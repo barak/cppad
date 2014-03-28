@@ -1,0 +1,123 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>AD Assignment: Example and Test</title>
+<meta name="description" id="description" content="AD Assignment: Example and Test"/>
+<meta name="keywords" id="keywords" content=" assign Ad object example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ad_assign.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="ad_assign.xml" target="_top">Prev</a>
+</td><td><a href="convert.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ad_assign</option>
+<option>ad_assign.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>ad_assign-&gt;</option>
+<option>ad_assign.cpp</option>
+</select>
+</td>
+<td>ad_assign.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>AD Assignment: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+
+bool ad_assign(void)
+{	bool ok = true;   // initialize test result flag
+	using CppAD::AD;  // so can use AD in place of CppAD::AD
+
+	// assignment to base value
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; a;   
+	a = 1.;
+	ok &amp;= a == 1.;
+
+	// assignment to a value that converts to the base type
+	a = 2; 
+	ok &amp;= a == 2.;
+
+	// assignment to an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; b(3.);
+	a = b;
+	ok &amp;= a == 3.;
+
+	// assignment to an VecAD&lt;Base&gt; element
+	CppAD::VecAD&lt;double&gt; v(1);
+	v[0] = 4.;
+	a = v[0];
+	ok &amp;= a == 4.;
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+<hr/>Input File: example/ad_assign.cpp
+
+</body>
+</html>

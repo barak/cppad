@@ -1,0 +1,113 @@
+#! /bin/python
+# $Id: replace_html.py 3102 2014-02-18 13:05:43Z bradbell $
+# -----------------------------------------------------------------------------
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+#
+# CppAD is distributed under multiple licenses. This distribution is under
+# the terms of the
+#                     Eclipse Public License Version 1.0.
+#
+# A copy of this license is included in the COPYING file of this distribution.
+# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# -----------------------------------------------------------------------------
+import sys
+import os
+import re
+# -----------------------------------------------------------------------------
+if sys.argv[0] != 'bin/replace_html.py' :
+	msg = 'bin/replace_html.py: must be executed from its parent directory'
+	sys.exit(msg)
+# 
+usage = '''\nusage: replace_html.py old_file new_file
+where old_file is the path to the file with html text that is to be replaced
+and new_file is the new_file that will be created.
+
+Each set of replacement text is defined in the file by
+	<!-- define name -->source<!-- end name -->
+where name is any unique name, with no spaces ' ' 
+for the replacement text source and source can be any text. 
+
+The destination, where the replacement text is placed, is specified by
+	<!-- replace name -->desination<!-- end name -->
+where name refers to a defined replacement text and destination
+is the text that is replaced.
+'''
+narg = len(sys.argv)
+if narg != 3 :
+	msg = '\nExpected 2 but found ' + str(narg-1) + ' command line arguments.'
+	sys.exit(usage + msg)
+old_file = sys.argv[1]
+new_file = sys.argv[2]
+# -----------------------------------------------------------------------------
+if not os.path.exists(old_file) :
+	msg = 'bin/replace_html.py: cannot find old_file = ' + old_file
+	sys.exit(msg)
+if os.path.exists(new_file) :
+	msg = 'bin/replace_html.py: cannot overwrite new_file ' + new_file
+	sys.exit(msg)
+f_in    = open(old_file, 'rb')
+data_in = f_in.read()
+f_in.close()
+# -----------------------------------------------------------------------------
+# create define: a dictionary with replacement text definitions
+define    = {}
+p_define  = re.compile('<!-- define ([^ ]*) -->')
+p_end     = re.compile('<!-- end ([^ ]*) -->')
+start     = 0
+while start < len(data_in) :
+	rest         = data_in[start : ]
+	next_define  = p_define.search(rest)
+	if next_define == None :
+		start = len(data_in)
+	else :
+		name         = next_define.group(1)
+		if name in define :
+			msg  = 'bin/replace_html.py: file = ' + file_path
+			msg += '\ncontains two defintions for name = ' + name
+			sys.exit(msg)
+		rest         = rest[ next_define.end() : ]
+		#
+		next_end     = p_end.search(rest)
+		source       = rest [ 0 : next_end.start() ]
+		define[name] = source
+		start       += next_define.end() + next_end.end()
+		if name != next_end.group(1) :
+			msg  = 'bin/replace_html.py: file = ' + file_path
+			msg += '\ndefine name = ' + name
+			msg += ', end name = ' + next_end.group(1)
+			sys.exit(msg)
+# -----------------------------------------------------------------------------
+# create data_out: a string with the replacements made
+data_out  = ''
+p_replace = re.compile('<!-- replace ([^ ]*) -->')
+start     = 0
+while start < len(data_in) :
+	rest          = data_in[start : ]
+	next_replace  = p_replace.search(rest)
+	if next_replace == None :
+		data_out += rest
+		start     = len(data_in)
+	else :
+		name      = next_replace.group(1)
+		if name not in define :
+			msg  = 'bin/replace_html.py: file = ' + file_path
+			msg += '\ncontains no defintions for name = ' + name
+			sys.exit(msg)
+		data_out    += rest[0 : next_replace.end() ]
+		data_out    += define[name]
+		#
+		rest         = rest[ next_replace.end() : ]
+		next_end     = p_end.search(rest)
+		data_out    += rest[ next_end.start() : next_end.end() ]
+		start       += next_replace.end() + next_end.end()
+		if name != next_end.group(1) :
+			msg  = 'bin/replace_html.py: file = ' + file_path
+			msg += '\nreplace name = ' + name
+			msg += ', end name = ' + next_end.group(1)
+			sys.exit(msg)
+# -----------------------------------------------------------------------------
+f_out    = open(new_file, 'wb')
+f_out.write(data_out)
+f_out.close()
+# -----------------------------------------------------------------------------
+sys.exit(0)

@@ -1,0 +1,156 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Double Speed: Sparse Hessian</title>
+<meta name="description" id="description" content="Double Speed: Sparse Hessian"/>
+<meta name="keywords" id="keywords" content=" link_sparse_hessian double speed sparse hessian "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_double_sparse_hessian.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="double_poly.cpp.xml" target="_top">Prev</a>
+</td><td><a href="double_sparse_jacobian.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>speed</option>
+<option>speed_double</option>
+<option>double_sparse_hessian.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>speed-&gt;</option>
+<option>speed_main</option>
+<option>speed_utility</option>
+<option>speed_double</option>
+<option>speed_adolc</option>
+<option>speed_cppad</option>
+<option>speed_fadbad</option>
+<option>speed_sacado</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>speed_double-&gt;</option>
+<option>double_det_minor.cpp</option>
+<option>double_det_lu.cpp</option>
+<option>double_mat_mul.cpp</option>
+<option>double_ode.cpp</option>
+<option>double_poly.cpp</option>
+<option>double_sparse_hessian.cpp</option>
+<option>double_sparse_jacobian.cpp</option>
+</select>
+</td>
+<td>double_sparse_hessian.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Specifications</option>
+<option>Implementation</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Double Speed: Sparse Hessian</big></big></b></center>
+<br/>
+<b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
+<br/>
+See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_hessian</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
+
+
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/speed/uniform_01.hpp&gt;
+# include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
+
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+
+bool link_sparse_hessian(
+	size_t                           size     , 
+	size_t                           repeat   , 
+	CppAD::vector&lt;double&gt;           &amp;x        ,
+	const CppAD::vector&lt;size_t&gt;     &amp;row      ,
+	const CppAD::vector&lt;size_t&gt;     &amp;col      ,
+	CppAD::vector&lt;double&gt;           &amp;hessian  )
+{
+	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
+		return false;
+	// -----------------------------------------------------
+	// setup
+	using CppAD::vector;
+	size_t order = 0;          // derivative order corresponding to function
+	size_t n     = size;       // argument space dimension
+	size_t m     = 1;          // range space dimension 
+	vector&lt;double&gt; y(m);       // function value
+
+	// choose a value for x
+	CppAD::uniform_01(n, x);
+	
+	// ------------------------------------------------------
+
+	while(repeat--)
+	{
+		// computation of the function
+		CppAD::sparse_hes_fun&lt;double&gt;(n, x, row, col, order, y);
+	}
+	hessian[0] = y[0];
+
+	return true;
+}
+</pre></font></code>
+
+
+<hr/>Input File: speed/double/sparse_hessian.cpp
+
+</body>
+</html>

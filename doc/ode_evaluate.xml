@@ -1,0 +1,507 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Evaluate a Function Defined in Terms of an ODE</title>
+<meta name="description" id="description" content="Evaluate a Function Defined in Terms of an ODE"/>
+<meta name="keywords" id="keywords" content=" ode_evaluate function "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ode_evaluate_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="mat_sum_sq.hpp.xml" target="_top">Prev</a>
+</td><td><a href="ode_evaluate.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>speed</option>
+<option>speed_utility</option>
+<option>ode_evaluate</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>speed-&gt;</option>
+<option>speed_main</option>
+<option>speed_utility</option>
+<option>speed_double</option>
+<option>speed_adolc</option>
+<option>speed_cppad</option>
+<option>speed_fadbad</option>
+<option>speed_sacado</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>speed_utility-&gt;</option>
+<option>det_by_lu</option>
+<option>det_of_minor</option>
+<option>det_by_minor</option>
+<option>det_33</option>
+<option>det_grad_33</option>
+<option>mat_sum_sq</option>
+<option>ode_evaluate</option>
+<option>sparse_jac_fun</option>
+<option>sparse_hes_fun</option>
+<option>uniform_01</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>ode_evaluate-&gt;</option>
+<option>ode_evaluate.cpp</option>
+<option>ode_evaluate.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>Inclusion</option>
+<option>Float</option>
+<option>---..Operation Sequence</option>
+<option>---..fabs</option>
+<option>x</option>
+<option>p</option>
+<option>---..p == 0</option>
+<option>---..p = 1</option>
+<option>fp</option>
+<option>---..Function</option>
+<option>---..Gradient</option>
+<option>Example</option>
+<option>Source Code</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Evaluate a Function Defined in Terms of an ODE</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/speed/ode_evaluate.hpp&gt;<br/>
+</span></font></code>
+
+<code><font color="blue"><span style='white-space: nowrap'>ode_evaluate(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This routine evaluates a function 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+
+defined by 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+where 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ solves the ordinary differential equation
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>x</mi>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>t</mi>
+</msub>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>g</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">]</mo>
+</mtd></mtr></mtable>
+</mrow></math>
+
+where 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>g</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x000D7;</mo>
+<mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+
+is an unspecified function.
+
+<br/>
+<br/>
+<b><big><a name="Inclusion" id="Inclusion">Inclusion</a></big></b>
+<br/>
+The template function <code><font color="blue">ode_evaluate</font></code> 
+is defined in the <code><font color="blue">CppAD</font></code> namespace by including 
+the file <code><font color="blue">cppad/speed/ode_evaluate.hpp</font></code> 
+(relative to the CppAD distribution directory).
+It is only intended for example and testing purposes, 
+so it is not automatically included by
+<a href="cppad.xml" target="_top"><span style='white-space: nowrap'>cppad.hpp</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="Float" id="Float">Float</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Float.Operation Sequence" id="Float.Operation Sequence">Operation Sequence</a></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
+ must be a <a href="numerictype.xml" target="_top"><span style='white-space: nowrap'>NumericType</span></a>
+.
+The 
+<code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
+ 
+<a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
+
+for this routine does not depend on the value of the argument 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+,
+hence it does not need to be retaped for each value of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+. 
+
+<br/>
+<br/>
+<b><a name="Float.fabs" id="Float.fabs">fabs</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
+ are 
+<code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
+ objects, the syntax
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;fabs(</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+must be supported. Note that it does not matter if the operation
+sequence for <code><font color="blue">fabs</font></code> depends on 
+<code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
+ because the 
+corresponding results are not actually used by <code><font color="blue">ode_evaluate</font></code>;
+see <code><font color="blue">fabs</font></code> in <a href="runge45.xml#Scalar.fabs" target="_top"><span style='white-space: nowrap'>Runge45</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="x" id="x">x</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It contains he argument value for which the function,
+or its derivative, is being evaluated.
+The value 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+ is determined by the size of the vector 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="p" id="p">p</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+<br/>
+<b><a name="p.p == 0" id="p.p == 0">p == 0</a></b>
+<br/>
+In this case a numerical method is used to solve the ode 
+and obtain an accurate approximation for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+.
+This numerical method has a fixed
+that does not depend on 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><a name="p.p = 1" id="p.p = 1">p = 1</a></b>
+<br/>
+In this case an analytic solution for the partial derivative
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>x</mi>
+</msub>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is returned.
+
+<br/>
+<br/>
+<b><big><a name="fp" id="fp">fp</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+The input value of the elements of 
+<code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
+ does not matter.
+
+<br/>
+<br/>
+<b><a name="fp.Function" id="fp.Function">Function</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+ is zero, 
+<code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
+ has size equal to 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+
+and contains the value of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><a name="fp.Gradient" id="fp.Gradient">Gradient</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+ is one, 
+<code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
+ has size equal to 
+<code><i><font color="black"><span style='white-space: nowrap'>n^2</span></font></i></code>
+ 
+and for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mi mathvariant='italic'>and</mi>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+, 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mfrac><mrow><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">]</mo>
+</mrow>
+<mrow><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">]</mo>
+</mrow>
+</mfrac>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>fp</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">&#x000B7;</mo>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">]</mo>
+</mrow></math>
+
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+The file
+<a href="ode_evaluate.cpp.xml" target="_top"><span style='white-space: nowrap'>ode_evaluate.cpp</span></a>
+
+contains an example and test  of <code><font color="blue">ode_evaluate.hpp</font></code>.
+It returns true if it succeeds and false otherwise.
+
+
+<br/>
+<br/>
+<b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
+<br/>
+The file 
+<a href="ode_evaluate.hpp.xml" target="_top"><span style='white-space: nowrap'>ode_evaluate.hpp</span></a>
+
+contains the source code for this template function.
+
+
+<hr/>Input File: cppad/speed/ode_evaluate.hpp
+
+</body>
+</html>

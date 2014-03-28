@@ -1,0 +1,153 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using a User Defined AD Base Type: Example and Test</title>
+<meta name="description" id="description" content="Using a User Defined AD Base Type: Example and Test"/>
+<meta name="keywords" id="keywords" content=" base type example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_base_require.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="base_alloc.hpp.xml" target="_top">Prev</a>
+</td><td><a href="base_adolc.hpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>base_require</option>
+<option>base_example</option>
+<option>base_require.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>base_require-&gt;</option>
+<option>base_member</option>
+<option>base_cond_exp</option>
+<option>base_identical</option>
+<option>base_ordered</option>
+<option>base_std_math</option>
+<option>base_example</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>base_example-&gt;</option>
+<option>base_alloc.hpp</option>
+<option>base_require.cpp</option>
+<option>base_adolc.hpp</option>
+<option>base_float.hpp</option>
+<option>base_double.hpp</option>
+<option>base_complex.hpp</option>
+</select>
+</td>
+<td>base_require.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Using a User Defined AD Base Type: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &quot;base_alloc.hpp&quot;
+# include &lt;cppad/cppad.hpp&gt;
+
+bool base_require(void)
+{	bool ok = true;
+	using CppAD::thread_alloc;
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;base_alloc&gt; ad_base_alloc;
+
+	// check the amount of memory inuse by this thread (thread zero)
+	size_t thread = thread_alloc::thread_num();
+	ok &amp;= thread == 0;
+
+	// y = x^2
+	size_t n = 1, m = 1;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ad_base_alloc) a_x(n), a_y(m);
+	a_x[0] = ad_base_alloc(1.);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+	a_y[0] = a_x[0] * a_x[0];
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;base_alloc&gt; f(a_x, a_y);
+
+	// check function value f(x) = x^2
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(base_alloc) x(n), y(m);
+	base_alloc eps = 
+		base_alloc(100.) * CppAD::numeric_limits&lt;base_alloc&gt;::epsilon();
+	x[0] = base_alloc(3.);
+	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(y[0], x[0] * x[0], eps, eps);
+
+	// check derivative value f'(x) = 2 * x
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(base_alloc) dy(m * n);
+	dy   = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+	ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], base_alloc(2.) * x[0], eps, eps);
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+The type <code><font color="blue">base_alloc</font></code>, defined in <a href="base_alloc.hpp.xml" target="_top"><span style='white-space: nowrap'>base_alloc.hpp</span></a>
+,
+meets the requirements specified by <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
+
+for 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ in 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+.
+The program below is an example use of 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;base_alloc&gt;</span></font></code>
+.
+
+
+<hr/>Input File: example/base_require.cpp
+
+</body>
+</html>

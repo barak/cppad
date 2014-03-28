@@ -1,0 +1,580 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using AD to Compute Atomic Function Derivatives</title>
+<meta name="description" id="description" content="Using AD to Compute Atomic Function Derivatives"/>
+<meta name="keywords" id="keywords" content=" Ad inside atomic user checkpoint "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_old_usead_2.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="old_usead_1.cpp.xml" target="_top">Prev</a>
+</td><td><a href="old_tan.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>deprecated</option>
+<option>old_atomic</option>
+<option>old_usead_2.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>Bugs</option>
+<option>WishList</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>deprecated-&gt;</option>
+<option>include_deprecated</option>
+<option>FunDeprecated</option>
+<option>omp_max_thread</option>
+<option>TrackNewDel</option>
+<option>omp_alloc</option>
+<option>memory_leak</option>
+<option>epsilon</option>
+<option>test_vector</option>
+<option>cppad_ipopt_nlp</option>
+<option>old_atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>old_atomic-&gt;</option>
+<option>old_reciprocal.cpp</option>
+<option>old_usead_1.cpp</option>
+<option>old_usead_2.cpp</option>
+<option>old_tan.cpp</option>
+<option>old_mat_mul.cpp</option>
+</select>
+</td>
+<td>old_usead_2.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Deprecated</option>
+<option>Purpose</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Using AD to Compute Atomic Function Derivatives</big></big></b></center>
+<br/>
+<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
+<br/>
+This example has been deprecated because it is easier to use the 
+<a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
+ class instead.
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Consider the case where an inner function is used repeatedly in the 
+definition of an outer function.
+In this case, it may reduce the number of variables
+<a href="seq_property.xml#size_var" target="_top"><span style='white-space: nowrap'>size_var</span></a>
+,
+and hence the required memory.
+
+<code><font color="blue">
+<pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+
+namespace { // Begin empty namespace 
+	using CppAD::AD;
+	using CppAD::ADFun;
+	using CppAD::vector;
+
+	// ----------------------------------------------------------------------
+	// ODE for [t, t^2 / 2 ] in form required by Runge45
+	class Fun {
+	public:
+		void Ode(
+			const <a href="ad.xml" target="_top">AD</a>&lt;double&gt;           &amp;t, 
+			const vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;z, 
+			vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;       &amp;f)
+		{	assert( z.size() == 2 );
+			assert( f.size() == 2 );
+			f[0] =  1.0;
+			f[1] =  z[0];
+		}
+	};
+
+	// ----------------------------------------------------------------------
+	// Create function that takes on Runge45 step for the ODE above
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* r_ptr_;
+	void create_r(void)
+	{	size_t n = 3, m = 2;
+		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; x(n), zi(m), y(m), e(m);
+		// The value of x does not matter because the operation sequence
+		// does not depend on x. 
+		x[0]  = 0.0;  // initial value z_0 (t) at t = ti
+		x[1]  = 0.0;  // initial value z_1 (t) at t = ti
+		x[2]  = 0.1;  // final time for this integration
+		CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+		zi[0]         = x[0];  // z_0 (t) at t = ti
+		zi[1]         = x[1];  // z_1 (t) at t = ti
+		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; ti = 0.0;   // t does not appear in ODE so does not matter
+		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; tf = x[2];  // final time
+		size_t M      = 3;     // number of Runge45 steps to take
+		Fun F;
+		y             = CppAD::Runge45(F, M, ti, tf, zi, e);
+		r_ptr_        = new <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;(x, y);
+	}
+	void destroy_r(void)
+	{	delete r_ptr_; 
+		r_ptr_ = CPPAD_NULL;
+	}
+
+	// ----------------------------------------------------------------------
+	// forward mode routine called by CppAD
+	bool solve_ode_forward(
+		size_t                   id ,
+		size_t                    k ,
+		size_t                    n ,
+		size_t                    m ,
+		const vector&lt;bool&gt;&amp;      vx ,
+		vector&lt;bool&gt;&amp;            vy ,
+		const vector&lt;double&gt;&amp;    tx ,
+		vector&lt;double&gt;&amp;          ty
+	)
+	{	assert( id == 0 );
+		assert( n == 3 );
+		assert( m == 2 );
+		assert( k == 0 || vx.size() == 0 );
+		bool ok = true;	
+		vector&lt;double&gt; xp(n), yp(m);
+		size_t i, j;
+
+		// check for special case
+		if( vx.size() &gt; 0 )
+		{	//Compute r, a Jacobian sparsity pattern.
+			// Use reverse mode because m &lt; n.
+			vector&lt; std::set&lt;size_t&gt; &gt; s(m), r(m);
+			for(i = 0; i &lt; m; i++)
+				s[i].insert(i);
+			r = r_ptr_-&gt;RevSparseJac(m, s);
+			std::set&lt;size_t&gt;::const_iterator itr;
+			for(i = 0; i &lt; m; i++)
+			{	vy[i] = false;
+				for(itr = s[i].begin(); itr != s[i].end(); itr++)
+				{	j = *itr;
+					assert( j &lt; n );
+					// y[i] depends on the value of x[j]
+					vy[i] |= vx[j];
+				}
+			}
+		}
+		// make sure r_ has proper lower order Taylor coefficients stored
+		// then compute ty[k]
+		for(size_t p = 0; p &lt;= k; p++)
+		{	for(j = 0; j &lt; n; j++)
+				xp[j] = tx[j * (k+1) + p];
+			yp    = r_ptr_-&gt;Forward(p, xp);
+			if( p == k )
+			{	for(i = 0; i &lt; m; i++)
+					ty[i * (k+1) + p] = yp[i];
+			}
+# ifndef NDEBUG
+			else
+			{	for(i = 0; i &lt; m; i++)
+					assert( ty[i * (k+1) + p] == yp[i] );
+			}
+# endif
+		}
+		// no longer need the Taylor coefficients in r_ptr_
+		// (have to reconstruct them every time)
+		r_ptr_-&gt;capacity_taylor(0);
+		return ok;
+	}
+	// ----------------------------------------------------------------------
+	// reverse mode routine called by CppAD
+	bool solve_ode_reverse(
+		size_t                   id ,
+		size_t                    k ,
+		size_t                    n ,
+		size_t                    m ,
+		const vector&lt;double&gt;&amp;    tx ,
+		const vector&lt;double&gt;&amp;    ty ,
+		vector&lt;double&gt;&amp;          px ,
+		const vector&lt;double&gt;&amp;    py
+	)
+	{	assert( id == 0 );
+		assert( n == 3 );
+		assert( m == 2 );
+		bool ok = true;	
+		vector&lt;double&gt; xp(n), w( (k+1) * m ), dw( (k+1) * n );
+
+		// make sure r_ has proper forward mode coefficients 
+		size_t i, j, p;
+		for(p = 0; p &lt;= k; p++)
+		{	for(j = 0; j &lt; n; j++)
+				xp[j] = tx[j * (k+1) + p];
+# ifdef NDEBUG
+			r_ptr_-&gt;Forward(p, xp);
+# else
+			vector&lt;double&gt; yp(m);
+			yp = r_ptr_-&gt;Forward(p, xp);
+			for(i = 0; i &lt; m; i++)
+				assert( ty[i * (k+1) + p] == yp[i] );
+# endif
+		}
+		for(i = 0; i &lt; m; i++)
+		{	for(p = 0; p &lt;=k; p++)
+				w[ i * (k+1) + p] = py[ i * (k+1) + p];
+		}
+		dw = r_ptr_-&gt;Reverse(k+1, w);
+		for(j = 0; j &lt; n; j++)
+		{	for(p = 0; p &lt;=k; p++)
+				px[ j * (k+1) + p] = dw[ j * (k+1) + p];
+		}
+		// no longer need the Taylor coefficients in r_ptr_
+		// (have to reconstruct them every time)
+		r_ptr_-&gt;capacity_taylor(0);
+
+		return ok;
+	}
+	// ----------------------------------------------------------------------
+	// forward Jacobian sparsity routine called by CppAD
+	bool solve_ode_for_jac_sparse(
+		size_t                               id ,             
+		size_t                                n ,
+		size_t                                m ,
+		size_t                                q ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           s )
+	{	assert( id == 0 );
+		assert( n == 3 );
+		assert( m == 2 );
+		bool ok = true;
+
+		vector&lt; std::set&lt;size_t&gt; &gt; R(n), S(m);
+		for(size_t j = 0; j &lt; n; j++)
+			R[j] = r[j];
+		S = r_ptr_-&gt;ForSparseJac(q, R);
+		for(size_t i = 0; i &lt; m; i++)
+			s[i] = S[i];
+
+		// no longer need the forward mode sparsity pattern
+		// (have to reconstruct them every time)
+		r_ptr_-&gt;size_forward_set(0);
+		
+		return ok; 
+	}
+	// ----------------------------------------------------------------------
+	// reverse Jacobian sparsity routine called by CppAD
+	bool solve_ode_rev_jac_sparse(
+		size_t                               id ,             
+		size_t                                n ,
+		size_t                                m ,
+		size_t                                q ,
+		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           r ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
+	{
+		assert( id == 0 );
+		assert( n == 3 );
+		assert( m == 2 );
+		bool ok = true;
+
+		vector&lt; std::set&lt;size_t&gt; &gt; R(q), S(q);
+		std::set&lt;size_t&gt;::const_iterator itr;
+		size_t i;
+		// untranspose s
+		for(i = 0; i &lt; m; i++)
+		{	for(itr = s[i].begin(); itr != s[i].end(); itr++)
+				S[*itr].insert(i);
+		}
+		R = r_ptr_-&gt;RevSparseJac(q, S);
+		// transpose r
+		for(i = 0; i &lt; m; i++)
+			r[i].clear();
+		for(i = 0; i &lt; q; i++)
+		{	for(itr = R[i].begin(); itr != R[i].end(); itr++)
+				r[*itr].insert(i);
+		}
+		return ok; 
+	}
+	// ----------------------------------------------------------------------
+	// reverse Hessian sparsity routine called by CppAD
+	bool solve_ode_rev_hes_sparse(
+		size_t                               id ,             
+		size_t                                n ,
+		size_t                                m ,
+		size_t                                q ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+		const vector&lt;bool&gt;&amp;                   s ,
+		vector&lt;bool&gt;&amp;                         t ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
+		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           v )
+	{	// Can just return false if not use RevSparseHes.
+		assert( id == 0 );
+		assert( n == 3 );
+		assert( m == 2 );
+		bool ok = true;
+		std::set&lt;size_t&gt;::const_iterator itr;
+
+		// compute sparsity pattern for T(x) = S(x) * f'(x)
+		vector&lt; std::set&lt;size_t&gt; &gt; S(1);
+		size_t i, j;
+		S[0].clear();
+		for(i = 0; i &lt; m; i++)
+			if( s[i] )
+				S[0].insert(i);
+		t = r_ptr_-&gt;RevSparseJac(1, s);
+
+		// compute sparsity pattern for A(x)^T = U(x)^T * f'(x)
+		vector&lt; std::set&lt;size_t&gt; &gt; Ut(q), At(q);
+		for(i = 0; i &lt; m; i++)
+		{	for(itr = u[i].begin(); itr != u[i].end(); itr++)
+				Ut[*itr].insert(i);
+		}
+		At = r_ptr_-&gt;RevSparseJac(q, Ut);
+
+		// compute sparsity pattern for H(x)^T = R^T * (S * F)''(x)
+		vector&lt; std::set&lt;size_t&gt; &gt; R(n), Ht(q);
+		for(j = 0; j &lt; n; j++)
+			R[j] = r[j];
+		r_ptr_-&gt;ForSparseJac(q, R);
+		Ht = r_ptr_-&gt;RevSparseHes(q, S);
+
+		// compute sparsity pattern for V(x) = A(x) + H(x)^T
+		for(j = 0; j &lt; n; j++)
+			v[j].clear();
+		for(i = 0; i &lt; q; i++)
+		{	for(itr = At[i].begin(); itr != At[i].end(); itr++)
+				v[*itr].insert(i);
+			for(itr = Ht[i].begin(); itr != Ht[i].end(); itr++)
+				v[*itr].insert(i);
+		}
+
+		// no longer need the forward mode sparsity pattern
+		// (have to reconstruct them every time)
+		r_ptr_-&gt;size_forward_set(0);
+
+		return ok;
+	}
+	// ---------------------------------------------------------------------
+	// Declare the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; routine solve_ode(id, ax, ay)
+	CPPAD_USER_ATOMIC(
+		solve_ode                 , 
+		CppAD::vector             ,
+		double                    , 
+		solve_ode_forward         , 
+		solve_ode_reverse         ,
+		solve_ode_for_jac_sparse  ,
+		solve_ode_rev_jac_sparse  ,
+		solve_ode_rev_hes_sparse  
+	)
+} // End empty namespace
+
+bool old_usead_2(void)
+{	bool ok = true;
+	using CppAD::NearEqual;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+
+	// --------------------------------------------------------------------
+	// Create the <a href="funconstruct.xml" target="_top">ADFun</a>&lt;doulbe&gt; r_
+	create_r();
+
+	// --------------------------------------------------------------------
+	// domain and range space vectors
+	size_t n = 3, m = 2;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(n), ax(n), ay(m);
+	au[0]         = 0.0;        // value of z_0 (t) = t, at t = 0
+	ax[1]         = 0.0;        // value of z_1 (t) = t^2/2, at t = 0
+	au[2]         = 1.0;        // final t
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(au);
+	size_t M      = 2;          // number of r steps to take
+	ax[0]         = au[0];      // value of z_0 (t) = t, at t = 0
+	ax[1]         = au[1];      // value of z_1 (t) = t^2/2, at t = 0
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; dt = au[2] / M;  // size of each r step
+	ax[2]         = dt;
+	for(size_t i_step = 0; i_step &lt; M; i_step++)
+	{	size_t id = 0;               // not used
+		solve_ode(id, ax, ay); 
+		ax[0] = ay[0];
+		ax[1] = ay[1];
+	}
+
+	// create f: u -&gt; y and stop tape recording
+	// y_0(t) = u_0 + t                   = u_0 + u_2
+	// y_1(t) = u_1 + u_0 * t + t^2 / 2   = u_1 + u_0 * u_2 + u_2^2 / 2
+	// where t = u_2
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
+	f.Dependent(au, ay); 
+
+	// --------------------------------------------------------------------
+	// Check forward mode results
+	//
+	// zero order forward
+	vector&lt;double&gt; up(n), yp(m);
+	size_t p  = 0;
+	double u0 = 0.5;
+	double u1 = 0.25;
+	double u2 = 0.75;
+	double check;
+	up[0]     = u0;
+	up[1]     = u1;
+	up[2]     = u2;
+	yp        = f.<a href="forward.xml" target="_top">Forward</a>(p, up);
+	check     = u0 + u2;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( yp[0], check,  eps, eps);
+	check     = u1 + u0 * u2 + u2 * u2 / 2.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( yp[1], check,  eps, eps);
+	//
+	// forward mode first derivative w.r.t t
+	p         = 1;
+	up[0]     = 0.0;
+	up[1]     = 0.0;
+	up[2]     = 1.0;
+	yp        = f.<a href="forward.xml" target="_top">Forward</a>(p, up);
+	check     = 1.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( yp[0], check,  eps, eps);
+	check     = u0 + u2;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( yp[1], check,  eps, eps);
+	//
+	// forward mode second order Taylor coefficient w.r.t t
+	p         = 2;
+	up[0]     = 0.0;
+	up[1]     = 0.0;
+	up[2]     = 0.0;
+	yp        = f.<a href="forward.xml" target="_top">Forward</a>(p, up);
+	check     = 0.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( yp[0], check,  eps, eps);
+	check     = 1.0 / 2.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( yp[1], check,  eps, eps);
+	// --------------------------------------------------------------------
+	// reverse mode derivatives of \partial_t y_1 (t)
+	vector&lt;double&gt; w(m * p), dw(n * p);
+	w[0 * p + 0]  = 0.0;
+	w[1 * p + 0]  = 0.0;
+	w[0 * p + 1]  = 0.0;
+	w[1 * p + 1]  = 1.0;
+	dw        = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
+	// derivative of y_1(u) = u_1 + u_0 * u_2 + u_2^2 / 2,  w.r.t. u
+	// is equal deritative of \partial_u2 y_1(u) w.r.t \partial_u2 u
+	check     = u2;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( dw[0 * p + 1], check,  eps, eps);
+	check     = 1.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( dw[1 * p + 1], check,  eps, eps);
+	check     = u0 + u2;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( dw[2 * p + 1], check,  eps, eps);
+	// derivative of \partial_t y_1 w.r.t u = u_0 + t,  w.r.t u
+	check     = 1.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( dw[0 * p + 0], check,  eps, eps);
+	check     = 0.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( dw[1 * p + 0], check,  eps, eps);
+	check     = 1.0;
+	ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( dw[2 * p + 0], check,  eps, eps);
+	// --------------------------------------------------------------------
+	// forward mode sparsity pattern for the Jacobian
+	// f_u = [   1, 0,   1 ]
+	//       [ u_2, 1, u_2 ] 
+	size_t i, j, q = n;
+	CppAD::vectorBool r(n * q), s(m * q);
+	// r = identity sparsity pattern
+	for(i = 0; i &lt; n; i++)
+		for(j = 0; j &lt; q; j++)
+			r[i*n +j] = (i == j); 
+	s   = f.ForSparseJac(q, r);
+	ok &amp;= s[ 0 * q + 0] == true;
+	ok &amp;= s[ 0 * q + 1] == false;
+	ok &amp;= s[ 0 * q + 2] == true;
+	ok &amp;= s[ 1 * q + 0] == true;
+	ok &amp;= s[ 1 * q + 1] == true;
+	ok &amp;= s[ 1 * q + 2] == true;
+	// --------------------------------------------------------------------
+	// reverse mode sparsity pattern for the Jacobian
+	p = m;
+	s.resize(p * m);
+	r.resize(p * n);
+	// s = identity sparsity pattern
+	for(i = 0; i &lt; p; i++)
+		for(j = 0; j &lt; m; j++)
+			s[i*m +j] = (i == j); 
+	r   = f.RevSparseJac(p, s);
+	ok &amp;= r[ 0 * n + 0] == true;
+	ok &amp;= r[ 0 * n + 1] == false;
+	ok &amp;= r[ 0 * n + 2] == true;
+	ok &amp;= r[ 1 * n + 0] == true;
+	ok &amp;= r[ 1 * n + 1] == true;
+	ok &amp;= r[ 1 * n + 2] == true;
+
+	// --------------------------------------------------------------------
+	// Hessian sparsity for y_1 (u) = u_1 + u_0 * u_2 + u_2^2 / 2
+	s.resize(m);
+	s[0] = false;
+	s[1] = true;
+	r.resize(n * n);
+	for(i = 0; i &lt; n; i++)
+		for(j = 0; j &lt; n; j++)
+			r[ i * n + j ] = (i == j);
+	CppAD::vectorBool h(n * n);
+	h   = f.RevSparseHes(n, s);
+	ok &amp;= h[0 * n + 0] == false;
+	ok &amp;= h[0 * n + 1] == false;
+	ok &amp;= h[0 * n + 2] == true;
+	ok &amp;= h[1 * n + 0] == false;
+	ok &amp;= h[1 * n + 1] == false;
+	ok &amp;= h[1 * n + 2] == false;
+	ok &amp;= h[2 * n + 0] == true;
+	ok &amp;= h[2 * n + 1] == false;
+	ok &amp;= h[2 * n + 2] == true;
+	
+	// --------------------------------------------------------------------
+	destroy_r();
+
+	// Free all temporary work space associated with old_atomic objects. 
+	// (If there are future calls to user atomic functions, they will 
+	// create new temporary work space.)
+	CppAD::user_atomic&lt;double&gt;::clear();
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/atomic/old_usead_2.cpp
+
+</body>
+</html>

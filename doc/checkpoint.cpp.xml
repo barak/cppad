@@ -1,0 +1,340 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Simple Checkpointing: Example and Test</title>
+<meta name="description" id="description" content="Simple Checkpointing: Example and Test"/>
+<meta name="keywords" id="keywords" content=" checkpoint example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_checkpoint.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="checkpoint.xml" target="_top">Prev</a>
+</td><td><a href="atomic_base.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>checkpoint</option>
+<option>checkpoint.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>std_math_ad</option>
+<option>MathOther</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>checkpoint-&gt;</option>
+<option>checkpoint.cpp</option>
+</select>
+</td>
+<td>checkpoint.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Simple Checkpointing: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Break a large computation into pieces and only store values at the 
+interface of the pieces.
+In actual applications, there may be many functions, but 
+for this example there are only two.
+The functions 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>F</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mn>2</mn>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mn>2</mn>
+</msup>
+</mrow></math>
+
+ 
+and
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>G</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mn>2</mn>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mn>2</mn>
+</msup>
+</mrow></math>
+
+ 
+defined by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>F</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+<mspace width='.3em'/>
+<mo stretchy="false">,</mo>
+<mspace width='.3em'/>
+<mi mathvariant='italic'>G</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>y</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>y</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>y</mi>
+<mn>0</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>y</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>y</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>y</mi>
+<mn>1</mn>
+</msub>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+
+namespace {
+	using CppAD::AD;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ADVector;
+
+	void f_algo(const ADVector&amp; x, ADVector&amp; y)
+	{	y[0] = 1.0;
+		y[1] = 1.0;
+		for(size_t k = 0; k &lt; 5; k++)
+		{	y[0] *= x[0];
+			y[1] *= x[1];
+		}
+		return;
+	}
+	void g_algo(const ADVector&amp; y, ADVector&amp; z)
+	{	z[0] = 0.0;
+		z[1] = 0.0;
+		for(size_t k = 0; k &lt; 3; k++)
+		{	z[0] += y[0];
+			z[1] += y[1];
+		}
+		return;
+	}
+}
+
+bool checkpoint(void)
+{	bool ok = true;
+	using CppAD::checkpoint;
+	using CppAD::ADFun;
+	using CppAD::NearEqual;
+	size_t i, j, k, n = 2, m = n;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+
+	// checkpoint version of the function F(x)
+	ADVector ax(n), ay(n), az(m);
+	for(j = 0; j &lt; n; j++)
+		ax[j] = double(j);
+	checkpoint&lt;double&gt; f_check(&quot;f_check&quot;, f_algo, ax, ay); 
+	checkpoint&lt;double&gt; g_check(&quot;g_check&quot;, g_algo, ay, az); 
+
+	// Record a version of z = g[f(x)] without checkpointing
+	<a href="independent.xml" target="_top">Independent</a>(ax);
+	f_algo(ax, ay);
+	g_algo(ay, az);
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; check_not(ax, az);
+
+	// Record a version of z = g[f(x)] with checkpointing
+	<a href="independent.xml" target="_top">Independent</a>(ax);
+	f_check(ax, ay);
+	g_check(ay, az);
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; check_yes(ax, az);
+
+	// checkpointing should use fewer operations
+	ok &amp;= check_yes.size_var() &lt; check_not.size_var();
+
+	// compare forward mode results for orders 0, 1, 2
+	size_t p = 2;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x_p(n*(p+1)), z_not(m*(p+1)), z_yes(m*(p+1));
+	for(j = 0; j &lt; n; j++)
+	{	for(k = 0; k &lt;= p; k++)
+			x_p[ j * (p+1) + k ] = 1.0 / (p + 1 - k);
+	}
+	z_not = check_not.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	z_yes = check_yes.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	for(i = 0; i &lt; m; i++)
+	{	for(k = 0; k &lt;= p; k++)
+		{	double zik_not = z_not[ i * (p+1) + k];
+			double zik_yes = z_yes[ i * (p+1) + k];
+			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(zik_not, zik_yes, eps, eps);
+		}
+	}
+
+	// compare reverse mode results
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m*(p+1)), dw_not(n*(p+1)), dw_yes(n*(p+1));
+	dw_not = check_not.<a href="reverse.xml" target="_top">Reverse</a>(p+1, w);
+	dw_yes = check_yes.<a href="reverse.xml" target="_top">Reverse</a>(p+1, w);
+	for(j = 0; j &lt; n; j++)
+	{	for(k = 0; k &lt;= p; k++)
+		{	double dwjk_not = dw_not[ j * (p+1) + k];
+			double dwjk_yes = dw_yes[ j * (p+1) + k];
+			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dwjk_not, dwjk_yes, eps, eps);
+		}
+	}
+
+	// mix sparsity so test both cases
+	f_check.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
+	g_check.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
+
+	// compare forward mode Jacobian sparsity patterns
+	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; r(n), s_not(m), s_yes(m);
+	for(j = 0; j &lt; n; j++)
+		r[j].insert(j);
+	s_not = check_not.ForSparseJac(n, r);
+	s_yes = check_yes.ForSparseJac(n, r);
+	for(i = 0; i &lt; m; i++)
+		ok &amp;= s_not[i] == s_yes[i];
+
+	// compare reverse mode Jacobian sparsity patterns
+	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; s(m), r_not(m), r_yes(m);
+	for(i = 0; i &lt; m; i++)
+		s[i].insert(i);
+	r_not = check_not.RevSparseJac(m, s);
+	r_yes = check_yes.RevSparseJac(m, s);
+	for(i = 0; i &lt; m; i++)
+		ok &amp;= s_not[i] == s_yes[i];
+	
+
+	// compare reverse mode Hessian sparsity patterns
+	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; s_one(1), h_not(n), h_yes(n); 
+	for(i = 0; i &lt; m; i++)
+		s_one[0].insert(i);
+	h_not = check_not.RevSparseHes(n, s_one);
+	h_yes = check_yes.RevSparseHes(n, s_one);
+	for(i = 0; i &lt; n; i++)
+		ok &amp;= h_not[i] == h_yes[i];
+	
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+
+<hr/>Input File: example/atomic/checkpoint.cpp
+
+</body>
+</html>

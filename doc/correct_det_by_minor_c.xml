@@ -1,0 +1,155 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Correctness Test of det_by_minor Routine</title>
+<meta name="description" id="description" content="Correctness Test of det_by_minor Routine"/>
+<meta name="keywords" id="keywords" content=" "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_correct_det_by_minor_c_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="uniform_01_c.xml" target="_top">Prev</a>
+</td><td><a href="repeat_det_by_minor_c.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>compare_c</option>
+<option>correct_det_by_minor_c</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>Bugs</option>
+<option>WishList</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>compare_c-&gt;</option>
+<option>det_of_minor_c</option>
+<option>det_by_minor_c</option>
+<option>uniform_01_c</option>
+<option>correct_det_by_minor_c</option>
+<option>repeat_det_by_minor_c</option>
+<option>elapsed_seconds_c</option>
+<option>time_det_by_minor_c</option>
+<option>main_compare_c</option>
+</select>
+</td>
+<td>correct_det_by_minor_c</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>flag</option>
+<option>Source Code</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Correctness Test of det_by_minor Routine</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;correct_det_by_minor()</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="flag" id="flag">flag</a></big></b>
+<br/>
+The return value has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It value is <code><font color="blue">1</font></code> if the test passes and <code><font color="blue">0</font></code> otherwise.
+
+
+
+
+<br/>
+<br/>
+<b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+bool correct_det_by_minor(void)
+{	double a[9], det, check;
+
+	<a href="uniform_01_c.xml" target="_top">random_seed</a>(123);
+	<a href="uniform_01_c.xml" target="_top">uniform_01</a>(9, a);
+
+	/* compute determinant using expansion by minors */
+	det = det_by_minor(a, 3);
+	
+	/* use expansion by minors to hand code the determinant  */
+	check = 0.;
+	check += a[0] * ( a[4] * a[8] - a[5] * a[7] );
+	check -= a[1] * ( a[3] * a[8] - a[5] * a[6] );
+	check += a[2] * ( a[3] * a[7] - a[4] * a[6] );
+
+	if( fabs(det / check - 1.0) &lt; 1e-10 )
+		return true;
+	return false;
+}
+</pre></font></code>
+
+
+<hr/>Input File: compare_c/det_by_minor.c
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using Eigen To Compute Determinant: Example and Test</title>
+<meta name="description" id="description" content="Using Eigen To Compute Determinant: Example and Test"/>
+<meta name="keywords" id="keywords" content=" determinant eigen example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_eigen_det.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="eigen_array.cpp.xml" target="_top">Prev</a>
+</td><td><a href="hes_minor_det.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Example</option>
+<option>General</option>
+<option>cppad_eigen.hpp</option>
+<option>eigen_det.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>Example-&gt;</option>
+<option>General</option>
+<option>ExampleUtility</option>
+<option>ListAllExamples</option>
+<option>testvector</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>General-&gt;</option>
+<option>ad_fun.cpp</option>
+<option>ad_in_c.cpp</option>
+<option>conj_grad.cpp</option>
+<option>cppad_eigen.hpp</option>
+<option>hes_minor_det.cpp</option>
+<option>hes_lu_det.cpp</option>
+<option>interface2c.cpp</option>
+<option>jac_minor_det.cpp</option>
+<option>jac_lu_det.cpp</option>
+<option>mul_level</option>
+<option>ode_stiff.cpp</option>
+<option>mul_level_ode.cpp</option>
+<option>mul_level_adolc_ode.cpp</option>
+<option>ode_taylor.cpp</option>
+<option>stack_machine.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>cppad_eigen.hpp-&gt;</option>
+<option>eigen_plugin.hpp</option>
+<option>eigen_array.cpp</option>
+<option>eigen_det.cpp</option>
+</select>
+</td>
+<td>eigen_det.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Using Eigen To Compute Determinant: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;cppad/example/cppad_eigen.hpp&gt;
+# include &lt;cppad/speed/det_by_minor.hpp&gt;
+# include &lt;Eigen/Dense&gt;
+
+bool eigen_det(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	using Eigen::Matrix;
+	using Eigen::Dynamic;
+	//
+	typedef Matrix&lt; double     , Dynamic, Dynamic &gt; matrix;
+	typedef Matrix&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; , Dynamic, Dynamic &gt; a_matrix;
+	//
+	typedef Matrix&lt; double ,     Dynamic , 1&gt;       vector;
+	typedef Matrix&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; , Dynamic , 1&gt;       a_vector;
+	// some temporary indices
+	size_t i, j;
+
+	// domain and range space vectors
+	size_t size = 3, n  = size * size, m = 1;
+	a_vector a_x(n), a_y(m);
+	vector x(n);
+
+	// set and declare independent variables and start tape recording
+	for(i = 0; i &lt; size; i++)
+	{	for(j = 0; j &lt; size; j++)
+		{	// lower triangular matrix 
+			a_x[i * size + j] = x[i * size + j] = 0.0;
+			if( j &lt;= i )
+				a_x[i * size + j] = x[i * size + j] = double(1 + i + j);
+		}
+	}
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+
+	// copy independent variable vector to a matrix
+	a_matrix a_X(size, size);
+	matrix X(size, size);
+	for(i = 0; i &lt; size; i++)
+	{	for(j = 0; j &lt; size; j++)
+		{	X(i, j)   = x[i * size + j];
+			// If we used a_X(i, j) = X(i, j), a_X would not depend on a_x.
+			a_X(i, j) = a_x[i * size + j];
+		}
+	}
+
+	// Compute the log of determinant of X
+	a_y[0] = log( a_X.determinant() );
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y); 
+
+	// check function value 
+	double eps = 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+	CppAD::det_by_minor&lt;double&gt; det(size); 
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Value(a_y[0]) , log(det(x)), eps, eps);
+
+	// compute the derivative of y w.r.t x using CppAD
+	vector jac = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+
+	// check the derivative using the formula
+	// d/dX log(det(X)) = transpose( inv(X) )
+	matrix inv_X = X.inverse();
+	for(i = 0; i &lt; size; i++)
+	{	for(j = 0; j &lt; size; j++)
+			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(jac[i * size + j], inv_X(j, i), eps, eps);
+	}
+
+	return ok;
+}
+
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/eigen_det.cpp
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>User Defined Atomic AD Functions</title>
+<meta name="description" id="description" content="User Defined Atomic AD Functions"/>
+<meta name="keywords" id="keywords" content=" atomic user function operation "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_atomic_base_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="checkpoint.cpp.xml" target="_top">Prev</a>
+</td><td><a href="atomic_ctor.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>std_math_ad</option>
+<option>MathOther</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>atomic_base-&gt;</option>
+<option>atomic_ctor</option>
+<option>atomic_option</option>
+<option>atomic_afun</option>
+<option>atomic_forward</option>
+<option>atomic_reverse</option>
+<option>atomic_for_sparse_jac</option>
+<option>atomic_rev_sparse_jac</option>
+<option>atomic_rev_sparse_hes</option>
+<option>atomic_base_clear</option>
+<option>atomic_get_started.cpp</option>
+<option>atomic_norm_sq.cpp</option>
+<option>atomic_reciprocal.cpp</option>
+<option>atomic_tangent.cpp</option>
+<option>atomic_mat_mul.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>Virtual Functions</option>
+<option>Contents</option>
+<option>Examples</option>
+<option>---..Getting Started</option>
+<option>---..Scalar Function</option>
+<option>---..Vector Range</option>
+<option>General Case</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>User Defined Atomic AD Functions</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>use_set</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>user_arg_list</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.forward(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vx</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vy</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>tx</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ty</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.reverse(</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>tx</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ty</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>px</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>py</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.for_sparse_jac(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.rev_sparse_jac(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.rev_sparse_hes(</span></font><i><font color="black"><span style='white-space: nowrap'>vx</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>t</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::clear()</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+In some cases, the user knows how to compute derivatives of a function 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>y</mi>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mspace width='.3em'/>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>where</mi>
+</mstyle></mrow>
+<mspace width='.3em'/>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">:</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+more efficiently than by coding it using 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ 
+<a href="glossary.xml#Operation.Atomic" target="_top"><span style='white-space: nowrap'>atomic</span></a>
+ operations
+and letting CppAD do the rest.
+In this case 
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base</span></font><i><font color="black"><span style='white-space: nowrap'>&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Base</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;</span></font></i></code>
+ can use
+the user code for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+, and its derivatives,
+as 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ atomic operations. 
+
+<br/>
+<br/>
+<b><big><a name="Virtual Functions" id="Virtual Functions">Virtual Functions</a></big></b>
+<br/>
+User defined derivatives are implemented by defining the
+following virtual functions in the 
+<code><i><font color="black"><span style='white-space: nowrap'>base_atomic</span></font></i></code>
+ class:
+<a href="atomic_forward.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
+,
+<a href="atomic_reverse.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
+,
+<a href="atomic_for_sparse_jac.xml" target="_top"><span style='white-space: nowrap'>for_sparse_jac</span></a>
+,
+<a href="atomic_rev_sparse_jac.xml" target="_top"><span style='white-space: nowrap'>rev_sparse_jac</span></a>
+, and
+<a href="atomic_rev_sparse_hes.xml" target="_top"><span style='white-space: nowrap'>rev_sparse_hes</span></a>
+.
+These virtual functions have a default implementation
+that returns 
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;false</span></font></code>
+.
+The <code><font color="blue">forward</font></code> function, 
+for the case 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;0</span></font></code>
+, must be implemented.
+Otherwise, only those functions
+required by the your calculations need to be implemented. 
+For example, 
+
+<code><i><font color="black"><span style='white-space: nowrap'>forward</span></font></i></code>
+ for the case 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;2</span></font></code>
+ can just return
+
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;false</span></font></code>
+ unless you require
+forward mode calculation of second derivatives.
+
+<br/>
+<br/>
+<b><big><a name="Contents" id="Contents">Contents</a></big></b>
+<br/>
+<table>
+<tr><td><a href="atomic_ctor.xml" target="_top">atomic_ctor</a></td><td>Atomic&#xA0;Function&#xA0;Constructor</td></tr><tr><td><a href="atomic_option.xml" target="_top">atomic_option</a></td><td>Set&#xA0;Atomic&#xA0;Function&#xA0;Options</td></tr><tr><td><a href="atomic_afun.xml" target="_top">atomic_afun</a></td><td>Using&#xA0;AD&#xA0;Version&#xA0;of&#xA0;Atomic&#xA0;Function</td></tr><tr><td><a href="atomic_forward.xml" target="_top">atomic_forward</a></td><td>Atomic&#xA0;Forward&#xA0;Mode</td></tr><tr><td><a href="atomic_reverse.xml" target="_top">atomic_reverse</a></td><td>Atomic&#xA0;Reverse&#xA0;Mode</td></tr><tr><td><a href="atomic_for_sparse_jac.xml" target="_top">atomic_for_sparse_jac</a></td><td>Atomic&#xA0;Forward&#xA0;Jacobian&#xA0;Sparsity&#xA0;Patterns</td></tr><tr><td><a href="atomic_rev_sparse_jac.xml" target="_top">atomic_rev_sparse_jac</a></td><td>Atomic&#xA0;Reverse&#xA0;Jacobian&#xA0;Sparsity&#xA0;Patterns</td></tr><tr><td><a href="atomic_rev_sparse_hes.xml" target="_top">atomic_rev_sparse_hes</a></td><td>Atomic&#xA0;Reverse&#xA0;Hessian&#xA0;Sparsity&#xA0;Patterns</td></tr><tr><td><a href="atomic_base_clear.xml" target="_top">atomic_base_clear</a></td><td>Free&#xA0;Static&#xA0;Variables</td></tr><tr><td><a href="atomic_get_started.cpp.xml" target="_top">atomic_get_started.cpp</a></td><td>Getting&#xA0;Started&#xA0;with&#xA0;Atomic&#xA0;Operations:&#xA0;Example&#xA0;and&#xA0;Test</td></tr><tr><td><a href="atomic_norm_sq.cpp.xml" target="_top">atomic_norm_sq.cpp</a></td><td>Euclidean&#xA0;Norm&#xA0;Squared:&#xA0;Example&#xA0;and&#xA0;Test</td></tr><tr><td><a href="atomic_reciprocal.cpp.xml" target="_top">atomic_reciprocal.cpp</a></td><td>Reciprocal&#xA0;as&#xA0;an&#xA0;Atomic&#xA0;Operation:&#xA0;Example&#xA0;and&#xA0;Test</td></tr><tr><td><a href="atomic_tangent.cpp.xml" target="_top">atomic_tangent.cpp</a></td><td>Tan&#xA0;and&#xA0;Tanh&#xA0;as&#xA0;User&#xA0;Atomic&#xA0;Operations:&#xA0;Example&#xA0;and&#xA0;Test</td></tr><tr><td><a href="atomic_mat_mul.cpp.xml" target="_top">atomic_mat_mul.cpp</a></td><td>User&#xA0;Atomic&#xA0;Matrix&#xA0;Multiply:&#xA0;Example&#xA0;and&#xA0;Test</td></tr></table><br/>
+<b><big><a name="Examples" id="Examples">Examples</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Examples.Getting Started" id="Examples.Getting Started">Getting Started</a></b>
+<br/>
+The file <a href="atomic_get_started.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_get_started.cpp</span></a>
+ contains an example and test
+that shows the minimal amount of information required to create
+a user defined atomic operation.
+
+<br/>
+<br/>
+<b><a name="Examples.Scalar Function" id="Examples.Scalar Function">Scalar Function</a></b>
+<br/>
+The file <a href="atomic_reciprocal.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_reciprocal.cpp</span></a>
+ contains an example and test
+where the user provides the code for computing derivatives.
+This example is simple because the domain and range are scalars.
+
+<br/>
+<br/>
+<b><a name="Examples.Vector Range" id="Examples.Vector Range">Vector Range</a></b>
+<br/>
+The file <a href="atomic_tangent.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_tangent.cpp</span></a>
+ contains another example
+where the user provides the code for computing derivatives.
+This example is more complex because the range has two components.
+
+<br/>
+<br/>
+<b><big><a name="General Case" id="General Case">General Case</a></big></b>
+<br/>
+The file <a href="atomic_mat_mul.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_mat_mul.cpp</span></a>
+ contains a more general example
+where the user provides the code for computing derivatives.
+This example is more complex because both the domain and range
+dimensions are arbitrary.
+
+
+<hr/>Input File: omh/atomic_base.omh
+
+</body>
+</html>

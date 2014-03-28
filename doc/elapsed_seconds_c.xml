@@ -1,0 +1,193 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Returns Elapsed Number of Seconds</title>
+<meta name="description" id="description" content="Returns Elapsed Number of Seconds"/>
+<meta name="keywords" id="keywords" content=" "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_elapsed_seconds_c_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="repeat_det_by_minor_c.xml" target="_top">Prev</a>
+</td><td><a href="time_det_by_minor_c.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>compare_c</option>
+<option>elapsed_seconds_c</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>Bugs</option>
+<option>WishList</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>compare_c-&gt;</option>
+<option>det_of_minor_c</option>
+<option>det_by_minor_c</option>
+<option>uniform_01_c</option>
+<option>correct_det_by_minor_c</option>
+<option>repeat_det_by_minor_c</option>
+<option>elapsed_seconds_c</option>
+<option>time_det_by_minor_c</option>
+<option>main_compare_c</option>
+</select>
+</td>
+<td>elapsed_seconds_c</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>s</option>
+<option>Source Code</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Returns Elapsed Number of Seconds</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;elapsed_seconds()</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This routine is accurate to within .02 seconds
+It does not necessary work for time intervals that are greater than a day.
+
+<br/>
+<br/>
+<b><big><a name="s" id="s">s</a></big></b>
+<br/>
+is a <code><font color="blue">double</font></code> equal to the 
+number of seconds since the first call to <code><font color="blue">elapsed_seconds</font></code>.
+
+
+<br/>
+<br/>
+<b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+# if _MSC_VER
+// ---------------------------------------------------------------------------
+// Microsoft version of timer
+# include &lt;windows.h&gt;
+# include &lt;cassert&gt;
+double elapsed_seconds(void)
+{	static bool       first_  = true;
+	static SYSTEMTIME st_;
+	double hour, minute, second, milli, diff;
+	SYSTEMTIME st;
+
+	if( first_ )
+	{	GetSystemTime(&amp;st_);
+		first_ = false;
+		return 0.;
+	}
+	GetSystemTime(&amp;st);
+
+	hour   = (double) st.wHour         - (double) st_.wHour;
+	minute = (double) st.wMinute       - (double) st_.wMinute;
+	second = (double) st.wSecond       - (double) st_.wSecond;
+	milli  = (double) st.wMilliseconds - (double) st_.wMilliseconds;
+
+	diff   = 1e-3*milli + second + 60.*minute + 3600.*hour;
+	if( diff &lt; 0. )
+		diff += 3600.*24.;
+	assert( 0 &lt;= diff &amp;&amp; diff &lt; 3600.*24. );
+
+	return diff;
+}
+# else
+// ---------------------------------------------------------------------------
+// Unix version of timer
+# include &lt;sys/time.h&gt;
+double elapsed_seconds(void)
+{	double sec, usec, diff;
+
+	static bool first_ = true;
+	static struct timeval tv_first;		
+	struct timeval        tv;
+	if( first_ )
+	{	gettimeofday(&amp;tv_first, NULL);
+		first_ = false;
+		return 0.;
+	}
+	gettimeofday(&amp;tv, NULL);
+	assert( tv.tv_sec &gt;= tv_first.tv_sec );
+
+	sec  = (double)(tv.tv_sec -  tv_first.tv_sec);
+	usec = (double)tv.tv_usec - (double)tv_first.tv_usec;
+	diff = sec + 1e-6*usec;
+
+	return diff;
+}
+# endif
+</pre></font></code>
+
+
+<hr/>Input File: compare_c/det_by_minor.c
+
+</body>
+</html>

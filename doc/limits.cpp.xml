@@ -1,0 +1,155 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Numeric Limits: Example and Test</title>
+<meta name="description" id="description" content="Numeric Limits: Example and Test"/>
+<meta name="keywords" id="keywords" content=" limits example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_limits.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="limits.xml" target="_top">Prev</a>
+</td><td><a href="condexp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>MathOther</option>
+<option>limits</option>
+<option>limits.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>std_math_ad</option>
+<option>MathOther</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>MathOther-&gt;</option>
+<option>abs</option>
+<option>sign</option>
+<option>atan2</option>
+<option>erf</option>
+<option>pow</option>
+<option>limits</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>limits-&gt;</option>
+<option>limits.cpp</option>
+</select>
+</td>
+<td>limits.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Numeric Limits: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# ifdef _MSC_VER
+// Supress Microsoft compiler warning about possible loss of precision,
+// in the constructors (when converting to std::complex&lt;float&gt;)
+//	Float one = 1
+//	Float two = 2
+// 1 and 2 are small enough so no loss of precision when converting to float.
+# pragma warning(disable:4244)
+# endif
+
+# include &lt;cppad/cppad.hpp&gt;
+# include &lt;complex&gt;
+
+namespace {
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; Float;
+	//
+	// -----------------------------------------------------------------
+	bool check_epsilon(void)
+	{	bool ok    = true;
+		Float eps   = CppAD::numeric_limits&lt;Float&gt;::epsilon();
+		Float eps2  = eps / 2.0; 
+		Float check = 1.0 + eps;
+		ok         &amp;= 1.0 !=  check;
+		check       = 1.0 + eps2;
+		ok         &amp;= 1.0 == check;
+		return ok;
+	}
+	// -----------------------------------------------------------------
+	bool check_min(void)
+	{	bool ok     = true;
+		Float min   = CppAD::numeric_limits&lt;Float&gt;::min();
+		Float eps   = CppAD::numeric_limits&lt;Float&gt;::epsilon();
+		//
+		Float match = (min / 100. ) * 100.;
+		ok         &amp;= abs(match/min - 1.0) &gt; 3.0 * eps;
+		//
+		match       = (min * 100.) / (100. * (1.0 - eps));
+		ok         &amp;= abs(match / min - 1.0) &lt; 3.0 * eps;
+		return ok;
+	}
+	// -----------------------------------------------------------------
+	bool check_max(void)
+	{	bool ok     = true;
+		Float max   = CppAD::numeric_limits&lt;Float&gt;::max();
+		Float eps   = CppAD::numeric_limits&lt;Float&gt;::epsilon();
+		//
+		Float match = (max * 100.) / 100.;
+		ok         &amp;= abs(match / max - 1.0) &gt; 3.0 * eps;
+		//
+		match       = (max / 100. ) * (100. * (1.0 - eps));
+		ok         &amp;= abs(match/max - 1.0) &lt; 3.0 * eps;
+		return ok;
+	}
+}
+
+bool limits(void)
+{	bool ok = true;
+
+	ok &amp;= check_epsilon();
+	ok &amp;= check_max();
+	ok &amp;= check_min();
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/limits.cpp
+
+</body>
+</html>

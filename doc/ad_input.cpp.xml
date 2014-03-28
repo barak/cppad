@@ -1,0 +1,123 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>AD Output Operator: Example and Test</title>
+<meta name="description" id="description" content="AD Output Operator: Example and Test"/>
+<meta name="keywords" id="keywords" content=" &lt;&lt; Ad example input test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ad_input.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="ad_input.xml" target="_top">Prev</a>
+</td><td><a href="ad_output.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>Convert</option>
+<option>ad_input</option>
+<option>ad_input.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Convert-&gt;</option>
+<option>Value</option>
+<option>Integer</option>
+<option>ad_input</option>
+<option>ad_output</option>
+<option>PrintFor</option>
+<option>Var2Par</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>ad_input-&gt;</option>
+<option>ad_input.cpp</option>
+</select>
+</td>
+<td>ad_input.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>AD Output Operator: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+
+# include &lt;sstream&gt;  // std::istringstream
+# include &lt;string&gt;   // std::string
+
+bool ad_input(void)
+{	bool ok = true;
+
+	// create the input string stream is.
+	std::string str (&quot;123 456&quot;);
+	std::istringstream is(str);
+
+	// start and <a href="ad.xml" target="_top">AD</a>&lt;double&gt; recording
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) x(1), y(1);
+	x[0] = 1.0;
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; z = x[0];
+	ok &amp;= Variable(z);
+
+	// read first number into z and second into y[0] 
+	is &gt;&gt; z &gt;&gt; y[0];
+	ok   &amp;= Parameter(z);
+	ok   &amp;= (z == 123.);
+	ok   &amp;= Parameter(y[0]);
+	ok   &amp;= (y[0] == 456.);
+	//
+	// terminate recording starting by call to Independent 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/ad_input.cpp
+
+</body>
+</html>

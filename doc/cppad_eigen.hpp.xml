@@ -1,0 +1,268 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Enable Use of Eigen Linear Algebra Package with CppAD</title>
+<meta name="description" id="description" content="Enable Use of Eigen Linear Algebra Package with CppAD"/>
+<meta name="keywords" id="keywords" content=" "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_cppad_eigen.hpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="conj_grad.cpp.xml" target="_top">Prev</a>
+</td><td><a href="eigen_plugin.hpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Example</option>
+<option>General</option>
+<option>cppad_eigen.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Example-&gt;</option>
+<option>General</option>
+<option>ExampleUtility</option>
+<option>ListAllExamples</option>
+<option>testvector</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>General-&gt;</option>
+<option>ad_fun.cpp</option>
+<option>ad_in_c.cpp</option>
+<option>conj_grad.cpp</option>
+<option>cppad_eigen.hpp</option>
+<option>hes_minor_det.cpp</option>
+<option>hes_lu_det.cpp</option>
+<option>interface2c.cpp</option>
+<option>jac_minor_det.cpp</option>
+<option>jac_lu_det.cpp</option>
+<option>mul_level</option>
+<option>ode_stiff.cpp</option>
+<option>mul_level_ode.cpp</option>
+<option>mul_level_adolc_ode.cpp</option>
+<option>ode_taylor.cpp</option>
+<option>stack_machine.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>cppad_eigen.hpp-&gt;</option>
+<option>eigen_plugin.hpp</option>
+<option>eigen_array.cpp</option>
+<option>eigen_det.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>Example</option>
+<option>Include Files</option>
+<option>Eigen NumTraits</option>
+<option>CppAD Namespace</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+<center><b><big><big>Enable Use of Eigen Linear Algebra Package with CppAD</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/example/cppad_eigen.hpp&gt;</span></font></code>
+
+
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Enables the use of the 
+<a href="http://eigen.tuxfamily.org" target="_top"><span style='white-space: nowrap'>eigen</span></a>
+
+linear algebra package with the type 
+<code><i><font color="black"><span style='white-space: nowrap'>AD&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Base</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+The files <a href="eigen_array.cpp.xml" target="_top"><span style='white-space: nowrap'>eigen_array.cpp</span></a>
+ and <a href="eigen_det.cpp.xml" target="_top"><span style='white-space: nowrap'>eigen_det.cpp</span></a>
+ 
+contain an example and test of this include file.
+It returns true if it succeeds and false otherwise.
+
+<br/>
+<br/>
+<b><big><a name="Include Files" id="Include Files">Include Files</a></big></b>
+<br/>
+The file <code><font color="blue">cppad_eigen.hpp</font></code> includes both
+<code><font color="blue">&lt;cppad/cppad.hpp&gt;</font></code> and <code><font color="blue">&lt;Eigen/Core&gt;</font></code>. 
+In addition,
+The file <a href="eigen_plugin.hpp.xml" target="_top"><span style='white-space: nowrap'>eigen_plugin.hpp</span></a>
+ 
+is used to define <code><font color="blue">value_type</font></code>
+in the Eigen matrix class definition so its vectors are 
+<a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
+.
+<code><font color='blue'><pre style='display:inline'> 
+# define EIGEN_MATRIXBASE_PLUGIN &lt;cppad/example/eigen_plugin.hpp&gt;
+# include &lt;Eigen/Core&gt;
+# include &lt;cppad/cppad.hpp&gt;
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="Eigen NumTraits" id="Eigen NumTraits">Eigen NumTraits</a></big></b>
+<br/>
+Eigen needs the following definitions to work properly
+with 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ scalars:
+<code><font color='blue'><pre style='display:inline'> 
+namespace Eigen {
+	template &lt;class Base&gt; struct NumTraits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;
+	{	// type that corresponds to the real part of an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; value
+		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Real;
+		// type for <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; operations that result in non-integer values
+		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   NonInteger;
+		// type for nested value inside an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; expression tree
+		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Nested;
+
+		enum {
+			// does not support complex Base types
+			IsComplex             = 0 ,
+			// does not support integer Base types
+			IsInteger             = 0 ,
+			// only support signed Base types
+			IsSigned              = 1 ,
+			// must initialize an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; object
+			RequireInitialization = 1 ,
+			// computational cost of the corresponding operations
+			ReadCost              = 1 ,
+			AddCost               = 2 ,
+			MulCost               = 2
+		};
+
+		// machine epsilon with type of real part of x
+		// (use assumption that Base is not complex)
+		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; epsilon(void)
+		{	return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon(); }
+
+		// relaxed version of machine epsilon for comparison of different
+		// operations that should result in the same value
+		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; dummy_precision(void)
+		{	return 100. * 
+				CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon(); 
+		}
+
+		// minimum normalized positive value
+		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; lowest(void)
+		{	return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::min(); }
+
+		// maximum finite value
+		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; highest(void)
+		{	return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::max(); }
+
+	};
+}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="CppAD Namespace" id="CppAD Namespace">CppAD Namespace</a></big></b>
+<br/>
+Eigen also needs the following definitions to work properly
+with 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ scalars:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+		// functions that return references
+		template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; conj(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+		{	return x; }
+		template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; real(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+		{	return x; }
+
+		// functions that return values (note abs is defined by cppad.hpp)
+		template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; imag(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+		{	return CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;(0.); }
+		template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; abs2(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+		{	return x * x; }
+}
+
+namespace Eigen { 
+	namespace internal {
+
+		template&lt;class Base&gt; 
+		struct significant_decimals_default_impl&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;, false&gt;
+		{	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; Scalar;
+
+  			typedef typename NumTraits&lt;Scalar&gt;::Real RealScalar;
+  			static inline int run()
+  			{	Scalar neg_log_eps = - log(
+					NumTraits&lt;RealScalar&gt;::epsilon()
+				);
+				int ceil_neg_log_eps = Integer( neg_log_eps );
+				if( Scalar(ceil_neg_log_eps) &lt; neg_log_eps )
+					ceil_neg_log_eps++;
+				return ceil_neg_log_eps;
+  			}
+		};
+	}
+}
+</pre></font></code>
+
+
+<hr/>Input File: cppad/example/cppad_eigen.hpp
+
+</body>
+</html>

@@ -1,0 +1,591 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Taylor's Ode Solver: An Example and Test</title>
+<meta name="description" id="description" content="Taylor's Ode Solver: An Example and Test"/>
+<meta name="keywords" id="keywords" content=" Ode Taylor example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ode_taylor.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="mul_level_adolc_ode.cpp.xml" target="_top">Prev</a>
+</td><td><a href="stack_machine.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Example</option>
+<option>General</option>
+<option>ode_taylor.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Example-&gt;</option>
+<option>General</option>
+<option>ExampleUtility</option>
+<option>ListAllExamples</option>
+<option>testvector</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>General-&gt;</option>
+<option>ad_fun.cpp</option>
+<option>ad_in_c.cpp</option>
+<option>conj_grad.cpp</option>
+<option>cppad_eigen.hpp</option>
+<option>hes_minor_det.cpp</option>
+<option>hes_lu_det.cpp</option>
+<option>interface2c.cpp</option>
+<option>jac_minor_det.cpp</option>
+<option>jac_lu_det.cpp</option>
+<option>mul_level</option>
+<option>ode_stiff.cpp</option>
+<option>mul_level_ode.cpp</option>
+<option>mul_level_adolc_ode.cpp</option>
+<option>ode_taylor.cpp</option>
+<option>stack_machine.cpp</option>
+</select>
+</td>
+<td>ode_taylor.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>ODE</option>
+<option>ODE Solution</option>
+<option>Forward Mode</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Taylor's Ode Solver: An Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This example solves an ordinary differential equation using Taylor's method;
+i.e.,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>Z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">+</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">&#x02248;</mo>
+<msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mfrac><mrow><msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+<mrow><mn>1</mn>
+<mo stretchy="false">!</mo>
+</mrow>
+</mfrac>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">&#x022EF;</mo>
+<mo stretchy="false">+</mo>
+<mfrac><mrow><msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>p</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+<mrow><mi mathvariant='italic'>p</mi>
+<mo stretchy="false">!</mo>
+</mrow>
+</mfrac>
+<mo stretchy="false">(</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<msup><mo stretchy="false">)</mo>
+<mi mathvariant='italic'>p</mi>
+</msup>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+<br/>
+<b><big><a name="ODE" id="ODE">ODE</a></big></b>
+<br/>
+The ODE is defined by the function
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+,
+which for this example is given by 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>H</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>Z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">]</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<mn>1</mn>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>Z</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x022EE;</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>Z</mi>
+<mrow><mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+and the initial condition is 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><big><a name="ODE Solution" id="ODE Solution">ODE Solution</a></big></b>
+<br/>
+The solution for this example can be calculated by 
+starting with the first row and then using the solution
+for the first row to solve the second and so on.
+Doing this we obtain
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>Z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<mi mathvariant='italic'>t</mi>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msup><mi mathvariant='italic'>t</mi>
+<mn>2</mn>
+</msup>
+<mo stretchy="false">/</mo>
+<mn>2</mn>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x022EE;</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">/</mo>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">!</mo>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+<br/>
+<b><big><a name="Forward Mode" id="Forward Mode">Forward Mode</a></big></b>
+<br/>
+Given the Taylor coefficients for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>K</mi>
+</mrow></math>
+
+
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msup><mi mathvariant='italic'>z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">=</mo>
+<mfrac><mrow><msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mrow>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">!</mo>
+</mrow>
+</mfrac>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+we note that
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>H</mi>
+<mo stretchy="false">(</mo>
+<msup><mi mathvariant='italic'>z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">&#x022EF;</mo>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>K</mi>
+</msup>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>O</mi>
+<mo stretchy="false">(</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mrow><mi mathvariant='italic'>K</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msup>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<msup><mi mathvariant='italic'>h</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>h</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">&#x022EF;</mo>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>h</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>K</mi>
+</msup>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>O</mi>
+<mo stretchy="false">(</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mrow><mi mathvariant='italic'>K</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msup>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow></math>
+
+where 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msup><mi mathvariant='italic'>h</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mrow></math>
+
+ is the <i>k</i>-th order Taylor coefficient for
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>H</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>Z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+.
+Taking <i>K</i>-th order derivatives of both sides we obtain
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>Z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">!</mo>
+<msup><mi mathvariant='italic'>h</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>z</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<msup><mi mathvariant='italic'>h</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>K</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">/</mo>
+<mi mathvariant='italic'>K</mi>
+</mtd></mtr></mtable>
+</mrow></math>
+
+The code below uses this relationship to implement Taylor's
+method for approximating the solution of an ODE.
+
+<code><font color="blue">
+<pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+
+// =========================================================================
+// define types for each level
+namespace { // BEGIN empty namespace
+	using CppAD::AD;
+
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) ode(
+		const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; )&amp; Z )
+	{	size_t n = Z.size();
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) y(n);
+		y[0] = 1;
+		for(size_t k = 1; k &lt; n; k++)
+			y[k] = Z[k-1]; 
+		return y;
+	}
+
+}
+
+// -------------------------------------------------------------------------
+// Example that uses Taylor's method to solve ordinary differential equaitons
+bool ode_taylor(void)
+{	// initialize the return value as true	
+	bool ok = true;
+
+	// some temporary indices
+	size_t i, j, k;
+
+	// The ODE does not depend on the arugment values
+	// so only tape once, also note that ode does not depend on t
+	size_t n = 5;    // number of independent and dependent variables
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) a_x(n), a_y(n);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>( a_x );
+	a_y = ode(a_x);
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; H(a_x, a_y);
+
+	// initialize the solution vector at time zero
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) z(n);
+	for(j = 0; j &lt; n; j++)
+		z[j] = 0.0; 
+
+	size_t order   = n;   // order of the Taylor method
+	size_t n_step  = 4;   // number of time steps
+	double dt      = 0.5; // step size in time
+	// Taylor coefficients of order k
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) hk(n), zk(n);
+
+	// loop with respect to each step of Taylor's method
+	for(size_t i_step = 0; i_step &lt; n_step; i_step++)
+	{	// Use Taylor's method to take a step
+		zk           = z;     // initialize z^{(k)}  for k = 0
+		double dt_kp = dt;    // initialize dt^(k+1) for k = 0
+		for(k = 0; k &lt; order; k++)
+		{	// evaluate k-th order Taylor coefficient of H
+			hk = H.<a href="forward.xml" target="_top">Forward</a>(k, zk);
+ 
+			for(j = 0; j &lt; n; j++)
+			{	// convert to (k+1)-Taylor coefficient for z
+				zk[j] = hk[j] / double(k + 1);
+
+				// add term for to this Taylor coefficient
+				// to solution for y(t, x)
+				z[j] += zk[j] * dt_kp;
+			}
+			// next power of t
+			dt_kp *= dt;
+		}
+	}
+
+	// check solution of the ODE, 
+	// Taylor's method should have no truncation error for this case
+	double eps   = 100. * std::numeric_limits&lt;double&gt;::epsilon();
+	double check = 1.;
+	double t     = n_step * dt;
+	for(i = 0; i &lt; n; i++)
+	{	check *= t / double(i + 1);
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(z[i], check, eps, eps);
+	}
+
+	return ok;
+}
+
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/ode_taylor.cpp
+
+</body>
+</html>

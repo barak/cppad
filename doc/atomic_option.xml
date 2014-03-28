@@ -1,0 +1,234 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Set Atomic Function Options</title>
+<meta name="description" id="description" content="Set Atomic Function Options"/>
+<meta name="keywords" id="keywords" content=" atomic options atomic_sparsity sparsity bool_sparsity_enum set_sparsity_enum "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_atomic_option_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="atomic_ctor.xml" target="_top">Prev</a>
+</td><td><a href="atomic_afun.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>atomic_base</option>
+<option>atomic_option</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>std_math_ad</option>
+<option>MathOther</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>atomic_base-&gt;</option>
+<option>atomic_ctor</option>
+<option>atomic_option</option>
+<option>atomic_afun</option>
+<option>atomic_forward</option>
+<option>atomic_reverse</option>
+<option>atomic_for_sparse_jac</option>
+<option>atomic_rev_sparse_jac</option>
+<option>atomic_rev_sparse_hes</option>
+<option>atomic_base_clear</option>
+<option>atomic_get_started.cpp</option>
+<option>atomic_norm_sq.cpp</option>
+<option>atomic_reciprocal.cpp</option>
+<option>atomic_tangent.cpp</option>
+<option>atomic_mat_mul.cpp</option>
+</select>
+</td>
+<td>atomic_option</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>atomic_sparsity</option>
+<option>---..bool_sparsity_enum</option>
+<option>---..set_sparsity_enum</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Set Atomic Function Options</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.option(</span></font><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="atomic_sparsity" id="atomic_sparsity">atomic_sparsity</a></big></b>
+
+
+<br/>
+You can used this option to set to type used for 
+
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+ sparsity patterns.
+This does not apply individual calls to 
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+,
+but rather all its uses between when the sparsity pattern is set and when
+it is changed.
+If neither the <code><font color="blue">set_sparsity_enum</font></code> or 
+<code><font color="blue">bool_sparsity_enum</font></code> option is set,
+the type for 
+<code><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i></code>
+ is one of the two choices below
+(and otherwise unspecified).
+
+<br/>
+<br/>
+<b><a name="atomic_sparsity.bool_sparsity_enum" id="atomic_sparsity.bool_sparsity_enum">bool_sparsity_enum</a></b>
+
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i></code>
+ is 
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::bool_sparsity_enum</span></font></code>
+, 
+then the type used by 
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+ for
+<a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;patterns</span></a>
+,
+(after the option is set) will be
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;typedef&#xA0;CppAD::vector&lt;bool&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+ is a sparsity pattern 
+for a matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>R</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mrow><mi mathvariant='italic'>p</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow>
+</msup>
+</mrow></math>
+
+:
+
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><a name="atomic_sparsity.set_sparsity_enum" id="atomic_sparsity.set_sparsity_enum">set_sparsity_enum</a></b>
+
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i></code>
+ is 
+<code><i><font color="black"><span style='white-space: nowrap'>atomic_base&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Base</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;::set_sparsity_enum</span></font></i></code>
+, 
+then the type used by 
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+ for
+<a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;patterns</span></a>
+,
+(after the option is set) will be
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;typedef&#xA0;CppAD::vector&lt;&#xA0;std::set&lt;size_t&gt;&#xA0;&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+ is a sparsity pattern 
+for a matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>R</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mrow><mi mathvariant='italic'>p</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow>
+</msup>
+</mrow></math>
+
+:
+
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+, and for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>p</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+the elements of 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
+ are between zero and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>q</mi>
+<mn>-1</mn>
+</mrow></math>
+
+ inclusive. 
+
+
+<hr/>Input File: cppad/local/atomic_base.hpp
+
+</body>
+</html>

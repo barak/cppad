@@ -1,0 +1,127 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>AD Constructors: Example and Test</title>
+<meta name="description" id="description" content="AD Constructors: Example and Test"/>
+<meta name="keywords" id="keywords" content=" constructor Ad object example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ad_ctor.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="ad_ctor.xml" target="_top">Prev</a>
+</td><td><a href="ad_assign.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ad_ctor</option>
+<option>ad_ctor.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>ad_ctor-&gt;</option>
+<option>ad_ctor.cpp</option>
+</select>
+</td>
+<td>ad_ctor.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>AD Constructors: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+
+bool ad_ctor(void)
+{	bool ok = true;   // initialize test result flag
+	using CppAD::AD;  // so can use AD in place of CppAD::AD
+
+	// default constructor
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; a;
+	a = 0.;
+	ok &amp;= a == 0.;
+
+	// constructor from base type
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; b(1.);   
+	ok &amp;= b == 1.;
+
+	// constructor from another type that converts to the base type
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; c(2);
+	ok &amp;= c == 2.;
+
+	// constructor from <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; d(c);    
+	ok &amp;= d == 2.;
+
+	// constructor from a VecAD&lt;Base&gt; element
+	CppAD::VecAD&lt;double&gt; v(1);
+	v[0] = 3.;
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; e( v[0] );
+	ok &amp;= e == 3.;
+
+	return ok;
+}
+
+</pre>
+
+</font></code>
+
+<hr/>Input File: example/ad_ctor.cpp
+
+</body>
+</html>

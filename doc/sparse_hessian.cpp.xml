@@ -1,0 +1,237 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Sparse Hessian: Example and Test</title>
+<meta name="description" id="description" content="Sparse Hessian: Example and Test"/>
+<meta name="keywords" id="keywords" content=" Hessian sparse example test spare "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_sparse_hessian.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sparse_hessian.xml" target="_top">Prev</a>
+</td><td><a href="funcheck.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>Drivers</option>
+<option>sparse_hessian</option>
+<option>sparse_hessian.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Drivers-&gt;</option>
+<option>Jacobian</option>
+<option>ForOne</option>
+<option>RevOne</option>
+<option>Hessian</option>
+<option>ForTwo</option>
+<option>RevTwo</option>
+<option>sparse_jacobian</option>
+<option>sparse_hessian</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>sparse_hessian-&gt;</option>
+<option>sparse_hessian.cpp</option>
+</select>
+</td>
+<td>sparse_hessian.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Sparse Hessian: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+bool sparse_hessian(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	size_t i, j, k, ell;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)               a_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)                     d_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(size_t)                     i_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(bool)                       b_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(std::set&lt;size_t&gt;)         s_vector;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+
+	// domain space vector
+	size_t n = 12;  // must be greater than or equal 3; see n_sweep below
+	a_vector a_x(n);
+	for(j = 0; j &lt; n; j++)
+		a_x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt; (0);
+
+	// declare independent variables and starting recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+
+	// range space vector
+	size_t m = 1;
+	a_vector a_y(m);
+	a_y[0] = a_x[0]*a_x[1];
+	for(j = 0; j &lt; n; j++)
+		a_y[0] += a_x[j] * a_x[j] * a_x[j];
+
+	// create f: x -&gt; y and stop tape recording
+	// (without executing zero order forward calculation)
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
+	f.Dependent(a_x, a_y);
+
+	// new value for the independent variable vector, and weighting vector
+	d_vector w(m), x(n);
+	for(j = 0; j &lt; n; j++)
+		x[j] = double(j);
+	w[0] = 1.0;
+
+	// vector used to check the value of the hessian
+	d_vector check(n * n);
+	for(ell = 0; ell &lt; n * n; ell++)
+		check[ell] = 0.0;
+	ell        = 0 * n + 1;
+	check[ell] = 1.0;
+	ell        = 1 * n + 0;
+	check[ell] = 1.0 ;
+	for(j = 0; j &lt; n; j++)
+	{	ell = j * n + j;
+		check[ell] = 6.0 * x[j];
+	}
+
+	// -------------------------------------------------------------------
+	// second derivative of y[0] w.r.t x
+	d_vector hes(n * n);
+	hes = f.SparseHessian(x, w);
+	for(ell = 0; ell &lt; n * n; ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(w[0] * check[ell], hes[ell], eps, eps );
+
+	// --------------------------------------------------------------------
+	// example using vectors of bools to compute sparsity pattern for Hessian
+	b_vector r_bool(n * n);
+	for(i = 0; i &lt; n; i++)
+	{	for(j = 0; j &lt; n; j++)
+			r_bool[i * n + j] = false;
+		r_bool[i * n + i] = true;
+	}
+	f.ForSparseJac(n, r_bool);
+	//
+	b_vector s_bool(m);
+	for(i = 0; i &lt; m; i++)
+		s_bool[i] = w[i] != 0;
+	b_vector p_bool = f.RevSparseHes(n, s_bool);
+
+	hes = f.SparseHessian(x, w, p_bool);
+	for(ell = 0; ell &lt; n * n; ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(w[0] * check[ell], hes[ell], eps, eps );
+
+	// --------------------------------------------------------------------
+	// example using vectors of sets to compute sparsity pattern for Hessian
+	s_vector r_set(n);
+	for(i = 0; i &lt; n; i++)
+		r_set[i].insert(i);
+	f.ForSparseJac(n, r_set);
+	//
+	s_vector s_set(m);
+	for(i = 0; i &lt; m; i++)
+		if( w[i] != 0. )
+			s_set[0].insert(i);
+	s_vector p_set = f.RevSparseHes(n, s_set);
+
+	// example passing sparsity pattern to SparseHessian
+	hes = f.SparseHessian(x, w, p_set);
+	for(ell = 0; ell &lt; n * n; ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(w[0] * check[ell], hes[ell], eps, eps );
+
+	// --------------------------------------------------------------------
+	// use row and column indices to specify upper triangle of
+	// non-zero elements of Hessian
+	size_t K = n + 1;
+	i_vector row(K), col(K);
+	hes.resize(K);
+	k = 0;
+	for(j = 0; j &lt; n; j++)
+	{	// diagonal of Hessian
+		row[k] = j;
+		col[k] = j;
+		k++;
+	}
+	// only off diagonal non-zero elemenet in upper triangle
+	row[k] = 0;
+	col[k] = 1;
+	k++;
+	ok &amp;= k == K;
+	CppAD::sparse_hessian_work work;
+
+	// can use p_set or p_bool.
+	size_t n_sweep = f.SparseHessian(x, w, p_set, row, col, hes, work);
+	for(k = 0; k &lt; K; k++)
+	{	ell = row[k] * n + col[k];
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(w[0] * check[ell], hes[k], eps, eps );
+	}
+	ok &amp;= n_sweep == 2;
+
+	// now recompute at a different x and w (using work from previous call
+	w[0]       = 2.0;
+	x[1]       = 0.5;
+	ell        = 1 * n + 1;
+	check[ell] = 6.0 * x[1];
+	n_sweep    = f.SparseHessian(x, w, p_set, row, col, hes, work);
+	for(k = 0; k &lt; K; k++)
+	{	ell = row[k] * n + col[k];
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(w[0] * check[ell], hes[k], eps, eps );
+	}
+	ok &amp;= n_sweep == 2;
+	
+
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/sparse_hessian.cpp
+
+</body>
+</html>

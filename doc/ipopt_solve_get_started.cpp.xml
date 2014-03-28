@@ -1,0 +1,317 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Nonlinear Programming Using CppAD and Ipopt: Example and Test</title>
+<meta name="description" id="description" content="Nonlinear Programming Using CppAD and Ipopt: Example and Test"/>
+<meta name="keywords" id="keywords" content=" example nonlinear programming ipopt Ad "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ipopt_solve_get_started.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="ipopt_solve.xml" target="_top">Prev</a>
+</td><td><a href="ipopt_solve_retape.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ipopt_solve</option>
+<option>ipopt_solve_get_started.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>ipopt_solve-&gt;</option>
+<option>ipopt_solve_get_started.cpp</option>
+<option>ipopt_solve_retape.cpp</option>
+<option>ipopt_solve_ode_inverse.cpp</option>
+</select>
+</td>
+<td>ipopt_solve_get_started.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>Configuration Requirement</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+
+
+
+<center><b><big><big>Nonlinear Programming Using CppAD and Ipopt: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This example program demonstrates how to use <a href="ipopt_solve.xml" target="_top"><span style='white-space: nowrap'>ipopt_solve</span></a>
+ to
+solve the example problem in the Ipopt documentation; i.e., the problem
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="left" >
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>minimize</mi>
+<mspace width='.3em'/>
+</mstyle></mrow>
+</mtd><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">*</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>4</mn>
+</msub>
+<mo stretchy="false">*</mo>
+<mo stretchy="false">(</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>2</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>3</mn>
+</msub>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>3</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="left" >
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>subject</mi>
+<mspace width='.3em'/>
+<mi mathvariant='normal'>to</mi>
+<mspace width='.3em'/>
+</mstyle></mrow>
+</mtd><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">*</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>2</mn>
+</msub>
+<mo stretchy="false">*</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>3</mn>
+</msub>
+<mo stretchy="false">*</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>4</mn>
+</msub>
+<mo stretchy="false">&#x02265;</mo>
+<mn>25</mn>
+</mtd></mtr><mtr><mtd columnalign="left" >
+</mtd><mtd columnalign="center" >
+<msubsup><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+<mn>2</mn>
+</msubsup>
+<mo stretchy="false">+</mo>
+<msubsup><mi mathvariant='italic'>x</mi>
+<mn>2</mn>
+<mn>2</mn>
+</msubsup>
+<mo stretchy="false">+</mo>
+<msubsup><mi mathvariant='italic'>x</mi>
+<mn>3</mn>
+<mn>2</mn>
+</msubsup>
+<mo stretchy="false">+</mo>
+<msubsup><mi mathvariant='italic'>x</mi>
+<mn>4</mn>
+<mn>2</mn>
+</msubsup>
+<mo stretchy="false">=</mo>
+<mn>40</mn>
+</mtd></mtr><mtr><mtd columnalign="left" >
+</mtd><mtd columnalign="center" >
+<mn>1</mn>
+<mo stretchy="false">&#x02264;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">,</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>2</mn>
+</msub>
+<mo stretchy="false">,</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>3</mn>
+</msub>
+<mo stretchy="false">,</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>4</mn>
+</msub>
+<mo stretchy="false">&#x02264;</mo>
+<mn>5</mn>
+</mtd></mtr></mtable>
+</mrow></math>
+
+<br/>
+<b><big><a name="Configuration Requirement" id="Configuration Requirement">Configuration Requirement</a></big></b>
+<br/>
+This example will be compiled and tested provided that
+<a href="ipopt_prefix.xml" target="_top"><span style='white-space: nowrap'>ipopt_prefix</span></a>
+ is specified on the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command line.
+
+<code><font color="blue">
+<pre style='display:inline'> 
+# include &lt;cppad/ipopt/solve.hpp&gt;
+
+namespace {
+	using CppAD::AD;
+
+	class FG_eval {
+	public:
+		typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) ADvector;
+		void operator()(ADvector&amp; fg, const ADvector&amp; x)
+		{	assert( fg.size() == 3 );
+			assert( x.size()  == 4 );
+
+			// Fortran style indexing 
+			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x1 = x[0];
+			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x2 = x[1];
+			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x3 = x[2];
+			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x4 = x[3];
+			// f(x)
+			fg[0] = x1 * x4 * (x1 + x2 + x3) + x3;
+			// g_1 (x)
+			fg[1] = x1 * x2 * x3 * x4;
+			// g_2 (x)
+			fg[2] = x1 * x1 + x2 * x2 + x3 * x3 + x4 * x4;
+			//
+			return;
+		}
+	};
+}
+	
+bool get_started(void)
+{	bool ok = true;
+	size_t i;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) Dvector;
+
+	// number of independent variables (domain dimension for f and g)
+	size_t nx = 4;  
+	// number of constraints (range dimension for g)
+	size_t ng = 2;
+	// initial value of the independent variables
+	Dvector xi(nx);
+	xi[0] = 1.0;
+	xi[1] = 5.0;
+	xi[2] = 5.0;
+	xi[3] = 1.0;
+	// lower and upper limits for x
+	Dvector xl(nx), xu(nx);
+	for(i = 0; i &lt; nx; i++)
+	{	xl[i] = 1.0;
+		xu[i] = 5.0;
+	}
+	// lower and upper limits for g
+	Dvector gl(ng), gu(ng);
+	gl[0] = 25.0;     gu[0] = 1.0e19;
+  	gl[1] = 40.0;     gu[1] = 40.0;
+
+	// object that computes objective and constraints
+	FG_eval fg_eval;
+
+	// options 
+	std::string options;
+	// turn off any printing
+	options += &quot;Integer print_level  0\n&quot;; 
+	options += &quot;String  sb           yes\n&quot;;
+	// maximum number of iterations
+	options += &quot;Integer max_iter     10\n&quot;;
+	// approximate accuracy in first order necessary conditions;
+	// see Mathematical Programming, Volume 106, Number 1, 
+	// Pages 25-57, Equation (6)
+	options += &quot;Numeric tol          1e-6\n&quot;;
+	// derivative testing
+	options += &quot;String  derivative_test            second-order\n&quot;;
+	// maximum amount of random pertubation; e.g., 
+	// when evaluation finite diff
+	options += &quot;Numeric point_perturbation_radius  0.\n&quot;;
+
+	// place to return solution
+	CppAD::ipopt::solve_result&lt;Dvector&gt; solution;
+
+	// solve the problem
+	CppAD::ipopt::solve&lt;Dvector, FG_eval&gt;(
+		options, xi, xl, xu, gl, gu, fg_eval, solution
+	);
+	//
+ 	// Check some of the solution values
+ 	//
+	ok &amp;= solution.status == CppAD::ipopt::solve_result&lt;Dvector&gt;::success;
+	//
+	double check_x[]  = { 1.000000, 4.743000, 3.82115, 1.379408 };
+	double check_zl[] = { 1.087871, 0.,       0.,      0.       };
+	double check_zu[] = { 0.,       0.,       0.,      0.       };
+	double rel_tol    = 1e-6;  // relative tolerance
+	double abs_tol    = 1e-6;  // absolute tolerance
+	for(i = 0; i &lt; nx; i++)
+	{	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(
+			check_x[i],  solution.x[i],   rel_tol, abs_tol
+		);
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(
+			check_zl[i], solution.zl[i], rel_tol, abs_tol
+		);
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(
+			check_zu[i], solution.zu[i], rel_tol, abs_tol
+		);
+	}
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/ipopt_solve/get_started.cpp
+
+</body>
+</html>

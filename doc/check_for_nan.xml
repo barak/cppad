@@ -1,0 +1,178 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Check an ADFun Object For Nan</title>
+<meta name="description" id="description" content="Check an ADFun Object For Nan"/>
+<meta name="keywords" id="keywords" content=" nan check Adfun in "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_check_for_nan_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="optimize.cpp.xml" target="_top">Prev</a>
+</td><td><a href="check_for_nan.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>check_for_nan-&gt;</option>
+<option>check_for_nan.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>f</option>
+<option>b</option>
+<option>Example</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+<center><b><big><big>Check an ADFun Object For Nan</big></big></b></center>
+.
+
+<br/>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>f</span></font><i><font color="black"><span style='white-space: nowrap'>.check_for_nan(</span></font></i><font color="blue"><span style='white-space: nowrap'>b</span></font><i><font color="black"><span style='white-space: nowrap'>)<br/>
+</span></font></i></code>
+
+<code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.check_for_nan()<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+If <code><font color="blue">NDEBUG</font></code> is not defined and
+the result of a <a href="forwardany.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
+ or <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
+
+calculation contains a  <a href="nan.xml" target="_top"><span style='white-space: nowrap'>nan</span></a>
+,
+CppAD halts with an error message.
+This can be suppressed using <code><font color="blue">check_for_nan</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="f" id="f">f</a></big></b>
+<br/>
+For the syntax where 
+<code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i></code>
+ is an argument, 
+
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+(see 
+<code><font color="blue"><span style='white-space: nowrap'>ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ <a href="funconstruct.xml" target="_top"><span style='white-space: nowrap'>constructor</span></a>
+).
+For the syntax where 
+<code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i></code>
+ is the result, 
+
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+<br/>
+<b><big><a name="b" id="b">b</a></big></b>
+<br/>
+This argument or result has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+Future calls to 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Forward</span></font></code>
+ will (will not) check for <code><font color="blue">nan</font></code>.
+depending on if 
+<code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i></code>
+ is true (false).
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+
+<br/>
+The file
+<a href="check_for_nan.cpp.xml" target="_top"><span style='white-space: nowrap'>check_for_nan.cpp</span></a>
+ 
+contains an example and test of these operations.
+It returns true if it succeeds and false otherwise.
+
+
+<hr/>Input File: omh/check_for_nan.omh
+
+</body>
+</html>

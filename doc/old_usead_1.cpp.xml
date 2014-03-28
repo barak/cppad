@@ -1,0 +1,461 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using AD to Compute Atomic Function Derivatives</title>
+<meta name="description" id="description" content="Using AD to Compute Atomic Function Derivatives"/>
+<meta name="keywords" id="keywords" content=" Ad inside atomic user checkpoint "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_old_usead_1.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="old_reciprocal.cpp.xml" target="_top">Prev</a>
+</td><td><a href="old_usead_2.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>deprecated</option>
+<option>old_atomic</option>
+<option>old_usead_1.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>Bugs</option>
+<option>WishList</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>deprecated-&gt;</option>
+<option>include_deprecated</option>
+<option>FunDeprecated</option>
+<option>omp_max_thread</option>
+<option>TrackNewDel</option>
+<option>omp_alloc</option>
+<option>memory_leak</option>
+<option>epsilon</option>
+<option>test_vector</option>
+<option>cppad_ipopt_nlp</option>
+<option>old_atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>old_atomic-&gt;</option>
+<option>old_reciprocal.cpp</option>
+<option>old_usead_1.cpp</option>
+<option>old_usead_2.cpp</option>
+<option>old_tan.cpp</option>
+<option>old_mat_mul.cpp</option>
+</select>
+</td>
+<td>old_usead_1.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Deprecated</option>
+<option>Purpose</option>
+<option>Simple Case</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Using AD to Compute Atomic Function Derivatives</big></big></b></center>
+<br/>
+<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
+<br/>
+This example has been deprecated because it is easier to use the 
+<a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
+ class instead.
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Consider the case where an inner function is used repeatedly in the 
+definition of an outer function.
+In this case, it may reduce the number of variables
+<a href="seq_property.xml#size_var" target="_top"><span style='white-space: nowrap'>size_var</span></a>
+,
+and hence the required memory.
+
+<br/>
+<br/>
+<b><big><a name="Simple Case" id="Simple Case">Simple Case</a></big></b>
+<br/>
+This example is the same as <a href="old_reciprocal.cpp.xml" target="_top"><span style='white-space: nowrap'>old_reciprocal.cpp</span></a>
+, except that it 
+uses AD to compute the 
+derivatives needed by an atomic function.
+This is a simple example of an inner function, and hence not really
+useful for the purpose above; 
+see <a href="old_usead_2.cpp.xml" target="_top"><span style='white-space: nowrap'>old_usead_2.cpp</span></a>
+ for a more complete example.
+
+<code><font color="blue">
+<pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+
+namespace { // Begin empty namespace 
+	using CppAD::AD;
+	using CppAD::ADFun;
+	using CppAD::vector;
+
+	// ----------------------------------------------------------------------
+	// function that computes reciprocal
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* r_ptr_;
+	void create_r(void)
+	{	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(1), ay(1);
+		ax[0]  = 1;
+		CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+		ay[0]  = 1.0 / ax[0];
+		r_ptr_ = new <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;(ax, ay);
+	}
+	void destroy_r(void)
+	{	delete r_ptr_; 
+		r_ptr_ = CPPAD_NULL;
+	}
+
+	// ----------------------------------------------------------------------
+	// forward mode routine called by CppAD
+	bool reciprocal_forward(
+		size_t                   id ,
+		size_t                    k ,
+		size_t                    n ,
+		size_t                    m ,
+		const vector&lt;bool&gt;&amp;      vx ,
+		vector&lt;bool&gt;&amp;            vy ,
+		const vector&lt;double&gt;&amp;    tx ,
+		vector&lt;double&gt;&amp;          ty
+	)
+	{	assert( id == 0 );
+		assert( n == 1 );
+		assert( m == 1 );
+		assert( k == 0 || vx.size() == 0 );
+		bool ok = true;	
+		vector&lt;double&gt; x_p(1), y_p(1);
+
+		// check for special case
+		if( vx.size() &gt; 0 )
+			vy[0] = vx[0];
+
+		// make sure r_ has proper lower order Taylor coefficients stored
+		// then compute ty[k]
+		for(size_t p = 0; p &lt;= k; p++)
+		{	x_p[0] = tx[p];
+			y_p    = r_ptr_-&gt;Forward(p, x_p);
+			if( p == k )
+				ty[k] = y_p[0];
+			assert( p == k || ty[p] == y_p[0] );
+		}
+		return ok;
+	}
+	// ----------------------------------------------------------------------
+	// reverse mode routine called by CppAD
+	bool reciprocal_reverse(
+		size_t                   id ,
+		size_t                    k ,
+		size_t                    n ,
+		size_t                    m ,
+		const vector&lt;double&gt;&amp;    tx ,
+		const vector&lt;double&gt;&amp;    ty ,
+		vector&lt;double&gt;&amp;          px ,
+		const vector&lt;double&gt;&amp;    py
+	)
+	{	assert( id == 0 );
+		assert( n == 1 );
+		assert( m == 1 );
+		bool ok = true;	
+		vector&lt;double&gt; x_p(1), w(k+1), dw(k+1);
+
+		// make sure r_ has proper forward mode coefficients 
+		size_t p;
+		for(p = 0; p &lt;= k; p++)
+		{	x_p[0] = tx[p];
+# ifdef NDEBUG
+			r_ptr_-&gt;Forward(p, x_p);
+# else
+			vector&lt;double&gt; y_p(1);
+			y_p    = r_ptr_-&gt;Forward(p, x_p);
+			assert( ty[p] == y_p[0] );
+# endif
+		}
+		for(p = 0; p &lt;=k; p++)
+			w[p] = py[p];
+		dw = r_ptr_-&gt;Reverse(k+1, w);
+		for(p = 0; p &lt;=k; p++)
+			px[p] = dw[p];
+
+		return ok;
+	}
+	// ----------------------------------------------------------------------
+	// forward Jacobian sparsity routine called by CppAD
+	bool reciprocal_for_jac_sparse(
+		size_t                               id ,             
+		size_t                                n ,
+		size_t                                m ,
+		size_t                                q ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           s )
+	{	assert( id == 0 );
+		assert( n == 1 );
+		assert( m == 1 );
+		bool ok = true;
+
+		vector&lt; std::set&lt;size_t&gt; &gt; R(1), S(1);
+		R[0] = r[0];
+		S = r_ptr_-&gt;ForSparseJac(q, R);
+		s[0] = S[0];
+
+		return ok; 
+	}
+	// ----------------------------------------------------------------------
+	// reverse Jacobian sparsity routine called by CppAD
+	bool reciprocal_rev_jac_sparse(
+		size_t                               id ,             
+		size_t                                n ,
+		size_t                                m ,
+		size_t                                q ,
+		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           r ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
+	{
+		assert( id == 0 );
+		assert( n == 1 );
+		assert( m == 1 );
+		bool ok = true;
+
+		vector&lt; std::set&lt;size_t&gt; &gt; R(q), S(q);
+		size_t p;
+		for(p = 0; p &lt; q; p++)
+			S[p] = s[p];
+		R = r_ptr_-&gt;RevSparseJac(q, S);
+		for(p = 0; p &lt; q; p++)
+			r[p] = R[p];
+
+		return ok; 
+	}
+	// ----------------------------------------------------------------------
+	// reverse Hessian sparsity routine called by CppAD
+	bool reciprocal_rev_hes_sparse(
+		size_t                               id ,             
+		size_t                                n ,
+		size_t                                m ,
+		size_t                                q ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+		const vector&lt;bool&gt;&amp;                   s ,
+		vector&lt;bool&gt;&amp;                         t ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
+		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           v )
+	{	// Can just return false if not use RevSparseHes.
+		assert( id == 0 );
+		assert( n == 1 );
+		assert( m == 1 );
+		bool ok = true;
+
+		// compute sparsity pattern for T(x) = S(x) * f'(x) 
+		vector&lt;bool&gt; T(1), S(1);
+		S[0]   = s[0];
+		T      = r_ptr_-&gt;RevSparseJac(1, S);
+		t[0]   = T[0];
+
+		// compute sparsity pattern for A(x) = U(x)^T * f'(x)
+		vector&lt;bool&gt; Ut(q), A(q);
+		size_t p;
+		for(p = 0; p &lt; q; p++)
+			Ut[p] = false;
+		std::set&lt;size_t&gt;::iterator itr;
+		for(itr = u[0].begin(); itr != u[0].end(); itr++)
+			Ut[*itr] = true;
+		A = r_ptr_-&gt; RevSparseJac(q, Ut);
+
+		// compute sparsity pattern for H(x) = R^T * (S * F)''(x)
+		vector&lt;bool&gt; H(q), R(n);
+		for(p = 0; p &lt; q; p++)
+			R[p] = false;
+		for(itr = r[0].begin(); itr != r[0].end(); itr++)
+			R[*itr] = true;
+		r_ptr_-&gt;ForSparseJac(q, R);
+		H = r_ptr_-&gt;RevSparseHes(q, S);
+
+		// compute sparsity pattern for V(x) = A(x)^T + H(x)^T
+		v[0].clear();
+		for(p = 0; p &lt; q; p++)
+			if( A[p] | H[p] )
+				v[0].insert(p);
+
+		return ok;
+	}
+	// ---------------------------------------------------------------------
+	// Declare the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; routine reciprocal(id, ax, ay)
+	CPPAD_USER_ATOMIC(
+		reciprocal                 , 
+		CppAD::vector              ,
+		double                     , 
+		reciprocal_forward         , 
+		reciprocal_reverse         ,
+		reciprocal_for_jac_sparse  ,
+		reciprocal_rev_jac_sparse  ,
+		reciprocal_rev_hes_sparse  
+	)
+} // End empty namespace
+
+bool old_usead_1(void)
+{	bool ok = true;
+	using CppAD::NearEqual;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+
+	// --------------------------------------------------------------------
+	// Create the <a href="funconstruct.xml" target="_top">ADFun</a>&lt;doulbe&gt; r_
+	create_r();
+
+	// --------------------------------------------------------------------
+	// Create the function f(x)
+	//
+	// domain space vector
+	size_t n  = 1;
+	double  x0 = 0.5;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n);
+	ax[0]     = x0;
+
+	// declare independent variables and start tape recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+
+	// range space vector 
+	size_t m = 1;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
+
+	// call user function and store reciprocal(x) in au[0] 
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(m);
+	size_t id = 0;           // not used
+	reciprocal(id, ax, au);	// u = 1 / x
+
+	// call user function and store reciprocal(u) in ay[0] 
+	reciprocal(id, au, ay);	// y = 1 / u = x
+
+	// create f: x -&gt; y and stop tape recording
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
+	f.Dependent(ax, ay);  // f(x) = x
+
+	// --------------------------------------------------------------------
+	// Check function value results
+	//
+	// check function value 
+	double check = x0;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
+
+	// check zero order forward mode
+	size_t p;
+	vector&lt;double&gt; x_p(n), y_p(m);
+	p      = 0;
+	x_p[0] = x0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+
+	// check first order forward mode
+	p      = 1;
+	x_p[0] = 1;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	check  = 1.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+
+	// check second order forward mode
+	p      = 2;
+	x_p[0] = 0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	check  = 0.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+
+	// --------------------------------------------------------------------
+	// Check reverse mode results
+	//
+	// third order reverse mode 
+	p     = 3;
+	vector&lt;double&gt; w(m), dw(n * p);
+	w[0]  = 1.;
+	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
+	check = 1.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  eps, eps);
+	check = 0.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1] , check,  eps, eps);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[2] , check,  eps, eps);
+
+	// --------------------------------------------------------------------
+	// forward mode sparstiy pattern
+	size_t q = n;
+	CppAD::vectorBool r1(n * q), s1(m * q);
+	r1[0] = true;          // compute sparsity pattern for x[0]
+	s1    = f.ForSparseJac(q, r1);
+	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
+
+	// --------------------------------------------------------------------
+	// reverse mode sparstiy pattern
+	p = m;
+	CppAD::vectorBool s2(p * m), r2(p * n);
+	s2[0] = true;          // compute sparsity pattern for f[0]
+	r2    = f.RevSparseJac(p, s2);
+	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
+
+	// --------------------------------------------------------------------
+	// Hessian sparsity (using previous ForSparseJac call) 
+	CppAD::vectorBool s3(m), h(q * n);
+	s3[0] = true;        // compute sparsity pattern for f[0]
+	h     = f.RevSparseJac(q, s3);
+	ok  &amp;= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
+
+	// -----------------------------------------------------------------
+	// Free all memory associated with the object r_ptr
+	destroy_r();
+
+	// -----------------------------------------------------------------
+	// Free all temporary work space associated with old_atomic objects. 
+	// (If there are future calls to user atomic functions, they will 
+	// create new temporary work space.)
+	CppAD::user_atomic&lt;double&gt;::clear();
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/atomic/old_usead_1.cpp
+
+</body>
+</html>

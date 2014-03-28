@@ -1,0 +1,265 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Getting Started with Atomic Operations: Example and Test</title>
+<meta name="description" id="description" content="Getting Started with Atomic Operations: Example and Test"/>
+<meta name="keywords" id="keywords" content=" get_started atomic operation "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_atomic_get_started.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="atomic_base_clear.xml" target="_top">Prev</a>
+</td><td><a href="atomic_norm_sq.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>atomic_base</option>
+<option>atomic_get_started.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>std_math_ad</option>
+<option>MathOther</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>atomic_base-&gt;</option>
+<option>atomic_ctor</option>
+<option>atomic_option</option>
+<option>atomic_afun</option>
+<option>atomic_forward</option>
+<option>atomic_reverse</option>
+<option>atomic_for_sparse_jac</option>
+<option>atomic_rev_sparse_jac</option>
+<option>atomic_rev_sparse_hes</option>
+<option>atomic_base_clear</option>
+<option>atomic_get_started.cpp</option>
+<option>atomic_norm_sq.cpp</option>
+<option>atomic_reciprocal.cpp</option>
+<option>atomic_tangent.cpp</option>
+<option>atomic_mat_mul.cpp</option>
+</select>
+</td>
+<td>atomic_get_started.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>Start Class Definition</option>
+<option>Constructor</option>
+<option>forward</option>
+<option>End Class Definition</option>
+<option>Use Atomic Function</option>
+<option>---..Constructor</option>
+<option>---..Recording</option>
+<option>---..forward</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+<center><b><big><big>Getting Started with Atomic Operations: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This example demonstrates the minimal amount of information
+necessary for a <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
+ operation.
+
+
+
+<br/>
+<br/>
+<b><big><a name="Start Class Definition" id="Start Class Definition">Start Class Definition</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+namespace {          // isolate items below to this file
+using CppAD::vector; // abbreviate as vector
+class atomic_get_started : public CppAD::atomic_base&lt;double&gt; {
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Constructor" id="Constructor">Constructor</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	public:
+	// constructor (could use const char* for name)
+	atomic_get_started(const std::string&amp; name) : 
+	CppAD::atomic_base&lt;double&gt;(name)
+	{ }
+	private:
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="forward" id="forward">forward</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// forward mode routine called by CppAD
+	virtual bool forward(
+		size_t                    q ,
+		size_t                    p ,
+		const vector&lt;bool&gt;&amp;      vx ,
+		      vector&lt;bool&gt;&amp;      vy ,
+		const vector&lt;double&gt;&amp;    tx ,
+		      vector&lt;double&gt;&amp;    ty
+	)
+	{	size_t n = tx.size() / (p + 1);
+		size_t m = ty.size() / (p + 1);
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// return flag
+		bool ok = p == 0;
+		if( ! ok )
+			return ok;
+
+		// check for defining variable information
+		// This case must always be implemented
+		if( vx.size() &gt; 0 )
+			vy[0] = vx[0];
+
+		// Order zero forward mode.
+		// This case must always be implemented
+		// y^0 = f( x^0 ) = 1 / x^0
+		double f = 1. / tx[0];
+		if( q &lt;= 0 )
+			ty[0] = f;
+		return ok;
+	}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="End Class Definition" id="End Class Definition">End Class Definition</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+}; // End of atomic_get_started class
+}  // End empty namespace
+
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="Use Atomic Function" id="Use Atomic Function">Use Atomic Function</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+bool get_started(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.Constructor" id="Use Atomic Function.Constructor">Constructor</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// Create the atomic get_started object
+	atomic_get_started afun(&quot;atomic_get_started&quot;);
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.Recording" id="Use Atomic Function.Recording">Recording</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// Create the function f(x)
+	//
+	// domain space vector
+	size_t n  = 1;
+	double  x0 = 0.5;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n);
+	ax[0]     = x0;
+
+	// declare independent variables and start tape recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+
+	// range space vector 
+	size_t m = 1;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
+
+	// call user function and store get_started(x) in au[0] 
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(m);
+	afun(ax, au);        // u = 1 / x
+
+	// now use AD division to invert to invert the operation
+	ay[0] = 1.0 / au[0]; // y = 1 / u = x
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
+	f.Dependent (ax, ay);  // f(x) = x
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.forward" id="Use Atomic Function.forward">forward</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// check function value 
+	double check = x0;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
+
+	// check zero order forward mode
+	size_t p;
+	vector&lt;double&gt; x_p(n), y_p(m);
+	p      = 0;
+	x_p[0] = x0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+
+	return ok;
+}
+</pre></font></code>
+
+ 
+
+<hr/>Input File: example/atomic/get_started.cpp
+
+</body>
+</html>

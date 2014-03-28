@@ -1,0 +1,312 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Compute Determinant using Expansion by Minors</title>
+<meta name="description" id="description" content="Compute Determinant using Expansion by Minors"/>
+<meta name="keywords" id="keywords" content=" "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_det_by_minor_c_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="det_of_minor_c.xml" target="_top">Prev</a>
+</td><td><a href="uniform_01_c.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>compare_c</option>
+<option>det_by_minor_c</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>Bugs</option>
+<option>WishList</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>compare_c-&gt;</option>
+<option>det_of_minor_c</option>
+<option>det_by_minor_c</option>
+<option>uniform_01_c</option>
+<option>correct_det_by_minor_c</option>
+<option>repeat_det_by_minor_c</option>
+<option>elapsed_seconds_c</option>
+<option>time_det_by_minor_c</option>
+<option>main_compare_c</option>
+</select>
+</td>
+<td>det_by_minor_c</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>a</option>
+<option>m</option>
+<option>Source Code</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Compute Determinant using Expansion by Minors</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>d</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;det_by_minor(</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+ 
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+returns the determinant of the matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+</mrow></math>
+
+
+using expansion by minors.
+The elements of the 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+ minor 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>M</mi>
+</mrow></math>
+
+ 
+of the matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+</mrow></math>
+
+ are defined,
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+ and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+, by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi mathvariant='italic'>M</mi>
+<mrow><mi mathvariant='italic'>i</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>j</mi>
+</mrow>
+</msub>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>A</mi>
+<mrow><mi mathvariant='italic'>i</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>j</mi>
+</mrow>
+</msub>
+</mrow></math>
+
+<br/>
+<b><big><a name="a" id="a">a</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>a</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;double*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and is a vector with size 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>m</mi>
+<mo stretchy="false">*</mo>
+<mi mathvariant='italic'>m</mi>
+</mrow></math>
+
+.
+The elements of the 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>m</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>m</mi>
+</mrow></math>
+
+ matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+</mrow></math>
+
+ are defined,
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>m</mi>
+<mn>-1</mn>
+</mrow></math>
+
+ and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>m</mi>
+<mn>-1</mn>
+</mrow></math>
+
+, by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi mathvariant='italic'>A</mi>
+<mrow><mi mathvariant='italic'>i</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>j</mi>
+</mrow>
+</msub>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>a</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">*</mo>
+<mi mathvariant='italic'>m</mi>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">]</mo>
+</mrow></math>
+
+<br/>
+<b><big><a name="m" id="m">m</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and is the number of rows (and columns) in the square matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+</mrow></math>
+
+.
+
+
+
+
+<br/>
+<br/>
+<b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+double det_by_minor(double* a, size_t m)
+{	size_t *r, *c, i;
+	double value;
+
+	r = (size_t*) malloc( (m+1) * sizeof(size_t) );
+	c = (size_t*) malloc( (m+1) * sizeof(size_t) );
+
+	assert(m &lt;= 100);
+	for(i = 0; i &lt; m; i++)
+	{	r[i] = i+1;
+		c[i] = i+1;
+	}
+	r[m] = 0;
+	c[m] = 0;
+
+	value = <a href="det_of_minor_c.xml" target="_top">det_of_minor</a>(a, m, m, r, c);
+
+	free(r);
+	free(c);
+	return value;
+}
+</pre></font></code>
+ 
+
+<hr/>Input File: compare_c/det_by_minor.c
+
+</body>
+</html>

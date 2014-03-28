@@ -1,0 +1,181 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Fadbad Speed: Ode</title>
+<meta name="description" id="description" content="Fadbad Speed: Ode"/>
+<meta name="keywords" id="keywords" content=" link_ode fadbad speed ode "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_fadbad_ode.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="fadbad_mat_mul.cpp.xml" target="_top">Prev</a>
+</td><td><a href="fadbad_poly.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>speed</option>
+<option>speed_fadbad</option>
+<option>fadbad_ode.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>speed-&gt;</option>
+<option>speed_main</option>
+<option>speed_utility</option>
+<option>speed_double</option>
+<option>speed_adolc</option>
+<option>speed_cppad</option>
+<option>speed_fadbad</option>
+<option>speed_sacado</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>speed_fadbad-&gt;</option>
+<option>fadbad_det_minor.cpp</option>
+<option>fadbad_det_lu.cpp</option>
+<option>fadbad_mat_mul.cpp</option>
+<option>fadbad_ode.cpp</option>
+<option>fadbad_poly.cpp</option>
+<option>fadbad_sparse_hessian.cpp</option>
+<option>fadbad_sparse_jacobian.cpp</option>
+</select>
+</td>
+<td>fadbad_ode.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Specifications</option>
+<option>Implementation</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Fadbad Speed: Ode</big></big></b></center>
+<br/>
+<b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
+<br/>
+See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_ode</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
+
+
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;FADBAD++/fadiff.h&gt;
+# include &lt;algorithm&gt;
+# include &lt;cassert&gt;
+# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/speed/uniform_01.hpp&gt;
+# include &lt;cppad/speed/ode_evaluate.hpp&gt;
+
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+extern bool global_boolsparsity;
+
+namespace fadbad {
+	// define fabs for use by ode_evaluate
+	fadbad::F&lt;double&gt; fabs(const fadbad::F&lt;double&gt;&amp; x)
+	{	return std::max(-x, x); }
+}
+
+bool link_ode(
+	size_t                     size       ,
+	size_t                     repeat     ,
+	CppAD::vector&lt;double&gt;      &amp;x         ,
+	CppAD::vector&lt;double&gt;      &amp;jacobian
+)
+{
+	// speed test global option values
+	if( global_atomic || global_boolsparsity )
+		return false;
+	if( global_memory || global_onetape || global_optimize )
+		return false;
+	// -------------------------------------------------------------
+	// setup
+	assert( x.size() == size );
+	assert( jacobian.size() == size * size );
+
+	typedef fadbad::F&lt;double&gt;       ADScalar;
+	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
+
+	size_t i, j;
+	size_t p = 0;          // use ode to calculate function values
+	size_t n = size;       // number of independent variables
+	size_t m = n;          // number of dependent variables
+	ADVector X(n), Y(m);   // independent and dependent variables
+
+	// -------------------------------------------------------------
+	while(repeat--)
+	{ 	// choose next x value
+		CppAD::uniform_01(n, x);
+		for(j = 0; j &lt; n; j++)
+		{	// set value of x[j]
+			X[j] = x[j];
+			// set up for X as the independent variable vector
+			X[j].diff(j, n);
+		}
+
+		// evaluate function
+		CppAD::ode_evaluate(X, p, Y);
+
+		// return values with Y as the dependent variable vector
+		for(i = 0; i &lt; m; i++)
+		{	for(j = 0; j &lt; n; j++)
+				jacobian[ i * n + j ] = Y[i].d(j);
+		}
+	}
+	return true;
+}
+</pre></font></code>
+
+
+<hr/>Input File: speed/fadbad/ode.cpp
+
+</body>
+</html>

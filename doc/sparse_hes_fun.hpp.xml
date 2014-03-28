@@ -1,0 +1,168 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Source: sparse_hes_fun</title>
+<meta name="description" id="description" content="Source: sparse_hes_fun"/>
+<meta name="keywords" id="keywords" content=" sparse_hes_fun source "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_sparse_hes_fun.hpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sparse_hes_fun.cpp.xml" target="_top">Prev</a>
+</td><td><a href="uniform_01.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>speed</option>
+<option>speed_utility</option>
+<option>sparse_hes_fun</option>
+<option>sparse_hes_fun.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>speed-&gt;</option>
+<option>speed_main</option>
+<option>speed_utility</option>
+<option>speed_double</option>
+<option>speed_adolc</option>
+<option>speed_cppad</option>
+<option>speed_fadbad</option>
+<option>speed_sacado</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>speed_utility-&gt;</option>
+<option>det_by_lu</option>
+<option>det_of_minor</option>
+<option>det_by_minor</option>
+<option>det_33</option>
+<option>det_grad_33</option>
+<option>mat_sum_sq</option>
+<option>ode_evaluate</option>
+<option>sparse_jac_fun</option>
+<option>sparse_hes_fun</option>
+<option>uniform_01</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>sparse_hes_fun-&gt;</option>
+<option>sparse_hes_fun.cpp</option>
+<option>sparse_hes_fun.hpp</option>
+</select>
+</td>
+<td>sparse_hes_fun.hpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Source: sparse_hes_fun</big></big></b></center>
+<code><font color="blue"># ifndef CPPAD_SPARSE_HES_FUN_INCLUDED 
+<code><span style='white-space: nowrap'><br/>
+</span></code># define CPPAD_SPARSE_HES_FUN_INCLUDED 
+
+<pre style='display:inline'> 
+# include &lt;cppad/local/cppad_assert.hpp&gt;
+# include &lt;cppad/check_numeric_type.hpp&gt;
+# include &lt;cppad/vector.hpp&gt;
+
+// following needed by gcc under fedora 17 so that exp(double) is defined
+# include &lt;cppad/base_require.hpp&gt; 
+
+namespace CppAD {
+	template &lt;class Float, class FloatVector&gt;
+	void sparse_hes_fun(
+		size_t                       n    ,
+		const FloatVector&amp;           x    ,
+		const CppAD::vector&lt;size_t&gt;&amp; row  , 
+		const CppAD::vector&lt;size_t&gt;&amp; col  , 
+		size_t                       p    ,
+		FloatVector&amp;                fp    )
+	{
+		// check numeric type specifications
+		CheckNumericType&lt;Float&gt;();
+
+		// check value of p
+		CPPAD_ASSERT_KNOWN(
+			p &lt; 3,
+			&quot;sparse_hes_fun: p &gt; 2&quot;
+		);
+
+		size_t i, j, k;
+		size_t size = 1;
+		for(k = 0; k &lt; p; k++)
+			size *= n;
+		for(k = 0; k &lt; size; k++)
+			fp[k] = Float(0);
+
+		size_t K = row.size();
+		Float t;
+		Float dt_i;
+		Float dt_j;
+		for(k = 0; k &lt; K; k++)
+		{	i    = row[k];
+			j    = col[k];
+			t    = exp( x[i] * x[j] );	
+			dt_i = t * x[j];
+			dt_j = t * x[i];
+			switch(p)
+			{
+				case 0:
+				fp[0] += t;
+				break;
+
+				case 1:
+				fp[i] += dt_i;
+				fp[j] += dt_j;
+				break;
+
+				case 2:
+				fp[i * n + i] += dt_i * x[j];
+				fp[i * n + j] += t + dt_j * x[j];
+				//
+				fp[j * n + i] += t + dt_i * x[i];
+				fp[j * n + j] += dt_j * x[i];
+				break;
+			}
+		}
+			
+	}
+}
+</pre>
+
+
+# endif
+</font></code>
+
+
+<hr/>Input File: omh/sparse_hes_fun.omh
+
+</body>
+</html>

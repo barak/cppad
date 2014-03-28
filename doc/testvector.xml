@@ -1,0 +1,203 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using The CppAD Test Vector Template Class</title>
+<meta name="description" id="description" content="Using The CppAD Test Vector Template Class"/>
+<meta name="keywords" id="keywords" content=" Cppad_testvector vector test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_testvector_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="listallexamples.xml" target="_top">Prev</a>
+</td><td><a href="speed.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Example</option>
+<option>testvector</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Example-&gt;</option>
+<option>General</option>
+<option>ExampleUtility</option>
+<option>ListAllExamples</option>
+<option>testvector</option>
+</select>
+</td>
+<td>testvector</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Introduction</option>
+<option>CppAD::vector</option>
+<option>std::vector</option>
+<option>boost::numeric::ublas::vector</option>
+<option>Eigen Vectors</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+
+
+
+
+<center><b><big><big>Using The CppAD Test Vector Template Class</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>CPPAD_TESTVECTOR(</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Introduction" id="Introduction">Introduction</a></big></b>
+<br/>
+Many of the CppAD <a href="example.xml" target="_top"><span style='white-space: nowrap'>examples</span></a>
+ and tests use 
+the <code><font color="blue">CPPAD_TESTVECTOR</font></code> template class to pass information to CppAD.
+This is not a true template class because it's syntax uses
+
+<code><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+ instead of 
+<code><font color="blue"><span style='white-space: nowrap'>&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+.
+This enables us to use
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Eigen::Matrix&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;Eigen::Dynamic,&#xA0;1&gt;<br/>
+</span></font></code>
+as one of the possible cases for this 'template class'.
+
+<br/>
+<br/>
+<b><big><a name="CppAD::vector" id="CppAD::vector">CppAD::vector</a></big></b>
+<br/>
+If in the <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
+
+you specify <a href="cppad_testvector.xml" target="_top"><span style='white-space: nowrap'>cppad_testvector</span></a>
+ to be <code><font color="blue">cppad</font></code>,
+<code><font color="blue">CPPAD_CPPADVECTOR</font></code> will be true.
+In this case,
+<code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
+<code><font color='blue'><pre style='display:inline'> 
+# if CPPAD_CPPADVECTOR
+# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) CppAD::vector&lt; Scalar &gt;
+# endif
+</pre></font></code>
+
+In this case CppAD will use its own vector for 
+many of its examples and tests.
+
+<br/>
+<br/>
+<b><big><a name="std::vector" id="std::vector">std::vector</a></big></b>
+<br/>
+If in the cmake command
+you specify 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
+ to be <code><font color="blue">std</font></code>,
+<code><font color="blue">CPPAD_STDVECTOR</font></code> will be true.
+In this case,
+<code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
+<code><font color='blue'><pre style='display:inline'> 
+# if CPPAD_STDVECTOR
+# include &lt;vector&gt;
+# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) std::vector&lt; Scalar &gt;
+# endif
+</pre></font></code>
+
+In this case CppAD will use standard vector for 
+many of its examples and tests.
+
+<br/>
+<br/>
+<b><big><a name="boost::numeric::ublas::vector" id="boost::numeric::ublas::vector">boost::numeric::ublas::vector</a></big></b>
+<br/>
+If in the cmake command
+you specify 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
+ to be <code><font color="blue">boost</font></code>,
+<code><font color="blue">CPPAD_BOOSTVECTOR</font></code> will be true.
+In this case,
+<code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
+<code><font color='blue'><pre style='display:inline'> 
+# if CPPAD_BOOSTVECTOR
+# include &lt;boost/numeric/ublas/vector.hpp&gt;
+# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) boost::numeric::ublas::vector&lt; Scalar &gt;
+# endif
+</pre></font></code>
+
+In this case CppAD will use this boost vector for 
+many of its examples and tests.
+
+<br/>
+<br/>
+<b><big><a name="Eigen Vectors" id="Eigen Vectors">Eigen Vectors</a></big></b>
+<br/>
+If in the cmake command
+you specify 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
+ to be <code><font color="blue">eigen</font></code>,
+<code><font color="blue">CPPAD_EIGENVECTOR</font></code> will be true.
+In this case,
+<code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
+<code><font color='blue'><pre style='display:inline'> 
+# if CPPAD_EIGENVECTOR
+# include &lt;cppad/example/cppad_eigen.hpp&gt;
+# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) Eigen::Matrix&lt; Scalar , Eigen::Dynamic, 1&gt;
+# endif
+</pre></font></code>
+
+In this case CppAD will use the Eigen vector 
+for many of its examples and tests.
+
+
+<hr/>Input File: cppad/local/testvector.hpp
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Free All Memory That Was Allocated for Use by thread_alloc</title>
+<meta name="description" id="description" content="Free All Memory That Was Allocated for Use by thread_alloc"/>
+<meta name="keywords" id="keywords" content=" free all thread_alloc "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_ta_free_all_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="ta_delete_array.xml" target="_top">Prev</a>
+</td><td><a href="index_sort.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>library</option>
+<option>thread_alloc</option>
+<option>ta_free_all</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>library-&gt;</option>
+<option>ErrorHandler</option>
+<option>NearEqual</option>
+<option>speed_test</option>
+<option>SpeedTest</option>
+<option>time_test</option>
+<option>NumericType</option>
+<option>CheckNumericType</option>
+<option>SimpleVector</option>
+<option>CheckSimpleVector</option>
+<option>nan</option>
+<option>pow_int</option>
+<option>Poly</option>
+<option>LuDetAndSolve</option>
+<option>RombergOne</option>
+<option>RombergMul</option>
+<option>Runge45</option>
+<option>Rosen34</option>
+<option>OdeErrControl</option>
+<option>OdeGear</option>
+<option>OdeGearControl</option>
+<option>CppAD_vector</option>
+<option>thread_alloc</option>
+<option>index_sort</option>
+<option>BenderQuad</option>
+<option>opt_val_hes</option>
+<option>LuRatio</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>thread_alloc-&gt;</option>
+<option>thread_alloc.cpp</option>
+<option>ta_parallel_setup</option>
+<option>ta_num_threads</option>
+<option>ta_in_parallel</option>
+<option>ta_thread_num</option>
+<option>ta_get_memory</option>
+<option>ta_return_memory</option>
+<option>ta_free_available</option>
+<option>ta_hold_memory</option>
+<option>ta_inuse</option>
+<option>ta_available</option>
+<option>ta_create_array</option>
+<option>ta_delete_array</option>
+<option>ta_free_all</option>
+</select>
+</td>
+<td>ta_free_all</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>ok</option>
+<option>Restrictions</option>
+<option>Example</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Free All Memory That Was Allocated for Use by thread_alloc</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;thread_alloc::free_all()</span></font></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Returns all memory that was used by <code><font color="blue">thread_alloc</font></code> to the system.
+
+<br/>
+<br/>
+<b><big><a name="ok" id="ok">ok</a></big></b>
+<br/>
+The return value 
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+Its value will be <code><font color="blue">true</font></code> if all the memory can be freed.
+This requires that for all 
+<code><i><font color="black"><span style='white-space: nowrap'>thread</span></font></i></code>
+ indices, there is no memory 
+<a href="ta_inuse.xml" target="_top"><span style='white-space: nowrap'>inuse</span></a>
+; i.e.,
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;0&#xA0;==&#xA0;thread_alloc::inuse(</span></font><i><font color="black"><span style='white-space: nowrap'>thread</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+Otherwise, the return value will be false.
+
+<br/>
+<br/>
+<b><big><a name="Restrictions" id="Restrictions">Restrictions</a></big></b>
+<br/>
+This function cannot be called while in parallel mode.
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+
+<br/>
+<a href="thread_alloc.cpp.xml" target="_top"><span style='white-space: nowrap'>thread_alloc.cpp</span></a>
+
+
+<hr/>Input File: cppad/thread_alloc.hpp
+
+</body>
+</html>

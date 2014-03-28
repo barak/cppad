@@ -1,0 +1,332 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Sparse Jacobian: Example and Test</title>
+<meta name="description" id="description" content="Sparse Jacobian: Example and Test"/>
+<meta name="keywords" id="keywords" content=" Jacobian sparse example test spare "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_sparse_jacobian.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sparse_jacobian.xml" target="_top">Prev</a>
+</td><td><a href="sparse_hessian.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>Drivers</option>
+<option>sparse_jacobian</option>
+<option>sparse_jacobian.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Drivers-&gt;</option>
+<option>Jacobian</option>
+<option>ForOne</option>
+<option>RevOne</option>
+<option>Hessian</option>
+<option>ForTwo</option>
+<option>RevTwo</option>
+<option>sparse_jacobian</option>
+<option>sparse_hessian</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>sparse_jacobian-&gt;</option>
+<option>sparse_jacobian.cpp</option>
+</select>
+</td>
+<td>sparse_jacobian.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Sparse Jacobian: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+namespace { // ---------------------------------------------------------
+bool reverse()
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) a_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       d_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(size_t)       i_vector;
+	size_t i, j, k, ell;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+
+	// domain space vector
+	size_t n = 4;
+	a_vector  a_x(n);
+	for(j = 0; j &lt; n; j++)
+		a_x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt; (0);
+
+	// declare independent variables and starting recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+
+	size_t m = 3;
+	a_vector  a_y(m);
+	a_y[0] = a_x[0] + a_x[1];
+	a_y[1] = a_x[2] + a_x[3];
+	a_y[2] = a_x[0] + a_x[1] + a_x[2] + a_x[3] * a_x[3] / 2.;
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
+
+	// new value for the independent variable vector
+	d_vector x(n);
+	for(j = 0; j &lt; n; j++)
+		x[j] = double(j);
+
+	// Jacobian of y without sparsity pattern
+	d_vector jac(m * n);
+	jac = f.SparseJacobian(x);
+	/*
+	      [ 1 1 0 0  ]
+	jac = [ 0 0 1 1  ]
+	      [ 1 1 1 x_3]
+	*/
+	d_vector check(m * n);
+	check[0] = 1.; check[1] = 1.; check[2]  = 0.; check[3]  = 0.;
+	check[4] = 0.; check[5] = 0.; check[6]  = 1.; check[7]  = 1.;
+	check[8] = 1.; check[9] = 1.; check[10] = 1.; check[11] = x[3];
+	for(ell = 0; ell &lt; size_t(check.size()); ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[ell], eps, eps );
+
+	// using packed boolean sparsity patterns
+	CppAD::vectorBool s_b(m * m), p_b(m * n);
+	for(i = 0; i &lt; m; i++)
+	{	for(ell = 0; ell &lt; m; ell++)
+			s_b[i * m + ell] = false;
+		s_b[i * m + i] = true;
+	}
+	p_b   = f.RevSparseJac(m, s_b);
+	jac   = f.SparseJacobian(x, p_b);
+	for(ell = 0; ell &lt; size_t(check.size()); ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[ell], eps, eps );
+
+	// using vector of sets sparsity patterns
+	std::vector&lt; std::set&lt;size_t&gt; &gt; s_s(m),  p_s(m);
+	for(i = 0; i &lt; m; i++)
+		s_s[i].insert(i);
+	p_s   = f.RevSparseJac(m, s_s);
+	jac   = f.SparseJacobian(x, p_s);
+	for(ell = 0; ell &lt; size_t(check.size()); ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[ell], eps, eps );
+
+	// using row and column indices to compute non-zero in rows 1 and 2
+	// (skip row 0). 
+	size_t K = 6;
+	i_vector row(K), col(K);
+	jac.resize(K);
+	k = 0;
+	for(j = 0; j &lt; n; j++)
+	{	for(i = 1; i &lt; m; i++)
+		{	ell = i * n + j;
+			if( p_b[ell] )
+			{	ok &amp;= check[ell] != 0.;
+				row[k] = i;
+				col[k] = j;
+				k++;
+			}
+		}
+	} 
+	ok &amp;= k == K;
+
+	// empty work structure
+	CppAD::sparse_jacobian_work work;
+
+	// could use p_b 
+	size_t n_sweep = f.SparseJacobianReverse(x, p_s, row, col, jac, work);
+	for(k = 0; k &lt; K; k++)
+	{	ell = row[k] * n + col[k];
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
+	}
+	ok &amp;= n_sweep == 2;
+
+	// now recompute at a different x value (using work from previous call)
+	check[11] = x[3] = 10.;
+	n_sweep = f.SparseJacobianReverse(x, p_s, row, col, jac, work);
+	for(k = 0; k &lt; K; k++)
+	{	ell = row[k] * n + col[k];
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
+	}
+	ok &amp;= n_sweep == 2;
+
+	return ok;
+}
+
+bool forward()
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) a_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       d_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(size_t)       i_vector;
+	size_t i, j, k, ell;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+
+	// domain space vector
+	size_t n = 3;
+	a_vector  a_x(n);
+	for(j = 0; j &lt; n; j++)
+		a_x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt; (0);
+
+	// declare independent variables and starting recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+
+	size_t m = 4;
+	a_vector  a_y(m);
+	a_y[0] = a_x[0] + a_x[2];
+	a_y[1] = a_x[0] + a_x[2];
+	a_y[2] = a_x[1] + a_x[2];
+	a_y[3] = a_x[1] + a_x[2] * a_x[2] / 2.;
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
+
+	// new value for the independent variable vector
+	d_vector x(n);
+	for(j = 0; j &lt; n; j++)
+		x[j] = double(j);
+
+	// Jacobian of y without sparsity pattern
+	d_vector jac(m * n);
+	jac = f.SparseJacobian(x);
+	/*
+	      [ 1 0 1   ]
+	jac = [ 1 0 1   ]
+	      [ 0 1 1   ]
+	      [ 0 1 x_2 ]
+	*/
+	d_vector check(m * n);
+	check[0] = 1.; check[1]  = 0.; check[2]  = 1.; 
+	check[3] = 1.; check[4]  = 0.; check[5]  = 1.;
+	check[6] = 0.; check[7]  = 1.; check[8]  = 1.; 
+	check[9] = 0.; check[10] = 1.; check[11] = x[2];
+	for(ell = 0; ell &lt; size_t(check.size()); ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[ell], eps, eps );
+
+	// test using packed boolean vectors for sparsity pattern
+	CppAD::vectorBool r_b(n * n), p_b(m * n);
+	for(j = 0; j &lt; n; j++)
+	{	for(ell = 0; ell &lt; n; ell++)
+			r_b[j * n + ell] = false;
+		r_b[j * n + j] = true;
+	}
+	p_b = f.ForSparseJac(n, r_b);
+	jac = f.SparseJacobian(x, p_b);
+	for(ell = 0; ell &lt; size_t(check.size()); ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[ell], eps, eps );
+
+	// test using vector of sets for sparsity pattern
+	std::vector&lt; std::set&lt;size_t&gt; &gt; r_s(n), p_s(m);
+	for(j = 0; j &lt; n; j++)
+		r_s[j].insert(j);
+	p_s = f.ForSparseJac(n, r_s);
+	jac = f.SparseJacobian(x, p_s);
+	for(ell = 0; ell &lt; size_t(check.size()); ell++)
+		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[ell], eps, eps );
+
+	// using row and column indices to compute non-zero elements excluding
+	// row 0 and column 0. 
+	size_t K = 5;
+	i_vector row(K), col(K);
+	jac.resize(K);
+	k = 0;
+	for(i = 1; i &lt; m; i++)
+	{	for(j = 1; j &lt; n; j++)
+		{	ell = i * n + j;
+			if( p_b[ell] )
+			{	ok &amp;= check[ell] != 0.;
+				row[k] = i;
+				col[k] = j;
+				k++;
+			}
+		}
+	} 
+	ok &amp;= k == K;
+
+	// empty work structure
+	CppAD::sparse_jacobian_work work;
+
+	// could use p_s 
+	size_t n_sweep = f.SparseJacobianForward(x, p_b, row, col, jac, work);
+	for(k = 0; k &lt; K; k++)
+	{    ell = row[k] * n + col[k];
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
+	}
+	ok &amp;= n_sweep == 2;
+
+	// now recompute at a different x value (using work from previous call)
+	check[11] = x[2] = 10.;
+	n_sweep = f.SparseJacobianForward(x, p_s, row, col, jac, work);
+	for(k = 0; k &lt; K; k++)
+	{    ell = row[k] * n + col[k];
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
+	}
+	ok &amp;= n_sweep == 2;
+
+	return ok;
+}
+} // End empty namespace 
+
+bool sparse_jacobian(void)
+{	bool ok = true;
+	ok &amp;= forward();
+	ok &amp;= reverse();
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/sparse_jacobian.cpp
+
+</body>
+</html>

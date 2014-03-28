@@ -1,0 +1,152 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>sparse_hes_fun: Example and test</title>
+<meta name="description" id="description" content="sparse_hes_fun: Example and test"/>
+<meta name="keywords" id="keywords" content=" sparse_hes_fun example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_sparse_hes_fun.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sparse_hes_fun.xml" target="_top">Prev</a>
+</td><td><a href="sparse_hes_fun.hpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>speed</option>
+<option>speed_utility</option>
+<option>sparse_hes_fun</option>
+<option>sparse_hes_fun.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>speed-&gt;</option>
+<option>speed_main</option>
+<option>speed_utility</option>
+<option>speed_double</option>
+<option>speed_adolc</option>
+<option>speed_cppad</option>
+<option>speed_fadbad</option>
+<option>speed_sacado</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>speed_utility-&gt;</option>
+<option>det_by_lu</option>
+<option>det_of_minor</option>
+<option>det_by_minor</option>
+<option>det_33</option>
+<option>det_grad_33</option>
+<option>mat_sum_sq</option>
+<option>ode_evaluate</option>
+<option>sparse_jac_fun</option>
+<option>sparse_hes_fun</option>
+<option>uniform_01</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>sparse_hes_fun-&gt;</option>
+<option>sparse_hes_fun.cpp</option>
+<option>sparse_hes_fun.hpp</option>
+</select>
+</td>
+<td>sparse_hes_fun.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+
+
+
+
+<center><b><big><big>sparse_hes_fun: Example and test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
+# include &lt;cppad/speed/uniform_01.hpp&gt;
+# include &lt;cppad/cppad.hpp&gt;
+
+bool sparse_hes_fun(void)
+{	using CppAD::NearEqual;
+	bool ok = true;
+
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; ADScalar;
+
+	size_t i, j, k;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+	size_t n   = 3;
+	size_t m   = 1;
+	size_t K   = 5;
+	CppAD::vector&lt;size_t&gt;       row(K),  col(K);
+	CppAD::vector&lt;double&gt;       x(n),    yp(n * n);
+	CppAD::vector&lt;ADScalar&gt;     a_x(n),  a_y(m);
+
+	// choose x
+	for(j = 0; j &lt; n; j++)
+		a_x[j] = x[j] = double(j + 1);
+
+	// choose row, col
+	for(k = 0; k &lt; K; k++)
+	{	row[k] = k % n;
+		col[k] = (K - k) % n;
+	}
+
+	// declare independent variables
+	<a href="independent.xml" target="_top">Independent</a>(a_x);
+
+	// evaluate function
+	size_t order = 0;
+	CppAD::sparse_hes_fun&lt;ADScalar&gt;(n, a_x, row, col, order, a_y);
+
+	// evaluate Hessian
+	order = 2;
+	CppAD::sparse_hes_fun&lt;double&gt;(n, x, row, col, order, yp);
+
+	// use AD to evaluate Hessian
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;   f(a_x, a_y);
+	CppAD::vector&lt;double&gt;  hes(n * n);
+	// compoute Hessian of f_0 (x)
+	hes = f.Hessian(x, 0);
+
+	for(i = 0; i &lt; n; i++)
+	{	for(j = 0; j &lt; n; j++)
+			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(hes[i * n + j], yp[i * n + j] , eps, eps);
+	}
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: speed/example/sparse_hes_fun.cpp
+
+</body>
+</html>

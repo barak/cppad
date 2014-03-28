@@ -1,0 +1,180 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Sacado Speed: Matrix Multiplication</title>
+<meta name="description" id="description" content="Sacado Speed: Matrix Multiplication"/>
+<meta name="keywords" id="keywords" content=" link_mat_mul sacado speed matrix multiply "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_sacado_mat_mul.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sacado_det_lu.cpp.xml" target="_top">Prev</a>
+</td><td><a href="sacado_ode.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>speed</option>
+<option>speed_sacado</option>
+<option>sacado_mat_mul.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>speed-&gt;</option>
+<option>speed_main</option>
+<option>speed_utility</option>
+<option>speed_double</option>
+<option>speed_adolc</option>
+<option>speed_cppad</option>
+<option>speed_fadbad</option>
+<option>speed_sacado</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>speed_sacado-&gt;</option>
+<option>sacado_det_minor.cpp</option>
+<option>sacado_det_lu.cpp</option>
+<option>sacado_mat_mul.cpp</option>
+<option>sacado_ode.cpp</option>
+<option>sacado_poly.cpp</option>
+<option>sacado_sparse_hessian.cpp</option>
+<option>sacado_sparse_jacobian.cpp</option>
+</select>
+</td>
+<td>sacado_mat_mul.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Specifications</option>
+<option>Implementation</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Sacado Speed: Matrix Multiplication</big></big></b></center>
+<br/>
+<b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
+<br/>
+See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>link_mat_mul</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
+
+
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;Sacado.hpp&gt;
+# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/speed/mat_sum_sq.hpp&gt;
+# include &lt;cppad/speed/uniform_01.hpp&gt;
+
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+extern bool global_boolsparsity;
+
+bool link_mat_mul(
+	size_t                           size     , 
+	size_t                           repeat   , 
+	CppAD::vector&lt;double&gt;&amp;           x        ,
+	CppAD::vector&lt;double&gt;&amp;           z        ,
+	CppAD::vector&lt;double&gt;&amp;           dz       )
+{
+	// speed test global option values
+	if( global_boolsparsity )
+		return false; 
+	if( global_memory || global_onetape || global_atomic || global_optimize )
+		return false;
+	// -----------------------------------------------------
+	// setup
+
+	// object for computing determinant
+	typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar; 
+	typedef CppAD::vector&lt;ADScalar&gt;       ADVector; 
+
+	size_t j;                // temporary index
+	size_t m = 1;            // number of dependent variables
+	size_t n = size * size;  // number of independent variables
+	ADVector   X(n);         // AD domain space vector
+	ADVector   Y(n);         // Store product matrix
+	ADVector   Z(m);         // AD range space vector
+	ADScalar   f;
+	
+	// ------------------------------------------------------
+	while(repeat--)
+	{	// get the next matrix
+		CppAD::uniform_01(n, x);
+
+		// set independent variable values
+		for(j = 0; j &lt; n; j++)
+			X[j] = x[j];
+
+		// do the computation
+		mat_sum_sq(size, X, Y, Z);
+
+		// create function object f : X -&gt; Z
+		f = Z[0];
+
+		// reverse mode gradient of last ADvar computed value; i.e., f
+		ADScalar::Gradcomp();
+
+		// return gradient
+		for(j = 0; j &lt; n; j++)
+			dz[j] = X[j].adj(); // partial f w.r.t X[j]
+	}
+	// return function value
+	z[0] = f.val();
+
+	// ---------------------------------------------------------
+	return true;
+}
+</pre></font></code>
+
+
+<hr/>Input File: speed/sacado/mat_mul.cpp
+
+</body>
+</html>

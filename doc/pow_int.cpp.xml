@@ -1,0 +1,174 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>The Pow Integer Exponent: Example and Test</title>
+<meta name="description" id="description" content="The Pow Integer Exponent: Example and Test"/>
+<meta name="keywords" id="keywords" content=" pow int example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_pow_int.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="pow_int.xml" target="_top">Prev</a>
+</td><td><a href="poly.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>library</option>
+<option>pow_int</option>
+<option>pow_int.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>library-&gt;</option>
+<option>ErrorHandler</option>
+<option>NearEqual</option>
+<option>speed_test</option>
+<option>SpeedTest</option>
+<option>time_test</option>
+<option>NumericType</option>
+<option>CheckNumericType</option>
+<option>SimpleVector</option>
+<option>CheckSimpleVector</option>
+<option>nan</option>
+<option>pow_int</option>
+<option>Poly</option>
+<option>LuDetAndSolve</option>
+<option>RombergOne</option>
+<option>RombergMul</option>
+<option>Runge45</option>
+<option>Rosen34</option>
+<option>OdeErrControl</option>
+<option>OdeGear</option>
+<option>OdeGearControl</option>
+<option>CppAD_vector</option>
+<option>thread_alloc</option>
+<option>index_sort</option>
+<option>BenderQuad</option>
+<option>opt_val_hes</option>
+<option>LuRatio</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>pow_int-&gt;</option>
+<option>pow_int.cpp</option>
+</select>
+</td>
+<td>pow_int.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>The Pow Integer Exponent: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+# include &lt;cmath&gt;
+
+bool pow_int(void)
+{	bool ok = true;
+
+	using CppAD::AD;
+	using CppAD::NearEqual;
+
+	// declare independent variables and start tape recording
+	size_t n  = 1;
+	double x0 = -0.5;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
+	x[0]      = x0;
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+
+	// dependent variable vector 
+	size_t m = 7;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
+	int i;
+	for(i = 0; i &lt; int(m); i++) 
+		y[i] = CppAD::pow(x[0], i - 3);
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+
+	// check value 
+	double check;
+	for(i = 0; i &lt; int(m); i++) 
+	{	check = std::pow(x0, double(i - 3));
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[i] , check,  1e-10 , 1e-10);
+	}
+
+	// forward computation of first partial w.r.t. x[0]
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
+	dx[0] = 1.;
+	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
+	for(i = 0; i &lt; int(m); i++) 
+	{	check = double(i-3) * std::pow(x0, double(i - 4));
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[i] , check,  1e-10 , 1e-10);
+	}
+
+	// reverse computation of derivative of y[i]
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
+	for(i = 0; i &lt; int(m); i++) 
+		w[i] = 0.;
+	for(i = 0; i &lt; int(m); i++) 
+	{	w[i] = 1.;	
+		dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
+		check = double(i-3) * std::pow(x0, double(i - 4));
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  1e-10 , 1e-10);
+		w[i] = 0.;	
+	}
+
+	return ok;
+}
+
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/pow_int.cpp
+
+</body>
+</html>

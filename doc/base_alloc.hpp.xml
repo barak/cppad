@@ -1,0 +1,503 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Example AD&lt;Base&gt; Where Base Constructor Allocates Memory</title>
+<meta name="description" id="description" content="Example AD&lt;Base&gt; Where Base Constructor Allocates Memory"/>
+<meta name="keywords" id="keywords" content=" "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_base_alloc.hpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="base_example.xml" target="_top">Prev</a>
+</td><td><a href="base_require.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>base_require</option>
+<option>base_example</option>
+<option>base_alloc.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>base_require-&gt;</option>
+<option>base_member</option>
+<option>base_cond_exp</option>
+<option>base_identical</option>
+<option>base_ordered</option>
+<option>base_std_math</option>
+<option>base_example</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>base_example-&gt;</option>
+<option>base_alloc.hpp</option>
+<option>base_require.cpp</option>
+<option>base_adolc.hpp</option>
+<option>base_float.hpp</option>
+<option>base_double.hpp</option>
+<option>base_complex.hpp</option>
+</select>
+</td>
+<td>base_alloc.hpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>Include File</option>
+<option>Computed Assignment Macro</option>
+<option>Binary Operator Macro</option>
+<option>Boolean Operator Macro</option>
+<option>Class Definition</option>
+<option>CondExpOp</option>
+<option>CondExpRel</option>
+<option>EqualOpSeq</option>
+<option>Identical</option>
+<option>Output Operator</option>
+<option>Integer</option>
+<option>Ordered</option>
+<option>Unary Standard Math</option>
+<option>sign</option>
+<option>pow</option>
+<option>limits</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Example AD&lt;Base&gt; Where Base Constructor Allocates Memory</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Demonstrate use of 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ 
+where memory is allocated for each element of the type 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+.
+In addition, this is a complete example where all the 
+<a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required&#xA0;Base</span></a>
+ type
+operations are defined (as apposed to other examples where
+some of the operations for the Base type are already defined).
+
+<br/>
+<br/>
+<b><big><a name="Include File" id="Include File">Include File</a></big></b>
+<br/>
+This file uses some of the definitions in <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
+
+and <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
+.
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;cppad/base_require.hpp&gt;
+# include &lt;cppad/thread_alloc.hpp&gt;
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Computed Assignment Macro" id="Computed Assignment Macro">Computed Assignment Macro</a></big></b>
+<br/>
+This macro is used for the 
+<code><font color="blue">base_alloc</font></code> computed assignment operators; to be specific, 
+used with 
+<code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
+ equal to
+<code><font color="blue">+=</font></code>,
+<code><font color="blue">-=</font></code>,
+<code><font color="blue">*=</font></code>,
+<code><font color="blue">/=</font></code>.
+<code><font color='blue'><pre style='display:inline'> 
+# define BASE_ALLOC_ASSIGN_OPERATOR(op) \
+	void operator op (const base_alloc&amp; x) \
+	{	*ptrdbl_ op *x.ptrdbl_; }
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Binary Operator Macro" id="Binary Operator Macro">Binary Operator Macro</a></big></b>
+<br/>
+This macro is used for the 
+<code><font color="blue">base_alloc</font></code> binary operators (as member functions); to be specific, 
+used with 
+<code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
+ equal to
+<code><font color="blue">+</font></code>,
+<code><font color="blue">-</font></code>,
+<code><font color="blue">*</font></code>,
+<code><font color="blue">/</font></code>.
+<code><font color='blue'><pre style='display:inline'> 
+# define BASE_ALLOC_BINARY_OPERATOR(op) const \
+	base_alloc operator op (const base_alloc&amp; x) const \
+	{	base_alloc result; \
+		double   dbl = *ptrdbl_; \
+		double x_dbl = *x.ptrdbl_; \
+		*result.ptrdbl_ = dbl op x_dbl; \
+		return result; \
+	}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Boolean Operator Macro" id="Boolean Operator Macro">Boolean Operator Macro</a></big></b>
+<br/>
+This macro can be used for the 
+<code><font color="blue">base_alloc</font></code> binary operators that have a 
+<code><font color="blue">bool</font></code> result; to be specific, 
+used with 
+<code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
+ equal to
+<code><font color="blue">==</font></code>,
+<code><font color="blue">!=</font></code>,
+<code><font color="blue">&lt;</font></code>,
+<code><font color="blue">&lt;=</font></code>,
+<code><font color="blue">&gt;=</font></code>, and
+<code><font color="blue">&gt;</font></code>,
+<code><font color='blue'><pre style='display:inline'> 
+# define BASE_ALLOC_BOOL_OPERATOR(op) const \
+	bool operator op (const base_alloc&amp; x) const \
+	{	double   dbl = *ptrdbl_; \
+		double x_dbl = *x.ptrdbl_; \
+		return dbl op x_dbl; \
+	}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Class Definition" id="Class Definition">Class Definition</a></big></b>
+<br/>
+The following example class 
+defines the necessary <a href="base_member.xml" target="_top"><span style='white-space: nowrap'>base_member</span></a>
+ functions.
+It is made more complicated by storing a pointer to a <code><font color="blue">double</font></code>
+instead of the <code><font color="blue">double</font></code> value itself.
+<code><font color='blue'><pre style='display:inline'> 
+
+class base_alloc {
+public:
+	double* ptrdbl_;
+
+	base_alloc(void)
+	{	size_t cap;
+		void* v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		ptrdbl_  = static_cast&lt;double*&gt;(v);
+	}
+	base_alloc(double dbl)
+	{	size_t cap;
+		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		ptrdbl_  = static_cast&lt;double*&gt;(v);
+		*ptrdbl_ = dbl;
+	}
+	base_alloc(const base_alloc&amp; x)
+	{	size_t cap;
+		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		ptrdbl_  = static_cast&lt;double*&gt;(v);
+		*ptrdbl_ = *x.ptrdbl_;
+	}
+	~base_alloc(void)
+	{	void* v  = static_cast&lt;void*&gt;(ptrdbl_);
+		CppAD::thread_alloc::return_memory(v);
+	}
+	base_alloc operator-(void) const
+	{	base_alloc result;
+		*result.ptrdbl_ = - *ptrdbl_;
+		return result;
+	}
+	base_alloc operator+(void) const
+	{	return *this; }
+	void operator=(const base_alloc&amp; x)
+	{	*ptrdbl_ = *x.ptrdbl_; }
+	BASE_ALLOC_ASSIGN_OPERATOR(+=)
+	BASE_ALLOC_ASSIGN_OPERATOR(-=)
+	BASE_ALLOC_ASSIGN_OPERATOR(*=)
+	BASE_ALLOC_ASSIGN_OPERATOR(/=)
+	BASE_ALLOC_BINARY_OPERATOR(+)
+	BASE_ALLOC_BINARY_OPERATOR(-)
+	BASE_ALLOC_BINARY_OPERATOR(*)
+	BASE_ALLOC_BINARY_OPERATOR(/)
+	BASE_ALLOC_BOOL_OPERATOR(==)
+	BASE_ALLOC_BOOL_OPERATOR(!=)
+	// The &lt;= operator is not necessary for the base type requirements 
+	// (needed so we can use NearEqual with base_alloc arguments).
+	BASE_ALLOC_BOOL_OPERATOR(&lt;=)
+};
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="CondExpOp" id="CondExpOp">CondExpOp</a></big></b>
+<br/>
+The type <code><font color="blue">base_alloc</font></code> does not use <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
+ operations.
+Hence its <code><font color="blue">CondExpOp</font></code> function is defined by
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline base_alloc CondExpOp( 
+		enum CompareOp     cop          ,
+		const base_alloc&amp;       left         ,
+		const base_alloc&amp;       right        , 
+		const base_alloc&amp;       exp_if_true  , 
+		const base_alloc&amp;       exp_if_false )
+	{	// not used
+		assert(false);
+
+		// to void compiler error
+		return base_alloc();
+	}
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="CondExpRel" id="CondExpRel">CondExpRel</a></big></b>
+<br/>
+The <a href="base_cond_exp.xml#CondExpRel" target="_top"><span style='white-space: nowrap'>CPPAD_COND_EXP_REL</span></a>
+ macro invocation
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_COND_EXP_REL(base_alloc)
+}
+</pre></font></code>
+
+uses <code><font color="blue">CondExpOp</font></code> above to
+define 
+<code><font color="blue"><span style='white-space: nowrap'>CondExp</span></font><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
+ for <code><font color="blue">base_alloc</font></code> arguments
+and 
+<code><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
+ equal to
+<code><font color="blue">Lt</font></code>, <code><font color="blue">Le</font></code>, <code><font color="blue">Eq</font></code>, <code><font color="blue">Ge</font></code>, and <code><font color="blue">Gt</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="EqualOpSeq" id="EqualOpSeq">EqualOpSeq</a></big></b>
+<br/>
+The type <code><font color="blue">base_alloc</font></code> is simple (in this respect) and so we define
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline bool EqualOpSeq(const base_alloc&amp; x, const base_alloc&amp; y)
+	{	return *x.ptrdbl_ == *y.ptrdbl_; }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Identical" id="Identical">Identical</a></big></b>
+<br/>
+The type <code><font color="blue">base_alloc</font></code> is simple (in this respect) and so we define
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline bool IdenticalPar(const base_alloc&amp; x)
+	{	return true; }
+	inline bool IdenticalZero(const base_alloc&amp; x)
+	{	return (*x.ptrdbl_ == 0.0); }
+	inline bool IdenticalOne(const base_alloc&amp; x)
+	{	return (*x.ptrdbl_ == 1.0); }
+	inline bool IdenticalEqualPar(const base_alloc&amp; x, const base_alloc&amp; y)
+	{	return (*x.ptrdbl_ == *y.ptrdbl_); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Output Operator" id="Output Operator">Output Operator</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	std::ostream&amp; operator &lt;&lt; (std::ostream &amp;os, const base_alloc&amp; x)
+	{	os &lt;&lt; *x.ptrdbl_;
+		return os;
+	}
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Integer" id="Integer">Integer</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline int Integer(const base_alloc&amp; x)
+	{	return static_cast&lt;int&gt;(*x.ptrdbl_); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
+<br/>
+The <code><font color="blue">base_alloc</font></code> type supports ordered comparisons
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline bool GreaterThanZero(const base_alloc&amp; x)
+	{	return *x.ptrdbl_ &gt; 0.0; }
+	inline bool GreaterThanOrZero(const base_alloc&amp; x)
+	{	return *x.ptrdbl_ &gt;= 0.0; }
+	inline bool LessThanZero(const base_alloc&amp; x)
+	{	return *x.ptrdbl_ &lt; 0.0; }
+	inline bool LessThanOrZero(const base_alloc&amp; x)
+	{	return *x.ptrdbl_ &lt;= 0.f; }
+	inline bool abs_geq(const base_alloc&amp; x, const base_alloc&amp; y)
+	{	return std::fabs(*x.ptrdbl_) &gt;= std::fabs(*y.ptrdbl_); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Unary Standard Math" id="Unary Standard Math">Unary Standard Math</a></big></b>
+<br/>
+The macro
+<a href="base_std_math.xml#CPPAD_STANDARD_MATH_UNARY" target="_top"><span style='white-space: nowrap'>CPPAD_STANDARD_MATH_UNARY</span></a>
+
+would not work with the type <code><font color="blue">base_alloc</font></code> so we define
+a special macro for this type:
+<code><font color='blue'><pre style='display:inline'> 
+# define BASE_ALLOC_STD_MATH(fun) \
+	inline base_alloc fun (const base_alloc&amp; x) \
+	{ return   std::fun(*x.ptrdbl_); }
+</pre></font></code>
+
+The following invocations of the macro above define the 
+<a href="base_std_math.xml#Unary Standard Math" target="_top"><span style='white-space: nowrap'>unary&#xA0;standard&#xA0;math</span></a>
+ functions
+(except for <code><font color="blue">abs</font></code>):
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	BASE_ALLOC_STD_MATH(acos)
+	BASE_ALLOC_STD_MATH(asin)
+	BASE_ALLOC_STD_MATH(atan)
+	BASE_ALLOC_STD_MATH(cos)
+	BASE_ALLOC_STD_MATH(cosh)
+	BASE_ALLOC_STD_MATH(exp)
+	BASE_ALLOC_STD_MATH(log)
+	BASE_ALLOC_STD_MATH(log10)
+	BASE_ALLOC_STD_MATH(sin)
+	BASE_ALLOC_STD_MATH(sinh)
+	BASE_ALLOC_STD_MATH(sqrt)
+	BASE_ALLOC_STD_MATH(tan)
+	BASE_ALLOC_STD_MATH(tanh)
+}
+</pre></font></code>
+
+The absolute value function is special because its <code><font color="blue">std</font></code> name is 
+<code><font color="blue">fabs</font></code>
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline base_alloc abs(const base_alloc&amp; x)
+	{	return std::fabs(*x.ptrdbl_); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="sign" id="sign">sign</a></big></b>
+<br/>
+The following defines the <code><font color="blue">CppAD::sign</font></code> function that
+is required to use <code><font color="blue">AD&lt;base_alloc&gt;</font></code>:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline base_alloc sign(const base_alloc&amp; x)
+	{	if( *x.ptrdbl_ &gt; 0.0 )
+			return 1.0;
+		if( *x.ptrdbl_ == 0.0 )
+			return 0.0;
+		return -1.0;
+	}
+}
+</pre></font></code>
+
+ 
+<br/>
+<br/>
+<b><big><a name="pow" id="pow">pow</a></big></b>
+<br/>
+The following defines a <code><font color="blue">CppAD::pow</font></code> function that
+is required to use <code><font color="blue">AD&lt;base_alloc&gt;</font></code>:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline base_alloc pow(const base_alloc&amp; x, const base_alloc&amp; y)
+	{ return std::pow(*x.ptrdbl_, *y.ptrdbl_); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="limits" id="limits">limits</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	template &lt;&gt;
+	class numeric_limits&lt;base_alloc&gt; {
+	public:
+		// machine epsilon
+		static base_alloc epsilon(void)
+		{	return std::numeric_limits&lt;base_alloc&gt;::epsilon(); }
+		// minimum positive normalized value
+		static base_alloc min(void)
+		{	return std::numeric_limits&lt;base_alloc&gt;::min(); }
+		// maximum finite value
+		static base_alloc max(void)
+		{	return std::numeric_limits&lt;base_alloc&gt;::max(); }
+	};
+	// deprecated machine epsilon
+	template &lt;&gt; 
+	inline base_alloc epsilon&lt;base_alloc&gt;(void)
+	{	return numeric_limits&lt;base_alloc&gt;::epsilon(); }
+}
+</pre></font></code>
+
+
+
+<hr/>Input File: example/base_alloc.hpp
+
+</body>
+</html>

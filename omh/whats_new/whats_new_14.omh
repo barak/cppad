@@ -1,0 +1,143 @@
+$Id: whats_new_14.omh 3127 2014-02-28 15:28:12Z bradbell $
+/* --------------------------------------------------------------------------
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+
+CppAD is distributed under multiple licenses. This distribution is under
+the terms of the 
+                    Eclipse Public License Version 1.0.
+
+A copy of this license is included in the COPYING file of this distribution.
+Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+-------------------------------------------------------------------------- */
+
+$begin whats_new_14$$
+$dollar @$$
+$spell
+	doxygen
+	ipopt
+	adolc
+	colpack
+	Jacobian
+	openmp
+	pthread
+	bthread
+	isnan
+	onetape
+	retape
+	fadbad
+	sacado
+	boolsparsity
+	cmake
+	docdir
+	CppAD
+	cppad
+	datadir
+$$
+
+$section CppAD Changes and Additions During 2014$$
+
+$head Introduction$$
+This section contains a list of the changes to CppAD during 2014
+(in reverse order by date).
+The purpose of this section is to
+assist you in learning about changes between various versions of CppAD.
+
+$head 02-28$$
+The $cref/data/CppAD_vector/data/$$ function was added to the
+$code CppAD::vector$$ template class.
+
+$head 02-27$$
+The CppAD developer documentation for the subdirectory
+$code cppad/ipopt$$ was not being built by the command 
+$code bin/run_doxygen.sh$$. 
+This has been fixed.
+
+$head 02-26$$
+$list number$$
+The 
+$cref/adolc/speed_adolc/$$ and
+$cref/cppad/speed_cppad/$$ sparse jacobian speed tests now print out
+$cref/n_sweep/sparse_jacobian/n_sweep/$$.
+$lnext
+The size of some of the $cref speed$$ test cases has been increased
+to test behavior for larger problems.
+$lnext
+A link to $cref ode_evaluate$$ was missing in the
+$cref/Speed Utility Routines/speed_utility/Speed Utility Routines/$$ table.
+This has been fixed.
+$lend
+
+
+$head 02-23$$
+The $cref/color_method/sparse_jacobian/work/color_method/$$
+option was added to the sparse Jacobian calculations.
+This enables one to use $cref/ColPack/colpack_prefix/$$ 
+do color the rows or columns.
+The speed test $cref/colpack/speed_main/option_list/colpack/$$ option 
+was also added (but not yet implemented for 
+$cref/sparse_hessian/link_sparse_hessian/$$ speed tests).
+
+
+$head 02-22$$
+The program names in
+$cref  thread_test.cpp$$ where changes from
+$icode%threading%_test%$$ to $codei%multi_thread_%threading%$$
+where $icode threading$$ is $code openmp$$, $code pthread$$ or $code bthread$$.
+
+$head 02-17$$
+Fix ambiguous call to $cref/isnan/nan/isnan/$$ 
+during MS Visual Studio 2012 compilation.
+
+$head 02-15$$
+$list number$$
+The $cref/boolsparsity/speed_main/option_list/boolsparsity/$$ option
+was added to the $cref speed_main$$ program.
+$lnext
+The $code retape$$ option what changed to 
+$cref/onetape/speed_main/option_list/onetape/$$ so that the default
+is to retape (option not present).
+This was done because 
+$cref/fadbad/fadbad_prefix/$$ and
+$cref/sacado/sacado_prefix/$$ always retape.
+$lnext
+The documentation, and example source code, for all the speed
+$cref/options/speed_main/option_list/$$ was improved
+(made clearer).
+$lnext
+Improve the success rate for 
+$cref speed_test.cpp$$ and $cref time_test.cpp$$.
+$lend
+
+$head 01-26$$
+The destination directory for the
+$cref/cppad documentation/cmake/cmake_install_docdir/$$
+is now set separately from the data directory
+using the $code cmake$$ option
+$codei%
+	-D cmake_install_docdir=%cmake_install_docdir%
+%$$
+This has increased the flexibility of the documentation installation
+and removed the need for the option
+$codei%
+	-D cppad_documentation=%yes_or_no%
+%$$
+which has been removed.
+	
+$head 01-21$$
+The destination directory for the
+cppad documentation
+used to be one of the following:
+$codei%
+	%prefix%/%datadir%/doc/cppad-%version%
+	%prefix%/%datadir%/doc/%postfix%cppad-%version%
+%$$
+This has been changed by dropping the $icode version$$ number
+at the end of the directory name.
+
+$head 01-10$$
+The change on $cref/2013-12-27/whats_new_13/12-27/$$
+caused a conversion error in $cref atan2$$ when it was used with
+$code AD< AD<double> >$$ arguments (and other similar cases).
+This has been fixed.
+
+$end

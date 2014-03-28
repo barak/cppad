@@ -1,0 +1,386 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type</title>
+<meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type"/>
+<meta name="keywords" id="keywords" content=" Adolc adouble as Base Adolc's "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_base_adolc.hpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="base_require.cpp.xml" target="_top">Prev</a>
+</td><td><a href="mul_level_adolc.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>base_require</option>
+<option>base_example</option>
+<option>base_adolc.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>AD-&gt;</option>
+<option>ad_ctor</option>
+<option>ad_assign</option>
+<option>Convert</option>
+<option>ADValued</option>
+<option>BoolValued</option>
+<option>VecAD</option>
+<option>base_require</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>base_require-&gt;</option>
+<option>base_member</option>
+<option>base_cond_exp</option>
+<option>base_identical</option>
+<option>base_ordered</option>
+<option>base_std_math</option>
+<option>base_example</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>base_example-&gt;</option>
+<option>base_alloc.hpp</option>
+<option>base_require.cpp</option>
+<option>base_adolc.hpp</option>
+<option>base_float.hpp</option>
+<option>base_double.hpp</option>
+<option>base_complex.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>base_adolc.hpp-&gt;</option>
+<option>mul_level_adolc.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Example</option>
+<option>Include Files</option>
+<option>CondExpOp</option>
+<option>EqualOpSeq</option>
+<option>Identical</option>
+<option>Integer</option>
+<option>Ordered</option>
+<option>Unary Standard Math</option>
+<option>sign</option>
+<option>abs</option>
+<option>pow</option>
+<option>limits</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+
+
+ 
+
+<center><b><big><big>Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/example/base_adolc.hpp&gt;<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+The file <a href="mul_level_adolc.cpp.xml" target="_top"><span style='white-space: nowrap'>mul_level_adolc.cpp</span></a>
+ contains an example use of
+Adolc's <code><font color="blue">adouble</font></code> type for a CppAD 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ type.
+It returns true if it succeeds and false otherwise.
+The file <a href="mul_level_adolc_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>mul_level_adolc_ode.cpp</span></a>
+ contains a more realistic
+(and complex) example.
+
+<br/>
+<br/>
+<b><big><a name="Include Files" id="Include Files">Include Files</a></big></b>
+<br/>
+This file <code><font color="blue">base_adolc.hpp</font></code> requires <code><font color="blue">adouble</font></code> to be defined.
+In addition, it is included before <code><font color="blue">&lt;cppad/cppad.hpp&gt;</font></code>,
+but it needs to include parts of CppAD that are used by this file.
+This is done with the following include commands:
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;adolc/adolc.h&gt;
+# include &lt;cppad/base_require.hpp&gt;
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="CondExpOp" id="CondExpOp">CondExpOp</a></big></b>
+<br/>
+The type <code><font color="blue">adouble</font></code> supports a conditional assignment function
+with the syntax
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;condassign(</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>d</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+which evaluates to
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;(</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;&#xA0;0)&#xA0;?&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;:&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>d</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
+</span></font></code>
+This enables one to include conditionals in the recording of
+<code><font color="blue">adouble</font></code> operations and later evaluation for different
+values of the independent variables 
+(in the same spirit as the CppAD <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
+ function).
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline adouble CondExpOp(
+		enum  CppAD::CompareOp     cop ,
+		const adouble            &amp;left ,
+		const adouble           &amp;right ,
+		const adouble        &amp;trueCase ,
+		const adouble       &amp;falseCase )
+	{	adouble result;
+		switch( cop )
+		{
+			case CompareLt: // left &lt; right
+			condassign(result, right - left, trueCase, falseCase);
+			break;
+
+			case CompareLe: // left &lt;= right
+			condassign(result, left - right, falseCase, trueCase);
+			break;
+
+			case CompareEq: // left == right
+			condassign(result, left - right, falseCase, trueCase);
+			condassign(result, right - left, falseCase, result);
+			break;
+
+			case CompareGe: // left &gt;= right
+			condassign(result, right - left, falseCase, trueCase);
+			break;
+
+			case CompareGt: // left &gt; right
+			condassign(result, left - right, trueCase, falseCase);
+			break;
+			default:
+			CppAD::ErrorHandler::Call(
+				true     , __LINE__ , __FILE__ ,
+				&quot;CppAD::CondExp&quot;,
+				&quot;Error: for unknown reason.&quot;
+			);
+			result = trueCase;
+		}
+		return result;
+	}
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="EqualOpSeq" id="EqualOpSeq">EqualOpSeq</a></big></b>
+<br/>
+The Adolc user interface does not specify a way to determine if 
+two <code><font color="blue">adouble</font></code> variables correspond to the same operations sequence. 
+Make <code><font color="blue">EqualOpSeq</font></code> an error if it gets used:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline bool EqualOpSeq(const adouble &amp;x, const adouble &amp;y)
+	{	CppAD::ErrorHandler::Call(
+			true     , __LINE__ , __FILE__ ,
+			&quot;CppAD::EqualOpSeq(x, y)&quot;,
+			&quot;Error: adouble does not support EqualOpSeq.&quot;
+		);
+		return false;
+	}
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Identical" id="Identical">Identical</a></big></b>
+<br/>
+The Adolc user interface does not specify a way to determine if an 
+<code><font color="blue">adouble</font></code> depends on the independent variables. 
+To be safe (but slow) return <code><font color="blue">false</font></code> in all the cases below.
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline bool IdenticalPar(const adouble &amp;x)
+	{	return false; }
+	inline bool IdenticalZero(const adouble &amp;x)
+	{	return false; }
+	inline bool IdenticalOne(const adouble &amp;x)
+	{	return false; }
+	inline bool IdenticalEqualPar(const adouble &amp;x, const adouble &amp;y)
+	{	return false; }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Integer" id="Integer">Integer</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	inline int Integer(const adouble &amp;x)
+	{    return static_cast&lt;int&gt;( x.getValue() ); }
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline bool GreaterThanZero(const adouble &amp;x)
+	{    return (x &gt; 0); }
+	inline bool GreaterThanOrZero(const adouble &amp;x)
+	{    return (x &gt;= 0); }
+	inline bool LessThanZero(const adouble &amp;x)
+	{    return (x &lt; 0); }
+	inline bool LessThanOrZero(const adouble &amp;x)
+	{    return (x &lt;= 0); }
+	inline bool abs_geq(const adouble&amp; x, const adouble&amp; y)
+	{	return fabs(x) &gt;= fabs(y); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Unary Standard Math" id="Unary Standard Math">Unary Standard Math</a></big></b>
+<br/>
+The following <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
+ functions 
+are defined by the Adolc package for the <code><font color="blue">adouble</font></code> base case:
+<code><span style='white-space: nowrap'><br/>
+</span></code><code><font color="blue">acos</font></code>,
+<code><font color="blue">asin</font></code>,
+<code><font color="blue">atan</font></code>,
+<code><font color="blue">cos</font></code>,
+<code><font color="blue">cosh</font></code>,
+<code><font color="blue">exp</font></code>,
+<code><font color="blue">fabs</font></code>,
+<code><font color="blue">log</font></code>,
+<code><font color="blue">sin</font></code>,
+<code><font color="blue">sinh</font></code>,
+<code><font color="blue">sqrt</font></code>,
+<code><font color="blue">tan</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="sign" id="sign">sign</a></big></b>
+<br/>
+This <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
+ function is defined using the 
+<code><font color="blue">codassign</font></code> function so that its <code><font color="blue">adouble</font></code> operation sequence
+does not depend on the value of 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+.
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline adouble sign(const adouble&amp; x)
+	{	adouble s_plus, s_minus, half(.5);
+		// set s_plus to sign(x)/2,  except for case x == 0, s_plus = -.5
+		condassign(s_plus,  +x, -half, +half);
+		// set s_minus to -sign(x)/2, except for case x == 0, s_minus = -.5
+		condassign(s_minus, -x, -half, +half);
+		// set s to sign(x)
+		return s_plus - s_minus;
+	}
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="abs" id="abs">abs</a></big></b>
+<br/>
+This <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
+ function uses the adolc <code><font color="blue">fabs</font></code> 
+function:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	inline adouble abs(const adouble&amp; x)
+	{	return fabs(x); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="pow" id="pow">pow</a></big></b>
+<br/>
+This <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
+ function 
+is defined by the Adolc package for the <code><font color="blue">adouble</font></code> base case.
+
+<br/>
+<br/>
+<b><big><a name="limits" id="limits">limits</a></big></b>
+<br/>
+The following defines the numeric limits functions
+<code><font color="blue">epsilon</font></code>, <code><font color="blue">min</font></code>, and <code><font color="blue">max</font></code> for the type
+<code><font color="blue">adouble</font></code>.
+It also defines the deprecated <code><font color="blue">epsilon</font></code> function:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	template &lt;&gt;
+	class numeric_limits&lt;adouble&gt; {
+	public:
+		// machine epsilon
+		static adouble epsilon(void)
+		{	return adouble( std::numeric_limits&lt;double&gt;::epsilon() ); }
+		// minimum positive normalized value
+		static adouble min(void)
+		{	return adouble( std::numeric_limits&lt;float&gt;::min() ); }
+		// maximum finite value
+		static adouble max(void)
+		{	return adouble( std::numeric_limits&lt;float&gt;::max() ); }
+	};
+	// deprecated machine epsilon
+	template &lt;&gt; inline adouble epsilon&lt;adouble&gt;(void)
+	{	return numeric_limits&lt;adouble&gt;::epsilon(); }
+}
+</pre></font></code>
+
+
+<hr/>Input File: cppad/example/base_adolc.hpp
+
+</body>
+</html>

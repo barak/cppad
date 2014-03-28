@@ -1,0 +1,560 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using CMake to Configure CppAD</title>
+<meta name="description" id="description" content="Using CMake to Configure CppAD"/>
+<meta name="keywords" id="keywords" content=" cmake configure cppad command makefile generator install prefix include directories data directory library postfix package c++ compile flags maximum number threads sparsity internal structure vector of sets memory usage tape ctor implicit or explicit "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_cmake_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="download.xml" target="_top">Prev</a>
+</td><td><a href="adolc_prefix.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Install</option>
+<option>cmake</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Install-&gt;</option>
+<option>download</option>
+<option>cmake</option>
+<option>cmake_check</option>
+<option>pkgconfig</option>
+<option>InstallUnix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>cmake-&gt;</option>
+<option>adolc_prefix</option>
+<option>colpack_prefix</option>
+<option>eigen_prefix</option>
+<option>fadbad_prefix</option>
+<option>ipopt_prefix</option>
+<option>sacado_prefix</option>
+<option>cppad_testvector</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>The CMake Program</option>
+<option>CMake Command</option>
+<option>generator</option>
+<option>cmake_install_prefix</option>
+<option>cmake_install_includedirs</option>
+<option>cmake_install_datadir</option>
+<option>cmake_install_docdir</option>
+<option>cmake_install_libdirs</option>
+<option>cmake_install_postfix</option>
+<option>package_prefix</option>
+<option>cppad_cxx_flags</option>
+<option>cppad_testvector</option>
+<option>cppad_max_num_threads</option>
+<option>cppad_sparse_list</option>
+<option>cppad_tape_id_type</option>
+<option>cppad_tape_addr_type</option>
+<option>cppad_implicit_ctor_from_any_type</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+
+<center><b><big><big>Using CMake to Configure CppAD</big></big></b></center>
+<br/>
+<b><big><a name="The CMake Program" id="The CMake Program">The CMake Program</a></big></b>
+
+<br/>
+The 
+<a href="http://www.cmake.org/cmake/help/install.html" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+  
+program enables one to create a single set of scripts,
+called <code><font color="blue">CMakeLists.txt</font></code>, 
+that can be used to test and install a program on Unix, Microsoft, or
+Apple operating systems. 
+For example, one can use it to automatically generate Microsoft project files.
+   
+<br/>
+<br/>
+<b><big><a name="CMake Command" id="CMake Command">CMake Command</a></big></b>
+
+
+
+<br/>
+The command below assumes that <code><font color="blue">cmake</font></code> is in your execution
+path. If not, you can put the path to <code><font color="blue">cmake</font></code> in font the command. 
+Only the <code><font color="blue">cmake</font></code> command and the path to the distribution directory
+(<code><font color="blue">..</font></code> at the end of the command below) are required.
+In other words, the first and last lines below are required
+and all of the other lines are optional.
+Create a <code><font color="blue">build</font></code> subdirectory of the 
+<a href="download.xml#Distribution Directory" target="_top"><span style='white-space: nowrap'>distribution&#xA0;directory</span></a>
+,
+change into the <code><font color="blue">build</font></code>  directory, 
+and execute the following command:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+cmake&#xA0;</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-G&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>generator</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_includedirs=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_includedirs</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_datadir=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_docdir=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_docdir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_libdirs=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_libdirs</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_postfix=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;adolc_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;colpack_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>colpack_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;eigen_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>eigen_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;fadbad_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>fadbad_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;ipopt_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>ipopt_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;sacado_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>sacado_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_cxx_flags=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_cxx_flags</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_testvector=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_max_num_threads=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_sparse_list=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_id_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_addr_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_implicit_ctor_from_any_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;..<br/>
+</span></font></code>
+<br/>
+<b><big><a name="generator" id="generator">generator</a></big></b>
+
+
+<br/>
+The CMake program is capable of generating different kinds of files.
+Below is a table with a few of the possible files
+<table><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>generator</span></font></i></code>
+ </td><td align='left'  valign='top'>
+ Description </td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">&quot;Unix Makefiles&quot;</font></code>   </td><td align='left'  valign='top'>
+ make files for unix operating system </td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">&quot;NMake Makefiles&quot;</font></code>  </td><td align='left'  valign='top'>
+ make files for Visual Studio
+</td></tr>
+</table>
+Other generator choices are available; see the cmake 
+<a href="http://www.cmake.org/cmake/help/cmake2.6docs.html#section_Generators" target="_top"><span style='white-space: nowrap'>generators</span></a>
+ documentation.
+
+<br/>
+<br/>
+<b><big><a name="cmake_install_prefix" id="cmake_install_prefix">cmake_install_prefix</a></big></b>
+
+
+<br/>
+This is the prefix directory for the CppAD files that get installed by the 
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;make&#xA0;install<br/>
+</span></font></code>
+All of the installed files will be placed below this directory.
+The default value for this directory is <code><font color="blue">/usr</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="cmake_install_includedirs" id="cmake_install_includedirs">cmake_install_includedirs</a></big></b>
+
+
+<br/>
+This can be one directory, or a list of directories separated
+by spaces or by semi-colons.
+This first entry in the list is the directory, 
+below the 
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+,
+where the CppAD include files will be installed.
+This directory, and the others in the list, are used for searching
+for include files.
+The default value for this directory list is <code><font color="blue">include</font></code>.
+For example, if 
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+,
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_includedirs</span></font></i></code>
+, and
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i></code>
+, are not specified,
+the file <code><font color="blue">cppad.hpp</font></code> will be installed in the location
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;/usr/include/cppad/cppad.hpp<br/>
+</span></font></code>
+<br/>
+<b><big><a name="cmake_install_datadir" id="cmake_install_datadir">cmake_install_datadir</a></big></b>
+
+
+<br/>
+This is the directory, 
+below the 
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+,
+where the data files will be installed.
+The default value for this directory is <code><font color="blue">share</font></code>.
+For example, if 
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+ and
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i></code>
+ are not specified,
+the <a href="pkgconfig.xml" target="_top"><span style='white-space: nowrap'>pkgconfig</span></a>
+ file <code><font color="blue">cppad.pc</font></code> will be installed in the location
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;/usr/share/pkgconfig/cppad.pc<br/>
+</span></font></code>
+<br/>
+<b><big><a name="cmake_install_docdir" id="cmake_install_docdir">cmake_install_docdir</a></big></b>
+
+
+<br/>
+This is the directory is present, the documentation files are installed
+in this sub-directory below the 
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+.
+The default value for this directory is <code><font color="blue">share</font></code>.
+For example, if 
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+ and
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i></code>
+ are not specified, and
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_docdir=share/doc<br/>
+</span></font></code>
+the file <code><font color="blue">cppad.xml</font></code> will be installed in the location
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;/usr/share/doc/cppad/cppad.xml<br/>
+</span></font></code>
+<br/>
+<b><big><a name="cmake_install_libdirs" id="cmake_install_libdirs">cmake_install_libdirs</a></big></b>
+
+
+<br/>
+This can be one directory, or a list of directories separated
+by spaces or semi-colons.
+The first entry in the list is the directory, 
+below the 
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+,
+where the CppAD library files will be installed.
+This directory, and the others in the list, are used for searching
+for library files.
+The default value for this directory list is <code><font color="blue">lib</font></code>.
+For example, if 
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+,
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i></code>
+,
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_libdirs</span></font></i></code>
+ are not specified, and
+
+<code><i><font color="black"><span style='white-space: nowrap'>ipopt_prefix</span></font></i></code>
+ is specified,
+the file <code><font color="blue">libcppad_ipopt.a</font></code> will be installed in the location
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;/usr/lib/libcppad_ipopt.a<br/>
+</span></font></code>
+<br/>
+<b><big><a name="cmake_install_postfix" id="cmake_install_postfix">cmake_install_postfix</a></big></b>
+
+
+<br/>
+This is the directory, 
+below the include, data, and library directories,
+where files will be installed.
+The default value for this directory is empty 
+(as the example cases above demonstrate).
+For example, 
+if 
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i></code>
+ and
+
+<code><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i></code>
+ are not specified, and
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_postfix=coin<br/>
+</span></font></code>
+the <a href="pkgconfig.xml" target="_top"><span style='white-space: nowrap'>pkgconfig</span></a>
+ file <code><font color="blue">cppad.pc</font></code> will be installed in the location
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;/usr/share/coin/pkgconfig/cppad.pc<br/>
+</span></font></code>
+<br/>
+<b><big><a name="package_prefix" id="package_prefix">package_prefix</a></big></b>
+
+
+
+<table><tr><td align='left'  valign='top'>
+
+<a href="adolc_prefix.xml" target="_top">adolc_prefix</a></td><td>
+Including the ADOL-C Examples and Tests</td></tr>
+<tr><td>
+
+<a href="colpack_prefix.xml" target="_top">colpack_prefix</a></td><td>
+Including the ColPack Sparsity Calculations</td></tr>
+<tr><td>
+
+<a href="eigen_prefix.xml" target="_top">eigen_prefix</a></td><td>
+Including the Eigen Examples and Tests</td></tr>
+<tr><td>
+
+<a href="fadbad_prefix.xml" target="_top">fadbad_prefix</a></td><td>
+Including the FADBAD Speed Tests</td></tr>
+<tr><td>
+
+<a href="ipopt_prefix.xml" target="_top">ipopt_prefix</a></td><td>
+Including the cppad_ipopt Library and Tests</td></tr>
+<tr><td>
+
+<a href="sacado_prefix.xml" target="_top">sacado_prefix</a></td><td>
+Including the Sacado Speed Tests</td></tr>
+<tr><td>
+
+</td></tr>
+</table>
+<br/>
+<b><big><a name="cppad_cxx_flags" id="cppad_cxx_flags">cppad_cxx_flags</a></big></b>
+
+
+
+<br/>
+This specifies the addition compiler flags,
+besides the debug and release flags,
+that are used when compiling the CppAD examples and tests.
+The default value for these flags is the empty string <code><font color="blue">&quot;&quot;</font></code>.
+These flags must be valid for the C++ compiler
+on your system.
+For example, if you are using <code><font color="blue">g++</font></code> you could specify
+<code><font color='blue'><pre style='display:inline'> 
+	-D cppad_cxx_flags=&quot;-Wall -ansi -pedantic-errors -std=c++98 -Wshadow&quot;
+</pre></font></code>
+
+The packages
+<a href="eigen_prefix.xml" target="_top"><span style='white-space: nowrap'>eigen</span></a>
+ and <a href="fadbad_prefix.xml" target="_top"><span style='white-space: nowrap'>fadbad</span></a>
+
+currently generate a lot of shadowed variable warnings.
+Hence the <code><font color="blue">-Wshadow</font></code> flag is automatically removed when
+compiling examples and test that use these packages.
+
+<br/>
+<br/>
+<b><big><a name="cppad_testvector" id="cppad_testvector">cppad_testvector</a></big></b>
+<br/>
+See <a href="cppad_testvector.xml" target="_top">Choosing the CppAD Test Vector Template Class</a>.
+
+<br/>
+<br/>
+<b><big><a name="cppad_max_num_threads" id="cppad_max_num_threads">cppad_max_num_threads</a></big></b>
+
+
+<br/>
+The value 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i></code>
+
+must be greater than or equal to four; i.e.,
+
+<code><i><font color="black"><span style='white-space: nowrap'>max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;=&#xA0;4</span></font></code>
+.
+The current default value for 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i></code>
+ is 48,
+but it may change in future versions of CppAD.
+The value 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i></code>
+ in turn specifies
+the default value for the preprocessor symbol
+<a href="multi_thread.xml#CPPAD_MAX_NUM_THREADS" target="_top"><span style='white-space: nowrap'>CPPAD_MAX_NUM_THREADS</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="cppad_sparse_list" id="cppad_sparse_list">cppad_sparse_list</a></big></b>
+
+
+<br/>
+There are two possible values for this option, <code><font color="blue">YES</font></code> and <code><font color="blue">NO</font></code>.
+This affect the internal data structure used to store a 
+<a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
+ when the
+users version of the sparsity pattern is a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code>.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i></code>
+ is <code><font color="blue">NO</font></code>
+the vectors of standard sets are also used internally.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i></code>
+ is <code><font color="blue">YES</font></code>,
+a special sparse list structure is used instead.
+This should affect the speed and memory required by the
+<a href="sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
+, <a href="sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
+, and
+<a href="sparse.xml" target="_top"><span style='white-space: nowrap'>sparse&#xA0;drivers</span></a>
+
+The default value for 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i></code>
+ is <code><font color="blue">YES</font></code>
+
+<br/>
+<br/>
+<b><big><a name="cppad_tape_id_type" id="cppad_tape_id_type">cppad_tape_id_type</a></big></b>
+
+
+
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i></code>
+ 
+is used for identifying different tapes.
+The valid values for this type are
+<code><font color="blue">unsigned short int</font></code>,
+<code><font color="blue">unsigned int</font></code>, and
+<code><font color="blue">size_t</font></code>.
+The smaller the value of 
+<code><font color="blue"><span style='white-space: nowrap'>sizeof(</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+,
+the less memory is used.
+On the other hand, the value
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;std::numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::max()<br/>
+</span></font></code>
+must be larger than the maximum number of tapes used by one thread times
+<a href="multi_thread.xml#CPPAD_MAX_NUM_THREADS" target="_top"><span style='white-space: nowrap'>CPPAD_MAX_NUM_THREADS</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="cppad_tape_addr_type" id="cppad_tape_addr_type">cppad_tape_addr_type</a></big></b>
+
+
+
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i></code>
+ 
+is used for address in the AD recordings (tapes).
+The valid values for this argument are
+<code><font color="blue">unsigned short int</font></code>,
+<code><font color="blue">unsigned int</font></code>,
+<code><font color="blue">size_t</font></code>.
+The smaller the value of 
+<code><font color="blue"><span style='white-space: nowrap'>sizeof(</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+,
+the less memory is used.
+On the other hand, the value
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;std::numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::max()<br/>
+</span></font></code>
+must be larger than any of the following:
+<a href="seq_property.xml#size_op" target="_top"><span style='white-space: nowrap'>size_op</span></a>
+,
+<a href="seq_property.xml#size_op_arg" target="_top"><span style='white-space: nowrap'>size_op_arg</span></a>
+,
+<a href="seq_property.xml#size_text" target="_top"><span style='white-space: nowrap'>size_par</span></a>
+,
+<a href="seq_property.xml#size_par" target="_top"><span style='white-space: nowrap'>size_par</span></a>
+,
+<a href="seq_property.xml#size_VecAD" target="_top"><span style='white-space: nowrap'>size_par</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="cppad_implicit_ctor_from_any_type" id="cppad_implicit_ctor_from_any_type">cppad_implicit_ctor_from_any_type</a></big></b>
+
+
+
+<br/>
+The default value for 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></font></i></code>
+ is <code><font color="blue">NO</font></code>.
+If it is <code><font color="blue">YES</font></code>, there is a 
+<a href="ad_ctor.xml#x.deprecated" target="_top"><span style='white-space: nowrap'>deprecated</span></a>
+
+implicit type constructor (type conversion)
+from any type to 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+.
+Otherwise this constructor is 
+<a href="ad_ctor.xml#x.explicit" target="_top"><span style='white-space: nowrap'>explicit</span></a>
+.
+
+
+
+
+
+
+<hr/>Input File: omh/install/cmake.omh
+
+</body>
+</html>

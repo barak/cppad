@@ -1,0 +1,688 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Reciprocal as an Atomic Operation: Example and Test</title>
+<meta name="description" id="description" content="Reciprocal as an Atomic Operation: Example and Test"/>
+<meta name="keywords" id="keywords" content=" reciprocal atomic operation simple "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_atomic_reciprocal.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="atomic_norm_sq.cpp.xml" target="_top">Prev</a>
+</td><td><a href="atomic_tangent.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>atomic_base</option>
+<option>atomic_reciprocal.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>std_math_ad</option>
+<option>MathOther</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>atomic_base-&gt;</option>
+<option>atomic_ctor</option>
+<option>atomic_option</option>
+<option>atomic_afun</option>
+<option>atomic_forward</option>
+<option>atomic_reverse</option>
+<option>atomic_for_sparse_jac</option>
+<option>atomic_rev_sparse_jac</option>
+<option>atomic_rev_sparse_hes</option>
+<option>atomic_base_clear</option>
+<option>atomic_get_started.cpp</option>
+<option>atomic_norm_sq.cpp</option>
+<option>atomic_reciprocal.cpp</option>
+<option>atomic_tangent.cpp</option>
+<option>atomic_mat_mul.cpp</option>
+</select>
+</td>
+<td>atomic_reciprocal.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Theory</option>
+<option>Start Class Definition</option>
+<option>Constructor</option>
+<option>forward</option>
+<option>reverse</option>
+<option>for_sparse_jac</option>
+<option>rev_sparse_jac</option>
+<option>rev_sparse_hes</option>
+<option>End Class Definition</option>
+<option>Use Atomic Function</option>
+<option>---..Constructor</option>
+<option>---..Recording</option>
+<option>---..forward</option>
+<option>---..reverse</option>
+<option>---..for_sparse_jac</option>
+<option>---..rev_sparse_jac</option>
+<option>---..rev_sparse_hes</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+<center><b><big><big>Reciprocal as an Atomic Operation: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Theory" id="Theory">Theory</a></big></b>
+<br/>
+This example demonstrates using <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
+
+to define the operation
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+ where
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">=</mo>
+<mn>1</mn>
+</mrow></math>
+
+, 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>m</mi>
+<mo stretchy="false">=</mo>
+<mn>1</mn>
+</mrow></math>
+
+, and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+.
+
+
+
+<br/>
+<br/>
+<b><big><a name="Start Class Definition" id="Start Class Definition">Start Class Definition</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+namespace {           // isolate items below to this file
+using CppAD::vector;  // abbreviate as vector
+//
+// a utility to compute the union of two sets.
+void my_union(
+	std::set&lt;size_t&gt;&amp;         result  ,
+	const std::set&lt;size_t&gt;&amp;   left    ,
+	const std::set&lt;size_t&gt;&amp;   right   )
+{	std::set&lt;size_t&gt; temp;
+	std::set_union(
+		left.begin()              ,
+		left.end()                ,
+		right.begin()             ,
+		right.end()               ,
+		std::inserter(temp, temp.begin())
+	);
+	result.swap(temp);
+}
+//
+class atomic_reciprocal : public CppAD::atomic_base&lt;double&gt; {
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="Constructor" id="Constructor">Constructor</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	public:
+	// constructor (could use const char* for name)
+	atomic_reciprocal(const std::string&amp; name) : 
+	CppAD::atomic_base&lt;double&gt;(name)
+	{ }
+	private:
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="forward" id="forward">forward</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// forward mode routine called by CppAD
+	virtual bool forward(
+		size_t                    q ,
+		size_t                    p ,
+		const vector&lt;bool&gt;&amp;      vx ,
+		      vector&lt;bool&gt;&amp;      vy ,
+		const vector&lt;double&gt;&amp;    tx ,
+		      vector&lt;double&gt;&amp;    ty
+	)
+	{	size_t n = tx.size() / (p + 1);
+		size_t m = ty.size() / (p + 1);
+		assert( n == 1 );
+		assert( m == 1 );
+		assert( q &lt;= p );
+
+		// return flag
+		bool ok = p &lt;= 2;
+
+		// check for defining variable information
+		// This case must always be implemented
+		if( vx.size() &gt; 0 )
+			vy[0] = vx[0];
+
+		// Order zero forward mode.
+		// This case must always be implemented
+		// y^0 = f( x^0 ) = 1 / x^0
+		double f = 1. / tx[0];
+		if( q &lt;= 0 )
+			ty[0] = f;
+		if( p &lt;= 0 )
+			return ok;
+		assert( vx.size() == 0 );
+
+		// Order one forward mode.
+		// This case needed if first order forward mode is used.
+		// y^1 = f'( x^0 ) x^1
+		double fp = - f / tx[0];
+		if( q &lt;= 1 )
+			ty[1] = fp * tx[1]; 
+		if( p &lt;= 1 )
+			return ok;
+
+		// Order two forward mode.
+		// This case needed if second order forward mode is used.
+		// Y''(t) = X'(t)^\R{T} f''[X(t)] X'(t) + f'[X(t)] X''(t)
+		// 2 y^2  = x^1 * f''( x^0 ) x^1 + 2 f'( x^0 ) x^2
+		double fpp  = - 2.0 * fp / tx[0];
+		ty[2] = tx[1] * fpp * tx[1] / 2.0 + fp * tx[2];
+		if( p &lt;= 2 )
+			return ok;
+
+		// Assume we are not using forward mode with order &gt; 2
+		assert( ! ok );
+		return ok;
+	}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="reverse" id="reverse">reverse</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// reverse mode routine called by CppAD
+	virtual bool reverse(
+		size_t                    p ,
+		const vector&lt;double&gt;&amp;    tx ,
+		const vector&lt;double&gt;&amp;    ty ,
+		      vector&lt;double&gt;&amp;    px ,
+		const vector&lt;double&gt;&amp;    py
+	)
+	{	size_t n = tx.size() / (p + 1);
+		size_t m = ty.size() / (p + 1);	
+		assert( px.size() == n * (p + 1) );
+		assert( py.size() == m * (p + 1) );
+		assert( n == 1 );
+		assert( m == 1 );
+		bool ok = p &lt;= 2;	
+
+		double f, fp, fpp, fppp;
+		switch(p)
+		{	case 0:
+			// This case needed if first order reverse mode is used
+			// reverse: F^0 ( tx ) = y^0 = f( x^0 )
+			f     = ty[0];
+			fp    = - f / tx[0];
+			px[0] = py[0] * fp;;
+			assert(ok);
+			break;
+
+			case 1:
+			// This case needed if second order reverse mode is used
+			// reverse: F^1 ( tx ) = y^1 = f'( x^0 ) x^1
+			f      = ty[0];
+			fp     = - f / tx[0];
+			fpp    = - 2.0 * fp / tx[0];
+			px[1]  = py[1] * fp;
+			px[0]  = py[1] * fpp * tx[1];
+			// reverse: F^0 ( tx ) = y^0 = f( x^0 );
+			px[0] += py[0] * fp;
+			assert(ok);
+			break;
+
+			case 2:
+			// This needed if third order reverse mode is used
+			// reverse: F^2 ( tx ) = y^2 =
+			//          = x^1 * f''( x^0 ) x^1 / 2 + f'( x^0 ) x^2
+			f      = ty[0];
+			fp     = - f / tx[0];
+			fpp    = - 2.0 * fp / tx[0];
+			fppp   = - 3.0 * fpp / tx[0];
+			px[2]  = py[2] * fp;
+			px[1]  = py[2] * fpp * tx[1];
+			px[0]  = py[2] * tx[1] * fppp * tx[1] / 2.0 + fpp * tx[2]; 
+			// reverse: F^1 ( tx ) = y^1 = f'( x^0 ) x^1
+			px[1] += py[1] * fp;
+			px[0] += py[1] * fpp * tx[1];
+			// reverse: F^0 ( tx ) = y^0 = f( x^0 );
+			px[0] += py[0] * fp;
+			assert(ok);
+			break;
+
+			default:
+			assert(!ok);
+		}
+		return ok;
+	}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="for_sparse_jac" id="for_sparse_jac">for_sparse_jac</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// forward Jacobian bool sparsity routine called by CppAD
+	virtual bool for_sparse_jac(
+		size_t                                q ,
+		const vector&lt;bool&gt;&amp;                   r ,
+		      vector&lt;bool&gt;&amp;                   s )
+	{	// This function needed if using f.ForSparseJac 
+		// with afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum )
+		size_t n = r.size() / q;
+		size_t m = s.size() / q;
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// sparsity for S(x) = f'(x) * R is same as sparsity for R
+		for(size_t j = 0; j &lt; q; j++)
+			s[j] = r[j];
+
+		return true; 
+	}
+	// forward Jacobian set sparsity routine called by CppAD
+	virtual bool for_sparse_jac(
+		size_t                                q ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
+	{	// This function needed if using f.ForSparseJac 
+		// with afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum )
+		size_t n = r.size();
+		size_t m = s.size();
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// sparsity for S(x) = f'(x) * R is same as sparsity for R
+		s[0] = r[0];
+
+		return true; 
+	}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="rev_sparse_jac" id="rev_sparse_jac">rev_sparse_jac</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// reverse Jacobian bool sparsity routine called by CppAD
+	virtual bool rev_sparse_jac(
+		size_t                                q  ,
+		const vector&lt;bool&gt;&amp;                   rt ,
+		      vector&lt;bool&gt;&amp;                   st )
+	{	// This function needed if using RevSparseJac or optimize
+		// with afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum )
+		size_t n = st.size() / q;
+		size_t m = rt.size() / q;
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// sparsity for S(x)^T = f'(x)^T * R^T is same as sparsity for R^T
+		for(size_t i = 0; i &lt; q; i++)
+			st[i] = rt[i];
+
+		return true; 
+	}
+	// reverse Jacobian set sparsity routine called by CppAD
+	virtual bool rev_sparse_jac(
+		size_t                                q  ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     rt ,
+		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     st )
+	{	// This function needed if using RevSparseJac or optimize
+		// with afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum )
+		size_t n = st.size();
+		size_t m = rt.size();
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// sparsity for S(x)^T = f'(x)^T * R^T is same as sparsity for R^T
+		st[0] = rt[0];
+
+		return true; 
+	}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="rev_sparse_hes" id="rev_sparse_hes">rev_sparse_hes</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// reverse Hessian bool sparsity routine called by CppAD
+	virtual bool rev_sparse_hes(
+		const vector&lt;bool&gt;&amp;                   vx,
+		const vector&lt;bool&gt;&amp;                   s ,
+		      vector&lt;bool&gt;&amp;                   t ,
+		size_t                                q ,
+		const vector&lt;bool&gt;&amp;                   r ,
+		const vector&lt;bool&gt;&amp;                   u ,
+		      vector&lt;bool&gt;&amp;                   v )
+	{	// This function needed if using RevSparseHes
+		// with afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum )
+		size_t m = s.size();
+		size_t n = t.size();
+		assert( r.size() == n * q );
+		assert( u.size() == m * q );
+		assert( v.size() == n * q );
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// There are no cross term second derivatives for this case,
+		// so it is not necessary to vx.
+
+		// sparsity for T(x) = S(x) * f'(x) is same as sparsity for S
+		t[0] = s[0];
+
+		// V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R 
+		// U(x) = g''(y) * f'(x) * R
+		// S(x) = g'(y)
+		
+		// back propagate the sparsity for U, note f'(x) may be non-zero;
+		size_t j;
+		for(j = 0; j &lt; q; j++)
+			v[j] = u[j];
+
+		// include forward Jacobian sparsity in Hessian sparsity
+		// (note sparsty for f''(x) * R same as for R)
+		if( s[0] )
+		{	for(j = 0; j &lt; q; j++)
+				v[j] |= r[j];
+		}
+
+		return true;
+	}
+	// reverse Hessian set sparsity routine called by CppAD
+	virtual bool rev_sparse_hes(
+		const vector&lt;bool&gt;&amp;                   vx,
+		const vector&lt;bool&gt;&amp;                   s ,
+		      vector&lt;bool&gt;&amp;                   t ,
+		size_t                                q ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
+		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     v )
+	{	// This function needed if using RevSparseHes
+		// with afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum )
+		size_t n = vx.size();
+		size_t m = s.size();
+		assert( t.size() == n );
+		assert( r.size() == n );
+		assert( u.size() == m );
+		assert( v.size() == n );
+		assert( n == 1 );
+		assert( m == 1 );
+
+		// There are no cross term second derivatives for this case,
+		// so it is not necessary to vx.
+
+		// sparsity for T(x) = S(x) * f'(x) is same as sparsity for S
+		t[0] = s[0];
+	
+		// V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R 
+		// U(x) = g''(y) * f'(x) * R
+		// S(x) = g'(y)
+		
+		// back propagate the sparsity for U, note f'(x) may be non-zero;
+		v[0] = u[0];
+
+		// include forward Jacobian sparsity in Hessian sparsity
+		// (note sparsty for f''(x) * R same as for R)
+		if( s[0] )
+			my_union(v[0], v[0], r[0] );
+
+		return true;
+	}
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="End Class Definition" id="End Class Definition">End Class Definition</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+}; // End of atomic_reciprocal class
+}  // End empty namespace
+
+</pre></font></code>
+
+<br/>
+<br/>
+<b><big><a name="Use Atomic Function" id="Use Atomic Function">Use Atomic Function</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+bool reciprocal(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.Constructor" id="Use Atomic Function.Constructor">Constructor</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// --------------------------------------------------------------------
+	// Create the atomic reciprocal object
+	atomic_reciprocal afun(&quot;atomic_reciprocal&quot;);
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.Recording" id="Use Atomic Function.Recording">Recording</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// Create the function f(x)
+	//
+	// domain space vector
+	size_t n  = 1;
+	double  x0 = 0.5;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n);
+	ax[0]     = x0;
+
+	// declare independent variables and start tape recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+
+	// range space vector 
+	size_t m = 1;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
+
+	// call user function and store reciprocal(x) in au[0] 
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(m);
+	afun(ax, au);        // u = 1 / x
+
+	// now use AD division to invert to invert the operation
+	ay[0] = 1.0 / au[0]; // y = 1 / u = x
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
+	f.Dependent (ax, ay);  // f(x) = x
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.forward" id="Use Atomic Function.forward">forward</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// check function value 
+	double check = x0;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
+
+	// check zero order forward mode
+	size_t p;
+	vector&lt;double&gt; x_p(n), y_p(m);
+	p      = 0;
+	x_p[0] = x0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+
+	// check first order forward mode
+	p      = 1;
+	x_p[0] = 1;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	check  = 1.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+
+	// check second order forward mode
+	p      = 2;
+	x_p[0] = 0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	check  = 0.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.reverse" id="Use Atomic Function.reverse">reverse</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// third order reverse mode 
+	p     = 3;
+	vector&lt;double&gt; w(m), dw(n * p);
+	w[0]  = 1.;
+	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
+	check = 1.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  eps, eps);
+	check = 0.;
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1] , check,  eps, eps);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[2] , check,  eps, eps);
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.for_sparse_jac" id="Use Atomic Function.for_sparse_jac">for_sparse_jac</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// forward mode sparstiy pattern
+	size_t q = n;
+	CppAD::vectorBool r1(n * q), s1(m * q);
+	r1[0] = true;          // compute sparsity pattern for x[0]
+	//
+	afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
+	s1    = f.ForSparseJac(q, r1);
+	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
+	//
+	afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
+	s1    = f.ForSparseJac(q, r1);
+	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.rev_sparse_jac" id="Use Atomic Function.rev_sparse_jac">rev_sparse_jac</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// reverse mode sparstiy pattern
+	p = m;
+	CppAD::vectorBool s2(p * m), r2(p * n);
+	s2[0] = true;          // compute sparsity pattern for f[0]
+	//
+	afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
+	r2    = f.RevSparseJac(p, s2);
+	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
+	//
+	afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
+	r2    = f.RevSparseJac(p, s2);
+	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
+</pre></font></code>
+
+<br/>
+<br/>
+<b><a name="Use Atomic Function.rev_sparse_hes" id="Use Atomic Function.rev_sparse_hes">rev_sparse_hes</a></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+	// Hessian sparsity (using previous ForSparseJac call) 
+	CppAD::vectorBool s3(m), h(q * n);
+	s3[0] = true;        // compute sparsity pattern for f[0]
+	//
+	afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
+	h     = f.RevSparseHes(q, s3);
+	ok  &amp;= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
+	//
+	afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
+	h     = f.RevSparseHes(q, s3);
+	ok  &amp;= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
+
+	return ok;
+}
+</pre></font></code>
+
+ 
+
+<hr/>Input File: example/atomic/reciprocal.cpp
+
+</body>
+</html>

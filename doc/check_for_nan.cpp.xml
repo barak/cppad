@@ -1,0 +1,151 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>ADFun Checking For Nan: Example and Test</title>
+<meta name="description" id="description" content="ADFun Checking For Nan: Example and Test"/>
+<meta name="keywords" id="keywords" content=" check_for_nan example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_check_for_nan.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="check_for_nan.xml" target="_top">Prev</a>
+</td><td><a href="preprocessor.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>check_for_nan</option>
+<option>check_for_nan.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>check_for_nan-&gt;</option>
+<option>check_for_nan.cpp</option>
+</select>
+</td>
+<td>check_for_nan.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+<center><b><big><big>ADFun Checking For Nan: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+
+namespace {
+	void myhandler(
+		bool known       ,
+		int  line        ,
+		const char *file ,
+		const char *exp  ,
+		const char *msg  )
+	{	// error handler must not return, so throw an exception
+		throw std::string(&quot;myhandler&quot;);
+	}
+}
+
+bool check_for_nan(void)
+{	bool ok = true;
+	using CppAD::AD;
+
+	// replace the default CppAD error handler
+	CppAD::ErrorHandler info(myhandler);
+
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(2), ay(2);
+	ax[0] = 0.0;
+	ax[1] = 1.0;
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+	ay    = ax;
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(2), y(2);
+	x[0] = 2.0;
+	x[1] = CppAD::nan(0.0);
+
+	// use try / catch because this causes an exception
+	// (assuming that NDEBUG is not defined)
+	f.check_for_nan(true);
+	try {
+		y = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+
+		// should never reach here
+		ok = false;
+	}
+	catch(std::string msg)
+	{	ok &amp;= msg == &quot;myhandler&quot;;
+	} 
+
+	// now do calculation without an exception
+	f.check_for_nan(false);
+	y = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	ok &amp;= y[0] == x[0];
+	ok &amp;= CppAD::isnan( y[1] ); 
+	
+	return ok;
+}
+
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/check_for_nan.cpp
+
+</body>
+</html>
