@@ -1,0 +1,8 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --buildsystem=cmake --parallel
+
+# web documentation uses .xml extension
+override_dh_compress:
+	dh_compress -X.xml

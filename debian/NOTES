@@ -1,0 +1,34 @@
+## Misc Notes
+
+git svn clone https://projects.coin-or.org/svn/CppAD/ \
+ --trunk=trunk \
+ --branches=releases \
+ --branches=stable \
+ --tags=tags
+
+# Or to add the SVN remote to an existing git repo:
+
+  git config svn-remote.svn.url 'https://projects.coin-or.org/svn/CppAD'
+  git config svn-remote.svn.fetch 'trunk:refs/remotes/trunk'
+  git config svn-remote.svn.branches 'releases/*:refs/remotes/*'
+  git config svn-remote.svn.branches 'stable/*:refs/remotes/*'
+  git config svn-remote.svn.tags 'tags/*:refs/remotes/tags/*'
+
+  git svn fetch
+
+# configuration
+autoreconf --install
+
+./configure --with-boostvector --prefix=/usr \
+ ADOLC_DIR=/usr \
+ BOOST_DIR=/usr \
+ CXX_FLAGS="-O2 -Wall"
+
+# Packaging dependencies:
+
+# for building:
+apt-get install libboost1.49-dev
+apt-get install omhelp # oops this is missing!
+
+# for testing:
+apt-get install libadolc-dev

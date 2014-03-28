@@ -1,0 +1,39 @@
+Source: cppad
+Section: devel
+Priority: optional
+Maintainer: Debian Science Team <debian-science-maintainers@lists.alioth.debian.org>
+Uploaders: Miles Lubin <miles.lubin@gmail.com>,
+           Barak A. Pearlmutter <bap@debian.org>
+Build-Depends: debhelper (>= 9), dh-autoreconf,
+		doxygen, texlive-latex-base,
+		libboost-dev
+Standards-Version: 3.9.5
+Homepage: http://www.coin-or.org/CppAD/
+Vcs-Git: git://git.debian.org/collab-maint/cppad.git
+Vcs-Browser: http://git.debian.org/?p=collab-maint/cppad.git;a=summary
+
+Package: cppad
+Architecture: any
+Depends: ${misc:Depends}
+Suggests: cppad-doc
+Description: Automatic Differentiation (AD) of C++ algorithms
+ CppAD is a package for automatic differentiation of algorithms
+ written in C++.  Given appropriately written C++ code that computes a
+ function, CppAD augments it to also compute derivative values.  The
+ system uses templates, supports forward and reverse accumulation
+ modes, and allows nested derivatives.
+ .
+ This package contains only C++ header files.
+
+Package: cppad-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: Automatic Differentiation (AD) of C++ algorithms (documentation)
+ CppAD is a package for automatic differentiation of algorithms
+ written in C++.  Given appropriately written C++ code that computes a
+ function, CppAD augments it to also compute derivative values.  The
+ system uses templates, supports forward and reverse accumulation
+ modes, and allows nested derivatives.
+ .
+ This package contains the documentation.
