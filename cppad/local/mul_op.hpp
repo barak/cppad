@@ -1,13 +1,13 @@
-/* $Id: mul_op.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: mul_op.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_MUL_OP_INCLUDED
 # define CPPAD_MUL_OP_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -15,7 +15,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup mul_op_hpp mul_op.hpp
 \{
 \file mul_op.hpp
 Forward and reverse mode calculations for z = x * y.
@@ -38,8 +37,8 @@ and the argument \a parameter is not used.
 
 template <class Base>
 inline void forward_mulvv_op(
-	size_t        q           , 
 	size_t        p           , 
+	size_t        q           , 
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -51,8 +50,8 @@ inline void forward_mulvv_op(
 	CPPAD_ASSERT_UNKNOWN( NumRes(MulvvOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < i_z );
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[1]) < i_z );
-	CPPAD_ASSERT_UNKNOWN( p < nc_taylor );
-	CPPAD_ASSERT_UNKNOWN( q <= p );
+	CPPAD_ASSERT_UNKNOWN( q < nc_taylor );
+	CPPAD_ASSERT_UNKNOWN( p <= q );
 
 	// Taylor coefficients corresponding to arguments and result
 	Base* x = taylor + arg[0] * nc_taylor;
@@ -60,7 +59,7 @@ inline void forward_mulvv_op(
 	Base* z = taylor + i_z    * nc_taylor;
 
 	size_t k;
-	for(size_t d = q; d <= p; d++)
+	for(size_t d = p; d <= q; d++)
 	{	z[d] = Base(0);
 		for(k = 0; k <= d; k++)
 			z[d] += x[d-k] * y[k];
@@ -174,8 +173,8 @@ this operations is for the case where x is a parameter and y is a variable.
 
 template <class Base>
 inline void forward_mulpv_op(
-	size_t        q           , 
 	size_t        p           , 
+	size_t        q           , 
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -186,8 +185,8 @@ inline void forward_mulpv_op(
 	CPPAD_ASSERT_UNKNOWN( NumArg(MulpvOp) == 2 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(MulpvOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[1]) < i_z );
-	CPPAD_ASSERT_UNKNOWN( p < nc_taylor );
-	CPPAD_ASSERT_UNKNOWN( q <= p );
+	CPPAD_ASSERT_UNKNOWN( q < nc_taylor );
+	CPPAD_ASSERT_UNKNOWN( p <= q );
 
 	// Taylor coefficients corresponding to arguments and result
 	Base* y = taylor + arg[1] * nc_taylor;
@@ -196,7 +195,7 @@ inline void forward_mulpv_op(
 	// Paraemter value
 	Base x = parameter[ arg[0] ];
 
-	for(size_t d = q; d <= p; d++)
+	for(size_t d = p; d <= q; d++)
 		z[d] = x * y[d];
 }
 /*!
@@ -282,6 +281,5 @@ inline void reverse_mulpv_op(
 }
 
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

@@ -1,12 +1,12 @@
-/* $Id: sparse_unary_op.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: sparse_unary_op.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_SPARSE_UNARY_OP_INCLUDED
 # define CPPAD_SPARSE_UNARY_OP_INCLUDED
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -14,7 +14,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup sparse_unary_op_hpp sparse_unary_op.hpp
 \{
 \file sparse_unary_op.hpp
 Forward and reverse mode sparsity patterns for unary operators.
@@ -30,9 +29,9 @@ The C++ source code corresponding to a unary operation has the form
 \endverbatim
 where fun is a C++ unary function, or it has the form
 \verbatim
-	z = x op p
+	z = x op q
 \endverbatim
-where op is a C++ binary unary operator and p is a parameter.
+where op is a C++ binary unary operator and q is a parameter.
 
 \tparam Vector_set
 is the type used for vectors of sets. It can be either
@@ -85,9 +84,9 @@ The C++ source code corresponding to a unary operation has the form
 \endverbatim
 where fun is a C++ unary function, or it has the form
 \verbatim
-	z = x op p
+	z = x op q
 \endverbatim
-where op is a C++ bianry operator and p is a parameter.
+where op is a C++ bianry operator and q is a parameter.
 
 This routine is given the sparsity patterns
 for a function G(z, y, ... )
@@ -149,9 +148,9 @@ The C++ source code corresponding to this operation is
 \endverbatim
 where fun is a linear functions; e.g. abs, or
 \verbatim
-	z = x op p
+	z = x op q
 \endverbatim
-where op is a C++ binary operator and p is a parameter.
+where op is a C++ binary operator and q is a parameter.
 
 \copydetails reverse_sparse_hessian_unary_op
 */
@@ -181,9 +180,9 @@ The C++ source code corresponding to this operation is
 \endverbatim
 where fun is a non-linear functions; e.g. sin. or
 \verbatim
-	z = p / x
+	z = q / x
 \endverbatim
-where p is a parameter.
+where q is a parameter.
 
 
 \copydetails reverse_sparse_hessian_unary_op
@@ -207,6 +206,5 @@ inline void reverse_sparse_hessian_nonlinear_unary_op(
 	return;
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

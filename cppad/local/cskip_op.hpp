@@ -1,4 +1,4 @@
-// $Id: cskip_op.hpp 3129 2014-02-28 19:58:28Z bradbell $
+// $Id: cskip_op.hpp 3223 2014-03-19 15:13:26Z bradbell $
 # ifndef CPPAD_CSKIP_OP_INCLUDED
 # define CPPAD_CSKIP_OP_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -15,7 +15,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup cskip_op_hpp cskip_op.hpp
 \{
 \file cskip_op.hpp
 Zero order forward mode set which operations to skip.
@@ -185,7 +184,6 @@ inline void forward_cskip_op_0(
 	}
 	return;
 }
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif
 

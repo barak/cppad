@@ -1,4 +1,4 @@
-/* $Id: undef.hpp 3116 2014-02-24 21:44:26Z bradbell $ */
+/* $Id: undef.hpp 3214 2014-03-18 20:50:38Z bradbell $ */
 # ifndef CPPAD_UNDEF_INCLUDED
 # define CPPAD_UNDEF_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -68,6 +68,7 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_FOLD_BOOL_VALUED_BINARY_OPERATOR
 # undef CPPAD_FOR_JAC_SWEEP_TRACE
 # undef CPPAD_HAS_COLPACK
+# undef CPPAD_HAS_RVALUE
 # undef CPPAD_HAS_GETTIMEOFDAY
 # undef CPPAD_HAS_NULLPTR
 # undef CPPAD_INLINE_FRIEND_TEMPLATE_FUNCTION
@@ -84,7 +85,6 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_TRACE_CAPACITY
 # undef CPPAD_TRACE_THREAD
 # undef CPPAD_TRACK_DEBUG
-# undef CPPAD_USE_FORWARD0SWEEP
 # undef CPPAD_USER_MACRO
 # undef CPPAD_USER_MACRO_ONE
 # undef CPPAD_USER_MACRO_TWO

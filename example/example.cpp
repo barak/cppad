@@ -1,10 +1,10 @@
-/* $Id: example.cpp 3116 2014-02-24 21:44:26Z bradbell $ */
+/* $Id: example.cpp 3214 2014-03-18 20:50:38Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -61,7 +61,7 @@ extern bool Atan2(void);
 extern bool base_require(void);
 extern bool BenderQuad(void);
 extern bool BoolFun(void);
-extern bool capacity_taylor(void);
+extern bool capacity_order(void);
 extern bool change_const(void);
 extern bool check_for_nan(void);
 extern bool CheckNumericType(void);
@@ -87,7 +87,7 @@ extern bool ForOne(void);
 extern bool ForTwo(void);
 extern bool ForSparseJac(void);
 extern bool Forward(void);
-extern bool forward_mul(void);
+extern bool forward_order(void);
 extern bool fun_assign(void);
 extern bool FunCheck(void);
 extern bool HesLagrangian(void);
@@ -221,7 +221,7 @@ int main(void)
 	ok &= Run( Atan2,             "Atan2"            );
 	ok &= Run( BenderQuad,        "BenderQuad"       );
 	ok &= Run( BoolFun,           "BoolFun"          );
-	ok &= Run( capacity_taylor,   "capacity_taylor"  );
+	ok &= Run( capacity_order,    "capacity_order"   );
 	ok &= Run( change_const,      "change_const"     );
 	ok &= Run( check_for_nan,     "check_for_nan"    );
 	ok &= Run( CheckNumericType,  "CheckNumericType" );
@@ -243,7 +243,7 @@ int main(void)
 	ok &= Run( ForOne,            "ForOne"           );
 	ok &= Run( ForTwo,            "ForTwo"           );
 	ok &= Run( Forward,           "Forward"          ); 
-	ok &= Run( forward_mul,       "forward_mul"      ); 
+	ok &= Run( forward_order,     "forward_order"    ); 
 	ok &= Run( ForSparseJac,      "ForSparseJac"     );
 	ok &= Run( fun_assign,        "fun_assign"       );
 	ok &= Run( FunCheck,          "FunCheck"         );

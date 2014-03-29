@@ -1,13 +1,13 @@
-// $Id: csum_op.hpp 2910 2013-10-07 13:27:58Z bradbell $
+// $Id: csum_op.hpp 3223 2014-03-19 15:13:26Z bradbell $
 # ifndef CPPAD_CSUM_OP_INCLUDED
 # define CPPAD_CSUM_OP_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -15,7 +15,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup csum_op_hpp csum_op.hpp
 \{
 \file csum_op.hpp
 Forward, reverse and sparsity calculations for cummulative summation.
@@ -34,10 +33,10 @@ base type for the operator; i.e., this operation was recorded
 using AD< \a Base > and computations by this routine are done using type
 \a Base.
 
-\param q
+\param p
 lowest order of the Taylor coefficient that we are computing.
 
-\param p
+\param q
 highest order of the Taylor coefficient that we are computing.
 
 \param i_z
@@ -74,26 +73,26 @@ number of colums in the matrix containing all the Taylor coefficients.
 \param taylor
 \b Input: <tt>taylor [ arg[2+i] * nc_taylor + k ]</tt>
 for <tt>i = 1 , ... , m</tt> 
-and <tt>k = 0 , ... , p</tt>
+and <tt>k = 0 , ... , q</tt>
 is the k-th order Taylor coefficient corresponding to <tt>x(i)</tt>
 \n
 \b Input: <tt>taylor [ arg[2+m+i] * nc_taylor + k ]</tt>
 for <tt>i = 1 , ... , n</tt> 
-and <tt>k = 0 , ... , p</tt>
+and <tt>k = 0 , ... , q</tt>
 is the k-th order Taylor coefficient corresponding to <tt>y(i)</tt>
 \n
 \b Input: <tt>taylor [ i_z * nc_taylor + k ]</tt>
-for k = 0 , ... , q,
+for k = 0 , ... , p,
 is the k-th order Taylor coefficient corresponding to z.
 \n
 \b Output: <tt>taylor [ i_z * nc_taylor + k ]</tt>
-for k = q , ... , p,
+for k = p , ... , q,
 is the \a k-th order Taylor coefficient corresponding to z.
 */
 template <class Base>
 inline void forward_csum_op(
-	size_t        q           , 
 	size_t        p           , 
+	size_t        q           , 
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	size_t        num_par     ,
@@ -105,8 +104,8 @@ inline void forward_csum_op(
 
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumRes(CSumOp) == 1 );
-	CPPAD_ASSERT_UNKNOWN( p < nc_taylor );
-	CPPAD_ASSERT_UNKNOWN( q <= p );
+	CPPAD_ASSERT_UNKNOWN( q < nc_taylor );
+	CPPAD_ASSERT_UNKNOWN( p <= q );
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[2]) < num_par );
 	CPPAD_ASSERT_UNKNOWN( 
 		arg[0] + arg[1] == arg[ arg[0] + arg[1] + 3 ]
@@ -114,24 +113,24 @@ inline void forward_csum_op(
 
 	// Taylor coefficients corresponding to result
 	Base* z = taylor + i_z    * nc_taylor;
-	for(k = q; k <= p; k++)
+	for(k = p; k <= q; k++)
 		z[k] = zero;
-	if( q == 0 )
-		z[q] = parameter[ arg[2] ];
+	if( p == 0 )
+		z[p] = parameter[ arg[2] ];
 	Base* x;
 	i = arg[0];
 	j = 2;
 	while(i--)
 	{	CPPAD_ASSERT_UNKNOWN( size_t(arg[j+1]) < i_z );
 		x     = taylor + arg[++j] * nc_taylor;
-		for(k = q; k <= p; k++)
+		for(k = p; k <= q; k++)
 			z[k] += x[k];
 	}	
 	i = arg[1];
 	while(i--)
 	{	CPPAD_ASSERT_UNKNOWN( size_t(arg[j+1]) < i_z );
 		x     = taylor + arg[++j] * nc_taylor;
-		for(k = q; k <= p; k++)
+		for(k = p; k <= q; k++)
 			z[k] -= x[k];
 	}	
 }
@@ -141,7 +140,7 @@ Compute reverse mode Taylor coefficients for result of op = CsumOp.
 
 This operation is 
 \verbatim
-	z = p + x(1) + ... + x(m) - y(1) - ... - y(n).
+	z = q + x(1) + ... + x(m) - y(1) - ... - y(n).
 	H(y, x, w, ...) = G[ z(x, y), y, x, w, ... ] 
 \endverbatim
 
@@ -168,7 +167,7 @@ is the number of subtraction variables in this cummulative summation; i.e.,
 \c m.
 \n
 <tt>parameter[ arg[2] ]</tt>
-is the parameter value \c p in this cummunative summation.
+is the parameter value \c q in this cummunative summation.
 \n
 <tt>arg[2+i]</tt>
 for <tt>i = 1 , ... , m</tt> is the value <tt>x(i)</tt>. 
@@ -253,7 +252,7 @@ Forward mode Jacobian sparsity pattern for CSumOp operator.
 
 This operation is 
 \verbatim
-	z = p + x(1) + ... + x(m) - y(1) - ... - y(n).
+	z = q + x(1) + ... + x(m) - y(1) - ... - y(n).
 \endverbatim
 
 \tparam Vector_set
@@ -274,7 +273,7 @@ is the number of subtraction variables in this cummulative summation; i.e.,
 \c m.
 \n
 <tt>parameter[ arg[2] ]</tt>
-is the parameter value \c p in this cummunative summation.
+is the parameter value \c q in this cummunative summation.
 \n
 <tt>arg[2+i]</tt>
 for <tt>i = 1 , ... , m</tt> is the value <tt>x(i)</tt>. 
@@ -330,7 +329,7 @@ Reverse mode Jacobian sparsity pattern for CSumOp operator.
 
 This operation is 
 \verbatim
-	z = p + x(1) + ... + x(m) - y(1) - ... - y(n).
+	z = q + x(1) + ... + x(m) - y(1) - ... - y(n).
 	H(y, x, w, ...) = G[ z(x, y), y, x, w, ... ] 
 \endverbatim
 
@@ -352,7 +351,7 @@ is the number of subtraction variables in this cummulative summation; i.e.,
 \c m.
 \n
 <tt>parameter[ arg[2] ]</tt>
-is the parameter value \c p in this cummunative summation.
+is the parameter value \c q in this cummunative summation.
 \n
 <tt>arg[2+i]</tt>
 for <tt>i = 1 , ... , m</tt> is the value <tt>x(i)</tt>. 
@@ -406,7 +405,7 @@ Reverse mode Hessian sparsity pattern for CSumOp operator.
 
 This operation is 
 \verbatim
-	z = p + x(1) + ... + x(m) - y(1) - ... - y(n).
+	z = q + x(1) + ... + x(m) - y(1) - ... - y(n).
 	H(y, x, w, ...) = G[ z(x, y), y, x, w, ... ] 
 \endverbatim
 
@@ -428,7 +427,7 @@ is the number of subtraction variables in this cummulative summation; i.e.,
 \c m.
 \n
 <tt>parameter[ arg[2] ]</tt>
-is the parameter value \c p in this cummunative summation.
+is the parameter value \c q in this cummunative summation.
 \n
 <tt>arg[2+i]</tt>
 for <tt>i = 1 , ... , m</tt> is the value <tt>x(i)</tt>. 
@@ -502,6 +501,5 @@ inline void reverse_sparse_hessian_csum_op(
 	}	
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

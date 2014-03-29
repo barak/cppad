@@ -95,6 +95,12 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Introduction</option>
+<option>03-18</option>
+<option>03-17</option>
+<option>03-09</option>
+<option>03-05</option>
+<option>03-02</option>
+<option>03-01</option>
 <option>02-28</option>
 <option>02-27</option>
 <option>02-26</option>
@@ -120,6 +126,151 @@ This section contains a list of the changes to CppAD during 2014
 (in reverse order by date).
 The purpose of this section is to
 assist you in learning about changes between various versions of CppAD.
+
+<br/>
+<br/>
+<b><big><a name="03-18" id="03-18">03-18</a></big></b>
+
+<ol type="1"><li>
+The 
+<a href="fundeprecated.xml#size_taylor" target="_top"><span style='white-space: nowrap'>size_taylor</span></a>
+
+and
+<a href="fundeprecated.xml#capacity_taylor" target="_top"><span style='white-space: nowrap'>capacity_taylor</span></a>
+
+functions were deprecated;
+use <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
+ and <a href="capacity_order.xml" target="_top"><span style='white-space: nowrap'>capacity_order</span></a>
+ instead.
+</li><li>
+
+The documentation for <a href="forward.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
+ and the examples
+<a href="forward.cpp.xml" target="_top"><span style='white-space: nowrap'>forward.cpp</span></a>
+, <a href="forward_order.cpp.xml" target="_top"><span style='white-space: nowrap'>forward_order.cpp</span></a>
+, have been improved. 
+To be more specific, <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward_order</span></a>
+ now references the special
+cases <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
+, <a href="forward_one.xml" target="_top"><span style='white-space: nowrap'>forward_one</span></a>
+ and the new case
+<a href="forward_two.xml" target="_top"><span style='white-space: nowrap'>forward_two</span></a>
+.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="03-17" id="03-17">03-17</a></big></b>
+<br/>
+The 
+<a href="cppad_vector.xml#Assignment.Move Semantics" target="_top"><span style='white-space: nowrap'>move&#xA0;semantics</span></a>
+
+version of the <code><font color="blue">CppAD::vector</font></code> assignment statement
+was not checking vector sizes.
+This has been fixed so that things work the same with compilers
+that do not have move semantics.
+(Note that with move semantics, no extra memory allocation is done
+even if the target vector has a different size.)
+
+<br/>
+<br/>
+<b><big><a name="03-09" id="03-09">03-09</a></big></b>
+<br/>
+The documentation links
+<code><font color="blue">forwardzero</font></code>, <code><font color="blue">forwardone</font></code>, and <code><font color="blue">forwardany</font></code>
+have been changed to
+<a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
+, <a href="forward_one.xml" target="_top"><span style='white-space: nowrap'>forward_one</span></a>
+, 
+and <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward_order</span></a>
+ respectively.
+This may affect links from other web pages to the CppAD documentation.
+
+<br/>
+<br/>
+<b><big><a name="03-05" id="03-05">03-05</a></big></b>
+<br/>
+The names 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
+ in the 
+<a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
+,
+<a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
+,
+<a href="atomic_forward.xml" target="_top"><span style='white-space: nowrap'>atomic_forward</span></a>
+, and 
+<a href="atomic_reverse.xml" target="_top"><span style='white-space: nowrap'>atomic_reverse</span></a>
+ functions
+were reverse so that 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&lt;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
+. 
+This is only a notational change to make the arguments easier to remember.
+
+<br/>
+<br/>
+<b><big><a name="03-02" id="03-02">03-02</a></big></b>
+
+<ol type="1"><li>
+In the output for the speed
+<a href="speed_main.xml#test.correct" target="_top"><span style='white-space: nowrap'>correct</span></a>
+ test,
+mention which tests are not available. 
+Note that the set of available tests can depend on the
+<a href="speed_main.xml#option_list" target="_top"><span style='white-space: nowrap'>list&#xA0;of&#xA0;options</span></a>
+.
+</li><li>
+
+In the documentation for
+<a href="sparse_jacobian.xml#n_sweep" target="_top"><span style='white-space: nowrap'>n_sweep</span></a>
+,
+mention that it is equal to the number of colors determined by the
+<a href="sparse_jacobian.xml#work.color_method" target="_top"><span style='white-space: nowrap'>color_method</span></a>
+.
+</li><li>
+
+The <a href="speed_cppad.xml" target="_top"><span style='white-space: nowrap'>speed_cppad</span></a>
+ tests were simplified by removing the printing
+of auxillary information related to the 
+<a href="speed_main.xml#option_list.optimize" target="_top"><span style='white-space: nowrap'>optimize</span></a>
+ option.
+Future auxillary information will be passed back in a manner similar to
+<a href="link_sparse_jacobian.xml#n_sweep" target="_top"><span style='white-space: nowrap'>n_sweep</span></a>
+ for the sparse jacobian test.
+</li><li>
+
+<a href="cppad_vector.xml#Assignment.Move Semantics" target="_top"><span style='white-space: nowrap'>Move&#xA0;semantics</span></a>
+
+were added to the <code><font color="blue">CppAD::vector</font></code> assignment operator.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="03-01" id="03-01">03-01</a></big></b>
+
+<ol type="1"><li>
+Change the prototype for 
+<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
+ in the 
+<a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_jacobian</span></a>
+ speed test to be <code><font color="blue">const</font></code>; i.e.,
+they are not changed.
+</li><li>
+
+Move 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ near end of <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_hessian</span></a>
+ speed test
+parameter list,
+(as is the case for <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_jacobian</span></a>
+).
+</li></ol>
+
 
 <br/>
 <br/>

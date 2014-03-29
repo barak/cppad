@@ -105,6 +105,7 @@ A:active { color : purple }
 <option>Assignment</option>
 <option>---..Check Size</option>
 <option>---..Return Reference</option>
+<option>---..Move Semantics</option>
 <option>Element Access</option>
 <option>push_back</option>
 <option>push_vector</option>
@@ -238,6 +239,15 @@ An example use of this reference is in multiple assignments of the form
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
+<br/>
+<b><a name="Assignment.Move Semantics" id="Assignment.Move Semantics">Move Semantics</a></b>
+<br/>
+If the C++ compiler supports move semantic rvalues using the <code><font color="blue">&amp;&amp;</font></code>
+syntax, then it will be used during the vector assignment statement.
+This means that return values and other temporaries are not be copied,
+but rather pointers are transferred.
+
+<br/>
 <br/>
 <b><big><a name="Element Access" id="Element Access">Element Access</a></big></b>
 

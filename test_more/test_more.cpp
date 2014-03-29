@@ -1,10 +1,10 @@
-/* $Id: test_more.cpp 3083 2014-01-10 18:35:07Z bradbell $ */
+/* $Id: test_more.cpp 3214 2014-03-18 20:50:38Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -48,7 +48,7 @@ extern bool Exp(void);
 extern bool ForHess(void);
 extern bool for_sparse_jac(void);
 extern bool Forward(void);
-extern bool forward_mul(void);
+extern bool forward_order(void);
 extern bool FromBase(void);
 extern bool FunCheck(void);
 extern bool ipopt_solve(void);
@@ -157,7 +157,7 @@ int main(void)
 	ok &= Run( ForHess,         "ForHess"        );
 	ok &= Run( for_sparse_jac,  "for_sparse_jac" );
 	ok &= Run( Forward,         "Forward"        );
-	ok &= Run( forward_mul,     "forward_mul"    );
+	ok &= Run( forward_order,   "forward_order"  );
 	ok &= Run( FromBase,        "FromBase"       );
 	ok &= Run( FunCheck,        "FunCheck"       );
 	ok &= Run( jacobian,        "jacobian"       );

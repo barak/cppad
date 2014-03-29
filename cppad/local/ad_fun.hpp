@@ -1,4 +1,4 @@
-/* $Id: ad_fun.hpp 3112 2014-02-21 22:37:17Z bradbell $ */
+/* $Id: ad_fun.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_AD_FUN_INCLUDED
 # define CPPAD_AD_FUN_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -59,7 +59,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup ad_fun_hpp ad_fun.hpp
 \{
 \file ad_fun.hpp
 File used to define the ADFun<Base> class.
@@ -84,14 +83,14 @@ private:
 	/// debug checking number of comparision operations that changed
 	size_t compare_change_;
 
-	/// number of taylor_ coefficieint per variable (currently stored)
-	size_t taylor_per_var_;
+	/// number of orders stored in taylor_
+	size_t num_order_taylor_;
 
-	/// number of columns currently allocated for taylor_ array
-	size_t taylor_col_dim_;
+	/// maximum number of orders that will fit in taylor_
+	size_t cap_order_taylor_;
 
-	/// number of rows (variables) in the recording (play_)
-	size_t total_num_var_;
+	/// number of variables in the recording (play_)
+	size_t num_var_tape_;
 
 	/// tape address for the independent variables
 	CppAD::vector<size_t> ind_taddr_;
@@ -102,15 +101,19 @@ private:
 	/// which dependent variables are actually parameters
 	CppAD::vector<bool>   dep_parameter_;
 
-	/// the operation sequence corresponding to this object
-	player<Base> play_;
-
 	/// results of the forward mode calculations
 	pod_vector<Base> taylor_;
 
 	/// which operations can be conditionally skipped
 	/// Set during forward pass of order zero
-	CppAD::vector<bool> cskip_op_;
+	pod_vector<bool> cskip_op_;
+
+	/// Variable on the tape corresponding to each vecad load operation
+	/// (if zero, the operation corresponds to a parameter).
+	pod_vector<addr_t> load_op_;
+
+	/// the operation sequence corresponding to this object
+	player<Base> play_;
 
 	/// Packed results of the forward mode Jacobian sparsity calculations.
 	/// for_jac_sparse_pack_.n_set() != 0  implies other sparsity results
@@ -233,7 +236,7 @@ private:
 public:
 	/// copy constructor
 	ADFun(const ADFun& g) 
-	: total_num_var_(0)
+	: num_var_tape_(0)
 	{	CppAD::ErrorHandler::Call(
 		true,
 		__LINE__,
@@ -272,8 +275,9 @@ public:
 
 	/// forward mode sweep
 	template <typename VectorBase>
-	VectorBase Forward(
-		size_t p, const VectorBase& x, std::ostream& s = std::cout);
+	VectorBase Forward(size_t q, 
+		const VectorBase& x, std::ostream& s = std::cout
+	);
 
 	/// reverse mode sweep
 	template <typename VectorBase>
@@ -327,11 +331,11 @@ public:
 
 	/// number of operators in the operation sequence
 	size_t size_op(void) const
-	{	return play_.num_rec_op(); }
+	{	return play_.num_op_rec(); }
 
 	/// number of operator arguments in the operation sequence
 	size_t size_op_arg(void) const
-	{	return play_.num_rec_op_arg(); }
+	{	return play_.num_op_arg_rec(); }
 
 	/// amount of memory required for the operation sequence
 	size_t size_op_seq(void) const
@@ -339,26 +343,26 @@ public:
 
 	/// number of parameters in the operation sequence
 	size_t size_par(void) const
-	{	return play_.num_rec_par(); }
+	{	return play_.num_par_rec(); }
 
-	/// number of taylor_ coefficients currently calculated (per variable)
-	size_t size_taylor(void) const
-	{	return taylor_per_var_; } 
+	/// number taylor coefficient orders calculated 
+	size_t size_order(void) const
+	{	return num_order_taylor_; } 
 
 	/// number of characters in the operation sequence
 	size_t size_text(void) const
-	{	return play_.num_rec_text(); }
+	{	return play_.num_text_rec(); }
 
 	/// number of variables in opertion sequence
 	size_t size_var(void) const
-	{	return total_num_var_; }
+	{	return num_var_tape_; }
 
 	/// number of VecAD indices in the operation sequence
 	size_t size_VecAD(void) const
-	{	return play_.num_rec_vecad_ind(); }
+	{	return play_.num_vec_ind_rec(); }
 
-	/// set number of coefficients currently allocated (per variable)
-	void capacity_taylor(size_t per_var);   
+	/// set number of orders and directions currently allocated
+	void capacity_order(size_t c);   
 
 	/// number of variables in conditional expressions that can be skipped
 	size_t number_skip(void);   
@@ -483,41 +487,51 @@ public:
 	template <typename ADvector>
 	void Dependent(const ADvector &y);
 
-	/// deprecated: number of variables in opertion sequence
+	/// Deprecated: number of variables in opertion sequence
 	size_t Size(void) const
-	{	return total_num_var_; }
+	{	return num_var_tape_; }
 
-	/// deprecated: # taylor_ coefficients currently stored (per variable)
+	/// Deprecated: # taylor_ coefficients currently stored 
+	/// (per variable,direction)
 	size_t Order(void) const
-	{	return taylor_per_var_ - 1; }
+	{	return num_order_taylor_ - 1; }
 
 	/// Deprecated: amount of memory for this object 
 	/// Note that an approximation is used for the std::set<size_t> memory
 	size_t Memory(void) const
-	{	size_t pervar  = taylor_col_dim_ * sizeof(Base)
+	{	size_t pervar  = cap_order_taylor_ * sizeof(Base)
 		+ for_jac_sparse_pack_.memory()
 		+ 3 * sizeof(size_t) * for_jac_sparse_set_.number_elements();
-		size_t total   = total_num_var_ * pervar + play_.Memory();
+		size_t total   = num_var_tape_  * pervar + play_.Memory();
 		return total;
 	}
 
-	/// deprecated: # taylor_ coefficients stored (per variable)
+	/// Deprecated: # taylor_ coefficient orderss stored 
+	/// (per variable,direction)
 	size_t taylor_size(void) const
-	{	return taylor_per_var_; } 
+	{	return num_order_taylor_; } 
 
-	/// deprecated: Does this AD operation sequence use 
-	//VecAD<Base>::reference operands
+	/// Deprecated: Does this AD operation sequence use 
+	/// VecAD<Base>::reference operands
 	bool use_VecAD(void) const
-	{	return play_.num_rec_vecad_ind() > 0; }
+	{	return play_.num_vec_ind_rec() > 0; }
+
+	/// Deprecated: # taylor_ coefficient orders calculated 
+	/// (per variable,direction)
+	size_t size_taylor(void) const
+	{	return num_order_taylor_; } 
+
+	/// Deprecated: set number of orders currently allocated 
+	/// (per variable,direction)
+	void capacity_taylor(size_t per_var);   
 };
 // ---------------------------------------------------------------------------
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 // non-user interfaces
 # include <cppad/local/forward0sweep.hpp>
-# include <cppad/local/forward_sweep.hpp>
+# include <cppad/local/forward1sweep.hpp>
 # include <cppad/local/reverse_sweep.hpp>
 # include <cppad/local/for_jac_sweep.hpp>
 # include <cppad/local/rev_jac_sweep.hpp>

@@ -1,13 +1,13 @@
-/* $Id: tape_link.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: tape_link.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_TAPE_LINK_INCLUDED
 # define CPPAD_TAPE_LINK_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -22,10 +22,9 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup tape_link_hpp  tape_link.hpp
 \{
 \file tape_link.hpp
-Routines that Link AD<Base> and ADTape<Base> Objects \ref tape_link_hpp.
+Routines that Link AD<Base> and ADTape<Base> Objects.
 
 The routines that connect the AD<Base> class to the corresponding tapes
 (one for each thread).
@@ -310,6 +309,5 @@ inline ADTape<Base> *AD<Base>::tape_this(void) const
 	return *tape_handle(thread);
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

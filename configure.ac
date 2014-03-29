@@ -1,10 +1,10 @@
-dnl $Id: configure.ac 3116 2014-02-24 21:44:26Z bradbell $
+dnl $Id: configure.ac 3145 2014-03-03 12:28:04Z bradbell $
 dnl ---------------------------------------------------------------------------
 dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 dnl
 dnl CppAD is distributed under multiple licenses. This distribution is under
 dnl the terms of the
-dnl                     Eclipse Public License Version 1.0.
+dnl                     GNU General Public License Version 3.
 dnl 
 dnl A copy of this license is included in the COPYING file of this distribution.
 dnl Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT(cppad, 20140301, cppad@list.coin-or.org)
+AC_INIT(cppad, 20140328, cppad@list.coin-or.org)
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -442,6 +442,7 @@ AC_SUBST(cppad_has_colpack, 0)
 dnl auto-tools version cannot use c++11 compiler
 dnl so supress corresponding features
 AC_SUBST(cppad_has_nullptr, 0)
+AC_SUBST(cppad_has_rvalue, 0)
 
 dnl Determine if size_t has same size as unsigned int 
 AC_CHECK_SIZEOF([size_t])

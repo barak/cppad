@@ -1,10 +1,10 @@
-/* $Id: microsoft_timer.cpp 2625 2012-12-23 14:34:12Z bradbell $ */
+/* $Id: microsoft_timer.cpp 3223 2014-03-19 15:13:26Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -50,7 +50,6 @@ $end
 // _MSC_VER is not defined during generation. In general, it is a problem
 // that not all preprocessor options get documented.
 /*!
-\defgroup microsoft_timer_cpp microsoft_timer.cpp
 \{
 \file microsoft_timer.cpp
 \brief Microsoft version of elapsed_seconds.
@@ -86,5 +85,4 @@ double microsoft_timer(void)
 	return diff;
 }
 
-/*! \} */
 # endif

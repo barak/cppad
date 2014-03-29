@@ -627,6 +627,10 @@ If <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>
 <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
  line,
 you can set this method to <code><font color="blue">&quot;colpack&quot;</font></code>.
+This value only matters on the first call to <code><font color="blue">sparse_jacobian</font></code>
+after the 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ constructor or a call to <code><font color="blue">clear</font></code>.
 
 <br/>
 <br/>
@@ -644,6 +648,8 @@ If <code><font color="blue">SparseJacobianForward</font></code> (<code><font col
 <code><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i></code>
  is the number of first order forward (reverse) sweeps 
 used to compute the requested Jacobian values. 
+(This is also the number of colors determined by the coloring method
+mentioned above).
 This is proportional to the total work that <code><font color="blue">SparseJacobian</font></code> does, 
 not counting the zero order forward sweep, 
 or the work to combine multiple columns (rows) into a single sweep.

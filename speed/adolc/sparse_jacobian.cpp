@@ -1,10 +1,10 @@
-/* $Id: sparse_jacobian.cpp 3123 2014-02-26 21:40:18Z bradbell $ */
+/* $Id: sparse_jacobian.cpp 3138 2014-03-02 18:46:11Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -15,6 +15,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin adolc_sparse_jacobian.cpp$$
 $spell
+	const
 	sparsedrivers.cpp
 	colpack
 	boolsparsity
@@ -59,13 +60,14 @@ extern bool global_memory, global_onetape, global_atomic, global_optimize;
 extern bool global_colpack, global_boolsparsity;
 
 bool link_sparse_jacobian(
-	size_t                     size     , 
-	size_t                     repeat   , 
-	size_t                     m        ,
-	CppAD::vector<double>     &x_return ,
-	CppAD::vector<size_t>     &row      ,
-	CppAD::vector<size_t>     &col      ,
-	CppAD::vector<double>     &jacobian )
+	size_t                           size     , 
+	size_t                           repeat   , 
+	size_t                           m        ,
+	const CppAD::vector<size_t>&     row      ,
+	const CppAD::vector<size_t>&     col      ,
+	      CppAD::vector<double>&     x_return ,
+	      CppAD::vector<double>&     jacobian ,
+	      size_t&                    n_sweep  )
 {
 	if( global_atomic || (! global_colpack) )
 		return false; 
@@ -120,13 +122,37 @@ bool link_sparse_jacobian(
 	{	for(j = 0; j < n; j++)
 			jacobian[ i * n + j ] = 0.;
 	}
+
+	// choose a value for x
+	CppAD::uniform_01(n, x);
+
+	// declare independent variables
+	int keep = 0; // keep forward mode results 
+	trace_on(tag, keep);
+	for(j = 0; j < n; j++)
+		a_x[j] <<= x[j];
+
+	// AD computation of f (x) 
+	CppAD::sparse_jac_fun<ADScalar>(m, n, a_x, row, col, order, a_y);
+
+	// create function object f : x -> y
+	for(i = 0; i < m; i++)
+		a_y[i] >>= y[i];
+	trace_off();
+
+	// Retrieve n_sweep using undocumented feature of sparsedrivers.cpp
+	int same_pattern = 0;
+	options[2]       = -1;
+	n_sweep = sparse_jac(tag, int(m), int(n), 
+		same_pattern, x, &nnz, &rind, &cind, &values, options
+	);
+	options[2]       = 0;
 	// ----------------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
 	{	// choose a value for x
 		CppAD::uniform_01(n, x);
 
 		// declare independent variables
-		int keep = 0; // keep forward mode results 
 		trace_on(tag, keep);
 		for(j = 0; j < n; j++)
 			a_x[j] <<= x[j];
@@ -159,34 +185,7 @@ bool link_sparse_jacobian(
 		free(values);
 	}
 	else
-	{	// choose a value for x
-		CppAD::uniform_01(n, x);
-
-		// declare independent variables
-		int keep = 0; // keep forward mode results 
-		trace_on(tag, keep);
-		for(j = 0; j < n; j++)
-			a_x[j] <<= x[j];
-
-		// AD computation of f (x) 
-		CppAD::sparse_jac_fun<ADScalar>(m, n, a_x, row, col, order, a_y);
-
-		// create function object f : x -> y
-		for(i = 0; i < m; i++)
-			a_y[i] >>= y[i];
-		trace_off();
-
-		// Retrieve n_sweep using undocumented feature of sparsedrivers.cpp
-		int same_pattern = 0;
-		options[2]       = -1;
-		int n_sweep = sparse_jac(tag, int(m), int(n), 
-			same_pattern, x, &nnz, &rind, &cind, &values, options
-		);
-		options[2]       = 0;
-		extern size_t global_sparse_jacobian_n_sweep;
-		global_sparse_jacobian_n_sweep = size_t(n_sweep);
-
-		while(repeat--)
+	{	while(repeat--)
 		{	// choose a value for x
 			CppAD::uniform_01(n, x);
 
