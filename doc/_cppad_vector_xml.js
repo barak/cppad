@@ -63,6 +63,7 @@ var list_current0 = [
 'cppad_vector.xml#Assignment',
 'cppad_vector.xml#Assignment.Check Size',
 'cppad_vector.xml#Assignment.Return Reference',
+'cppad_vector.xml#Assignment.Move Semantics',
 'cppad_vector.xml#Element Access',
 'cppad_vector.xml#push_back',
 'cppad_vector.xml#push_vector',

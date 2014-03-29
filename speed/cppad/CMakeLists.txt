@@ -1,10 +1,10 @@
-# $Id: CMakeLists.txt 3122 2014-02-26 03:23:19Z bradbell $
+# $Id: CMakeLists.txt 3139 2014-03-02 21:12:00Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
-#                     Eclipse Public License Version 1.0.
+#                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -24,7 +24,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
 # add_executable(<name> [WIN32] [MACOSX_BUNDLE] [EXCLUDE_FROM_ALL]
 #                 source1 source2 ... sourceN
 # )
-ADD_EXECUTABLE(speed_cppad EXCLUDE_FROM_ALL ../main.cpp print_optimize.cpp
+ADD_EXECUTABLE(speed_cppad EXCLUDE_FROM_ALL ../main.cpp 
 	det_lu.cpp
 	det_minor.cpp
 	mat_mul.cpp

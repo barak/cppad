@@ -80,7 +80,6 @@ A:active { color : purple }
 <option>cppad_poly.cpp</option>
 <option>cppad_sparse_hessian.cpp</option>
 <option>cppad_sparse_jacobian.cpp</option>
-<option>cppad_print_optimize</option>
 </select>
 </td>
 <td>cppad_det_minor.cpp</td>
@@ -107,7 +106,6 @@ See <a href="link_det_minor.xml" target="_top"><span style='white-space: nowrap'
 # include &lt;cppad/vector.hpp&gt;
 # include &lt;cppad/speed/det_by_minor.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &quot;print_optimize.hpp&quot;
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
@@ -144,11 +142,6 @@ bool link_det_minor(
 	// the AD function object
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat &gt; 1) &amp; (previous_size != size);
-	previous_size = size;
-
 	// ---------------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
 	{
@@ -167,9 +160,7 @@ bool link_det_minor(
 		f.Dependent(A, detA);
 
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_det_minor_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
 	
 		// evaluate the determinant at the new matrix value
 		f.<a href="forward.xml" target="_top">Forward</a>(0, matrix);
@@ -194,9 +185,7 @@ bool link_det_minor(
 		f.Dependent(A, detA);
 
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_det_minor_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
 	
 		// ------------------------------------------------------
 		while(repeat--)

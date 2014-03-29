@@ -58,10 +58,9 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_cppad_OBJECTS = print_optimize.$(OBJEXT) main.$(OBJEXT) \
-	det_lu.$(OBJEXT) det_minor.$(OBJEXT) mat_mul.$(OBJEXT) \
-	ode.$(OBJEXT) poly.$(OBJEXT) sparse_hessian.$(OBJEXT) \
-	sparse_jacobian.$(OBJEXT)
+am_cppad_OBJECTS = main.$(OBJEXT) det_lu.$(OBJEXT) det_minor.$(OBJEXT) \
+	mat_mul.$(OBJEXT) ode.$(OBJEXT) poly.$(OBJEXT) \
+	sparse_hessian.$(OBJEXT) sparse_jacobian.$(OBJEXT)
 cppad_OBJECTS = $(am_cppad_OBJECTS)
 cppad_LDADD = $(LDADD)
 cppad_DEPENDENCIES =
@@ -86,16 +85,6 @@ CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD " $@;
-COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
-am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
-am__v_CC_0 = @echo "  CC    " $@;
-CCLD = $(CC)
-LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-AM_V_CCLD = $(am__v_CCLD_@AM_V@)
-am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
-am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
@@ -137,13 +126,13 @@ CXX_FLAGS_EIGEN = @CXX_FLAGS_EIGEN@
 CXX_FLAGS_FADBAD = @CXX_FLAGS_FADBAD@
 CYGPATH_W = @CYGPATH_W@
 
-# $Id: makefile.in 3121 2014-02-25 14:41:51Z bradbell $
+# $Id: makefile.in 3145 2014-03-03 12:28:04Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
-#                     Eclipse Public License Version 1.0.
+#                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -226,6 +215,7 @@ cppad_eigenvector = @cppad_eigenvector@
 cppad_has_colpack = @cppad_has_colpack@
 cppad_has_gettimeofday = @cppad_has_gettimeofday@
 cppad_has_nullptr = @cppad_has_nullptr@
+cppad_has_rvalue = @cppad_has_rvalue@
 cppad_implicit_ctor_from_any_type = @cppad_implicit_ctor_from_any_type@
 cppad_internal_sparse_set = @cppad_internal_sparse_set@
 cppad_libs = @cppad_libs@
@@ -285,8 +275,6 @@ LDADD = -lspeed
 AM_LDFLAGS = -L../src
 #
 cppad_SOURCES = \
-	print_optimize.hpp \
-	print_optimize.cpp \
 	../main.cpp \
 	det_lu.cpp  \
 	det_minor.cpp \
@@ -349,7 +337,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mat_mul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/poly.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/print_optimize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sparse_hessian.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sparse_jacobian.Po@am__quote@
 

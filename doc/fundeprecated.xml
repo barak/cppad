@@ -5,7 +5,7 @@
 <head>
 <title>ADFun Object Deprecated Member Functions</title>
 <meta name="description" id="description" content="ADFun Object Deprecated Member Functions"/>
-<meta name="keywords" id="keywords" content=" Adfun Dependent Order Memory Size taylor_size use_vecad "/>
+<meta name="keywords" id="keywords" content=" Adfun Dependent Order Memory Size taylor_size use_vecad size_taylor capacity_taylor "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -106,6 +106,10 @@ A:active { color : purple }
 <option>---..Deprecated</option>
 <option>use_VecAD</option>
 <option>---..Deprecated</option>
+<option>size_taylor</option>
+<option>---..Deprecated</option>
+<option>capacity_taylor</option>
+<option>---..Deprecated</option>
 </select>
 </td>
 </tr></table><br/>
@@ -131,6 +135,12 @@ A:active { color : purple }
 </span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.use_VecAD()<br/>
+</span></font></code>
+
+<code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_taylor()<br/>
+</span></font></code>
+
+<code><i><font color="black"><span style='white-space: nowrap'>w</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.capacity_taylor()<br/>
 </span></font></code>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -215,7 +225,7 @@ values so that
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  uses less memory. 
 In this case, the return value of <code><font color="blue">Order</font></code> would not make sense.
-Use <a href="size_taylor.xml" target="_top"><span style='white-space: nowrap'>size_taylor</span></a>
+Use <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
  to obtain 
 the number of Taylor coefficients currently stored
 in the ADFun object 
@@ -303,8 +313,7 @@ The result
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>t</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-and is the number of Taylor coefficients, 
-per variable in the AD operation sequence,
+and is the number of Taylor coefficient orders
 currently calculated and stored in the ADFun object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
@@ -313,8 +322,7 @@ currently calculated and stored in the ADFun object
 <br/>
 <b><a name="taylor_size.Deprecated" id="taylor_size.Deprecated">Deprecated</a></b>
 <br/>
-For the purpose of uniform naming,
-this function has been replaced by <a href="size_taylor.xml" target="_top"><span style='white-space: nowrap'>size_taylor</span></a>
+This function has been replaced by <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
 .
 
 <br/>
@@ -354,6 +362,56 @@ You can instead use
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_VecAD()&#xA0;&gt;&#xA0;0<br/>
 </span></font></code>
+<br/>
+<b><big><a name="size_taylor" id="size_taylor">size_taylor</a></big></b>
+
+
+<br/>
+The result 
+<code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and is the number of Taylor coefficient orders
+currently calculated and stored in the ADFun object 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><a name="size_taylor.Deprecated" id="size_taylor.Deprecated">Deprecated</a></b>
+<br/>
+This function has been replaced by <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="capacity_taylor" id="capacity_taylor">capacity_taylor</a></big></b>
+
+
+<br/>
+The result 
+<code><i><font color="black"><span style='white-space: nowrap'>w</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>w</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and is the number of Taylor coefficient orders currently allocated
+in the ADFun object 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><a name="capacity_taylor.Deprecated" id="capacity_taylor.Deprecated">Deprecated</a></b>
+<br/>
+This function has been replaced by <a href="capacity_order.xml" target="_top"><span style='white-space: nowrap'>capacity_order</span></a>
+.
+
+
 
 <hr/>Input File: omh/deprecated/fun_deprecated.omh
 

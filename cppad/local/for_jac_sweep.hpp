@@ -1,12 +1,12 @@
-/* $Id: for_jac_sweep.hpp 2991 2013-10-22 16:25:15Z bradbell $ */
+/* $Id: for_jac_sweep.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_FOR_JAC_SWEEP_INCLUDED
 # define CPPAD_FOR_JAC_SWEEP_INCLUDED
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -17,7 +17,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup for_jac_sweep_hpp for_jac_sweep.hpp
 \{
 \file for_jac_sweep.hpp
 Compute Forward mode Jacobian sparsity patterns.
@@ -69,7 +68,7 @@ is the number of independent variables on the tape.
 
 \param numvar
 is the total number of variables on the tape; i.e.,
-\a play->num_rec_var().
+\a play->num_var_rec().
 
 \param play
 The information stored in \a play
@@ -96,7 +95,7 @@ corresponds to the set with index i in \a var_sparsity.
 
 \par Checked Assertions:
 \li numvar == var_sparsity.n_set()
-\li numvar == play->num_rec_var()
+\li numvar == play->num_var_rec()
 */
 
 template <class Base, class Vector_set>
@@ -115,11 +114,11 @@ void ForJacSweep(
 	size_t            i, j, k;
 
 	// check numvar argument
-	CPPAD_ASSERT_UNKNOWN( play->num_rec_var()  == numvar );
+	CPPAD_ASSERT_UNKNOWN( play->num_var_rec()  == numvar );
 	CPPAD_ASSERT_UNKNOWN( var_sparsity.n_set() == numvar );
 
 	// length of the parameter vector (used by CppAD assert macros)
-	const size_t num_par = play->num_rec_par();
+	const size_t num_par = play->num_par_rec();
 
 	// cum_sparsity accumulates sparsity pattern a cummulative sum
 	size_t limit = var_sparsity.end();
@@ -128,8 +127,8 @@ void ForJacSweep(
 	// to all the other variables.
 	// vecad_ind maps a VecAD index (the beginning of the
 	// VecAD object) to its from index in vecad_sparsity
-	size_t num_vecad_ind   = play->num_rec_vecad_ind();
-	size_t num_vecad_vec   = play->num_rec_vecad_vec();
+	size_t num_vecad_ind   = play->num_vec_ind_rec();
+	size_t num_vecad_vec   = play->num_vecad_vec_rec();
 	Vector_set  vecad_sparsity;
 	vecad_sparsity.resize(num_vecad_vec, limit);
 	pod_vector<size_t> vecad_ind;
@@ -147,7 +146,7 @@ void ForJacSweep(
 			// start of next VecAD
 			j       += length + 1;
 		}
-		CPPAD_ASSERT_UNKNOWN( j == play->num_rec_vecad_ind() );
+		CPPAD_ASSERT_UNKNOWN( j == play->num_vec_ind_rec() );
 	}
 
 	// --------------------------------------------------------------
@@ -186,13 +185,13 @@ void ForJacSweep(
 # endif
 
 	// skip the BeginOp at the beginning of the recording
-	play->start_forward(op, arg, i_op, i_var);
+	play->forward_start(op, arg, i_op, i_var);
 	CPPAD_ASSERT_UNKNOWN( op == BeginOp );
 	bool more_operators = true;
 	while(more_operators)
 	{
 		// this op
-		play->next_forward(op, arg, i_op, i_var);
+		play->forward_next(op, arg, i_op, i_var);
 		CPPAD_ASSERT_UNKNOWN( (i_op > n)  | (op == InvOp) );  
 		CPPAD_ASSERT_UNKNOWN( (i_op <= n) | (op != InvOp) );  
 
@@ -252,20 +251,20 @@ void ForJacSweep(
 
 			case CSkipOp:
 			// CSipOp has a variable number of arguments and
-			// next_forward thinks it one has one argument.
-			// we must inform next_forward of this special case.
+			// forward_next thinks it has no arguments.
+			// we must inform forward_next of this special case.
 			play->forward_cskip(op, arg, i_op, i_var);
 			break;
 			// -------------------------------------------------
 
 			case CSumOp:
 			// CSumOp has a variable number of arguments and
-			// next_forward thinks it one has one argument.
-			// we must inform next_forward of this special case.
-			play->forward_csum(op, arg, i_op, i_var);
+			// forward_next thinks it has no arguments.
+			// we must inform forward_next of this special case.
 			forward_sparse_jacobian_csum_op(
 				i_var, arg, var_sparsity
 			);
+			play->forward_csum(op, arg, i_op, i_var);
 			break;
 			// -------------------------------------------------
 
@@ -721,12 +720,11 @@ void ForJacSweep(
 # else
 	}
 # endif
-	CPPAD_ASSERT_UNKNOWN( i_var + 1 == play->num_rec_var() );
+	CPPAD_ASSERT_UNKNOWN( i_var + 1 == play->num_var_rec() );
 
 	return;
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 // preprocessor symbols that are local to this file

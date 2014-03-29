@@ -80,7 +80,6 @@ A:active { color : purple }
 <option>cppad_poly.cpp</option>
 <option>cppad_sparse_hessian.cpp</option>
 <option>cppad_sparse_jacobian.cpp</option>
-<option>cppad_print_optimize</option>
 </select>
 </td>
 <td>cppad_sparse_hessian.cpp</td>
@@ -111,7 +110,6 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 # include &lt;cppad/cppad.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
-# include &quot;print_optimize.hpp&quot;
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
@@ -161,10 +159,10 @@ namespace {
 bool link_sparse_hessian(
 	size_t                           size     , 
 	size_t                           repeat   , 
-	CppAD::vector&lt;double&gt;&amp;           x        ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
-	CppAD::vector&lt;double&gt;&amp;           hessian  )
+	      CppAD::vector&lt;double&gt;&amp;     x        ,
+	      CppAD::vector&lt;double&gt;&amp;     hessian  )
 {
 	if( global_atomic || global_colpack )
 		return false;
@@ -188,11 +186,6 @@ bool link_sparse_hessian(
 
 	// weights for hessian calculation (only one component of f)
 	w[0] = 1.;
-
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat &gt; 1) &amp; (previous_size != size);
-	previous_size = size;
 
 	// declare sparsity pattern
 	SetVector  set_sparsity(n);
@@ -220,9 +213,7 @@ bool link_sparse_hessian(
 		f.Dependent(a_x, a_y);
 
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_sparse_hessian_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
 
 		// calculate the Hessian sparsity pattern for this function
 		if( global_boolsparsity )
@@ -259,9 +250,7 @@ bool link_sparse_hessian(
 		f.Dependent(a_x, a_y);
 
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_sparse_hessian_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
 
 		// calculate the Hessian sparsity pattern for this function
 		if( global_boolsparsity)

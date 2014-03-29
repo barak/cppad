@@ -1,10 +1,10 @@
-$Id: whats_new_14.omh 3127 2014-02-28 15:28:12Z bradbell $
+$Id: whats_new_14.omh 3214 2014-03-18 20:50:38Z bradbell $
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -13,6 +13,11 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 $begin whats_new_14$$
 $dollar @$$
 $spell
+	taylor
+	forwardzero
+	forwardone
+	forwardany
+	const
 	doxygen
 	ipopt
 	adolc
@@ -41,6 +46,83 @@ This section contains a list of the changes to CppAD during 2014
 (in reverse order by date).
 The purpose of this section is to
 assist you in learning about changes between various versions of CppAD.
+
+$head 03-18$$
+$list number$$
+The 
+$cref/size_taylor/FunDeprecated/size_taylor/$$
+and
+$cref/capacity_taylor/FunDeprecated/capacity_taylor/$$
+functions were deprecated;
+use $cref size_order$$ and $cref capacity_order$$ instead.
+$lnext
+The documentation for $cref forward$$ and the examples
+$cref forward.cpp$$, $cref forward_order.cpp$$, have been improved. 
+To be more specific, $cref forward_order$$ now references the special
+cases $cref forward_zero$$, $cref forward_one$$ and the new case
+$cref forward_two$$.
+$lend
+
+$head 03-17$$
+The 
+$cref/move semantics/CppAD_vector/Assignment/Move Semantics/$$
+version of the $code CppAD::vector$$ assignment statement
+was not checking vector sizes.
+This has been fixed so that things work the same with compilers
+that do not have move semantics.
+(Note that with move semantics, no extra memory allocation is done
+even if the target vector has a different size.)
+
+$head 03-09$$
+The documentation links
+$code forwardzero$$, $code forwardone$$, and $code forwardany$$
+have been changed to
+$cref forward_zero$$, $cref forward_one$$, 
+and $cref forward_order$$ respectively.
+This may affect links from other web pages to the CppAD documentation.
+
+$head 03-05$$
+The names $icode p$$ and $icode q$$ in the 
+$cref/forward/forward_order/$$,
+$cref/reverse/reverse_any/$$,
+$cref atomic_forward$$, and 
+$cref atomic_reverse$$ functions
+were reverse so that $icode%p% <= %q%$$. 
+This is only a notational change to make the arguments easier to remember.
+
+$head 03-02$$
+$list number$$
+In the output for the speed
+$cref/correct/speed_main/test/correct/$$ test,
+mention which tests are not available. 
+Note that the set of available tests can depend on the
+$cref/list of options/speed_main/option_list/$$.
+$lnext
+In the documentation for
+$cref/n_sweep/sparse_jacobian/n_sweep/$$,
+mention that it is equal to the number of colors determined by the
+$cref/color_method/sparse_jacobian/work/color_method/$$.
+$lnext
+The $cref speed_cppad$$ tests were simplified by removing the printing
+of auxillary information related to the 
+$cref/optimize/speed_main/option_list/optimize/$$ option.
+Future auxillary information will be passed back in a manner similar to
+$cref/n_sweep/link_sparse_jacobian/n_sweep/$$ for the sparse jacobian test.
+$lnext
+$cref/Move semantics/CppAD_vector/Assignment/Move Semantics/$$
+were added to the $code CppAD::vector$$ assignment operator.
+$lend
+
+$head 03-01$$
+$list number$$
+Change the prototype for $icode row$$ and $icode col$$ in the 
+$cref link_sparse_jacobian$$ speed test to be $code const$$; i.e.,
+they are not changed.
+$lnext
+Move $icode x$$ near end of $cref link_sparse_hessian$$ speed test
+parameter list,
+(as is the case for $cref link_sparse_jacobian$$).
+$lend
 
 $head 02-28$$
 The $cref/data/CppAD_vector/data/$$ function was added to the

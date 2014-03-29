@@ -1,4 +1,4 @@
-/* $Id: configure.hpp.in 3116 2014-02-24 21:44:26Z bradbell $ */
+/* $Id: configure.hpp.in 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_CONFIGURE_INCLUDED
 # define CPPAD_CONFIGURE_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -34,11 +34,16 @@ $end
 */
 
 /*!
-\defgroup configure_hpp configure.hpp
 \{
  \file configure.hpp
 Replacement for config.h so that all preprocessor symbols begin with CPPAD_ 
 */
+
+/*!
+\def CPPAD_HAS_RVALUE
+Does this compiler cupport c++11 rvalues; i.e., values with move semantics
+*/
+# define CPPAD_HAS_RVALUE @cppad_has_rvalue@
 
 /*!
 \def CPPAD_PACKAGE_STRING
@@ -165,5 +170,4 @@ header files.  If it is not yet defined,
 # define CPPAD_MAX_NUM_THREADS @cppad_max_num_threads@
 # endif
 
-/*! \} */
 # endif

@@ -1,4 +1,4 @@
-/* $Id: sparse_jacobian.hpp 3116 2014-02-24 21:44:26Z bradbell $ */
+/* $Id: sparse_jacobian.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_SPARSE_JACOBIAN_INCLUDED
 # define CPPAD_SPARSE_JACOBIAN_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -182,6 +182,8 @@ is $code "cppad"$$.
 If $cref colpack_prefix$$ is specified on the
 $cref/cmake command/cmake/CMake Command/$$ line,
 you can set this method to $code "colpack"$$.
+This value only matters on the first call to $code sparse_jacobian$$
+after the $icode work$$ constructor or a call to $code clear$$.
 
 $head n_sweep$$
 The return value $icode n_sweep$$ has prototype
@@ -191,6 +193,8 @@ $codei%
 If $code SparseJacobianForward$$ ($code SparseJacobianReverse$$) is used, 
 $icode n_sweep$$ is the number of first order forward (reverse) sweeps 
 used to compute the requested Jacobian values. 
+(This is also the number of colors determined by the coloring method
+mentioned above).
 This is proportional to the total work that $code SparseJacobian$$ does, 
 not counting the zero order forward sweep, 
 or the work to combine multiple columns (rows) into a single sweep.
@@ -255,7 +259,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup sparse_jacobian_hpp sparse_jacobian.hpp
 \{
 \file sparse_jacobian.hpp
 Sparse Jacobian driver routine and helper functions.
@@ -1008,6 +1011,5 @@ VectorBase ADFun<Base>::SparseJacobian( const VectorBase& x )
 	return SparseJacobian(x, p);
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif
