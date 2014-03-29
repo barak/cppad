@@ -52,6 +52,12 @@ var list_down1 = [
 ];
 var list_current0 = [
 'whats_new_14.xml#Introduction',
+'whats_new_14.xml#03-18',
+'whats_new_14.xml#03-17',
+'whats_new_14.xml#03-09',
+'whats_new_14.xml#03-05',
+'whats_new_14.xml#03-02',
+'whats_new_14.xml#03-01',
 'whats_new_14.xml#02-28',
 'whats_new_14.xml#02-27',
 'whats_new_14.xml#02-26',

@@ -1,11 +1,11 @@
 #! /bin/bash -e
-# $Id: check_include_omh.sh 2792 2013-04-28 09:25:28Z bradbell $
+# $Id: check_include_omh.sh 3214 2014-03-18 20:50:38Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
-#                     Eclipse Public License Version 1.0.
+#                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -31,6 +31,8 @@ find . \( -name '*.c'   \) -or \
 		-e '/.\/build\//d' \
 		-e '/.\/new\//d' \
 		-e '/.\/doc\//d' \
+		-e '/.\/junk$/d' \
+		-e '/.\/junk\./d' \
 		-e 's|./||' \
 		> bin/check_include_omh.1.$$
 echo $sh_files_with_omhelp_documentation >> bin/check_include_omh.1.$$

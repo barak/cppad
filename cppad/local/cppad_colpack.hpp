@@ -1,10 +1,10 @@
-/* $Id: cppad_colpack.hpp 3127 2014-02-28 15:28:12Z bradbell $ */
+/* $Id: cppad_colpack.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -15,7 +15,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup cppad_colpack_hpp cppad_colpack.hpp
 \{
 \file cppad_colpack.hpp
 External interface to Colpack routines used by cppad.
@@ -69,7 +68,6 @@ extern void cppad_colpack(
 	const CppAD::vector<unsigned int*>&  adolc_pattern
 );
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 # endif

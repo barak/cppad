@@ -1,11 +1,11 @@
 #! /bin/bash -e
-# $Id: commit.sh 3056 2013-12-27 14:06:02Z bradbell $
+# $Id: commit.sh 3214 2014-03-18 20:50:38Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
-#                     Eclipse Public License Version 1.0.
+#                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -79,7 +79,7 @@ fi
 # -----------------------------------------------------------------------
 # check for abort do to unknown files
 unknown=`svn status | sed -n -e '/^[?]/p' | \
-	sed -e 's/^[?]//' -e "/bin\/commit.*.$$/d"`
+	sed -e 's/^[?]//' -e "/bin\/commit.*.$$/d" -e '/\/new$/d'`
 msg="aborting because the following files are unknown to svn"
 print_msg="no"
 for file in $unknown

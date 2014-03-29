@@ -3,8 +3,8 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>Speed Testing Main Program</title>
-<meta name="description" id="description" content="Speed Testing Main Program"/>
+<title>Speed Testing a C++ Operator Overloading AD Package</title>
+<meta name="description" id="description" content="Speed Testing a C++ Operator Overloading AD Package"/>
 <meta name="keywords" id="keywords" content=" cppad speed test uniform_01 "/>
 <style type='text/css'>
 body { color : black }
@@ -104,11 +104,12 @@ A:active { color : purple }
 <option>---..boolsparsity</option>
 <option>Correctness Results</option>
 <option>Speed Results</option>
+<option>---..sparse_jacobian</option>
 <option>Link Functions</option>
 </select>
 </td>
 </tr></table><br/>
-<center><b><big><big>Speed Testing Main Program</big></big></b></center>
+<center><b><big><big>Speed Testing a C++ Operator Overloading AD Package</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
@@ -138,7 +139,8 @@ or the speed tests for one AD package identified by
 The command line argument
 
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i></code>
- specifies one of the following AD packages:
+ specifies one of the AD package.
+The CppAD distribution comes with support for the following packages:
 <a href="speed_adolc.xml" target="_top"><span style='white-space: nowrap'>adolc</span></a>
 ,
 <a href="speed_cppad.xml" target="_top"><span style='white-space: nowrap'>cppad</span></a>
@@ -147,6 +149,16 @@ The command line argument
 , 
 <a href="speed_sacado.xml" target="_top"><span style='white-space: nowrap'>sacado</span></a>
 .
+You can extend this program to include other package.
+Such an extension need not include all the tests. 
+For example, 
+<a href="link_sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_hessian</span></a>
+ just returns <code><font color="blue">false</font></code> for the
+<a href="fadbad_sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>fadbad</span></a>
+ and
+<a href="sacado_sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>sacado</span></a>
+ packages.
+
 
 <br/>
 <br/>
@@ -199,6 +211,8 @@ and has the following possible values:
 ,
 <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
 .
+You can experiment with changing the implementation of a
+particular test for a particular package.
 
 <br/>
 <br/>
@@ -377,9 +391,10 @@ if this option is chosen.
 <br/>
 <b><big><a name="Correctness Results" id="Correctness Results">Correctness Results</a></big></b>
 <br/>
-An output line of the following form:
+One, but not both, of the following two output lines
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>optionlist</span></font></i><font color="blue"><span style='white-space: nowrap'>_available&#xA0;=&#xA0;false<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>optionlist</span></font></i><font color="blue"><span style='white-space: nowrap'>_ok&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 is generated for each correctness test where
@@ -410,8 +425,8 @@ following form are generated:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>optionlist</span></font></i><font color="blue"><span style='white-space: nowrap'>_ok&#xA0;&#xA0;&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>optionlist</span></font></i><font color="blue"><span style='white-space: nowrap'>_size&#xA0;=&#xA0;[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_1</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>optionlist</span></font></i><font color="blue"><span style='white-space: nowrap'>_rate&#xA0;=&#xA0;[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>rate_1</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>rate_n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_size&#xA0;=&#xA0;[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_1</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>_rate&#xA0;=&#xA0;[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>rate_1</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>rate_n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]<br/>
 </span></font></code>
 The values 
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i></code>
@@ -436,14 +451,37 @@ The values
  are the number of times
 per second that the corresponding size problem executed.
 
+<br/>
+<br/>
+<b><a name="Speed Results.sparse_jacobian" id="Speed Results.sparse_jacobian">sparse_jacobian</a></b>
+<br/>
+The <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
+ test has an extra output
+line with the following form
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_sparse_jacobian_n_sweep&#xA0;=&#xA0;[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n_sweep_1</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n_sweep_n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]<br/>
+</span></font></code>
+The values 
+<code><i><font color="black"><span style='white-space: nowrap'>n_sweep_1</span></font></i></code>
+, ..., 
+<code><i><font color="black"><span style='white-space: nowrap'>n_sweep_n</span></font></i></code>
+ are the number of 
+sweeps (colors) used for each sparse Jacobian calculation; see
+<a href="sparse_jacobian.xml#n_sweep" target="_top"><span style='white-space: nowrap'>n_sweep</span></a>
+.
+
+
 
 
 <br/>
 <br/>
 <b><big><a name="Link Functions" id="Link Functions">Link Functions</a></big></b>
 <br/>
-Each speed test defines it's own version of one of the following 
-functions that link the speed test to the main program described above:
+Each <a href="speed_main.xml#package" target="_top"><span style='white-space: nowrap'>package</span></a>
+
+defines it's own version of one of the link functions listed below.
+Each of these functions links this main program to the corresponding test:
 <table><tr><td align='left'  valign='top'>
 
 <a href="link_det_lu.xml" target="_top">link_det_lu</a></td><td>

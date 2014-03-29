@@ -1,10 +1,10 @@
-/* $Id: poly.cpp 3093 2014-02-15 20:43:07Z bradbell $ */
+/* $Id: poly.cpp 3214 2014-03-18 20:50:38Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -52,7 +52,6 @@ $head Implementation$$
 $codep */
 # include <cppad/cppad.hpp>
 # include <cppad/speed/uniform_01.hpp>
-# include "print_optimize.hpp"
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
@@ -96,11 +95,6 @@ bool link_poly(
 	// AD function object
 	CppAD::ADFun<double> f;
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat > 1) & (previous_size != size);
-	previous_size = size;
-
 	// --------------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
 	{
@@ -118,12 +112,10 @@ bool link_poly(
 		f.Dependent(Z, P);
 
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_poly_optimize", size);
-			print = false;
-		}
+			f.optimize();
 
 		// pre-allocate memory for three forward mode calculations
-		f.capacity_taylor(3);
+		f.capacity_order(3);
 
 		// evaluate the polynomial 
 		p = f.Forward(0, z);
@@ -151,9 +143,7 @@ bool link_poly(
 		f.Dependent(Z, P);
 
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_poly_optimize", size);
-			print = false;
-		}
+			f.optimize();
 
 		while(repeat--)
 		{	// sufficient memory is allocated by second repetition

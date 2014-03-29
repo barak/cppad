@@ -1,4 +1,4 @@
-/* $Id: reverse_sweep.hpp 3129 2014-02-28 19:58:28Z bradbell $ */
+/* $Id: reverse_sweep.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_REVERSE_SWEEP_INCLUDED
 # define CPPAD_REVERSE_SWEEP_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -16,7 +16,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup reverse_sweep_hpp reverse_sweep.hpp
 \{
 \file reverse_sweep.hpp
 Compute derivatives of arbitrary order Taylor coefficients.
@@ -68,7 +67,7 @@ is the number of independent variables on the tape.
 \param numvar
 is the total number of variables on the tape.
 This is also equal to the number of rows in the matrix \a Taylor; i.e.,
-play->num_rec_var().
+play->num_var_rec().
 
 \param play
 The information stored in \a play
@@ -145,10 +144,16 @@ is the partial derivative of \f$ G( u ) \f$ with
 respect to \f$ u_j^{(k)} \f$.
 
 \param cskip_op
-Is a vector with size play->num_rec_op().
+Is a vector with size play->num_op_rec().
 If cskip_op[i] is true, the operator index i in the recording
 does not affect any of the dependent variable (given the value
 of the independent variables).
+
+\param var_by_load_op
+is a vector with size play->num_load_op_rec().
+Is the variable index corresponding to each load instruction.
+In the case where the index is zero,
+the instruction corresponds to a parameter (not variable).
 
 \par Assumptions
 The first operator on the tape is a BeginOp,
@@ -165,7 +170,8 @@ void ReverseSweep(
 	const Base*                 Taylor,
 	size_t                      K,
 	Base*                       Partial,
-	bool*                       cskip_op
+	bool*                       cskip_op,
+	const pod_vector<addr_t>&   var_by_load_op
 )
 {
 	OpCode           op;
@@ -175,11 +181,11 @@ void ReverseSweep(
 	const addr_t*   arg = CPPAD_NULL;
 
 	// check numvar argument
-	CPPAD_ASSERT_UNKNOWN( play->num_rec_var() == numvar );
+	CPPAD_ASSERT_UNKNOWN( play->num_var_rec() == numvar );
 	CPPAD_ASSERT_UNKNOWN( numvar > 0 );
 
 	// length of the parameter vector (used by CppAD assert macros)
-	const size_t num_par = play->num_rec_par();
+	const size_t num_par = play->num_par_rec();
 
 	// pointer to the beginning of the parameter vector
 	const Base* parameter = CPPAD_NULL;
@@ -213,7 +219,7 @@ void ReverseSweep(
 	size_t j, ell;
 
 	// Initialize
-	play->start_reverse(op, arg, i_op, i_var);
+	play->reverse_start(op, arg, i_op, i_var);
 	CPPAD_ASSERT_UNKNOWN( op == EndOp );
 # if CPPAD_REVERSE_SWEEP_TRACE
 	std::cout << std::endl;
@@ -221,10 +227,10 @@ void ReverseSweep(
 	bool more_operators = true;
 	while(more_operators)
 	{	// next op
-		play->next_reverse(op, arg, i_op, i_var);
+		play->reverse_next(op, arg, i_op, i_var);
 		CPPAD_ASSERT_UNKNOWN((i_op >  n) | (op == InvOp) | (op == BeginOp));
 		CPPAD_ASSERT_UNKNOWN((i_op <= n) | (op != InvOp) | (op != BeginOp));
-		CPPAD_ASSERT_UNKNOWN( i_op < play->num_rec_op() );
+		CPPAD_ASSERT_UNKNOWN( i_op < play->num_op_rec() );
 
 		// check if we are skipping this operation
 		while( cskip_op[i_op] )
@@ -232,8 +238,8 @@ void ReverseSweep(
 			{	// CSumOp has a variable number of arguments
 				play->reverse_csum(op, arg, i_op, i_var);
 			}
-			play->next_reverse(op, arg, i_op, i_var);
-			CPPAD_ASSERT_UNKNOWN( i_op < play->num_rec_op() );
+			play->reverse_next(op, arg, i_op, i_var);
+			CPPAD_ASSERT_UNKNOWN( i_op < play->num_op_rec() );
 		}
 
 		// rest of informaiton depends on the case
@@ -316,16 +322,16 @@ void ReverseSweep(
 
 			case CSkipOp:
 			// CSkipOp has a variable number of arguments and
-			// next_forward thinks it one has one argument.
-			// we must inform next_reverse of this special case.
+			// forward_next thinks it one has one argument.
+			// we must inform reverse_next of this special case.
 			play->reverse_cskip(op, arg, i_op, i_var);
 			break;
 			// -------------------------------------------------
 
 			case CSumOp:
 			// CSumOp has a variable number of arguments and
-			// next_reverse thinks it one has one argument.
-			// We must inform next_reverse of this special case.
+			// reverse_next thinks it one has one argument.
+			// We must inform reverse_next of this special case.
 			play->reverse_csum(op, arg, i_op, i_var);
 			reverse_csum_op(
 				d, i_var, arg, K, Partial
@@ -406,14 +412,14 @@ void ReverseSweep(
 			// --------------------------------------------------
 			case LdpOp:
 			reverse_load_op(
-				op, d, i_var, arg, J, Taylor, K, Partial
+		op, d, i_var, arg, J, Taylor, K, Partial, var_by_load_op.data()
 			);
 			break;
 			// -------------------------------------------------
 
 			case LdvOp:
 			reverse_load_op(
-				op, d, i_var, arg, J, Taylor, K, Partial
+		op, d, i_var, arg, J, Taylor, K, Partial, var_by_load_op.data()
 			);
 			break;
 			// -------------------------------------------------
@@ -698,7 +704,6 @@ void ReverseSweep(
 	CPPAD_ASSERT_UNKNOWN( i_var == 0 );
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 // preprocessor symbols that are local to this file

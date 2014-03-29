@@ -1,13 +1,13 @@
-/* $Id: rev_sparse_jac.hpp 2994 2013-10-23 15:47:20Z bradbell $ */
+/* $Id: rev_sparse_jac.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_REV_SPARSE_JAC_INCLUDED
 # define CPPAD_REV_SPARSE_JAC_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -185,7 +185,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup rev_sparse_jac_hpp rev_sparse_jac.hpp
 \{
 \file rev_sparse_jac.hpp
 Reverse mode Jacobian sparsity patterns.
@@ -531,7 +530,7 @@ void ADFun<Base>::RevSparseJacCase(
 		q              ,
 		r              ,
 		s              ,
-		total_num_var_ ,
+		num_var_tape_  ,
 		dep_taddr_     ,
 		ind_taddr_     ,
 		play_
@@ -586,7 +585,7 @@ void ADFun<Base>::RevSparseJacCase(
 		q              ,
 		r              ,
 		s              ,
-		total_num_var_ ,
+		num_var_tape_  ,
 		dep_taddr_     ,
 		ind_taddr_     ,
 		play_
@@ -662,6 +661,5 @@ VectorSet ADFun<Base>::RevSparseJac(
 	return s;
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

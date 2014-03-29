@@ -1,10 +1,10 @@
-/* $Id: det_minor.cpp 3093 2014-02-15 20:43:07Z bradbell $ */
+/* $Id: det_minor.cpp 3139 2014-03-02 21:12:00Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -48,7 +48,6 @@ $codep */
 # include <cppad/vector.hpp>
 # include <cppad/speed/det_by_minor.hpp>
 # include <cppad/speed/uniform_01.hpp>
-# include "print_optimize.hpp"
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
@@ -85,11 +84,6 @@ bool link_det_minor(
 	// the AD function object
 	CppAD::ADFun<double> f;
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat > 1) & (previous_size != size);
-	previous_size = size;
-
 	// ---------------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
 	{
@@ -108,9 +102,7 @@ bool link_det_minor(
 		f.Dependent(A, detA);
 
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_det_minor_optimize", size);
-			print = false;
-		}
+			f.optimize();
 	
 		// evaluate the determinant at the new matrix value
 		f.Forward(0, matrix);
@@ -135,9 +127,7 @@ bool link_det_minor(
 		f.Dependent(A, detA);
 
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_det_minor_optimize", size);
-			print = false;
-		}
+			f.optimize();
 	
 		// ------------------------------------------------------
 		while(repeat--)

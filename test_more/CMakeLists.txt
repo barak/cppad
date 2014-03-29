@@ -1,10 +1,10 @@
-# $Id: CMakeLists.txt 3119 2014-02-25 11:52:41Z bradbell $
+# $Id: CMakeLists.txt 3214 2014-03-18 20:50:38Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
-#                     Eclipse Public License Version 1.0.
+#                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -94,7 +94,7 @@ ADD_EXECUTABLE(test_more EXCLUDE_FROM_ALL test_more.cpp
 	for_hess.cpp
 	for_sparse_jac.cpp
 	forward.cpp
-	forward_mul.cpp
+	forward_order.cpp
 	from_base.cpp
 	fun_check.cpp
 	jacobian.cpp

@@ -1,4 +1,4 @@
-/* $Id: sparse_hessian.hpp 3116 2014-02-24 21:44:26Z bradbell $ */
+/* $Id: sparse_hessian.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_SPARSE_HESSIAN_INCLUDED
 # define CPPAD_SPARSE_HESSIAN_INCLUDED
 
@@ -7,7 +7,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -246,7 +246,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup sparse_hessian_hpp sparse_hessian.hpp
 \{
 \file sparse_hessian.hpp
 Sparse Hessian driver routine and helper functions.
@@ -686,6 +685,5 @@ VectorBase ADFun<Base>::SparseHessian(const VectorBase &x, const VectorBase &w)
 	return SparseHessian(x, w, p);
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

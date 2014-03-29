@@ -1,20 +1,19 @@
-/* $Id: define.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: define.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
 # ifndef CPPAD_DEFINE_INCLUDED
 # define CPPAD_DEFINE_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
-                    Eclipse Public License Version 1.0.
+                    GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
 /*!
-\defgroup define_hpp define.hpp
 \{
 \file define.hpp
 Define processor symbols and macros that are used by CppAD.
@@ -33,19 +32,6 @@ in pod_vector.hpp.
 */
 # define CPPAD_OP_CODE_TYPE unsigned char
 
-/*!
-\def CPPAD_USE_FORWARD0SWEEP
-If ture, use compute zero order sweeps using a specialized routine.
-
-The value of this define should be zero or one. 
-If it is one, a specialized routine is used for zero order forward sweeps.
-Otherwise, use the general forward routine is used for zero order.
-Using the specialized routine is an optimization that makes the source
-more complicated and a significant speed improvement has not been 
-verified (as yet).
-This preprocessor symbol makes it easier to compare these two options.
-*/
-# define CPPAD_USE_FORWARD0SWEEP 1
 
 /*!
 \def CPPAD_INLINE_FRIEND_TEMPLATE_FUNCTION
@@ -332,5 +318,4 @@ inline bool operator Op                                                \
 	(const VecAD_reference<double> &left, const double &right)        \
 {	return left.ADBase() Op AD<double>(right); }
 
-/*! \} */
 # endif

@@ -1,11 +1,11 @@
 #! /bin/bash -e
-# $Id: search.sh 2939 2013-10-14 11:06:18Z bradbell $
+# $Id: search.sh 3212 2014-03-18 13:05:24Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
-#                     Eclipse Public License Version 1.0.
+#                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
@@ -22,46 +22,21 @@ then
 	exit 1
 fi
 pattern="$1"
-extensions='.ac .am .c .cmake .cpp .h .hpp .in .omh .pc .py .sed .sh .txt'
-directories='
-	.
+dir_list='
 	bin
 	cppad 
-	cppad/cmake
-	cppad/example 
-	cppad/ipopt
-	cppad/local 
-	cppad/speed 
-	cppad_ipopt/example
-	cppad_ipopt/speed
-	cppad_ipopt/src
-	cppad_ipopt/test
+	cppad_ipopt
 	example 
-	example/atomic
-	example/ipopt_solve
-	introduction/exp_apx
-	introduction/get_started
+	introduction
 	multi_thread
-	multi_thread/bthread
-	multi_thread/openmp
-	multi_thread/pthread
 	omh
-	omh/deprecated
-	omh/install
-	omh/whats_new
 	pkgconfig
 	print_for
 	speed
-	speed/adolc
-	speed/cppad
-	speed/double
-	speed/example
-	speed/fadbad
-	speed/profile
-	speed/sacado
-	speed/src
 	test_more 
 '
 #
-find_files.sh "$pattern" "$extensions" "$directories" | \
-	 sed -e '/\/makefile.in/d'
+grep -l -r  "$pattern" $dir_list | \
+	 sed -e '/\/makefile.in/d' -e '/test_one.exe/d'  -e '/\/new\//d'
+grep -l "$pattern" makefile.am CMakeLists.txt doc.omh | \
+	 sed -e '/\/makefile.in/d' -e '/test_one.exe/d'  -e '/\/new\//d'
