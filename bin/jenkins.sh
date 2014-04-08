@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: jenkins.sh 3018 2013-12-02 02:32:49Z bradbell $
+# $Id: jenkins.sh 3067 2013-12-29 17:35:34Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -122,6 +122,7 @@ cat << EOF
 $trunk_dir/configure \\
 	$build_type \\
 	--disable-silent-rules \\
+	--with-implicit_ctor \\
 	ADOLC_DIR="$trunk_dir/build/prefix" \\
 	SACADO_DIR="$trunk_dir/build/prefix" \\
 	EIGEN_DIR="$trunk_dir/build/prefix" \\
@@ -131,6 +132,7 @@ $trunk_dir/configure \\
 EOF
 if ! $trunk_dir/configure $build_type \
 	--disable-silent-rules \
+	--with-implicit_ctor \
 	ADOLC_DIR="$trunk_dir/build/prefix" \
 	SACADO_DIR="$trunk_dir/build/prefix" \
 	EIGEN_DIR="$trunk_dir/build/prefix" \

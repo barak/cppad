@@ -1,4 +1,4 @@
-$Id: whats_new_13.omh 3024 2013-12-24 20:15:14Z bradbell $
+$Id: whats_new_13.omh 3073 2014-01-01 11:48:13Z bradbell $
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
@@ -13,6 +13,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 $begin whats_new_13$$
 $dollar @$$
 $spell
+	ctor
 	Num
 	autotools
 	nz
@@ -60,6 +61,54 @@ This section contains a list of the changes to CppAD during 2013
 (in reverse order by date).
 The purpose of this section is to
 assist you in learning about changes between various versions of CppAD.
+
+$head 12-29$$
+$list number$$
+The include file 
+$cref cppad_eigen.hpp$$ now automatically includes $code cppad.hpp$$.
+$lnext
+There was a problem with this automation
+when $code eigen$$ was used for the cppad $cref testvector$$.
+This has been fixed.
+$lnext
+There was a problem with deprecated $cref InstallUnix$$
+(created when optional implicit constructor from any type was added).
+This has been fixed by adding the
+$cref/--with-implicit_ctor/InstallUnix/--with-implicit_ctor/$$ option.
+$lend
+
+$head 12-27$$
+The constructor from an arbitrary type to $codei%AD<%Base%>%$$ was
+implicit, but there was no specification to this effect.
+The caused problems when using CppAD with 
+$cref/eigen 3.2/eigen_prefix/$$ (scheduled to be fixed in 3.3).
+The default for this constructor has been changed to be 
+$cref/explicit/ad_ctor/x/explicit/$$.
+In addition, other 
+$cref/implicit/ad_ctor/x/implicit/$$ constructors
+are now listed in the documentation.
+$pre
+
+$$
+If you get a compiler error on an constructor / assignment of the form
+$codei%
+	AD<%Base%> x = %y%
+%$$
+(that used to work) try changing the constructor call to
+$codei%
+	AD<%Base%>( %y% )
+%$$
+A deprecated alternative is to make this constructor implicit using the
+$cref/cppad_implicit_ctor_from_any_type
+	/cmake
+	/cppad_implicit_ctor_from_any_type
+/$$
+option during the install procedure.
+
+$head 12-26$$
+Document fact that
+$cref/monthly versions/download/Compressed Tar File/Monthly Versions/$$
+of the CppAD compressed tar file last till the end of the year.
 
 $head 12-24$$
 The interface to $cref/eigen/cppad_eigen.hpp/$$ defined a function
