@@ -9,27 +9,22 @@ var list_up0 = [
 'cppad.xml',
 'install.xml',
 'cmake.xml',
-'colpack_prefix.xml',
+'adolc_prefix.xml',
+'get_adolc.sh.xml',
 'get_colpack.sh.xml'
 ];
 var list_down3 = [
-'download.xml',
-'cmake.xml',
-'cmake_check.xml',
-'pkgconfig.xml',
-'installunix.xml'
-];
-var list_down2 = [
 'adolc_prefix.xml',
-'colpack_prefix.xml',
 'eigen_prefix.xml',
 'fadbad_prefix.xml',
 'ipopt_prefix.xml',
 'sacado_prefix.xml',
 'cppad_testvector.xml'
 ];
+var list_down2 = [
+'get_adolc.sh.xml'
+];
 var list_down1 = [
-'colpack.cpp.xml',
 'get_colpack.sh.xml'
 ];
 var list_current0 = [

@@ -1,6 +1,6 @@
-/* $Id: cppad_vector.cpp 3127 2014-02-28 15:28:12Z bradbell $ */
+/* $Id: cppad_vector.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -95,22 +95,13 @@ bool CppAD_vector(void)
 	for(i = 0; i < N; i++)
 		ok &= ( x[i] == Type(i) );
 
-	// test of data
-	Type* data = x.data();
-	for(i = 0; i < N; i++)
-	{	ok &= data[i] == Type(i);
-		data[i] = Type(N - i);
-		ok &= x[i] == Type(N - i);
-	}
-
 	// test of push_vector 
 	x.push_vector(x);
 	ok &= (x.size() == 2 * N);
 	for(i = 0; i < N; i++)
-	{	ok &= x[i] == Type(N - i);
-		ok &= x[i+N] == Type(N - i);
+	{	ok &= ( x[i] == Type(i) );
+		ok &= ( x[i+N] == Type(i) );
 	}
-
 
 	return ok;
 }

@@ -26,7 +26,7 @@ var list_down2 = [
 var list_down1 = [
 'download.xml',
 'cmake.xml',
-'cmake_check.xml',
+'cppad_test.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];

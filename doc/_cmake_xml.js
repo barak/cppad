@@ -26,13 +26,12 @@ var list_down2 = [
 var list_down1 = [
 'download.xml',
 'cmake.xml',
-'cmake_check.xml',
+'cppad_test.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];
 var list_down0 = [
 'adolc_prefix.xml',
-'colpack_prefix.xml',
 'eigen_prefix.xml',
 'fadbad_prefix.xml',
 'ipopt_prefix.xml',
@@ -46,17 +45,16 @@ var list_current0 = [
 'cmake.xml#cmake_install_prefix',
 'cmake.xml#cmake_install_includedirs',
 'cmake.xml#cmake_install_datadir',
-'cmake.xml#cmake_install_docdir',
 'cmake.xml#cmake_install_libdirs',
 'cmake.xml#cmake_install_postfix',
 'cmake.xml#package_prefix',
 'cmake.xml#cppad_cxx_flags',
+'cmake.xml#cppad_documentation',
 'cmake.xml#cppad_testvector',
 'cmake.xml#cppad_max_num_threads',
 'cmake.xml#cppad_sparse_list',
 'cmake.xml#cppad_tape_id_type',
-'cmake.xml#cppad_tape_addr_type',
-'cmake.xml#cppad_implicit_ctor_from_any_type'
+'cmake.xml#cppad_tape_addr_type'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

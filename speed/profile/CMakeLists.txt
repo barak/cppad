@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3139 2014-03-02 21:12:00Z bradbell $
+# $Id: CMakeLists.txt 2608 2012-12-15 17:47:33Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -11,12 +11,15 @@
 # -----------------------------------------------------------------------------
 # Build the speed/profile directory tests 
 # Inherit environment from ../CMakeList.txt
-# CMAKE_BUILD_TYPE determined by parent directory
+
+# Specifies build type for this directory. Possible values are 
+# empty, Debug, Release, RelWithDebInfo and MinSizeRel
+SET(CMAKE_BUILD_TYPE RELEASE)
 
 # Adds flags to the compiler command line for sources in the current directory 
 # and below. This command can be used to add any flags, but it was originally 
 # intended to add preprocessor definitions. 
-ADD_DEFINITIONS("-DCPPAD_PROFILE_SPEED -pg")
+ADD_DEFINITIONS("-DSPEED_PROFILE -pg")
 
 # Extra flags used by the linker when creating an executable. 
 SET(CMAKE_EXE_LINKER_FLAGS "-pg")
@@ -28,6 +31,8 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
 #                 source1 source2 ... sourceN
 # )
 ADD_EXECUTABLE(speed_profile EXCLUDE_FROM_ALL ../main.cpp 
+	../cppad/print_optimize.hpp
+	../cppad/print_optimize.cpp
 	../cppad/ode.cpp
 	../cppad/det_lu.cpp 
 	../cppad/det_minor.cpp 
@@ -43,7 +48,6 @@ ADD_EXECUTABLE(speed_profile EXCLUDE_FROM_ALL ../main.cpp
 	../src/link_sparse_hessian.cpp
 	../src/link_sparse_jacobian.cpp
 	../src/microsoft_timer.cpp
-	${colpack_sources}
 )
 
 # Compiler flags for cppad source
@@ -51,7 +55,6 @@ add_cppad_cxx_flags( speed_profile )
 
 # profile builds it own copy of src/speed library (see ADD_EXECUTABLE above)
 # TARGET_LINK_LIBRARIES(speed_profile speed_src )
-TARGET_LINK_LIBRARIES(speed_profile ${colpack_libs} )
 
 # Add the check_speed_profile target
 ADD_CUSTOM_TARGET(check_speed_profile 

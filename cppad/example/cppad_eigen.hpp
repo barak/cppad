@@ -1,4 +1,4 @@
-/* $Id: cppad_eigen.hpp 3065 2013-12-29 14:03:45Z bradbell $ */
+/* $Id: cppad_eigen.hpp 3022 2013-12-24 14:25:43Z bradbell $ */
 # ifndef CPPAD_CPPAD_EIGEN_INCLUDED
 # define CPPAD_CPPAD_EIGEN_INCLUDED
 /* --------------------------------------------------------------------------
@@ -56,22 +56,22 @@ $href%http://eigen.tuxfamily.org%eigen%$$
 linear algebra package with the type $icode%AD<%Base%>%$$.
 
 $head Example$$
-The files $cref eigen_array.cpp$$ and $cref eigen_det.cpp$$ 
+THe files $cref eigen_array.cpp$$ and $cref eigen_det.cpp$$ 
 contain an example and test of this include file.
 It returns true if it succeeds and false otherwise.
 
+$head eigen_plugin.hpp$$
+Here is the source code for $cref eigen_plugin.hpp$$:
+
 $head Include Files$$
-The file $code cppad_eigen.hpp$$ includes both
-$code <cppad/cppad.hpp>$$ and $code <Eigen/Core>$$. 
-In addition,
-The file $cref eigen_plugin.hpp$$ 
-is used to define $code value_type$$
+This file $code cppad_eigen.hpp$$ requires the CppAD types to be defined.
+The file $code eigen_plugin$$ defines $code value_type$$
 in the Eigen matrix class definition so its vectors are 
 $cref/simple vectors/SimpleVector/$$.
 $codep */
+# include <cppad/local/limits.hpp>
 # define EIGEN_MATRIXBASE_PLUGIN <cppad/example/eigen_plugin.hpp>
 # include <Eigen/Core>
-# include <cppad/cppad.hpp>
 /* $$
 $head Eigen NumTraits$$
 Eigen needs the following definitions to work properly

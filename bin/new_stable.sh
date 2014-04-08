@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: new_stable.sh 3031 2013-12-25 12:07:08Z bradbell $
+# $Id: new_stable.sh 3030 2013-12-25 04:31:10Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #

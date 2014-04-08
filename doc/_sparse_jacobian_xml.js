@@ -58,7 +58,6 @@ var list_current0 = [
 'sparse_jacobian.xml#row, col',
 'sparse_jacobian.xml#jac',
 'sparse_jacobian.xml#work',
-'sparse_jacobian.xml#work.color_method',
 'sparse_jacobian.xml#n_sweep',
 'sparse_jacobian.xml#VectorBase',
 'sparse_jacobian.xml#VectorSet',

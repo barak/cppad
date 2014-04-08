@@ -142,7 +142,7 @@ bool FunCheckCases(void)
 
 	// stop tape and store operation sequence in f : X -&gt; Y
 	f.Dependent(X, Y);
-	ok &amp;= (f.size_order() == 0);  // no implicit forward operation
+	ok &amp;= (f.size_taylor() == 0);  // no implicit forward operation
 
 	// create function object to use with double
 	Fun&lt;double, Vector&gt; g(n);
@@ -171,7 +171,7 @@ bool FunCheckCases(void)
 
 	// stop tape and store operation sequence in f : X -&gt; Y
 	f.Dependent(X, Y);
-	ok &amp;= (f.size_order() == 0);  // no implicit forward with this x
+	ok &amp;= (f.size_taylor() == 0);  // no implicit forward with this x
 
 	// function values should agree now
 	ok      &amp;= FunCheck(f, g, x, a, r);

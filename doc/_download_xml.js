@@ -26,7 +26,7 @@ var list_down2 = [
 var list_down1 = [
 'download.xml',
 'cmake.xml',
-'cmake_check.xml',
+'cppad_test.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];
@@ -35,7 +35,6 @@ var list_current0 = [
 'download.xml#Distribution Directory',
 'download.xml#Compressed Tar File',
 'download.xml#Compressed Tar File.Current Version',
-'download.xml#Compressed Tar File.Monthly Versions',
 'download.xml#Compressed Tar File.Release Versions',
 'download.xml#Compressed Tar File.Unix File Extraction',
 'download.xml#Compressed Tar File.Windows File Extraction',

@@ -1,9 +1,9 @@
-/* $Id: rev_hes_sweep.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: rev_hes_sweep.hpp 2991 2013-10-22 16:25:15Z bradbell $ */
 # ifndef CPPAD_REV_HES_SWEEP_INCLUDED
 # define CPPAD_REV_HES_SWEEP_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -15,6 +15,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
+\defgroup rev_hes_sweep_hpp rev_hes_sweep.hpp
 \{
 \file rev_hes_sweep.hpp
 Compute Reverse mode Hessian sparsity patterns.
@@ -48,7 +49,7 @@ is the number of independent variables on the tape.
 
 \param numvar
 is the total number of variables on the tape; i.e.,
-\a play->num_var_rec().
+\a play->num_rec_var().
 This is also the number of rows in the entire sparsity pattern 
 \a rev_hes_sparse.
 
@@ -116,12 +117,12 @@ void RevHesSweep(
 	const addr_t*   arg = CPPAD_NULL;
 
 	// length of the parameter vector (used by CppAD assert macros)
-	const size_t num_par = play->num_par_rec();
+	const size_t num_par = play->num_rec_par();
 
 	size_t             i, j, k;
 
 	// check numvar argument
-	CPPAD_ASSERT_UNKNOWN( play->num_var_rec()     == numvar );
+	CPPAD_ASSERT_UNKNOWN( play->num_rec_var()     == numvar );
 	CPPAD_ASSERT_UNKNOWN( for_jac_sparse.n_set() == numvar );
 	CPPAD_ASSERT_UNKNOWN( rev_hes_sparse.n_set() == numvar );
 	CPPAD_ASSERT_UNKNOWN( numvar > 0 );
@@ -138,8 +139,8 @@ void RevHesSweep(
 	// vecad_sparsity contains a sparsity pattern for each VecAD object.
 	// vecad_ind maps a VecAD index (beginning of the VecAD object) 
 	// to the index for the corresponding set in vecad_sparsity.
-	size_t num_vecad_ind   = play->num_vec_ind_rec();
-	size_t num_vecad_vec   = play->num_vecad_vec_rec();
+	size_t num_vecad_ind   = play->num_rec_vecad_ind();
+	size_t num_vecad_vec   = play->num_rec_vecad_vec();
 	Vector_set vecad_sparse;
 	vecad_sparse.resize(num_vecad_vec, limit);
 	pod_vector<size_t> vecad_ind;
@@ -162,7 +163,7 @@ void RevHesSweep(
 			// initialize this vector's reverse jacobian value 
 			vecad_jac[i] = false;
 		}
-		CPPAD_ASSERT_UNKNOWN( j == play->num_vec_ind_rec() );
+		CPPAD_ASSERT_UNKNOWN( j == play->num_rec_vecad_ind() );
 	}
 
 	// work space used by UserOp.
@@ -199,7 +200,7 @@ void RevHesSweep(
 
 
 	// Initialize
-	play->reverse_start(op, arg, i_op, i_var);
+	play->start_reverse(op, arg, i_op, i_var);
 	CPPAD_ASSERT_UNKNOWN( op == EndOp );
 # if CPPAD_REV_HES_SWEEP_TRACE
 	std::cout << std::endl;
@@ -210,7 +211,7 @@ void RevHesSweep(
 	while(more_operators)
 	{
 		// next op
-		play->reverse_next(op, arg, i_op, i_var);
+		play->next_reverse(op, arg, i_op, i_var);
 # ifndef NDEBUG
 		if( i_op <= n )
 		{	CPPAD_ASSERT_UNKNOWN((op == InvOp) | (op == BeginOp));
@@ -280,16 +281,16 @@ void RevHesSweep(
 
 			case CSkipOp:
 			// CSkipOp has a variable number of arguments and
-			// reverse_next thinks it one has one argument.
-			// We must inform reverse_next of this special case.
+			// next_reverse thinks it one has one argument.
+			// We must inform next_reverse of this special case.
 			play->reverse_cskip(op, arg, i_op, i_var);
 			break;
 			// -------------------------------------------------
 
 			case CSumOp:
 			// CSumOp has a variable number of arguments and
-			// reverse_next thinks it one has one argument.
-			// We must inform reverse_next of this special case.
+			// next_reverse thinks it one has one argument.
+			// We must inform next_reverse of this special case.
 			play->reverse_csum(op, arg, i_op, i_var);
 			reverse_sparse_hessian_csum_op(
 				i_var, arg, RevJac, rev_hes_sparse
@@ -808,6 +809,7 @@ void RevHesSweep(
 
 	return;
 }
+/*! \} */
 } // END_CPPAD_NAMESPACE
 
 // preprocessor symbols that are local to this file

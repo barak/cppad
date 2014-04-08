@@ -1,6 +1,6 @@
-/* $Id: det_lu.cpp 3094 2014-02-15 22:51:31Z bradbell $ */
+/* $Id: det_lu.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -12,8 +12,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin sacado_det_lu.cpp$$
 $spell
-	boolsparsity
-	onetape
+	retape
 	cppad
 	Lu
 	det
@@ -50,10 +49,6 @@ $codep */
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/vector.hpp>
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
-extern bool global_boolsparsity;
-
 bool link_det_lu(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -61,13 +56,13 @@ bool link_det_lu(
 	CppAD::vector<double>     &gradient )
 {
 	// speed test global option values
-	if( global_onetape || global_atomic || global_boolsparsity )
+	extern bool global_retape, global_atomic, global_optimize;
+	if( ! global_retape || global_optimize || global_atomic )
 		return false;
-	if( global_memory || global_optimize )
-		return false;
+
 	// -----------------------------------------------------
 	// setup
-	//
+
 	// object for computing determinant
 	typedef Sacado::Rad::ADvar<double>   ADScalar; 
 	typedef CppAD::vector<ADScalar>      ADVector; 

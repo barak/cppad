@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: check_include_omh.sh 3214 2014-03-18 20:50:38Z bradbell $
+# $Id: check_include_omh.sh 2792 2013-04-28 09:25:28Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -31,8 +31,6 @@ find . \( -name '*.c'   \) -or \
 		-e '/.\/build\//d' \
 		-e '/.\/new\//d' \
 		-e '/.\/doc\//d' \
-		-e '/.\/junk$/d' \
-		-e '/.\/junk\./d' \
 		-e 's|./||' \
 		> bin/check_include_omh.1.$$
 echo $sh_files_with_omhelp_documentation >> bin/check_include_omh.1.$$

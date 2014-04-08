@@ -1,6 +1,6 @@
-dnl $Id: configure.ac 3145 2014-03-03 12:28:04Z bradbell $
+dnl $Id: configure.ac 3030 2013-12-25 04:31:10Z bradbell $
 dnl ---------------------------------------------------------------------------
-dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 dnl
 dnl CppAD is distributed under multiple licenses. This distribution is under
 dnl the terms of the
@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT(cppad, 20140408, cppad@list.coin-or.org)
+AC_INIT(cppad, 20140000.0, cppad@list.coin-or.org)
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -200,24 +200,6 @@ if test "$sparse_set" = "yes" ; then
 	AC_SUBST(cppad_internal_sparse_set, sparse_set)
 else
 	AC_SUBST(cppad_internal_sparse_set, sparse_list)
-fi
-
-
-dnl Are we including an implicit constructor from any type -----------
-AC_MSG_CHECKING([--with-implicit_ctor])
-AC_ARG_WITH(implicit_ctor, 
-	AC_HELP_STRING(
-		[--with-implicit_ctor], 
-		[include an implicit AD<Base> constructor from any type]
-	),
-	[implicit_ctor="yes"],
-	[implicit_ctor="no"]
-)
-AC_MSG_RESULT([$implicit_ctor])
-if test "$implicit_ctor" = "yes" ; then
-	AC_SUBST(cppad_implicit_ctor_from_any_type, "1")
-else
-	AC_SUBST(cppad_implicit_ctor_from_any_type, "0")
 fi
 
 dnl The postfix directiory corresponding to CppAD ------------------------
@@ -436,13 +418,9 @@ if test "$ok" == "no" ; then
 fi
 AC_MSG_NOTICE([********** End Checking Command Line arguments ***************])
 
-dnl auto-tools version does not support ColPack coloring 
-AC_SUBST(cppad_has_colpack, 0)
-
 dnl auto-tools version cannot use c++11 compiler
 dnl so supress corresponding features
 AC_SUBST(cppad_has_nullptr, 0)
-AC_SUBST(cppad_has_rvalue, 0)
 
 dnl Determine if size_t has same size as unsigned int 
 AC_CHECK_SIZEOF([size_t])

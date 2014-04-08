@@ -1,6 +1,6 @@
-/* $Id: speed_test.cpp 3094 2014-02-15 22:51:31Z bradbell $ */
+/* $Id: speed_test.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -58,7 +58,7 @@ namespace { // empty namespace
 		{	i = size;;
 			while(i)
 			{	--i;
-				c[i] = a[i] * b[i];
+				c[i] = a[i] + b[i];
 			}
 		}
 		// teardown
@@ -73,11 +73,11 @@ bool speed_test(void)
 
 	// size of the test cases
 	std::vector<size_t> size_vec(2);
-	size_vec[0] = 40;
-	size_vec[1] = 80;
+	size_vec[0] = 10;
+	size_vec[1] = 20;
 
-	// minimum amount of time to run test
-	double time_min = 0.5;
+	// use a small amout of time (we do not need accurate results)
+	double time_min = .2; 
 
 	// run the test cases
 	std::vector<size_t> rate_vec(2);
@@ -89,10 +89,8 @@ bool speed_test(void)
 
 	// for this case, time should be linear w.r.t size
 	double check    = double(size_vec[1]) * time_0 / double(size_vec[0]);
-	double rel_diff = (check - time_1) / time_1;
-	ok             &= (std::fabs(rel_diff) <= .1);
-	if( ! ok )
-		std::cout << std::endl << "rel_diff = " << rel_diff << std::endl;
+	double rel_diff = std::abs(check - time_1) / time_1;
+	ok             &= (rel_diff <= .1);
  
 	return ok;
 }

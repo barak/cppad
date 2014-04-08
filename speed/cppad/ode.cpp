@@ -1,6 +1,6 @@
-/* $Id: ode.cpp 3139 2014-03-02 21:12:00Z bradbell $ */
+/* $Id: ode.cpp 2870 2013-07-28 17:00:59Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -12,7 +12,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin cppad_ode.cpp$$
 $spell
-	boolsparsity
 	jacobian jacobian
 	endif
 	var
@@ -24,7 +23,7 @@ $spell
 	cppad
 	hpp
 	bool
-	onetape
+	retape
 	typedef
 	cassert
 $$
@@ -47,10 +46,7 @@ $codep */
 # include <cppad/speed/ode_evaluate.hpp>
 # include <cppad/speed/uniform_01.hpp>
 # include <cassert>
-
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+# include "print_optimize.hpp"
 
 bool link_ode(
 	size_t                     size       ,
@@ -59,15 +55,16 @@ bool link_ode(
 	CppAD::vector<double>      &jacobian
 )
 {
-	// speed test global option values
-	if( global_atomic || global_boolsparsity )
-		return false;
-
-	// --------------------------------------------------------------------
-	// setup
 	assert( x.size() == size );
 	assert( jacobian.size() == size * size );
 
+	// speed test global option values
+	extern bool global_retape, global_atomic, global_optimize;
+	if( global_atomic )
+		return false;
+
+	// -------------------------------------------------------------
+	// setup
 	typedef CppAD::AD<double>       ADScalar;
 	typedef CppAD::vector<ADScalar> ADVector;
 
@@ -78,8 +75,13 @@ bool link_ode(
 	ADVector  X(n), Y(m);      // independent and dependent variables
 	CppAD::ADFun<double>  f;   // AD function
 
+	// use the unspecified fact that size is non-decreasing between calls
+	static size_t previous_size = 0;
+	bool print    = (repeat > 1) & (previous_size != size);
+	previous_size = size;
+
 	// -------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( global_retape) while(repeat--)
 	{ 	// choose next x value
 		uniform_01(n, x);
 		for(j = 0; j < n; j++)
@@ -95,8 +97,9 @@ bool link_ode(
 		f.Dependent(X, Y);
 
 		if( global_optimize )
-			f.optimize();
-
+		{	print_optimize(f, print, "cppad_ode_optimize", size);
+			print = false;
+		}
 		jacobian = f.Jacobian(x);
 	}
 	else
@@ -115,7 +118,9 @@ bool link_ode(
 		f.Dependent(X, Y);
 
 		if( global_optimize )
-			f.optimize();
+		{	print_optimize(f, print, "cppad_ode_optimize", size);
+			print = false;
+		}
 		while(repeat--)
 		{	// get next argument value
 			uniform_01(n, x);

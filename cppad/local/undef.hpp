@@ -1,9 +1,9 @@
-/* $Id: undef.hpp 3214 2014-03-18 20:50:38Z bradbell $ */
+/* $Id: undef.hpp 2939 2013-10-14 11:06:18Z bradbell $ */
 # ifndef CPPAD_UNDEF_INCLUDED
 # define CPPAD_UNDEF_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -50,9 +50,6 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CppADTrackExtend      deprecated version of CPPAD_TRACK_EXTEND
 # undef CppADTrackNewVec      deprecated version of CPPAD_TRACK_NEW_VEC
 # undef CppADvector           deprecated version of CPPAD_TEST_VECTOR
-
-// for conditional testing when implicit conversion is not present
-# undef CPPAD_IMPLICIT_CTOR_FROM_ANY_TYPE
 -----------------------------------------------------------------------------
 */
 // Preprecessor definitions that do not presist 
@@ -67,8 +64,6 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_FOLD_ASSIGNMENT_OPERATOR
 # undef CPPAD_FOLD_BOOL_VALUED_BINARY_OPERATOR
 # undef CPPAD_FOR_JAC_SWEEP_TRACE
-# undef CPPAD_HAS_COLPACK
-# undef CPPAD_HAS_RVALUE
 # undef CPPAD_HAS_GETTIMEOFDAY
 # undef CPPAD_HAS_NULLPTR
 # undef CPPAD_INLINE_FRIEND_TEMPLATE_FUNCTION
@@ -85,6 +80,7 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_TRACE_CAPACITY
 # undef CPPAD_TRACE_THREAD
 # undef CPPAD_TRACK_DEBUG
+# undef CPPAD_USE_FORWARD0SWEEP
 # undef CPPAD_USER_MACRO
 # undef CPPAD_USER_MACRO_ONE
 # undef CPPAD_USER_MACRO_TWO

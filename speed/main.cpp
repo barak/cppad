@@ -1,6 +1,6 @@
-/* $Id: main.cpp 3155 2014-03-05 13:12:19Z bradbell $ */
+/* $Id: main.cpp 2859 2013-05-28 06:03:21Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -25,36 +25,34 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # include <cppad/track_new_del.hpp>
 # include <cppad/thread_alloc.hpp>
 
-# ifdef CPPAD_ADOLC_SPEED
+# ifdef SPEED_ADOLC
 # define AD_PACKAGE "adolc"
 # endif
-# ifdef CPPAD_CPPAD_SPEED
+# ifdef SPEED_CPPAD
 # define AD_PACKAGE "cppad"
 # endif
-# ifdef CPPAD_DOUBLE_SPEED
+# ifdef SPEED_DOUBLE
 # define AD_PACKAGE "double"
 # endif
-# ifdef CPPAD_FADBAD_SPEED
+# ifdef SPEED_FADBAD
 # define AD_PACKAGE "fadbad"
 # endif
-# ifdef CPPAD_PROFILE_SPEED
+# ifdef SPEED_PROFILE
 # define AD_PACKAGE "profile"
 # endif
-# ifdef CPPAD_SACADO_SPEED
+# ifdef SPEED_SACADO
 # define AD_PACKAGE "sacado"
 # endif
 
 /*
 $begin speed_main$$
 $spell
-	colpack
-	onetape
-	boolsparsity
 	optionlist
 	underbar
 	alloc
 	mat_mul
 	retaped
+	retape
 	bool
 	ddp
 	cppad
@@ -71,7 +69,7 @@ $index cppad, speed test$$
 $index speed, test cppad$$
 $index test, cppad speed$$
 
-$section Speed Testing a C++ Operator Overloading AD Package$$
+$section Speed Testing Main Program$$
 
 $head Syntax$$
 $codei%speed/%package%/%package% %test% %seed% %option_list%$$
@@ -84,19 +82,11 @@ $head package$$
 
 $subhead AD Package$$
 The command line argument
-$icode package$$ specifies one of the AD package.
-The CppAD distribution comes with support for the following packages:
+$icode package$$ specifies one of the following AD packages:
 $cref/adolc/speed_adolc/$$,
 $cref/cppad/speed_cppad/$$, 
 $cref/fadbad/speed_fadbad/$$, 
 $cref/sacado/speed_sacado/$$.
-You can extend this program to include other package.
-Such an extension need not include all the tests. 
-For example, 
-$cref link_sparse_hessian$$ just returns $code false$$ for the
-$cref/fadbad/fadbad_sparse_hessian.cpp/$$ and
-$cref/sacado/sacado_sparse_hessian.cpp/$$ packages.
-
 
 $subhead double$$
 The value
@@ -125,8 +115,6 @@ $cref/ode/link_ode/$$,
 $cref/poly/link_poly/$$,
 $cref/sparse_hessian/link_sparse_hessian/$$,
 $cref/sparse_jacobian/link_sparse_jacobian/$$.
-You can experiment with changing the implementation of a
-particular test for a particular package.
 
 $subhead correct$$
 If $icode test$$ is equal to $code correct$$,
@@ -151,22 +139,20 @@ This is a list of options that follow $icode seed$$ value.
 The order of the options does not matter and the list can be empty.
 Each option in the list, must be separate 
 command line argument to the main program. 
-The documentation below specifics how CppAD uses these options,
-see the examples in $cref speed_adolc$$ for how another package might
-uses these options.
 
-$subhead onetape$$
-If the option $code onetape$$ is present, the symbol
+$subhead retape$$
+If the option $code retape$$ is present, the symbol
 $codep
-	extern bool global_onetape
+	extern bool global_retape
 $$
 is true and otherwise it is false.
 If this external symbol is true,
-CppAD will use one taping of the operation
-sequence for all the repetitions of that speed test.
-Otherwise, the 
+every test must retape the 
 $cref/operation sequence/glossary/Operation/Sequence/$$
-will be retaped for each test repetition.
+for each test repetition.
+If it is false,
+the AD package is allowed to use one taping of the operation
+sequence for all the repetitions of that speed test.
 $pre
 
 $$
@@ -175,24 +161,10 @@ have a fixed operations sequence.
 The operation sequence for $code det_lu$$ 
 may be different for each repetition of the test because it
 depends on the matrix for which the determinant is being calculated. 
-For this reason, the CppAD test
+For this reason,
 $cref cppad_det_lu.cpp$$ returns false 
-(indicating that the test not implemented)
-when $code global_onetape$$ is true.
-
-$subhead colpack$$
-If the option $code colpack$$ is present, the symbol
-$codep
-	extern bool global_colpack
-$$
-is true and otherwise it is false.
-This symbols only affects the
-$cref/sparse_jacobian/link_sparse_jacobian/$$ and
-$cref/sparse_hessian/link_sparse_hessian/$$ tests.
-If this external symbol is true,
-CppAD will use $cref/colpack/colpack_prefix/$$ to do the coloring 
-for its 
-Otherwise, it will use it's own coloring algorithm.
+(for test not implemented)
+when $code global_retape$$ is false.
 
 $subhead optimize$$
 If the option $code optimize$$ is present, the symbol
@@ -201,8 +173,11 @@ $codep
 $$
 is true and otherwise it is false.
 If this external symbol is true,
-CppAD will optimize the operation sequence before doing computations.
-If it is false, this optimization will not be done.
+and the AD package has an optional way to spend time optimizing
+the operation sequence,
+this optimization should be done before doing computations.
+If it is false,
+this optimization should not be done.
 
 $subhead atomic$$
 If the option $code atomic$$ is present, the symbol
@@ -210,10 +185,11 @@ $codep
 	extern bool global_atomic
 $$
 is true and otherwise it is false.
-If this external symbol is true, CppAD will use its user defined 
-$cref/atomic/atomic_base/$$ operation is used for the test.
-If no such atomic operation exists,
-and atomic is chosen, CppAD returns false for the test.
+If this external symbol is true,
+and the AD package has a way to speed up the processing
+by adding $cref old_atomic$$ operations,
+this should be included in computations.
+If it is false, user defined atomic operations should not be done.
 
 $subhead memory$$
 If the option $code memory$$ is present, the symbol
@@ -225,28 +201,13 @@ If it is true, the CppAD
 $cref/hold_memory/ta_hold_memory/$$ routine will be called by 
 the main program before any of the tests are executed.
 This should make the CppAD $code thread_alloc$$ allocator faster.
-If it is false, CppAD will used standard memory allocation. 
-
-$subhead boolsparsity$$
-If the option $code boolsparsity$$ is present, the symbol
-$codep
-	extern bool global_boolsparsity
-$$
-is true and otherwise it is false.
-If it is true, CppAD will use a
-$cref/vector of bool/glossary/Sparsity Pattern/Vector of Boolean/$$
-for its sparsity patterns during the
-$cref/sparse_jacobian/link_sparse_jacobian/$$ and
-$cref/sparse_hessian/link_sparse_hessian/$$ speed tests.
-Otherwise it will use a 
-$cref/vector of sets/glossary/Sparsity Pattern/Vector of Sets/$$.
-The other tests do not use sparsity patterns and so they return false
-if this option is chosen.
+If it is false, standard memory allocation should be done by.
+Otherwise the test can use special memory allocation to try 
+and improve speed.
 
 $head Correctness Results$$
-One, but not both, of the following two output lines
+An output line of the following form:
 $codei%
-	%package%_%test%_%optionlist%_available = false
 	%package%_%test%_%optionlist%_ok = %flag%
 %$$
 is generated for each correctness test where
@@ -261,8 +222,8 @@ For each speed test, corresponds to three lines of the
 following form are generated:
 $codei%
 	%package%_%test%_%optionlist%_ok   = %flag%
-	%package%_%test%_size = [ %size_1%, %...%, %size_n% ]
-	%package%_%test%_rate = [ %rate_1%, %...%, %rate_n% ]
+	%package%_%test%_%optionlist%_size = [ %size_1%, %...%, %size_n% ]
+	%package%_%test%_%optionlist%_rate = [ %rate_1%, %...%, %rate_n% ]
 %$$
 The values $icode package$$, $icode test$$, $icode optionlist$$,
 and $icode flag$$ are as in the correctness results above.
@@ -270,17 +231,6 @@ The values $icode size_1$$, ..., $icode size_n$$ are the
 size arguments used for the corresponding tests.
 The values $icode rate_1$$, ..., $icode rate_n$$ are the number of times
 per second that the corresponding size problem executed.
-
-$subhead sparse_jacobian$$
-The $cref/sparse_jacobian/link_sparse_jacobian/$$ test has an extra output
-line with the following form
-$codei%
-	%package%_sparse_jacobian_n_sweep = [ %n_sweep_1%, %...%, %n_sweep_n% ]
-%$$
-The values $icode n_sweep_1$$, ..., $icode n_sweep_n$$ are the number of 
-sweeps (colors) used for each sparse Jacobian calculation; see
-$cref/n_sweep/sparse_jacobian/n_sweep/$$.
-
 
 $children%
 	speed/src/link_det_lu.cpp%
@@ -294,9 +244,8 @@ $children%
 %$$
 
 $head Link Functions$$
-Each $cref/package/speed_main/package/$$
-defines it's own version of one of the link functions listed below.
-Each of these functions links this main program to the corresponding test:
+Each speed test defines it's own version of one of the following 
+functions that link the speed test to the main program described above:
 $table
 $rref link_det_lu$$
 $rref link_det_minor$$
@@ -311,7 +260,6 @@ $tend
 $end 
 -----------------------------------------------------------------------------
 */
-// external routines
 
 # define CPPAD_DECLARE_SPEED(name)                       \
      extern bool available_##name(void);                 \
@@ -326,17 +274,10 @@ CPPAD_DECLARE_SPEED(poly);
 CPPAD_DECLARE_SPEED(sparse_hessian);
 CPPAD_DECLARE_SPEED(sparse_jacobian);
 
-// info is different for each test
-extern void info_sparse_jacobian(size_t size, size_t& n_sweep);
-
-// --------------------------------------------------------------------------
-
-bool   global_onetape;
-bool   global_colpack;
+bool   global_retape;
 bool   global_optimize;
 bool   global_atomic;
 bool   global_memory;
-bool   global_boolsparsity;
 
 namespace {
 	using std::cout;
@@ -346,12 +287,11 @@ namespace {
 	void not_available_message(const char* test_name)
 	{	cout << AD_PACKAGE << ": " << test_name;
 		cout << " is not availabe with " << endl;
-		cout << "onetape = " << global_onetape << endl;
-		cout << "colpack = " << global_colpack << endl;
-		cout << "optimize = " << global_optimize << endl;
-		cout << "atomic = " << global_atomic << endl;
-		cout << "memory = " << global_memory << endl;
-		cout << "boolsparsity = " << global_boolsparsity << endl;
+		cout << "global_retape = " << global_retape;
+		cout << ", global_optimize = " << global_optimize;
+		cout << ", global_atomic = " << global_atomic;
+		cout << ", global_memory = " << global_memory;
+		cout << endl;
 	}
 
 	// ------------------------------------------------------
@@ -372,37 +312,22 @@ namespace {
 	// function that runs one correctness case
 	static size_t Run_ok_count    = 0;
 	static size_t Run_error_count = 0;
-	bool run_correct(
-		bool available_case(void) ,
-		bool correct_case(bool)   , 
-		const char *case_name     )
-	{	bool available = available_case();
-		bool ok        = true;
-		if( available )	
-		{
-# ifdef CPPAD_DOUBLE_SPEED
-			ok = correct_case(true);
+	bool run_correct(bool correct_case(bool), const char *case_name)
+	{	bool ok;
+# ifdef SPEED_DOUBLE
+		ok = correct_case(true);
 # else
-			ok = correct_case(false);
+		ok = correct_case(false);
 # endif
-		}
 		cout << AD_PACKAGE << "_" << case_name;
-		if( global_onetape )
-			cout << "_onetape";
-		if( global_colpack )
-			cout << "_colpack";
+		if( global_retape )
+			cout << "_retape";
 		if( global_optimize )
 			cout << "_optimize";
 		if( global_atomic )
 			cout << "_atomic";
 		if( global_memory )
 			cout << "_memory";
-		if( global_boolsparsity )
-			cout << "_boolsparsity";
-		if( ! available )
-		{	cout << "_available = false" << endl;
-			return ok;
-		}
 		cout << "_ok = ";
 		if( ok )
 		{	cout << " true" << endl;
@@ -424,7 +349,17 @@ namespace {
 		cout << AD_PACKAGE << "_" << case_name << "_size = ";
 		output(size_vec);
 		cout << endl;
-		cout << AD_PACKAGE << "_" << case_name << "_rate = ";
+		cout << AD_PACKAGE << "_" << case_name;
+		if( global_retape )
+			cout << "_retape";
+		if( global_optimize )
+			cout << "_optimize";
+		if( global_atomic )
+			cout << "_atomic";
+		if( global_memory )
+			cout << "_memory";
+		cout << "_rate = ";
+
 		cout << std::fixed;
 		for(size_t i = 0; i < size_vec.size(); i++)
 		{	if( i == 0 )
@@ -486,31 +421,25 @@ int main(int argc, char *argv[])
 		error = match == test_error;
 		iseed = std::atoi( argv[2] );
 		error |= iseed < 0;
-		global_onetape      = false;
-		global_colpack      = false;
-		global_optimize     = false;
-		global_atomic       = false;
-		global_memory       = false;
-		global_boolsparsity = false;
+		global_retape   = false;
+		global_optimize = false;
+		global_atomic   = false;
+		global_memory   = false;
 		for(i = 3; i < size_t(argc); i++)
-		{	if( strcmp(argv[i], "onetape") == 0 )
-				global_onetape = true;
-			else if( strcmp(argv[i], "colpack") == 0 )
-				global_colpack = true;
+		{	if( strcmp(argv[i], "retape") == 0 )
+				global_retape = true;
 			else if( strcmp(argv[i], "optimize") == 0 )
 				global_optimize = true;
 			else if( strcmp(argv[i], "atomic") == 0 )
 				global_atomic = true;
 			else if( strcmp(argv[i], "memory") == 0 )
 				global_memory = true;
-			else if( strcmp(argv[i], "boolsparsity") == 0 )
-				global_boolsparsity = true;
 			else
 				error = true;
 		}
 	}
 	if( error )
-	{	cout << "usage: ./speed_" 
+	{	cout << "usage: ./" 
 		     << AD_PACKAGE << " test seed option_list" << endl;
 		cout << "test choices: " << endl;
 		for(i = 0; i < n_test; i++)
@@ -518,12 +447,10 @@ int main(int argc, char *argv[])
 		cout << "seed choices: ";
 		cout << "a positive integer used as a random seed." << endl;
 		cout << "option choices: ";
-		cout << " \"onetape\",";
-		cout << " \"colpack\",";
+		cout << " \"retape\",";
 		cout << " \"optimize\",";
 		cout << " \"atomic\",";
-		cout << " \"memory\",";
-		cout << " \"boolsparsity\"." << endl << endl;
+		cout << " \"memory\"." << endl << endl;
 		return 1;
 	}
 	if( global_memory )
@@ -542,11 +469,11 @@ int main(int argc, char *argv[])
 	CppAD::vector<size_t> size_sparse_hessian(n_size);
 	CppAD::vector<size_t> size_sparse_jacobian(n_size);
 	for(i = 0; i < n_size; i++) 
-	{	size_det_minor[i]   = i + 1;
-		size_det_lu[i]      = 10 * i + 1;
-		size_mat_mul[i]     = 10 * i + 1;
-		size_ode[i]         = 10 * i + 1;
-		size_poly[i]        = 10 * i + 1;
+	{	size_det_lu[i]      = 3 * i + 1;
+		size_det_minor[i]   = i + 1;
+		size_mat_mul[i]     = 10 * (i + 1);
+		size_ode[i]         = 3 * i + 1;
+		size_poly[i]        = 8 * i + 1;
 		size_sparse_hessian[i]  = 100 * (i + 1) * (i + 1);
 		size_sparse_jacobian[i] = 100 * (i + 1) * (i + 1);
 	}
@@ -555,28 +482,26 @@ int main(int argc, char *argv[])
 	{
 		// run all the correctness tests
 		case test_correct:
-		ok &= run_correct( available_det_lu, correct_det_lu, "det_lu"       
+		if( available_det_lu() ) ok &= run_correct(
+			correct_det_lu,           "det_lu"       
 		);
-		ok &= run_correct(
-			available_det_minor, correct_det_minor, "det_minor"    
+		if( available_det_minor() ) ok &= run_correct(
+			correct_det_minor,        "det_minor"    
 		);
-		ok &= run_correct(
-			available_mat_mul, correct_mat_mul, "mat_mul"    
+		if( available_mat_mul() ) ok &= run_correct(
+			correct_mat_mul,          "mat_mul"    
 		);
-		ok &= run_correct(
-			available_ode, correct_ode, "ode"         
+		if( available_ode() ) ok &= run_correct(
+			correct_ode,             "ode"         
 		);
-		ok &= run_correct( available_poly, correct_poly, "poly"         
+		if( available_poly() ) ok &= run_correct(
+			correct_poly,            "poly"         
 		);
-		ok &= run_correct(
-			available_sparse_hessian, 
-			correct_sparse_hessian,
-			"sparse_hessian"         
+		if( available_sparse_hessian() ) ok &= run_correct(
+			correct_sparse_hessian,  "sparse_hessian"         
 		);
-		ok &= run_correct(
-			available_sparse_jacobian, 
-			correct_sparse_jacobian,
-			"sparse_jacobian"         
+		if( available_sparse_jacobian() ) ok &= run_correct(
+			correct_sparse_jacobian, "sparse_jacobian"         
 		);
 		// summarize results
 		assert( ok || (Run_error_count > 0) );
@@ -622,9 +547,7 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_det_lu, correct_det_lu, "det_lu")
-		;
+		ok &= run_correct(correct_det_lu,           "det_lu");
 		run_speed(speed_det_lu,    size_det_lu,     "det_lu");
 		break;
 		// ---------------------------------------------------------
@@ -634,9 +557,7 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_det_minor, correct_det_minor, "det_minor"
-		);
+		ok &= run_correct(correct_det_minor,       "det_minor");
 		run_speed(speed_det_minor, size_det_minor, "det_minor");
 		break;
 		// ---------------------------------------------------------
@@ -646,9 +567,7 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_mat_mul, correct_mat_mul, "mat_mul"
-		);
+		ok &= run_correct(correct_mat_mul,     "mat_mul");
 		run_speed(speed_mat_mul, size_mat_mul, "mat_mul");
 		break;
 		// ---------------------------------------------------------
@@ -658,9 +577,7 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_ode, correct_ode, "ode"
-		);
+		ok &= run_correct(correct_ode,           "ode");
 		run_speed(speed_ode,      size_ode,      "ode");
 		break;
 		// ---------------------------------------------------------
@@ -670,9 +587,7 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_poly, correct_poly, "poly"
-		);
+		ok &= run_correct(correct_poly,            "poly");
 		run_speed(speed_poly,      size_poly,      "poly");
 		break;
 		// ---------------------------------------------------------
@@ -682,11 +597,7 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_sparse_hessian,
-			correct_sparse_hessian,
-			"sparse_hessian"
-		);
+		ok &= run_correct(correct_sparse_hessian, "sparse_hessian");
 		run_speed(
 		speed_sparse_hessian, size_sparse_hessian,  "sparse_hessian");
 		break;
@@ -697,24 +608,10 @@ int main(int argc, char *argv[])
 		{	not_available_message( argv[1] ); 
 			exit(1);
 		}
-		ok &= run_correct(
-			available_sparse_jacobian,
-			correct_sparse_jacobian,
-			"sparse_jacobian"
-		);
+		ok &= run_correct(correct_sparse_jacobian, "sparse_jacobian");
 		run_speed(
 		speed_sparse_jacobian, size_sparse_jacobian, "sparse_jacobian"
 		);
-		cout << AD_PACKAGE << "_sparse_jacobian_n_sweep = ";
-		for(size_t i = 0; i < size_sparse_jacobian.size(); i++)
-		{	if( i == 0 )
-				cout << "[ ";
-			else	cout << ", ";	
-			size_t n_sweep;
-			info_sparse_jacobian(size_sparse_jacobian[i], n_sweep);
-			cout << n_sweep;
-		}
-		cout << " ]" << endl;
 		break;
 		// ---------------------------------------------------------
 		

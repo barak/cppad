@@ -1,4 +1,4 @@
-/* $Id: cppad_eigen.cpp 3070 2013-12-31 15:09:11Z bradbell $ */
+/* $Id: cppad_eigen.cpp 3022 2013-12-24 14:25:43Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
@@ -15,12 +15,12 @@ Test of Eigen Interface to CppAD Scalar Types
 $end
 */
 # include <cppad/example/cppad_eigen.hpp>
+# include <cppad/cppad.hpp>
 
 bool cppad_eigen(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using Eigen::Dynamic;
-	using Eigen::Matrix;
 
 	typedef Eigen::NumTraits<AD<double> >         traits;
 
@@ -47,25 +47,13 @@ bool cppad_eigen(void)
 	ok  &= imag(x)  == 0.0;
 	ok  &= abs2(x)  == 4.0;
 
-	// Outputing a matrix used to fail before partial specialization of
+	// Outputing a matrix used to fail before paritali specialization of
 	// struct significant_decimals_default_impl in cppad_eigen.hpp. 
-	Matrix< AD<double>, 1, 1> X;
+	Eigen::Matrix< AD<double>, 1, 1> X;
 	X(0, 0) = AD<double>(1);
 	std::stringstream stream_out;
 	stream_out << X;
 	ok &= "1" == stream_out.str();
-
-# if ! CPPAD_IMPLICIT_CTOR_FROM_ANY_TYPE 
-	// multiplying three matrices together used to cause warning
-	// before making ctor from arbitrary type to AD<Base> explicit.
-	typedef CppAD::AD<double> AScalar;
-	Matrix<AScalar, Dynamic, Dynamic> A(1,1), B(1,1), C(1,1), D(1,1);
-	A(0,0) = 1.0;
-	B(0,0) = 2.0;
-	C(0,0) = 3.0;
-	D      = A * B * C; 
-	ok    &= D(0,0) == 6.0 ;
-# endif
 	
 	return ok;
 }

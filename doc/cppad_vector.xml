@@ -5,7 +5,7 @@
 <head>
 <title>The CppAD::vector Template Class</title>
 <meta name="description" id="description" content="The CppAD::vector Template Class"/>
-<meta name="keywords" id="keywords" content=" vector Cppad template class assignment [] push_back push_vector push data vectorbool thread_alloc exercise Cppad::vector "/>
+<meta name="keywords" id="keywords" content=" vector Cppad template class assignment [] push_back push_vector push vectorbool thread_alloc exercise Cppad::vector "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -105,17 +105,14 @@ A:active { color : purple }
 <option>Assignment</option>
 <option>---..Check Size</option>
 <option>---..Return Reference</option>
-<option>---..Move Semantics</option>
 <option>Element Access</option>
 <option>push_back</option>
 <option>push_vector</option>
 <option>Output</option>
 <option>resize</option>
 <option>clear</option>
-<option>data</option>
 <option>vectorBool</option>
 <option>---..Memory</option>
-<option>---..data</option>
 <option>---..Output</option>
 <option>---..Element Type</option>
 <option>Memory and Parallel Mode</option>
@@ -240,15 +237,6 @@ An example use of this reference is in multiple assignments of the form
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 <br/>
-<b><a name="Assignment.Move Semantics" id="Assignment.Move Semantics">Move Semantics</a></b>
-<br/>
-If the C++ compiler supports move semantic rvalues using the <code><font color="blue">&amp;&amp;</font></code>
-syntax, then it will be used during the vector assignment statement.
-This means that return values and other temporaries are not be copied,
-but rather pointers are transferred.
-
-<br/>
-<br/>
 <b><big><a name="Element Access" id="Element Access">Element Access</a></big></b>
 
 
@@ -325,6 +313,7 @@ and
 (equal in the sense of the 
 <code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
  assignment operator).
+
 
 <br/>
 <br/>
@@ -448,54 +437,6 @@ see the <a href="cppad_vector.xml#Memory and Parallel Mode" target="_top"><span 
 
 <br/>
 <br/>
-<b><big><a name="data" id="data">data</a></big></b>
-
-
-<br/>
-If 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- is a 
-<code><font color="blue"><span style='white-space: nowrap'>CppAD::vector&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- object
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.data()<br/>
-</span></font></code>
-returns a pointer to a 
-<code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
- object such that for
-
-<code><font color="blue"><span style='white-space: nowrap'>0&#xA0;&lt;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&lt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()</span></font></code>
-,
-
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
- and 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.data()[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
- 
-are the same 
-<code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
- object.
-If 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- is <code><font color="blue">const</font></code>, the pointer is <code><font color="blue">const</font></code>.
-If 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.capacity()</span></font></code>
- is zero, the value of the pointer is not defined.
-The pointer may no longer be valid after the following operations on 
-
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
-:
-its destructor,
-<code><font color="blue">clear</font></code>,
-<code><font color="blue">resize</font></code>, 
-<code><font color="blue">push_back</font></code>,
-<code><font color="blue">push_vector</font></code>,
-assignment to another vector when original size of 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- is zero. 
-
-<br/>
-<br/>
 <b><big><a name="vectorBool" id="vectorBool">vectorBool</a></big></b>
 
 <br/>
@@ -511,14 +452,6 @@ with the following exceptions:
 The class <code><font color="blue">vectorBool</font></code> conserves on memory
 (on the other hand, <code><font color="blue">CppAD::vector&lt;bool&gt;</font></code> is expected to be faster
 than <code><font color="blue">vectorBool</font></code>).
-
-<br/>
-<br/>
-<b><a name="vectorBool.data" id="vectorBool.data">data</a></b>
-<br/>
-The <a href="cppad_vector.xml#data" target="_top"><span style='white-space: nowrap'>data</span></a>
- function is not supported by
-<code><font color="blue">vectorBool</font></code>.
 
 <br/>
 <br/>

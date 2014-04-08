@@ -1,9 +1,9 @@
-/* $Id: atomic_base.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: atomic_base.hpp 3012 2013-11-27 22:00:48Z bradbell $ */
 # ifndef CPPAD_ATOMIC_BASE_INCLUDED
 # define CPPAD_ATOMIC_BASE_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -20,6 +20,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
+\defgroup atomic_base.hpp atomic_base.hpp
 \{
 \file atomic_base.hpp
 Base class for atomic user operations.
@@ -441,12 +442,12 @@ void operator()(
 		}
 	}
 	// Use zero order forward mode to compute values
-	size_t p = 0, q = 0;
+	size_t q = 0, p = 0;
 	set_id(id);
 # ifdef NDEBUG
-	forward(p, q, vx, vy, tx, ty);  
+	forward(q, p, vx, vy, tx, ty);  
 # else
-	ok = forward(p, q, vx, vy, tx, ty);  
+	ok = forward(q, p, vx, vy, tx, ty);  
 	if( ! ok )
 	{	msg += afun_name() + ": ok is false for "
 			"zero order forward mode calculation.";
@@ -549,7 +550,7 @@ $index forward, atomic virtual$$
 
 
 $head Syntax$$
-$icode%ok% = %afun%.forward(%p%, %q%, %vx%, %vy%, %tx%, %ty%)%$$
+$icode%ok% = %afun%.forward(%q%, %p%, %vx%, %vy%, %tx%, %ty%)%$$
 
 $head Purpose$$
 This virtual function is used by $cref atomic_afun$$
@@ -562,24 +563,24 @@ This virtual function must be defined by the
 $cref/atomic_user/atomic_ctor/atomic_user/$$ class.
 It can just return $icode%ok% == false%$$ 
 (and not compute anything) for values
-of $icode%q% > 0%$$ that are greater than those used by your
+of $icode%p% > 0%$$ that are greater than those used by your
 $cref/forward/Forward/$$ mode calculations.
-
-$head p$$
-The argument $icode p$$ has prototype
-$codei%
-	size_t %p%
-%$$
-It specifies the lowest order Taylor coefficient that we are evaluating. 
-During calls to $cref atomic_afun$$, $icode%p% == 0%$$.
 
 $head q$$
 The argument $icode q$$ has prototype
 $codei%
 	size_t %q%
 %$$
-It specifies the highest order Taylor coefficient that we are evaluating. 
+It specifies the lowest order Taylor coefficient that we are evaluating. 
 During calls to $cref atomic_afun$$, $icode%q% == 0%$$.
+
+$head p$$
+The argument $icode p$$ has prototype
+$codei%
+	size_t %p%
+%$$
+It specifies the highest order Taylor coefficient that we are evaluating. 
+During calls to $cref atomic_afun$$, $icode%p% == 0%$$.
 
 $head vx$$
 The $code forward$$ argument $icode vx$$ has prototype
@@ -589,7 +590,7 @@ $codei%
 The case $icode%vx%.size() > 0%$$ only occurs while evaluating a call to 
 $cref atomic_afun$$.
 In this case,
-$icode%p% == %q% == 0%$$, 
+$icode%q% == %p% == 0%$$, 
 $icode%vx%.size() == %n%$$, and
 for $latex j = 0 , \ldots , n-1$$,
 $icode%vx%[%j%]%$$ is true if and only if
@@ -609,7 +610,7 @@ $codei%
 %$$
 If $icode%vy%.size() == 0%$$, it should not be used.
 Otherwise, 
-$icode%q% == 0%$$ and $icode%vy%.size() == %m%$$.
+$icode%p% == 0%$$ and $icode%vy%.size() == %m%$$.
 The input values of the elements of $icode vy$$ 
 are not specified (must not matter).
 Upon return, for $latex j = 0 , \ldots , m-1$$,
@@ -622,14 +623,14 @@ The argument $icode tx$$ has prototype
 $codei%
 	const CppAD::vector<%Base%>& %tx%
 %$$
-and $icode%tx%.size() == (%q%+1)*%n%$$.
-For $latex j = 0 , \ldots , n-1$$ and $latex k = 0 , \ldots , q$$,
+and $icode%tx%.size() == (%p%+1)*%n%$$.
+For $latex j = 0 , \ldots , n-1$$ and $latex k = 0 , \ldots , p$$,
 we use the Taylor coefficient notation
 $latex \[
 \begin{array}{rcl}
-	x_j^k    & = & tx [ j * ( q + 1 ) + k ]
+	x_j^k    & = & tx [ j * ( p + 1 ) + k ]
 	\\
-	X_j (t)  & = & x_j^0 + x_j^1 t^1 + \cdots + x_j^q t^q
+	X_j (t)  & = & x_j^0 + x_j^1 t^1 + \cdots + x_j^p t^p
 \end{array}
 \] $$
 Note that superscripts represent an index for $latex x_j^k$$
@@ -645,19 +646,19 @@ The argument $icode ty$$ has prototype
 $codei%
 	CppAD::vector<%Base%>& %ty%
 %$$
-and $icode%tx%.size() == (%q%+1)*%m%$$.
+and $icode%tx%.size() == (%p%+1)*%m%$$.
 Upon return,
-For $latex i = 0 , \ldots , m-1$$ and $latex k = 0 , \ldots , q$$,
+For $latex i = 0 , \ldots , m-1$$ and $latex k = 0 , \ldots , p$$,
 $latex \[
 \begin{array}{rcl}
 	Y_i (t)  & = & f_i [ X(t) ]
 	\\
-	Y_i (t)  & = & y_i^0 + y_i^1 t^1 + \cdots + y_i^q t^q + o ( t^q )
+	Y_i (t)  & = & y_i^0 + y_i^1 t^1 + \cdots + y_i^p t^p + o ( t^p )
 	\\
-	ty [ i * ( q + 1 ) + k ] & = & y_i^k
+	ty [ i * ( p + 1 ) + k ] & = & y_i^k
 \end{array}
 \] $$
-where $latex o( t^q ) / t^q \rightarrow 0$$ as $latex t \rightarrow 0$$.
+where $latex o( t^p ) / t^p \rightarrow 0$$ as $latex t \rightarrow 0$$.
 Note that superscripts represent an index for $latex y_j^k$$
 and an exponent for $latex t^k$$.
 Also note that the Taylor coefficients for $latex Y(t)$$ correspond
@@ -665,11 +666,11 @@ to the derivatives of $latex Y(t)$$ at $latex t = 0$$ in the following way:
 $latex \[
 	y_j^k = \frac{1}{ k ! } Y_j^{(k)} (0)
 \] $$
-If $latex p > 0$$, 
-for $latex i = 0 , \ldots , m-1$$ and $latex k = 0 , \ldots , p-1$$,
+If $latex q > 0$$, 
+for $latex i = 0 , \ldots , m-1$$ and $latex k = 0 , \ldots , q-1$$,
 the input of $icode ty$$ satisfies
 $latex \[
-	ty [ i * ( q + 1 ) + k ] = y_i^k
+	ty [ i * ( p + 1 ) + k ] = y_i^k
 \]$$
 and hence the corresponding elements need not be recalculated.
 
@@ -678,7 +679,7 @@ If the required results are calculated, $icode ok$$ should be true.
 Otherwise, it should be false.
 
 $head Discussion$$
-For example, suppose that $icode%q% == 2%$$,
+For example, suppose that $icode%p% == 2%$$,
 and you know how to compute the function $latex f(x)$$,
 its first derivative $latex f^{(1)} (x)$$,
 and it component wise Hessian $latex f_i^{(2)} (x)$$.
@@ -704,7 +705,7 @@ y_i^2
 \] $$
 For $latex i = 0 , \ldots , m-1$$, and $latex k = 0 , 1 , 2$$, 
 $latex \[
-	ty [ i * (q + 1) + k ] = y_i^k
+	ty [ i * (p + 1) + k ] = y_i^k
 \] $$
 
 $head Examples$$
@@ -732,10 +733,10 @@ $end
 /*!
 Link from atomic_base to forward mode 
 
-\param p [in]
+\param q [in]
 lowerest order for this forward mode calculation.
 
-\param q [in]
+\param p [in]
 highest order for this forward mode calculation.
 
 \param vx [in]
@@ -753,8 +754,8 @@ Taylor coefficient corresponding to \c y for this calculation
 See the forward mode in user's documentation for base_atomic 
 */
 virtual bool forward(
-	size_t                    p  ,
 	size_t                    q  ,
+	size_t                    p  ,
 	const vector<bool>&       vx ,
 	      vector<bool>&       vy ,
 	const vector<Base>&       tx ,
@@ -784,7 +785,7 @@ $spell
 $$
 
 $head Syntax$$
-$icode%ok% = %afun%.reverse(%q%, %tx%, %ty%, %px%, %py%)%$$
+$icode%ok% = %afun%.reverse(%p%, %tx%, %ty%, %px%, %py%)%$$
 
 $head Purpose$$
 This function is used by $cref/reverse/Reverse/$$ 
@@ -797,13 +798,13 @@ this virtual function must be defined by the
 $cref/atomic_user/atomic_ctor/atomic_user/$$ class.
 It can just return $icode%ok% == false%$$ 
 (and not compute anything) for values
-of $icode q$$ that are greater than those used by your
+of $icode p$$ that are greater than those used by your
 $cref/reverse/Reverse/$$ mode calculations.
 
-$head q$$
-The argument $icode q$$ has prototype
+$head p$$
+The argument $icode p$$ has prototype
 $codei%
-	size_t %q%
+	size_t %p%
 %$$
 It specifies the highest order Taylor coefficient that
 computing the derivative of.
@@ -813,14 +814,14 @@ The argument $icode tx$$ has prototype
 $codei%
 	const CppAD::vector<%Base%>& %tx%
 %$$
-and $icode%tx%.size() == (%q%+1)*%n%$$.
-For $latex j = 0 , \ldots , n-1$$ and $latex k = 0 , \ldots , q$$,
+and $icode%tx%.size() == (%p%+1)*%n%$$.
+For $latex j = 0 , \ldots , n-1$$ and $latex k = 0 , \ldots , p$$,
 we use the Taylor coefficient notation
 $latex \[
 \begin{array}{rcl}
-	x_j^k    & = & tx [ j * ( q + 1 ) + k ]
+	x_j^k    & = & tx [ j * ( p + 1 ) + k ]
 	\\
-	X_j (t)  & = & x_j^0 + x_j^1 t^1 + \cdots + x_j^q t^q
+	X_j (t)  & = & x_j^0 + x_j^1 t^1 + \cdots + x_j^p t^p
 \end{array}
 \] $$
 Note that superscripts represent an index for $latex x_j^k$$
@@ -836,19 +837,19 @@ The argument $icode ty$$ has prototype
 $codei%
 	const CppAD::vector<%Base%>& %ty%
 %$$
-and $icode%tx%.size() == (%q%+1)*%m%$$.
-For $latex i = 0 , \ldots , m-1$$ and $latex k = 0 , \ldots , q$$,
+and $icode%tx%.size() == (%p%+1)*%m%$$.
+For $latex i = 0 , \ldots , m-1$$ and $latex k = 0 , \ldots , p$$,
 we use the Taylor coefficient notation
 $latex \[
 \begin{array}{rcl}
 	Y_i (t)  & = & f_i [ X(t) ]
 	\\
-	Y_i (t)  & = & y_i^0 + y_i^1 t^1 + \cdots + y_i^q t^q + o ( t^q )
+	Y_i (t)  & = & y_i^0 + y_i^1 t^1 + \cdots + y_i^p t^p + o ( t^p )
 	\\
-	y_i^k    & = & ty [ i * ( q + 1 ) + k ]
+	y_i^k    & = & ty [ i * ( p + 1 ) + k ]
 \end{array}
 \] $$
-where $latex o( t^q ) / t^q \rightarrow 0$$ as $latex t \rightarrow 0$$.
+where $latex o( t^p ) / t^p \rightarrow 0$$ as $latex t \rightarrow 0$$.
 Note that superscripts represent an index for $latex y_j^k$$
 and an exponent for $latex t^k$$.
 Also note that the Taylor coefficients for $latex Y(t)$$ correspond
@@ -859,22 +860,22 @@ $latex \[
 
 
 $head F, G, H$$
-We use the notation $latex \{ x_j^k \} \in B^{n \times (q+1)}$$ for 
+We use the notation $latex \{ x_j^k \} \in B^{n \times (p+1)}$$ for 
 $latex \[
-	\{ x_j^k \W{:} j = 0 , \ldots , n-1, k = 0 , \ldots , q \}
+	\{ x_j^k \W{:} j = 0 , \ldots , n-1, k = 0 , \ldots , p \}
 \]$$ 
-We use the notation $latex \{ y_i^k \} \in B^{m \times (q+1)}$$ for 
+We use the notation $latex \{ y_i^k \} \in B^{m \times (p+1)}$$ for 
 $latex \[
-	\{ y_i^k \W{:} i = 0 , \ldots , m-1, k = 0 , \ldots , q \}
+	\{ y_i^k \W{:} i = 0 , \ldots , m-1, k = 0 , \ldots , p \}
 \]$$ 
 We define the function
-$latex F : B^{n \times (q+1)} \rightarrow B^{m \times (q+1)}$$ by
+$latex F : B^{n \times (p+1)} \rightarrow B^{m \times (p+1)}$$ by
 $latex \[
 	y_i^k = F_i^k [ \{ x_j^k \} ]
 \] $$
-We use $latex G : B^{m \times (q+1)} \rightarrow B$$
+We use $latex G : B^{m \times (p+1)} \rightarrow B$$
 to denote an arbitrary scalar valued function of $latex \{ y_i^k \}$$.
-We use $latex H : B^{n \times (q+1)} \rightarrow B$$
+We use $latex H : B^{n \times (p+1)} \rightarrow B$$
 defined by
 $latex \[
 	H ( \{ x_j^k \} ) = G[ F( \{ x_j^k \} ) ]
@@ -885,10 +886,10 @@ The argument $icode py$$ has prototype
 $codei%
 	const CppAD::vector<%Base%>& %py%
 %$$
-and $icode%py%.size() == m * (%q%+1)%$$.
-For $latex i = 0 , \ldots , m-1$$, $latex k = 0 , \ldots , q$$,
+and $icode%py%.size() == m * (%p%+1)%$$.
+For $latex i = 0 , \ldots , m-1$$, $latex k = 0 , \ldots , p$$,
 $latex \[
-	py[ i * (q + 1 ) + k ] = \partial G / \partial y_i^k
+	py[ i * (p + 1 ) + k ] = \partial G / \partial y_i^k
 \] $$
 
 $subhead px$$
@@ -896,26 +897,26 @@ The $icode px$$ has prototype
 $codei%
 	CppAD::vector<%Base%>& %px%
 %$$
-and $icode%px%.size() == n * (%q%+1)%$$.
+and $icode%px%.size() == n * (%p%+1)%$$.
 The input values of the elements of $icode px$$ 
 are not specified (must not matter).
 Upon return,
-for $latex j = 0 , \ldots , n-1$$ and $latex \ell = 0 , \ldots , q$$,
+for $latex j = 0 , \ldots , n-1$$ and $latex \ell = 0 , \ldots , p$$,
 $latex \[
 \begin{array}{rcl}
-px [ j * (q + 1) + \ell ] & = & \partial H / \partial x_j^\ell
+px [ j * (p + 1) + \ell ] & = & \partial H / \partial x_j^\ell
 \\
 & = & 
 ( \partial G / \partial \{ y_i^k \} ) 
 	( \partial \{ y_i^k \} / \partial x_j^\ell )
 \\
 & = & 
-\sum_{i=0}^{m-1} \sum_{k=0}^q
+\sum_{i=0}^{m-1} \sum_{k=0}^p
 ( \partial G / \partial y_i^k ) ( \partial y_i^k / \partial x_j^\ell )
 \\
 & = & 
-\sum_{i=0}^{m-1} \sum_{k=\ell}^q
-py[ i * (q + 1 ) + k ] ( \partial F_i^k / \partial x_j^\ell )
+\sum_{i=0}^{m-1} \sum_{k=\ell}^p
+py[ i * (p + 1 ) + k ] ( \partial F_i^k / \partial x_j^\ell )
 \end{array}
 \] $$
 Note that we have used the fact that for $latex k < \ell$$,
@@ -951,7 +952,7 @@ $end
 /*!
 Link from reverse mode sweep to users routine.
 
-\param q [in]
+\param p [in]
 highest order for this reverse mode calculation.
 
 \param tx [in]
@@ -969,7 +970,7 @@ Partials w.r.t. the \c y Taylor coefficients.
 See atomic_reverse mode use documentation 
 */
 virtual bool reverse(
-	size_t                    q  ,
+	size_t                    p  ,
 	const vector<Base>&       tx ,
 	const vector<Base>&       ty ,
 	      vector<Base>&       px ,
@@ -1511,5 +1512,6 @@ virtual void set_id(size_t id)
 { }
 // ---------------------------------------------------------------------------
 };
+/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

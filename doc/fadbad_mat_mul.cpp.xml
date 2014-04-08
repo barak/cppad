@@ -111,11 +111,6 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/vector.hpp&gt;
-
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
-extern bool global_boolsparsity;
-
 bool link_mat_mul(
 	size_t                           size     , 
 	size_t                           repeat   , 
@@ -124,10 +119,10 @@ bool link_mat_mul(
 	CppAD::vector&lt;double&gt;&amp;           dz       )
 {
 	// speed test global option values
-	if( global_boolsparsity )
-		return false; 
-	if( global_memory || global_onetape || global_atomic || global_optimize )
+	extern bool global_retape, global_atomic, global_optimize;
+	if( ! global_retape || global_atomic || global_optimize )
 		return false;
+
 	// The correctness check for this test is failing, so abort (for now).
 	return false;
 

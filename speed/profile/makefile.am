@@ -1,6 +1,6 @@
-# $Id: makefile.am 3139 2014-03-02 21:12:00Z bradbell $
+# $Id: makefile.am 2529 2012-10-31 17:37:50Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -23,16 +23,18 @@ check_PROGRAMS   = profile
 AM_CPPFLAGS   = -I$(top_srcdir) $(BOOST_INCLUDE) $(EIGEN_INCLUDE)
 #
 # BEGIN OPTIMIZE
-AM_CXXFLAGS   = -pg -O2 -DCPPAD_PROFILE_SPEED -DNDEBUG $(CXX_FLAGS)
+AM_CXXFLAGS   = -pg -O2 -DSPEED_PROFILE -DNDEBUG $(CXX_FLAGS)
 # END OPTIMIZE
 #
 # BEGIN DEBUG
-# AM_CXXFLAGS = -g $(CXX_FLAGS) -DCPPAD_PROFILE_SPEED
+# AM_CXXFLAGS = -g $(CXX_FLAGS) -DSPEED_PROFILE
 # END DEBUG
 #
 AM_LDFLAGS    = -pg
 #
 profile_SOURCES = \
+	../cppad/print_optimize.hpp \
+	../cppad/print_optimize.cpp \
 	../main.cpp \
 	../cppad/ode.cpp \
 	../cppad/det_lu.cpp  \

@@ -1,6 +1,6 @@
-/* $Id: link_sparse_hessian.cpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: link_sparse_hessian.cpp 2625 2012-12-23 14:34:12Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -69,7 +69,7 @@ each repetition).
 $head x$$
 The argument $icode x$$ has prototype
 $codei%
-        CppAD::vector<double>& %x%
+        CppAD::vector<double> &%x%
 %$$
 and its size is $latex n$$; i.e., $icode%x%.size() == %size%$$.
 The input value of the elements of $icode x$$ does not matter.
@@ -115,7 +115,7 @@ $icode%j% = %col%[%k%]%$$.
 $head hessian$$
 The argument $icode hessian$$ has prototype
 $codei%
-	CppAD::vector<double>&  hessian
+	CppAD::vector<double>  &hessian
 %$$
 and its size is $latex n \times n$$.
 The input value of its elements does not matter. 
@@ -142,6 +142,7 @@ $end
 # include <cppad/index_sort.hpp>
 
 /*!
+\defgroup link_sparse_hessian_cpp link_sparse_hessian.cpp
 \{
 \file link_sparse_hessian.cpp
 Defines and implement sparse Hessian speed link to package specific code.
@@ -280,12 +281,12 @@ is true, if the sparse Hessian speed test is implemented for this package,
 and false otherwise.
 */
 extern bool link_sparse_hessian(
-	size_t                           size      ,
-	size_t                           repeat    ,
-	const CppAD::vector<size_t>&     row       ,
-	const CppAD::vector<size_t>&     col       , 
-	      CppAD::vector<double>&     x         ,
-	      CppAD::vector<double>&     hessian
+	size_t                           size       ,
+	size_t                           repeat     ,
+	CppAD::vector<double>            &x         ,
+	const CppAD::vector<size_t>      &row       ,
+	const CppAD::vector<size_t>      &col       , 
+	CppAD::vector<double>            &hessian
 );
 
 /*!
@@ -303,14 +304,11 @@ bool available_sparse_hessian(void)
 	vector<size_t> row, col; 
 	choose_row_col(n, row, col);
 
-	return link_sparse_hessian(n, repeat, row, col, x, hessian);
+	return link_sparse_hessian(n, repeat, x, row, col, hessian);
 	exit(0);
 }
 /*!
 Does final sparse Hessian value pass correctness test.
-
-\param is_package_double
-if true, we are checking function values instead of derivatives.
 
 \return
 true, if correctness test passes, and false otherwise.
@@ -324,7 +322,7 @@ bool correct_sparse_hessian(bool is_package_double)
 	vector<size_t> row, col;
 	choose_row_col(n, row, col);
 
-	link_sparse_hessian(n, repeat, row, col, x, hessian);
+	link_sparse_hessian(n, repeat, x, row, col, hessian);
 
 	size_t order, size;
 	if( is_package_double)
@@ -362,7 +360,8 @@ void speed_sparse_hessian(size_t size, size_t repeat)
 	choose_row_col(n, row, col);
 
 	// note that cppad/sparse_hessian.cpp assumes that x.size() == size
-	link_sparse_hessian(n, repeat, row, col, x, hessian);
+	link_sparse_hessian(n, repeat, x, row, col, hessian);
 	return;
 }
 
+/*! \} */

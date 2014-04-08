@@ -112,10 +112,6 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 # include &lt;cppad/speed/ode_evaluate.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
-
 bool link_ode(
 	size_t                     size       ,
 	size_t                     repeat     ,
@@ -123,11 +119,10 @@ bool link_ode(
 	CppAD::vector&lt;double&gt;      &amp;jacobian
 )
 {
-	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
-		return false;
+	assert( x.size() == size );
+
 	// -------------------------------------------------------------
 	// setup
-	assert( x.size() == size );
 
 	size_t n = size;
 

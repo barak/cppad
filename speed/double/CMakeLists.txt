@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3122 2014-02-26 03:23:19Z bradbell $
+# $Id: CMakeLists.txt 2572 2012-11-15 19:43:06Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -11,12 +11,15 @@
 # -----------------------------------------------------------------------------
 # Build the speed/double directory tests 
 # Inherit environment from ../CMakeList.txt
-# CMAKE_BUILD_TYPE determined by parent directory
+
+# Specifies build type for this directory. Possible values are 
+# empty, Debug, Release, RelWithDebInfo and MinSizeRel
+SET(CMAKE_BUILD_TYPE RELEASE)
 
 # Adds flags to the compiler command line for sources in the current directory 
 # and below. This command can be used to add any flags, but it was originally 
 # intended to add preprocessor definitions. 
-ADD_DEFINITIONS("-DCPPAD_DOUBLE_SPEED")
+ADD_DEFINITIONS("-DSPEED_DOUBLE")
 
 # Local include directories to search (not in package_prefix/includdir)
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )

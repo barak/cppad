@@ -56,6 +56,7 @@ var list_current0 = [
 'cppad_eigen.hpp.xml#Syntax',
 'cppad_eigen.hpp.xml#Purpose',
 'cppad_eigen.hpp.xml#Example',
+'cppad_eigen.hpp.xml#eigen_plugin.hpp',
 'cppad_eigen.hpp.xml#Include Files',
 'cppad_eigen.hpp.xml#Eigen NumTraits',
 'cppad_eigen.hpp.xml#CppAD Namespace'

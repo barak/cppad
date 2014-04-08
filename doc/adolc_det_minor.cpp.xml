@@ -109,10 +109,6 @@ See <a href="link_det_minor.xml" target="_top"><span style='white-space: nowrap'
 # include &lt;cppad/speed/det_by_minor.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
-extern bool global_boolsparsity;
-
 bool link_det_minor(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -120,10 +116,10 @@ bool link_det_minor(
 	CppAD::vector&lt;double&gt;     &amp;gradient )
 {
 	// speed test global option values
-	if( global_atomic || global_boolsparsity )
+	extern bool global_retape, global_atomic, global_optimize;
+	if( global_atomic || global_optimize )
 		return false; 
-	if( global_memory || global_optimize )
-		return false; 
+
 	// -----------------------------------------------------
 	// setup
 	typedef adouble    ADScalar;
@@ -159,7 +155,7 @@ bool link_det_minor(
 	double* grad = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
 
 	// ----------------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( global_retape ) while(repeat--)
 	{	// choose a matrix
 		CppAD::uniform_01(n, mat);
 

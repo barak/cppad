@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3122 2014-02-26 03:23:19Z bradbell $
+# $Id: CMakeLists.txt 2765 2013-03-03 15:48:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -11,7 +11,6 @@
 # -----------------------------------------------------------------------------
 # Build the speed/sacado directory tests 
 # Inherit environment from ../CMakeList.txt
-# CMAKE_BUILD_TYPE determined by parent directory
 
 # assert sacado_prefix is defined
 IF ( NOT sacado_prefix )
@@ -20,10 +19,14 @@ IF ( NOT sacado_prefix )
 	)
 ENDIF ( NOT sacado_prefix )
 
+# Specifies build type for this directory. Possible values are 
+# empty, Debug, Release, RelWithDebInfo and MinSizeRel
+SET(CMAKE_BUILD_TYPE RELEASE)
+
 # Adds flags to the compiler command line for sources in the current directory 
 # and below. This command can be used to add any flags, but it was originally 
 # intended to add preprocessor definitions. 
-ADD_DEFINITIONS("-DCPPAD_SACADO_SPEED -DRAD_AUTO_AD_Const")
+ADD_DEFINITIONS("-DSPEED_SACADO -DRAD_AUTO_AD_Const")
 
 # Local include directories to search (not in package_prefix/includdir)
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
