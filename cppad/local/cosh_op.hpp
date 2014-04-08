@@ -1,9 +1,9 @@
-/* $Id: cosh_op.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: cosh_op.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
 # ifndef CPPAD_COSH_OP_INCLUDED
 # define CPPAD_COSH_OP_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -16,6 +16,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
+\defgroup cosh_op_hpp cosh_op.hpp
 \{
 \file cosh_op.hpp
 Forward and reverse mode calculations for z = cosh(x).
@@ -40,8 +41,8 @@ and derivatives of z.
 */
 template <class Base>
 inline void forward_cosh_op(
-	size_t p           ,
 	size_t q           ,
+	size_t p           ,
 	size_t i_z         ,
 	size_t i_x         ,
 	size_t nc_taylor   , 
@@ -51,8 +52,8 @@ inline void forward_cosh_op(
 	CPPAD_ASSERT_UNKNOWN( NumArg(CoshOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(CoshOp) == 2 );
 	CPPAD_ASSERT_UNKNOWN( i_x + 1 < i_z );
-	CPPAD_ASSERT_UNKNOWN( q < nc_taylor );
-	CPPAD_ASSERT_UNKNOWN( p <= q );
+	CPPAD_ASSERT_UNKNOWN( p < nc_taylor );
+	CPPAD_ASSERT_UNKNOWN( q <= p );
 
 	// Taylor coefficients corresponding to argument and result
 	Base* x = taylor + i_x * nc_taylor;
@@ -62,12 +63,12 @@ inline void forward_cosh_op(
 	// rest of this routine is identical for the following cases:
 	// forward_sin_op, forward_cos_op, forward_sinh_op, forward_cosh_op.
 	size_t k;
-	if( p == 0 )
+	if( q == 0 )
 	{	s[0] = sinh( x[0] );
 		c[0] = cosh( x[0] );
-		p++;
+		q++;
 	}
-	for(size_t j = p; j <= q; j++)
+	for(size_t j = q; j <= p; j++)
 	{
 		s[j] = Base(0);
 		c[j] = Base(0);
@@ -184,5 +185,6 @@ inline void reverse_cosh_op(
 	px[0] += pc[0] * s[0];
 }
 
+/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

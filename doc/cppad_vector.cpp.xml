@@ -169,22 +169,13 @@ bool CppAD_vector(void)
 	for(i = 0; i &lt; N; i++)
 		ok &amp;= ( x[i] == Type(i) );
 
-	// test of data
-	Type* data = x.data();
-	for(i = 0; i &lt; N; i++)
-	{	ok &amp;= data[i] == Type(i);
-		data[i] = Type(N - i);
-		ok &amp;= x[i] == Type(N - i);
-	}
-
 	// test of push_vector 
 	x.push_vector(x);
 	ok &amp;= (x.size() == 2 * N);
 	for(i = 0; i &lt; N; i++)
-	{	ok &amp;= x[i] == Type(N - i);
-		ok &amp;= x[i+N] == Type(N - i);
+	{	ok &amp;= ( x[i] == Type(i) );
+		ok &amp;= ( x[i+N] == Type(i) );
 	}
-
 
 	return ok;
 }

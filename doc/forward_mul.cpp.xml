@@ -1,0 +1,155 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Forward Mode: Example and Test of Multiple Orders</title>
+<meta name="description" id="description" content="Forward Mode: Example and Test of Multiple Orders"/>
+<meta name="keywords" id="keywords" content=" forward multiple orders order "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_forward_mul.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="forward.cpp.xml" target="_top">Prev</a>
+</td><td><a href="reverse.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>FunEval</option>
+<option>Forward</option>
+<option>forward_mul.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>FunEval-&gt;</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>Sparse</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Forward-&gt;</option>
+<option>ForwardZero</option>
+<option>ForwardOne</option>
+<option>ForwardAny</option>
+<option>size_taylor</option>
+<option>CompareChange</option>
+<option>capacity_taylor</option>
+<option>number_skip</option>
+<option>forward.cpp</option>
+<option>forward_mul.cpp</option>
+</select>
+</td>
+<td>forward_mul.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Forward Mode: Example and Test of Multiple Orders</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+bool forward_mul(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+
+	// domain space vector
+	size_t n = 2;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
+	X[0] = 0.; 
+	X[1] = 1.;
+
+	// declare independent variables and starting recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+
+	// range space vector
+	size_t m = 1;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
+	Y[0] = X[0] * X[0] * X[1];
+
+	// create f: X -&gt; Y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+
+	// initially, the variable values during taping are stored in f
+	ok &amp;= f.size_taylor() == 1;
+
+	// Compute three forward orders at one
+	size_t p = 2, p1 = p+1;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x_p(n * (p+1)), y_p(m * (p+1));
+	x_p[0 * p1 + 0] = 3.; x_p[1 * p1 + 0] = 4.; // order 0
+	x_p[0 * p1 + 1] = 1.; x_p[1 * p1 + 1] = 0.; // order 1
+	x_p[0 * p1 + 2] = 0.; x_p[1 * p1 + 2] = 0.; // order 2
+	// X(t) =   x^0 + x^1 * t + x^2 * t^2
+	//      = [ 3 + t, 4 ]   
+	//
+	y_p  = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	// Y(t) = F[X(t)] = y^0 + y^1 * t + y^2 * t^2 + o(t^3)
+	//
+	// check order zero
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
+	x[0] = x_p[0 * p1 + 0];
+	x[1] = x_p[1 * p1 + 0];
+	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0 * p1 + 0] , x[0]*x[0]*x[1], eps, eps);
+	//
+	// check order one
+	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0 * p1 + 1] , 2.*x[0]*x[1], eps, eps);
+	// check order two
+	double F_00 = 2. * y_p[0 * p1 + 2]; // second partial F w.r.t. x[0], x[0]
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(F_00, 2.*x[1], eps, eps);
+
+	// check number of orders per variable
+	ok   &amp;= f.size_taylor() == 3;
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/forward_mul.cpp
+
+</body>
+</html>

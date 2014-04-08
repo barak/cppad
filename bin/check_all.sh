@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_all.sh 3123 2014-02-26 21:40:18Z bradbell $
+# $Id: check_all.sh 2873 2013-07-29 05:15:13Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -25,13 +25,12 @@ echo_log_eval() {
 		exit 1
 	fi
 	msg=`cat $top_srcdir/check_all.err`
+	cat $top_srcdir/check_all.err
+	rm $top_srcdir/check_all.err
 	if [ "$msg" != '' ]
 	then
-		echo "$msg"
-		echo 'Warning: see check_all.err' 
 		exit 1
 	fi
-	rm $top_srcdir/check_all.err
 }
 log_eval() {
 	echo $* >> $top_srcdir/check_all.log
@@ -59,7 +58,6 @@ echo "bin/package.sh"
 bin/package.sh
 # -----------------------------------------------------------------------------
 # choose which tarball to use for testing
-skip=''
 version=`bin/version.sh get`
 echo_log_eval cd build
 list=( `ls cppad-$version.*.tgz` )
@@ -86,35 +84,54 @@ do
 		echo_log_eval rm -r $name
 	fi
 done
-echo_log_eval bin/run_cmake.sh --boost_vector
+echo_log_eval bin/run_cmake.sh
 echo_log_eval cd build
 # -----------------------------------------------------------------------------
 echo_log_eval make check 
 # -----------------------------------------------------------------------------
-for package in adolc eigen ipopt fadbad sacado
+skip=''
+list='
+	cppad_ipopt/example/example_ipopt_nlp
+	cppad_ipopt/speed/speed_ipopt_nlp
+	cppad_ipopt/test/test_more_ipopt_nlp
+	example/example
+	example/ipopt_solve/example_ipopt_solve
+	introduction/exp_apx/introduction_exp_apx
+	introduction/get_started/introduction_get_started
+	speed/example/speed_example
+	test_more/test_more
+'
+#
+# standard tests
+for program in $list
 do
-	dir=$HOME/prefix/$package
-	if [ ! -d "$dir" ]
+	if [ ! -e "$program" ]
 	then
-		skip="$skip $package"
+		skip="$skip $program"
+	else
+		echo_log_eval $program 
 	fi
 done
 #
-# extra speed tests not run with option specified
-for option in onetape colpack optimize atomic memory boolsparsity
+# speed tests
+for dir in adolc cppad double fadbad sacado profile
 do
-	echo_eval speed/cppad/speed_cppad correct 432 $option
+	program="speed/$dir/speed_${dir}"
+	if [ ! -e "$program" ]
+	then
+		skip="$skip $program"
+	else
+		echo_log_eval $program correct 54321 
+		echo_log_eval $program correct 54321 retape
+	fi
 done
-echo_eval speed/adolc/speed_adolc correct         432 onetape
-echo_eval speed/adolc/speed_adolc sparse_jacobian 432 onetape colpack
-echo_eval speed/adolc/speed_adolc sparse_hessian  432 onetape colpack
 #
+# multi_thread tests
 # ----------------------------------------------------------------------------
-# extra multi_thread tests
 program_list=''
-for threading in bthread openmp pthread
+for dir in bthread openmp pthread
 do
-	program="multi_thread/${threading}/multi_thread_${threading}"
+	program="multi_thread/${dir}/${dir}_test"
 	if [ ! -e $program ]
 	then
 		skip="$skip $program"

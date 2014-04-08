@@ -39,9 +39,6 @@ var list_current0 = [
 'ad_ctor.xml#Syntax',
 'ad_ctor.xml#Purpose',
 'ad_ctor.xml#x',
-'ad_ctor.xml#x.implicit',
-'ad_ctor.xml#x.explicit',
-'ad_ctor.xml#x.deprecated',
 'ad_ctor.xml#y',
 'ad_ctor.xml#Example'
 ];

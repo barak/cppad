@@ -112,10 +112,6 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;FADBAD++/tadiff.h&gt;
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
-extern bool global_boolsparsity;
-
 bool link_poly(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -123,10 +119,11 @@ bool link_poly(
 	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
 	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z  
 {
-	if( global_atomic || global_boolsparsity )
+	// speed test global option values
+	extern bool global_retape, global_atomic, global_optimize;
+	if( ! global_retape || global_atomic || global_optimize )
 		return false;
-	if( global_memory || global_onetape || global_optimize )
-		return false;
+
 	// -----------------------------------------------------
 	// setup
 	size_t i;             // temporary index     

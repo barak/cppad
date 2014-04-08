@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: run_cmake.sh 3126 2014-02-28 13:28:39Z bradbell $
+# $Id: run_cmake.sh 2897 2013-09-18 13:05:21Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -21,70 +21,25 @@ echo_eval() {
 	echo $*
 	eval $*
 }
-# -----------------------------------------------
-verbose='no'
-testvector='boost'
-debug_speed='no'
-profile_speed='no'
-while [ "$1" != "" ]
-do
+# ---------------------------------------------------------------------------
+# clean all variables in cmake cache
+cmake_args='-U .+'
+if [ "$1" != "" ]
+then
 	if [ "$1" == '--verbose' ]
 	then
-		verbose='yes'
-	elif [ "$1" == '--cppad_vector' ]
-	then
-		testvector='cppad'
-	elif [ "$1" == '--boost_vector' ]
-	then
-		testvector='boost'
-	elif [ "$1" == '--eigen_vector' ]
-	then
-		testvector='eigen'
-	elif [ "$1" == '--debug_speed' ]
-	then
-		debug_speed='yes'
-		profile_speed='no'
-	elif [ "$1" == '--profile_speed' ]
-	then
-		profile_speed='yes'
-		debug_speed='no'
+		# echo each command that make executes
+		cmake_args="$cmake_args  -D CMAKE_VERBOSE_MAKEFILE=1"
 	else
-		options='[--verbose] [--<package>_vector]'
-		options="$options [--debug_speed] [--profile_speed']"
-		echo "usage: bin/run_cmake.sh: $options"
-		echo 'where <package> is cppad, boost, or eigen'
+		echo 'usage: bin/run_cmake.sh: [--verbose]'
 		exit 1
 	fi
-	shift
-done
-# ---------------------------------------------------------------------------
-if [ "$debug_speed" == 'yes' ]
-then
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE DEBUG)|' \
-		-i  speed/CMakeLists.txt
-elif [ "$profile_speed" == 'yes' ]
-then
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE MinSizeRel)|' \
-		-i  speed/CMakeLists.txt
-else
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE RELEASE)|' \
-		-i speed/CMakeLists.txt
 fi
-# ---------------------------------------------------------------------------
 if [ ! -e build ]
 then
 	echo_eval mkdir build
 fi
 echo_eval cd build
-# ---------------------------------------------------------------------------
-# clean all variables in cmake cache
-cmake_args='-U .+'
-#
-if [ "$verbose" == 'yes' ]
-then
-	# echo each command that make executes
-	cmake_args="$cmake_args  -D CMAKE_VERBOSE_MAKEFILE=1"
-fi
 # -----------------------------------------------------------------------------
 # cmake_install_prefix
 cmake_args="$cmake_args  -D cmake_install_prefix=$HOME/prefix/cppad"
@@ -99,7 +54,6 @@ fi
 if [ -d '/usr/share' ]
 then
 	cmake_args="$cmake_args -D cmake_install_datadir=share"
-	cmake_args="$cmake_args -D cmake_install_docdir=share/doc"
 fi
 #
 # cmake_install_libdirs
@@ -112,7 +66,7 @@ then
 fi
 #
 # {package}_prefix
-for package in adolc colpack eigen ipopt fadbad sacado
+for package in adolc eigen ipopt fadbad sacado
 do
 	dir=$HOME/prefix/$package
 	if [ -d "$dir" ]
@@ -122,16 +76,13 @@ do
 done
 #
 # cppad_cxx_flags
-cmake_args="$cmake_args -D cppad_cxx_flags='-Wall -pedantic-errors -std=c++11'"
-if [ "$testvector" != 'eigen' ]
-then
- 	cmake_args="$cmake_args -Wshadow"
-fi
+cmake_args="$cmake_args -D cppad_cxx_flags=\
+'-Wall -pedantic-errors -std=c++11 -Wshadow'"
 #
 # simple options
-cmake_args="$cmake_args -D cppad_implicit_ctor_from_any_type_from_any_type=NO"
+cmake_args="$cmake_args -D cppad_documentation=YES"
 cmake_args="$cmake_args -D cppad_sparse_list=YES"
-cmake_args="$cmake_args -D cppad_testvector=$testvector"
+cmake_args="$cmake_args -D cppad_testvector=cppad"
 cmake_args="$cmake_args -D cppad_tape_id_type='int'"
 cmake_args="$cmake_args -D cppad_tape_addr_type=int"
 cmake_args="$cmake_args -D cppad_max_num_threads=48"

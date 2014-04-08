@@ -43,7 +43,6 @@ var list_current0 = [
 'check_for_nan.xml#Purpose',
 'check_for_nan.xml#f',
 'check_for_nan.xml#b',
-'check_for_nan.xml#Default',
 'check_for_nan.xml#Example'
 ];
 function choose_across0(item)

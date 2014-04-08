@@ -49,12 +49,11 @@ var list_current0 = [
 'link_sparse_jacobian.xml#size',
 'link_sparse_jacobian.xml#repeat',
 'link_sparse_jacobian.xml#m',
+'link_sparse_jacobian.xml#x',
 'link_sparse_jacobian.xml#row',
 'link_sparse_jacobian.xml#col',
-'link_sparse_jacobian.xml#x',
 'link_sparse_jacobian.xml#jacobian',
-'link_sparse_jacobian.xml#n_sweep',
-'link_sparse_jacobian.xml#n_sweep.double'
+'link_sparse_jacobian.xml#jacobian.double'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

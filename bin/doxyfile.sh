@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: doxyfile.sh 3126 2014-02-28 13:28:39Z bradbell $
+# $Id: doxyfile.sh 2859 2013-05-28 06:03:21Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -31,23 +31,16 @@ cat << EOF > bin/doxyfile.$$
 ALWAYS_DETAILED_SEC     = YES
 BUILTIN_STL_SUPPORT     = YES
 EXTRACT_ALL             = YES
-EXTRACT_LOCAL_CLASSES   = YES
+EXTRACT_LOCAL_CLASSES   = NO
 EXTRACT_PRIVATE         = YES
 EXTRACT_STATIC          = YES
-EXTRACT_ANON_NSPACES    = YES
 FILE_PATTERNS           =  *.hpp  *.cpp
 FULL_PATH_NAMES         = NO
 GENERATE_LATEX          = NO
 GENERATE_TREEVIEW       = YES
 INHERIT_DOCS            = NO
 INLINE_INHERITED_MEMB   = YES
-INPUT                   = \
-	./cppad \
-	./cppad/local \
-	./cppad/ipopt \
-	./cppad_ipopt/src \
-	./speed/src
-LATEX_BATCHMODE         = YES
+INPUT                   = ./cppad  ./cppad/local ./cppad_ipopt/src ./speed/src
 MULTILINE_CPP_IS_BRIEF  = YES
 OUTPUT_DIRECTORY        = $output_directory
 PROJECT_NAME            = "CppAD: A C++ Algorithmic Differentiation Package"
@@ -69,7 +62,6 @@ WARN_LOGFILE            = $error_file
 WARN_NO_PARAMDOC        = YES
 EOF
 sed \
-	-e 's/\t/ /g' \
 	-e 's/^/s|^\\(/' \
 	-e 's/ *=/ *=\\).*|\\1/' \
 	-e 's/$/|/' \

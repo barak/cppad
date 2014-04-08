@@ -1,8 +1,8 @@
-/* $Id: cppad.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: cppad.hpp 2625 2012-12-23 14:34:12Z bradbell $ */
 # ifndef CPPAD_CPPAD_INCLUDED
 # define CPPAD_CPPAD_INCLUDED
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -12,6 +12,7 @@ A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 /*!
+\defgroup cppad_hpp cppad.hpp
 \{
 \file cppad.hpp
 \brief includes the entire CppAD package in the necessary order.
@@ -95,4 +96,5 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 // undo definitions in Define.h
 # include <cppad/local/undef.hpp>   
 
+/*! \} */
 # endif

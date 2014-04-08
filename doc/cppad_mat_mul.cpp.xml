@@ -80,6 +80,7 @@ A:active { color : purple }
 <option>cppad_poly.cpp</option>
 <option>cppad_sparse_hessian.cpp</option>
 <option>cppad_sparse_jacobian.cpp</option>
+<option>cppad_print_optimize</option>
 </select>
 </td>
 <td>cppad_mat_mul.cpp</td>
@@ -111,10 +112,7 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/example/matrix_mul.hpp&gt;
-
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+# include &quot;print_optimize.hpp&quot;
 
 bool link_mat_mul(
 	size_t                           size     , 
@@ -124,8 +122,9 @@ bool link_mat_mul(
 	CppAD::vector&lt;double&gt;&amp;           dz
 )
 {
-	if( global_boolsparsity )
-		return false;
+	// speed test global option values
+	extern bool global_retape, global_atomic, global_optimize;
+
 	// -----------------------------------------------------
 	// setup
 	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar; 
@@ -150,8 +149,13 @@ bool link_mat_mul(
 	size_t nc_result = size;
 	matrix_mul atom_mul(nr_result, n_middle, nc_result);
 
+	// use the unspecified fact that size is non-decreasing between calls
+	static size_t previous_size = 0;
+	bool print    = (repeat &gt; 1) &amp; (previous_size != size);
+	previous_size = size;
+
 	// ------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( global_retape ) while(repeat--)
 	{	// get the next matrix
 		CppAD::uniform_01(n, x);
 		for( j = 0; j &lt; n; j++)
@@ -178,7 +182,9 @@ bool link_mat_mul(
 		f.Dependent(X, Z);
 
 		if( global_optimize )
-			f.optimize();
+		{	print_optimize(f, print, &quot;cppad_mat_mul_optimize&quot;, size);
+			print = false;
+		}
 
 		// evaluate and return gradient using reverse mode
 		z  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
@@ -212,7 +218,9 @@ bool link_mat_mul(
 		f.Dependent(X, Z);
 
 		if( global_optimize )
-			f.optimize();
+		{	print_optimize(f, print, &quot;cppad_mat_mul_optimize&quot;, size);
+			print = false;
+		}
 		while(repeat--)
 		{	// get a next matrix
 			CppAD::uniform_01(n, x);

@@ -21,7 +21,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="whats_new_14.xml" target="_top">Prev</a>
+<td><a href="whats_new.xml" target="_top">Prev</a>
 </td><td><a href="whats_new_12.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -76,7 +76,6 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
-<option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
 <option>whats_new_11</option>
@@ -95,9 +94,6 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Introduction</option>
-<option>12-29</option>
-<option>12-27</option>
-<option>12-26</option>
 <option>12-24</option>
 <option>11-27</option>
 <option>11-13</option>
@@ -144,75 +140,6 @@ This section contains a list of the changes to CppAD during 2013
 (in reverse order by date).
 The purpose of this section is to
 assist you in learning about changes between various versions of CppAD.
-
-<br/>
-<br/>
-<b><big><a name="12-29" id="12-29">12-29</a></big></b>
-
-<ol type="1"><li>
-The include file 
-<a href="cppad_eigen.hpp.xml" target="_top"><span style='white-space: nowrap'>cppad_eigen.hpp</span></a>
- now automatically includes <code><font color="blue">cppad.hpp</font></code>.
-</li><li>
-
-There was a problem with this automation
-when <code><font color="blue">eigen</font></code> was used for the cppad <a href="testvector.xml" target="_top"><span style='white-space: nowrap'>testvector</span></a>
-.
-This has been fixed.
-</li><li>
-
-There was a problem with deprecated <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>InstallUnix</span></a>
-
-(created when optional implicit constructor from any type was added).
-This has been fixed by adding the
-<a href="installunix.xml#--with-implicit_ctor" target="_top"><span style='white-space: nowrap'>--with-implicit_ctor</span></a>
- option.
-</li></ol>
-
-
-<br/>
-<br/>
-<b><big><a name="12-27" id="12-27">12-27</a></big></b>
-<br/>
-The constructor from an arbitrary type to 
-<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- was
-implicit, but there was no specification to this effect.
-The caused problems when using CppAD with 
-<a href="eigen_prefix.xml" target="_top"><span style='white-space: nowrap'>eigen&#xA0;3.2</span></a>
- (scheduled to be fixed in 3.3).
-The default for this constructor has been changed to be 
-<a href="ad_ctor.xml#x.explicit" target="_top"><span style='white-space: nowrap'>explicit</span></a>
-.
-In addition, other 
-<a href="ad_ctor.xml#x.implicit" target="_top"><span style='white-space: nowrap'>implicit</span></a>
- constructors
-are now listed in the documentation.
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>If you get a compiler error on an constructor / assignment of the form
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;x&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-(that used to work) try changing the constructor call to
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;)<br/>
-</span></font></code>
-A deprecated alternative is to make this constructor implicit using the
-<a href="cmake.xml#cppad_implicit_ctor_from_any_type" target="_top"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></a>
-
-option during the install procedure.
-
-<br/>
-<br/>
-<b><big><a name="12-26" id="12-26">12-26</a></big></b>
-<br/>
-Document fact that
-<a href="download.xml#Compressed Tar File.Monthly Versions" target="_top"><span style='white-space: nowrap'>monthly&#xA0;versions</span></a>
-
-of the CppAD compressed tar file last till the end of the year.
 
 <br/>
 <br/>
@@ -538,7 +465,7 @@ Check <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>
   mode results when 
 <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>check_for_nan</span></a>
  is true.
-(It used to be the case that only <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
+(It used to be the case that only <a href="forwardany.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
  results
 were checked for <code><font color="blue">nan</font></code>.)
 </li></ol>
@@ -692,7 +619,7 @@ names were all changed to begin with <code><font color="blue">user</font></code>
 <b><big><a name="05-04" id="05-04">05-04</a></big></b>
 <br/>
 The option to compute 
-<a href="forward_order.xml#xq.Multiple Orders" target="_top"><span style='white-space: nowrap'>multiple&#xA0;orders</span></a>
+<a href="forwardany.xml#x_p.Multiple Orders" target="_top"><span style='white-space: nowrap'>multiple&#xA0;orders</span></a>
  was added.
 The <a href="old_usead_2.cpp.xml" target="_top"><span style='white-space: nowrap'>old_usead_2.cpp</span></a>
  example shows the need for this.

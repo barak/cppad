@@ -1,9 +1,9 @@
-/* $Id: forward.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: forward.hpp 2991 2013-10-22 16:25:15Z bradbell $ */
 # ifndef CPPAD_FORWARD_INCLUDED
 # define CPPAD_FORWARD_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -13,72 +13,66 @@ A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
+/*
+$begin Forward$$
+
+$section Forward Mode$$
+
+$childtable%
+	omh/forward.omh%
+	cppad/local/cap_taylor.hpp%
+	cppad/local/num_skip.hpp%
+	example/forward.cpp%
+	example/forward_mul.cpp
+%$$
+
+$end
+-----------------------------------------------------------------------------
+*/
+
 // documened after Forward but included here so easy to see
-# include <cppad/local/capacity_order.hpp>
+# include <cppad/local/cap_taylor.hpp>
 # include <cppad/local/num_skip.hpp>
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
+\defgroup forward_hpp forward.hpp
 \{
 \file forward.hpp
 User interface to forward mode computations
 */
 
 /*!
-Arbitrary order, one direction, forward mode Taylor coefficieints.
+Compute arbitrary order forward mode Taylor coefficieints.
 
 \tparam Base
 The type used during the forward mode computations; i.e., the corresponding
-recording of operations used the type AD<Base>.
+recording of operations used the type \c AD<Base>.
 
 \tparam Vector
-is a Simple Vector class with eleements of type Base.
+is a Simple Vector class with eleements of type \c Base.
 
-\param q
+\param p
 is the hightest order for this forward mode computation; i.e., 
-after this calculation there will be <code>q+1</code>
-Taylor coefficients per variable.
+after this calculation there will be <code>p+1</code>
+Taylor coefficients per variables.
 
-\param xq
+\param x_p
 contains Taylor coefficients for the independent variables.
-The size of xq must either be n or <code>(q+1)*n</code>,
-We define <code>p = q + 1 - xq.size()/n</code>. 
-For <code>j = 0 , ... , n-1</code>,
-<code>k = p, ... , q</code>, are
-<code>xq[ (q+1-p)*j + k - p ]</code>
-is the k-th order coefficient for the j-th independent variable.
+The size of \a x_p must either be \c n or <code>n*(p+1)</code>,
+We define <code>q = p + 1 - x_p.size() / n</code>. 
+The Taylor coefficients of order k, for
+k = q, ... , p are calculated.
 
 \param s
-Is the stream where output corresponding to PriOp operations will written.
-
-\return
-contains Taylor coefficients for the independent variables.
-The size of the return value y is <code>m*(q+1-p)</code>.
-For <code>i = 0, ... , m-1</code>,
-<code>k = p, ..., q</code>,
-<code>y[(q+1-p)*i + (k-p)]</code> 
-is the k-th order coefficient for the i-th dependent variable.
-
-\par taylor_
-The Taylor coefficients up to order p-1 are inputs
-and the coefficents from order p through q are outputs.
-Let <code>N = num_var_tape_</code>, and
-<code>C = cap_order_taylor_</code>.
-Note that for
-<code>i = 1 , ..., N-1</code>,
-<code>k = 0 , ..., q</code>,
-<code>taylor_[ C*i + k ]</code>
-is the k-th order cofficent,
-for the i-th varaible on the tape.
-(The first independent variable has index one on the tape 
-and there is no variable with index zero.)
+Is the stream where output corresponding to \c PriOp operations will written.
 */
 
 template <typename Base>
 template <typename Vector>
 Vector ADFun<Base>::Forward(
-	size_t q                    , 
-	const Vector& xq            , 
+	size_t p                    , 
+	const Vector& x_p           , 
 	std::ostream& s             )
 {	// temporary indices
 	size_t i, j, k;
@@ -92,123 +86,118 @@ Vector ADFun<Base>::Forward(
 	// check Vector is Simple Vector class with Base type elements
 	CheckSimpleVector<Base, Vector>();
 
-
 	CPPAD_ASSERT_KNOWN(
-		size_t(xq.size()) == n || size_t(xq.size()) == n*(q+1),
-		"Forward(q, xq): xq.size() is not equal n or n*(q+1)"
+		size_t(x_p.size()) == n || size_t(x_p.size()) == n*(p+1),
+		"Forward: x_p.size() is not equal n or n*(p+1)"
 	);
-
-	// lowest order we are computing
-	size_t p = q + 1 - size_t(xq.size()) / n;
-	CPPAD_ASSERT_UNKNOWN( p == 0 || p == q );
+	size_t n_order = size_t(x_p.size()) / n;
 	CPPAD_ASSERT_KNOWN(
-		q <= num_order_taylor_ || p == 0,
-		"Forward(q, xq): Number of Taylor coefficient orders stored in this"
-		" ADFun\nis less than q and xq.size() != n*(q+1)."
+		p <= taylor_per_var_ || n_order == p + 1,
+		"The number of Taylor coefficient currently stored in this ADFun\n"
+		"is less than p and x_p.size() != n*(p+1)."
 	);  
-	// does taylor_ need more orders or different number of directions
-	if( cap_order_taylor_ <= q )
-	{	if( p == 0 )
-		{	// no need to copy old values during capacity_order
-			num_order_taylor_ = 0;
-		}
-		size_t c = std::max(q + 1, cap_order_taylor_);
-		capacity_order(c);
-	}
-	CPPAD_ASSERT_UNKNOWN( cap_order_taylor_ > q );
 
-	// short hand notation for order capacity
-	size_t C = cap_order_taylor_;
+	// check if the taylor_ matrix needs more columns
+	if( taylor_col_dim_ <= p )
+		capacity_taylor(p + 1);
+	CPPAD_ASSERT_UNKNOWN( taylor_col_dim_ > p );
 
-	// set Taylor coefficients for independent variables
+	// set the p-th order taylor_ coefficients for independent variables
 	for(j = 0; j < n; j++)
-	{	CPPAD_ASSERT_UNKNOWN( ind_taddr_[j] < num_var_tape_  );
+	{	CPPAD_ASSERT_UNKNOWN( ind_taddr_[j] < total_num_var_ );
 
 		// ind_taddr_[j] is operator taddr for j-th independent variable
 		CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[j] ) == InvOp );
 
-		if( p ==  q )
-			taylor_[ C * ind_taddr_[j] + q] = xq[j];
-		else
-		{	for(k = 0; k <= q; k++)
-				taylor_[ C * ind_taddr_[j] + k] = xq[ (q+1)*j + k];
-		}
+		// It is also variable taddr for j-th independent variable
+		if( n_order ==  1 )
+			taylor_[ind_taddr_[j] * taylor_col_dim_ + p] = x_p[j];
+		else for(k = 0; k < n_order; k++)
+			taylor_[ind_taddr_[j] * taylor_col_dim_ + k] = 
+				x_p[j * n_order + k];
 	}
 
 	// evaluate the derivatives
-	CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
-	CPPAD_ASSERT_UNKNOWN( load_op_.size()  == play_.num_load_op_rec() );
-	if( q == 0 )
+	size_t q = (p + 1) - n_order;
+	if( p == 0 )
 	{
+# if CPPAD_USE_FORWARD0SWEEP
 		compare_change_ = forward0sweep(s, true,
-			n, num_var_tape_, &play_, C, 
-			taylor_.data(), cskip_op_.data(), load_op_
+			n, total_num_var_, &play_, taylor_col_dim_, taylor_.data(),
+			cskip_op_
 		);
+# else
+		compare_change_ = forward_sweep(s, true, q,
+			p, n, total_num_var_, &play_, taylor_col_dim_, taylor_.data(),
+			cskip_op_
+		);
+# endif
 	}
-	else if( p == 0 )
-	{	compare_change_ = forward1sweep(s, true, p, q, 
-			n, num_var_tape_, &play_, C, 
-			taylor_.data(), cskip_op_.data(), load_op_
+	else if( q == 0 )
+	{	compare_change_ = forward_sweep(s, true, q,
+			p, n, total_num_var_, &play_, taylor_col_dim_, taylor_.data(),
+			cskip_op_
 		);
 	}
 	else
-	{	forward1sweep(s, true, p, q, 
-			n, num_var_tape_, &play_, C, 
-			taylor_.data(), cskip_op_.data(), load_op_
+	{	forward_sweep(s, true, q,
+			p, n, total_num_var_, &play_, taylor_col_dim_, taylor_.data(),
+			cskip_op_
 		);
 	}
 
 	// return Taylor coefficients for dependent variables
-	Vector yq;
-	if( p == q )
-	{	yq.resize(m);
+	Vector y_p;
+	if( n_order == 1 )
+	{	y_p.resize(m);
 		for(i = 0; i < m; i++)
-		{	CPPAD_ASSERT_UNKNOWN( dep_taddr_[i] < num_var_tape_  );
-			yq[i] = taylor_[ C * dep_taddr_[i] + q];
+		{	CPPAD_ASSERT_UNKNOWN( dep_taddr_[i] < total_num_var_ );
+			y_p[i] = taylor_[dep_taddr_[i] * taylor_col_dim_ + p];
 		}
 	}
 	else
-	{	yq.resize(m * (q+1) );
+	{	y_p.resize(m * n_order );
 		for(i = 0; i < m; i++)	
-		{	for(k = 0; k <= q; k++)
-				yq[ (q+1) * i + k] = 
-					taylor_[ C * dep_taddr_[i] + k ]; 
+		{	for(k = 0; k < n_order; k++)
+				y_p[ i * n_order + k] = 
+					taylor_[ dep_taddr_[i] * taylor_col_dim_ + k ]; 
 		}
 	}
 # ifndef NDEBUG
 	if( check_for_nan_ )
 	{	bool ok = true;
-		if( p == 0 )
+		if( p == 0 && n_order == 1 )
+			ok = ! hasnan(y_p);
+		else if( n_order != 1 )
 		{	for(i = 0; i < m; i++)
-			{	// Visual Studio 2012, CppAD required in front of isnan ?
-				ok &= ! CppAD::isnan( yq[ (q+1) * i + 0 ] );
-			}
+			ok &= ! isnan( y_p[ i * n_order + 0 ] );
 		} 
 		CPPAD_ASSERT_KNOWN(ok,
-			"yq = f.Forward(q, xq): has a zero order Taylor coefficient "
+			"y_p = f.Forward(p, x): has a zero order Taylor coefficient "
 			"with the value nan."
 		);  
-		if( 0 < q )
+		if( p != 0 && n_order == 1 )
+			ok = ! hasnan(y_p);
+		else if( n_order != 1 )
 		{	for(i = 0; i < m; i++)
-			{	for(k = p; k <= q; k++)
-				{	// Studio 2012, CppAD required in front of isnan ?
-					ok &= ! CppAD::isnan( yq[ (q+1-p)*i + k-p ] );
-				}
+			{	for(k = 1; k < n_order; k++)
+					ok &= ! isnan( y_p[ i * n_order + k ] );
 			}
 		}
 		CPPAD_ASSERT_KNOWN(ok,
-		"yq = f.Forward(q, xq): has a non-zero order Taylor coefficient\n"
+		"y_p = f.Forward(p, x): has a non-zero order Taylor coefficient\n"
 		"with the value nan (but zero order coefficients are not nan)."
 		);
 	}
 # endif
 
-	// now we have q + 1  taylor_ coefficient orders per variable
-	num_order_taylor_ = q + 1;
 
-	return yq;
+	// now we have p + 1  taylor_ coefficients per variable
+	taylor_per_var_ = p + 1;
+
+	return y_p;
 }
 
-
+/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

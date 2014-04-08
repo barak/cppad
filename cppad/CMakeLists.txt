@@ -1,6 +1,6 @@
-#CppAD $Id: CMakeLists.txt 3142 2014-03-03 10:26:53Z bradbell $
+#CppAD $Id: CMakeLists.txt 2769 2013-03-05 14:28:47Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -23,6 +23,7 @@ MACRO(check_match match_variable match_constant output_variable)
 ENDMACRO(check_match)
 # -----------------------------------------------------------------------------
 # command line arguments
+#
 #
 # cppad_testvector 
 command_line_arg(cppad_testvector cppad STRING
@@ -47,18 +48,6 @@ command_line_arg(cppad_tape_id_type "unsigned int" STRING
 command_line_arg(cppad_tape_addr_type "unsigned int" STRING
 "type used to identify variables on one tape, size must be <= sizeof(size_t)"
 )
-#
-# cppad_implicit_ctor_from_any_type_from_any_type
-command_line_arg(cppad_implicit_ctor_from_any_type_from_any_type NO BOOL 
-	"implicit (instead of explicit) conversion from any type to AD<Base>"
-)
-# -----------------------------------------------------------------------------
-# cppad_explicit_ctor
-IF( cppad_implicit_ctor_from_any_type_from_any_type )
-	SET(cppad_implicit_ctor_from_any_type 1)
-ELSE( cppad_implicit_ctor_from_any_type_from_any_type )
-	SET(cppad_implicit_ctor_from_any_type 0)
-ENDIF( cppad_implicit_ctor_from_any_type_from_any_type )
 # -----------------------------------------------------------------------------
 # cppad_internal_sparse_set
 #
@@ -105,27 +94,6 @@ IF( cppad_eigenvector )
 	ENDIF( NOT eigen_prefix )
 ENDIF( cppad_eigenvector )
 
-# -----------------------------------------------------------------------------
-# cppad_has_rvalue
-#
-# CHECK_CXX_SOURCE_RUNS(source variable)
-SET(CMAKE_REQUIRED_INCLUDES  "")
-SET(CMAKE_REQUIRED_LIBRARIES "")
-SET(CMAKE_REQUIRED_FLAGS     ${cppad_cxx_flags})
-SET(source "
-int main(void)
-{	int&& value = 1 + 2;
-	if( value != 3 )
-		return 1;
-	return 0;
-}" )
-CHECK_CXX_SOURCE_RUNS("${source}" rvalue_ok)
-IF( rvalue_ok )
-	SET(cppad_has_rvalue 1)
-ELSE( rvalue_ok )
-	SET(cppad_has_rvalue 0)
-ENDIF( rvalue_ok )
-MESSAGE(STATUS "cppad_has_rvalue = ${cppad_has_rvalue}" )
 # -----------------------------------------------------------------------------
 # cppad_has_nullptr
 #

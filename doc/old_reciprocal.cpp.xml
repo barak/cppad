@@ -193,7 +193,7 @@ namespace { // Begin empty namespace
 		double f, fp, fpp;
 
 		// Must always define the case k = 0.
-		// Do not need case k if not using f.<a href="forward.xml" target="_top">Forward</a>(q, xp) for q &gt;= k.
+		// Do not need case k if not using f.<a href="forward.xml" target="_top">Forward</a>(p, xp) for p &gt;= k.
 		switch(k)
 		{	case 0:
 			// this case must  be implemented
@@ -299,7 +299,7 @@ namespace { // Begin empty namespace
 		size_t                               id ,             
 		size_t                                n ,
 		size_t                                m ,
-		size_t                                p ,
+		size_t                                q ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
 		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           s )
 	{	// Can just return false if not using f.ForSparseJac
@@ -318,7 +318,7 @@ namespace { // Begin empty namespace
 		size_t                               id ,             
 		size_t                                n ,
 		size_t                                m ,
-		size_t                                p ,
+		size_t                                q ,
 		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           r ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
 	{	// Can just return false if not using RevSparseJac.
@@ -327,8 +327,8 @@ namespace { // Begin empty namespace
 		assert( m == 1 );
 
 		// sparsity for R(x) = S * f'(x) is same as sparsity for S
-		for(size_t q = 0; q &lt; p; q++)
-			r[q] = s[q];
+		for(size_t p = 0; p &lt; q; p++)
+			r[p] = s[p];
 
 		return true; 
 	}
@@ -338,7 +338,7 @@ namespace { // Begin empty namespace
 		size_t                               id ,             
 		size_t                                n ,
 		size_t                                m ,
-		size_t                                p ,
+		size_t                                q ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
 		const vector&lt;bool&gt;&amp;                   s ,
 		      vector&lt;bool&gt;&amp;                   t ,
@@ -424,35 +424,35 @@ bool old_reciprocal(void)
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
 
 	// check zero order forward mode
-	size_t q;
-	vector&lt;double&gt; x_q(n), y_q(m);
-	q      = 0;
-	x_q[0] = x0;
-	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+	size_t p;
+	vector&lt;double&gt; x_p(n), y_p(m);
+	p      = 0;
+	x_p[0] = x0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
 
 	// check first order forward mode
-	q      = 1;
-	x_q[0] = 1;
-	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+	p      = 1;
+	x_p[0] = 1;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
 	check  = 1.;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
 
 	// check second order forward mode
-	q      = 2;
-	x_q[0] = 0;
-	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+	p      = 2;
+	x_p[0] = 0;
+	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
 	check  = 0.;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
 
 	// --------------------------------------------------------------------
 	// Check reverse mode results
 	//
 	// third order reverse mode 
-	q     = 3;
-	vector&lt;double&gt; w(m), dw(n * q);
+	p     = 3;
+	vector&lt;double&gt; w(m), dw(n * p);
 	w[0]  = 1.;
-	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(q, w);
+	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
 	check = 1.;
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  eps, eps);
 	check = 0.;
@@ -461,25 +461,25 @@ bool old_reciprocal(void)
 
 	// --------------------------------------------------------------------
 	// forward mode sparstiy pattern
-	size_t p = n;
-	CppAD::vectorBool r1(n * p), s1(m * p);
+	size_t q = n;
+	CppAD::vectorBool r1(n * q), s1(m * q);
 	r1[0] = true;          // compute sparsity pattern for x[0]
-	s1    = f.ForSparseJac(p, r1);
+	s1    = f.ForSparseJac(q, r1);
 	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
 
 	// --------------------------------------------------------------------
 	// reverse mode sparstiy pattern
-	q = m;
-	CppAD::vectorBool s2(q * m), r2(q * n);
+	p = m;
+	CppAD::vectorBool s2(p * m), r2(p * n);
 	s2[0] = true;          // compute sparsity pattern for f[0]
-	r2    = f.RevSparseJac(q, s2);
+	r2    = f.RevSparseJac(p, s2);
 	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
 
 	// --------------------------------------------------------------------
 	// Hessian sparsity (using previous ForSparseJac call) 
-	CppAD::vectorBool s3(m), h(p * n);
+	CppAD::vectorBool s3(m), h(q * n);
 	s3[0] = true;        // compute sparsity pattern for f[0]
-	h     = f.RevSparseHes(p, s3);
+	h     = f.RevSparseHes(q, s3);
 	ok  &amp;= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
 
 	// -----------------------------------------------------------------

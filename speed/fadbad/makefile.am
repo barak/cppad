@@ -1,6 +1,6 @@
-# $Id: makefile.am 3121 2014-02-25 14:41:51Z bradbell $
+# $Id: makefile.am 2527 2012-10-31 07:12:36Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -25,11 +25,11 @@ AM_CPPFLAGS   = \
 #
 # BEGIN OPTIMIZE
 # Use special version of CXX_FLAGS with -Wshadow removed (if present).
-AM_CXXFLAGS   = -O2 -DNDEBUG -DCPPAD_FADBAD_SPEED $(CXX_FLAGS_FADBAD)
+AM_CXXFLAGS   = -O2 -DNDEBUG -DSPEED_FADBAD $(CXX_FLAGS_FADBAD)
 # END OPTIMIZE
 #
 # BEGIN DEBUG
-# AM_CXXFLAGS   = -g -DCPPAD_FADBAD_SPEED $(CXX_FLAGS_FADBAD)
+# AM_CXXFLAGS   = -g -DSPEED_FADBAD $(CXX_FLAGS_FADBAD)
 # END DEBUG
 #
 LDADD           = -lspeed
@@ -46,4 +46,4 @@ fadbad_SOURCES = \
 	sparse_jacobian.cpp
 
 test: check
-	./fadbad correct 123
+	./fadbad correct 123 retape

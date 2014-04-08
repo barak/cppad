@@ -1,8 +1,8 @@
-/* $Id: solve.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: solve.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
 # ifndef CPPAD_SOLVE_INCLUDED
 # define CPPAD_SOLVE_INCLUDED
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -407,6 +407,7 @@ $end
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 namespace ipopt {
 /*!
+\defgroup solve_hpp solve.hpp
 \{
 \file solve.hpp
 \brief Implement the ipopt::solve Nonlinear Programming Solver 
@@ -639,6 +640,7 @@ void solve(
 	return;
 }
 
+/*! \} */
 } // end ipopt namespace
 } // END_CPPAD_NAMESPACE
 # endif

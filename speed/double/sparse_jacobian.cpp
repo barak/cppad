@@ -1,6 +1,6 @@
-/* $Id: sparse_jacobian.cpp 3138 2014-03-02 18:46:11Z bradbell $ */
+/* $Id: sparse_jacobian.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -12,9 +12,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin double_sparse_jacobian.cpp$$
 $spell
-	const
-	onetape
-	boolsparsity
 	yp
 	jac
 	Jacobian
@@ -25,6 +22,7 @@ $spell
 	CppAD
 	cmath
 	exp
+	tmp
 	std
 $$
 
@@ -47,35 +45,44 @@ $codep */
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/speed/sparse_jac_fun.hpp>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
-
 bool link_sparse_jacobian(
-	size_t                           size     , 
-	size_t                           repeat   , 
-	size_t                           m        ,
-	const CppAD::vector<size_t>&     row      ,
-	const CppAD::vector<size_t>&     col      ,
-	      CppAD::vector<double>&     x        ,
-	      CppAD::vector<double>&     jacobian ,
-	      size_t&                    n_sweep  )
+	size_t                     size     , 
+	size_t                     repeat   , 
+	size_t                     m        ,
+	CppAD::vector<double>     &x        ,
+	CppAD::vector<size_t>     &row      ,
+	CppAD::vector<size_t>     &col      ,
+	CppAD::vector<double>     &jacobian )
 {
-	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
-		return false;
 	// -----------------------------------------------------
 	// setup
 	using CppAD::vector;
-	size_t i;
+	size_t i, k;
 	size_t order = 0;          // order for computing function value
 	size_t n     = size;       // argument space dimension
+	size_t K     = row.size(); // size of index vectors
 	vector<double> yp(m);      // function value yp = f(x)
 
-	// ------------------------------------------------------
-	while(repeat--)
-	{	// choose a value for x
-		CppAD::uniform_01(n, x);
+	// temporaries
+	vector<double> tmp(2 * K);
+
+	// choose a value for x
+	CppAD::uniform_01(n, x);
 	
+	// ------------------------------------------------------
+
+	while(repeat--)
+	{
+		// get the next set of indices
+		CppAD::uniform_01(2 * K, tmp);
+		for(k = 0; k < K; k++)
+		{	row[k] = size_t( n * tmp[k] );
+			row[k] = std::min(n-1, row[k]);
+			//
+			col[k] = size_t( n * tmp[k + K] );
+			col[k] = std::min(n-1, col[k]);
+		}
+
 		// computation of the function
 		CppAD::sparse_jac_fun<double>(m, n, x, row, col, order, yp);
 	}

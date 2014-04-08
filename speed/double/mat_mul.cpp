@@ -1,6 +1,6 @@
-/* $Id: mat_mul.cpp 3094 2014-02-15 22:51:31Z bradbell $ */
+/* $Id: mat_mul.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-11 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -12,8 +12,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin double_mat_mul.cpp$$
 $spell
-	onetape
-	boolsparsity
 	CppAD
 	cppad
 	mul_mat
@@ -42,10 +40,6 @@ $codep */
 # include <cppad/speed/mat_sum_sq.hpp>
 # include <cppad/speed/uniform_01.hpp>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
-
 bool link_mat_mul(
 	size_t                           size     , 
 	size_t                           repeat   , 
@@ -54,8 +48,6 @@ bool link_mat_mul(
 	CppAD::vector<double>&           dz
 )
 {
-	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
-		return false;
 	// -----------------------------------------------------
 	size_t n = size * size; // number of independent variables
 	CppAD::vector<double> y(n);

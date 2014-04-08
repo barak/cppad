@@ -1,6 +1,6 @@
-// $Id: old_reciprocal.cpp 3160 2014-03-05 17:04:14Z bradbell $
+// $Id: old_reciprocal.cpp 2899 2013-09-18 13:50:37Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -74,7 +74,7 @@ namespace { // Begin empty namespace
 		double f, fp, fpp;
 
 		// Must always define the case k = 0.
-		// Do not need case k if not using f.Forward(q, xp) for q >= k.
+		// Do not need case k if not using f.Forward(p, xp) for p >= k.
 		switch(k)
 		{	case 0:
 			// this case must  be implemented
@@ -180,7 +180,7 @@ namespace { // Begin empty namespace
 		size_t                               id ,             
 		size_t                                n ,
 		size_t                                m ,
-		size_t                                p ,
+		size_t                                q ,
 		const vector< std::set<size_t> >&     r ,
 		vector< std::set<size_t> >&           s )
 	{	// Can just return false if not using f.ForSparseJac
@@ -199,7 +199,7 @@ namespace { // Begin empty namespace
 		size_t                               id ,             
 		size_t                                n ,
 		size_t                                m ,
-		size_t                                p ,
+		size_t                                q ,
 		vector< std::set<size_t> >&           r ,
 		const vector< std::set<size_t> >&     s )
 	{	// Can just return false if not using RevSparseJac.
@@ -208,8 +208,8 @@ namespace { // Begin empty namespace
 		assert( m == 1 );
 
 		// sparsity for R(x) = S * f'(x) is same as sparsity for S
-		for(size_t q = 0; q < p; q++)
-			r[q] = s[q];
+		for(size_t p = 0; p < q; p++)
+			r[p] = s[p];
 
 		return true; 
 	}
@@ -219,7 +219,7 @@ namespace { // Begin empty namespace
 		size_t                               id ,             
 		size_t                                n ,
 		size_t                                m ,
-		size_t                                p ,
+		size_t                                q ,
 		const vector< std::set<size_t> >&     r ,
 		const vector<bool>&                   s ,
 		      vector<bool>&                   t ,
@@ -305,35 +305,35 @@ bool old_reciprocal(void)
 	ok &= NearEqual( Value(ay[0]) , check,  eps, eps);
 
 	// check zero order forward mode
-	size_t q;
-	vector<double> x_q(n), y_q(m);
-	q      = 0;
-	x_q[0] = x0;
-	y_q    = f.Forward(q, x_q);
-	ok &= NearEqual(y_q[0] , check,  eps, eps);
+	size_t p;
+	vector<double> x_p(n), y_p(m);
+	p      = 0;
+	x_p[0] = x0;
+	y_p    = f.Forward(p, x_p);
+	ok &= NearEqual(y_p[0] , check,  eps, eps);
 
 	// check first order forward mode
-	q      = 1;
-	x_q[0] = 1;
-	y_q    = f.Forward(q, x_q);
+	p      = 1;
+	x_p[0] = 1;
+	y_p    = f.Forward(p, x_p);
 	check  = 1.;
-	ok &= NearEqual(y_q[0] , check,  eps, eps);
+	ok &= NearEqual(y_p[0] , check,  eps, eps);
 
 	// check second order forward mode
-	q      = 2;
-	x_q[0] = 0;
-	y_q    = f.Forward(q, x_q);
+	p      = 2;
+	x_p[0] = 0;
+	y_p    = f.Forward(p, x_p);
 	check  = 0.;
-	ok &= NearEqual(y_q[0] , check,  eps, eps);
+	ok &= NearEqual(y_p[0] , check,  eps, eps);
 
 	// --------------------------------------------------------------------
 	// Check reverse mode results
 	//
 	// third order reverse mode 
-	q     = 3;
-	vector<double> w(m), dw(n * q);
+	p     = 3;
+	vector<double> w(m), dw(n * p);
 	w[0]  = 1.;
-	dw    = f.Reverse(q, w);
+	dw    = f.Reverse(p, w);
 	check = 1.;
 	ok &= NearEqual(dw[0] , check,  eps, eps);
 	check = 0.;
@@ -342,25 +342,25 @@ bool old_reciprocal(void)
 
 	// --------------------------------------------------------------------
 	// forward mode sparstiy pattern
-	size_t p = n;
-	CppAD::vectorBool r1(n * p), s1(m * p);
+	size_t q = n;
+	CppAD::vectorBool r1(n * q), s1(m * q);
 	r1[0] = true;          // compute sparsity pattern for x[0]
-	s1    = f.ForSparseJac(p, r1);
+	s1    = f.ForSparseJac(q, r1);
 	ok  &= s1[0] == true;  // f[0] depends on x[0]  
 
 	// --------------------------------------------------------------------
 	// reverse mode sparstiy pattern
-	q = m;
-	CppAD::vectorBool s2(q * m), r2(q * n);
+	p = m;
+	CppAD::vectorBool s2(p * m), r2(p * n);
 	s2[0] = true;          // compute sparsity pattern for f[0]
-	r2    = f.RevSparseJac(q, s2);
+	r2    = f.RevSparseJac(p, s2);
 	ok  &= r2[0] == true;  // f[0] depends on x[0]  
 
 	// --------------------------------------------------------------------
 	// Hessian sparsity (using previous ForSparseJac call) 
-	CppAD::vectorBool s3(m), h(p * n);
+	CppAD::vectorBool s3(m), h(q * n);
 	s3[0] = true;        // compute sparsity pattern for f[0]
-	h     = f.RevSparseHes(p, s3);
+	h     = f.RevSparseHes(q, s3);
 	ok  &= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
 
 	// -----------------------------------------------------------------

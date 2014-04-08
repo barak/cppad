@@ -1,6 +1,6 @@
-# $Id: makefile.am 3214 2014-03-18 20:50:38Z bradbell $
+# $Id: makefile.am 2991 2013-10-22 16:25:15Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -41,10 +41,9 @@ EIGEN_EXTRA_FILES   = eigen_det.cpp eigen_array.cpp
 EIGEN_LIB           =
 endif
 # -------------------------------------------------------------------------
-# auto-tools does not support use of colpack
+# Microsoft project files an script to run a single test
 EXTRA_DIST        =  \
 	test_one.sh.in \
-	colpack.cpp \
 	$(ADOLC_EXTRA_FILES) \
 	$(EIGEN_EXTRA_FILES)
 #
@@ -87,7 +86,7 @@ example_SOURCES   = \
 	base_require.cpp \
 	bender_quad.cpp \
 	bool_fun.cpp \
-	capacity_order.cpp \
+	capacity_taylor.cpp \
 	change_const.cpp \
 	check_for_nan.cpp \
 	check_numeric_type.cpp \
@@ -109,7 +108,7 @@ example_SOURCES   = \
 	for_one.cpp \
 	for_two.cpp \
 	forward.cpp \
-	forward_order.cpp \
+	forward_mul.cpp \
 	for_sparse_jac.cpp \
 	fun_assign.cpp \
 	fun_check.cpp \

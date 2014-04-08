@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: build.sh 3117 2014-02-24 22:51:19Z bradbell $
+# $Id: build.sh 3030 2013-12-25 04:31:10Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -19,7 +19,7 @@ FADBAD_DIR=$HOME/prefix/fadbad
 IPOPT_DIR=$HOME/prefix/ipopt
 SACADO_DIR=$HOME/prefix/sacado
 # version type is one of "trunk" or "stable"
-version_type="trunk"
+version_type="stable"
 # -----------------------------------------------------------------------------
 if [ $0 != "./build.sh" ]
 then
@@ -226,16 +226,14 @@ cat << EOF
 $dir_list \\
 CXX_FLAGS=\"$cxx_flags\" \\
 $special_types OPENMP_FLAGS=-fopenmp \\
---with-sparse_list --with-Documentation \\
---with-implicit_ctor
+--with-sparse_list --with-Documentation
 EOF
 	#
 	../configure > $log_dir/$log_file \
 		$dir_list \
 		CXX_FLAGS="$cxx_flags" \
 		$special_types OPENMP_FLAGS=-fopenmp \
-		--with-sparse_list --with-Documentation \
-		--with-implicit_ctor
+		--with-sparse_list --with-Documentation 
 	#
 	for file in $configure_file_list
 	do
@@ -282,9 +280,8 @@ then
 	#
 	# Run automated checking of file names in original source directory
 	list="
-		check_define.sh
 		check_example.sh
-		check_if.sh
+		check_if_0.sh
 		check_include_def.sh
 		check_include_file.sh
 		check_include_omh.sh

@@ -1,9 +1,9 @@
-/* $Id: memory_leak.hpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: memory_leak.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
 # ifndef CPPAD_MEMORY_LEAK_INCLUDED
 # define CPPAD_MEMORY_LEAK_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -119,6 +119,7 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
+\defgroup memory_leak_hpp memory_leak.hpp
 \{
 \file memory_leak.hpp
 File that implements a memory check at end of a CppAD program
@@ -213,5 +214,6 @@ inline bool memory_leak(size_t add_static = 0)
 	return leak;
 }
 
+/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

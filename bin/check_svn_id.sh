@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_svn_id.sh 3218 2014-03-19 12:23:36Z bradbell $
+# $Id: check_svn_id.sh 2935 2013-10-12 19:40:01Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -19,28 +19,39 @@ fi
 echo "Checking for \$Id:.*\$ in beginning of source code"
 echo "-------------------------------------------------------" 
 ok="yes"
-list=`find . \
-	\( -name \*.hpp \) -or \
-	\( -name \*.cpp \) -or \
-	\( -name \*.omh \) -or \
-	\( -name \*.sh \) -or \
-	\( -name \*.in \) -or \
-	\( -name makefile.am \) -or \
-	\( -name CMakeLists.txt \) |
-	sed \
-		-e '/\/build\//d'  \
-		-e '/makefile\.in/d'  \
-		-e '/config\.h\.in/d' \
-		-e '/\/junk\./d' \
-		-e '/\/temp\./d'
-`
-for file in $list
+for ext in .hpp .cpp .omh .sh .in
 do
-	if ! head -2 $file | grep '$Id:.*\$' > /dev/null
-	then
-		echo "$file does not have '\$Id:.*\$' in first two lines"
-		ok="no"
-	fi
+	dir_list=`find . -name "*$ext" | sed \
+		-e '/\/junk$/d' \
+		-e '/\/junk\./d' \
+		-e '/\/temp$/d' \
+		-e '/\/temp\./d' \
+		-e 's|^\./||' \
+		-e 's/^[^/]*$/./' \
+		-e '/^work\//d' \
+		-e '/^build\//d' \
+		-e '/^bug\/build\//d' \
+		-e '/svn_dist\//d' \
+		-e 's|/[^/]*$||' \
+		| sort -u`  
+	for dir in $dir_list 
+	do
+		list=`ls $dir/*$ext | sed \
+			-e '/\/config.h.in/d' \
+			-e '/\/makefile\.in/d' \
+			-e '/\/junk$/d' \
+			-e '/\/junk\./d' \
+			-e '/\/temp$/d' \
+			-e '/\/temp\./d'`
+		for file in $list
+		do
+			if ! head -2 $file | grep '$Id:.*\$' > /dev/null
+			then
+				echo "$file does not have '\$Id:.*\$' in first two lines"
+				ok="no"
+			fi
+		done
+	done
 done
 echo "-------------------------------------------------------" 
 if [ "$ok" = "no" ]

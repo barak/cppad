@@ -1,6 +1,6 @@
-/* $Id: example.cpp 3214 2014-03-18 20:50:38Z bradbell $ */
+/* $Id: example.cpp 2991 2013-10-22 16:25:15Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -21,7 +21,7 @@ $index example, CppAD$$
 $index test, CppAD$$
 
 $head Running Tests$$
-To build this program and run its correctness tests see $cref cmake_check$$.
+To build this program and run its correctness tests see $cref cppad_test$$.
 
 $code
 $verbatim%example/example.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -61,12 +61,11 @@ extern bool Atan2(void);
 extern bool base_require(void);
 extern bool BenderQuad(void);
 extern bool BoolFun(void);
-extern bool capacity_order(void);
+extern bool capacity_taylor(void);
 extern bool change_const(void);
 extern bool check_for_nan(void);
 extern bool CheckNumericType(void);
 extern bool CheckSimpleVector(void);
-extern bool colpack(void);
 extern bool Compare(void);
 extern bool CompareChange(void);
 extern bool complex_poly(void);
@@ -87,7 +86,7 @@ extern bool ForOne(void);
 extern bool ForTwo(void);
 extern bool ForSparseJac(void);
 extern bool Forward(void);
-extern bool forward_order(void);
+extern bool forward_mul(void);
 extern bool fun_assign(void);
 extern bool FunCheck(void);
 extern bool HesLagrangian(void);
@@ -221,7 +220,7 @@ int main(void)
 	ok &= Run( Atan2,             "Atan2"            );
 	ok &= Run( BenderQuad,        "BenderQuad"       );
 	ok &= Run( BoolFun,           "BoolFun"          );
-	ok &= Run( capacity_order,    "capacity_order"   );
+	ok &= Run( capacity_taylor,   "capacity_taylor"  );
 	ok &= Run( change_const,      "change_const"     );
 	ok &= Run( check_for_nan,     "check_for_nan"    );
 	ok &= Run( CheckNumericType,  "CheckNumericType" );
@@ -243,7 +242,7 @@ int main(void)
 	ok &= Run( ForOne,            "ForOne"           );
 	ok &= Run( ForTwo,            "ForTwo"           );
 	ok &= Run( Forward,           "Forward"          ); 
-	ok &= Run( forward_order,     "forward_order"    ); 
+	ok &= Run( forward_mul,       "forward_mul"      ); 
 	ok &= Run( ForSparseJac,      "ForSparseJac"     );
 	ok &= Run( fun_assign,        "fun_assign"       );
 	ok &= Run( FunCheck,          "FunCheck"         );
@@ -329,9 +328,6 @@ int main(void)
 # ifdef CPPAD_ADOLC_EXAMPLES
 	ok &= Run( mul_level_adolc,      "mul_level_adolc"     );
 	ok &= Run( mul_level_adolc_ode,  "mul_level_adolc_ode" );
-# endif
-# ifdef CPPAD_COLPACK_EXAMPLES
-	ok &= Run( colpack,           "colpack"          );
 # endif
 # ifdef CPPAD_EIGEN_EXAMPLES
 	ok &= Run( eigen_array,       "eigen_array"      );

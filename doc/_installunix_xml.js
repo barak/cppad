@@ -26,7 +26,7 @@ var list_down2 = [
 var list_down1 = [
 'download.xml',
 'cmake.xml',
-'cmake_check.xml',
+'cppad_test.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];
@@ -42,7 +42,6 @@ var list_current0 = [
 'installunix.xml#--with-Documentation',
 'installunix.xml#--with-testvector',
 'installunix.xml#--with-sparse_option',
-'installunix.xml#--with-implicit_ctor',
 'installunix.xml#max_num_threads',
 'installunix.xml#cxx_flags',
 'installunix.xml#openmp_flags',

@@ -114,9 +114,6 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 # include &lt;cppad/speed/ode_evaluate.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
-extern bool global_boolsparsity;
 
 bool link_ode(
 	size_t                     size       ,
@@ -125,16 +122,16 @@ bool link_ode(
 	CppAD::vector&lt;double&gt;      &amp;jac
 )
 {
-	// speed test global option values
-	if( global_atomic || global_boolsparsity )
-		return false;
-	if( global_memory || global_optimize )
-		return false;
-	// -------------------------------------------------------------
-	// setup
 	assert( x.size() == size );
 	assert( jac.size() == size * size );
 
+	// speed test global option values
+	extern bool global_retape, global_atomic, global_optimize;
+	if( global_atomic || global_optimize )
+		return false;
+
+	// -------------------------------------------------------------
+	// setup
 	typedef CppAD::vector&lt;adouble&gt; ADVector;
 	typedef CppAD::vector&lt;double&gt;  DblVector;
 
@@ -163,7 +160,7 @@ bool link_ode(
 		jac_ptr[i] = jac_raw + i * n;
 
 	// -------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( global_retape) while(repeat--)
 	{ 	// choose next x value
 		uniform_01(n, x);
 

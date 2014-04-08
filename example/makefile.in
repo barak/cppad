@@ -81,12 +81,12 @@ am__example_SOURCES_DIST = mul_level_adolc.cpp mul_level_adolc_ode.cpp \
 	add_eq.cpp ad_assign.cpp ad_ctor.cpp ad_fun.cpp ad_in_c.cpp \
 	ad_input.cpp ad_output.cpp asin.cpp atan.cpp atan2.cpp \
 	base_alloc.hpp base_require.cpp bender_quad.cpp bool_fun.cpp \
-	capacity_order.cpp change_const.cpp check_for_nan.cpp \
+	capacity_taylor.cpp change_const.cpp check_for_nan.cpp \
 	check_numeric_type.cpp check_simple_vector.cpp compare.cpp \
 	compare_change.cpp complex_poly.cpp cond_exp.cpp conj_grad.cpp \
 	cos.cpp cosh.cpp cppad_vector.cpp div.cpp div_eq.cpp \
 	equal_op_seq.cpp erf.cpp error_handler.cpp exp.cpp for_one.cpp \
-	for_two.cpp forward.cpp forward_order.cpp for_sparse_jac.cpp \
+	for_two.cpp forward.cpp forward_mul.cpp for_sparse_jac.cpp \
 	fun_assign.cpp fun_check.cpp hes_lagrangian.cpp hes_lu_det.cpp \
 	hes_minor_det.cpp hessian.cpp hes_times_dir.cpp \
 	independent.cpp index_sort.cpp integer.cpp interface2c.cpp \
@@ -118,7 +118,7 @@ am_example_OBJECTS = $(am__objects_1) example.$(OBJEXT) \
 	ad_input.$(OBJEXT) ad_output.$(OBJEXT) asin.$(OBJEXT) \
 	atan.$(OBJEXT) atan2.$(OBJEXT) base_require.$(OBJEXT) \
 	bender_quad.$(OBJEXT) bool_fun.$(OBJEXT) \
-	capacity_order.$(OBJEXT) change_const.$(OBJEXT) \
+	capacity_taylor.$(OBJEXT) change_const.$(OBJEXT) \
 	check_for_nan.$(OBJEXT) check_numeric_type.$(OBJEXT) \
 	check_simple_vector.$(OBJEXT) compare.$(OBJEXT) \
 	compare_change.$(OBJEXT) complex_poly.$(OBJEXT) \
@@ -126,7 +126,7 @@ am_example_OBJECTS = $(am__objects_1) example.$(OBJEXT) \
 	cosh.$(OBJEXT) cppad_vector.$(OBJEXT) div.$(OBJEXT) \
 	div_eq.$(OBJEXT) equal_op_seq.$(OBJEXT) erf.$(OBJEXT) \
 	error_handler.$(OBJEXT) exp.$(OBJEXT) for_one.$(OBJEXT) \
-	for_two.$(OBJEXT) forward.$(OBJEXT) forward_order.$(OBJEXT) \
+	for_two.$(OBJEXT) forward.$(OBJEXT) forward_mul.$(OBJEXT) \
 	for_sparse_jac.$(OBJEXT) fun_assign.$(OBJEXT) \
 	fun_check.$(OBJEXT) hes_lagrangian.$(OBJEXT) \
 	hes_lu_det.$(OBJEXT) hes_minor_det.$(OBJEXT) hessian.$(OBJEXT) \
@@ -236,9 +236,9 @@ CXX_FLAGS_EIGEN = @CXX_FLAGS_EIGEN@
 CXX_FLAGS_FADBAD = @CXX_FLAGS_FADBAD@
 CYGPATH_W = @CYGPATH_W@
 
-# $Id: makefile.in 3216 2014-03-19 05:06:44Z bradbell $
+# $Id: makefile.in 2995 2013-10-23 16:56:13Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -321,11 +321,8 @@ cppad_cflags = @cppad_cflags@
 cppad_cppadvector = @cppad_cppadvector@
 cppad_description = @cppad_description@
 cppad_eigenvector = @cppad_eigenvector@
-cppad_has_colpack = @cppad_has_colpack@
 cppad_has_gettimeofday = @cppad_has_gettimeofday@
 cppad_has_nullptr = @cppad_has_nullptr@
-cppad_has_rvalue = @cppad_has_rvalue@
-cppad_implicit_ctor_from_any_type = @cppad_implicit_ctor_from_any_type@
 cppad_internal_sparse_set = @cppad_internal_sparse_set@
 cppad_libs = @cppad_libs@
 cppad_max_num_threads = @cppad_max_num_threads@
@@ -392,10 +389,9 @@ top_srcdir = @top_srcdir@
 @CppAD_EIGEN_DIR_TRUE@	-I$(EIGEN_DIR)/include 
 
 # -------------------------------------------------------------------------
-# auto-tools does not support use of colpack
+# Microsoft project files an script to run a single test
 EXTRA_DIST = \
 	test_one.sh.in \
-	colpack.cpp \
 	$(ADOLC_EXTRA_FILES) \
 	$(EIGEN_EXTRA_FILES)
 
@@ -435,7 +431,7 @@ example_SOURCES = \
 	base_require.cpp \
 	bender_quad.cpp \
 	bool_fun.cpp \
-	capacity_order.cpp \
+	capacity_taylor.cpp \
 	change_const.cpp \
 	check_for_nan.cpp \
 	check_numeric_type.cpp \
@@ -457,7 +453,7 @@ example_SOURCES = \
 	for_one.cpp \
 	for_two.cpp \
 	forward.cpp \
-	forward_order.cpp \
+	forward_mul.cpp \
 	for_sparse_jac.cpp \
 	fun_assign.cpp \
 	fun_check.cpp \
@@ -617,7 +613,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base_require.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bender_quad.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bool_fun.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/capacity_order.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/capacity_taylor.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/change_const.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_for_nan.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_numeric_type.Po@am__quote@
@@ -641,7 +637,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/for_sparse_jac.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/for_two.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forward.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forward_order.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forward_mul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fun_assign.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fun_check.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hes_lagrangian.Po@am__quote@
