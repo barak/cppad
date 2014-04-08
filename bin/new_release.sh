@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: new_release.sh 3030 2013-12-25 04:31:10Z bradbell $
+# $Id: new_release.sh 3085 2014-01-20 22:53:15Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -23,7 +23,7 @@ echo_eval() {
 # -----------------------------------------------------------------------------
 repository="https://projects.coin-or.org/svn/CppAD"
 stable_version="20140000"
-release='0'
+release='2'
 release_version="$stable_version.$release"
 msg="Creating releases/$release_version"
 # -----------------------------------------------------------------------------
