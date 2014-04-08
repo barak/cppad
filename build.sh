@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: build.sh 3030 2013-12-25 04:31:10Z bradbell $
+# $Id: build.sh 3067 2013-12-29 17:35:34Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -226,14 +226,16 @@ cat << EOF
 $dir_list \\
 CXX_FLAGS=\"$cxx_flags\" \\
 $special_types OPENMP_FLAGS=-fopenmp \\
---with-sparse_list --with-Documentation
+--with-sparse_list --with-Documentation \\
+--with-implicit_ctor
 EOF
 	#
 	../configure > $log_dir/$log_file \
 		$dir_list \
 		CXX_FLAGS="$cxx_flags" \
 		$special_types OPENMP_FLAGS=-fopenmp \
-		--with-sparse_list --with-Documentation 
+		--with-sparse_list --with-Documentation \
+		--with-implicit_ctor
 	#
 	for file in $configure_file_list
 	do

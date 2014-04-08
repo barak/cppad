@@ -54,7 +54,8 @@ var list_current0 = [
 'cmake.xml#cppad_max_num_threads',
 'cmake.xml#cppad_sparse_list',
 'cmake.xml#cppad_tape_id_type',
-'cmake.xml#cppad_tape_addr_type'
+'cmake.xml#cppad_tape_addr_type',
+'cmake.xml#cppad_implicit_ctor_from_any_type'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

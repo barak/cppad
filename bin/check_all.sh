@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: check_all.sh 2873 2013-07-29 05:15:13Z bradbell $
+# $Id: check_all.sh 3067 2013-12-29 17:35:34Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -25,12 +25,13 @@ echo_log_eval() {
 		exit 1
 	fi
 	msg=`cat $top_srcdir/check_all.err`
-	cat $top_srcdir/check_all.err
-	rm $top_srcdir/check_all.err
 	if [ "$msg" != '' ]
 	then
+		echo "$msg"
+		echo 'Warning: see check_all.err' 
 		exit 1
 	fi
+	rm $top_srcdir/check_all.err
 }
 log_eval() {
 	echo $* >> $top_srcdir/check_all.log
@@ -84,7 +85,7 @@ do
 		echo_log_eval rm -r $name
 	fi
 done
-echo_log_eval bin/run_cmake.sh
+echo_log_eval bin/run_cmake.sh --boost_vector
 echo_log_eval cd build
 # -----------------------------------------------------------------------------
 echo_log_eval make check 

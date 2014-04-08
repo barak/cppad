@@ -3,10 +3,10 @@
 // ------------------------------------------------------- 
 Keyword = 
 [
-"CppAD  cppad-20140000.0: A Package for Differentiation of C++ Algorithms   algorithmic automatic derivative version introduction include cppad.hpp symbol preprocessor namespace",
+"CppAD  cppad-20140000.1: A Package for Differentiation of C++ Algorithms   algorithmic automatic derivative version introduction include cppad.hpp symbol preprocessor namespace",
 "Install  CppAD Download, Test, and Install Instructions  ",
 "download  Download The CppAD Source Code  ",
-"cmake  Using CMake to Configure CppAD   command makefile generator install prefix include directories data directory library postfix package c++ compile flags documentation maximum number threads sparsity internal structure vector of sets memory usage tape",
+"cmake  Using CMake to Configure CppAD   command makefile generator install prefix include directories data directory library postfix package c++ compile flags documentation maximum number threads sparsity internal structure vector of sets memory usage tape implicit explicit",
 "adolc_prefix  Including the ADOL-C Examples and Tests   speed unix cygwin get",
 "get_adolc.sh  Download and Install Adolc in Build Directory  ",
 "get_colpack.sh  Download and Install ColPack in Build Directory  ",
@@ -21,7 +21,7 @@ Keyword =
 "cppad_testvector  Choosing the CppAD Test Vector Template Class   boost eigen",
 "cppad_test  Running the CppAD Examples and Tests  ",
 "pkgconfig  CppAD pkg-config Files   pc",
-"InstallUnix  Unix Test and Installation   cppad free configure speed profile prefix directory documentation std vector boost eigen sparse internal sets compile flags openmp postfix adolc fadbad ipopt sacado memory usage tape",
+"InstallUnix  Unix Test and Installation   cppad free configure speed profile prefix directory documentation std vector boost eigen sparse internal sets implicit explicit compile flags openmp postfix adolc fadbad ipopt sacado memory usage tape",
 "Introduction  An Introduction by Example to Algorithmic Differentiation   ad automatic",
 "get_started.cpp  Getting Started Using CppAD to Compute Derivatives   simple example",
 "exp_2  Second Order Exponential Approximation   example algorithm",
@@ -54,7 +54,7 @@ Keyword =
 "exp_eps_cppad  exp_eps: CppAD Forward and Reverse Sweeps  ",
 "exp_apx_main.cpp  Correctness Tests For Exponential Approximation in Introduction   run",
 "AD  AD Objects   base require",
-"ad_ctor  AD Constructors   convert base vecad",
+"ad_ctor  AD Constructors   convert base vecad deprecated",
 "ad_ctor.cpp  AD Constructors: Example and Test   object",
 "ad_assign  AD Assignment Operator   base vecad",
 "ad_assign.cpp  AD Assignment: Example and Test   object",

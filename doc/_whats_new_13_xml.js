@@ -51,6 +51,9 @@ var list_down1 = [
 ];
 var list_current0 = [
 'whats_new_13.xml#Introduction',
+'whats_new_13.xml#12-29',
+'whats_new_13.xml#12-27',
+'whats_new_13.xml#12-26',
 'whats_new_13.xml#12-24',
 'whats_new_13.xml#11-27',
 'whats_new_13.xml#11-13',

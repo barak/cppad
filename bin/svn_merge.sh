@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: svn_merge.sh 2991 2013-10-22 16:25:15Z bradbell $
+# $Id: svn_merge.sh 3073 2014-01-01 11:48:13Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -32,13 +32,13 @@ echo "DryRun = $DryRun"
 repository='https://projects.coin-or.org/svn/CppAD'
 #
 # Name of the directory where the changes have been committed
-from_branch='branches/opt_cond_exp'
+from_branch='trunk'
 #
 # Version of the repository corresponding to from_branch just before changes
-Start=2952
+Start=3067
 # 
 # Version of the repository corresponding to from_branch after the changes
-End=2990
+End=3071
 #
 # the svn merge command
 cmd="svn merge $DryRun -r $Start:$End $repository/$from_branch"

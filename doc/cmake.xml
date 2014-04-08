@@ -5,7 +5,7 @@
 <head>
 <title>Using CMake to Configure CppAD</title>
 <meta name="description" id="description" content="Using CMake to Configure CppAD"/>
-<meta name="keywords" id="keywords" content=" cmake configure cppad command makefile generator install prefix include directories data directory library postfix package c++ compile flags documentation maximum number threads sparsity internal structure vector of sets memory usage tape "/>
+<meta name="keywords" id="keywords" content=" cmake configure cppad command makefile generator install prefix include directories data directory library postfix package c++ compile flags documentation maximum number threads sparsity internal structure vector of sets memory usage tape ctor implicit or explicit "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -97,6 +97,7 @@ A:active { color : purple }
 <option>cppad_sparse_list</option>
 <option>cppad_tape_id_type</option>
 <option>cppad_tape_addr_type</option>
+<option>cppad_implicit_ctor_from_any_type</option>
 </select>
 </td>
 </tr></table><br/>
@@ -138,28 +139,29 @@ change into the <code><font color="blue">build</font></code>  directory,
 and execute the following command:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-cmake&#xA0;</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-G&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>generator</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_includedirs=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_includedirs</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_datadir=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_libdirs=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_libdirs</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_postfix=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+cmake&#xA0;</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-G&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>generator</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_includedirs=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_includedirs</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_datadir=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_libdirs=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_libdirs</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cmake_install_postfix=</span></font><i><font color="black"><span style='white-space: nowrap'>cmake_install_postfix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;adolc_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;eigen_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>eigen_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;fadbad_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>fadbad_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;ipopt_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>ipopt_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;sacado_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>sacado_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;adolc_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;eigen_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>eigen_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;fadbad_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>fadbad_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;ipopt_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>ipopt_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;sacado_prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>sacado_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_cxx_flags=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_cxx_flags</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_documentation=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_documentation</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_cxx_flags=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_cxx_flags</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_documentation=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_documentation</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_testvector=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_max_num_threads=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_sparse_list=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_id_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_addr_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_testvector=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_max_num_threads=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_sparse_list=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_id_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_addr_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_implicit_ctor_from_any_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;..<br/>
 </span></font></code>
@@ -546,6 +548,27 @@ must be larger than any of the following:
 <a href="seq_property.xml#size_par" target="_top"><span style='white-space: nowrap'>size_par</span></a>
 ,
 <a href="seq_property.xml#size_VecAD" target="_top"><span style='white-space: nowrap'>size_par</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="cppad_implicit_ctor_from_any_type" id="cppad_implicit_ctor_from_any_type">cppad_implicit_ctor_from_any_type</a></big></b>
+
+
+
+<br/>
+The default value for 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></font></i></code>
+ is <code><font color="blue">NO</font></code>.
+If it is <code><font color="blue">YES</font></code>, there is a 
+<a href="ad_ctor.xml#x.deprecated" target="_top"><span style='white-space: nowrap'>deprecated</span></a>
+
+implicit type constructor (type conversion)
+from any type to 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+.
+Otherwise this constructor is 
+<a href="ad_ctor.xml#x.explicit" target="_top"><span style='white-space: nowrap'>explicit</span></a>
 .
 
 
