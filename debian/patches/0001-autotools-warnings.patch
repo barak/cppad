@@ -1,0 +1,28 @@
+From: "Barak A. Pearlmutter" <barak+git@cs.nuim.ie>
+Date: Thu, 10 Apr 2014 10:31:13 +0100
+Subject: autotools warnings
+
+---
+ configure.ac | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index e18dd09..0be2bfe 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -470,11 +470,14 @@ fi
+ 
+ dnl Run any macros required for proper operation of generated makefiles
+ dnl nostdinc: Do not define standard include directories in generated makefiles
+-AM_INIT_AUTOMAKE(nostdinc)
++AM_INIT_AUTOMAKE([nostdinc subdir-objects -Wall])
+ 
+ dnl Use LIBTOOL for cppad_ipopt ?
+ dnl AC_PROG_LIBTOOL
+ 
++dnl required by automake when linking libraries using a non-POSIX linker
++AM_PROG_AR
++
+ dnl Determine if ranlib is present and where it is if present (set RANLIB)
+ AC_PROG_RANLIB
+ 
