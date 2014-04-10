@@ -1,0 +1,151 @@
+From: "Barak A. Pearlmutter" <barak+git@cs.nuim.ie>
+Date: Thu, 10 Apr 2014 14:14:21 +0100
+Subject: autoupdate
+
+---
+ configure.ac | 40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 0be2bfe..4fdf710 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
+ dnl
+ dnl Process this file with autoconf to produce a configure script.
+ dnl   package   version              bug-report
+-AC_INIT(cppad, 20140000.3, cppad@list.coin-or.org)
++AC_INIT([cppad],[20140000.3],[cppad@list.coin-or.org])
+ AM_SILENT_RULES([yes])
+ 
+ dnl By defalut disable maintainer mode when running configure;
+@@ -47,56 +47,49 @@ if test "$CPP_ERROR_WARN" != "" ; then
+     AC_MSG_ERROR([The CPP_ERROR_WARN configure option is now CXX_FLAGS])
+ fi
+ dnl
+-AC_ARG_WITH(SpeedExample, AC_HELP_STRING(
+-	[--with-SpeedExample], [is not necessary, see install instructions.]),
++AC_ARG_WITH(SpeedExample, AS_HELP_STRING([--with-SpeedExample],[is not necessary, see install instructions.]),
+ 	[SpeedExample="yes"], [SpeedExample="no"]
+ )
+ if test "$SpeedExample" = "yes" ; then
+     AC_MSG_ERROR([--with-SpeedExample not necessary, see install instructions.])
+ fi
+ dnl
+-AC_ARG_WITH(profiling, AC_HELP_STRING(
+-	[--with-profiling], [is not necessary, see install instructions.]),
++AC_ARG_WITH(profiling, AS_HELP_STRING([--with-profiling],[is not necessary, see install instructions.]),
+ 	[profiling="yes"], [profiling="no"]
+ )
+ if test "$profiling" = "yes" ; then
+     AC_MSG_ERROR([--with-profiling not necessary, see install instructions.])
+ fi
+ dnl 
+-AC_ARG_WITH(Speed, AC_HELP_STRING(
+-	[--with-Speed], [is not necessary, see install instructions.]),
++AC_ARG_WITH(Speed, AS_HELP_STRING([--with-Speed],[is not necessary, see install instructions.]),
+ 	[Speed="yes"], [Speed="no"]
+ )
+ if test "$Speed" = "yes" ; then
+     AC_MSG_ERROR([--with-Speed not necessary, see install instructions.])
+ fi
+ dnl 
+-AC_ARG_WITH(Introduction, AC_HELP_STRING(
+-	[--with-Introduction], [is not necessary, see install instructions.]),
++AC_ARG_WITH(Introduction, AS_HELP_STRING([--with-Introduction],[is not necessary, see install instructions.]),
+ 	[Introduction="yes"], [Introduction="no"]
+ )
+ if test "$Introduction" = "yes" ; then
+     AC_MSG_ERROR([--with-Introduction not necessary, see install instructions.])
+ fi
+ dnl 
+-AC_ARG_WITH(Example, AC_HELP_STRING(
+-	[--with-Example], [is not necessary, see install instructions.]),
++AC_ARG_WITH(Example, AS_HELP_STRING([--with-Example],[is not necessary, see install instructions.]),
+ 	[Example="yes"], [Example="no"]
+ )
+ if test "$Example" = "yes" ; then
+     AC_MSG_ERROR([--with-Example not necessary, see install instructions.])
+ fi
+ dnl 
+-AC_ARG_WITH(TestMore, AC_HELP_STRING(
+-	[--with-TestMore], [is not necessary, see install instructions.]),
++AC_ARG_WITH(TestMore, AS_HELP_STRING([--with-TestMore],[is not necessary, see install instructions.]),
+ 	[TestMore="yes"], [TestMore="no"]
+ )
+ if test "$TestMore" = "yes" ; then
+     AC_MSG_ERROR([--with-TestMore not necessary, see install instructions.])
+ fi
+ dnl 
+-AC_ARG_WITH(PrintFor, AC_HELP_STRING(
+-	[--with-PrintFor], [is not necessary, see install instructions.]),
++AC_ARG_WITH(PrintFor, AS_HELP_STRING([--with-PrintFor],[is not necessary, see install instructions.]),
+ 	[PrintFor="yes"], [PrintFor="no"]
+ )
+ if test "$PrintFor" = "yes" ; then
+@@ -117,7 +110,7 @@ dnl Are we installing the documentation -----------------------------------
+ dnl cygwin begin delete:
+ AC_MSG_CHECKING([--with-Documentation])
+ AC_ARG_WITH(Documentation, 
+-	AC_HELP_STRING([--with-Documentation], [default is no]),
++	AS_HELP_STRING([--with-Documentation],[default is no]),
+ 	[Documentation="yes"],
+ 	[Documentation="no"]
+ )
+@@ -129,7 +122,7 @@ dnl cygwin replace: AM_CONDITIONAL(CppAD_DOCUMENTATION, test "yes" = "yes")
+ dnl Are we using standard vectors ----------------------------------------
+ AC_MSG_CHECKING([--with-stdvector])
+ AC_ARG_WITH(stdvector, 
+-	AC_HELP_STRING([--with-stdvector], [default is no]),
++	AS_HELP_STRING([--with-stdvector],[default is no]),
+ 	[stdvector="yes"],
+ 	[stdvector="no"]
+ )
+@@ -143,7 +136,7 @@ AC_MSG_RESULT([$stdvector])
+ dnl Are we using boost vectors ----------------------------------------
+ AC_MSG_CHECKING([--with-boostvector])
+ AC_ARG_WITH(boostvector, 
+-	AC_HELP_STRING([--with-boostvector], [default is no]),
++	AS_HELP_STRING([--with-boostvector],[default is no]),
+ 	[boostvector="yes"],
+ 	[boostvector="no"]
+ )
+@@ -160,7 +153,7 @@ fi
+ dnl Are we using eigen vectors ----------------------------------------
+ AC_MSG_CHECKING([--with-eigenvector])
+ AC_ARG_WITH(eigenvector, 
+-	AC_HELP_STRING([--with-eigenvector], [default is no]),
++	AS_HELP_STRING([--with-eigenvector],[default is no]),
+ 	[eigenvector="yes"],
+ 	[eigenvector="no"]
+ )
+@@ -180,7 +173,7 @@ fi
+ dnl Are we using sparse_set or sparse_list ----------------------------
+ AC_MSG_CHECKING([--with-sparse_set])
+ AC_ARG_WITH(sparse_set, 
+-	AC_HELP_STRING([--with-sparse_set], [default is not specified]),
++	AS_HELP_STRING([--with-sparse_set],[default is not specified]),
+ 	[sparse_set="yes"],
+ 	[sparse_set="no"]
+ )
+@@ -188,7 +181,7 @@ AC_MSG_RESULT([$sparse_set])
+ dnl
+ AC_MSG_CHECKING([--with-sparse_list])
+ AC_ARG_WITH(sparse_list, 
+-	AC_HELP_STRING([--with-sparse_list], [default is not specified]),
++	AS_HELP_STRING([--with-sparse_list],[default is not specified]),
+ 	[sparse_list="yes"],
+ 	[sparse_list="no"]
+ )
+@@ -206,10 +199,7 @@ fi
+ dnl Are we including an implicit constructor from any type -----------
+ AC_MSG_CHECKING([--with-implicit_ctor])
+ AC_ARG_WITH(implicit_ctor, 
+-	AC_HELP_STRING(
+-		[--with-implicit_ctor], 
+-		[include an implicit AD<Base> constructor from any type]
+-	),
++	AS_HELP_STRING([--with-implicit_ctor],[include an implicit AD<Base> constructor from any type]),
+ 	[implicit_ctor="yes"],
+ 	[implicit_ctor="no"]
+ )
