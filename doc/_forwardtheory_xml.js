@@ -49,7 +49,8 @@ var list_down0 = [
 'atanforward.xml',
 'asinforward.xml',
 'acosforward.xml',
-'tan_forward.xml'
+'tan_forward.xml',
+'erf_forward.xml'
 ];
 var list_current0 = [
 'forwardtheory.xml#Taylor Notation',

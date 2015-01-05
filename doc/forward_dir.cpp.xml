@@ -1,0 +1,173 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Forward Mode: Example and Test of Multiple Directions</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Forward Mode: Example and Test of Multiple Directions"/>
+<meta name="keywords" id="keywords" content=" forward mode: example and test of multiple directions orders order "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_forward_dir.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="forward_dir.xml" target="_top">Prev</a>
+</td><td><a href="size_order.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>FunEval</option>
+<option>Forward</option>
+<option>forward_dir</option>
+<option>forward_dir.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>FunEval-&gt;</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>Sparse</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Forward-&gt;</option>
+<option>forward_zero</option>
+<option>forward_one</option>
+<option>forward_two</option>
+<option>forward_order</option>
+<option>forward_dir</option>
+<option>size_order</option>
+<option>CompareChange</option>
+<option>capacity_order</option>
+<option>number_skip</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>forward_dir-&gt;</option>
+<option>forward_dir.cpp</option>
+</select>
+</td>
+<td>forward_dir.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Forward Mode: Example and Test of Multiple Directions</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;limits&gt;
+# include &lt;cppad/cppad.hpp&gt;
+bool forward_dir(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+	size_t j;
+
+	// domain space vector
+	size_t n = 3;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
+	ax[0] = 0.; 
+	ax[1] = 1.;
+	ax[2] = 2.;
+
+	// declare independent variables and starting recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+
+	// range space vector
+	size_t m = 1;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
+	ay[0] = ax[0] * ax[1] * ax[2];
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+
+	// initially, the variable values during taping are stored in f
+	ok &amp;= f.size_order() == 1;
+
+	// zero order Taylor coefficients
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x0(n), y0;
+	for(j = 0; j &lt; n; j++)
+		x0[j] = double(j+1);
+	y0          = f.<a href="forward.xml" target="_top">Forward</a>(0, x0);
+	ok         &amp;= y0.size() == m;
+	double y_0  = 1.*2.*3.; 
+	ok         &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y0[0], y_0, eps, eps);
+
+	// first order Taylor coefficients
+	size_t r = 2, ell;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x1(r*n), y1;
+	for(ell = 0; ell &lt; r; ell++)
+	{	for(j = 0; j &lt; n; j++)
+			x1[ r * j + ell ] = double(j + 1 + ell);
+	}
+	y1  = f.<a href="forward.xml" target="_top">Forward</a>(1, r, x1);
+	ok &amp;= y1.size() == r*m;
+	
+	// secondorder Taylor coefficients
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x2(r*n), y2;
+	for(ell = 0; ell &lt; r; ell++)
+	{	for(j = 0; j &lt; n; j++)
+			x2[ r * j + ell ] = 0.0;
+	}
+	y2  = f.<a href="forward.xml" target="_top">Forward</a>(2, r, x2);
+	ok &amp;= y2.size() == r*m;
+	// 
+	// Y_0 (t)     = F[X_0(t)] 
+	//             =  (1 + 1t)(2 + 2t)(3 + 3t) 
+	double y_1_0   = 1.*2.*3. + 2.*1.*3. + 3.*1.*2.;
+	double y_2_0   = 1.*2.*3. + 2.*1.*3. + 3.*1.*2.;
+	// 
+	// Y_1 (t)     = F[X_1(t)] 
+	//             =  (1 + 2t)(2 + 3t)(3 + 4t) 
+	double y_1_1   = 2.*2.*3. + 3.*1.*3. + 4.*1.*2.;
+	double y_2_1   = 1.*3.*4. + 2.*2.*4. + 3.*2.*3.;
+	//
+	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y1[0] , y_1_0, eps, eps);
+	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y1[1] , y_1_1, eps, eps);
+	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[0] , y_2_0, eps, eps);
+	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[1] , y_2_1, eps, eps);
+	//
+	// check number of orders 
+	ok   &amp;= f.size_order() == 3;
+	//
+	// check number of directions 
+	ok   &amp;= f.size_direction() == 2;
+	//
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/forward_dir.cpp
+
+</body>
+</html>

@@ -4,8 +4,9 @@
 >
 <head>
 <title>Construct an ADFun Object and Stop Recording</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Construct an ADFun Object and Stop Recording"/>
-<meta name="keywords" id="keywords" content=" Adfun construct tape stop recording default constructor sequence copy assignment operator parallel "/>
+<meta name="keywords" id="keywords" content=" construct an adfun object and stop recording Adfun tape syntax purpose x y vectorad default constructor sequence copy assignment operator taylor coefficients sparsity patterns parallel mode example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -182,9 +183,6 @@ and
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-.
-
-<br/>
 <br/>
 <b><big><a name="y" id="y">y</a></big></b>
 <br/>
@@ -251,7 +249,6 @@ returns the value zero (see <a href="seq_property.xml#size_var" target="_top"><s
 
 
 <br/>
-The default constructor 
 The sequence constructor 
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -273,7 +270,7 @@ corresponding to the call
 and stores the corresponding operation sequence in the object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
-It then stores the first order taylor_ coefficients 
+It then stores the zero order Taylor coefficients 
 (corresponding to the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 ) in 
@@ -299,7 +296,7 @@ Stop the tape and storing the operation sequence using
 ).
 </li><li>
 
-Calculating the first order taylor_ coefficients for all 
+Calculate the zero order Taylor coefficients for all 
 the variables in the operation sequence using
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -356,7 +353,6 @@ The
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>g</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-.
 makes a copy of the operation sequence currently stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 
@@ -367,7 +363,12 @@ The object
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  is not affected by this operation and
 can be <code><font color="blue">const</font></code>.
-Any operation sequence or other information in 
+All of information (state) stored in 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ is copied to 
+<code><i><font color="black"><span style='white-space: nowrap'>g</span></font></i></code>
+
+and any information originally in 
 <code><i><font color="black"><span style='white-space: nowrap'>g</span></font></i></code>
  is lost.
 
@@ -386,7 +387,7 @@ copied to
 Hence, directly after this operation
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>g</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_taylor()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_taylor()<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>g</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_order()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_order()<br/>
 </span></font></code>
 <br/>
 <b><a name="Assignment Operator.Sparsity Patterns" id="Assignment Operator.Sparsity Patterns">Sparsity Patterns</a></b>

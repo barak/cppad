@@ -76,6 +76,7 @@ var list_current0 = [
 'ta_create_array.xml#size_out',
 'ta_create_array.xml#array',
 'ta_create_array.xml#Delta',
+'ta_create_array.xml#Alignment',
 'ta_create_array.xml#Example'
 ];
 function choose_across0(item)

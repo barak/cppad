@@ -1,9 +1,9 @@
-/* $Id: for_sparse_jac.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: for_sparse_jac.hpp 3232 2014-04-27 15:38:21Z bradbell $ */
 # ifndef CPPAD_FOR_SPARSE_JAC_INCLUDED
 # define CPPAD_FOR_SPARSE_JAC_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -211,8 +211,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup for_sparse_jac_hpp for_sparse_jac.hpp
-\{
 \file for_sparse_jac.hpp
 Forward mode Jacobian sparsity patterns.
 */
@@ -547,7 +545,7 @@ void ADFun<Base>::ForSparseJacCase(
 		q                , 
 		r                ,
 		s                ,
-		total_num_var_   ,
+		num_var_tape_    ,
 		dep_taddr_       ,
 		ind_taddr_       ,
 		play_            ,
@@ -605,7 +603,7 @@ void ADFun<Base>::ForSparseJacCase(
 		q                , 
 		r                ,
 		s                ,
-		total_num_var_   ,
+		num_var_tape_    ,
 		dep_taddr_       ,
 		ind_taddr_       ,
 		play_            ,
@@ -661,7 +659,7 @@ the forward sparsity pattern for all of the variables on the
 tape is stored in \c for_jac_sparse_pack__.
 In this case 
 \verbatim
-	for_jac_sparse_pack_.n_set() == total_num_var_
+	for_jac_sparse_pack_.n_set() == num_var_tape_
 	for_jac_sparse_pack_.end() == q
 	for_jac_sparse_set_.n_set()  == 0
 	for_jac_sparse_set_.end()  == 0
@@ -673,7 +671,7 @@ the forward sparsity pattern for all of the variables on the
 tape is stored in \c for_jac_sparse_set__.
 In this case 
 \verbatim
-	for_jac_sparse_set_.n_set()   == total_num_var_
+	for_jac_sparse_set_.n_set()   == num_var_tape_
 	for_jac_sparse_set_.end()   == q
 	for_jac_sparse_pack_.n_set()  == 0
 	for_jac_sparse_pack_.end()  == 0
@@ -704,6 +702,5 @@ VectorSet ADFun<Base>::ForSparseJac(
 }
 
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

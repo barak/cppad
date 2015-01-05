@@ -1,9 +1,9 @@
-/* $Id: base_std_math.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: base_std_math.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
 # ifndef CPPAD_BASE_STD_MATH_INCLUDED
 # define CPPAD_BASE_STD_MATH_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -30,6 +30,7 @@ $spell
 	const
 	CppAD
 	namespace
+	erf
 $$
 
 $section Base Type Requirements for Standard Math Functions$$
@@ -88,6 +89,21 @@ must be defined and have the same prototype as $codei%CppAD::%Fun%$$.
 For example, 
 $cref/float/base_float.hpp/Unary Standard Math/$$.
 
+$head erf$$
+$index erf, base require$$
+$index base, erf require$$
+$index require, base erf$$
+If the error function is supported by the compiler,
+$cref/CPPAD_COMPILER_HAS_ERF/erf/Method/CPPAD_COMPILER_HAS_ERF/$$
+is one,
+the type $icode Base$$ must support the syntax
+$codei%
+	%y% = CppAD::erf(%x%)
+%$$
+where $icode x$$ and $icode y$$ have the same prototype as above.
+For example, see
+$cref/base_alloc/base_alloc.hpp/erf/$$.
+
 $head sign$$
 $index sign, base require$$
 $index base, sign require$$
@@ -98,20 +114,13 @@ $codei%
 %$$
 which computes
 $latex \[
-z = \left\{ \begin{array}{ll} 
+y = \left\{ \begin{array}{ll}
 	+1 & {\rm if} \; x > 0 \\
 	 0 & {\rm if} \; x = 0 \\
 	-1 & {\rm if} \; x < 0
 \end{array} \right.
 \] $$
-The arguments $icode x$$ has prototype
-$codei%
-	const %Base%& %x%
-%$$
-and the return value $icode z$$ has prototype
-$codei%
-	%Base% %z%
-%$$
+where $icode x$$ and $icode y$$ have the same prototype as above.
 For example, see
 $cref/base_alloc/base_alloc.hpp/sign/$$.
 Note that, if ordered comparisons are not defined for the type $icode Base$$,
@@ -183,8 +192,6 @@ $end
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 
 /*!
-\defgroup base_std_math_hpp base_std_math.hpp
-\{
 \file base_std_math.hpp
 Defintions that aid meeting Base type requirements for standard math functions.
 */
@@ -199,10 +206,9 @@ where the argument \c x and return value \c y have type \c Type
 using the corresponding function <code>std::Fun</code>.
 */
 # define CPPAD_STANDARD_MATH_UNARY(Type, Fun) \
-	inline Type Fun(const Type& x)           \
+	inline Type Fun(const Type& x)            \
 	{	return std::Fun(x); }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 # endif

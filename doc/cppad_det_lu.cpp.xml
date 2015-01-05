@@ -4,8 +4,9 @@
 >
 <head>
 <title>CppAD Speed: Gradient of Determinant Using Lu Factorization</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Speed: Gradient of Determinant Using Lu Factorization"/>
-<meta name="keywords" id="keywords" content=" link_det_lu cppad speed lu matrix factor "/>
+<meta name="keywords" id="keywords" content=" cppad speed: gradient of determinant using lu factorization link_det_lu speed matrix factor specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -80,7 +81,6 @@ A:active { color : purple }
 <option>cppad_poly.cpp</option>
 <option>cppad_sparse_hessian.cpp</option>
 <option>cppad_sparse_jacobian.cpp</option>
-<option>cppad_print_optimize</option>
 </select>
 </td>
 <td>cppad_det_lu.cpp</td>
@@ -110,7 +110,10 @@ See <a href="link_det_lu.xml" target="_top"><span style='white-space: nowrap'>li
 # include &lt;cppad/vector.hpp&gt;
 # include &lt;cppad/speed/det_by_lu.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &quot;print_optimize.hpp&quot;
+
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize;
 
 bool link_det_lu(
 	size_t                           size     , 
@@ -119,8 +122,7 @@ bool link_det_lu(
 	CppAD::vector&lt;double&gt;           &amp;gradient )
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_atomic )
+	if( global_onetape || global_atomic )
 		return false;
 
 	// -----------------------------------------------------
@@ -140,12 +142,6 @@ bool link_det_lu(
 	CppAD::vector&lt;double&gt; w(1);
 	w[0] = 1.;
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat &gt; 1) &amp; (previous_size != size);
-	previous_size = size;
-
-
 	// ------------------------------------------------------
 	while(repeat--)
 	{	// get the next matrix
@@ -161,11 +157,8 @@ bool link_det_lu(
 
 		// create function object f : A -&gt; detA
 		f.Dependent(A, detA);
-
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_det_lu_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
 
 		// evaluate and return gradient using reverse mode
 		f.<a href="forward.xml" target="_top">Forward</a>(0, matrix);

@@ -1,9 +1,9 @@
-// $Id: cskip_op.hpp 2991 2013-10-22 16:25:15Z bradbell $
+// $Id: cskip_op.hpp 3370 2014-09-28 10:52:36Z bradbell $
 # ifndef CPPAD_CSKIP_OP_INCLUDED
 # define CPPAD_CSKIP_OP_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -15,8 +15,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup cskip_op_hpp cskip_op.hpp
-\{
 \file cskip_op.hpp
 Zero order forward mode set which operations to skip.
 */
@@ -91,18 +89,18 @@ If left is a parameter,
 If right is a parameter,
 <code>parameter [ arg[3] ]</code> is its value.
 
-\param nc_taylor [in]
+\param cap_order [in]
 number of columns in the matrix containing the Taylor coefficients.
 
 \param taylor [in]
 If left is a variable,
-<code>taylor [ arg[2] * nc_taylor + 0 ]</code>
+<code>taylor [ arg[2] * cap_order + 0 ]</code>
 is the zeroth order Taylor coefficient corresponding to left.
 If right is a variable,
-<code>taylor [ arg[3] * nc_taylor + 0 ]</code>
+<code>taylor [ arg[3] * cap_order + 0 ]</code>
 is the zeroth order Taylor coefficient corresponding to right.
 
-\param \cskip_var [in,out]
+\param \cskip_op [in,out]
 is vector specifying which operations are at this point are know to be
 unecessary and can be skipped. 
 This is both an input and an output.
@@ -113,17 +111,18 @@ inline void forward_cskip_op_0(
 	const addr_t*        arg            ,
 	size_t               num_par        ,
 	const Base*          parameter      ,
-	size_t               nc_taylor      ,
+	size_t               cap_order      ,
 	Base*                taylor         ,
-	CppAD::vector<bool>& cskip_var      )
+	bool*                cskip_op       )
 {
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < size_t(CompareNe) );
 	CPPAD_ASSERT_UNKNOWN( arg[1] != 0 );
 
 	Base left, right;
 	if( arg[1] & 1 )
-	{	CPPAD_ASSERT_UNKNOWN( size_t(arg[2]) <= i_z );
-		left = taylor[ arg[2] * nc_taylor + 0 ];
+	{	// If varialbe arg[2] <= i_z, it has already been computed,
+		// but it will be skipped for higher orders.
+		left = taylor[ arg[2] * cap_order + 0 ];
 		CPPAD_ASSERT_UNKNOWN( IdenticalPar(left) );
 	}
 	else
@@ -132,8 +131,9 @@ inline void forward_cskip_op_0(
 		CPPAD_ASSERT_UNKNOWN( IdenticalPar(left) );
 	}
 	if( arg[1] & 2 )
-	{	CPPAD_ASSERT_UNKNOWN( size_t(arg[3]) <= i_z );
-		right = taylor[ arg[3] * nc_taylor + 0 ];
+	{	// If varialbe arg[3] <= i_z, it has already been computed,
+		// but it will be skipped for higher orders.
+		right = taylor[ arg[3] * cap_order + 0 ];
 		CPPAD_ASSERT_UNKNOWN( IdenticalPar(right) );
 	}
 	else
@@ -177,15 +177,14 @@ inline void forward_cskip_op_0(
 	}
 	if( true_case )
 	{	for(size_t i = 0; i < size_t(arg[4]); i++)
-			cskip_var[ arg[6+i] ] = true; 
+			cskip_op[ arg[6+i] ] = true; 
 	}
 	else
 	{	for(size_t i = 0; i < size_t(arg[5]); i++)
-			cskip_var[ arg[6+arg[4]+i] ] = true; 
+			cskip_op[ arg[6+arg[4]+i] ] = true; 
 	}
 	return;
 }
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif
 

@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: test_one.sh 2850 2013-05-24 17:49:50Z bradbell $
+# $Id: test_one.sh 3323 2014-09-12 12:10:54Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -49,7 +49,6 @@ cmd="g++ test_one.cpp $*
 	-o test_one.exe
 	$cxxflags
 	-g
-	-lboost_thread-mt
 	-std=c++11 
 	-I../.. 
 "

@@ -4,8 +4,9 @@
 >
 <head>
 <title>Sparse Jacobian: Easy Driver</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Sparse Jacobian: Easy Driver"/>
-<meta name="keywords" id="keywords" content=" Sparsejacobian jacobian sparse "/>
+<meta name="keywords" id="keywords" content=" sparse jacobian: easy driver Sparsejacobian jacobian syntax purpose f x p row col jac work color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -103,6 +104,7 @@ A:active { color : purple }
 <option>row, col</option>
 <option>jac</option>
 <option>work</option>
+<option>---..color_method</option>
 <option>n_sweep</option>
 <option>VectorBase</option>
 <option>VectorSet</option>
@@ -352,7 +354,27 @@ They specify which rows and columns of
 </mrow></math>
 
  are
-returned and in what order.
+computes and in what order.
+Not all the non-zero entries in 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msup><mi mathvariant='italic'>F</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ need be computed,
+but all the entries specified by 
+<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
+
+must be possibly non-zero in the sparsity pattern.
 We use 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>K</mi>
@@ -400,26 +422,6 @@ for
 <mi mathvariant='italic'>n</mi>
 </mrow></math>
 
-.
-In addition, 
-all of the 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mo stretchy="false">(</mo>
-<mi mathvariant='italic'>row</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>k</mi>
-<mo stretchy="false">]</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>col</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>k</mi>
-<mo stretchy="false">]</mo>
-<mo stretchy="false">)</mo>
-</mrow></math>
-
- pairs must correspond to a true value
-in the sparsity pattern 
-<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
 .
 
 <br/>
@@ -610,6 +612,29 @@ to inform CppAD that this information needs to be recomputed.
 
 <br/>
 <br/>
+<b><a name="work.color_method" id="work.color_method">color_method</a></b>
+<br/>
+The coloring algorithm determines which columns (forward mode)
+or rows (reverse mode) can be computed during the same sweep.
+This field has prototype
+<code><font color='blue'><pre style='display:inline'> 
+	std::string %work%.color_method
+</pre></font></code>
+
+and its default value (after a constructor or <code><font color="blue">clear()</font></code>) 
+is <code><font color="blue">&quot;cppad&quot;</font></code>.
+If <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
+ is specified on the
+<a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
+ line,
+you can set this method to <code><font color="blue">&quot;colpack&quot;</font></code>.
+This value only matters on the first call to <code><font color="blue">sparse_jacobian</font></code>
+after the 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ constructor or a call to <code><font color="blue">clear</font></code>.
+
+<br/>
+<br/>
 <b><big><a name="n_sweep" id="n_sweep">n_sweep</a></big></b>
 <br/>
 The return value 
@@ -624,6 +649,8 @@ If <code><font color="blue">SparseJacobianForward</font></code> (<code><font col
 <code><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i></code>
  is the number of first order forward (reverse) sweeps 
 used to compute the requested Jacobian values. 
+(This is also the number of colors determined by the coloring method
+mentioned above).
 This is proportional to the total work that <code><font color="blue">SparseJacobian</font></code> does, 
 not counting the zero order forward sweep, 
 or the work to combine multiple columns (rows) into a single sweep.

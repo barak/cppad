@@ -1,0 +1,180 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Checking the CppAD Examples and Tests</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Checking the CppAD Examples and Tests"/>
+<meta name="keywords" id="keywords" content=" checking the cppad examples and tests purpose check all subsets "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_cmake_check_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="cppad_testvector.xml" target="_top">Prev</a>
+</td><td><a href="pkgconfig.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Install</option>
+<option>cmake_check</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>library</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Install-&gt;</option>
+<option>download</option>
+<option>cmake</option>
+<option>cmake_check</option>
+<option>pkgconfig</option>
+<option>InstallUnix</option>
+</select>
+</td>
+<td>cmake_check</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>Check All</option>
+<option>Subsets</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Checking the CppAD Examples and Tests</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+After you configure your system with the 
+<a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
+ you
+can run the CppAD example and tests to make sure that 
+CppAD functions properly on your system.
+
+
+<br/>
+<br/>
+<b><big><a name="Check All" id="Check All">Check All</a></big></b>
+<br/>
+In the <code><font color="blue">build</font></code> subdirectory of the 
+<a href="download.xml#Distribution Directory" target="_top"><span style='white-space: nowrap'>distribution&#xA0;directory</span></a>
+
+execute the command
+<code><font color='blue'><pre style='display:inline'> 
+	make check
+</pre></font></code>
+
+This will build and run all of the tests that are support
+by your system and the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command options.
+If you created <code><font color="blue">nmake</font></code> makefiles, you will have
+to use <code><font color="blue">nmake</font></code> instead of <code><font color="blue">make</font></code> in the command above; see
+the <a href="cmake.xml#generator" target="_top"><span style='white-space: nowrap'>generator</span></a>
+ option for the <code><font color="blue">cmake</font></code> command.
+
+<br/>
+<br/>
+<b><big><a name="Subsets" id="Subsets">Subsets</a></big></b>
+<br/>
+It is possible to build and run the following subsets of the 
+examples and tests:
+<table><tr><td align='left'  valign='top'>
+
+Command </td><td align='left'  valign='top'>
+ 
+	Description
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_compare_c</font></code> </td><td align='left'  valign='top'>
+ 
+	<a href="compare_c.xml" target="_top">Compare Speed of C and C++</a> 
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_introduction</font></code>   </td><td align='left'  valign='top'>
+ 
+	the programs in the <a href="introduction.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
+
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_example</font></code>   </td><td align='left'  valign='top'>
+ 
+	most of the <a href="example.xml" target="_top"><span style='white-space: nowrap'>Example</span></a>
+ programs
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_print_for</font></code> </td><td align='left'  valign='top'>
+ 
+	the <a href="printfor.xml" target="_top"><span style='white-space: nowrap'>PrintFor</span></a>
+  command
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_test_more</font></code> </td><td align='left'  valign='top'>
+ 
+	correctness tests that are not examples 
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_multi_thread</font></code> </td><td align='left'  valign='top'>
+ 
+	<a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi_thread</span></a>
+ tests (run correctness only) 
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_speed</font></code> </td><td align='left'  valign='top'>
+ 
+	single threading <a href="speed.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
+ tests (run correctness only)
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">make check_cppad_ipopt</font></code> </td><td align='left'  valign='top'>
+ 
+	the <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
+ speed and correctness tests
+</td></tr><tr><td align='left'  valign='top'>
+
+</td></tr>
+</table>
+
+<hr/>Input File: omh/install/cmake_check.omh
+
+</body>
+</html>

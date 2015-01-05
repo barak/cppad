@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: doxyfile.sh 2859 2013-05-28 06:03:21Z bradbell $
+# $Id: doxyfile.sh 3238 2014-04-28 13:40:39Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -31,16 +31,23 @@ cat << EOF > bin/doxyfile.$$
 ALWAYS_DETAILED_SEC     = YES
 BUILTIN_STL_SUPPORT     = YES
 EXTRACT_ALL             = YES
-EXTRACT_LOCAL_CLASSES   = NO
+EXTRACT_LOCAL_CLASSES   = YES
 EXTRACT_PRIVATE         = YES
 EXTRACT_STATIC          = YES
+EXTRACT_ANON_NSPACES    = YES
 FILE_PATTERNS           =  *.hpp  *.cpp
 FULL_PATH_NAMES         = NO
 GENERATE_LATEX          = NO
 GENERATE_TREEVIEW       = YES
 INHERIT_DOCS            = NO
 INLINE_INHERITED_MEMB   = YES
-INPUT                   = ./cppad  ./cppad/local ./cppad_ipopt/src ./speed/src
+INPUT                   = \
+	./cppad \
+	./cppad/local \
+	./cppad/ipopt \
+	./cppad_ipopt/src \
+	./speed/src
+LATEX_BATCHMODE         = YES
 MULTILINE_CPP_IS_BRIEF  = YES
 OUTPUT_DIRECTORY        = $output_directory
 PROJECT_NAME            = "CppAD: A C++ Algorithmic Differentiation Package"
@@ -52,7 +59,8 @@ SEPARATE_MEMBER_PAGES   = YES
 SHOW_DIRECTORIES        = YES
 SHOW_INCLUDE_FILES      = NO
 SORT_GROUP_NAMES        = YES
-SORT_MEMBER_DOCS        = NO
+SORT_MEMBER_DOCS        = YES
+SORT_BRIEF_DOCS         = YES
 SOURCE_BROWSER          = YES
 STRIP_CODE_COMMENTS     = NO
 SUBGROUPING             = NO
@@ -62,6 +70,7 @@ WARN_LOGFILE            = $error_file
 WARN_NO_PARAMDOC        = YES
 EOF
 sed \
+	-e 's/\t/ /g' \
 	-e 's/^/s|^\\(/' \
 	-e 's/ *=/ *=\\).*|\\1/' \
 	-e 's/$/|/' \

@@ -4,8 +4,9 @@
 >
 <head>
 <title>AD Vectors that Record Index Operations</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Vectors that Record Index Operations"/>
-<meta name="keywords" id="keywords" content=" Vecad vector Ad index record tape Vecad&lt;base&gt;::reference reference Vecad&lt;base&gt; "/>
+<meta name="keywords" id="keywords" content=" Vecad vector Ad index record tape ad vectors that operations syntax purpose alternatives vecad&lt;base&gt;::reference Vecad&lt;base&gt;::reference reference Vecad&lt;base&gt; exceptions constructor v n size size_t indexing i b x r example speed and memory "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -128,7 +129,6 @@ A:active { color : purple }
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
 
 
-
 <br/>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -143,7 +143,7 @@ If either
 the indexing operation
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>]<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>]<br/>
 </span></font></code>
 is recorded in the corresponding
 AD of 
@@ -202,7 +202,7 @@ way to represent these vectors.
 
 <br/>
 The result 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  has type
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -219,7 +219,7 @@ with some notable exceptions:
 
 <ol type="1"><li>
 The object 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  cannot be used with the
 <a href="value.xml" target="_top"><span style='white-space: nowrap'>Value</span></a>
  function to compute the corresponding 
@@ -227,11 +227,13 @@ The object
  value.
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
- is not a <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variable</span></a>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>i</span></font></i></code>
+ are not <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variables</span></a>
 
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;v[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;v[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]<br/>
 </span></font></code>
 can be used to compute the corresponding 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -240,7 +242,7 @@ can be used to compute the corresponding
 </li><li>
 
 The object 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  cannot be used
 with the <a href="arithmetic.xml" target="_top"><span style='white-space: nowrap'>computed&#xA0;assignments&#xA0;operators</span></a>
  
@@ -260,7 +262,7 @@ no matter what the types of
 </li><li>
 
 Assignment to 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  returns a <code><font color="blue">void</font></code>.
 For example, the following syntax is not valid:
 
@@ -283,7 +285,7 @@ The <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondEx
 For example, the following syntax is not valid:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CondExpGt(</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CondExpGt(</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>],&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 no matter what the types of 
 <code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
@@ -299,10 +301,14 @@ The <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Paramet
  functions cannot be used with
 
 <code><font color="blue"><span style='white-space: nowrap'>VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::reference</span></font></code>
- arguments
-(use the entire 
+ arguments like 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+,
+use the entire 
 <code><font color="blue"><span style='white-space: nowrap'>VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- vector instead).
+ vector instead; i.e. 
+<code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
+.
 
 </li><li>
 
@@ -429,7 +435,7 @@ The result
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-and is a reference to the <i>i</i>-th element in the vector 
+and is a reference to the <code><i>i</i></code>-th element in the vector 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
 .
 It can be used to change the element value;
@@ -490,7 +496,7 @@ the number of elements in
 <b><a name="AD Indexing.r" id="AD Indexing.r">r</a></b>
 <br/>
 The result 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -584,10 +590,10 @@ using either the <code><font color="blue">Ldp</font></code> or <code><font color
 The effect of this can be seen by executing the following steps:
 
 <ol type="1"><li>
-In the file <code><font color="blue">cppad/local/forward_sweep.h</font></code>,
-change the definition of <code><font color="blue">CPPAD_FORWARD_SWEEP_TRACE</font></code> to
+In the file <code><font color="blue">cppad/local/forward1sweep.h</font></code>,
+change the definition of <code><font color="blue">CPPAD_FORWARD1SWEEP_TRACE</font></code> to
 <code><font color='blue'><pre style='display:inline'> 
-	# define CPPAD_FORWARD_SWEEP_TRACE 1
+	# define CPPAD_FORWARD1SWEEP_TRACE 1
 </pre></font></code>
 
 </li><li>

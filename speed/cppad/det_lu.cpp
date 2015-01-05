@@ -1,6 +1,6 @@
-/* $Id: det_lu.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: det_lu.cpp 3311 2014-05-28 16:21:08Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -12,7 +12,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin cppad_det_lu.cpp$$
 $spell
-	retape
+	onetape
 	bool
 	CppAD
 	vector Vector
@@ -47,7 +47,10 @@ $codep */
 # include <cppad/vector.hpp>
 # include <cppad/speed/det_by_lu.hpp>
 # include <cppad/speed/uniform_01.hpp>
-# include "print_optimize.hpp"
+
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize;
 
 bool link_det_lu(
 	size_t                           size     , 
@@ -56,8 +59,7 @@ bool link_det_lu(
 	CppAD::vector<double>           &gradient )
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_atomic )
+	if( global_onetape || global_atomic )
 		return false;
 
 	// -----------------------------------------------------
@@ -77,12 +79,6 @@ bool link_det_lu(
 	CppAD::vector<double> w(1);
 	w[0] = 1.;
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat > 1) & (previous_size != size);
-	previous_size = size;
-
-
 	// ------------------------------------------------------
 	while(repeat--)
 	{	// get the next matrix
@@ -98,11 +94,8 @@ bool link_det_lu(
 
 		// create function object f : A -> detA
 		f.Dependent(A, detA);
-
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_det_lu_optimize", size);
-			print = false;
-		}
+			f.optimize();
 
 		// evaluate and return gradient using reverse mode
 		f.Forward(0, matrix);

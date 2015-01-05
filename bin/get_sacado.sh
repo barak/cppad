@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: get_sacado.sh 2931 2013-10-12 13:13:45Z bradbell $
+# $Id: get_sacado.sh 3407 2014-11-27 13:14:56Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -64,8 +64,8 @@ echo_eval() {
 }
 # -----------------------------------------------------------------------------
 echo 'Download sacado to build/external and install it to build/prefix'
-version="trilinos-10.8.3-Source"
-web_page="http://trilinos.sandia.gov/download/files"
+version="trilinos-11.12.1-Source"
+web_page="http://trilinos.org/oldsite/download/files"
 prefix=`pwd`'/build/prefix'
 # -----------------------------------------------------------------------------
 # determine which version of cmake to use

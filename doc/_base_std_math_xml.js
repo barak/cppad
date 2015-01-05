@@ -45,6 +45,7 @@ var list_current0 = [
 'base_std_math.xml#Purpose',
 'base_std_math.xml#Unary Standard Math',
 'base_std_math.xml#CPPAD_STANDARD_MATH_UNARY',
+'base_std_math.xml#erf',
 'base_std_math.xml#sign',
 'base_std_math.xml#pow',
 'base_std_math.xml#isnan',

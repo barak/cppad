@@ -4,8 +4,9 @@
 >
 <head>
 <title>CppAD Examples and Tests</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Examples and Tests"/>
-<meta name="keywords" id="keywords" content=" example Cppad test "/>
+<meta name="keywords" id="keywords" content=" cppad examples and tests example Cppad test running "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -90,7 +91,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Running Tests" id="Running Tests">Running Tests</a></big></b>
 <br/>
-To build this program and run its correctness tests see <a href="cppad_test.xml" target="_top"><span style='white-space: nowrap'>cppad_test</span></a>
+To build this program and run its correctness tests see <a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>cmake_check</span></a>
 .
 
 <code><font color="blue">
@@ -126,11 +127,12 @@ extern bool Atan2(void);
 extern bool base_require(void);
 extern bool BenderQuad(void);
 extern bool BoolFun(void);
-extern bool capacity_taylor(void);
+extern bool capacity_order(void);
 extern bool change_const(void);
 extern bool check_for_nan(void);
 extern bool CheckNumericType(void);
 extern bool CheckSimpleVector(void);
+extern bool colpack(void);
 extern bool Compare(void);
 extern bool CompareChange(void);
 extern bool complex_poly(void);
@@ -151,7 +153,8 @@ extern bool ForOne(void);
 extern bool ForTwo(void);
 extern bool ForSparseJac(void);
 extern bool Forward(void);
-extern bool forward_mul(void);
+extern bool forward_dir(void);
+extern bool forward_order(void);
 extern bool fun_assign(void);
 extern bool FunCheck(void);
 extern bool HesLagrangian(void);
@@ -285,7 +288,7 @@ int main(void)
 	ok &amp;= Run( Atan2,             &quot;Atan2&quot;            );
 	ok &amp;= Run( BenderQuad,        &quot;BenderQuad&quot;       );
 	ok &amp;= Run( BoolFun,           &quot;BoolFun&quot;          );
-	ok &amp;= Run( capacity_taylor,   &quot;capacity_taylor&quot;  );
+	ok &amp;= Run( capacity_order,    &quot;capacity_order&quot;   );
 	ok &amp;= Run( change_const,      &quot;change_const&quot;     );
 	ok &amp;= Run( check_for_nan,     &quot;check_for_nan&quot;    );
 	ok &amp;= Run( CheckNumericType,  &quot;CheckNumericType&quot; );
@@ -307,7 +310,8 @@ int main(void)
 	ok &amp;= Run( ForOne,            &quot;ForOne&quot;           );
 	ok &amp;= Run( ForTwo,            &quot;ForTwo&quot;           );
 	ok &amp;= Run( Forward,           &quot;Forward&quot;          ); 
-	ok &amp;= Run( forward_mul,       &quot;forward_mul&quot;      ); 
+	ok &amp;= Run( forward_dir,       &quot;forward_dir&quot;      ); 
+	ok &amp;= Run( forward_order,     &quot;forward_order&quot;    ); 
 	ok &amp;= Run( ForSparseJac,      &quot;ForSparseJac&quot;     );
 	ok &amp;= Run( fun_assign,        &quot;fun_assign&quot;       );
 	ok &amp;= Run( FunCheck,          &quot;FunCheck&quot;         );
@@ -393,6 +397,9 @@ int main(void)
 # ifdef CPPAD_ADOLC_EXAMPLES
 	ok &amp;= Run( mul_level_adolc,      &quot;mul_level_adolc&quot;     );
 	ok &amp;= Run( mul_level_adolc_ode,  &quot;mul_level_adolc_ode&quot; );
+# endif
+# ifdef CPPAD_COLPACK_EXAMPLES
+	ok &amp;= Run( colpack,           &quot;colpack&quot;          );
 # endif
 # ifdef CPPAD_EIGEN_EXAMPLES
 	ok &amp;= Run( eigen_array,       &quot;eigen_array&quot;      );

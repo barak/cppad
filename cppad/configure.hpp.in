@@ -1,9 +1,9 @@
-/* $Id: configure.hpp.in 3064 2013-12-28 18:01:30Z bradbell $ */
+// $Id: configure.hpp.in 3495 2014-12-24 01:16:15Z bradbell $
 # ifndef CPPAD_CONFIGURE_INCLUDED
 # define CPPAD_CONFIGURE_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -34,17 +34,27 @@ $end
 */
 
 /*!
-\defgroup configure_hpp configure.hpp
-\{
  \file configure.hpp
 Replacement for config.h so that all preprocessor symbols begin with CPPAD_ 
 */
+
+/*!
+\def CPPAD_HAS_RVALUE
+Does this compiler cupport c++11 rvalues; i.e., values with move semantics
+*/
+# define CPPAD_HAS_RVALUE @cppad_has_rvalue@
 
 /*!
 \def CPPAD_PACKAGE_STRING
 cppad-yyyymmdd as a C string where yyyy is year, mm is month, and dd is day.
 */
 # define CPPAD_PACKAGE_STRING "cppad-@cppad_version@"
+
+/*!
+def CPPAD_HAS_COLPACK
+Was a colpack_prefix specified on the cmake command line.
+*/
+# define CPPAD_HAS_COLPACK @cppad_has_colpack@
 
 /*!
 def CPPAD_HAS_NULLPTR
@@ -113,11 +123,25 @@ Otherwise, this smybol should be zero.
 # define CPPAD_HAS_GETTIMEOFDAY @cppad_has_gettimeofday@
 
 /*!
-\def CPPAD_SIZE_T_SAME_UNSIGNED_INT 
-If this symbol is one, the type size_t is the same as the type unsigned int,
-otherwise this symbol is zero.
+\def CPPAD_SIZE_T_NOT_UNSIGNED_INT 
+If this symbol is zero, the type size_t is the same as the type unsigned int,
+otherwise this symbol is one.
 */
-# define CPPAD_SIZE_T_SAME_UNSIGNED_INT @cppad_size_t_same_unsigned_int@
+# define CPPAD_SIZE_T_NOT_UNSIGNED_INT @cppad_size_t_not_unsigned_int@
+
+/*!
+\def CPPAD_HAS_CSTDINT_8_TO_64 
+If this symbol is one, the types uint_8, uint_16, uint_32, and uint_64
+are defined.  otherwise this symbol is zero.
+*/
+# define CPPAD_HAS_CSTDINT_8_TO_64 @cppad_has_cstdint_8_to_64@
+
+/*!
+\def CPPAD_COMPILER_HAS_ERF
+If this symbol is one, the function std::erf(double) is defined by the
+C++ compiler, otherwise the symbol is zero.
+*/
+# define CPPAD_COMPILER_HAS_ERF @cppad_compiler_has_erf@
 
 /*!
 \def CPPAD_TAPE_ADDR_TYPE
@@ -159,5 +183,4 @@ header files.  If it is not yet defined,
 # define CPPAD_MAX_NUM_THREADS @cppad_max_num_threads@
 # endif
 
-/*! \} */
 # endif

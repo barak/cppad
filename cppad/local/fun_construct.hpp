@@ -1,4 +1,4 @@
-/* $Id: fun_construct.hpp 3098 2014-02-18 03:19:39Z bradbell $ */
+/* $Id: fun_construct.hpp 3301 2014-05-24 05:20:21Z bradbell $ */
 # ifndef CPPAD_FUN_CONSTRUCT_INCLUDED
 # define CPPAD_FUN_CONSTRUCT_INCLUDED
 
@@ -19,7 +19,7 @@ $spell
 	num
 	Jac
 	bool
-	taylor_
+	taylor
 	var
 	ADvector
 	const
@@ -71,7 +71,7 @@ $codei%
 and 
 $codei%
 	ADFun<%Base%> %f%(%x%, %y%)
-%$$.
+%$$
 
 $head y$$
 If the argument $icode y$$ is present, it has prototype
@@ -107,7 +107,6 @@ $head Sequence Constructor$$
 $index sequence, ADFun constructor$$
 $index ADFun, sequence constructor$$
 $index constructor, ADFun sequence$$
-The default constructor 
 The sequence constructor 
 $codei%
 	ADFun<%Base%> %f%(%x%, %y%)
@@ -119,7 +118,7 @@ $codei%
 	Independent(%x%)
 %$$
 and stores the corresponding operation sequence in the object $icode f$$.
-It then stores the first order taylor_ coefficients 
+It then stores the zero order Taylor coefficients 
 (corresponding to the value of $icode x$$) in $icode f$$.
 This is equivalent to the following steps using the default constructor:
 
@@ -135,7 +134,7 @@ $codei%
 %$$
 (see $cref Dependent$$).
 $lnext
-Calculating the first order taylor_ coefficients for all 
+Calculate the zero order Taylor coefficients for all 
 the variables in the operation sequence using
 $codei%
 	%f%.Forward(%p%, %x_p%)
@@ -165,12 +164,13 @@ $index operator, ADFun assignment$$
 The $codei%ADFun<%Base%>%$$ assignment operation
 $codei%
 	%g% = %f%
-%$$.
+%$$
 makes a copy of the operation sequence currently stored in $icode f$$
 in the object $icode g$$.
 The object $icode f$$ is not affected by this operation and
 can be $code const$$.
-Any operation sequence or other information in $icode g$$ is lost.
+All of information (state) stored in $icode f$$ is copied to $icode g$$
+and any information originally in $icode g$$ is lost.
 
 $subhead Taylor Coefficients$$
 The Taylor coefficient information currently stored in $icode f$$ 
@@ -178,7 +178,7 @@ The Taylor coefficient information currently stored in $icode f$$
 copied to $icode g$$.
 Hence, directly after this operation
 $codei%
-	%g%.size_taylor() == %f%.size_taylor()
+	%g%.size_order() == %f%.size_order()
 %$$
 
 $subhead Sparsity Patterns$$
@@ -239,8 +239,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup fun_construct_hpp fun_construct.hpp
-\{
 \file fun_construct.hpp
 ADFun function constructors and assignment operator.
 */
@@ -264,7 +262,7 @@ i.e., operation sequences that were recorded using the type \c AD<Base>.
 template <typename Base>
 ADFun<Base>::ADFun(void) : 
 check_for_nan_(true) ,
-total_num_var_(0) 
+num_var_tape_(0) 
 { }
 
 /*!
@@ -290,53 +288,43 @@ template <typename Base>
 void ADFun<Base>::operator=(const ADFun<Base>& f)
 {	size_t m = f.Range();
 	size_t n = f.Domain();
+	size_t i;
 
-	// go through member variables in order
-	// (see ad_fun.hpp for meaning of each variable)
-	check_for_nan_             = true;
-	compare_change_            = 0;
-
-	taylor_.erase();
-	taylor_per_var_            = 0;
-	taylor_col_dim_            = 0;
-
-	total_num_var_             = f.total_num_var_;
+	// go through member variables in ad_fun.hpp order
+	// 
+	// size_t objects
+	check_for_nan_             = f.check_for_nan_;
+	compare_change_            = f.compare_change_;
+	num_order_taylor_          = f.num_order_taylor_;
+	cap_order_taylor_          = f.cap_order_taylor_;
+	num_direction_taylor_      = f.num_direction_taylor_;
+	num_var_tape_              = f.num_var_tape_;
+	//
+	// CppAD::vector objects
 	ind_taddr_.resize(n);
 	ind_taddr_                 = f.ind_taddr_;
 	dep_taddr_.resize(m);
 	dep_taddr_                 = f.dep_taddr_;
 	dep_parameter_.resize(m);
 	dep_parameter_             = f.dep_parameter_;
+	//
+	// pod_vector objects
+	taylor_                    = f.taylor_;
+	cskip_op_                  = f.cskip_op_;
+	load_op_                   = f.load_op_;
+	//
+	// player
 	play_                      = f.play_;
+	//
+	// sparse_pack
 	for_jac_sparse_pack_.resize(0, 0);
-	for_jac_sparse_set_.resize(0, 0);
-
-	// allocate and copy the Taylor coefficients
-	taylor_per_var_     = f.taylor_per_var_;
-	taylor_col_dim_     = f.taylor_col_dim_;
-	size_t length       = total_num_var_ * taylor_col_dim_;
-	if( length > 0 )
-		taylor_.extend(length);
-	size_t i, j;
-	for(i = 0; i < total_num_var_; i++)
-	{	for(j = 0; j < taylor_per_var_; j++)
-		{	taylor_[ i * taylor_col_dim_ + j ] =
-				f.taylor_[ i * taylor_col_dim_ + j ];
-		}
-	}
-
-	// allocate and copy the conditional skip information
-	cskip_op_.clear();
-	cskip_op_ = f.cskip_op_;
-
-	// allocate and copy the forward sparsity information
 	size_t n_set = f.for_jac_sparse_pack_.n_set();
 	size_t end   = f.for_jac_sparse_pack_.end();
 	if( n_set > 0 )
-	{	CPPAD_ASSERT_UNKNOWN( n_set == total_num_var_ );
+	{	CPPAD_ASSERT_UNKNOWN( n_set == num_var_tape_  );
 		CPPAD_ASSERT_UNKNOWN( f.for_jac_sparse_set_.n_set() == 0 );
 		for_jac_sparse_pack_.resize(n_set, end);
-		for(i = 0; i < total_num_var_ ; i++)
+		for(i = 0; i < num_var_tape_  ; i++)
 		{	for_jac_sparse_pack_.assignment(
 				i                       ,
 				i                       ,
@@ -344,13 +332,16 @@ void ADFun<Base>::operator=(const ADFun<Base>& f)
 			);
 		}
 	}
+	//
+	// sparse_set
+	for_jac_sparse_set_.resize(0, 0);
 	n_set = f.for_jac_sparse_set_.n_set();
 	end   = f.for_jac_sparse_set_.end();
 	if( n_set > 0 )
-	{	CPPAD_ASSERT_UNKNOWN( n_set == total_num_var_ );
+	{	CPPAD_ASSERT_UNKNOWN( n_set == num_var_tape_  );
 		CPPAD_ASSERT_UNKNOWN( f.for_jac_sparse_pack_.n_set() == 0 );
 		for_jac_sparse_set_.resize(n_set, end);
-		for(i = 0; i < total_num_var_; i++)
+		for(i = 0; i < num_var_tape_; i++)
 		{	for_jac_sparse_set_.assignment(
 				i                       ,
 				i                       ,
@@ -358,7 +349,6 @@ void ADFun<Base>::operator=(const ADFun<Base>& f)
 			);
 		}
 	}
-
 }
 
 /*!
@@ -397,9 +387,7 @@ are stored in this ADFun object.
 */
 template <typename Base>
 template <typename VectorAD>
-ADFun<Base>::ADFun(const VectorAD &x, const VectorAD &y) : 
-check_for_nan_(true) ,
-total_num_var_(0)
+ADFun<Base>::ADFun(const VectorAD &x, const VectorAD &y)
 {
 	CPPAD_ASSERT_KNOWN(
 		x.size() > 0,
@@ -439,10 +427,17 @@ total_num_var_(0)
 	// stop the tape and store the operation sequence
 	Dependent(tape, y);
 
+	// ad_fun.hpp member values not set by dependent
+	check_for_nan_ = true;
+
 	// allocate memory for one zero order taylor_ coefficient
-	taylor_per_var_  = 1;
-	taylor_col_dim_  = 1;
-	taylor_.extend(total_num_var_);
+	CPPAD_ASSERT_UNKNOWN( num_order_taylor_ == 0 );
+	CPPAD_ASSERT_UNKNOWN( num_direction_taylor_ == 0 );
+	size_t c = 1;
+	size_t r = 1;
+	capacity_order(c, r);
+	CPPAD_ASSERT_UNKNOWN( cap_order_taylor_     == c );
+	CPPAD_ASSERT_UNKNOWN( num_direction_taylor_ == r );
 
 	// set zero order coefficients corresponding to indpendent variables
 	CPPAD_ASSERT_UNKNOWN( n == ind_taddr_.size() );
@@ -453,19 +448,16 @@ total_num_var_(0)
 	}
 
 	// use independent variable values to fill in values for others
-# if CPPAD_USE_FORWARD0SWEEP
+	CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
+	CPPAD_ASSERT_UNKNOWN( load_op_.size()  == play_.num_load_op_rec() );
 	compare_change_ = forward0sweep(std::cout, false,
-		n, total_num_var_, &play_, taylor_col_dim_, taylor_.data(),
-		cskip_op_
+		n, num_var_tape_, &play_, cap_order_taylor_, taylor_.data(),
+		cskip_op_.data(), load_op_
 	);
-# else
-	size_t p = 0;
-	compare_change_ = forward_sweep(std::cout, false,
-		p, p, n, total_num_var_, &play_, taylor_col_dim_, taylor_.data(),
-		cskip_op_
-	);
-# endif
 	CPPAD_ASSERT_UNKNOWN( compare_change_ == 0 );
+
+	// now set the number of orders stored
+	num_order_taylor_ = 1;
 
 # ifndef NDEBUG
 	// on MS Visual Studio 2012, CppAD required in front of isnan ?
@@ -491,6 +483,5 @@ total_num_var_(0)
 # endif
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

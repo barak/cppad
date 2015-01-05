@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 2572 2012-11-15 19:43:06Z bradbell $
+# $Id: CMakeLists.txt 3141 2014-03-02 23:24:45Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -11,6 +11,7 @@
 # -----------------------------------------------------------------------------
 # Build the speed/adolc directory tests 
 # Inherit environment from ../CMakeList.txt
+# CMAKE_BUILD_TYPE determined by parent directory
 
 # assert adolc_prefix is defined
 IF ( NOT adolc_prefix )
@@ -19,14 +20,11 @@ IF ( NOT adolc_prefix )
 	)
 ENDIF ( NOT adolc_prefix )
 
-# Specifies build type for this directory. Possible values are 
-# empty, Debug, Release, RelWithDebInfo and MinSizeRel
-SET(CMAKE_BUILD_TYPE RELEASE)
 
 # Adds flags to the compiler command line for sources in the current directory 
 # and below. This command can be used to add any flags, but it was originally 
 # intended to add preprocessor definitions. 
-ADD_DEFINITIONS("-DSPEED_ADOLC")
+ADD_DEFINITIONS("-DCPPAD_ADOLC_SPEED")
 
 # Local include directories to search (not in package_prefix/includdir)
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
@@ -48,10 +46,12 @@ ADD_EXECUTABLE(speed_adolc EXCLUDE_FROM_ALL ../main.cpp alloc_mat.cpp
 add_cppad_cxx_flags( speed_adolc )
 
 # List of libraries to be linked into the specified target
-TARGET_LINK_LIBRARIES(speed_adolc speed_src adolc )
+TARGET_LINK_LIBRARIES(speed_adolc speed_src adolc ${colpack_libs} )
 
 # Add the check_speed_adolc target
-ADD_CUSTOM_TARGET(check_speed_adolc 
-	speed_adolc correct 54321
-	DEPENDS speed_adolc speed_src
+ADD_CUSTOM_TARGET(
+	check_speed_adolc 
+	speed_adolc correct 54321 colpack
+	DEPENDS 
+	speed_adolc speed_src
 )

@@ -1,6 +1,6 @@
-/* $Id: test_more.cpp 2859 2013-05-28 06:03:21Z bradbell $ */
+/* $Id: test_more.cpp 3301 2014-05-24 05:20:21Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -26,7 +26,7 @@ extern bool alloc_openmp(void);
 extern bool Asin(void);
 extern bool assign(void);
 extern bool Atan(void);
-extern bool Atan2(void);
+extern bool atan2(void);
 extern bool base_adolc(void);
 extern bool base_alloc_test(void);
 extern bool check_simple_vector(void);
@@ -48,7 +48,8 @@ extern bool Exp(void);
 extern bool ForHess(void);
 extern bool for_sparse_jac(void);
 extern bool Forward(void);
-extern bool forward_mul(void);
+extern bool forward_dir(void);
+extern bool forward_order(void);
 extern bool FromBase(void);
 extern bool FunCheck(void);
 extern bool ipopt_solve(void);
@@ -138,7 +139,7 @@ int main(void)
 	ok &= Run( Asin,            "Asin"           );
 	ok &= Run( assign,          "assign"         );
 	ok &= Run( Atan,            "Atan"           );
-	ok &= Run( Atan2,           "Atan2"          );
+	ok &= Run( atan2,           "atan2"          );
 	ok &= Run( check_simple_vector, "check_simple_vector" );
 	ok &= Run( checkpoint,      "checkpoint"     );
 	ok &= Run( Compare,         "Compare"        );
@@ -157,7 +158,8 @@ int main(void)
 	ok &= Run( ForHess,         "ForHess"        );
 	ok &= Run( for_sparse_jac,  "for_sparse_jac" );
 	ok &= Run( Forward,         "Forward"        );
-	ok &= Run( forward_mul,     "forward_mul"    );
+	ok &= Run( forward_dir,     "forward_dir"    );
+	ok &= Run( forward_order,   "forward_order"  );
 	ok &= Run( FromBase,        "FromBase"       );
 	ok &= Run( FunCheck,        "FunCheck"       );
 	ok &= Run( jacobian,        "jacobian"       );

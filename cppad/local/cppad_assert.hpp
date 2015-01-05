@@ -1,9 +1,9 @@
-/* $Id: cppad_assert.hpp 2625 2012-12-23 14:34:12Z bradbell $ */
+/* $Id: cppad_assert.hpp 3320 2014-09-11 23:06:21Z bradbell $ */
 # ifndef CPPAD_CPPAD_ASSERT_INCLUDED
 # define CPPAD_CPPAD_ASSERT_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -14,8 +14,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
 /*!
-\defgroup cppad_assert_hpp cppad_assert.hpp
-\{
 \file cppad_assert.hpp
 Define the CppAD error checking macros (all of which begin with CPPAD_ASSERT_)
 */
@@ -199,5 +197,19 @@ execution is terminated and the source code line number is reported.
 	}
 # endif
 
-/*! \} */
+/*!
+\def CPPAD_ASSERT_ARG_BEFORE_RESULT
+Check that operator arguments come before result.
+
+If \c NDEBUG is defined, this macro has no effect,
+otherwise it calls the function assert_arg_before_result.
+*/
+# ifdef NDEBUG
+# define CPPAD_ASSERT_ARG_BEFORE_RESULT(op, arg, result)
+# else
+# define CPPAD_ASSERT_ARG_BEFORE_RESULT(op, arg, result) \
+	assert_arg_before_result(op, arg, result)
+	
+# endif
+
 # endif

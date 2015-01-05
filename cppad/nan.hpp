@@ -1,4 +1,4 @@
-/* $Id: nan.hpp 3098 2014-02-18 03:19:39Z bradbell $ */
+/* $Id: nan.hpp 3097 2014-02-18 02:48:28Z bradbell $ */
 # ifndef CPPAD_NAN_INCLUDED
 # define CPPAD_NAN_INCLUDED
 

@@ -1,9 +1,9 @@
-/* $Id: thread_alloc.hpp 2939 2013-10-14 11:06:18Z bradbell $ */
+/* $Id: thread_alloc.hpp 3408 2014-11-27 15:17:20Z bradbell $ */
 # ifndef CPPAD_THREAD_ALLOC_INCLUDED
 # define CPPAD_THREAD_ALLOC_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -29,8 +29,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # include <cppad/local/define.hpp>
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup thread_alloc_hpp thread_alloc.hpp
-\{
 \file thread_alloc.hpp
 File used to define the CppAD multi-threading allocaor class
 */
@@ -115,7 +113,7 @@ private:
 		size_t             extra_;
 		/// an index that uniquely idenfifies both thread and capacity
 		size_t             tc_index_;
-		/// pointer to the next memory allocation with the the same tc_index_
+		/// pointer to the next memory allocation with the same tc_index_
 		void*              next_;
 		// -----------------------------------------------------------------
 		/// make default constructor private. It is only used by constructor
@@ -789,6 +787,12 @@ The current $icode min_bytes$$ is between
 the previous $icode min_bytes$$ and previous $icode cap_bytes$$.
 $lend
 
+$head Alignment$$
+We call a memory allocation aligned if the address is a multiple
+of the number of bytes in a $code size_t$$ value.
+If the system $code new$$ allocator is aligned, then $icode v_ptr$$
+pointer is also aligned.
+
 $head Example$$
 $cref thread_alloc.cpp$$
 
@@ -1373,6 +1377,12 @@ The $cref/available/ta_available/$$ memory will decrease by $icode delta$$,
 if a previous allocation with $icode size_min$$ between its current value
 and $icode size_out$$ is available. 
 
+$head Alignment$$
+We call a memory allocation aligned if the address is a multiple
+of the number of bytes in a $code size_t$$ value.
+If the system $code new$$ allocator is aligned, then $icode array$$
+pointer is also aligned.
+
 $head Example$$
 $cref thread_alloc.cpp$$
 
@@ -1568,7 +1578,6 @@ $end
 };
 
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 // preprocessor symbols local to this file

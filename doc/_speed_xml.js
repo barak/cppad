@@ -33,7 +33,6 @@ var list_down0 = [
 ];
 var list_current0 = [
 'speed.xml#Purpose',
-'speed.xml#Windows',
 'speed.xml#Contents'
 ];
 function choose_across0(item)

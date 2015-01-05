@@ -1,9 +1,9 @@
-/* $Id: opt_val_hes.hpp 2936 2013-10-13 11:44:13Z bradbell $ */
+/* $Id: opt_val_hes.hpp 3232 2014-04-27 15:38:21Z bradbell $ */
 # ifndef CPPAD_OPT_VAL_HES_INCLUDED
 # define CPPAD_OPT_VAL_HES_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -240,8 +240,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup opt_val_hes_hpp opt_val_hes.hpp
-\{
 \file opt_val_hes.hpp
 \brief Computing Jabobians and Hessians of Optimal Values
 */
@@ -526,7 +524,6 @@ int opt_val_hes(
 	return signdet;
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 
 # endif

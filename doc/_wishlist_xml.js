@@ -46,7 +46,7 @@ var list_current0 = [
 'wishlist.xml#Forward Mode Recomputation',
 'wishlist.xml#Iterator Interface',
 'wishlist.xml#Library',
-'wishlist.xml#Multiple Argument Forward',
+'wishlist.xml#Multiple Directions',
 'wishlist.xml#Numeric Limits',
 'wishlist.xml#Operation Sequence',
 'wishlist.xml#Optimization',

@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: adolc_usrparms.sh 2506 2012-10-24 19:36:49Z bradbell $
+# $Id: adolc_usrparms.sh 3217 2014-03-19 05:09:01Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -11,7 +11,6 @@
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
 #! /bin/bash 
-# $Id: adolc_usrparms.sh 2506 2012-10-24 19:36:49Z bradbell $
 #
 message="
 usage: adolc_usrparms.sh <dir> 

@@ -1,4 +1,4 @@
-/* $Id: base_alloc.hpp 2936 2013-10-13 11:44:13Z bradbell $ */
+/* $Id: base_alloc.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
 # ifndef CPPAD_BASE_ALLOC_INCLUDED
 # define CPPAD_BASE_ALLOC_INCLUDED
 /* --------------------------------------------------------------------------
@@ -39,6 +39,8 @@ $spell
 	asin
 	std
 	fabs
+	erf
+	endif
 $$
 $section Example AD<Base> Where Base Constructor Allocates Memory$$
 
@@ -296,6 +298,16 @@ namespace CppAD {
 	inline base_alloc abs(const base_alloc& x)
 	{	return std::fabs(*x.ptrdbl_); }
 }
+/* $$
+
+$head erf$$
+The following defines the $code CppAD::erf$$ function that
+is required th use $code AD<Base_alloc>$$:
+$codep */
+# if CPPAD_COMPILER_HAS_ERF
+	inline base_alloc erf(const base_alloc& x)
+	{	return std::erf(*x.ptrdbl_); }
+# endif
 /* $$
 
 $head sign$$

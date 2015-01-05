@@ -39,6 +39,7 @@ var list_down1 = [
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
 'atomic_tangent.cpp.xml',
+'atomic_hes_sparse.cpp.xml',
 'atomic_mat_mul.cpp.xml'
 ];
 var list_current0 = [

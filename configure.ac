@@ -1,4 +1,4 @@
-dnl $Id: configure.ac 3099 2014-02-18 03:29:44Z bradbell $
+dnl $Id: configure.ac 3509 2014-12-27 20:38:37Z bradbell $
 dnl ---------------------------------------------------------------------------
 dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 dnl
@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT(cppad, 20140000.3, cppad@list.coin-or.org)
+AC_INIT([cppad], [20150000.0], [cppad@list.coin-or.org])
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -32,11 +32,11 @@ dnl Check for programs
 AC_CHECK_PROG(have_pkg_config, [pkg-config], [yes], [no])
 AM_CONDITIONAL(CppAD_PKG_CONFIG, test "$have_pkg_config" = "yes")
 
-AC_CHECK_PROG(have_ar, [ar], [yes], [no])
-AM_CONDITIONAL(CppAD_HAVE_AR, test "$have_ar" = "yes")
-if test "$have_ar" = "no"; then
+AM_PROG_AR()
+AM_CONDITIONAL(CppAD_HAVE_AR, test "$AR" = "ar")
+if test "$AR" != "ar"; then
 	AC_MSG_WARN(
-	[cannot build any libraries because ar is missing, speed/* is not used] 
+	[cannot build any libraries because ar is missing; e.g,, speed/* not built] 
 	)
 fi
 
@@ -436,17 +436,23 @@ if test "$ok" == "no" ; then
 fi
 AC_MSG_NOTICE([********** End Checking Command Line arguments ***************])
 
+dnl auto-tools version does not support ColPack coloring 
+AC_SUBST(cppad_has_colpack, 0)
+
 dnl auto-tools version cannot use c++11 compiler
 dnl so supress corresponding features
 AC_SUBST(cppad_has_nullptr, 0)
+AC_SUBST(cppad_has_rvalue, 0)
+AC_SUBST(cppad_has_cstdint_8_to_64, 0)
+AC_SUBST(cppad_compiler_has_erf, 0)
 
 dnl Determine if size_t has same size as unsigned int 
 AC_CHECK_SIZEOF([size_t])
 AC_CHECK_SIZEOF([unsigned int])
 if test "$ac_cv_size_t" == "$ac_cv_unsigned_int" ; then
-	AC_SUBST(cppad_size_t_same_unsigned_int, 1)
+	AC_SUBST(cppad_size_t_not_unsigned_int, 1)
 else
-	AC_SUBST(cppad_size_t_same_unsigned_int, 0)
+	AC_SUBST(cppad_size_t_not_unsigned_int, 0)
 fi
 
 dnl Determine which definition we are using for CPPAD_TESTVECTOR
@@ -470,7 +476,7 @@ fi
 
 dnl Run any macros required for proper operation of generated makefiles
 dnl nostdinc: Do not define standard include directories in generated makefiles
-AM_INIT_AUTOMAKE(nostdinc)
+AM_INIT_AUTOMAKE([nostdinc subdir-objects -Wall])
 
 dnl Use LIBTOOL for cppad_ipopt ?
 dnl AC_PROG_LIBTOOL

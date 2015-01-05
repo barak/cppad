@@ -4,8 +4,9 @@
 >
 <head>
 <title>Adolc Speed: Matrix Multiplication</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Adolc Speed: Matrix Multiplication"/>
-<meta name="keywords" id="keywords" content=" link_mat_mul adolc speed matrix multiply "/>
+<meta name="keywords" id="keywords" content=" adolc speed: matrix multiplication link_mat_mul speed multiply specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -113,6 +114,10 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/vector.hpp&gt;
+
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 bool link_mat_mul(
 	size_t                           size     , 
 	size_t                           repeat   , 
@@ -121,10 +126,8 @@ bool link_mat_mul(
 	CppAD::vector&lt;double&gt;&amp;           dz       )
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( global_atomic || global_optimize )
-		return false; 
-
+	if( global_memory || global_atomic || global_optimize )
+		return false;
 	// -----------------------------------------------------
 	// setup
 	typedef adouble    ADScalar;
@@ -160,7 +163,7 @@ bool link_mat_mul(
 	double* grad = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
 
 	// ----------------------------------------------------------------------
-	if( global_retape ) while(repeat--)
+	if( ! global_onetape ) while(repeat--)
 	{	// choose a matrix
 		CppAD::uniform_01(n, mat);
 

@@ -43,9 +43,8 @@ var list_down0 = [
 ];
 var list_current0 = [
 'speed_sacado.xml#Purpose',
-'speed_sacado.xml#sacado_dir',
+'speed_sacado.xml#sacado_prefix',
 'speed_sacado.xml#Running Tests',
-'speed_sacado.xml#C++ Compiler Flags',
 'speed_sacado.xml#Contents'
 ];
 function choose_across0(item)

@@ -4,8 +4,9 @@
 >
 <head>
 <title>CppAD::vector Template Class: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD::vector Template Class: Example and Test"/>
-<meta name="keywords" id="keywords" content=" vector Cppad Cppad::vector example test "/>
+<meta name="keywords" id="keywords" content=" cppad::vector template class: example and test vector Cppad Cppad::vector "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -169,13 +170,22 @@ bool CppAD_vector(void)
 	for(i = 0; i &lt; N; i++)
 		ok &amp;= ( x[i] == Type(i) );
 
+	// test of data
+	Type* data = x.data();
+	for(i = 0; i &lt; N; i++)
+	{	ok &amp;= data[i] == Type(i);
+		data[i] = Type(N - i);
+		ok &amp;= x[i] == Type(N - i);
+	}
+
 	// test of push_vector 
 	x.push_vector(x);
 	ok &amp;= (x.size() == 2 * N);
 	for(i = 0; i &lt; N; i++)
-	{	ok &amp;= ( x[i] == Type(i) );
-		ok &amp;= ( x[i+N] == Type(i) );
+	{	ok &amp;= x[i] == Type(N - i);
+		ok &amp;= x[i+N] == Type(N - i);
 	}
+
 
 	return ok;
 }

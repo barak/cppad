@@ -1,4 +1,4 @@
-/* $Id: ad.hpp 3064 2013-12-28 18:01:30Z bradbell $ */
+/* $Id: ad.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
 # ifndef CPPAD_AD_INCLUDED
 # define CPPAD_AD_INCLUDED
 
@@ -205,6 +205,9 @@ public:
 	inline AD sqrt(void) const;
 	inline AD tan(void) const;
 	inline AD tanh(void) const;
+# if CPPAD_COMPILER_HAS_ERF
+	inline AD erf(void) const;
+# endif
 
 	// ----------------------------------------------------------
 	// static public member functions

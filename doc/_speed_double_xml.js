@@ -44,7 +44,6 @@ var list_down0 = [
 var list_current0 = [
 'speed_double.xml#Purpose',
 'speed_double.xml#Running Tests',
-'speed_double.xml#C++ Compiler Flags',
 'speed_double.xml#Contents'
 ];
 function choose_across0(item)

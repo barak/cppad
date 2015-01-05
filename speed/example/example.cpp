@@ -1,6 +1,6 @@
-/* $Id: example.cpp 2683 2012-12-30 18:17:03Z bradbell $ */
+/* $Id: example.cpp 3114 2014-02-22 16:20:39Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -23,7 +23,7 @@ $index example, speed program$$
 $section Run the Speed Examples$$
 
 $head Running Tests$$
-To build this program and run its correctness tests see $cref cppad_test$$.
+To build this program and run its correctness tests see $cref cmake_check$$.
 
 
 $code

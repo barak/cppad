@@ -1,4 +1,4 @@
-// $Id: base_require.hpp 3062 2013-12-28 10:40:48Z bradbell $
+// $Id: base_require.hpp 3495 2014-12-24 01:16:15Z bradbell $
 # ifndef CPPAD_BASE_REQUIRE_INCLUDED
 # define CPPAD_BASE_REQUIRE_INCLUDED
 
@@ -46,7 +46,6 @@ $spell
 	Op
 	std
 	CondExp
-	erf
 $$
 
 $index Base, require$$

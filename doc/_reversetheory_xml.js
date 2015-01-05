@@ -49,7 +49,8 @@ var list_down0 = [
 'atanreverse.xml',
 'asinreverse.xml',
 'acosreverse.xml',
-'tan_reverse.xml'
+'tan_reverse.xml',
+'erf_reverse.xml'
 ];
 var list_current0 = [
 'reversetheory.xml#Taylor Notation',

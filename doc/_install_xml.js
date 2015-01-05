@@ -25,16 +25,16 @@ var list_down1 = [
 var list_down0 = [
 'download.xml',
 'cmake.xml',
-'cppad_test.xml',
+'cmake_check.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];
 var list_current0 = [
 'install.xml#Instructions',
-'install.xml#Instructions.Download',
-'install.xml#Instructions.Cmake',
-'install.xml#Instructions.Test',
-'install.xml#Instructions.Install',
+'install.xml#Instructions.Step 1: Download',
+'install.xml#Instructions.Step 2: Cmake',
+'install.xml#Instructions.Step 3: Check',
+'install.xml#Instructions.Step 4: Install',
 'install.xml#Contents'
 ];
 function choose_across0(item)

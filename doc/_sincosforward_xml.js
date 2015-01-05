@@ -37,7 +37,8 @@ var list_down1 = [
 'atanforward.xml',
 'asinforward.xml',
 'acosforward.xml',
-'tan_forward.xml'
+'tan_forward.xml',
+'erf_forward.xml'
 ];
 var list_current0 = [
 'sincosforward.xml#Differential Equation'

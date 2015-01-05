@@ -4,8 +4,9 @@
 >
 <head>
 <title>Getting Started with Atomic Operations: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Getting Started with Atomic Operations: Example and Test"/>
-<meta name="keywords" id="keywords" content=" get_started atomic operation "/>
+<meta name="keywords" id="keywords" content=" getting started with atomic operations: example and test get_started operation purpose start class definition constructor forward end use function recording "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
 <option>atomic_tangent.cpp</option>
+<option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
 </select>
 </td>
@@ -141,20 +143,20 @@ class atomic_get_started : public CppAD::atomic_base&lt;double&gt; {
 <code><font color='blue'><pre style='display:inline'> 
 	// forward mode routine called by CppAD
 	virtual bool forward(
-		size_t                    q ,
 		size_t                    p ,
+		size_t                    q ,
 		const vector&lt;bool&gt;&amp;      vx ,
 		      vector&lt;bool&gt;&amp;      vy ,
 		const vector&lt;double&gt;&amp;    tx ,
 		      vector&lt;double&gt;&amp;    ty
 	)
-	{	size_t n = tx.size() / (p + 1);
-		size_t m = ty.size() / (p + 1);
+	{	size_t n = tx.size() / (q + 1);
+		size_t m = ty.size() / (q + 1);
 		assert( n == 1 );
 		assert( m == 1 );
 
 		// return flag
-		bool ok = p == 0;
+		bool ok = q == 0;
 		if( ! ok )
 			return ok;
 
@@ -167,7 +169,7 @@ class atomic_get_started : public CppAD::atomic_base&lt;double&gt; {
 		// This case must always be implemented
 		// y^0 = f( x^0 ) = 1 / x^0
 		double f = 1. / tx[0];
-		if( q &lt;= 0 )
+		if( p &lt;= 0 )
 			ty[0] = f;
 		return ok;
 	}
@@ -246,12 +248,12 @@ bool get_started(void)
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
 
 	// check zero order forward mode
-	size_t p;
-	vector&lt;double&gt; x_p(n), y_p(m);
-	p      = 0;
-	x_p[0] = x0;
-	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+	size_t q;
+	vector&lt;double&gt; x_q(n), y_q(m);
+	q      = 0;
+	x_q[0] = x0;
+	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
 
 	return ok;
 }

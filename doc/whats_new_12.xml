@@ -4,8 +4,9 @@
 >
 <head>
 <title>CppAD Changes and Additions During 2012</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Changes and Additions During 2012"/>
-<meta name="keywords" id="keywords" content=" "/>
+<meta name="keywords" id="keywords" content=" cppad changes and additions during 2012 introduction 12-30 12-29 12-28 12-27 12-26 12-23 12-22 12-20 12-19 12-17 12-15 12-14 12-13 11-28 11-21 11-20 11-17 11-16 11-14 11-09 11-06 11-04 10-31 10-30 10-25 10-24 10-12 10-04 10-03 10-02 09-24 09-11 08-05 07-30 07-08 07-07 07-05 07-04 07-03 07-02 07-01 06-17 06-16 06-15 06-12 06-10 06-09 06-08 06-07 06-05 06-04 06-03 06-02 06-01 05-31 05-30 05-29 05-27 05-24 04-19 04-18 04-17 04-10 04-06 04-05 04-01 03-27 03-26 03-23 03-21 03-17 03-11 03-03 03-02 02-11 02-10 02-09 01-30 01-27 01-24 01-23 01-20 01-19 01-16 01-15 01-12 01-07 01-02 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -76,6 +77,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
 <option>whats_new_11</option>
@@ -297,7 +299,7 @@ instructions.
 
 Include the <a href="introduction.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
  programs in the 
-<a href="cppad_test.xml" target="_top"><span style='white-space: nowrap'>cppad_test</span></a>
+<a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>cmake_check</span></a>
  built using <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
 .
 </li><li>
@@ -1141,8 +1143,7 @@ does not depend on the repetition; see
 </li><li>
 
 Use same argument for taping and derivative evaluation when
-<a href="speed_main.xml#option_list.retape" target="_top"><span style='white-space: nowrap'>retape</span></a>
- is true.
+<code><font color="blue">retape</font></code> speed test option is true.
 </li><li>
 
 Implement the 
@@ -1191,15 +1192,13 @@ the
  interface to <a href="sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
 .
 In addition, implement the speed test 
-<a href="speed_main.xml#option_list.retape" target="_top"><span style='white-space: nowrap'>retape</span></a>
- option for these tests.
+<code><font color="blue">retape</font></code> speed test option for these tests.
 
 <br/>
 <br/>
 <b><big><a name="05-31" id="05-31">05-31</a></big></b>
 <br/>
-Add the <a href="cppad_print_optimize.xml" target="_top"><span style='white-space: nowrap'>cppad_print_optimize</span></a>
- routine to so that the corresponding
+Add the <code><font color="blue">cppad_print_optimize</font></code> routine to so that the corresponding
 code does not need to be reproduced for all the 
 <a href="speed_cppad.xml" target="_top"><span style='white-space: nowrap'>speed_cppad</span></a>
  tests.
@@ -1215,8 +1214,7 @@ Change specifications for
  so that the row and column indices are 
 inputs (instead of being chosen randomly by the test for each repetition).
 This enables use of the 
-<a href="speed_main.xml#option_list.retape" target="_top"><span style='white-space: nowrap'>retape</span></a>
- option
+<code><font color="blue">retape</font></code> speed test option
 during sparse Hessian speed tests.
 
 <br/>
@@ -1430,7 +1428,7 @@ a <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>Depend
 <br/>
 Calling <code><font color="blue">taylor_capacity</font></code>, with to with capacity equal to zero,
 was not
-<a href="capacity_taylor.xml#c.Freeing Memory" target="_top"><span style='white-space: nowrap'>freeing&#xA0;memory</span></a>
+<a href="capacity_order.xml#c.Freeing Memory" target="_top"><span style='white-space: nowrap'>freeing&#xA0;memory</span></a>
 .
 This has been fixed.
 

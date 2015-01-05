@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: get_adolc.sh 2948 2013-10-15 16:09:40Z bradbell $
+# $Id: get_adolc.sh 3488 2014-12-19 12:04:15Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -31,9 +31,6 @@
 # $href%https://projects.coin-or.org/ADOL-C%ADOL-C%$$ in the
 # CppAD $code build$$ directory.
 #
-# $children%
-#	bin/get_colpack.sh
-# %$$
 # $head Requirements$$
 # You must first use $cref get_colpack.sh$$ to download and install
 # $code ColPack$$ (coloring algorithms used for sparse matrix derivatives).
@@ -71,6 +68,10 @@ echo_eval() {
 }
 # -----------------------------------------------------------------------------
 echo 'Download adolc to build/external and install it to build/prefix'
+# ADOL-C verison 2.5.2 results in:
+#	adouble.h:74: error: 'badouble::badouble()' is protected
+# It apprears that newer versions of adolc assume some c++11 features; see
+#	http://list.coin-or.org/pipermail/adol-c/2014-December/001023.html
 version='2.4.1'
 web_page="http://www.coin-or.org/download/source/ADOL-C"
 prefix=`pwd`'/build/prefix'
@@ -105,24 +106,10 @@ fi
 echo_eval cd ADOL-C-$version
 # -----------------------------------------------------------------------------
 system=`uname | tr [A-Z] [a-z] | sed -e 's|\([a-z][a-z]*\).*|\1|'`
-if [ "$system" == 'cygwin' ] && [ "$version" == '2.3.0' ]
-then
-	# see http://list.coin-or.org/pipermail/adol-c/2012-April/000814.html
-	echo 'changing ADOL-C/src/adouble.cpp'
-	sed \
-		-e '/^double fmin(/,/^}/s|^|// |' \
-		-e '/^double fmax(/,/^}/s|^|// |' \
-		-i 'ADOL-C/src/adouble.cpp'
-	echo 'changing ADOL-C/src/adouble.h'
-	sed \
-		-e '/^double [A-Z_]* fmin(/s|^|// |' \
-		-e '/^double [A-Z_]* fmax(/s|^|// |' \
-		-i 'ADOL-C/src/adouble.h'
-fi
 # -----------------------------------------------------------------------------
 if which autoconf >& /dev/null
 then
-	ac_version=`autoconf --version | \
+	ac_version=`autoconf --version | sed -n -e '/^autoconf/p' | \
 		sed -e 's|[^0-9]*\([0-9.]*\)[.]\([0-9]*\).*|\1 * 100 + \2|' | bc`
 	if [ "$ac_version" -ge 267 ]
 	then

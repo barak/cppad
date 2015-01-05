@@ -4,8 +4,9 @@
 >
 <head>
 <title>Fadbad Speed: Ode</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Fadbad Speed: Ode"/>
-<meta name="keywords" id="keywords" content=" link_ode fadbad speed ode "/>
+<meta name="keywords" id="keywords" content=" fadbad speed: ode link_ode speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -114,6 +115,9 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/ode_evaluate.hpp&gt;
 
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 namespace fadbad {
 	// define fabs for use by ode_evaluate
 	fadbad::F&lt;double&gt; fabs(const fadbad::F&lt;double&gt;&amp; x)
@@ -127,16 +131,16 @@ bool link_ode(
 	CppAD::vector&lt;double&gt;      &amp;jacobian
 )
 {
+	// speed test global option values
+	if( global_atomic )
+		return false;
+	if( global_memory || global_onetape || global_optimize )
+		return false;
+	// -------------------------------------------------------------
+	// setup
 	assert( x.size() == size );
 	assert( jacobian.size() == size * size );
 
-	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_atomic || global_optimize )
-		return false;
-
-	// -------------------------------------------------------------
-	// setup
 	typedef fadbad::F&lt;double&gt;       ADScalar;
 	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
 

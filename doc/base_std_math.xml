@@ -4,8 +4,9 @@
 >
 <head>
 <title>Base Type Requirements for Standard Math Functions</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Base Type Requirements for Standard Math Functions"/>
-<meta name="keywords" id="keywords" content=" math base require unary Cppad_standard_math_unary sign pow isnan type numeric limits Base numeric_limits "/>
+<meta name="keywords" id="keywords" content=" base type requirements for standard math functions require purpose unary cppad_standard_math_unary Cppad_standard_math_unary erf sign pow isnan limits numeric Base numeric_limits epsilon "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -88,6 +89,7 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>Unary Standard Math</option>
 <option>CPPAD_STANDARD_MATH_UNARY</option>
+<option>erf</option>
 <option>sign</option>
 <option>pow</option>
 <option>isnan</option>
@@ -229,6 +231,33 @@ For example,
 
 <br/>
 <br/>
+<b><big><a name="erf" id="erf">erf</a></big></b>
+
+
+
+<br/>
+If the error function is supported by the compiler,
+<a href="erf.xml#Method.CPPAD_COMPILER_HAS_ERF" target="_top"><span style='white-space: nowrap'>CPPAD_COMPILER_HAS_ERF</span></a>
+
+is one,
+the type 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ must support the syntax
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;CppAD::erf(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+where 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+ have the same prototype as above.
+For example, see
+<a href="base_alloc.hpp.xml#erf" target="_top"><span style='white-space: nowrap'>base_alloc</span></a>
+.
+
+<br/>
+<br/>
 <b><big><a name="sign" id="sign">sign</a></big></b>
 
 
@@ -244,7 +273,7 @@ The type
 which computes
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
-<mi mathvariant='italic'>z</mi>
+<mi mathvariant='italic'>y</mi>
 <mo stretchy="false">=</mo>
 <mrow><mo stretchy="true">{</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="left" >
 <mo stretchy="false">+</mo>
@@ -278,20 +307,11 @@ which computes
 </mrow><mo stretchy="true"> </mo></mrow>
 </mrow></math>
 
-The arguments 
+where 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- has prototype
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-and the return value 
-<code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
- has prototype
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
+ have the same prototype as above.
 For example, see
 <a href="base_alloc.hpp.xml#sign" target="_top"><span style='white-space: nowrap'>base_alloc</span></a>
 .

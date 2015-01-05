@@ -4,8 +4,9 @@
 >
 <head>
 <title>Double Speed: Evaluate a Polynomial</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Double Speed: Evaluate a Polynomial"/>
-<meta name="keywords" id="keywords" content=" link_poly double speed polynomial "/>
+<meta name="keywords" id="keywords" content=" double speed: evaluate a polynomial link_poly speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -110,6 +111,10 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 # include &lt;cppad/cppad.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize;
+
 bool link_poly(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -117,6 +122,8 @@ bool link_poly(
 	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
 	CppAD::vector&lt;double&gt;     &amp;p        )  // second derivative w.r.t z  
 {
+	if(global_onetape||global_atomic||global_optimize)
+		return false;
 	// -----------------------------------------------------
 	// setup
 

@@ -37,7 +37,8 @@ var list_down1 = [
 'atanreverse.xml',
 'asinreverse.xml',
 'acosreverse.xml',
-'tan_reverse.xml'
+'tan_reverse.xml',
+'erf_reverse.xml'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

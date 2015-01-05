@@ -4,8 +4,9 @@
 >
 <head>
 <title>CppAD Speed: Gradient of Ode Solution</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Speed: Gradient of Ode Solution"/>
-<meta name="keywords" id="keywords" content=" link_ode cppad speed ode "/>
+<meta name="keywords" id="keywords" content=" cppad speed: gradient of ode solution link_ode speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -80,7 +81,6 @@ A:active { color : purple }
 <option>cppad_poly.cpp</option>
 <option>cppad_sparse_hessian.cpp</option>
 <option>cppad_sparse_jacobian.cpp</option>
-<option>cppad_print_optimize</option>
 </select>
 </td>
 <td>cppad_ode.cpp</td>
@@ -112,7 +112,10 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 # include &lt;cppad/speed/ode_evaluate.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cassert&gt;
-# include &quot;print_optimize.hpp&quot;
+
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize;
 
 bool link_ode(
 	size_t                     size       ,
@@ -121,16 +124,15 @@ bool link_ode(
 	CppAD::vector&lt;double&gt;      &amp;jacobian
 )
 {
-	assert( x.size() == size );
-	assert( jacobian.size() == size * size );
-
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
 	if( global_atomic )
 		return false;
 
-	// -------------------------------------------------------------
+	// --------------------------------------------------------------------
 	// setup
+	assert( x.size() == size );
+	assert( jacobian.size() == size * size );
+
 	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;       ADScalar;
 	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
 
@@ -141,13 +143,8 @@ bool link_ode(
 	ADVector  X(n), Y(m);      // independent and dependent variables
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;  f;   // AD function
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat &gt; 1) &amp; (previous_size != size);
-	previous_size = size;
-
 	// -------------------------------------------------------------
-	if( global_retape) while(repeat--)
+	if( ! global_onetape ) while(repeat--)
 	{ 	// choose next x value
 		uniform_01(n, x);
 		for(j = 0; j &lt; n; j++)
@@ -163,9 +160,8 @@ bool link_ode(
 		f.Dependent(X, Y);
 
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_ode_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
+
 		jacobian = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
 	}
 	else
@@ -184,9 +180,7 @@ bool link_ode(
 		f.Dependent(X, Y);
 
 		if( global_optimize )
-		{	print_optimize(f, print, &quot;cppad_ode_optimize&quot;, size);
-			print = false;
-		}
+			f.optimize();
 		while(repeat--)
 		{	// get next argument value
 			uniform_01(n, x);

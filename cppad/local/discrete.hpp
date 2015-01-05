@@ -1,9 +1,9 @@
-/* $Id: discrete.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: discrete.hpp 3359 2014-09-26 00:12:56Z bradbell $ */
 # ifndef CPPAD_DISCRETE_INCLUDED
 # define CPPAD_DISCRETE_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -165,8 +165,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup discrete_hpp discrete.hpp
-\{
 \file discrete.hpp
 user define discrete functions
 */
@@ -231,7 +229,7 @@ public:
 	/*!
 	Constructor called for each invocation of CPPAD_DISCRETE_FUNCTION.
 
-	Put this objec in the list of all objects for this class and set
+	Put this object in the list of all objects for this class and set
 	the constant private data name_, f_, and index_.
 
 	\param Name
@@ -307,6 +305,5 @@ public:
 	}
 };
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

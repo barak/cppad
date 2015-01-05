@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3099 2014-02-18 03:29:44Z bradbell $
+# $Id: CMakeLists.txt 3509 2014-12-27 20:38:37Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -16,7 +16,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # cppad_version is used by set_version.sh to get the version number.
-SET(cppad_version      "20140000.3" )
+SET(cppad_version      "20150000.0" )
 SET(cppad_url          "http://www.coin-or.org/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 
@@ -60,12 +60,20 @@ INCLUDE(cmake/optional_package.cmake)
 #
 # add_cppad_cxx_flags(target_name)
 INCLUDE(cmake/add_cppad_cxx_flags.cmake)
+#
+# sources_libs_define(prefix_name sources libs define)
+INCLUDE(cmake/sources_libs_define.cmake)
 # =============================================================================
 # command line arguments
 # =============================================================================
 # cmake_install_datadir
 command_line_arg(cmake_install_datadir share STRING 
 	"directory, below prefix, where cmake installs cppad data files"
+)
+# -----------------------------------------------------------------------------
+# cmake_install_docdir
+command_line_arg(cmake_install_docdir "" STRING 
+	"directory, below prefix, where cmake installs cppad documentation files"
 )
 # -----------------------------------------------------------------------------
 # cmake_install_includedirs
@@ -97,14 +105,23 @@ command_line_arg(cppad_cxx_flags NOTFOUND STRING
 )
 # -----------------------------------------------------------------------------
 # cppad_documentation
-command_line_arg(cppad_documentation NO BOOL 
-	"install cppad documentation"
+command_line_arg(cppad_documentation "" STRING 
+	"install cppad documentation: use camke_install_docdir instead"
 )
+STRING(COMPARE NOTEQUAL "${cppad_documentation}" "" cppad_documentation_error)
+IF( cppad_documentation_error )
+	MESSAGE(FATAL_ERROR 
+"cppad_documentation is no longer an option, use cmake_install_docdir instead"
+	)
+ENDIF( cppad_documentation_error )
 # -----------------------------------------------------------------------------
 # External package prefixes
 #
 # adolc_prefix
 optional_package(adolc_prefix "adolc install prefix")
+#
+# colpack_prefix
+optional_package(colpack_prefix "colpack install prefix")
 #
 # eigen_prefix
 optional_package(eigen_prefix "eigen install prefix")
@@ -117,6 +134,14 @@ optional_package(ipopt_prefix "ipopt install prefix")
 #
 # sacado_prefix
 optional_package(sacado_prefix "sacado install prefix")
+# -----------------------------------------------------------------------------
+# cppad_has_colpack
+#
+IF( colpack_prefix )
+	SET(cppad_has_colpack 1)
+ELSE( colpack_prefix )
+	SET(cppad_has_colpack 0)
+ENDIF( colpack_prefix )
 # =============================================================================
 # automated system configuration
 # =============================================================================
@@ -146,19 +171,22 @@ MESSAGE(STATUS "cppad_cxx_flags_sacado = ${cppad_cxx_flags_sacado}")
 # -----------------------------------------------------------------------------
 # cppad_cxx_flags_skip_eigen
 STRING(REGEX REPLACE 
-	"(.*)-Wshadow(.*)"         "\\1 \\2" 
+	"(.*)-Wshadow(.*)"         "\\1-Wno-shadow\\2" 
 	cppad_cxx_flags_eigen "${cppad_cxx_flags}"
 )
 MESSAGE(STATUS "cppad_cxx_flags_eigen = ${cppad_cxx_flags_eigen}")
 # -----------------------------------------------------------------------------
 # cppad_cxx_flags_skip_fadbad
 STRING(REGEX REPLACE 
-	"(.*)-Wshadow(.*)"         "\\1 \\2" 
+	"(.*)-Wshadow(.*)"         "\\1-Wno-shadow\\2" 
 	cppad_cxx_flags_fadbad "${cppad_cxx_flags}"
 )
 MESSAGE(STATUS "cppad_cxx_flags_fadbad = ${cppad_cxx_flags_fadbad}")
 # -----------------------------------------------------------------------------
 # cppad_abs_includedir, cppad_abs_libdir, cppad_abs_datadir, cppad_abs_docdir
+#
+# cppad_abs_docdir is not used if cmake_install_docdir is ""
+#
 IF ( cmake_install_postfix )
 	SET(cppad_abs_includedir 
 "${cmake_install_prefix}/${cppad_install_includedir}/${cmake_install_postfix}" 
@@ -173,7 +201,7 @@ IF ( cmake_install_postfix )
 		CACHE INTERNAL "cppad install data file directory" FORCE
 	)
 	SET(cppad_abs_docdir 
-"${cmake_install_prefix}/${cmake_install_datadir}/doc/${cmake_install_postfix}" 
+"${cmake_install_prefix}/${cmake_install_docdir}/${cmake_install_postfix}" 
 		CACHE INTERNAL "cppad install data file directory" FORCE
 	)
 ELSE ( cmake_install_postfix )
@@ -190,7 +218,7 @@ ELSE ( cmake_install_postfix )
 		CACHE INTERNAL "cppad install data file directory" FORCE
 	)
 	SET(cppad_abs_docdir 
-		"${cmake_install_prefix}/${cmake_install_datadir}/doc" 
+		"${cmake_install_prefix}/${cmake_install_docdir}" 
 		CACHE INTERNAL "cppad install data file directory" FORCE
 	)
 ENDIF ( cmake_install_postfix )
@@ -270,38 +298,38 @@ ENDIF( ipopt_prefix )
 # add_subdirectory(source_dir [binary_dir] [EXCLUDE_FROM_ALL])
 #
 # Initialize list of tests as empty
-SET(list_check "")
+SET(check_depends "")
 #
 ADD_SUBDIRECTORY(cppad)
 ADD_SUBDIRECTORY(pkgconfig)
 #
 ADD_SUBDIRECTORY(compare_c)
-add_to_list(list_check check_compare_c)
+add_to_list(check_depends check_compare_c)
 #
 ADD_SUBDIRECTORY(example)
-add_to_list(list_check check_example)
+add_to_list(check_depends check_example)
 #
 ADD_SUBDIRECTORY(introduction)
-add_to_list(list_check check_introduction)
+add_to_list(check_depends check_introduction)
 #
 ADD_SUBDIRECTORY(print_for)
-add_to_list(list_check check_print_for)
+add_to_list(check_depends check_print_for)
 #
 ADD_SUBDIRECTORY(test_more)
-add_to_list(list_check check_test_more)
+add_to_list(check_depends check_test_more)
 #
 ADD_SUBDIRECTORY(multi_thread)
-add_to_list(list_check check_multi_thread)
+add_to_list(check_depends check_multi_thread)
 #
 ADD_SUBDIRECTORY(speed)
-add_to_list(list_check check_speed)
+add_to_list(check_depends check_speed)
 #
 IF ( ipopt_prefix )
 	ADD_SUBDIRECTORY(cppad_ipopt)
-	add_to_list(list_check check_ipopt_nlp)
+	add_to_list(check_depends check_cppad_ipopt)
 ENDIF( ipopt_prefix )
 #
-ADD_CUSTOM_TARGET(check DEPENDS ${list_check})
+ADD_CUSTOM_TARGET(check DEPENDS ${check_depends})
 #
 # =============================================================================
 # install procedure
@@ -318,7 +346,7 @@ ADD_CUSTOM_TARGET(check DEPENDS ${list_check})
 # Note a trailing / in the source directory name drops the source directory
 # name during the copy.
 #
-# During install copy all ithe cppad include files to 
+# During install copy all the cppad include files to 
 # ${cppad_abs_includedir}/cppad  
 INSTALL( 
 	DIRECTORY "cppad/" 
@@ -330,10 +358,13 @@ INSTALL(
 	DESTINATION ${cppad_abs_includedir}/cppad
 	FILES_MATCHING PATTERN "*.hpp"
 )
+INSTALL( 
+	FILES "cppad/local/cppad_colpack.cpp"
+	DESTINATION ${cppad_abs_datadir}/cppad
+)
 #
-# During install copy doc direcrory to cppad_abs_docdir/cppad-${cppad_version}  
+# During install copy doc direcrory to cppad_abs_docdir/cppad
+STRING( COMPARE NOTEQUAL "${cmake_install_docdir}" "" cppad_documentation )
 IF ( cppad_documentation )
-	INSTALL( DIRECTORY "doc/" DESTINATION 
-		${cppad_abs_docdir}/cppad-${cppad_version} 
-	)
+	INSTALL( DIRECTORY "doc/" DESTINATION ${cppad_abs_docdir}/cppad )
 ENDIF ( cppad_documentation )

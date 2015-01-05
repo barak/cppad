@@ -47,6 +47,7 @@ var list_down0 = [
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
 'atomic_tangent.cpp.xml',
+'atomic_hes_sparse.cpp.xml',
 'atomic_mat_mul.cpp.xml'
 ];
 var list_current0 = [
@@ -58,6 +59,7 @@ var list_current0 = [
 'atomic_base.xml#Examples.Getting Started',
 'atomic_base.xml#Examples.Scalar Function',
 'atomic_base.xml#Examples.Vector Range',
+'atomic_base.xml#Examples.Hessian Sparsity Patterns',
 'atomic_base.xml#General Case'
 ];
 function choose_across0(item)

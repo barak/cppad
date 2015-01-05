@@ -4,8 +4,9 @@
 >
 <head>
 <title>Sacado Speed: Gradient of Determinant by Minor Expansion</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Sacado Speed: Gradient of Determinant by Minor Expansion"/>
-<meta name="keywords" id="keywords" content=" link_det_minor sacado speed minor determinant "/>
+<meta name="keywords" id="keywords" content=" sacado speed: gradient of determinant by minor expansion link_det_minor speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -108,6 +109,10 @@ See <a href="link_det_minor.xml" target="_top"><span style='white-space: nowrap'
 # include &lt;cppad/speed/det_by_minor.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/vector.hpp&gt;
+
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 bool link_det_minor(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -115,10 +120,10 @@ bool link_det_minor(
 	CppAD::vector&lt;double&gt;     &amp;gradient )
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_optimize || global_atomic )
-		return false;
-
+	if( global_atomic )
+		return false; 
+	if( global_memory || global_onetape || global_optimize )
+		return false; 
 	// -----------------------------------------------------
 	// setup
 

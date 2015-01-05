@@ -4,8 +4,9 @@
 >
 <head>
 <title>Sacado Speed: Gradient of Determinant Using Lu Factorization</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Sacado Speed: Gradient of Determinant Using Lu Factorization"/>
-<meta name="keywords" id="keywords" content=" link_det_lu sacado speed lu matrix factor "/>
+<meta name="keywords" id="keywords" content=" sacado speed: gradient of determinant using lu factorization link_det_lu speed matrix factor specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -111,6 +112,9 @@ See <a href="link_det_lu.xml" target="_top"><span style='white-space: nowrap'>li
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/vector.hpp&gt;
 
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 bool link_det_lu(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -118,13 +122,13 @@ bool link_det_lu(
 	CppAD::vector&lt;double&gt;     &amp;gradient )
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_optimize || global_atomic )
+	if( global_onetape || global_atomic )
 		return false;
-
+	if( global_memory || global_optimize )
+		return false;
 	// -----------------------------------------------------
 	// setup
-
+	//
 	// object for computing determinant
 	typedef Sacado::Rad::ADvar&lt;double&gt;   ADScalar; 
 	typedef CppAD::vector&lt;ADScalar&gt;      ADVector; 

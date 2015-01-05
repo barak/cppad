@@ -4,8 +4,9 @@
 >
 <head>
 <title>Speed Test of Derivatives Using Adolc</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Speed Test of Derivatives Using Adolc"/>
-<meta name="keywords" id="keywords" content=" speed test adolc "/>
+<meta name="keywords" id="keywords" content=" speed test adolc of derivatives using purpose adolc_prefix running tests "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -86,9 +87,8 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Purpose</option>
-<option>adolc_dir</option>
+<option>adolc_prefix</option>
 <option>Running Tests</option>
-<option>C++ Compiler Flags</option>
 <option>Contents</option>
 </select>
 </td>
@@ -111,15 +111,14 @@ This section links to the source code the Adolc speed tests
 
 <br/>
 <br/>
-<b><big><a name="adolc_dir" id="adolc_dir">adolc_dir</a></big></b>
+<b><big><a name="adolc_prefix" id="adolc_prefix">adolc_prefix</a></big></b>
 <br/>
-To run these tests, you must include the <code><font color="blue">configure</font></code> command line option
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADOLC_DIR=</span></font><i><font color="black"><span style='white-space: nowrap'>adolc_dir</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-during <a href="installunix.xml#adolc_dir" target="_top"><span style='white-space: nowrap'>installation</span></a>
+To run these tests, 
+you must include the <a href="adolc_prefix.xml" target="_top"><span style='white-space: nowrap'>adolc_prefix</span></a>
+ 
+in you <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
 .
+
 
 <br/>
 <br/>
@@ -127,39 +126,24 @@ during <a href="installunix.xml#adolc_dir" target="_top"><span style='white-spac
 <br/>
 To build these speed tests, and run their correctness tests,
 execute the following commands starting in the
-<a href="installunix.xml#Work Directory" target="_top"><span style='white-space: nowrap'>work&#xA0;directory</span></a>
+<a href="cmake.xml#CMake Command.Build Directory" target="_top"><span style='white-space: nowrap'>build&#xA0;directory</span></a>
 :
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cd&#xA0;speed/adolc<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;make&#xA0;test<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;make&#xA0;check_speed_adolc&#xA0;VERBOSE=1<br/>
 </span></font></code>
 You can then run the corresponding speed tests 
 with the following command
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;./adolc&#xA0;speed&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>seed</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;./speed_adolc&#xA0;speed&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>seed</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>seed</span></font></i></code>
  is a positive integer.
 See <a href="speed_main.xml" target="_top"><span style='white-space: nowrap'>speed_main</span></a>
  for more options.
-
-<br/>
-<br/>
-<b><big><a name="C++ Compiler Flags" id="C++ Compiler Flags">C++ Compiler Flags</a></big></b>
-<br/>
-The C++ compiler flags used to build the Adolc speed tests are
-<code><font color="blue">
-<pre style='display:inline'> 
-     AM_CXXFLAGS   = -O2 -DNDEBUG -DSPEED_ADOLC $(CXX_FLAGS)
-</pre>
-
-</font></code>
-where <code><font color="blue">CXX_FLAGS</font></code> is specified by the 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
- command.
 
 <br/>
 <br/>

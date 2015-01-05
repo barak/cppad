@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 2595 2012-11-20 17:39:25Z bradbell $
+# $Id: CMakeLists.txt 3116 2014-02-24 21:44:26Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -25,6 +25,7 @@ ADD_LIBRARY(cppad_ipopt
 	jac_g_map.cpp
 	sparse_map2vec.cpp
 	vec_fun_pattern.cpp 
+	${colpack_sources}
 )
 
 # Add extra compiler flags

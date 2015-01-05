@@ -4,8 +4,9 @@
 >
 <head>
 <title>Reverse Mode</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Reverse Mode"/>
-<meta name="keywords" id="keywords" content=" "/>
+<meta name="keywords" id="keywords" content=" reverse mode multiple directions "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -21,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="forward_mul.cpp.xml" target="_top">Prev</a>
+<td><a href="number_skip.cpp.xml" target="_top">Prev</a>
 </td><td><a href="reverse_one.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -92,6 +93,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
+<option>Multiple Directions</option>
 <option>Contents</option>
 </select>
 </td>
@@ -101,11 +103,26 @@ A:active { color : purple }
 
 <center><b><big><big>Reverse Mode</big></big></b></center>
 <br/>
+<b><big><a name="Multiple Directions" id="Multiple Directions">Multiple Directions</a></big></b>
+<br/>
+Reverse mode after <a href="forward_dir.xml" target="_top"><span style='white-space: nowrap'>Forward(q,&#xA0;r,&#xA0;xq)</span></a>
+
+with number of directions 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;!=&#xA0;1</span></font></code>
+ is not yet supported.
+There is one exception, <a href="reverse_one.xml" target="_top"><span style='white-space: nowrap'>reverse_one</span></a>
+ is allowed
+because there is only one zero order forward direction.
+After such an operation, only the zero order forward
+results are retained (the higher order forward results are lost).
+
+<br/>
+<br/>
 <b><big><a name="Contents" id="Contents">Contents</a></big></b>
 <br/>
 <table>
 <tr><td><a href="reverse_one.xml" target="_top">reverse_one</a></td><td>First&#xA0;Order&#xA0;Reverse&#xA0;Mode</td></tr><tr><td><a href="reverse_two.xml" target="_top">reverse_two</a></td><td>Second&#xA0;Order&#xA0;Reverse&#xA0;Mode</td></tr><tr><td><a href="reverse_any.xml" target="_top">reverse_any</a></td><td>Any&#xA0;Order&#xA0;Reverse&#xA0;Mode</td></tr></table>
-<hr/>Input File: cppad/local/reverse.hpp
+<hr/>Input File: omh/reverse/reverse.omh
 
 </body>
 </html>

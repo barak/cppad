@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_example.sh 2683 2012-12-30 18:17:03Z bradbell $
+# $Id: check_example.sh 3308 2014-05-26 14:29:01Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -18,12 +18,9 @@ fi
 # -----------------------------------------------------------------------------
 echo "Checking that all examples are in omh/example_list.omh"
 echo "-------------------------------------------------------" 
-file_list="
-	example/*.[ch]pp 
-	example/*/*.[ch]pp 
-	multi_thread/*.[ch]pp
-	multi_thread/*/*.[ch]pp
-"
+file_list=`bin/list_files.sh | \
+	sed -n -e '/example\//p' -e '/multi_thread\//p'`
+#
 sed < omh/example_list.omh > bin/check_example.$$ \
 	-n -e '/\$begin ListAllExamples\$\$/,/\$end/p' 
 ok="yes"

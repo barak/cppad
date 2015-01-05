@@ -1,0 +1,977 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Multiple Directions Forward Mode</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Multiple Directions Forward Mode"/>
+<meta name="keywords" id="keywords" content=" multiple directions forward mode direction syntax purpose notation n m f q r xq zero order non-zero lower orders x(t) y(t) yq vector example "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_forward_dir_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="forward_order.cpp.xml" target="_top">Prev</a>
+</td><td><a href="forward_dir.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>FunEval</option>
+<option>Forward</option>
+<option>forward_dir</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>FunEval-&gt;</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>Sparse</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Forward-&gt;</option>
+<option>forward_zero</option>
+<option>forward_one</option>
+<option>forward_two</option>
+<option>forward_order</option>
+<option>forward_dir</option>
+<option>size_order</option>
+<option>CompareChange</option>
+<option>capacity_order</option>
+<option>number_skip</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>forward_dir-&gt;</option>
+<option>forward_dir.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>Notation</option>
+<option>---..n</option>
+<option>---..m</option>
+<option>f</option>
+<option>q</option>
+<option>r</option>
+<option>xq</option>
+<option>Zero Order</option>
+<option>Non-Zero Lower Orders</option>
+<option>X(t)</option>
+<option>Y(t)</option>
+<option>yq</option>
+<option>Vector</option>
+<option>Example</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Multiple Directions Forward Mode</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>yq</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Forward(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i><font color="blue"><span style='white-space: nowrap'>)&#xA0;<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+We use 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>F</mi>
+<mo stretchy="false">:</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+ to denote the
+<a href="glossary.xml#AD Function" target="_top"><span style='white-space: nowrap'>AD&#xA0;function</span></a>
+ corresponding to 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+.
+Given a function 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>X</mi>
+<mo stretchy="false">:</mo>
+<mi mathvariant='italic'>B</mi>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+,
+defined by its 
+<a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
+,
+forward mode computes the Taylor coefficients for the function 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>F</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>X</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">]</mo>
+</mrow></math>
+
+<br/>
+<b><big><a name="Notation" id="Notation">Notation</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Notation.n" id="Notation.n">n</a></b>
+<br/>
+We use 
+<code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
+ to denote the dimension of the
+<a href="seq_property.xml#Domain" target="_top"><span style='white-space: nowrap'>domain</span></a>
+ space for 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><a name="Notation.m" id="Notation.m">m</a></b>
+<br/>
+We use 
+<code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
+ to denote the dimension of the
+<a href="seq_property.xml#Range" target="_top"><span style='white-space: nowrap'>range</span></a>
+ space for 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="f" id="f">f</a></big></b>
+<br/>
+The <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ object 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+Note that the <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ object 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ is not <code><font color="blue">const</font></code>.
+After this call we will have
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_order()&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;+&#xA0;1<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_direction()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+<br/>
+<b><big><a name="q" id="q">q</a></big></b>
+<br/>
+This argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It specifies the order of Taylor Coefficient that we are calculating
+and must be greater than zero.
+The zero order coefficients can only have one direction computed
+and stored in 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ so use <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
+ 
+to compute the zero order coefficients.
+
+<br/>
+<br/>
+<b><big><a name="r" id="r">r</a></big></b>
+<br/>
+This argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It specifies the number of directions that are computed together.
+If (
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;1</span></font></code>
+), you are only using one direction and
+<a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward_order</span></a>
+ is simpler, and should be faster,
+than this more general case.
+
+<br/>
+<br/>
+<b><big><a name="xq" id="xq">xq</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and its size must be 
+<code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>*</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+
+(see <a href="forward_dir.xml#Vector" target="_top"><span style='white-space: nowrap'>Vector</span></a>
+ below).
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>r</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+the <code><i>j</i></code>-th component of the <code><i>q</i></code>-th order Taylor coefficient 
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is defined by
+<code><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></code> 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msubsup><mi mathvariant='italic'>x</mi>
+<mi mathvariant='italic'>j</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>q</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">=</mo>
+</mrow></math>
+
+ 
+<code><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i><font color="blue"><span style='white-space: nowrap'>[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;+&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Zero Order" id="Zero Order">Zero Order</a></big></b>
+<br/>
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+the <code><i>j</i></code>-th component of the zero order Taylor coefficient 
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is defined by
+<code><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></code> 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msubsup><mi mathvariant='italic'>x</mi>
+<mi mathvariant='italic'>j</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">=</mo>
+</mrow></math>
+
+ 
+<code><i><font color="black"><span style='white-space: nowrap'>xk</span></font></i><font color="blue"><span style='white-space: nowrap'>[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]</span></font></code>
+
+where 
+<code><i><font color="black"><span style='white-space: nowrap'>xk</span></font></i></code>
+ corresponds to the previous call
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Forward(</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xk</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+with 
+<code><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;0</span></font></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="Non-Zero Lower Orders" id="Non-Zero Lower Orders">Non-Zero Lower Orders</a></big></b>
+<br/>
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>r</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">=</mo>
+<mn>1</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>q</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+the <code><i>j</i></code>-th component of the <code><i>k</i></code>-th order Taylor coefficient 
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is defined by
+<code><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></code> 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msubsup><mi mathvariant='italic'>x</mi>
+<mi mathvariant='italic'>j</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">=</mo>
+</mrow></math>
+
+ 
+<code><i><font color="black"><span style='white-space: nowrap'>xk</span></font></i><font color="blue"><span style='white-space: nowrap'>[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;+&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]</span></font></code>
+
+where 
+<code><i><font color="black"><span style='white-space: nowrap'>xk</span></font></i></code>
+ corresponds to the previous call
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Forward(</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xk</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+Note that 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+ must have the same value in this previous call.
+
+<br/>
+<br/>
+<b><big><a name="X(t)" id="X(t)">X(t)</a></big></b>
+<br/>
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>r</mi>
+<mn>-1</mn>
+</mrow></math>
+
+, the function
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">:</mo>
+<mi mathvariant='italic'>B</mi>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+ is defined using
+the Taylor coefficients 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msup><mi mathvariant='italic'>x</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+:
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<msup><mi mathvariant='italic'>x</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>x</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+<mo stretchy="false">*</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mn>1</mn>
+</msup>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">&#x022EF;</mo>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>x</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>q</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>q</mi>
+</msup>
+</mrow></math>
+
+Note that the <code><i>k</i></code>-th derivative of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is related to
+its Taylor coefficients by 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>x</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>x</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mfrac><mrow><mn>1</mn>
+</mrow>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">!</mo>
+</mrow>
+</mfrac>
+<msubsup><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow></math>
+
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">=</mo>
+<mn>1</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><big><a name="Y(t)" id="Y(t)">Y(t)</a></big></b>
+<br/>
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>r</mi>
+<mn>-1</mn>
+</mrow></math>
+
+, the function
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">:</mo>
+<mi mathvariant='italic'>B</mi>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+  is defined by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>F</mi>
+<mo stretchy="false">[</mo>
+<msub><mi mathvariant='italic'>X</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">]</mo>
+</mrow></math>
+
+.
+We use 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mrow></math>
+
+ for the zero order coefficient
+and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+ to denote the 
+hight order coefficients; i.e.,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+<mo stretchy="false">*</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mn>1</mn>
+</msup>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">&#x022EF;</mo>
+<mo stretchy="false">+</mo>
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>q</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+<mo stretchy="false">*</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>q</mi>
+</msup>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>o</mi>
+<mo stretchy="false">(</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>q</mi>
+</msup>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+where 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>o</mi>
+<mo stretchy="false">(</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>q</mi>
+</msup>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">*</mo>
+<msup><mi mathvariant='italic'>t</mi>
+<mrow><mo stretchy="false">-</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<mn>0</mn>
+</mrow></math>
+
+ as 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">&#x02192;</mo>
+<mn>0</mn>
+</mrow></math>
+
+.
+Note that the <code><i>k</i></code>-th derivative of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is related to
+its Taylor coefficients by 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<msub><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msup><mi mathvariant='italic'>y</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msup>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mfrac><mrow><mn>1</mn>
+</mrow>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">!</mo>
+</mrow>
+</mfrac>
+<msubsup><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow></math>
+
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">=</mo>
+<mn>1</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><big><a name="yq" id="yq">yq</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>yq</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>yq</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and its size is 
+<code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>*</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+
+(see <a href="forward_dir.xml#Vector" target="_top"><span style='white-space: nowrap'>Vector</span></a>
+ below).
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>r</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>m</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+the <code><i>i</i></code>-th component of the <code><i>q</i></code>-th order Taylor coefficient 
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>Y</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ is given by
+<code><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></code> 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msubsup><mi mathvariant='italic'>y</mi>
+<mi mathvariant='italic'>i</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>q</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">=</mo>
+</mrow></math>
+
+ 
+<code><i><font color="black"><span style='white-space: nowrap'>yq</span></font></i><font color="blue"><span style='white-space: nowrap'>[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;+&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;]</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Vector" id="Vector">Vector</a></big></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i></code>
+ must be a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
+ class with
+<a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+.
+The routine <a href="checksimplevector.xml" target="_top"><span style='white-space: nowrap'>CheckSimpleVector</span></a>
+ will generate an error message
+if this is not the case.
+
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+The file
+<a href="forward_dir.cpp.xml" target="_top"><span style='white-space: nowrap'>forward_dir.cpp</span></a>
+
+contains an example and test using one order (multiple orders).
+They return true if they succeed and false otherwise.
+
+
+<hr/>Input File: omh/forward/forward_dir.omh
+
+</body>
+</html>

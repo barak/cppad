@@ -4,8 +4,9 @@
 >
 <head>
 <title>The CppAD Wish List</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The CppAD Wish List"/>
-<meta name="keywords" id="keywords" content=" wish list new features adolc atan2 checkpoint forward iterator compile speed Ad&lt;double&gt; testing machine epsilon sequence operation optimize tape preprocessor tracing "/>
+<meta name="keywords" id="keywords" content=" the cppad wish list new features adolc atan2 benderquad checkpointing checkpoint conditional expressions nesting sparsity forward mode recomputation iterator interface library compile speed Ad&lt;double&gt; multiple directions numeric limits testing machine epsilon operation sequence optimization optimize tape expression hashing variable pairs preprocessor symbols software guidelines boost tracing "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -86,7 +87,7 @@ A:active { color : purple }
 <option>Forward Mode Recomputation</option>
 <option>Iterator Interface</option>
 <option>Library</option>
-<option>Multiple Argument Forward</option>
+<option>Multiple Directions</option>
 <option>Numeric Limits</option>
 <option>Operation Sequence</option>
 <option>Optimization</option>
@@ -224,10 +225,10 @@ done when the optimizer is using the sparsity pattern for this purpose.
 <b><big><a name="Forward Mode Recomputation" id="Forward Mode Recomputation">Forward Mode Recomputation</a></big></b>
 
 <br/>
-If the results of <a href="forwardany.xml" target="_top"><span style='white-space: nowrap'>ForwardAny</span></a>
+If the results of <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward_order</span></a>
  have already been computed and are still
 stored in the <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
- object (see <a href="size_taylor.xml" target="_top"><span style='white-space: nowrap'>size_taylor</span></a>
+ object (see <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
 ), 
 then they do not need to be recomputed and the results can just be returned.
 
@@ -264,15 +265,28 @@ the
 
 <br/>
 <br/>
-<b><big><a name="Multiple Argument Forward" id="Multiple Argument Forward">Multiple Argument Forward</a></big></b>
+<b><big><a name="Multiple Directions" id="Multiple Directions">Multiple Directions</a></big></b>
 
 
-<br/>
-It has been suggested that computing and storing forward mode
-results for multiple argument values
-is faster for Adolc. 
-Perhaps CppAD should allow for forward mode at 
-multiple argument values.
+
+<ol type="1"><li>
+Extend the <a href="forward_dir.xml" target="_top"><span style='white-space: nowrap'>forward_dir</span></a>
+ routine so they can do multiple orders
+as well as multiple directions at the same time.
+</li><li>
+
+Extend the <a href="atomic.xml" target="_top"><span style='white-space: nowrap'>atomic</span></a>
+ functions so they can use multiple directions
+and multiple orders at the same time
+(currently they compute one direction and one order at a time).
+</li><li>
+
+Extend the <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>Reverse</span></a>
+ routines so they can handle one reverse direction
+for multiple forward directions, or multiple reverse directions for
+one forward direction.
+</li></ol>
+
 
 <br/>
 <br/>

@@ -1,4 +1,4 @@
-/* $Id: cppad_eigen.cpp 3067 2013-12-29 17:35:34Z bradbell $ */
+/* $Id: cppad_eigen.cpp 3070 2013-12-31 15:09:11Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 

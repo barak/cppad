@@ -36,6 +36,7 @@ var list_down1 = [
 'license.xml'
 ];
 var list_down0 = [
+'whats_new_14.xml',
 'whats_new_13.xml',
 'whats_new_12.xml',
 'whats_new_11.xml',

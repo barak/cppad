@@ -47,6 +47,7 @@ var list_down0 = [
 'reverse_any.xml'
 ];
 var list_current0 = [
+'reverse.xml#Multiple Directions',
 'reverse.xml#Contents'
 ];
 function choose_across0(item)

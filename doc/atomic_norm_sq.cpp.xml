@@ -4,8 +4,9 @@
 >
 <head>
 <title>Euclidean Norm Squared: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Euclidean Norm Squared: Example and Test"/>
-<meta name="keywords" id="keywords" content=" norm_sq atomic operation Euclidean norm example "/>
+<meta name="keywords" id="keywords" content=" euclidean norm squared: example and test norm_sq atomic operation Euclidean theory start class definition constructor forward reverse for_sparse_jac rev_sparse_jac rev_sparse_hes end use function recording "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
 <option>atomic_tangent.cpp</option>
+<option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
 </select>
 </td>
@@ -211,21 +213,21 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 <code><font color='blue'><pre style='display:inline'> 
 	// forward mode routine called by CppAD
 	virtual bool forward(
-		size_t                    q ,
 		size_t                    p ,
+		size_t                    q ,
 		const vector&lt;bool&gt;&amp;      vx ,
 		      vector&lt;bool&gt;&amp;      vy ,
 		const vector&lt;double&gt;&amp;    tx ,
 		      vector&lt;double&gt;&amp;    ty
 	)
-	{	size_t n = tx.size() / (p+1);
-		size_t m = ty.size() / (p+1);
+	{	size_t n = tx.size() / (q+1);
+		size_t m = ty.size() / (q+1);
 		assert( n == 2 );
 		assert( m == 1 );
-		assert( q &lt;= p );
+		assert( p &lt;= q );
 
 		// return flag
-		bool ok = p &lt;= 1;
+		bool ok = q &lt;= 1;
 
 		// Variable information must always be implemented.
 		// y_0 is a variable if and only if x_0 or x_1 is a variable.
@@ -234,25 +236,25 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 
 		// Order zero forward mode must always be implemented.
 		// y^0 = f( x^0 ) 
-		double x_00 = tx[ 0*(p+1) + 0];        // x_0^0
-		double x_10 = tx[ 1*(p+1) + 0];        // x_10
+		double x_00 = tx[ 0*(q+1) + 0];        // x_0^0
+		double x_10 = tx[ 1*(q+1) + 0];        // x_10
 		double f = x_00 * x_00 + x_10 * x_10;  // f( x^0 )
-		if( q &lt;= 0 )
-			ty[0] = f;   // y_0^0
 		if( p &lt;= 0 )
+			ty[0] = f;   // y_0^0
+		if( q &lt;= 0 )
 			return ok;
 		assert( vx.size() == 0 );
 
 		// Order one forward mode.
 		// This case needed if first order forward mode is used.
 		// y^1 = f'( x^0 ) x^1
-		double x_01 = tx[ 0*(p+1) + 1];   // x_0^1
-		double x_11 = tx[ 1*(p+1) + 1];   // x_1^1
+		double x_01 = tx[ 0*(q+1) + 1];   // x_0^1
+		double x_11 = tx[ 1*(q+1) + 1];   // x_1^1
 		double fp_0 = 2.0 * x_00;         // partial f w.r.t x_0^0
 		double fp_1 = 2.0 * x_10;         // partial f w.r.t x_1^0
-		if( q &lt;= 1 )
-			ty[1] = fp_0 * x_01 + fp_1 * x_11; // f'( x^0 ) * x^1
 		if( p &lt;= 1 )
+			ty[1] = fp_0 * x_01 + fp_1 * x_11; // f'( x^0 ) * x^1
+		if( q &lt;= 1 )
 			return ok;
 
 		// Assume we are not using forward mode with order &gt; 1
@@ -268,22 +270,22 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 <code><font color='blue'><pre style='display:inline'> 
 	// reverse mode routine called by CppAD
 	virtual bool reverse(
-		size_t                    p ,
+		size_t                    q ,
 		const vector&lt;double&gt;&amp;    tx ,
 		const vector&lt;double&gt;&amp;    ty ,
 		      vector&lt;double&gt;&amp;    px ,
 		const vector&lt;double&gt;&amp;    py
 	)
-	{	size_t n = tx.size() / (p+1);
-		size_t m = ty.size() / (p+1);	
-		assert( px.size() == n * (p+1) );
-		assert( py.size() == m * (p+1) );
+	{	size_t n = tx.size() / (q+1);
+		size_t m = ty.size() / (q+1);	
+		assert( px.size() == n * (q+1) );
+		assert( py.size() == m * (q+1) );
 		assert( n == 2 );
 		assert( m == 1 );
-		bool ok = p &lt;= 1;	
+		bool ok = q &lt;= 1;	
 
 		double fp_0, fp_1;
-		switch(p)
+		switch(q)
 		{	case 0:
 			// This case needed if first order reverse mode is used
 			// F ( {x} ) = f( x^0 ) = y^0
@@ -295,7 +297,7 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 			break;
 
 			default:
-			// Assume we are not using reverse with order &gt; 1 (p &gt; 0)
+			// Assume we are not using reverse with order &gt; 1 (q &gt; 0)
 			assert(!ok);
 		}
 		return ok;
@@ -309,28 +311,28 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 <code><font color='blue'><pre style='display:inline'> 
 	// forward Jacobian bool sparsity routine called by CppAD
 	virtual bool for_sparse_jac(
-		size_t                                q ,
+		size_t                                p ,
 		const vector&lt;bool&gt;&amp;                   r ,
 		      vector&lt;bool&gt;&amp;                   s )
 	{	// This function needed if using f.ForSparseJac 
 		// with afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum )
-		size_t n = r.size() / q;
-		size_t m = s.size() / q;
+		size_t n = r.size() / p;
+		size_t m = s.size() / p;
 		assert( n == 2 );
 		assert( m == 1 );
 
 		// sparsity for S(x) = f'(x) * R 
 		// where f'(x) = 2 * [ x_0, x_1 ]
-		for(size_t j = 0; j &lt; q; j++)
+		for(size_t j = 0; j &lt; p; j++)
 		{	s[j] = false;
 			for(size_t i = 0; i &lt; n; i++)
-				s[j] |= r[i * q + j];
+				s[j] |= r[i * p + j];
 		}
 		return true; 
 	}
 	// forward Jacobian set sparsity routine called by CppAD
 	virtual bool for_sparse_jac(
-		size_t                                q ,
+		size_t                                p ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
 		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
 	{	// This function needed if using f.ForSparseJac 
@@ -355,27 +357,27 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 <code><font color='blue'><pre style='display:inline'> 
 	// reverse Jacobian bool sparsity routine called by CppAD
 	virtual bool rev_sparse_jac(
-		size_t                                q  ,
+		size_t                                p  ,
 		const vector&lt;bool&gt;&amp;                   rt ,
 		      vector&lt;bool&gt;&amp;                   st )
 	{	// This function needed if using RevSparseJac or optimize
 		// with afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum )
-		size_t n = st.size() / q;
-		size_t m = rt.size() / q;
+		size_t n = st.size() / p;
+		size_t m = rt.size() / p;
 		assert( n == 2 );
 		assert( m == 1 );
 
 		// sparsity for S(x)^T = f'(x)^T * R^T 
 		// where f'(x)^T = 2 * [ x_0, x_1]^T
-		for(size_t j = 0; j &lt; q; j++)
+		for(size_t j = 0; j &lt; p; j++)
 			for(size_t i = 0; i &lt; n; i++)
-				st[i * q + j] = rt[j];
+				st[i * p + j] = rt[j];
 
 		return true; 
 	}
 	// reverse Jacobian set sparsity routine called by CppAD
 	virtual bool rev_sparse_jac(
-		size_t                                q  ,
+		size_t                                p  ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     rt ,
 		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     st )
 	{	// This function needed if using RevSparseJac or optimize
@@ -404,7 +406,7 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 		const vector&lt;bool&gt;&amp;                   vx,
 		const vector&lt;bool&gt;&amp;                   s ,
 		      vector&lt;bool&gt;&amp;                   t ,
-		size_t                                q ,
+		size_t                                p ,
 		const vector&lt;bool&gt;&amp;                   r ,
 		const vector&lt;bool&gt;&amp;                   u ,
 		      vector&lt;bool&gt;&amp;                   v )
@@ -412,9 +414,9 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 		// with afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum )
 		size_t m = s.size();
 		size_t n = t.size();
-		assert( r.size() == n * q );
-		assert( u.size() == m * q );
-		assert( v.size() == n * q );
+		assert( r.size() == n * p );
+		assert( u.size() == m * p );
+		assert( v.size() == n * p );
 		assert( n == 2 );
 		assert( m == 1 );
 
@@ -431,17 +433,17 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 		
 		// back propagate the sparsity for U
 		size_t j;
-		for(j = 0; j &lt; q; j++)
+		for(j = 0; j &lt; p; j++)
 			for(size_t i = 0; i &lt; n; i++)
-				v[ i * q + j] = u[j];
+				v[ i * p + j] = u[j];
 
 		// include forward Jacobian sparsity in Hessian sparsity
 		// sparsity for g'(y) * f''(x) * R  (Note f''(x) has same sparsity
 		// as the identity matrix)
 		if( s[0] )
-		{	for(j = 0; j &lt; q; j++)
+		{	for(j = 0; j &lt; p; j++)
 				for(size_t i = 0; i &lt; n; i++)
-					v[ i * q + j] |= r[ i * q + j];
+					v[ i * p + j] |= r[ i * p + j];
 		}
 
 		return true;
@@ -451,7 +453,7 @@ class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
 		const vector&lt;bool&gt;&amp;                   vx,
 		const vector&lt;bool&gt;&amp;                   s ,
 		      vector&lt;bool&gt;&amp;                   t ,
-		size_t                                q ,
+		size_t                                p ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
 		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     v )
@@ -568,21 +570,21 @@ bool norm_sq(void)
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
 
 	// check zero order forward mode
-	size_t p;
-	vector&lt;double&gt; x_p(n), y_p(m);
-	p      = 0;
-	x_p[0] = x0;
-	x_p[1] = x1;
-	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+	size_t q;
+	vector&lt;double&gt; x_q(n), y_q(m);
+	q      = 0;
+	x_q[0] = x0;
+	x_q[1] = x1;
+	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
 
 	// check first order forward mode
-	p      = 1;
-	x_p[0] = 0.3;
-	x_p[1] = 0.7;
-	y_p    = f.<a href="forward.xml" target="_top">Forward</a>(p, x_p);
-	check  = 2.0 * x0 * x_p[0] + 2.0 * x1 * x_p[1];
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_p[0] , check,  eps, eps);
+	q      = 1;
+	x_q[0] = 0.3;
+	x_q[1] = 0.7;
+	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+	check  = 2.0 * x0 * x_q[0] + 2.0 * x1 * x_q[1];
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
 
 </pre></font></code>
 
@@ -592,10 +594,10 @@ bool norm_sq(void)
 
 <code><font color='blue'><pre style='display:inline'> 
 	// first order reverse mode 
-	p     = 1;
-	vector&lt;double&gt; w(m), dw(n * p);
+	q     = 1;
+	vector&lt;double&gt; w(m), dw(n * q);
 	w[0]  = 1.;
-	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
+	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(q, w);
 	check = 2.0 * x0;
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  eps, eps);
 	check = 2.0 * x1;
@@ -608,18 +610,18 @@ bool norm_sq(void)
 
 <code><font color='blue'><pre style='display:inline'> 
 	// forward mode sparstiy pattern
-	size_t q = n;
-	CppAD::vectorBool r1(n * q), s1(m * q);
+	size_t p = n;
+	CppAD::vectorBool r1(n * p), s1(m * p);
 	r1[0] = true;  r1[1] = false; // sparsity pattern identity
 	r1[2] = false; r1[3] = true;
 	//
 	afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
-	s1    = f.ForSparseJac(q, r1);
+	s1    = f.ForSparseJac(p, r1);
 	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
 	ok  &amp;= s1[1] == true;  // f[0] depends on x[1]  
 	//
 	afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
-	s1    = f.ForSparseJac(q, r1);
+	s1    = f.ForSparseJac(p, r1);
 	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
 	ok  &amp;= s1[1] == true;  // f[0] depends on x[1]  
 </pre></font></code>
@@ -630,17 +632,17 @@ bool norm_sq(void)
 
 <code><font color='blue'><pre style='display:inline'> 
 	// reverse mode sparstiy pattern
-	p = m;
-	CppAD::vectorBool s2(p * m), r2(p * n);
+	q = m;
+	CppAD::vectorBool s2(q * m), r2(q * n);
 	s2[0] = true;          // compute sparsity pattern for f[0]
 	//
 	afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
-	r2    = f.RevSparseJac(p, s2);
+	r2    = f.RevSparseJac(q, s2);
 	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
 	ok  &amp;= r2[1] == true;  // f[0] depends on x[1]  
 	//
 	afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
-	r2    = f.RevSparseJac(p, s2);
+	r2    = f.RevSparseJac(q, s2);
 	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
 	ok  &amp;= r2[1] == true;  // f[0] depends on x[1]  
 </pre></font></code>
@@ -651,18 +653,18 @@ bool norm_sq(void)
 
 <code><font color='blue'><pre style='display:inline'> 
 	// Hessian sparsity (using previous ForSparseJac call) 
-	CppAD::vectorBool s3(m), h(q * n);
+	CppAD::vectorBool s3(m), h(p * n);
 	s3[0] = true;        // compute sparsity pattern for f[0]
 	//
 	afun.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
-	h     = f.RevSparseHes(q, s3);
+	h     = f.RevSparseHes(p, s3);
 	ok  &amp;= h[0] == true;  // partial of f[0] w.r.t. x[0],x[0] is non-zero
 	ok  &amp;= h[1] == false; // partial of f[0] w.r.t. x[0],x[1] is zero
 	ok  &amp;= h[2] == false; // partial of f[0] w.r.t. x[1],x[0] is zero
 	ok  &amp;= h[3] == true;  // partial of f[0] w.r.t. x[1],x[1] is non-zero
 	//
 	afun.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
-	h     = f.RevSparseHes(q, s3);
+	h     = f.RevSparseHes(p, s3);
 	ok  &amp;= h[0] == true;  // partial of f[0] w.r.t. x[0],x[0] is non-zero
 	ok  &amp;= h[1] == false; // partial of f[0] w.r.t. x[0],x[1] is zero
 	ok  &amp;= h[2] == false; // partial of f[0] w.r.t. x[1],x[0] is zero

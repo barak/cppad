@@ -62,7 +62,11 @@ var list_current0 = [
 'fundeprecated.xml#taylor_size',
 'fundeprecated.xml#taylor_size.Deprecated',
 'fundeprecated.xml#use_VecAD',
-'fundeprecated.xml#use_VecAD.Deprecated'
+'fundeprecated.xml#use_VecAD.Deprecated',
+'fundeprecated.xml#size_taylor',
+'fundeprecated.xml#size_taylor.Deprecated',
+'fundeprecated.xml#capacity_taylor',
+'fundeprecated.xml#capacity_taylor.Deprecated'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

@@ -1,4 +1,4 @@
-/* $Id: atan2.hpp 3085 2014-01-20 22:53:15Z bradbell $ */
+/* $Id: atan2.hpp 3083 2014-01-10 18:35:07Z bradbell $ */
 # ifndef CPPAD_ATAN2_INCLUDED
 # define CPPAD_ATAN2_INCLUDED
 

@@ -4,8 +4,9 @@
 >
 <head>
 <title>Double Speed: Sparse Hessian</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Double Speed: Sparse Hessian"/>
-<meta name="keywords" id="keywords" content=" link_sparse_hessian double speed sparse hessian "/>
+<meta name="keywords" id="keywords" content=" double speed: sparse hessian link_sparse_hessian speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -111,14 +112,20 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
 
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+
 bool link_sparse_hessian(
 	size_t                           size     , 
 	size_t                           repeat   , 
-	CppAD::vector&lt;double&gt;           &amp;x        ,
-	const CppAD::vector&lt;size_t&gt;     &amp;row      ,
-	const CppAD::vector&lt;size_t&gt;     &amp;col      ,
-	CppAD::vector&lt;double&gt;           &amp;hessian  )
+	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
+	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
+	      CppAD::vector&lt;double&gt;&amp;     x        ,
+	      CppAD::vector&lt;double&gt;&amp;     hessian  )
 {
+	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
+		return false;
 	// -----------------------------------------------------
 	// setup
 	using CppAD::vector;
