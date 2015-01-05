@@ -1,9 +1,9 @@
-/* $Id: undef.hpp 3067 2013-12-29 17:35:34Z bradbell $ */
+// $Id: undef.hpp 3495 2014-12-24 01:16:15Z bradbell $
 # ifndef CPPAD_UNDEF_INCLUDED
 # define CPPAD_UNDEF_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -27,6 +27,7 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_BOOL_UNARY          in user api
 # undef CPPAD_DISCRETE_FUNCTION   in user api
 # undef CPPAD_EIGENVECTOR         in user api
+# undef CPPAD_COMPILER_HAS_ERF  in user api
 # undef CPPAD_INTERNAL_SPARSE_SET in user api
 # undef CPPAD_MAX_NUM_THREADS     in user api
 # undef CPPAD_NULL                in user api
@@ -58,6 +59,7 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 // Preprecessor definitions that do not presist 
 # undef CPPAD_ASSERT_NARG_NRES
 # undef CPPAD_ASSERT_NOT_PARALLEL
+# undef CPPAD_ASSERT_ARG_BEFORE_RESULT
 # undef CPPAD_BOOSTVECTOR
 # undef CPPAD_COND_EXP
 # undef CPPAD_COND_EXP_BASE_REL
@@ -67,6 +69,9 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_FOLD_ASSIGNMENT_OPERATOR
 # undef CPPAD_FOLD_BOOL_VALUED_BINARY_OPERATOR
 # undef CPPAD_FOR_JAC_SWEEP_TRACE
+# undef CPPAD_HAS_COLPACK
+# undef CPPAD_HAS_CSTDINT_8_TO_64
+# undef CPPAD_HAS_RVALUE
 # undef CPPAD_HAS_GETTIMEOFDAY
 # undef CPPAD_HAS_NULLPTR
 # undef CPPAD_INLINE_FRIEND_TEMPLATE_FUNCTION
@@ -76,14 +81,13 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_REVERSE_SWEEP_TRACE
 # undef CPPAD_REV_HES_SWEEP_TRACE
 # undef CPPAD_REV_JAC_SWEEP_TRACE
-# undef CPPAD_SIZE_T_SAME_UNSIGNED_INT
+# undef CPPAD_SIZE_T_NOT_UNSIGNED_INT
 # undef CPPAD_STANDARD_MATH_UNARY
 # undef CPPAD_STANDARD_MATH_UNARY_AD
 # undef CPPAD_STDVECTOR
 # undef CPPAD_TRACE_CAPACITY
 # undef CPPAD_TRACE_THREAD
 # undef CPPAD_TRACK_DEBUG
-# undef CPPAD_USE_FORWARD0SWEEP
 # undef CPPAD_USER_MACRO
 # undef CPPAD_USER_MACRO_ONE
 # undef CPPAD_USER_MACRO_TWO

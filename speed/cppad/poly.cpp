@@ -1,6 +1,6 @@
-/* $Id: poly.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: poly.cpp 3311 2014-05-28 16:21:08Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -12,7 +12,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin cppad_poly.cpp$$
 $spell
-	retape
+	onetape
 	coef
 	ddp
 	ADScalar
@@ -51,7 +51,10 @@ $head Implementation$$
 $codep */
 # include <cppad/cppad.hpp>
 # include <cppad/speed/uniform_01.hpp>
-# include "print_optimize.hpp"
+
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize;
 
 bool link_poly(
 	size_t                     size     , 
@@ -61,7 +64,6 @@ bool link_poly(
 	CppAD::vector<double>     &ddp      )  // second derivative w.r.t z  
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
 	if( global_atomic )
 		return false;
 
@@ -92,13 +94,8 @@ bool link_poly(
 	// AD function object
 	CppAD::ADFun<double> f;
 
-	// use the unspecified fact that size is non-decreasing between calls
-	static size_t previous_size = 0;
-	bool print    = (repeat > 1) & (previous_size != size);
-	previous_size = size;
-
 	// --------------------------------------------------------------------
-	if( global_retape ) while(repeat--)
+	if( ! global_onetape ) while(repeat--)
 	{
 		// choose an argument value
 		CppAD::uniform_01(1, z);
@@ -114,12 +111,10 @@ bool link_poly(
 		f.Dependent(Z, P);
 
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_poly_optimize", size);
-			print = false;
-		}
+			f.optimize();
 
 		// pre-allocate memory for three forward mode calculations
-		f.capacity_taylor(3);
+		f.capacity_order(3);
 
 		// evaluate the polynomial 
 		p = f.Forward(0, z);
@@ -146,11 +141,8 @@ bool link_poly(
 		// create function object f : A -> detA
 		f.Dependent(Z, P);
 
-		extern bool global_optimize;
 		if( global_optimize )
-		{	print_optimize(f, print, "cppad_poly_optimize", size);
-			print = false;
-		}
+			f.optimize();
 
 		while(repeat--)
 		{	// sufficient memory is allocated by second repetition

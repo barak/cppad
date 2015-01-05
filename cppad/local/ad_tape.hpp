@@ -1,9 +1,9 @@
-/* $Id: ad_tape.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: ad_tape.hpp 3153 2014-03-04 19:49:06Z bradbell $ */
 # ifndef CPPAD_AD_TAPE_INCLUDED
 # define CPPAD_AD_TAPE_INCLUDED
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -156,7 +156,7 @@ value of the parameter that we are placing in the tape.
 \return 
 variable index (for this recording) correpsonding to the parameter.
 
-\par Wish List
+\par 2DO
 All these operates are preformed in \c Rec_, so we should
 move this routine from <tt>ADTape<Base></tt> to <tt>recorder<Base></tt>.
 */
@@ -186,7 +186,15 @@ size of the <tt>VecAD<Base></tt> object.
 initial values for the <tt>VecAD<Base></tt> object
 (values before it becomes a variable).
 
-\par Wish List
+\return
+index of the start of this vector in the list of vector indices.
+The value for this vector index is the length of the vector.
+There are \c length indices following for this vector.
+The values for these vector indices are the corresponding
+parameter indices in the tape for the initial value of the corresponding
+vec_ad element.  
+
+\par 2DO
 All these operates are preformed in \c Rec_, so we should
 move this routine from <tt>ADTape<Base></tt> to <tt>recorder<Base></tt>.
 */

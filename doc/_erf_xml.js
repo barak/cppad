@@ -46,6 +46,8 @@ var list_current0 = [
 'erf.xml#x',
 'erf.xml#Operation Sequence',
 'erf.xml#Method',
+'erf.xml#Method.CPPAD_COMPILER_HAS_ERF',
+'erf.xml#Method.Other',
 'erf.xml#Example'
 ];
 function choose_across0(item)

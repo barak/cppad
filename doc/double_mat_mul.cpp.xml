@@ -4,8 +4,9 @@
 >
 <head>
 <title>CppAD Speed: Matrix Multiplication (Double Version)</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Speed: Matrix Multiplication (Double Version)"/>
-<meta name="keywords" id="keywords" content=" cppad speed matrix multiply link_mat_mul "/>
+<meta name="keywords" id="keywords" content=" cppad speed: matrix multiplication (double version) speed multiply specifications implementation link_mat_mul "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -112,6 +113,10 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize;
+
 bool link_mat_mul(
 	size_t                           size     , 
 	size_t                           repeat   , 
@@ -120,6 +125,8 @@ bool link_mat_mul(
 	CppAD::vector&lt;double&gt;&amp;           dz
 )
 {
+	if(global_onetape||global_atomic||global_optimize)
+		return false;
 	// -----------------------------------------------------
 	size_t n = size * size; // number of independent variables
 	CppAD::vector&lt;double&gt; y(n);

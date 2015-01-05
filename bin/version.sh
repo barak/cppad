@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: version.sh 2725 2013-01-07 03:52:36Z bradbell $
+# $Id: version.sh 3479 2014-12-17 14:03:11Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -75,7 +75,7 @@ sed  \
 #
 echo 'sed -i.old configure.ac ...'
 sed  \
-	-e "s/(cppad, [0-9]\{8\}[.0-9]* *,/(cppad, $version,/"  \
+	-e "s/(\[cppad\], *\[[0-9]\{8\}[.0-9]*\] *,/([cppad], [$version],/"  \
 	-i.old configure.ac
 #
 echo 'sed -i.old configure ...'

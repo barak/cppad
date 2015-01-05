@@ -4,8 +4,9 @@
 >
 <head>
 <title>Adolc Speed: Sparse Hessian</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Adolc Speed: Sparse Hessian"/>
-<meta name="keywords" id="keywords" content=" link_sparse_hessian adolc speed sparse hessian "/>
+<meta name="keywords" id="keywords" content=" adolc speed: sparse hessian link_sparse_hessian speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -115,19 +116,22 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 # include &lt;cppad/thread_alloc.hpp&gt;
 # include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
 
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+extern bool global_colpack, global_boolsparsity;
+
 bool link_sparse_hessian(
 	size_t                           size     , 
 	size_t                           repeat   , 
-	CppAD::vector&lt;double&gt;           &amp;x_return ,
-	const CppAD::vector&lt;size_t&gt;     &amp;row      ,
-	const CppAD::vector&lt;size_t&gt;     &amp;col      ,
-	CppAD::vector&lt;double&gt;           &amp;hessian  )
+	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
+	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
+	      CppAD::vector&lt;double&gt;&amp;     x_return ,
+	      CppAD::vector&lt;double&gt;&amp;     hessian  )
 {
-	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( global_atomic || global_optimize )
+	if( global_atomic || (! global_colpack) )
 		return false; 
-
+	if( global_memory || global_optimize || global_boolsparsity )
+		return false;
 	// -----------------------------------------------------
 	// setup
 	typedef unsigned int*    SizeVector;
@@ -173,7 +177,7 @@ bool link_sparse_hessian(
 			hessian[ i * n + j ] = 0.;
 	}
 	// ----------------------------------------------------------------------
-	if( global_retape ) while(repeat--)
+	if( ! global_onetape ) while(repeat--)
 	{	// choose a value for x
 		CppAD::uniform_01(n, x);
 

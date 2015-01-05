@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 2991 2013-10-22 16:25:15Z bradbell $
+# $Id: CMakeLists.txt 3301 2014-05-24 05:20:21Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -16,47 +16,42 @@
 # empty, Debug, Release, RelWithDebInfo and MinSizeRel
 SET(CMAKE_BUILD_TYPE DEBUG)
 
+# initialize check_depends
+SET(check_depends example)
+
 # atomic examples
 ADD_SUBDIRECTORY(atomic)
+add_to_list(check_depends check_example_atomic)
 
 # adolc_prefix
-IF ( adolc_prefix )
-	# Extra source files if we are including adolc
-	SET(adolc_sources 
-		mul_level_adolc.cpp mul_level_adolc_ode.cpp
-	)
-	# Adds -D define flags to the compilation of source files.
-	ADD_DEFINITIONS("-DCPPAD_ADOLC_EXAMPLES")
-	# add adolc to list of libraries
-	SET(example_adolc adolc)
-ELSE ( adolc_prefix )
-	SET(adolc_sources "")
-	SET(example_adolc "")
-ENDIF ( adolc_prefix )
+SET(sources mul_level_adolc.cpp mul_level_adolc_ode.cpp)
+sources_libs_define(adolc "${sources}" adolc ADOLC_EXAMPLES)
+
+# colpack_prefix
+SET(sources colpack.cpp ../cppad/local/cppad_colpack.cpp)
+sources_libs_define(colpack "${sources}" ColPack COLPACK_EXAMPLES)
 
 # eigen_prefix
 IF ( eigen_prefix )
 	# compile eigen library separately so can use different compiler flags
-	ADD_LIBRARY(example_eigen 
+	ADD_LIBRARY(example_eigen_lib EXCLUDE_FROM_ALL
 		eigen_det.cpp
 		eigen_array.cpp
 	)
 	# Adds -D define flags to the compilation of source files.
 	ADD_DEFINITIONS("-DCPPAD_EIGEN_EXAMPLES")
-	add_cppad_cxx_flags(example_eigen)
+	add_cppad_cxx_flags(example_eigen_lib)
 	#
 	# Add eigen to list of libraries
-	SET(example_eigen example_eigen)
+	SET(eigen_libs example_eigen_lib)
 ELSE ( eigen_prefix )
-	SET(example_eigen "")
+	SET(eigen_libs "")
 ENDIF ( eigen_prefix )
 
 # ipopt_prefix
 IF( ipopt_prefix )
 	ADD_SUBDIRECTORY(ipopt_solve)
-	SET(example_ipopt check_example_ipopt_solve)
-ELSE( ipopt_prefix )
-	SET(example_ipopt "")
+	add_to_list(check_depends check_example_ipopt_solve)
 ENDIF( ipopt_prefix )
 
 
@@ -73,6 +68,7 @@ CONFIGURE_FILE(
 # )
 ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	${adolc_sources}
+	${colpack_sources}
 	abort_recording.cpp
 	abs.cpp
 	acos.cpp
@@ -91,7 +87,7 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	base_require.cpp
 	bender_quad.cpp
 	bool_fun.cpp
-	capacity_taylor.cpp
+	capacity_order.cpp
 	change_const.cpp
 	check_for_nan.cpp
 	check_numeric_type.cpp
@@ -113,7 +109,8 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	for_one.cpp
 	for_two.cpp
 	forward.cpp
-	forward_mul.cpp
+	forward_dir.cpp
+	forward_order.cpp
 	for_sparse_jac.cpp
 	fun_assign.cpp
 	fun_check.cpp
@@ -205,11 +202,11 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 add_cppad_cxx_flags(example) 
 
 # List of libraries to be linked into the specified target
-TARGET_LINK_LIBRARIES(example ${example_adolc} ${example_eigen})
+TARGET_LINK_LIBRARIES(example 
+	${adolc_libs} 
+	${colpack_libs} 
+	${eigen_libs}
+)
 
 # Add the check_example target
-ADD_CUSTOM_TARGET(check_example example DEPENDS 
-	example 
-	check_example_atomic 
-	${example_ipopt}
-)
+ADD_CUSTOM_TARGET(check_example example DEPENDS ${check_depends})

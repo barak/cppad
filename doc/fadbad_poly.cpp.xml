@@ -4,8 +4,9 @@
 >
 <head>
 <title>Fadbad Speed: Second Derivative of a Polynomial</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Fadbad Speed: Second Derivative of a Polynomial"/>
-<meta name="keywords" id="keywords" content=" link_poly fadbad speed polynomial "/>
+<meta name="keywords" id="keywords" content=" fadbad speed: second derivative of a polynomial link_poly speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -112,6 +113,9 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;FADBAD++/tadiff.h&gt;
 
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 bool link_poly(
 	size_t                     size     , 
 	size_t                     repeat   , 
@@ -119,11 +123,10 @@ bool link_poly(
 	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
 	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z  
 {
-	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_atomic || global_optimize )
+	if( global_atomic )
 		return false;
-
+	if( global_memory || global_onetape || global_optimize )
+		return false;
 	// -----------------------------------------------------
 	// setup
 	size_t i;             // temporary index     

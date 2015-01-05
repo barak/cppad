@@ -15,12 +15,13 @@ var list_up0 = [
 var list_down3 = [
 'download.xml',
 'cmake.xml',
-'cppad_test.xml',
+'cmake_check.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];
 var list_down2 = [
 'adolc_prefix.xml',
+'colpack_prefix.xml',
 'eigen_prefix.xml',
 'fadbad_prefix.xml',
 'ipopt_prefix.xml',
@@ -29,9 +30,6 @@ var list_down2 = [
 ];
 var list_down1 = [
 'get_adolc.sh.xml'
-];
-var list_down0 = [
-'get_colpack.sh.xml'
 ];
 var list_current0 = [
 'get_adolc.sh.xml#Syntax',

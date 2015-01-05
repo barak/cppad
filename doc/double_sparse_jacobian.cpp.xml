@@ -4,8 +4,9 @@
 >
 <head>
 <title>Double Speed: Sparse Jacobian</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Double Speed: Sparse Jacobian"/>
-<meta name="keywords" id="keywords" content=" link_sparse_jacobian double speed sparse jacobian "/>
+<meta name="keywords" id="keywords" content=" double speed: sparse jacobian link_sparse_jacobian speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -111,44 +112,35 @@ See <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: n
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/sparse_jac_fun.hpp&gt;
 
+// Note that CppAD uses global_memory at the main program level
+extern bool
+	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+
 bool link_sparse_jacobian(
-	size_t                     size     , 
-	size_t                     repeat   , 
-	size_t                     m        ,
-	CppAD::vector&lt;double&gt;     &amp;x        ,
-	CppAD::vector&lt;size_t&gt;     &amp;row      ,
-	CppAD::vector&lt;size_t&gt;     &amp;col      ,
-	CppAD::vector&lt;double&gt;     &amp;jacobian )
+	size_t                           size     , 
+	size_t                           repeat   , 
+	size_t                           m        ,
+	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
+	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
+	      CppAD::vector&lt;double&gt;&amp;     x        ,
+	      CppAD::vector&lt;double&gt;&amp;     jacobian ,
+	      size_t&amp;                    n_sweep  )
 {
+	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
+		return false;
 	// -----------------------------------------------------
 	// setup
 	using CppAD::vector;
-	size_t i, k;
+	size_t i;
 	size_t order = 0;          // order for computing function value
 	size_t n     = size;       // argument space dimension
-	size_t K     = row.size(); // size of index vectors
 	vector&lt;double&gt; yp(m);      // function value yp = f(x)
 
-	// temporaries
-	vector&lt;double&gt; tmp(2 * K);
-
-	// choose a value for x
-	CppAD::uniform_01(n, x);
-	
 	// ------------------------------------------------------
-
 	while(repeat--)
-	{
-		// get the next set of indices
-		CppAD::uniform_01(2 * K, tmp);
-		for(k = 0; k &lt; K; k++)
-		{	row[k] = size_t( n * tmp[k] );
-			row[k] = std::min(n-1, row[k]);
-			//
-			col[k] = size_t( n * tmp[k + K] );
-			col[k] = std::min(n-1, col[k]);
-		}
-
+	{	// choose a value for x
+		CppAD::uniform_01(n, x);
+	
 		// computation of the function
 		CppAD::sparse_jac_fun&lt;double&gt;(m, n, x, row, col, order, yp);
 	}

@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: test_one.sh.in 3073 2014-01-01 11:48:13Z bradbell $
+# $Id: test_one.sh.in 3322 2014-09-12 10:29:34Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -50,7 +50,7 @@ cmd="g++ test_one.cpp $*
 	$cxxflags
 	-g
 	-fopenmp
-	-lboost_thread-mt
+	-lboost_thread
 	-lpthread
 	-std=c++11 -DCPPAD_ADOLC_EXAMPLES -DCPPAD_EIGEN_EXAMPLES
 	-I.. 
@@ -58,6 +58,10 @@ cmd="g++ test_one.cpp $*
 if [ -e @adolc_prefix@/include ]
 then
 	cmd="$cmd -I@adolc_prefix@/include"
+fi
+if [ -e @colpack_prefix@/include ]
+then
+	cmd="$cmd -I@colpack_prefix@/include"
 fi
 if [ -e @eigen_prefix@/include ]
 then
@@ -69,6 +73,11 @@ do
 	then
 		cmd="$cmd -L@adolc_prefix@/$lib -ladolc -lColPack"
 		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@adolc_prefix@/$lib"
+	fi
+	if [ -e @colpack_prefix@/$lib ]
+	then
+		cmd="$cmd -L@colpack_prefix@/$lib -lColPack"
+		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@colpack_prefix@/$lib"
 	fi
 done
 echo $cmd

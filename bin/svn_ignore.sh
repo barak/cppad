@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: svn_ignore.sh 2875 2013-07-29 11:56:01Z bradbell $
+# $Id: svn_ignore.sh 3492 2014-12-21 16:23:41Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -18,6 +18,7 @@ fi
 # -----------------------------------------------------------------------------
 cat << EOF > bin/svn_ignore.$$
 aclocal.m4
+ar-lib
 autom4te.cache
 build
 check_all.err

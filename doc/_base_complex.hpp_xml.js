@@ -50,6 +50,7 @@ var list_current0 = [
 'base_complex.hpp.xml#EqualOpSeq',
 'base_complex.hpp.xml#Identical',
 'base_complex.hpp.xml#Ordered',
+'base_complex.hpp.xml#erf',
 'base_complex.hpp.xml#Integer',
 'base_complex.hpp.xml#isnan',
 'base_complex.hpp.xml#Valid Unary Math',

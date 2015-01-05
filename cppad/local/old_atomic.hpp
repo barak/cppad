@@ -1,8 +1,8 @@
-/* $Id: old_atomic.hpp 2910 2013-10-07 13:27:58Z bradbell $ */
+/* $Id: old_atomic.hpp 3232 2014-04-27 15:38:21Z bradbell $ */
 # ifndef CPPAD_OLD_ATOMIC_INCLUDED
 # define CPPAD_OLD_ATOMIC_INCLUDED
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -340,7 +340,7 @@ by calls to $icode afun$$.
 It is used,
 with $icode%vx%.size() = 0%$$ and
 $icode k$$ equal to the order of the derivative begin computed,
-by calls to $cref/forward/ForwardAny/$$.
+by calls to $cref/forward/forward_order/$$.
 
 $subhead vx$$
 The $icode forward$$ argument $icode vx$$ has prototype
@@ -747,8 +747,6 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
-\defgroup old_atomic_hpp old_atomic.hpp
-\{
 \file old_atomic.hpp
 user defined atomic operations.
 */
@@ -984,38 +982,38 @@ public:
 	\copydetails atomic_base::forward
  	*/
 	virtual bool forward(
-		size_t                    q ,
 		size_t                    p ,
+		size_t                    q ,
 		const vector<bool>&      vx , 
 		      vector<bool>&      vy , 
 		const vector<Base>&      tx ,
 		      vector<Base>&      ty )
-	{	CPPAD_ASSERT_UNKNOWN( tx.size() % (p+1) == 0 );
-		CPPAD_ASSERT_UNKNOWN( ty.size() % (p+1) == 0 );
-		size_t n = tx.size() / (p+1);
-		size_t m = ty.size() / (p+1);
+	{	CPPAD_ASSERT_UNKNOWN( tx.size() % (q+1) == 0 );
+		CPPAD_ASSERT_UNKNOWN( ty.size() % (q+1) == 0 );
+		size_t n = tx.size() / (q+1);
+		size_t m = ty.size() / (q+1);
 		size_t i, j, k, ell;
 
-		vector<Base> x(n * (p+1));
-		vector<Base> y(m * (p+1));
+		vector<Base> x(n * (q+1));
+		vector<Base> y(m * (q+1));
 		vector<bool> empty;
 
 		// old_atomic interface can only handel one order at a time
 		// so must just throuh hoops to get multiple orders at one time.
 		bool ok = true;
-		for(k = q; k <= p; k++)
+		for(k = p; k <= q; k++)
 		{	for(j = 0; j < n; j++)
 				for(ell = 0; ell <= k; ell++)
-					x[ j * (k+1) + ell ] = tx[ j * (p+1) + ell ];
+					x[ j * (k+1) + ell ] = tx[ j * (q+1) + ell ];
 			for(i = 0; i < m; i++)
 				for(ell = 0; ell < k; ell++)
-					y[ i * (k+1) + ell ] = ty[ i * (p+1) + ell ];
+					y[ i * (k+1) + ell ] = ty[ i * (q+1) + ell ];
 			if( k == 0 )
 				ok &= f_(id_, k, n, m, vx, vy, x, y);
 			else
 				ok &= f_(id_, k, n, m, empty, empty, x, y);
 			for(i = 0; i < m; i++)
-				ty[ i * (p+1) + k ] = y[ i * (k+1) + k];
+				ty[ i * (q+1) + k ] = y[ i * (k+1) + k];
 		}
 		return ok;
 	}
@@ -1025,16 +1023,16 @@ public:
 	\copydetails atomic_base::reverse
  	*/
 	virtual bool reverse(
-		size_t                   p ,
+		size_t                   q ,
 		const vector<Base>&     tx ,
 		const vector<Base>&     ty ,
 		      vector<Base>&     px ,
 		const vector<Base>&     py )
-	{	CPPAD_ASSERT_UNKNOWN( tx.size() % (p+1) == 0 );
-		CPPAD_ASSERT_UNKNOWN( ty.size() % (p+1) == 0 );
-		size_t n = tx.size() / (p+1);
-		size_t m = ty.size() / (p+1);
-		bool   ok = r_(id_, p, n, m, tx, ty, px, py);
+	{	CPPAD_ASSERT_UNKNOWN( tx.size() % (q+1) == 0 );
+		CPPAD_ASSERT_UNKNOWN( ty.size() % (q+1) == 0 );
+		size_t n = tx.size() / (q+1);
+		size_t m = ty.size() / (q+1);
+		bool   ok = r_(id_, q, n, m, tx, ty, px, py);
 		return ok;
 	}
 	/*!
@@ -1091,6 +1089,5 @@ public:
 	}
 };
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

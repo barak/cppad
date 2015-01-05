@@ -39,14 +39,15 @@ var list_down1 = [
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
 'atomic_tangent.cpp.xml',
+'atomic_hes_sparse.cpp.xml',
 'atomic_mat_mul.cpp.xml'
 ];
 var list_current0 = [
 'atomic_forward.xml#Syntax',
 'atomic_forward.xml#Purpose',
 'atomic_forward.xml#Implementation',
-'atomic_forward.xml#q',
 'atomic_forward.xml#p',
+'atomic_forward.xml#q',
 'atomic_forward.xml#vx',
 'atomic_forward.xml#vy',
 'atomic_forward.xml#tx',

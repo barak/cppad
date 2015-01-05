@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3012 2013-11-27 22:00:48Z bradbell $
+# $Id: CMakeLists.txt 3505 2014-12-26 15:06:54Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -20,6 +20,7 @@ ADD_EXECUTABLE(example_atomic EXCLUDE_FROM_ALL
 	atomic.cpp
 	checkpoint.cpp
 	get_started.cpp
+	hes_sparse.cpp
 	mat_mul.cpp
 	norm_sq.cpp
 	reciprocal.cpp

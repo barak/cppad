@@ -43,9 +43,8 @@ var list_down0 = [
 ];
 var list_current0 = [
 'speed_fadbad.xml#Purpose',
-'speed_fadbad.xml#fadbad_dir',
+'speed_fadbad.xml#fadbad_prefix',
 'speed_fadbad.xml#Running Tests',
-'speed_fadbad.xml#C++ Compiler Flags',
 'speed_fadbad.xml#Contents'
 ];
 function choose_across0(item)

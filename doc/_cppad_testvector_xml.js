@@ -27,12 +27,13 @@ var list_down3 = [
 var list_down2 = [
 'download.xml',
 'cmake.xml',
-'cppad_test.xml',
+'cmake_check.xml',
 'pkgconfig.xml',
 'installunix.xml'
 ];
 var list_down1 = [
 'adolc_prefix.xml',
+'colpack_prefix.xml',
 'eigen_prefix.xml',
 'fadbad_prefix.xml',
 'ipopt_prefix.xml',

@@ -39,13 +39,14 @@ var list_down1 = [
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
 'atomic_tangent.cpp.xml',
+'atomic_hes_sparse.cpp.xml',
 'atomic_mat_mul.cpp.xml'
 ];
 var list_current0 = [
 'atomic_reverse.xml#Syntax',
 'atomic_reverse.xml#Purpose',
 'atomic_reverse.xml#Implementation',
-'atomic_reverse.xml#p',
+'atomic_reverse.xml#q',
 'atomic_reverse.xml#tx',
 'atomic_reverse.xml#ty',
 'atomic_reverse.xml#F, G, H',

@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: build.sh 3067 2013-12-29 17:35:34Z bradbell $
+# $Id: build.sh 3509 2014-12-27 20:38:37Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -219,7 +219,7 @@ then
 	cxx_flags="-Wall -ansi -pedantic-errors -std=c++98 -Wshadow"
 #_build_test_only:	if [ -e $EIGEN_DIR/include/Eigen ]
 #_build_test_only:	then
-#_build_test_only:	cxx_flags="-Wall -ansi -pedantic-errors -std=c++98 -Wno-long-long"
+#_build_test_only:	cxx_flags="-Wall -ansi -pedantic-errors -std=c++98 -Wno-long-long -Wno-sign-compare"
 #_build_test_only:	fi
 cat << EOF
 ../configure > $log_file \\
@@ -282,8 +282,9 @@ then
 	#
 	# Run automated checking of file names in original source directory
 	list="
+		check_define.sh
 		check_example.sh
-		check_if_0.sh
+		check_if.sh
 		check_include_def.sh
 		check_include_file.sh
 		check_include_omh.sh

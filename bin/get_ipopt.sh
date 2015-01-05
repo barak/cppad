@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: get_ipopt.sh 2931 2013-10-12 13:13:45Z bradbell $
+# $Id: get_ipopt.sh 3408 2014-11-27 15:17:20Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -63,7 +63,7 @@ echo_eval() {
 }
 # -----------------------------------------------------------------------------
 echo 'Download ipopt to build/external and install it to build/prefix'
-version='3.11.4'
+version='3.11.9'
 web_page='http://www.coin-or.org/download/source/Ipopt'
 prefix=`pwd`'/build/prefix'
 # -----------------------------------------------------------------------------

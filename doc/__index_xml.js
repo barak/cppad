@@ -46,6 +46,8 @@ var list_current0 = [
 '_index.xml#U',
 '_index.xml#V',
 '_index.xml#W',
+'_index.xml#X',
+'_index.xml#Y',
 '_index.xml#Z'
 ];
 function choose_across0(item)

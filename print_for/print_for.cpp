@@ -1,6 +1,6 @@
-/* $Id: print_for.cpp 2683 2012-12-30 18:17:03Z bradbell $ */
+/* $Id: print_for.cpp 3114 2014-02-22 16:20:39Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -38,7 +38,7 @@ $index example, print forward mode$$
 $index print, example forward mode$$
 
 $head Running$$
-To build this program and run its correctness test see $cref cppad_test$$.
+To build this program and run its correctness test see $cref cmake_check$$.
 
 $head Source Code$$
 $codep */

@@ -4,8 +4,9 @@
 >
 <head>
 <title>The AD Error Function</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The AD Error Function"/>
-<meta name="keywords" id="keywords" content=" erf Ad function error "/>
+<meta name="keywords" id="keywords" content=" the ad error function erf Ad syntax description x operation sequence method cppad_compiler_has_erf Cppad_compiler_has_erf other example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -91,6 +92,8 @@ A:active { color : purple }
 <option>x</option>
 <option>Operation Sequence</option>
 <option>Method</option>
+<option>---..CPPAD_COMPILER_HAS_ERF</option>
+<option>---..Other</option>
 <option>Example</option>
 </select>
 </td>
@@ -178,8 +181,32 @@ of
 <br/>
 <br/>
 <b><big><a name="Method" id="Method">Method</a></big></b>
+
+
 <br/>
-This is a fast approximation (few numerical operations) 
+<br/>
+<b><a name="Method.CPPAD_COMPILER_HAS_ERF" id="Method.CPPAD_COMPILER_HAS_ERF">CPPAD_COMPILER_HAS_ERF</a></b>
+
+<br/>
+This preprocessor symbol is one if
+the function 
+<code><font color="blue"><span style='white-space: nowrap'>std::erf(double&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+ is defined the in the
+include file <code><font color="blue">&lt;cmath&gt;</font></code>.
+Otherwise this preprocessor symbol is zero.
+If this preprocessor symbols is one,
+CppAD uses the compiler's version of <code><font color="blue">erf</font></code>
+and it corresponds to an <a href="glossary.xml#Operation.Atomic" target="_top"><span style='white-space: nowrap'>atomic</span></a>
+ operation.
+
+<br/>
+<br/>
+<b><a name="Method.Other" id="Method.Other">Other</a></b>
+<br/>
+If the function 
+<code><font color="blue"><span style='white-space: nowrap'>std::erf(double&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+ is not defined, 
+CppAD uses a fast approximation (few numerical operations) 
 with relative error bound 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mn>4</mn>

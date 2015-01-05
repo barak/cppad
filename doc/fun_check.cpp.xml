@@ -4,8 +4,9 @@
 >
 <head>
 <title>ADFun Check and Re-Tape: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="ADFun Check and Re-Tape: Example and Test"/>
-<meta name="keywords" id="keywords" content=" Funcheck example test Adfun Dependent "/>
+<meta name="keywords" id="keywords" content=" adfun check and re-tape: example test Funcheck Adfun Dependent "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -142,7 +143,7 @@ bool FunCheckCases(void)
 
 	// stop tape and store operation sequence in f : X -&gt; Y
 	f.Dependent(X, Y);
-	ok &amp;= (f.size_taylor() == 0);  // no implicit forward operation
+	ok &amp;= (f.size_order() == 0);  // no implicit forward operation
 
 	// create function object to use with double
 	Fun&lt;double, Vector&gt; g(n);
@@ -171,7 +172,7 @@ bool FunCheckCases(void)
 
 	// stop tape and store operation sequence in f : X -&gt; Y
 	f.Dependent(X, Y);
-	ok &amp;= (f.size_taylor() == 0);  // no implicit forward with this x
+	ok &amp;= (f.size_order() == 0);  // no implicit forward with this x
 
 	// function values should agree now
 	ok      &amp;= FunCheck(f, g, x, a, r);

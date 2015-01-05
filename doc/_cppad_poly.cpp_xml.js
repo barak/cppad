@@ -40,8 +40,7 @@ var list_down1 = [
 'cppad_ode.cpp.xml',
 'cppad_poly.cpp.xml',
 'cppad_sparse_hessian.cpp.xml',
-'cppad_sparse_jacobian.cpp.xml',
-'cppad_print_optimize.xml'
+'cppad_sparse_jacobian.cpp.xml'
 ];
 var list_current0 = [
 'cppad_poly.cpp.xml#Specifications',

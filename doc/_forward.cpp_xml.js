@@ -10,35 +10,28 @@ var list_up0 = [
 'adfun.xml',
 'funeval.xml',
 'forward.xml',
+'forward_order.xml',
 'forward.cpp.xml'
 ];
 var list_down3 = [
-'independent.xml',
-'funconstruct.xml',
-'dependent.xml',
-'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
-'drivers.xml',
-'funcheck.xml',
-'optimize.xml',
-'check_for_nan.xml'
-];
-var list_down2 = [
 'forward.xml',
 'reverse.xml',
 'sparse.xml'
 ];
-var list_down1 = [
-'forwardzero.xml',
-'forwardone.xml',
-'forwardany.xml',
-'size_taylor.xml',
+var list_down2 = [
+'forward_zero.xml',
+'forward_one.xml',
+'forward_two.xml',
+'forward_order.xml',
+'forward_dir.xml',
+'size_order.xml',
 'comparechange.xml',
-'capacity_taylor.xml',
-'number_skip.xml',
+'capacity_order.xml',
+'number_skip.xml'
+];
+var list_down1 = [
 'forward.cpp.xml',
-'forward_mul.cpp.xml'
+'forward_order.cpp.xml'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

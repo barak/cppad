@@ -1,6 +1,6 @@
-/* $Id: vec_fun_pattern.cpp 2625 2012-12-23 14:34:12Z bradbell $ */
+/* $Id: vec_fun_pattern.cpp 3223 2014-03-19 15:13:26Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -15,7 +15,6 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 namespace cppad_ipopt {
 // ---------------------------------------------------------------------------
 /*!
-\defgroup vec_fun_pattern_cpp vec_fun_pattern.cpp
 \{
 \file vec_fun_pattern.cpp
 \brief Determine a sparsity pattern for a vector of AD function objects.
@@ -140,6 +139,5 @@ void vec_fun_pattern(
 	}
 }
 // ---------------------------------------------------------------------------
-/*! \} */
 } // end namespace cppad_ipopt
 // ---------------------------------------------------------------------------

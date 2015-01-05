@@ -1,4 +1,4 @@
-/* $Id: optimize.hpp 3085 2014-01-20 22:53:15Z bradbell $ */
+/* $Id: optimize.hpp 3507 2014-12-27 16:30:12Z bradbell $ */
 # ifndef CPPAD_OPTIMIZE_INCLUDED
 # define CPPAD_OPTIMIZE_INCLUDED
 
@@ -64,13 +64,13 @@ derivatives using the original operation sequence.
 $subhead Testing$$
 You can run the CppAD $cref/speed/speed_main/$$ tests and see
 the corresponding changes in number of variables and execution time; 
-see $cref cppad_test$$.
+see $cref cmake_check$$.
 
 $head Efficiency$$
 The $code optimize$$ member function
 may greatly reduce the number of variables 
 in the operation sequence; see $cref/size_var/seq_property/size_var/$$.
-If a $cref/zero order forward/ForwardZero/$$ calculation is done during
+If a $cref/zero order forward/forward_zero/$$ calculation is done during
 the construction of $icode f$$, it will require more memory
 and time than required after the optimization procedure.
 In addition, it will need to be redone.
@@ -114,8 +114,8 @@ the value of $icode%u%[%i%]%$$ is set to $cref nan$$.
 $head Checking Optimization$$
 $index NDEBUG$$
 If $cref/NDEBUG/Faq/Speed/NDEBUG/$$ is not defined,
-and $cref/f.size_taylor()/size_taylor/$$ is greater than zero,
-a $cref ForwardZero$$ calculation is done using the optimized version
+and $cref/f.size_order()/size_order/$$ is greater than zero,
+a $cref forward_zero$$ calculation is done using the optimized version
 of $icode f$$ and the results are checked to see that they are
 the same as before.
 If they are not the same, the
@@ -139,8 +139,6 @@ $end
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 namespace optimize { // BEGIN_CPPAD_OPTIMIZE_NAMESPACE
 /*!
-\defgroup optimize_hpp optimize.hpp
-\{
 \file optimize.hpp
 Routines for optimizing a tape
 */
@@ -260,6 +258,9 @@ struct struct_old_variable {
 	/// New operator index for this varable.
 	/// Set during forward sweep to the index in the new tape
 	size_t new_op;
+
+	/// Did this variable match another variable in the operation sequence
+	bool match;
 };
 
 struct struct_size_pair {
@@ -472,14 +473,14 @@ this operation in the new operation sequence.
 If the return value is zero,
 no match was found.
 If the return value is greater than zero,
-it is the index of a new variable that can be used to replace the 
-old variable.
+it is the old operation sequence index of a variable,
+that comes before current and can be used to replace the current variable.
 
 \par Restrictions:
 NumArg( tape[current].op ) == 1
 */
 template <class Base>
-size_t unary_match(
+addr_t unary_match(
 	const CppAD::vector<struct struct_old_variable>& tape           ,
 	size_t                                             current        ,
 	size_t                                             npar           ,
@@ -501,13 +502,13 @@ size_t unary_match(
 		npar                ,
 		par
 	);
-	size_t  i               = hash_table_var[code];
-	CPPAD_ASSERT_UNKNOWN( i < current );
-	if( op == tape[i].op )
-	{	size_t k = tape[i].arg[0];
-		CPPAD_ASSERT_UNKNOWN( k < i );
+	size_t  i_var  = hash_table_var[code];
+	CPPAD_ASSERT_UNKNOWN( i_var < current );
+	if( op == tape[i_var].op )
+	{	size_t k = tape[i_var].arg[0];
+		CPPAD_ASSERT_UNKNOWN( k < i_var );
 		if (new_arg[0] == tape[k].new_var )
-			return tape[i].new_var;
+			return i_var;
 	}
 	return 0;
 } 
@@ -586,8 +587,8 @@ The binary operator must be an addition, subtraction, multiplication, division
 or power operator.  NumArg( tape[current].op ) == 1.
 */
 template <class Base>
-inline size_t binary_match(
-	const CppAD::vector<struct struct_old_variable>& tape           ,
+inline addr_t binary_match(
+	const CppAD::vector<struct struct_old_variable>&   tape           ,
 	size_t                                             current        ,
 	size_t                                             npar           ,
 	const Base*                                        par            ,
@@ -599,12 +600,20 @@ inline size_t binary_match(
 	bool          parameter[2];
 
 	// initialize return value
-	size_t  match_var = 0;
+	addr_t  match_var = 0;
 
 	CPPAD_ASSERT_UNKNOWN( NumArg(op) == 2 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(op) >  0 );
 	switch(op)
-	{	// parameter op variable ----------------------------------
+	{	// index op variable
+		case DisOp:
+		// parameter not defined for this case
+		CPPAD_ASSERT_UNKNOWN( size_t(arg[1]) < current );
+		new_arg[0]   = arg[0];
+		new_arg[1]   = tape[arg[1]].new_var;
+		break;
+
+		// parameter op variable ----------------------------------
 		case AddpvOp:
 		case MulpvOp:
 		case DivpvOp:
@@ -660,53 +669,57 @@ inline size_t binary_match(
 		npar                ,
 		par
 	);
-	size_t  i  = hash_table_var[code];
-	CPPAD_ASSERT_UNKNOWN( i < current );
-	if( op == tape[i].op )
+	size_t  i_var  = hash_table_var[code];
+	CPPAD_ASSERT_UNKNOWN( i_var < current );
+	if( op == tape[i_var].op )
 	{	bool match = true;
-		size_t j;
-		for(j = 0; j < 2; j++)
-		{	size_t k = tape[i].arg[j];
-			if( parameter[j] )
-			{	CPPAD_ASSERT_UNKNOWN( k < npar );
-				match &= IdenticalEqualPar(
-					par[ arg[j] ], par[k]
-				);
-			}
-			else
-			{	CPPAD_ASSERT_UNKNOWN( k < i );
-				match &= (new_arg[j] == tape[k].new_var);
+		if( op == DisOp )
+		{	match   &= new_arg[0] == tape[i_var].arg[0];
+			size_t k = tape[i_var].arg[1];
+			match   &= new_arg[1] == tape[k].new_var;
+		}
+		else
+		{	for(size_t j = 0; j < 2; j++)
+			{	size_t k = tape[i_var].arg[j];
+				if( parameter[j] )
+				{	CPPAD_ASSERT_UNKNOWN( k < npar );
+					match &= IdenticalEqualPar(
+						par[ arg[j] ], par[k]
+					);
+				}
+				else
+				{	CPPAD_ASSERT_UNKNOWN( k < i_var );
+					match &= (new_arg[j] == tape[k].new_var);
+				}
 			}
 		}
 		if( match )
-			match_var = tape[i].new_var;
+			match_var = i_var;
 	}
 	if( (match_var > 0) | ( (op != AddvvOp) & (op != MulvvOp ) ) )
 		return match_var;
 
 	// check for match with argument order switched ----------------------
 	CPPAD_ASSERT_UNKNOWN( op == AddvvOp || op == MulvvOp );
-	i          = new_arg[0];
-	new_arg[0] = new_arg[1];
-	new_arg[1] = i;
+	std::swap(new_arg[0], new_arg[1]);
 	unsigned short code_switch = hash_code(
 		op                  , 
 		new_arg             ,
 		npar                ,
 		par
 	);
-	i  = hash_table_var[code_switch];
-	CPPAD_ASSERT_UNKNOWN( i < current );
-	if( op == tape[i].op )
+	i_var  = hash_table_var[code_switch];
+	CPPAD_ASSERT_UNKNOWN( i_var < current );
+	if( op == tape[i_var].op )
 	{	bool match = true;
 		size_t j;
 		for(j = 0; j < 2; j++)
-		{	size_t k = tape[i].arg[j];
-			CPPAD_ASSERT_UNKNOWN( k < i );
+		{	size_t k = tape[i_var].arg[j];
+			CPPAD_ASSERT_UNKNOWN( k < i_var );
 			match &= (new_arg[j] == tape[k].new_var);
 		}
 		if( match )
-			match_var = tape[i].new_var;
+			match_var = i_var;
 	}
 	return match_var;
 } 
@@ -806,7 +819,7 @@ struct_size_pair record_pv(
 	rec->PutArg( new_arg[0], new_arg[1] );
 
 	struct_size_pair ret;
-	ret.i_op  = rec->num_rec_op();
+	ret.i_op  = rec->num_op_rec();
 	ret.i_var = rec->PutOp(op);
 	CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < ret.i_var );
 	return ret;
@@ -906,7 +919,7 @@ struct_size_pair record_vp(
 	rec->PutArg( new_arg[0], new_arg[1] );
 
 	struct_size_pair ret;
-	ret.i_op  = rec->num_rec_op();
+	ret.i_op  = rec->num_op_rec();
 	ret.i_var = rec->PutOp(op);
 	CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < ret.i_var );
 	return ret;
@@ -1007,7 +1020,7 @@ struct_size_pair record_vv(
 	rec->PutArg( new_arg[0], new_arg[1] );
 
 	struct_size_pair ret;
-	ret.i_op  = rec->num_rec_op();
+	ret.i_op  = rec->num_op_rec();
 	ret.i_var = rec->PutOp(op);
 	CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < ret.i_var );
 	CPPAD_ASSERT_UNKNOWN( size_t(new_arg[1]) < ret.i_var );
@@ -1239,7 +1252,7 @@ struct_size_pair record_csum(
 
 
 	struct_size_pair ret;
-	ret.i_op  = rec->num_rec_op();
+	ret.i_op  = rec->num_op_rec();
 	ret.i_var = rec->PutOp(CSumOp);
 	CPPAD_ASSERT_UNKNOWN( new_arg < ret.i_var );
 	return ret;
@@ -1292,18 +1305,18 @@ void optimize_run(
 	size_t m = dep_taddr.size();
 
 	// number of variables in the player
-	const size_t num_var = play->num_rec_var(); 
+	const size_t num_var = play->num_var_rec(); 
 
 # ifndef NDEBUG
 	// number of parameters in the player
-	const size_t num_par = play->num_rec_par();
+	const size_t num_par = play->num_par_rec();
 # endif
 
 	// number of  VecAD indices 
-	size_t num_vecad_ind   = play->num_rec_vecad_ind();
+	size_t num_vecad_ind   = play->num_vec_ind_rec();
 
 	// number of VecAD vectors
-	size_t num_vecad_vec   = play->num_rec_vecad_vec();
+	size_t num_vecad_vec   = play->num_vecad_vec_rec();
 
 	// -------------------------------------------------------------
 	// data structure that maps variable index in original operation
@@ -1371,13 +1384,13 @@ void optimize_run(
 
 	// Initialize a reverse mode sweep through the operation sequence
 	size_t i_op;
-	play->start_reverse(op, arg, i_op, i_var);
+	play->reverse_start(op, arg, i_op, i_var);
 	CPPAD_ASSERT_UNKNOWN( op == EndOp );
 	size_t mask;
 	user_state = user_end;
 	while(op != BeginOp)
 	{	// next op
-		play->next_reverse(op, arg, i_op, i_var);
+		play->reverse_next(op, arg, i_op, i_var);
 
 		// Store the operator corresponding to each variable
 		if( NumRes(op) > 0 )
@@ -1394,7 +1407,7 @@ void optimize_run(
 		std::set<class_cexp_pair>& cexp_set = tape[i_var].cexp_set;
 		switch( op )
 		{
-			// Unary operator where operand is arg[0]
+			// One variable corresponding to arg[0]
 			case AbsOp:
 			case AcosOp:
 			case AsinOp:
@@ -1441,7 +1454,7 @@ void optimize_run(
 			}
 			break; // --------------------------------------------
 
-			// Unary operator where operand is arg[1]
+			// One variable corresponding to arg[1]
 			case DisOp:
 			case DivpvOp:
 			case MulpvOp:
@@ -1639,6 +1652,7 @@ void optimize_run(
 				info.right      = arg[3];
 				info.n_op_true  = 0;
 				info.n_op_false = 0;
+				info.i_arg      = 0; // case where no CSkipOp for this CExpOp
 				//
 				size_t index    = 0;
 				if( arg[1] & 1 )
@@ -1656,23 +1670,40 @@ void optimize_run(
 				cskip_info.push_back(info);
 				//
 				if( arg[1] & 4 )
-				{	tape[arg[4]].connect_type = cexp_connected;
-					tape[arg[4]].cexp_set     = cexp_set;
-					tape[arg[4]].cexp_set.insert(
-						class_cexp_pair(true, index)
-					);
+				{	if( tape[arg[4]].connect_type == not_connected )	
+					{	tape[arg[4]].connect_type = cexp_connected;
+						tape[arg[4]].cexp_set     = cexp_set;
+						tape[arg[4]].cexp_set.insert(
+							class_cexp_pair(true, index)
+						);
+					}
+					else
+					{	// if arg[4] is cexp_connected, it could be 
+						// connected for both the true and false case
+						// 2DO: if previously cexp_connected
+						// and the true/false sense is the same, should
+						// keep this conditional connnection.
+						tape[arg[4]].cexp_set.clear();
+						tape[arg[4]].connect_type = yes_connected;
+					}
 				}
 				if( arg[1] & 8 )
-				{	tape[arg[5]].connect_type = cexp_connected;
-					tape[arg[5]].cexp_set     = cexp_set;
-					tape[arg[5]].cexp_set.insert(
-						class_cexp_pair(false, index)
-					);
+				{	if( tape[arg[5]].connect_type == not_connected )	
+					{	tape[arg[5]].connect_type = cexp_connected;
+						tape[arg[5]].cexp_set     = cexp_set;
+						tape[arg[5]].cexp_set.insert(
+							class_cexp_pair(false, index)
+						);
+					}
+					else
+					{	tape[arg[5]].cexp_set.clear();
+						tape[arg[5]].connect_type = yes_connected;
+					}
 				}
 			}
 			break;  // --------------------------------------------
 
-			// Operations where there is noting to do
+			// Operations where there is nothing to do
 			case ComOp:
 			case EndOp:
 			case ParOp:
@@ -1834,6 +1865,8 @@ void optimize_run(
 						user_info[user_curr].connect_type = yes_connected;
 				}
 				else	user_info[user_curr].connect_type = yes_connected;
+				user_r_set[user_i].insert(0);
+				user_r_bool[user_i] = true;
 				break;
 
 				default:
@@ -1880,7 +1913,7 @@ void optimize_run(
 						"Optimizing an ADFun object"
 						" that contains the atomic function\n\t";
 					s += user_atom->afun_name();
-					s += "\nCurrent atomoic_sparsity is set to";
+					s += "\nCurrent atomic_sparsity is set to";
 					//
 					if( user_set )
 						s += " std::set\nand std::set";
@@ -1945,7 +1978,10 @@ void optimize_run(
 			keys[i] = std::max( cskip_info[i].left, cskip_info[i].right );
 		CppAD::index_sort(keys, cskip_info_order);
 	}
-	size_t cskip_info_next = 0;
+	// index in sorted order
+	size_t cskip_order_next = 0;
+	// index in order during reverse sweep
+	size_t cskip_info_index = cskip_info.size();
 
 
 	// Initilaize table mapping hash code to variable index in tape
@@ -1991,14 +2027,14 @@ void optimize_run(
 	CPPAD_ASSERT_UNKNOWN( j == num_vecad_ind );
 
 	// start playing the operations in the forward direction
-	play->start_forward(op, arg, i_op, i_var);
+	play->forward_start(op, arg, i_op, i_var);
 	CPPAD_ASSERT_UNKNOWN( user_curr == user_info.size() );
 
 	// playing forward skips BeginOp at the beginning, but not EndOp at
 	// the end.  Put BeginOp at beginning of recording
 	CPPAD_ASSERT_UNKNOWN( op == BeginOp );
 	CPPAD_ASSERT_NARG_NRES(BeginOp, 1, 1);
-	tape[i_var].new_op  = rec->num_rec_op();
+	tape[i_var].new_op  = rec->num_op_rec();
 	tape[i_var].new_var = rec->PutOp(BeginOp);
 	rec->PutArg(0);
 
@@ -2016,31 +2052,30 @@ void optimize_run(
 	user_state = user_start;
 	while(op != EndOp)
 	{	// next op
-		play->next_forward(op, arg, i_op, i_var);
+		play->forward_next(op, arg, i_op, i_var);
 		CPPAD_ASSERT_UNKNOWN( (i_op > n)  | (op == InvOp) );
 		CPPAD_ASSERT_UNKNOWN( (i_op <= n) | (op != InvOp) );
 
 		// determine if we should insert a conditional skip here
-		bool skip = cskip_info_next < cskip_info.size();
-		skip     &= (op != BeginOp) & (op != InvOp);
+		bool skip = cskip_order_next < cskip_info.size();
+		skip     &= op != BeginOp;
+		skip     &= op != InvOp;
+		skip     &= user_state == user_start;
 		if( skip )
-		{	j     = cskip_info_order[cskip_info_next];
+		{	j     = cskip_info_order[cskip_order_next];
 			if( NumRes(op) > 0 )
 				skip &= cskip_info[j].max_left_right < i_var;
 			else
 				skip &= cskip_info[j].max_left_right <= i_var;
 		}
 		if( skip )
-		{	cskip_info_next++;
-			skip &= cskip_info[j].skip_var_true.size() > 0 ||
-					cskip_info[j].skip_var_false.size() > 0;
+		{	cskip_order_next++;
+			struct_cskip_info info = cskip_info[j];
+			size_t n_true  = info.skip_var_true.size() + info.n_op_true;
+			size_t n_false = info.skip_var_false.size() + info.n_op_false;
+			skip &= n_true > 0 || n_false > 0;
 			if( skip )
-			{	struct_cskip_info info = cskip_info[j];
-				CPPAD_ASSERT_UNKNOWN( NumRes(CSkipOp) == 0 );
-				size_t n_true  = 
-					info.skip_var_true.size() + info.n_op_true;
-				size_t n_false = 
-					info.skip_var_false.size() + info.n_op_false;
+			{	CPPAD_ASSERT_UNKNOWN( NumRes(CSkipOp) == 0 );
 				size_t n_arg   = 7 + n_true + n_false; 
 				// reserve space for the arguments to this operator but 
 				// delay setting them until we have all the new addresses
@@ -2048,7 +2083,6 @@ void optimize_run(
 				CPPAD_ASSERT_UNKNOWN( cskip_info[j].i_arg > 0 );
 				rec->PutOp(CSkipOp);
 			}
-			else	cskip_info[j].i_arg = 0;
 		}
 
 		// determine if we should keep this operation in the new
@@ -2096,9 +2130,10 @@ void optimize_run(
 			break;
 		}
 
-		size_t         match_var    = 0;
 		unsigned short code         = 0;
 		bool           replace_hash = false;
+		addr_t         match_var;
+		tape[i_var].match = false;
 		if( keep ) switch( op )
 		{
 			// Unary operator where operand is arg[0]
@@ -2119,19 +2154,22 @@ void optimize_run(
 			match_var = unary_match(
 				tape                ,  // inputs 
 				i_var               ,
-				play->num_rec_par() ,
+				play->num_par_rec() ,
 				play->GetPar()      ,
 				hash_table_var      ,
 				code                  // outputs
 			);
 			if( match_var > 0 )
-				tape[i_var].new_var = match_var;
+			{	tape[i_var].match     = true;
+				tape[match_var].match = true;
+				tape[i_var].new_var   = tape[match_var].new_var;
+			}
 			else
 			{
 				replace_hash = true;
 				new_arg[0]   = tape[ arg[0] ].new_var;
 				rec->PutArg( new_arg[0] );
-				tape[i_var].new_op  = rec->num_rec_op();
+				tape[i_var].new_op  = rec->num_op_rec();
 				tape[i_var].new_var = i = rec->PutOp(op);
 				CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < i );
 			}
@@ -2146,7 +2184,7 @@ void optimize_run(
 				size_pair = record_csum(
 					tape                , // inputs
 					i_var               ,
-					play->num_rec_par() ,
+					play->num_par_rec() ,
 					play->GetPar()      ,
 					rec                 ,
 					csum_work
@@ -2161,18 +2199,21 @@ void optimize_run(
 			match_var = binary_match(
 				tape                ,  // inputs 
 				i_var               ,
-				play->num_rec_par() ,
+				play->num_par_rec() ,
 				play->GetPar()      ,
 				hash_table_var      ,
 				code                  // outputs
 			);
 			if( match_var > 0 )
-				tape[i_var].new_var = match_var;
+			{	tape[i_var].match     = true;
+				tape[match_var].match = true;
+				tape[i_var].new_var   = tape[match_var].new_var;
+			}
 			else
 			{	size_pair = record_vp(
 					tape                , // inputs
 					i_var               ,
-					play->num_rec_par() ,
+					play->num_par_rec() ,
 					play->GetPar()      ,
 					rec                 ,
 					op                  ,
@@ -2185,6 +2226,36 @@ void optimize_run(
 			break;
 			// ---------------------------------------------------
 			// Binary operators where 
+			// left is an index and right is a variable
+			case DisOp:
+			match_var = binary_match(
+				tape                ,  // inputs 
+				i_var               ,
+				play->num_par_rec() ,
+				play->GetPar()      ,
+				hash_table_var      ,
+				code                  // outputs
+			);
+			if( match_var > 0 )
+			{	tape[i_var].match     = true;
+				tape[match_var].match = true;
+				tape[i_var].new_var   = tape[match_var].new_var;
+			}
+			else
+			{	new_arg[0] = arg[0];
+				new_arg[1] = tape[ arg[1] ].new_var;
+				rec->PutArg( new_arg[0], new_arg[1] ); 
+				tape[i_var].new_op  = rec->num_op_rec();
+				tape[i_var].new_var = rec->PutOp(op);
+				CPPAD_ASSERT_UNKNOWN( 
+					size_t(new_arg[1]) < tape[i_var].new_var
+				);
+				replace_hash = true;
+			}
+			break;
+
+			// ---------------------------------------------------
+			// Binary operators where 
 			// left is a parameter and right is a variable
 			case SubpvOp:
 			case AddpvOp:
@@ -2194,7 +2265,7 @@ void optimize_run(
 				size_pair = record_csum(
 					tape                , // inputs
 					i_var               ,
-					play->num_rec_par() ,
+					play->num_par_rec() ,
 					play->GetPar()      ,
 					rec                 ,
 					csum_work
@@ -2210,18 +2281,21 @@ void optimize_run(
 			match_var = binary_match(
 				tape                ,  // inputs 
 				i_var               ,
-				play->num_rec_par() ,
+				play->num_par_rec() ,
 				play->GetPar()      ,
 				hash_table_var      ,
 				code                  // outputs
 			);
 			if( match_var > 0 )
-				tape[i_var].new_var = match_var;
+			{	tape[i_var].match     = true;
+				tape[match_var].match = true;
+				tape[i_var].new_var   = tape[match_var].new_var;
+			}
 			else
 			{	size_pair = record_pv(
 					tape                , // inputs
 					i_var               ,
-					play->num_rec_par() ,
+					play->num_par_rec() ,
 					play->GetPar()      ,
 					rec                 ,
 					op                  ,
@@ -2245,7 +2319,7 @@ void optimize_run(
 				size_pair = record_csum(
 					tape                , // inputs
 					i_var               ,
-					play->num_rec_par() ,
+					play->num_par_rec() ,
 					play->GetPar()      ,
 					rec                 ,
 					csum_work
@@ -2261,18 +2335,21 @@ void optimize_run(
 			match_var = binary_match(
 				tape                ,  // inputs 
 				i_var               ,
-				play->num_rec_par() ,
+				play->num_par_rec() ,
 				play->GetPar()      ,
 				hash_table_var      ,
 				code                  // outputs
 			);
 			if( match_var > 0 )
-				tape[i_var].new_var = match_var;
+			{	tape[i_var].match     = true;
+				tape[match_var].match = true;
+				tape[i_var].new_var   = tape[match_var].new_var;
+			}
 			else
 			{	size_pair = record_vv(
 					tape                , // inputs
 					i_var               ,
-					play->num_rec_par() ,
+					play->num_par_rec() ,
 					play->GetPar()      ,
 					rec                 ,
 					op                  ,
@@ -2310,8 +2387,16 @@ void optimize_run(
 				new_arg[4] ,
 				new_arg[5] 
 			);
-			tape[i_var].new_op  = rec->num_rec_op();
+			tape[i_var].new_op  = rec->num_op_rec();
 			tape[i_var].new_var = rec->PutOp(op);
+			//
+			// The new addresses for left and right are used during 
+			// fill in the arguments for the CSkip operations. This does not
+			// affect max_left_right which is used during this sweep.
+			CPPAD_ASSERT_UNKNOWN( cskip_info_index > 0 );
+			cskip_info_index--;
+			cskip_info[ cskip_info_index ].left  = new_arg[2];
+			cskip_info[ cskip_info_index ].right = new_arg[3];
 			break;
 			// ---------------------------------------------------
 			// Operations with no arguments and no results
@@ -2323,7 +2408,7 @@ void optimize_run(
 			// Operations with no arguments and one result
 			case InvOp:
 			CPPAD_ASSERT_NARG_NRES(op, 0, 1);
-			tape[i_var].new_op  = rec->num_rec_op();
+			tape[i_var].new_op  = rec->num_op_rec();
 			tape[i_var].new_var = rec->PutOp(op);
 			break;
  			// ---------------------------------------------------
@@ -2333,7 +2418,7 @@ void optimize_run(
 			new_arg[0] = rec->PutPar( play->GetPar(arg[0] ) );
 
 			rec->PutArg( new_arg[0] );
-			tape[i_var].new_op  = rec->num_rec_op();
+			tape[i_var].new_op  = rec->num_op_rec();
 			tape[i_var].new_var = rec->PutOp(op);
 			break;
 			// ---------------------------------------------------
@@ -2342,14 +2427,15 @@ void optimize_run(
 			CPPAD_ASSERT_NARG_NRES(op, 3, 1);
 			new_arg[0] = new_vecad_ind[ arg[0] ];
 			new_arg[1] = arg[1];
+			new_arg[2] = rec->num_load_op_rec();
 			CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < num_vecad_ind );
 			rec->PutArg( 
 				new_arg[0], 
 				new_arg[1], 
-				0
+				new_arg[2]
 			);
-			tape[i_var].new_op  = rec->num_rec_op();
-			tape[i_var].new_var = rec->PutOp(op);
+			tape[i_var].new_op  = rec->num_op_rec();
+			tape[i_var].new_var = rec->PutLoadOp(op);
 			break;
 			// ---------------------------------------------------
 			// Load using a variable index
@@ -2357,15 +2443,16 @@ void optimize_run(
 			CPPAD_ASSERT_NARG_NRES(op, 3, 1);
 			new_arg[0] = new_vecad_ind[ arg[0] ];
 			new_arg[1] = tape[arg[1]].new_var;
+			new_arg[2] = rec->num_load_op_rec();
 			CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < num_vecad_ind );
 			CPPAD_ASSERT_UNKNOWN( size_t(new_arg[1]) < num_var );
 			rec->PutArg( 
 				new_arg[0], 
 				new_arg[1], 
-				0
+				new_arg[2]
 			);
-			tape[i_var].new_var = rec->num_rec_op();
-			tape[i_var].new_var = rec->PutOp(op);
+			tape[i_var].new_var = rec->num_op_rec();
+			tape[i_var].new_var = rec->PutLoadOp(op);
 			break;
 			// ---------------------------------------------------
 			// Store a parameter using a parameter index
@@ -2440,11 +2527,11 @@ void optimize_run(
 			{	user_state = user_arg;
 				CPPAD_ASSERT_UNKNOWN( user_curr > 0 );
 				user_curr--;
-				user_info[user_curr].op_begin = rec->num_rec_op();
+				user_info[user_curr].op_begin = rec->num_op_rec();
 			}
 			else
 			{	user_state = user_start;
-				user_info[user_curr].op_end = rec->num_rec_op() + 1;
+				user_info[user_curr].op_end = rec->num_op_rec() + 1;
 			}
 			// user_index, user_id, user_n, user_m
 			if( user_info[user_curr].connect_type != not_connected )
@@ -2492,7 +2579,7 @@ void optimize_run(
 			case UsrrvOp:
 			CPPAD_ASSERT_NARG_NRES(op, 0, 1);
 			if( user_info[user_curr].connect_type != not_connected )
-			{	tape[i_var].new_op  = rec->num_rec_op();
+			{	tape[i_var].new_op  = rec->num_op_rec();
 				tape[i_var].new_var = rec->PutOp(UsrrvOp);
 			}
 			break;
@@ -2518,7 +2605,7 @@ void optimize_run(
 	}
 
 # ifndef NDEBUG
-	size_t num_new_op = rec->num_rec_op();
+	size_t num_new_op = rec->num_op_rec();
 	for(i_var = 0; i_var < tape.size(); i_var++)
 		CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op < num_new_op );
 # endif
@@ -2542,7 +2629,7 @@ void optimize_run(
 	}
 
 	// fill in the arguments for the CSkip operations
-	CPPAD_ASSERT_UNKNOWN( cskip_info_next == cskip_info.size() );
+	CPPAD_ASSERT_UNKNOWN( cskip_order_next == cskip_info.size() );
 	for(i = 0; i < cskip_info.size(); i++)
 	{	struct_cskip_info info = cskip_info[i];
 		if( info.i_arg > 0 )
@@ -2561,8 +2648,14 @@ void optimize_run(
 			rec->ReplaceArg(i_arg++, n_false    );
 			for(j = 0; j < info.skip_var_true.size(); j++)
 			{	i_var = info.skip_var_true[j];
-				CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op > 0 );
-				rec->ReplaceArg(i_arg++, tape[i_var].new_op );
+				if( tape[i_var].match )
+				{	// the operation for this argument has been removed
+					rec->ReplaceArg(i_arg++, 0);
+				}
+				else
+				{	CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op > 0 );
+					rec->ReplaceArg(i_arg++, tape[i_var].new_op );
+				}
 			} 
 			for(j = 0; j < info.skip_op_true.size(); j++)
 			{	i_op = info.skip_op_true[j];
@@ -2570,8 +2663,14 @@ void optimize_run(
 			} 
 			for(j = 0; j < info.skip_var_false.size(); j++)
 			{	i_var = info.skip_var_false[j];
-				CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op > 0 );
-				rec->ReplaceArg(i_arg++, tape[i_var].new_op );
+				if( tape[i_var].match )
+				{	// the operation for this argument has been removed
+					rec->ReplaceArg(i_arg++, 0);
+				}
+				else
+				{	CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op > 0 );
+					rec->ReplaceArg(i_arg++, tape[i_var].new_op );
+				}
 			} 
 			for(j = 0; j < info.skip_op_false.size(); j++)
 			{	i_op = info.skip_op_false[j];
@@ -2608,29 +2707,28 @@ void ADFun<Base>::optimize(void)
 	// number of independent variables
 	size_t n = ind_taddr_.size();
 
-	size_t i;
 # ifndef NDEBUG
-	size_t j, m = dep_taddr_.size();
+	size_t i, j, m = dep_taddr_.size();
 	CppAD::vector<Base> x(n), y(m), check(m);
-	bool check_zero_order = taylor_per_var_ > 0;
 	Base max_taylor(0);
+	bool check_zero_order = num_order_taylor_ > 0;
 	if( check_zero_order )
 	{	// zero order coefficients for independent vars
 		for(j = 0; j < n; j++)
 		{	CPPAD_ASSERT_UNKNOWN( play_.GetOp(j+1) == InvOp );
 			CPPAD_ASSERT_UNKNOWN( ind_taddr_[j]    == j+1   );
-			x[j] = taylor_[ ind_taddr_[j] * taylor_col_dim_ + 0];
+			x[j] = taylor_[ ind_taddr_[j] * cap_order_taylor_ + 0];
 		}
 		// zero order coefficients for dependent vars
 		for(i = 0; i < m; i++)
-		{	CPPAD_ASSERT_UNKNOWN( dep_taddr_[i] < total_num_var_ );
-			y[i] = taylor_[ dep_taddr_[i] * taylor_col_dim_ + 0];
+		{	CPPAD_ASSERT_UNKNOWN( dep_taddr_[i] < num_var_tape_  );
+			y[i] = taylor_[ dep_taddr_[i] * cap_order_taylor_ + 0];
 		}
 		// maximum zero order coefficient not counting BeginOp at beginning
 		// (which is correpsonds to uninitialized memory).
-		for(i = 1; i < total_num_var_; i++)
-		{	if(  abs_geq(taylor_[i*taylor_col_dim_+0] , max_taylor) )
-				max_taylor = taylor_[i*taylor_col_dim_+0];
+		for(i = 1; i < num_var_tape_; i++)
+		{	if(  abs_geq(taylor_[i*cap_order_taylor_+0] , max_taylor) )
+				max_taylor = taylor_[i*cap_order_taylor_+0];
 		}
 	}
 # endif
@@ -2639,7 +2737,7 @@ void ADFun<Base>::optimize(void)
 	CppAD::optimize::optimize_run<Base>(n, dep_taddr_, &play_, &rec);
 
 	// number of variables in the recording
-	total_num_var_ = rec.num_rec_var();
+	num_var_tape_  = rec.num_var_rec();
 
 	// now replace the recording
 	play_.get(rec);
@@ -2651,14 +2749,13 @@ void ADFun<Base>::optimize(void)
 
 	// free old Taylor coefficient memory
 	taylor_.free();
-	taylor_per_var_ = 0;
-	taylor_col_dim_ = 0;
+	num_order_taylor_     = 0;
+	cap_order_taylor_     = 0;
 
 	// resize and initilaize conditional skip vector
 	// (must use player size because it now has the recoreder information)
-	cskip_op_.resize( play_.num_rec_op() );
-	for(i = 0; i < cskip_op_.size(); i++)
-		cskip_op_[i] = false;
+	cskip_op_.erase();
+	cskip_op_.extend( play_.num_op_rec() );
 
 # ifndef NDEBUG
 	if( check_zero_order )
@@ -2675,11 +2772,10 @@ void ADFun<Base>::optimize(void)
 
 		// Erase memory that this calculation was done so NDEBUG gives 
 		// same final state for this object (from users perspective)
-		taylor_per_var_ = 0;
+		num_order_taylor_     = 0;
 	}
 # endif
 }
 
-/*! \} */
 } // END_CPPAD_NAMESPACE
 # endif

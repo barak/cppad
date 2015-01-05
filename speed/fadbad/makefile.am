@@ -1,6 +1,6 @@
-# $Id: makefile.am 2527 2012-10-31 07:12:36Z bradbell $
+# $Id: makefile.am 3481 2014-12-17 23:39:47Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -10,12 +10,16 @@
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
 #
-# automake input file
+# Copy source file so that main.o does not end up in parent directory
+BUILT_SOURCES = main.cpp
+main.cpp:
+	cp $(srcdir)/../main.cpp main.cpp
+#
 #
 # CppAD pusts all it's preprocessor definitions in the cppad/configure.hpp
 DEFS          =
 #
-check_PROGRAMS   = fadbad 
+check_PROGRAMS   = speed_fadbad 
 #
 AM_CPPFLAGS   = \
 	-I$(top_srcdir) \
@@ -25,18 +29,18 @@ AM_CPPFLAGS   = \
 #
 # BEGIN OPTIMIZE
 # Use special version of CXX_FLAGS with -Wshadow removed (if present).
-AM_CXXFLAGS   = -O2 -DNDEBUG -DSPEED_FADBAD $(CXX_FLAGS_FADBAD)
+AM_CXXFLAGS   = -O2 -DNDEBUG -DCPPAD_FADBAD_SPEED $(CXX_FLAGS_FADBAD)
 # END OPTIMIZE
 #
 # BEGIN DEBUG
-# AM_CXXFLAGS   = -g -DSPEED_FADBAD $(CXX_FLAGS_FADBAD)
+# AM_CXXFLAGS   = -g -DCPPAD_FADBAD_SPEED $(CXX_FLAGS_FADBAD)
 # END DEBUG
 #
 LDADD           = -lspeed
 AM_LDFLAGS      = -L../src
 #
-fadbad_SOURCES = \
-	../main.cpp \
+speed_fadbad_SOURCES = \
+	main.cpp \
 	det_lu.cpp  \
 	det_minor.cpp  \
 	mat_mul.cpp  \
@@ -46,4 +50,4 @@ fadbad_SOURCES = \
 	sparse_jacobian.cpp
 
 test: check
-	./fadbad correct 123 retape
+	./speed_fadbad correct 123

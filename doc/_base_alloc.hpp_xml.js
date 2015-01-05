@@ -52,6 +52,7 @@ var list_current0 = [
 'base_alloc.hpp.xml#Integer',
 'base_alloc.hpp.xml#Ordered',
 'base_alloc.hpp.xml#Unary Standard Math',
+'base_alloc.hpp.xml#erf',
 'base_alloc.hpp.xml#sign',
 'base_alloc.hpp.xml#pow',
 'base_alloc.hpp.xml#limits'

@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: commit.sh 3027 2013-12-24 23:23:58Z bradbell $
+# $Id: commit.sh 3214 2014-03-18 20:50:38Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 #
@@ -18,7 +18,7 @@
 cat << EOF > bin/commit.user.$$
 General comments about this commit go here (delete this line).
 
-bin/new_stable.sh@
+dir/file.ext@ optional comment about this file.
 EOF
 # -----------------------------------------------------------------------------
 if [ ! -e "bin/commit.sh" ]
@@ -79,7 +79,7 @@ fi
 # -----------------------------------------------------------------------
 # check for abort do to unknown files
 unknown=`svn status | sed -n -e '/^[?]/p' | \
-	sed -e 's/^[?]//' -e "/bin\/commit.*.$$/d"`
+	sed -e 's/^[?]//' -e "/bin\/commit.*.$$/d" -e '/\/new$/d'`
 msg="aborting because the following files are unknown to svn"
 print_msg="no"
 for file in $unknown

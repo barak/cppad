@@ -50,6 +50,7 @@ var list_current0 = [
 'base_adolc.hpp.xml#Integer',
 'base_adolc.hpp.xml#Ordered',
 'base_adolc.hpp.xml#Unary Standard Math',
+'base_adolc.hpp.xml#erf',
 'base_adolc.hpp.xml#sign',
 'base_adolc.hpp.xml#abs',
 'base_adolc.hpp.xml#pow',

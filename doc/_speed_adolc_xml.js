@@ -44,9 +44,8 @@ var list_down0 = [
 ];
 var list_current0 = [
 'speed_adolc.xml#Purpose',
-'speed_adolc.xml#adolc_dir',
+'speed_adolc.xml#adolc_prefix',
 'speed_adolc.xml#Running Tests',
-'speed_adolc.xml#C++ Compiler Flags',
 'speed_adolc.xml#Contents'
 ];
 function choose_across0(item)

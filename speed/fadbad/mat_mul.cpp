@@ -1,6 +1,6 @@
-/* $Id: mat_mul.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: mat_mul.cpp 3311 2014-05-28 16:21:08Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -14,7 +14,7 @@ $begin fadbad_mat_mul.cpp$$
 $spell
 	badiff
 	sq
-	retape
+	onetape
 	typedef
 	diff
 	Fadbad
@@ -45,6 +45,10 @@ $codep */
 # include <cppad/speed/mat_sum_sq.hpp>
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/vector.hpp>
+
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 bool link_mat_mul(
 	size_t                           size     , 
 	size_t                           repeat   , 
@@ -53,10 +57,8 @@ bool link_mat_mul(
 	CppAD::vector<double>&           dz       )
 {
 	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_atomic || global_optimize )
+	if( global_memory || global_onetape || global_atomic || global_optimize )
 		return false;
-
 	// The correctness check for this test is failing, so abort (for now).
 	return false;
 

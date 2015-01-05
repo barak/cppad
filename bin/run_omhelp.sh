@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: run_omhelp.sh 2722 2013-01-06 16:52:46Z bradbell $
+# $Id: run_omhelp.sh 3405 2014-11-26 14:20:55Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -61,12 +61,12 @@ if [ $printable == 'yes' ]
 then
 	cmd="$cmd -printable"
 fi
-echo "$cmd > omhelp.$ext.log"
-if !  $cmd > ../omhelp.$ext.log
+echo "$cmd >& omhelp.$ext.log"
+if !  $cmd >& ../omhelp.$ext.log
 then
-	grep "^OMhelp Error:" ../omhelp.$ext.log
+	cat ../omhelp.$ext.log
 	echo "OMhelp could not build doc/*.$ext documentation."
-	echo "See the complete error message in omhelp.$ext.log"
+	grep "^OMhelp Error:" ../omhelp.$ext.log
 	exit 1
 fi
 if grep "^OMhelp Warning:" ../omhelp.$ext.log

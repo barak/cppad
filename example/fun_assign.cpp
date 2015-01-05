@@ -1,6 +1,6 @@
-/* $Id: fun_assign.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: fun_assign.cpp 3214 2014-03-18 20:50:38Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -71,7 +71,7 @@ bool fun_assign(void)
 	g = f;
 
 	// check values that should be equal
-	ok &= ( g.size_taylor()       == f.size_taylor() );
+	ok &= ( g.size_order()       == f.size_order() );
 	ok &= ( g.size_forward_bool() == f.size_forward_bool() );
 	ok &= ( g.size_forward_set()  == f.size_forward_set() );
 

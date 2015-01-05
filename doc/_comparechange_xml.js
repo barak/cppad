@@ -30,15 +30,15 @@ var list_down2 = [
 'sparse.xml'
 ];
 var list_down1 = [
-'forwardzero.xml',
-'forwardone.xml',
-'forwardany.xml',
-'size_taylor.xml',
+'forward_zero.xml',
+'forward_one.xml',
+'forward_two.xml',
+'forward_order.xml',
+'forward_dir.xml',
+'size_order.xml',
 'comparechange.xml',
-'capacity_taylor.xml',
-'number_skip.xml',
-'forward.cpp.xml',
-'forward_mul.cpp.xml'
+'capacity_order.xml',
+'number_skip.xml'
 ];
 var list_down0 = [
 'compare_change.cpp.xml'

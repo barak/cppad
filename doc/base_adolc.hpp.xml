@@ -4,8 +4,9 @@
 >
 <head>
 <title>Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type"/>
-<meta name="keywords" id="keywords" content=" Adolc adouble as Base Adolc's "/>
+<meta name="keywords" id="keywords" content=" Adolc adouble as Base Adolc's enable use of ad&lt;base&gt; where base is adolc's type syntax example include files condexpop equalopseq identical integer ordered unary standard math erf sign abs pow limits "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -95,6 +96,7 @@ A:active { color : purple }
 <option>Integer</option>
 <option>Ordered</option>
 <option>Unary Standard Math</option>
+<option>erf</option>
 <option>sign</option>
 <option>abs</option>
 <option>pow</option>
@@ -301,6 +303,34 @@ are defined by the Adolc package for the <code><font color="blue">adouble</font>
 <code><font color="blue">sinh</font></code>,
 <code><font color="blue">sqrt</font></code>,
 <code><font color="blue">tan</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="erf" id="erf">erf</a></big></b>
+<br/>
+If the error function is supported by the compiler,
+it must also be supported by a 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ type;
+see <a href="base_std_math.xml#erf" target="_top"><span style='white-space: nowrap'>erf</span></a>
+.
+The adolc package does not support this function:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+# if CPPAD_COMPILER_HAS_ERF
+	inline adouble erf(const adouble&amp; x)
+	{	CPPAD_ASSERT_KNOWN( 
+			false,
+			&quot;erf: adolc does not support the error function&quot;
+		);
+		return 0;
+	}
+# endif
+}
+</pre></font></code>
+ 
+
+
 
 <br/>
 <br/>

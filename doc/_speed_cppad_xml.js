@@ -39,13 +39,11 @@ var list_down0 = [
 'cppad_ode.cpp.xml',
 'cppad_poly.cpp.xml',
 'cppad_sparse_hessian.cpp.xml',
-'cppad_sparse_jacobian.cpp.xml',
-'cppad_print_optimize.xml'
+'cppad_sparse_jacobian.cpp.xml'
 ];
 var list_current0 = [
 'speed_cppad.xml#Purpose',
 'speed_cppad.xml#Running Tests',
-'speed_cppad.xml#C++ Compiler Flags',
 'speed_cppad.xml#Contents'
 ];
 function choose_across0(item)

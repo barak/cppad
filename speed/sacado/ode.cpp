@@ -1,6 +1,6 @@
-/* $Id: ode.cpp 2870 2013-07-28 17:00:59Z bradbell $ */
+/* $Id: ode.cpp 3311 2014-05-28 16:21:08Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the 
@@ -17,7 +17,7 @@ $spell
 	cppad
 	hpp
 	bool
-	retape
+	onetape
 	CppAD
 	typedef
 	endif
@@ -45,6 +45,9 @@ $codep */
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/speed/ode_evaluate.hpp>
 
+// list of possible options
+extern bool global_memory, global_onetape, global_atomic, global_optimize;
+
 bool link_ode(
 	size_t                     size       ,
 	size_t                     repeat     ,
@@ -52,16 +55,16 @@ bool link_ode(
 	CppAD::vector<double>      &jacobian
 )
 {
+	// speed test global option values
+	if( global_atomic )
+		return false;
+	if( global_memory || global_onetape || global_optimize )
+		return false;
+	// -------------------------------------------------------------
+	// setup
 	assert( x.size() == size );
 	assert( jacobian.size() == size * size );
 
-	// speed test global option values
-	extern bool global_retape, global_atomic, global_optimize;
-	if( ! global_retape || global_atomic || global_optimize )
-		return false;
-
-	// -------------------------------------------------------------
-	// setup
 	typedef Sacado::Fad::DFad<double>  ADScalar;
 	typedef CppAD::vector<ADScalar>    ADVector;
 

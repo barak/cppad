@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: package.sh 2997 2013-10-27 12:32:25Z bradbell $
+# $Id: package.sh 3494 2014-12-22 14:10:44Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -64,7 +64,7 @@ echo_log_eval bin/version.sh copy
 list="
 	check_define.sh
 	check_example.sh
-	check_if_0.sh
+	check_if.sh
 	check_include_def.sh
 	check_include_file.sh
 	check_include_omh.sh
@@ -114,15 +114,18 @@ file_list=`find . \
 	\( -name '*.sed' \) -or \
 	\( -name '*.sh' \) -or \
 	\( -name '*.txt' \) | sed \
+		-e '/\/new\//d' \
 		-e '/\.\/build\//d' \
 		-e '/bug\/build\//d' \
-		-e '/\/junk.sh$/d' \
-		-e '/\/temp.sh$/d' \
+		-e '/\/junk\.[a-z]*$/d' \
+		-e '/\/temp\.[a-z]*$/d' \
 		-e 's|^\./||'`
 other_files="
 	AUTHORS 
 	ChangeLog 
 	configure 
+	config.guess
+	config.sub
 	COPYING 
 	depcomp
 	INSTALL 

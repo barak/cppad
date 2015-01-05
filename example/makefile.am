@@ -1,6 +1,6 @@
-# $Id: makefile.am 2991 2013-10-22 16:25:15Z bradbell $
+# $Id: makefile.am 3486 2014-12-18 16:29:51Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -26,12 +26,14 @@ ADOLC_LIB         =
 ADOLC_FLAGS       =
 endif
 # -------------------------------------------------------------------------
+if CppAD_HAVE_AR
 if CppAD_EIGEN_DIR
 # make a special library so can have it's own compile flags (see configure.ac)
 EIGEN_EXTRA_FILES   =
 noinst_LIBRARIES    = libeigen.a
 libeigen_a_SOURCES  =  eigen_det.cpp eigen_array.cpp
 EIGEN_LIB           = -L. -leigen
+EIGEN_FLAGS         = -DCPPAD_EIGEN_EXAMPLES
 libeigen_a_CXXFLAGS = \
 	-g $(CXX_FLAGS_EIGEN) \
 	-DCPPAD_EIGEN_EXAMPLES \
@@ -39,20 +41,27 @@ libeigen_a_CXXFLAGS = \
 else
 EIGEN_EXTRA_FILES   = eigen_det.cpp eigen_array.cpp
 EIGEN_LIB           =
+EIGEN_FLAGS         = 
+endif
+else
+EIGEN_EXTRA_FILES   = eigen_det.cpp eigen_array.cpp
+EIGEN_LIB           =
+EIGEN_FLAGS         =
 endif
 # -------------------------------------------------------------------------
-# Microsoft project files an script to run a single test
+# auto-tools does not support use of colpack
 EXTRA_DIST        =  \
 	test_one.sh.in \
+	colpack.cpp \
 	$(ADOLC_EXTRA_FILES) \
 	$(EIGEN_EXTRA_FILES)
 #
 check_PROGRAMS    = example 
 #
 if CppAD_MS_COMPILER
-AM_CXXFLAGS       = -EHsc -g $(ADOLC_FLAGS) $(CXX_FLAGS)
+AM_CXXFLAGS       = -EHsc -g $(ADOLC_FLAGS) $(EIGEN_FLAGS) $(CXX_FLAGS)
 else
-AM_CXXFLAGS       = -g $(ADOLC_FLAGS) $(CXX_FLAGS)
+AM_CXXFLAGS       = -g $(ADOLC_FLAGS) $(EIGEN_FLAGS) $(CXX_FLAGS)
 endif
 #
 AM_CPPFLAGS       = \
@@ -60,7 +69,8 @@ AM_CPPFLAGS       = \
 	-I$(top_srcdir) \
 	$(BOOST_INCLUDE) \
 	$(EIGEN_INCLUDE) \
-	$(ADOLC_FLAGS)
+	$(ADOLC_FLAGS) \
+	$(EIGEN_FLAGS)
 #
 LDADD        =  $(ADOLC_LIB)  $(BTHREAD_LIB) $(EIGEN_LIB) $(PTHREAD_LIB)
 #
@@ -86,7 +96,7 @@ example_SOURCES   = \
 	base_require.cpp \
 	bender_quad.cpp \
 	bool_fun.cpp \
-	capacity_taylor.cpp \
+	capacity_order.cpp \
 	change_const.cpp \
 	check_for_nan.cpp \
 	check_numeric_type.cpp \
@@ -108,7 +118,8 @@ example_SOURCES   = \
 	for_one.cpp \
 	for_two.cpp \
 	forward.cpp \
-	forward_mul.cpp \
+	forward_dir.cpp \
+	forward_order.cpp \
 	for_sparse_jac.cpp \
 	fun_assign.cpp \
 	fun_check.cpp \

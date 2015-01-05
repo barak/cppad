@@ -75,6 +75,7 @@ var list_current0 = [
 'ta_get_memory.xml#cap_bytes',
 'ta_get_memory.xml#v_ptr',
 'ta_get_memory.xml#Allocation Speed',
+'ta_get_memory.xml#Alignment',
 'ta_get_memory.xml#Example'
 ];
 function choose_across0(item)

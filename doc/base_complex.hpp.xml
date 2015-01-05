@@ -4,8 +4,9 @@
 >
 <head>
 <title>Enable use of AD&lt;Base&gt; where Base is std::complex&lt;double&gt;</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is std::complex&lt;double&gt;"/>
-<meta name="keywords" id="keywords" content=" complex double Base "/>
+<meta name="keywords" id="keywords" content=" complex double Base enable use of ad&lt;base&gt; where base is std::complex&lt;double&gt; example see also include order condexpop condexprel equalopseq identical ordered erf integer isnan valid unary math invalid pow limits "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -95,6 +96,7 @@ A:active { color : purple }
 <option>EqualOpSeq</option>
 <option>Identical</option>
 <option>Ordered</option>
+<option>erf</option>
 <option>Integer</option>
 <option>isnan</option>
 <option>Valid Unary Math</option>
@@ -262,6 +264,22 @@ namespace CppAD {
 	{	return std::abs(x) &gt;= std::abs(y); }
 }
 </pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="erf" id="erf">erf</a></big></b>
+<br/>
+Complex types do not support the error function
+(use CPPAD_USER_MACRO define above).
+<code><font color='blue'><pre style='display:inline'> 
+# if CPPAD_COMPILER_HAS_ERF
+namespace CppAD {
+	CPPAD_USER_MACRO(erf)
+}
+# endif
+</pre></font></code>
+
 
 
 <br/>
