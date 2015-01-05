@@ -30,11 +30,9 @@ var list_down2 = [
 'base_complex.hpp.xml'
 ];
 var list_down1 = [
-'complex_poly.cpp.xml',
-'not_complex_ad.cpp.xml'
+'complex_poly.cpp.xml'
 ];
 var list_current0 = [
-'complex_poly.cpp.xml#See Also',
 'complex_poly.cpp.xml#Poly'
 ];
 function choose_across0(item)

@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3301 2014-05-24 05:20:21Z bradbell $
+# $Id: CMakeLists.txt 3526 2014-12-29 21:56:45Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -64,9 +64,9 @@ ADD_EXECUTABLE(test_more EXCLUDE_FROM_ALL test_more.cpp
 	${adolc_sources}
 	${colpack_sources}
 	${ipopt_sources}
-	${eigen_sources}
 	abs.cpp
 	acos.cpp
+	adfun_copy.cpp
 	asin.cpp
 	assign.cpp
 	add.cpp
@@ -106,7 +106,6 @@ ADD_EXECUTABLE(test_more EXCLUDE_FROM_ALL test_more.cpp
 	mul_eq.cpp
 	mul_level.cpp
 	mul_zero_one.cpp
-	ndebug.cpp
 	near_equal_ext.cpp
 	neg.cpp
 	ode_err_control.cpp

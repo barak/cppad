@@ -1,4 +1,4 @@
-/* $Id: rev_sparse_jac.cpp 2859 2013-05-28 06:03:21Z bradbell $ */
+/* $Id: rev_sparse_jac.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 
@@ -533,6 +533,7 @@ bool rev_sparse_jac(void)
 	ok &= case_two();
 	ok &= case_three();
 	ok &= case_four();
+	ok &= case_five();
 
 	return ok;
 }

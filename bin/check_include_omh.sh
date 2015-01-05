@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: check_include_omh.sh 3308 2014-05-26 14:29:01Z bradbell $
+# $Id: check_include_omh.sh 3526 2014-12-29 21:56:45Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -27,8 +27,9 @@ ls bin/get_*.sh >> bin/check_include_omh.1.$$
 #
 for file in `cat bin/check_include_omh.1.$$`
 do
-	# assume $childtable, ... , $verbatim use % for delimiter
-	# also assume verbatim commands use one line (would be nice to allow
+	# 1. assume $childtable, ... , $verbatim use % for delimiter
+	# 2. assume verbatim commands use one line.
+	# 3. assume $childtable, $children, $contents use multiple lines.
 	# multiple line verbatim commands).
 	sed -n < $file >> bin/check_include_omh.2.$$ \
 		-e 's/^#[ \t][ \t]*//' \

@@ -1,4 +1,4 @@
-/* $Id: complex_poly.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: complex_poly.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
@@ -22,9 +22,6 @@ $index complex, polynomial$$
 $index polynomial, complex$$
 $index example, complex polynomial$$
 $index test, complex polynomial$$
-
-$head See Also$$
-$cref not_complex_ad.cpp$$
 
 $head Poly$$
 Select this link to view specifications for $cref Poly$$:

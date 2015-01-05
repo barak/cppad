@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: test_one.sh.in 3116 2014-02-24 21:44:26Z bradbell $
+# $Id: test_one.sh.in 3526 2014-12-29 21:56:45Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -84,10 +84,6 @@ do
 		cmd="$cmd $cflags $libs"
 	fi
 done
-if [ "$1" == 'ndebug.cpp' ]
-then
-	cmd="$cmd -DNDEBUG"
-fi
 echo $cmd
 $cmd
 echo "./test_one.exe"

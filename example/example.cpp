@@ -1,4 +1,4 @@
-/* $Id: example.cpp 3301 2014-05-24 05:20:21Z bradbell $ */
+/* $Id: example.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 
@@ -122,7 +122,6 @@ extern bool mul_level_adolc_ode(void);
 extern bool nan(void);
 extern bool Near_Equal(void);
 extern bool NearEqualExt(void);
-extern bool not_complex_ad(void);
 extern bool number_skip(void);
 extern bool NumericType(void);
 extern bool OdeErrControl(void);
@@ -278,7 +277,6 @@ int main(void)
 	ok &= Run( nan,               "nan"              );
 	ok &= Run( Near_Equal,        "Near_Equal"       );
 	ok &= Run( NearEqualExt,      "NearEqualExt"     );
-	ok &= Run( not_complex_ad,    "not_complex_ad"   );
 	ok &= Run( number_skip,       "number_skip"      );
 	ok &= Run( NumericType,       "NumericType"      );
 	ok &= Run( OdeErrControl,     "OdeErrControl"    );

@@ -38,12 +38,10 @@ var list_down1 = [
 'base_complex.hpp.xml'
 ];
 var list_down0 = [
-'complex_poly.cpp.xml',
-'not_complex_ad.cpp.xml'
+'complex_poly.cpp.xml'
 ];
 var list_current0 = [
 'base_complex.hpp.xml#Example',
-'base_complex.hpp.xml#See Also',
 'base_complex.hpp.xml#Include Order',
 'base_complex.hpp.xml#CondExpOp',
 'base_complex.hpp.xml#CondExpRel',

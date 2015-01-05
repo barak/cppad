@@ -1,4 +1,4 @@
-/* $Id: base_complex.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
+/* $Id: base_complex.hpp 3526 2014-12-29 21:56:45Z bradbell $ */
 # ifndef CPPAD_BASE_COMPLEX_INCLUDED
 # define CPPAD_BASE_COMPLEX_INCLUDED
 /* --------------------------------------------------------------------------
@@ -55,19 +55,12 @@ $index double, complex Base$$
 
 $section Enable use of AD<Base> where Base is std::complex<double>$$
 
-$children%
-	example/complex_poly.cpp%
-	example/not_complex_ad.cpp
+$children%example/complex_poly.cpp
 %$$
-
 $head Example$$
 The file $cref complex_poly.cpp$$ contains an example use of
 $code std::complex<double>$$ type for a CppAD $icode Base$$ type.
 It returns true if it succeeds and false otherwise.
-
-$head See Also$$
-The file $cref not_complex_ad.cpp$$ contains an example using
-complex arithmetic where the function is not complex differentiable.
 
 $head Include Order$$
 This file is included before $code <cppad/cppad.hpp>$$

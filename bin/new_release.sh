@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: new_release.sh 3512 2014-12-27 20:39:59Z bradbell $
+# $Id: new_release.sh 3546 2015-01-01 02:52:34Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -23,7 +23,7 @@ echo_eval() {
 # -----------------------------------------------------------------------------
 repository="https://projects.coin-or.org/svn/CppAD"
 stable_version="20150000"
-release='0'
+release='1'
 release_version="$stable_version.$release"
 # -----------------------------------------------------------------------------
 # Check release version
@@ -36,7 +36,7 @@ then
 	exit 1
 fi
 # -----------------------------------------------------------------------------
-echo_eval git checkout $stable_version
+echo_eval git checkout stable/$stable_version
 # -----------------------------------------------------------------------------
 #
 check_one=`bin/version.sh get`
@@ -86,4 +86,4 @@ sed -i projDesc.xml \
 	-e "/^ *<release/,/^ *<\/release/s/[0-9]\{8\}\.[0-9]*/$release_version/"
 #
 echo "Use the command the following command to finish the process"
-echo "	svn commit -m \"$msg\" ../../conf/projDesc.xml"
+echo "	svn commit -m \"$msg\" build/conf/projDesc.xml"
