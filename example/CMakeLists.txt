@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3301 2014-05-24 05:20:21Z bradbell $
+# $Id: CMakeLists.txt 3526 2014-12-29 21:56:45Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -145,7 +145,6 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	nan.cpp
 	near_equal.cpp
 	near_equal_ext.cpp
-	not_complex_ad.cpp
 	number_skip.cpp
 	numeric_type.cpp
 	ode_err_control.cpp

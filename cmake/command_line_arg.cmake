@@ -1,4 +1,4 @@
-# $Id: command_line_arg.cmake 2770 2013-03-08 13:42:40Z bradbell $
+# $Id: command_line_arg.cmake 3529 2014-12-30 15:36:27Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -39,5 +39,5 @@ MACRO(command_line_arg variable default type description)
 	ENDIF( NOT ( ${type} STREQUAL "STRING" ) )
 	#
 	SET(${variable} "${default}" CACHE ${type} "${description}")
-	MESSAGE(STATUS "${variable} = ${${variable}}")
+	MESSAGE(STATUS "${variable} = \"${${variable}}\"")
 ENDMACRO( command_line_arg )

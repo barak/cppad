@@ -1,4 +1,4 @@
-/* $Id: div.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: div.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
@@ -203,5 +203,6 @@ bool Div(void)
 {	bool ok = true;
 	ok &= DivTestOne();
 	ok &= DivTestTwo(); 
+	ok &= DivTestThree(); 
 	return ok;
 }

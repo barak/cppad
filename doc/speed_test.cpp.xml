@@ -109,40 +109,38 @@ A:active { color : purple }
 <center><b><big><big>speed_test: Example and test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;cppad/speed_test.hpp&gt;
-# include &lt;vector&gt;
+# include &lt;cppad/vector.hpp&gt;
 
 namespace { // empty namespace
+	using CppAD::vector;
+	vector&lt;double&gt; a, b, c;
 	void test(size_t size, size_t repeat)
 	{	// setup
-		double *a = new double[size];
-		double *b = new double[size];
-		double *c = new double[size];
+		a.resize(size);
+		b.resize(size);
+		c.resize(size);
 		size_t i  = size;;
 		while(i)
 		{	--i;
 			a[i] = i;
 			b[i] = 2 * i;
+			c[i] = 0.0;
 		}
 		// operations we are timing
 		while(repeat--)
 		{	i = size;;
 			while(i)
 			{	--i;
-				c[i] = a[i] * b[i];
+				c[i] += std::sqrt(a[i] * a[i] + b[i] * b[i]);
 			}
 		}
-		// teardown
-		delete [] a;
-		delete [] b;
-		delete [] c;
-		return;
 	}
 }
 bool speed_test(void)
 {	bool ok = true;
 
 	// size of the test cases
-	std::vector&lt;size_t&gt; size_vec(2);
+	vector&lt;size_t&gt; size_vec(2);
 	size_vec[0] = 40;
 	size_vec[1] = 80;
 
@@ -150,7 +148,7 @@ bool speed_test(void)
 	double time_min = 0.5;
 
 	// run the test cases
-	std::vector&lt;size_t&gt; rate_vec(2);
+	vector&lt;size_t&gt; rate_vec(2);
 	rate_vec = CppAD::speed_test(test, size_vec, time_min);
 
 	// time per repeat loop (note counting setup or teardown)
@@ -164,6 +162,9 @@ bool speed_test(void)
 	if( ! ok )
 		std::cout &lt;&lt; std::endl &lt;&lt; &quot;rel_diff = &quot; &lt;&lt; rel_diff &lt;&lt; std::endl;
  
+	a.clear();
+	b.clear();
+	c.clear();
 	return ok;
 }
 </pre>

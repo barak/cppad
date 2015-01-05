@@ -1,4 +1,4 @@
-/* $Id: ad_in_c.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+/* $Id: ad_in_c.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
 
@@ -41,6 +41,7 @@ $end
 
 namespace { // Begin empty namespace *****************************************
 
+/*
 void debug_print(const char *label, double d)
 {	using std::printf;
 
@@ -51,6 +52,7 @@ void debug_print(const char *label, double d)
 		printf("%x", byte[i]);
 	printf("\n");
 }
+*/
 
 // type in C corresponding to an AD<double> object 
 typedef struct { void*  p_void; } cad;
