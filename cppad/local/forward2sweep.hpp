@@ -1,4 +1,4 @@
-/* $Id: forward2sweep.hpp 3372 2014-09-28 18:42:37Z bradbell $ */
+/* $Id: forward2sweep.hpp 3589 2015-01-11 14:07:42Z bradbell $ */
 # ifndef CPPAD_FORWARD2SWEEP_INCLUDED
 # define CPPAD_FORWARD2SWEEP_INCLUDED
 
@@ -405,7 +405,7 @@ size_t forward2sweep(
 			// -------------------------------------------------
 
 			case ParOp:
-			k = i_var*(J-1)*r + i_var + (q-1)*r;
+			k = i_var*(J-1)*r + i_var + (q-1)*r + 1;
 			for(ell = 0; ell < r; ell++)
 				taylor[k + ell] = Base(0); 
 			break;
