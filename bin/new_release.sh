@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: new_release.sh 3647 2015-02-15 01:06:13Z bradbell $
+# $Id: new_release.sh 3661 2015-02-23 22:19:20Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -23,7 +23,7 @@ echo_eval() {
 # -----------------------------------------------------------------------------
 svn_repository="https://projects.coin-or.org/svn/CppAD"
 stable_version="20150000"
-release='8'
+release='9'
 release_version="$stable_version.$release"
 # -----------------------------------------------------------------------------
 # Check release version

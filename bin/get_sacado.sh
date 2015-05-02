@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: get_sacado.sh 3407 2014-11-27 13:14:56Z bradbell $
+# $Id: get_sacado.sh 3658 2015-02-22 13:56:28Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -69,9 +69,10 @@ web_page="http://trilinos.org/oldsite/download/files"
 prefix=`pwd`'/build/prefix'
 # -----------------------------------------------------------------------------
 # determine which version of cmake to use
-cmake --version |  sed \
+cmake --version |  sed -n \
 		-e 's|[^0-9]*|.|g ' \
 		-e 's|\.\([0-9]*\)\.\([0-9]*\).*|\1 * 10 + \2|' \
+		-e '1,1p' \
 	| bc > get_sacado.$$
 cmake_version=`cat get_sacado.$$`
 rm get_sacado.$$
