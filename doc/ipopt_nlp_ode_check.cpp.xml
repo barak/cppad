@@ -164,6 +164,11 @@ bool ode_check(const SizeVector&amp; N, const NumberVector&amp; x)
 	Number obj_value = 0.; // optimal object (no noise in simulation)
 	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check, obj_value, rel_tol, abs_tol);
 
+	// Use this empty namespace function to avoid warning that it is not used
+	static size_t ode_check_count = 0;
+	ode_check_count++;
+	ok &amp;= count_eval_r() == ode_check_count;
+
 	return ok;
 }
 </pre>
