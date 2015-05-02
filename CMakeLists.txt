@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3620 2015-01-28 15:27:32Z bradbell $
+# $Id: CMakeLists.txt 3634 2015-02-09 14:09:03Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -16,7 +16,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 # cppad_version is used by set_version.sh to get the version number.
-SET(cppad_version      "20150000.4" )
+SET(cppad_version      "20150000.5" )
 SET(cppad_url          "http://www.coin-or.org/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 

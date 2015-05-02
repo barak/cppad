@@ -1,4 +1,4 @@
-/* $Id: optimize.hpp 3507 2014-12-27 16:30:12Z bradbell $ */
+/* $Id: optimize.hpp 3624 2015-01-29 11:45:00Z bradbell $ */
 # ifndef CPPAD_OPTIMIZE_INCLUDED
 # define CPPAD_OPTIMIZE_INCLUDED
 
@@ -2248,7 +2248,7 @@ void optimize_run(
 				tape[i_var].new_op  = rec->num_op_rec();
 				tape[i_var].new_var = rec->PutOp(op);
 				CPPAD_ASSERT_UNKNOWN( 
-					size_t(new_arg[1]) < tape[i_var].new_var
+					new_arg[1] < tape[i_var].new_var
 				);
 				replace_hash = true;
 			}
