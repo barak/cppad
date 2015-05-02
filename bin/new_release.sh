@@ -1,5 +1,5 @@
 #! /bin/bash -e
-# $Id: new_release.sh 3589 2015-01-11 14:07:42Z bradbell $
+# $Id: new_release.sh 3611 2015-01-24 16:16:13Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
@@ -23,7 +23,7 @@ echo_eval() {
 # -----------------------------------------------------------------------------
 repository="https://projects.coin-or.org/svn/CppAD"
 stable_version="20150000"
-release='2'
+release='3'
 release_version="$stable_version.$release"
 # -----------------------------------------------------------------------------
 # Check release version
@@ -38,7 +38,28 @@ fi
 # -----------------------------------------------------------------------------
 echo_eval git checkout stable/$stable_version
 # -----------------------------------------------------------------------------
-#
+# check that local branch is up to date
+list=`git status -s`
+if [ "$list" != '' ]
+then
+	echo "new_release.sh: 'git status -s' is not empty"
+	exit 1
+fi
+# -----------------------------------------------------------------------------
+# check that remote branch agrees with local branch
+local_hash=`git show-ref stable/$stable_version | \
+	grep "refs/heads/stable/$stable_version" | \
+	sed -e "s| *refs/heads/stable/$stable_version||"`
+remote_hash=`git show-ref stable/$stable_version | \
+	grep "refs/remotes/origin/stable/$stable_version" | \
+	sed -e "s| *refs/remotes/origin/stable/$stable_version||"`
+if [ "$local_hash" != "$remote_hash" ]
+then
+	echo_eval git show-ref stable/$stable_version
+	echo 'new_release.sh: exiting because local and remote branch differ'
+	exit 1
+fi
+# -----------------------------------------------------------------------------
 check_one=`bin/version.sh get`
 echo_eval git checkout doc.omh
 check_two=`grep "cppad-$stable_version" doc.omh \
@@ -80,7 +101,7 @@ echo_eval svn checkout $repository/conf conf
 echo_eval cd conf
 #
 msg="Update stable and release numbers in projDesc.xml"
-echo 'Settting stable and advance release in ../../conf/projDesc.xml.'
+echo 'Settting stable and advance release in build/conf/projDesc.xml.'
 sed -i projDesc.xml \
 	-e "/^ *<stable/,/^ *<\/stable/s/[0-9]\{8\}/$stable_version/" \
 	-e "/^ *<release/,/^ *<\/release/s/[0-9]\{8\}\.[0-9]*/$release_version/"
