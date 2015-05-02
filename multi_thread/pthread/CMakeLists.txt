@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3114 2014-02-22 16:20:39Z bradbell $
+# $Id: CMakeLists.txt 3619 2015-01-28 14:11:13Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
@@ -14,7 +14,7 @@
 
 # Specifies build type for this directory. Possible values are 
 # empty, Debug, Release, RelWithDebInfo and MinSizeRel
-SET(CMAKE_BUILD_TYPE RELEASE)
+SET(CMAKE_BUILD_TYPE DEBUG)
 
 # Local include directories to search (not in package_prefix/include)
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
