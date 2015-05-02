@@ -1,4 +1,4 @@
-/* $Id: optimize.hpp 3639 2015-02-11 02:01:35Z bradbell $ */
+/* $Id: optimize.hpp 3643 2015-02-12 11:47:46Z bradbell $ */
 # ifndef CPPAD_OPTIMIZE_INCLUDED
 # define CPPAD_OPTIMIZE_INCLUDED
 
@@ -2668,7 +2668,7 @@ void optimize_run(
 			{	i_var = info.skip_var_true[j];
 				if( tape[i_var].match )
 				{	// the operation for this argument has been removed
-					rec->ReplaceArg(i_arg++, 0);
+					rec->ReplaceArg(i_arg++, rec->num_op_rec());
 				}
 				else
 				{	CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op > 0 );
@@ -2683,7 +2683,7 @@ void optimize_run(
 			{	i_var = info.skip_var_false[j];
 				if( tape[i_var].match )
 				{	// the operation for this argument has been removed
-					rec->ReplaceArg(i_arg++, 0);
+					rec->ReplaceArg(i_arg++, rec->num_op_rec());
 				}
 				else
 				{	CPPAD_ASSERT_UNKNOWN( tape[i_var].new_op > 0 );
