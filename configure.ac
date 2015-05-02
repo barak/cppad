@@ -1,4 +1,4 @@
-dnl $Id: configure.ac 3589 2015-01-11 14:07:42Z bradbell $
+dnl $Id: configure.ac 3611 2015-01-24 16:16:13Z bradbell $
 dnl ---------------------------------------------------------------------------
 dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 dnl
@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20150000.2], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20150000.3], [cppad@list.coin-or.org])
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -449,7 +449,7 @@ AC_SUBST(cppad_compiler_has_erf, 0)
 dnl Determine if size_t has same size as unsigned int 
 AC_CHECK_SIZEOF([size_t])
 AC_CHECK_SIZEOF([unsigned int])
-if test "$ac_cv_size_t" == "$ac_cv_unsigned_int" ; then
+if test "$ac_cv_sizeof_size_t" != "$ac_cv_sizeof_unsigned_int" ; then
 	AC_SUBST(cppad_size_t_not_unsigned_int, 1)
 else
 	AC_SUBST(cppad_size_t_not_unsigned_int, 0)
