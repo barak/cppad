@@ -1,4 +1,4 @@
-/* $Id: hash_code.hpp 3359 2014-09-26 00:12:56Z bradbell $ */
+/* $Id: hash_code.hpp 3639 2015-02-11 02:01:35Z bradbell $ */
 # ifndef CPPAD_HASH_CODE_INCLUDED
 # define CPPAD_HASH_CODE_INCLUDED
 
@@ -217,6 +217,7 @@ unsigned short hash_code(
 		case AtanOp:
 		case CosOp:
 		case CoshOp:
+		case ErfOp:
 		case ExpOp:
 		case LogOp:
 		case SignOp:
