@@ -1,4 +1,4 @@
-/* $Id: rev_hes_sweep.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
+/* $Id: rev_hes_sweep.hpp 3639 2015-02-11 02:01:35Z bradbell $ */
 # ifndef CPPAD_REV_HES_SWEEP_INCLUDED
 # define CPPAD_REV_HES_SWEEP_INCLUDED
 
@@ -358,7 +358,7 @@ void RevHesSweep(
 			// -------------------------------------------------
 
 			case ErfOp:
-			CPPAD_ASSERT_NARG_NRES(op, 1, 1)
+			CPPAD_ASSERT_NARG_NRES(op, 3, 5)
 			reverse_sparse_hessian_nonlinear_unary_op(
 			i_var, arg[0], RevJac, for_jac_sparse, rev_hes_sparse
 			);
