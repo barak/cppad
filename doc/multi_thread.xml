@@ -6,7 +6,7 @@
 <title>Using CppAD in a Multi-Threading Environment</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Using CppAD in a Multi-Threading Environment"/>
-<meta name="keywords" id="keywords" content=" using cppad in a multi-threading environment parallel mode execution purpose cppad_max_num_threads maximum number of threads Cppad_max_num_threads parallel_setup hold_memory ad initialization same thread prohibited "/>
+<meta name="keywords" id="keywords" content=" using cppad in a multi-threading environment mode execution maximum number purpose cppad_max_num_threads parallel_setup hold_memory parallel ad initialization same thread prohibited "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -50,7 +50,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -83,19 +83,16 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Extra steps and care must be taken to use CppAD 
+Extra steps and care must be taken to use CppAD
 in <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
- execution mode. 
+ execution mode.
 This section collects this information in one place.
 
 <br/>
 <br/>
 <b><big><a name="CPPAD_MAX_NUM_THREADS" id="CPPAD_MAX_NUM_THREADS">CPPAD_MAX_NUM_THREADS</a></big></b>
-
-
-
 <br/>
-The value <code><font color="blue">CPPAD_MAX_NUM_THREADS</font></code> is an absolute maximum for 
+The value <code><font color="blue">CPPAD_MAX_NUM_THREADS</font></code> is an absolute maximum for
 the number of threads that CppAD should support.
 If this preprocessor symbol is defined
 before including any CppAD header files,
@@ -116,7 +113,7 @@ defining it before including the CppAD header files.
 <br/>
 Using any of the following routines in a multi-threading environment
 requires that <a href="ta_parallel_setup.xml" target="_top"><span style='white-space: nowrap'>thread_alloc::parallel_setup</span></a>
- 
+
 has been completed:
 <a href="cppad_vector.xml#Memory and Parallel Mode" target="_top"><span style='white-space: nowrap'>CppAD::vector</span></a>
 ,
@@ -134,7 +131,7 @@ has been completed:
 Memory allocation should be much faster after calling
 <code><font color="blue">hold_memory</font></code> with
 <a href="ta_hold_memory.xml#value" target="_top"><span style='white-space: nowrap'>value</span></a>
- equal to true. 
+ equal to true.
 This may even be true if there is only one thread.
 
 <br/>
@@ -143,7 +140,7 @@ This may even be true if there is only one thread.
 <br/>
 One must first call
 <a href="ta_parallel_setup.xml" target="_top"><span style='white-space: nowrap'>thread_alloc::parallel_setup</span></a>
- 
+
 and then call <a href="parallel_ad.xml" target="_top"><span style='white-space: nowrap'>parallel_ad</span></a>
  before using <code><font color="blue">AD</font></code> types
 in <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>

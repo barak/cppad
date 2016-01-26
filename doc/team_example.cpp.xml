@@ -6,7 +6,7 @@
 <title>Using a Team of AD Threads: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Using a Team of AD Threads: Example and Test"/>
-<meta name="keywords" id="keywords" content=" using a team of ad threads: example and test thread Ad purpose thread_team source code "/>
+<meta name="keywords" id="keywords" content=" using a team of ad threads: example and test thread purpose thread_team source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -104,7 +104,7 @@ This example demonstrates how use a team threads with CppAD.
 <br/>
 <b><big><a name="thread_team" id="thread_team">thread_team</a></big></b>
 <br/>
-The following three implementations of the 
+The following three implementations of the
 <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team_thread.hpp</span></a>
  specifications are included:
 <table><tr><td align='left'  valign='top'>
@@ -159,9 +159,9 @@ namespace {
 		ax[0] = work_all_[thread_num]-&gt;x;
 		<a href="independent.xml" target="_top">Independent</a>(ax);
 		ay[0] = sqrt( ax[0] * ax[0] );
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay); 
+		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
-		// Check function value corresponds to the identity 
+		// Check function value corresponds to the identity
 		double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
 		ok        &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[0], ax[0], eps, eps);
 
@@ -186,8 +186,8 @@ bool team_example(void)
 	// (using thread_alloc in sequential mode)
 	size_t thread_num;
 	for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-	{	ok &amp;= thread_alloc::inuse(thread_num) == 0; 
-		ok &amp;= thread_alloc::available(thread_num) == 0; 
+	{	ok &amp;= thread_alloc::inuse(thread_num) == 0;
+		ok &amp;= thread_alloc::available(thread_num) == 0;
 	}
 
 	// initialize work_all_
@@ -198,7 +198,7 @@ bool team_example(void)
 		work_all_[thread_num]     = static_cast&lt;work_one_t*&gt;(v_ptr);
 		// incase this thread's worker does not get called
 		work_all_[thread_num]-&gt;ok = false;
-		// parameter that defines the work for this thread 
+		// parameter that defines the work for this thread
 		work_all_[thread_num]-&gt;x  = double(thread_num) + 1.;
 	}
 
@@ -211,7 +211,7 @@ bool team_example(void)
 	while(thread_num--)
 	{	// check that this thread was ok with the work it did
 		ok &amp;= work_all_[thread_num]-&gt;ok;
-		// delete problem specific information 
+		// delete problem specific information
 		void* v_ptr = static_cast&lt;void*&gt;( work_all_[thread_num] );
 		thread_alloc::return_memory( v_ptr );
 		// check that there is no longer any memory inuse by this thread

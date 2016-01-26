@@ -9,7 +9,7 @@ var list_up0 = [
 'cppad.xml',
 'ad.xml',
 'advalued.xml',
-'mathother.xml',
+'unary_standard_math.xml',
 'sign.xml'
 ];
 var list_down3 = [
@@ -23,30 +23,44 @@ var list_down3 = [
 ];
 var list_down2 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_down1 = [
+'acos.xml',
+'asin.xml',
+'atan.xml',
+'cos.xml',
+'cosh.xml',
+'exp.xml',
+'log.xml',
+'log10.xml',
+'sin.xml',
+'sinh.xml',
+'sqrt.xml',
+'tan.xml',
+'tanh.xml',
 'abs.xml',
-'sign.xml',
-'atan2.xml',
+'acosh.xml',
+'asinh.xml',
+'atanh.xml',
 'erf.xml',
-'pow.xml',
-'limits.xml'
+'expm1.xml',
+'log1p.xml',
+'sign.xml'
 ];
 var list_down0 = [
 'sign.cpp.xml'
 ];
 var list_current0 = [
 'sign.xml#Syntax',
-'sign.xml#Purpose',
-'sign.xml#x',
-'sign.xml#y',
-'sign.xml#Operation Sequence',
-'sign.xml#Complex Types',
+'sign.xml#Description',
+'sign.xml#x, y',
+'sign.xml#Atomic',
 'sign.xml#Derivative',
 'sign.xml#Example'
 ];

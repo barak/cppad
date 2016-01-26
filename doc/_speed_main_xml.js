@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -63,7 +63,7 @@ var list_current0 = [
 'speed_main.xml#Sparsity Options.colpack',
 'speed_main.xml#Correctness Results',
 'speed_main.xml#Speed Results',
-'speed_main.xml#Speed Results.sparse_jacobian',
+'speed_main.xml#Speed Results.n_sweep',
 'speed_main.xml#Link Functions'
 ];
 function choose_across0(item)

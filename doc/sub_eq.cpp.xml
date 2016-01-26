@@ -6,7 +6,7 @@
 <title>AD Computed Assignment Subtraction: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Computed Assignment Subtraction: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad computed assignment subtraction: example and test -= Ad subtract assign plus add "/>
+<meta name="keywords" id="keywords" content=" ad computed assignment subtraction: example and test -= subtract assign plus add "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -92,12 +93,12 @@ bool SubEq(void)
 	size_t  n = 1;
 	double x0 = .5;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0; 
+	x[0]      = x0;
 
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 
-	// range space vector 
+	// range space vector
 	size_t m = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = 3. * x[0];    // initial value
@@ -106,9 +107,9 @@ bool SubEq(void)
 	y[1] = y[0] -= x[0]; // use the result of a computed assignment
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
-	// check value 
+	// check value
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , 3.*x0-(2.+4.+x0),  1e-10 , 1e-10);
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[1] ,             y[0],  1e-10 , 1e-10);
 

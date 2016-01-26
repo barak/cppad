@@ -85,17 +85,17 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: sparse_jac_fun</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_SPARSE_JAC_FUN_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_SPARSE_JAC_FUN_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_SPARSE_JAC_FUN_INCLUDED 
+</span></code># define CPPAD_SPARSE_JAC_FUN_HPP
 
 <pre style='display:inline'> 
 # include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/check_numeric_type.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/check_numeric_type.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 
 // following needed by gcc under fedora 17 so that exp(double) is defined
-# include &lt;cppad/base_require.hpp&gt; 
+# include &lt;cppad/base_require.hpp&gt;
 
 namespace CppAD {
 	template &lt;class Float, class FloatVector&gt;
@@ -103,8 +103,8 @@ namespace CppAD {
 		size_t                       m    ,
 		size_t                       n    ,
 		const FloatVector&amp;           x    ,
-		const CppAD::vector&lt;size_t&gt;&amp; row  , 
-		const CppAD::vector&lt;size_t&gt;&amp; col  , 
+		const CppAD::vector&lt;size_t&gt;&amp; row  ,
+		const CppAD::vector&lt;size_t&gt;&amp; col  ,
 		size_t                       p    ,
 		FloatVector&amp;                 fp   )
 	{
@@ -112,22 +112,25 @@ namespace CppAD {
 		CheckNumericType&lt;Float&gt;();
 		// check value of p
 		CPPAD_ASSERT_KNOWN(
-			p &lt; 2,
-			&quot;sparse_jac_fun: p &gt; 1&quot;
+			p == 0 || p == 1,
+			&quot;sparse_jac_fun: p != 0 and p != 1&quot;
+		);
+		size_t K = row.size();
+		CPPAD_ASSERT_KNOWN(
+			K &gt;= m,
+			&quot;sparse_jac_fun: row.size() &lt; m&quot;
 		);
 		size_t i, j, k;
-		size_t size = m;
-		if( p &gt; 0 )
-			size *= n;
-		for(k = 0; k &lt; size; k++)
-			fp[k] = Float(0);
 
-		size_t K = row.size();
+		if( p == 0 )
+			for(i = 0; i &lt; m; i++)
+				fp[i] = Float(0);
+
 		Float t;
 		for(k = 0; k &lt; K; k++)
 		{	i    = row[k];
 			j    = col[k];
-			t    = exp( x[j] * x[j] / 2.0 );	
+			t    = exp( x[j] * x[j] / 2.0 );
 			switch(p)
 			{
 				case 0:
@@ -135,7 +138,7 @@ namespace CppAD {
 				break;
 
 				case 1:
-				fp[i * n + j] += t * x[j];
+				fp[k] = t * x[j];
 				break;
 			}
 		}

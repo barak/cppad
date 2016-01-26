@@ -9,7 +9,7 @@ var list_up0 = [
 'cppad.xml',
 'ad.xml',
 'advalued.xml',
-'mathother.xml',
+'unary_standard_math.xml',
 'erf.xml'
 ];
 var list_down3 = [
@@ -23,19 +23,35 @@ var list_down3 = [
 ];
 var list_down2 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_down1 = [
+'acos.xml',
+'asin.xml',
+'atan.xml',
+'cos.xml',
+'cosh.xml',
+'exp.xml',
+'log.xml',
+'log10.xml',
+'sin.xml',
+'sinh.xml',
+'sqrt.xml',
+'tan.xml',
+'tanh.xml',
 'abs.xml',
-'sign.xml',
-'atan2.xml',
+'acosh.xml',
+'asinh.xml',
+'atanh.xml',
 'erf.xml',
-'pow.xml',
-'limits.xml'
+'expm1.xml',
+'log1p.xml',
+'sign.xml'
 ];
 var list_down0 = [
 'erf.cpp.xml'
@@ -43,11 +59,10 @@ var list_down0 = [
 var list_current0 = [
 'erf.xml#Syntax',
 'erf.xml#Description',
-'erf.xml#x',
-'erf.xml#Operation Sequence',
-'erf.xml#Method',
-'erf.xml#Method.CPPAD_COMPILER_HAS_ERF',
-'erf.xml#Method.Other',
+'erf.xml#x, y',
+'erf.xml#CPPAD_USE_CPLUSPLUS_2011',
+'erf.xml#CPPAD_USE_CPLUSPLUS_2011.true',
+'erf.xml#CPPAD_USE_CPLUSPLUS_2011.false',
 'erf.xml#Example'
 ];
 function choose_across0(item)

@@ -1,6 +1,6 @@
-dnl $Id: configure.ac 3661 2015-02-23 22:19:20Z bradbell $
+dnl $Id: configure.ac 3772 2015-12-31 14:01:01Z bradbell $
 dnl ---------------------------------------------------------------------------
-dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 dnl
 dnl CppAD is distributed under multiple licenses. This distribution is under
 dnl the terms of the
@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20150000.9], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20160000.0], [cppad@list.coin-or.org])
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -31,6 +31,11 @@ dnl nostdinc: Do not define standard include directories in generated makefiles
 dnl Note this must come before AC_PROG_CC; see
 dnl http://lists.gnu.org/archive/html/automake/2010-08/msg00113.html
 AM_INIT_AUTOMAKE([nostdinc subdir-objects -Wall])
+
+# check if we have ar program
+have_ar='yes'
+AM_PROG_AR([have_ar='no'])
+AC_MSG_NOTICE([have_ar = $have_ar])
 
 dnl ----------------------------------------------------------------------
 AC_MSG_NOTICE([*** Check command line arguments that are longer used ****])
@@ -208,21 +213,22 @@ else
 fi
 
 
-dnl Are we including an implicit constructor from any type -----------
-AC_MSG_CHECKING([--with-implicit_ctor])
-AC_ARG_WITH(implicit_ctor,
+dnl Are we including deprecated features in the install-----------
+AC_MSG_CHECKING([--with-deprecated])
+AC_ARG_WITH(deprecated,
 	AC_HELP_STRING(
-		[--with-implicit_ctor],
+		[--with-deprecated],
 		[include an implicit AD<Base> constructor from any type]
 	),
-	[implicit_ctor="yes"],
-	[implicit_ctor="no"]
+	[deprecated="yes"],
+	[deprecated="no"]
 )
-AC_MSG_RESULT([$implicit_ctor])
-if test "$implicit_ctor" = "yes" ; then
-	AC_SUBST(cppad_implicit_ctor_from_any_type, "1")
+AC_MSG_RESULT([$deprecated])
+AM_CONDITIONAL(CppAD_DEPRECATED, test "$deprecated" = 'yes' )
+if test "$deprecated" = "yes" ; then
+	AC_SUBST(cppad_deprecated, "1")
 else
-	AC_SUBST(cppad_implicit_ctor_from_any_type, "0")
+	AC_SUBST(cppad_deprecated, "0")
 fi
 
 dnl The postfix directiory corresponding to CppAD ------------------------
@@ -364,7 +370,7 @@ AC_ARG_VAR(MAX_NUM_THREADS,
 )
 if test "$MAX_NUM_THREADS" != "" ; then
 	AC_MSG_RESULT([$MAX_NUM_THREADS])
-  	if test "$MAX_NUM_THREADS" -lt "4" ; then
+	if test "$MAX_NUM_THREADS" -lt "4" ; then
 		AC_MSG_ERROR(
 			[ MAX_NUM_THREADS=$MAX_NUM_THREADS is less than 4 ]
 		)
@@ -403,7 +409,7 @@ if test "$addr_t" == "unsigned short int" ; then
 	ok="yes"
 fi
 if test "$ok" == "no" ; then
-  	AC_MSG_ERROR(
+	AC_MSG_ERROR(
 		[$addr_t is not a valid choice for TAPE_ADDR_TYPE]
 	)
 fi
@@ -435,7 +441,7 @@ if test "$tape_id_t" == "unsigned short int" ; then
 	ok="yes"
 fi
 if test "$ok" == "no" ; then
-  	AC_MSG_ERROR(
+	AC_MSG_ERROR(
 		[$tape_id_t is not a valid choice for TAPE_ID_TYPE]
 	)
 fi
@@ -474,24 +480,29 @@ AC_CHECK_PROG(have_pkg_config, [pkg-config], [yes], [no])
 AM_CONDITIONAL(CppAD_PKG_CONFIG, test "$have_pkg_config" = "yes")
 
 dnl check if we can build libraries
-AM_PROG_AR()
-AM_CONDITIONAL(CppAD_HAVE_AR, test "$AR" = "ar")
-if test "$AR" != "ar"; then
+AM_CONDITIONAL(CppAD_HAVE_AR, test "$have_ar" = 'yes' )
+if test "$have_ar" = 'no'; then
 	AC_MSG_WARN(
 	[cannot build any libraries because ar is missing; e.g,, speed/* not built]
 	)
 fi
 
+dnl test_one.sh.in settings for cppad_cxx_flags
+AC_SUBST(cppad_cxx_flags, "-g -O0")
 
-dnl auto-tools version does not support ColPack coloring
+dnl auto-tools version does not colpack
 AC_SUBST(cppad_has_colpack, 0)
+
+dnl auto-tools version will assumes mkstemp is available.
+AC_SUBST(cppad_has_mkstemp, 1)
 
 dnl auto-tools version cannot use c++11 compiler
 dnl so supress corresponding features
 AC_SUBST(cppad_has_nullptr, 0)
 AC_SUBST(cppad_has_rvalue, 0)
 AC_SUBST(cppad_has_cstdint_8_to_64, 0)
-AC_SUBST(cppad_compiler_has_erf, 0)
+AC_SUBST(cppad_use_cplusplus_2011, 0)
+AC_SUBST(cppad_has_high_resolution_clock, 0)
 
 dnl Determine if size_t has same size as unsigned int
 AC_CHECK_SIZEOF([size_t])
@@ -537,8 +548,8 @@ fi
 
 
 
-dnl Have configure check source directory to see if cppad/CppAD.h is there
-AC_CONFIG_SRCDIR(cppad/CppAD.h)
+dnl Have configure check source directory to see if cppad/cppad.hpp is there
+AC_CONFIG_SRCDIR(cppad/cppad.hpp)
 
 dnl AC_PROG_CP outputs CPP as command to run C preprocessor
 AC_PROG_CPP
@@ -751,9 +762,9 @@ else
 	cppad_pkgconfig_libs_value="$cppad_pkgconfig_libs_value -lcppad_ipopt"
 	cppad_pkgconfig_requires_value="ipopt"
 fi
-AC_SUBST(cppad_cflags,   "$cppad_pkgconfig_cflags_value")
-AC_SUBST(cppad_libs,     "$cppad_pkgconfig_libs_value")
-AC_SUBST(cppad_requires, "$cppad_pkgconfig_requires_value")
+AC_SUBST(cppad_pkgconfig_cflags,   "$cppad_pkgconfig_cflags_value")
+AC_SUBST(cppad_pkgconfig_libs,     "$cppad_pkgconfig_libs_value")
+AC_SUBST(cppad_pkgconfig_requires, "$cppad_pkgconfig_requires_value")
 dnl
 dnl names set here so cppad.pc-uninstalled works both with cmake and autoconf
 AC_SUBST(cppad_SOURCE_DIR,  ${ABS_TOP_SRCDIR} )

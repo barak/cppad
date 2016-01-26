@@ -6,7 +6,7 @@
 <title>Boost Thread Implementation of a Team of AD Threads</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Boost Thread Implementation of a Team of AD Threads"/>
-<meta name="keywords" id="keywords" content=" bthread Ad team boost thread implementation of a ad threads "/>
+<meta name="keywords" id="keywords" content=" boost thread implementation of a team ad threads bthread "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -81,9 +81,6 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>Boost Thread Implementation of a Team of AD Threads</big></big></b></center>
 See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team_thread.hpp</span></a>
  for this routines specifications.
@@ -99,9 +96,9 @@ namespace {
 	using CppAD::thread_alloc;
 
 	// number of threads in the team
-	size_t num_threads_ = 1; 
+	size_t num_threads_ = 1;
 
-	// no need to cleanup up thread specific data 
+	// no need to cleanup up thread specific data
 	void cleanup(size_t*)
 	{	return; }
 
@@ -221,9 +218,9 @@ bool team_create(size_t num_threads)
 	num_threads_ = num_threads;
 
 	// initialize two barriers, one for work done, one for new job ready
-	wait_for_work_ = new boost::barrier(num_threads); 
-	wait_for_job_  = new boost::barrier(num_threads); 
-	
+	wait_for_work_ = new boost::barrier(num_threads);
+	wait_for_job_  = new boost::barrier(num_threads);
+
 	// initial job for the threads
 	thread_job_           = init_enum;
 	if( num_threads &gt; 1 )
@@ -233,7 +230,7 @@ bool team_create(size_t num_threads)
 	// num_threads - 1 more threads
 	for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
 	{	// Create the thread with thread number equal to thread_num
-		thread_all_[thread_num].bthread = 
+		thread_all_[thread_num].bthread =
 			new boost::thread(thread_work, thread_num);
 	}
 
@@ -258,7 +255,7 @@ bool team_work(void worker(void))
 	// set the new job that other threads are waiting for
 	thread_job_ = work_enum;
 
-	// Enter parallel exectuion when master thread calls wait_for_job_ 
+	// Enter parallel exectuion when master thread calls wait_for_job_
 	if( num_threads_ &gt; 1 )
 		sequential_execution_ = false;
 	wait_for_job_-&gt;wait();
@@ -289,7 +286,7 @@ bool team_destroy(void)
 	// set the new job that other threads are waiting for
 	thread_job_ = join_enum;
 
-	// enter parallel exectuion soon as master thread completes wait_for_job_ 
+	// enter parallel exectuion soon as master thread completes wait_for_job_
 	if( num_threads_ &gt; 1 )
 			sequential_execution_ = false;
 	wait_for_job_-&gt;wait();
@@ -302,7 +299,7 @@ bool team_destroy(void)
 		delete thread_all_[thread_num].bthread;
 		thread_all_[thread_num].bthread = CPPAD_NULL;
 	}
-	// now we are down to just the master thread (thread zero) 
+	// now we are down to just the master thread (thread zero)
 	sequential_execution_ = true;
 
 	// destroy wait_for_work_

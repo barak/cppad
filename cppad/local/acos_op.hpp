@@ -1,12 +1,12 @@
-/* $Id: acos_op.hpp 3320 2014-09-11 23:06:21Z bradbell $ */
-# ifndef CPPAD_ACOS_OP_INCLUDED
-# define CPPAD_ACOS_OP_INCLUDED
+// $Id: acos_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_ACOS_OP_HPP
+# define CPPAD_ACOS_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -43,9 +43,9 @@ inline void forward_acos_op(
 	size_t q           ,
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
-{	
+{
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(AcosOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(AcosOp) == 2 );
@@ -107,9 +107,9 @@ inline void forward_acos_op_dir(
 	size_t r           ,
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
-{	
+{
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(AcosOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(AcosOp) == 2 );
@@ -127,12 +127,12 @@ inline void forward_acos_op_dir(
 	for(ell = 0; ell < r; ell ++)
 	{	Base uq = - 2.0 * x[m + ell] * x[0];
 		for(k = 1; k < q; k++)
-			uq -= x[(k-1)*r+1+ell] * x[(q-k-1)*r+1+ell]; 
+			uq -= x[(k-1)*r+1+ell] * x[(q-k-1)*r+1+ell];
 		b[m+ell] = Base(0);
 		z[m+ell] = Base(0);
 		for(k = 1; k < q; k++)
-		{	b[m+ell] += Base(k) * b[(k-1)*r+1+ell] * b[(q-k-1)*r+1+ell]; 
-			z[m+ell] += Base(k) * z[(k-1)*r+1+ell] * b[(q-k-1)*r+1+ell]; 
+		{	b[m+ell] += Base(k) * b[(k-1)*r+1+ell] * b[(q-k-1)*r+1+ell];
+			z[m+ell] += Base(k) * z[(k-1)*r+1+ell] * b[(q-k-1)*r+1+ell];
 		}
 		b[m+ell] =  ( uq / Base(2) - b[m+ell] / Base(q) ) / b[0];
 		z[m+ell] = -( x[m+ell]     + z[m+ell] / Base(q) ) / b[0];
@@ -158,7 +158,7 @@ template <class Base>
 inline void forward_acos_op_0(
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
 {
 	// check assumptions
@@ -195,7 +195,7 @@ inline void reverse_acos_op(
 	size_t      d            ,
 	size_t      i_z          ,
 	size_t      i_x          ,
-	size_t      cap_order    , 
+	size_t      cap_order    ,
 	const Base* taylor       ,
 	size_t      nc_partial   ,
 	Base*       partial      )
@@ -218,44 +218,46 @@ inline void reverse_acos_op(
 	const Base* b  = z  - cap_order; // called y in documentation
 	Base* pb       = pz - nc_partial;
 
+	Base inv_b0 = Base(1) / b[0];
+
 	// number of indices to access
 	size_t j = d;
 	size_t k;
 	while(j)
 	{
 		// scale partials w.r.t b[j] by 1 / b[0]
-		pb[j] /= b[0];
+		pb[j]  = azmul(pb[j], inv_b0);
 
 		// scale partials w.r.t z[j] by 1 / b[0]
-		pz[j] /= b[0];
+		pz[j]  = azmul(pz[j], inv_b0);
 
-		// update partials w.r.t b^0 
-		pb[0] -= pz[j] * z[j] + pb[j] * b[j]; 
+		// update partials w.r.t b^0
+		pb[0] -= azmul(pz[j], z[j]) + azmul(pb[j], b[j]);
 
 		// update partial w.r.t. x^0
-		px[0] -= pb[j] * x[j];
+		px[0] -= azmul(pb[j], x[j]);
 
 		// update partial w.r.t. x^j
-		px[j] -= pz[j] + pb[j] * x[0];
+		px[j] -= pz[j] + azmul(pb[j], x[0]);
 
 		// further scale partial w.r.t. z[j] by 1 / j
 		pz[j] /= Base(j);
 
 		for(k = 1; k < j; k++)
 		{	// update partials w.r.t b^(j-k)
-			pb[j-k] -= Base(k) * pz[j] * z[k] + pb[j] * b[k];
+			pb[j-k] -= Base(k) * azmul(pz[j], z[k]) + azmul(pb[j], b[k]);
 
-			// update partials w.r.t. x^k 
-			px[k]   -= pb[j] * x[j-k];
+			// update partials w.r.t. x^k
+			px[k]   -= azmul(pb[j], x[j-k]);
 
 			// update partials w.r.t. z^k
-			pz[k]   -= pz[j] * Base(k) * b[j-k];
+			pz[k]   -= Base(k) * azmul(pz[j], b[j-k]);
 		}
 		--j;
 	}
 
 	// j == 0 case
-	px[0] -= ( pz[0] + pb[0] * x[0]) / b[0];
+	px[0] -= azmul( pz[0] + azmul(pb[0], x[0]), inv_b0);
 }
 
 } // END_CPPAD_NAMESPACE

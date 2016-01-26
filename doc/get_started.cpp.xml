@@ -6,7 +6,7 @@
 <title>Getting Started Using CppAD to Compute Derivatives</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Getting Started Using CppAD to Compute Derivatives"/>
-<meta name="keywords" id="keywords" content=" getting started using cppad to compute derivatives simple example start Cppad purpose function derivative value poly exercises program output running "/>
+<meta name="keywords" id="keywords" content=" getting started using cppad to compute derivatives simple example start purpose function derivative value poly exercises program output running "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -87,7 +87,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Demonstrate the use of CppAD by computing the derivative 
+Demonstrate the use of CppAD by computing the derivative
 of a simple example function.
 
 <br/>
@@ -105,7 +105,7 @@ The example function
 </mstyle></mrow>
 </mrow></math>
 
- is defined by 
+ is defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -208,7 +208,7 @@ For the particular case in this example,
 <mi mathvariant='italic'>k</mi>
 </mrow></math>
 
- is equal to 5, 
+ is equal to 5,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>a</mi>
@@ -226,7 +226,7 @@ For the particular case in this example,
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-, and 
+, and
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -235,7 +235,7 @@ For the particular case in this example,
 </mrow></math>
 
 .
-If follows that 
+If follows that
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -312,7 +312,7 @@ at the point
 <mn>2</mn>
 </mrow></math>
 
-. 
+.
 </li><li>
 
 Compute and print the derivative of 
@@ -385,11 +385,11 @@ at the point
 <b><big><a name="Program" id="Program">Program</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-#include &lt;iostream&gt;      // standard input/output 
+#include &lt;iostream&gt;      // standard input/output
 #include &lt;vector&gt;        // standard vector
 #include &lt;cppad/cppad.hpp&gt; // the CppAD package http://www.coin-or.org/CppAD/
 
-namespace { 
+namespace {
       // define y(x) = Poly(a, x) in the empty namespace
       template &lt;class Type&gt;
       Type Poly(const std::vector&lt;double&gt; &amp;a, const Type &amp;x)

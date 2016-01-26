@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -95,7 +96,7 @@ bool UnaryMinus(void)
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = - x[0];
@@ -127,7 +128,7 @@ bool UnaryMinus(void)
 	v[zero] = x[0];
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; result = - v[zero];
 	ok     &amp;= (result == y[0]);
-	 
+
 	return ok;
 }
 </pre>

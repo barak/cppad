@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -49,19 +49,18 @@ var list_down1 = [
 ];
 var list_down0 = [
 'mul_level.cpp.xml',
-'change_const.cpp.xml'
+'change_param.cpp.xml'
 ];
 var list_current0 = [
 'mul_level.xml#Background',
 'mul_level.xml#Motivation',
-'mul_level.xml#General Solution',
-'mul_level.xml#General Procedure',
-'mul_level.xml#General Procedure.Start ADBaseTape',
-'mul_level.xml#General Procedure.Start ADDBaseTape',
-'mul_level.xml#General Procedure.Inner Function Calculations',
-'mul_level.xml#General Procedure.Derivative of Inner Function',
-'mul_level.xml#General Procedure.Outer Function',
-'mul_level.xml#General Procedure.Derivative of Outer Function',
+'mul_level.xml#Procedure',
+'mul_level.xml#Procedure.First Start AD&lt;double&gt;',
+'mul_level.xml#Procedure.Start AD&lt; AD&lt;double&gt; &gt; Recording',
+'mul_level.xml#Procedure.Inner Function',
+'mul_level.xml#Procedure.Second Start AD&lt; AD&lt;double&gt; &gt;',
+'mul_level.xml#Procedure.Outer Function',
+'mul_level.xml#Procedure.Derivatives of Outer Function',
 'mul_level.xml#Example'
 ];
 function choose_across0(item)

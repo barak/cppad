@@ -122,25 +122,25 @@ bool RevOneCases()
 	x[0] = 2.;
 	x[1] = 1.;
 
-	// compute and check derivative of y[0] 
+	// compute and check derivative of y[0]
 	Vector dw(n);
 	dw  = f.RevOne(x, 0);
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0],      exp(x[1]), 1e-10, 1e-10 ); // w.r.t x[0]
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], x[0]*exp(x[1]), 1e-10, 1e-10 ); // w.r.t x[1]
 
-	// compute and check derivative of y[1] 
+	// compute and check derivative of y[1]
 	dw  = f.RevOne(x, 1);
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0],      sin(x[1]), 1e-10, 1e-10 );
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], x[0]*cos(x[1]), 1e-10, 1e-10 );
 
-	// compute and check derivative of y[2] 
+	// compute and check derivative of y[2]
 	dw  = f.RevOne(x, 2);
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0],        cos(x[1]), 1e-10, 1e-10 );
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], - x[0]*sin(x[1]), 1e-10, 1e-10 );
 
 	return ok;
 }
-} // End empty namespace 
+} // End empty namespace
 # include &lt;vector&gt;
 # include &lt;valarray&gt;
 bool RevOne(void)

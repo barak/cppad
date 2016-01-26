@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -113,20 +113,20 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 # include &lt;adolc/adolc.h&gt;
 
 # include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;cppad/poly.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
-# include &lt;cppad/thread_alloc.hpp&gt;
+# include &lt;cppad/utility/poly.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
+# include &lt;cppad/utility/thread_alloc.hpp&gt;
 # include &quot;adolc_alloc_mat.hpp&quot;
 
 // list of possible options
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_poly(
-	size_t                     size     , 
-	size_t                     repeat   , 
+	size_t                     size     ,
+	size_t                     repeat   ,
 	CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
 	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z  
+	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
 {
 	if( global_atomic )
 		return false;
@@ -139,7 +139,7 @@ bool link_poly(
 	int keep = 0;  // do not keep forward mode results in buffer
 	int m    = 1;  // number of dependent variables
 	int n    = 1;  // number of independent variables
-	int d    = 2;  // highest derivative degree 
+	int d    = 2;  // highest derivative degree
 	double f;      // function value
 
 	// set up for thread_alloc memory allocator (fast and checks for leaks)
@@ -174,9 +174,9 @@ bool link_poly(
 
 		// declare independent variables
 		trace_on(tag, keep);
-		Z &lt;&lt;= z[0]; 
+		Z &lt;&lt;= z[0];
 
-		// AD computation of the function value 
+		// AD computation of the function value
 		P = CppAD::Poly(0, A, Z);
 
 		// create function object f : Z -&gt; P
@@ -199,9 +199,9 @@ bool link_poly(
 
 		// declare independent variables
 		trace_on(tag, keep);
-		Z &lt;&lt;= z[0]; 
+		Z &lt;&lt;= z[0];
 
-		// AD computation of the function value 
+		// AD computation of the function value
 		P = CppAD::Poly(0, A, Z);
 
 		// create function object f : Z -&gt; P

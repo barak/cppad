@@ -6,7 +6,7 @@
 <title>LuSolve With Complex Arguments: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="LuSolve With Complex Arguments: Example and Test"/>
-<meta name="keywords" id="keywords" content=" lusolve with complex arguments: example and test Lusolve "/>
+<meta name="keywords" id="keywords" content=" lusolve with complex arguments: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuSolve</option>
 <option>lu_solve.cpp</option>
@@ -46,7 +46,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -70,9 +70,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -99,9 +97,9 @@ A:active { color : purple }
 <center><b><big><big>LuSolve With Complex Arguments: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
-# include &lt;cppad/lu_solve.hpp&gt;       // for CppAD::LuSolve
-# include &lt;cppad/near_equal.hpp&gt;     // for CppAD::NearEqual
-# include &lt;cppad/vector.hpp&gt;  // for CppAD::vector
+# include &lt;cppad/utility/lu_solve.hpp&gt;       // for CppAD::LuSolve
+# include &lt;cppad/utility/near_equal.hpp&gt;     // for CppAD::NearEqual
+# include &lt;cppad/utility/vector.hpp&gt;  // for CppAD::vector
 # include &lt;complex&gt;               // for std::complex
 
 typedef std::complex&lt;double&gt; Complex;    // define the Complex type
@@ -129,8 +127,8 @@ bool LuSolve(void)
 	for(j = 0; j &lt; n; j++)
 		for(k = 0; k &lt; m; k++)
 			S[ j * m + k ] = Complex(j, j + k);
-		
-	// set B = A * S 
+
+	// set B = A * S
 	size_t ik;
 	Complex sum;
 	for(k = 0; k &lt; m; k++)

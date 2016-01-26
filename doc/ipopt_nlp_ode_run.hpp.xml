@@ -50,6 +50,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -58,6 +59,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -106,14 +108,14 @@ void ipopt_ode_case(
 	S[0] = 0;
 	for(i = 1; i &lt;= Nz; i++)
 		S[i] = S[i-1] + N[i];
-	
+
 	// number of components of x corresponding to values for y
 	size_t ny_inx = (S[Nz] + 1) * Ny;
 	// number of constraints (range dimension of g)
 	size_t m      = ny_inx;
 	// number of components in x (domain dimension for f and g)
 	size_t n      = ny_inx + Na;
-	// the argument vector for the optimization is 
+	// the argument vector for the optimization is
 	// y(t) at t[0] , ... , t[S[Nz]] , followed by a
 	NumberVector x_i(n), x_l(n), x_u(n);
 	for(j = 0; j &lt; ny_inx; j++)
@@ -154,7 +156,7 @@ void ipopt_ode_case(
 	app-&gt;Options()-&gt;SetIntegerValue(&quot;max_iter&quot;, 30);
 
 	// approximate accuracy in first order necessary conditions;
-	// see Mathematical Programming, Volume 106, Number 1, 
+	// see Mathematical Programming, Volume 106, Number 1,
 	// Pages 25-57, Equation (6)
 	app-&gt;Options()-&gt;SetNumericValue(&quot;tol&quot;, 1e-9);
 

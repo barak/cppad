@@ -7,7 +7,7 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'library.xml',
+'utility.xml',
 'nan.xml'
 ];
 var list_down2 = [
@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -47,9 +47,7 @@ var list_down1 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'benderquad.xml',
-'opt_val_hes.xml',
-'luratio.xml'
+'to_string.xml'
 ];
 var list_down0 = [
 'nan.cpp.xml'
@@ -59,15 +57,17 @@ var list_current0 = [
 'nan.xml#Purpose',
 'nan.xml#Include',
 'nan.xml#Include.Macros',
-'nan.xml#nan',
-'nan.xml#nan.z',
-'nan.xml#nan.s',
 'nan.xml#isnan',
 'nan.xml#isnan.s',
 'nan.xml#isnan.b',
 'nan.xml#hasnan',
 'nan.xml#hasnan.v',
 'nan.xml#hasnan.b',
+'nan.xml#nan(zero)',
+'nan.xml#nan(zero).Deprecated 2015-10-04',
+'nan.xml#nan(zero).Syntax',
+'nan.xml#nan(zero).z',
+'nan.xml#nan(zero).s',
 'nan.xml#Scalar',
 'nan.xml#Vector',
 'nan.xml#Example'

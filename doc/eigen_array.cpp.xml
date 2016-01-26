@@ -115,10 +115,10 @@ bool eigen_array(void)
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
 
 	// evaluate a component wise function
-	a_y = a_x.array() + sin(a_x.array()); 
-	
+	a_y = a_x.array() + sin(a_x.array());
+
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
 
 	// compute the derivative of y w.r.t x using CppAD
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);

@@ -6,7 +6,7 @@
 <title>An Arbitrary Order Gear Method</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="An Arbitrary Order Gear Method"/>
-<meta name="keywords" id="keywords" content=" Odegear Ode Gear stiff differential equation an arbitrary order gear method syntax purpose include fun t x f f_x warning m n e scalar vector example source code theory gear's "/>
+<meta name="keywords" id="keywords" content=" an arbitrary order gear method Odegear Ode stiff differential equation syntax purpose include fun t x f f_x warning m n e scalar vector example source code theory gear's "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>OdeGear</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -125,19 +123,13 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
- 
 <center><b><big><big>An Arbitrary Order Gear Method</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/ode_gear.hpp&gt;<br/>
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/ode_gear.hpp&gt;<br/>
 </span></font></code>
 
 <code><font color="blue"><span style='white-space: nowrap'>OdeGear(</span></font><i><font color="black"><span style='white-space: nowrap'>F</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>T</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>X</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>e</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
@@ -152,7 +144,7 @@ This routine applies
 <a href="odegear.xml#Gear's Method" target="_top"><span style='white-space: nowrap'>Gear's&#xA0;Method</span></a>
 
 to solve an explicit set of ordinary differential equations.
-We are given 
+We are given
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -232,7 +224,7 @@ an explicit method may be better (perhaps <a href="runge45.xml" target="_top"><s
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
 The file <code><font color="blue">cppad/ode_gear.hpp</font></code> is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of 
+but it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
@@ -241,7 +233,7 @@ the <code><font color="blue">CppAD</font></code> routines.
 <br/>
 The class 
 <code><i><font color="black"><span style='white-space: nowrap'>Fun</span></font></i></code>
- 
+
 and the object 
 <code><i><font color="black"><span style='white-space: nowrap'>F</span></font></i></code>
  satisfy the prototype
@@ -266,7 +258,7 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>t</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 (see description of <a href="odegear.xml#Scalar" target="_top"><span style='white-space: nowrap'>Scalar</span></a>
- below). 
+ below).
 
 <br/>
 <br/>
@@ -283,7 +275,7 @@ and has size
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 
 (see description of <a href="odegear.xml#Vector" target="_top"><span style='white-space: nowrap'>Vector</span></a>
- below). 
+ below).
 
 <br/>
 <br/>
@@ -323,7 +315,7 @@ On output,
 (see 
 <code><i><font color="black"><span style='white-space: nowrap'>f(t,&#xA0;x)</span></font></i></code>
  in <a href="odegear.xml#Purpose" target="_top"><span style='white-space: nowrap'>Purpose</span></a>
-). 
+).
 
 <br/>
 <br/>
@@ -349,7 +341,7 @@ On input and output,
 and the input values of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>f_x</span></font></i></code>
  do not matter.
-On output, 
+On output,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -389,7 +381,7 @@ The arguments
 <code><i><font color="black"><span style='white-space: nowrap'>f_x</span></font></i></code>
 
 must have a call by reference in their prototypes; i.e.,
-do not forget the <code><font color="blue">&amp;</font></code> in the prototype for 
+do not forget the <code><font color="blue">&amp;</font></code> in the prototype for
 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  and 
@@ -412,7 +404,7 @@ It specifies the order (highest power of
 <mi mathvariant='italic'>t</mi>
 </mrow></math>
 
-) 
+)
 used to represent the function 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -421,7 +413,7 @@ used to represent the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- in the multi-step method. 
+ in the multi-step method.
 Upon return from <code><font color="blue">OdeGear</font></code>,
 the <code><i>i</i></code>-th component of the polynomial is defined by
 
@@ -484,7 +476,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the range space dimension of the 
+It specifies the range space dimension of the
 vector valued function 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -532,8 +524,8 @@ For
 <mo stretchy="false">]</mo>
 </mrow></math>
 
- is the time 
-corresponding to time corresponding 
+ is the time
+corresponding to time corresponding
 to a previous point in the multi-step method.
 The value 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -543,7 +535,7 @@ The value
 <mo stretchy="false">]</mo>
 </mrow></math>
 
- is the time 
+ is the time
 of the next point in the multi-step method.
 The array 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -634,7 +626,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- 
+
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -669,7 +661,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- 
+
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -726,7 +718,7 @@ The vector
 </mrow></math>
 
 The order of this approximation is one less than the order of
-the solution; i.e., 
+the solution; i.e.,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>e</mi>
@@ -772,7 +764,7 @@ for a <a href="numerictype.xml" target="_top"><span style='white-space: nowrap'>
 The routine <a href="checknumerictype.xml" target="_top"><span style='white-space: nowrap'>CheckNumericType</span></a>
  will generate an error message
 if this is not the case.
-In addition, the following operations must be defined for 
+In addition, the following operations must be defined for
 
 <code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
  objects 
@@ -835,7 +827,7 @@ For this discussion we use the shorthand
 </msub>
 </mrow></math>
 
- 
+
 for the value 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -1388,7 +1380,7 @@ Gear's method determines
 </msub>
 </mrow></math>
 
- by solving the following 
+ by solving the following
 nonlinear equation
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -1420,7 +1412,7 @@ nonlinear equation
 </msub>
 </mrow></math>
 
-Newton's method for solving this equation determines iterates, 
+Newton's method for solving this equation determines iterates,
 which we denote by 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msubsup><mi mathvariant='italic'>x</mi>
@@ -1429,7 +1421,7 @@ which we denote by
 </msubsup>
 </mrow></math>
 
-, by solving the following affine 
+, by solving the following affine
 approximation of the equation above
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -1793,14 +1785,14 @@ We solve the following approximation of the equation above to determine
 <br/>
 <b><big><a name="Gear's Method" id="Gear's Method">Gear's Method</a></big></b>
 <br/>
-C. W. Gear, 
-``Simultaneous Numerical Solution of Differential-Algebraic Equations,'' 
-IEEE Transactions on Circuit Theory, 
+C. W. Gear,
+``Simultaneous Numerical Solution of Differential-Algebraic Equations,''
+IEEE Transactions on Circuit Theory,
 vol. 18, no. 1, pp. 89-95, Jan. 1971.
 
 
 
-<hr/>Input File: cppad/ode_gear.hpp
+<hr/>Input File: cppad/utility/ode_gear.hpp
 
 </body>
 </html>

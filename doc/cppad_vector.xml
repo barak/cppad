@@ -6,7 +6,7 @@
 <title>The CppAD::vector Template Class</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The CppAD::vector Template Class"/>
-<meta name="keywords" id="keywords" content=" vector Cppad template class the cppad::vector syntax description include capacity assignment check size return reference move semantics element access [] push_back push_vector push output resize clear data vectorbool memory type and parallel mode thread_alloc example exercise Cppad::vector "/>
+<meta name="keywords" id="keywords" content=" the cppad::vector template class vector Cppad [] push thread_alloc syntax description include capacity assignment check size return reference move semantics element access push_back push_vector output resize clear data vectorbool memory bit_per_unit type and parallel mode example exercise "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>CppAD_vector</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -116,6 +114,7 @@ A:active { color : purple }
 <option>data</option>
 <option>vectorBool</option>
 <option>---..Memory</option>
+<option>---..bit_per_unit</option>
 <option>---..data</option>
 <option>---..Output</option>
 <option>---..Element Type</option>
@@ -129,15 +128,12 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>The CppAD::vector Template Class</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <code><font color="blue"><br/>
-# include &lt;cppad/vector.hpp&gt;</font></code>
+%# include &lt;cppad/utility/vector.hpp&gt;</font></code>
 
 <br/>
 <br/>
@@ -154,7 +150,7 @@ it has the features listed below:
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
 The file <code><font color="blue">cppad/vector.hpp</font></code> is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of the 
+but it can also be included separately with out the rest of the
 CppAD include files.
 
 <br/>
@@ -188,13 +184,12 @@ Note that
 </span></font></code>
 <br/>
 <b><big><a name="Assignment" id="Assignment">Assignment</a></big></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- are 
+ are
 
 <code><font color="blue"><span style='white-space: nowrap'>CppAD::vector&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  objects,
@@ -251,8 +246,6 @@ but rather pointers are transferred.
 <br/>
 <br/>
 <b><big><a name="Element Access" id="Element Access">Element Access</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -293,8 +286,6 @@ to generate an appropriate error report.
 <br/>
 <br/>
 <b><big><a name="push_back" id="push_back">push_back</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -330,8 +321,6 @@ and
 <br/>
 <br/>
 <b><big><a name="push_vector" id="push_vector">push_vector</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -425,16 +414,26 @@ The call
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.resize(</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
  set the size of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- equal to 
+ equal to
 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
-. 
+.
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&lt;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.capacity()</span></font></code>
-, 
-no memory is freed or allocated and the capacity of 
+,
+no memory is freed or allocated, the capacity of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- does not change.
+ does not change,
+and the data in 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ is preserved.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.capacity()</span></font></code>
+,
+new memory is allocated and the data in 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ is lost
+(not copied to the new memory location).
 
 <br/>
 <br/>
@@ -450,8 +449,6 @@ see the <a href="cppad_vector.xml#Memory and Parallel Mode" target="_top"><span 
 <br/>
 <br/>
 <b><big><a name="data" id="data">data</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -472,7 +469,7 @@ returns a pointer to a
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.data()[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
- 
+
 are the same 
 <code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
  object.
@@ -482,27 +479,26 @@ If
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>.capacity()</span></font></code>
  is zero, the value of the pointer is not defined.
-The pointer may no longer be valid after the following operations on 
+The pointer may no longer be valid after the following operations on
 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 :
 its destructor,
 <code><font color="blue">clear</font></code>,
-<code><font color="blue">resize</font></code>, 
+<code><font color="blue">resize</font></code>,
 <code><font color="blue">push_back</font></code>,
 <code><font color="blue">push_vector</font></code>,
 assignment to another vector when original size of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- is zero. 
+ is zero.
 
 <br/>
 <br/>
 <b><big><a name="vectorBool" id="vectorBool">vectorBool</a></big></b>
-
 <br/>
 The file <code><font color="blue">&lt;cppad/vector.hpp&gt;</font></code> also defines the class
 <code><font color="blue">CppAD::vectorBool</font></code>.
-This has the same specifications as <code><font color="blue">CppAD::vector&lt;bool&gt;</font></code> 
+This has the same specifications as <code><font color="blue">CppAD::vector&lt;bool&gt;</font></code>
 with the following exceptions:
 
 <br/>
@@ -512,6 +508,23 @@ with the following exceptions:
 The class <code><font color="blue">vectorBool</font></code> conserves on memory
 (on the other hand, <code><font color="blue">CppAD::vector&lt;bool&gt;</font></code> is expected to be faster
 than <code><font color="blue">vectorBool</font></code>).
+
+<br/>
+<br/>
+<b><a name="vectorBool.bit_per_unit" id="vectorBool.bit_per_unit">bit_per_unit</a></b>
+<br/>
+The static function call
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;vectorBool::bit_per_unit()<br/>
+</span></font></code>
+returns the <code><font color="blue">size_t</font></code> value 
+<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
+
+which is equal to the number of boolean values (bits) that are
+packed into one operational unit.
+For example, a logical <code><font color="blue">or</font></code>
+acts on this many boolean values with one operation.
 
 <br/>
 <br/>
@@ -526,12 +539,12 @@ The <a href="cppad_vector.xml#data" target="_top"><span style='white-space: nowr
 <b><a name="vectorBool.Output" id="vectorBool.Output">Output</a></b>
 <br/>
 The <code><font color="blue">CppAD::vectorBool</font></code> output operator
-prints each boolean value as 
+prints each boolean value as
 a <code><font color="blue">0</font></code> for false,
-a <code><font color="blue">1</font></code> for true, 
+a <code><font color="blue">1</font></code> for true,
 and does not print any other output; i.e.,
 the vector is written a long sequence of zeros and ones with no
-surrounding <code><font color="blue">{</font></code>, <code><font color="blue">}</font></code> and with no separating commas or spaces. 
+surrounding <code><font color="blue">{</font></code>, <code><font color="blue">}</font></code> and with no separating commas or spaces.
 
 <br/>
 <br/>
@@ -563,7 +576,7 @@ the following syntax is supported:
 </li><li>
 
 <code><i><font color="black"><span style='white-space: nowrap'>elementType</span></font></i></code>
- supports the assignment operator <code><font color="blue">=</font></code> where the 
+ supports the assignment operator <code><font color="blue">=</font></code> where the
 right hand side is a <code><font color="blue">bool</font></code> or an 
 <code><i><font color="black"><span style='white-space: nowrap'>elementType</span></font></i></code>
  object; e.g.,
@@ -580,7 +593,7 @@ The result of an assignment to an
 
 also has type 
 <code><i><font color="black"><span style='white-space: nowrap'>elementType</span></font></i></code>
-. 
+.
 Thus, if 
 <code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
  has type <code><font color="blue">bool</font></code>, the following syntax is supported:
@@ -591,22 +604,20 @@ Thus, if
 </li></ol>
 <br/>
 <b><big><a name="Memory and Parallel Mode" id="Memory and Parallel Mode">Memory and Parallel Mode</a></big></b>
-
-
 <br/>
-These vectors use the multi-threaded fast memory allocator 
+These vectors use the multi-threaded fast memory allocator
 <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
 :
 
 <ol type="1"><li>
 The routine <a href="ta_parallel_setup.xml" target="_top"><span style='white-space: nowrap'>parallel_setup</span></a>
  must
-be called before these vectors can be used 
+be called before these vectors can be used
 <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>in&#xA0;parallel</span></a>
 .
 </li><li>
 
-Using these vectors affects the amount of memory 
+Using these vectors affects the amount of memory
 <a href="ta_inuse.xml" target="_top"><span style='white-space: nowrap'>in_use</span></a>
  and <a href="ta_available.xml" target="_top"><span style='white-space: nowrap'>available</span></a>
 .
@@ -640,7 +651,6 @@ They return true if they succeed and false otherwise.
 <br/>
 <br/>
 <b><big><a name="Exercise" id="Exercise">Exercise</a></big></b>
-
 <br/>
 Create and run a program that contains the following code:
 <code><font color='blue'><pre style='display:inline'> 
@@ -653,7 +663,7 @@ Create and run a program that contains the following code:
 
 
 
-<hr/>Input File: cppad/vector.hpp
+<hr/>Input File: cppad/utility/vector.hpp
 
 </body>
 </html>

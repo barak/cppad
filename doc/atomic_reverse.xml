@@ -6,7 +6,7 @@
 <title>Atomic Reverse Mode</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Atomic Reverse Mode"/>
-<meta name="keywords" id="keywords" content=" atomic reverse mode callback virtual syntax purpose implementation q tx ty f g h py px ok examples define use "/>
+<meta name="keywords" id="keywords" content=" atomic reverse mode syntax purpose implementation q tx ty f g h py px ok examples define use "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -120,7 +122,7 @@ A:active { color : purple }
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
 This function is used by <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
- 
+
 to compute derivatives.
 
 <br/>
@@ -135,7 +137,7 @@ this virtual function must be defined by the
  class.
 It can just return 
 <code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;false</span></font></code>
- 
+
 (and not compute anything) for values
 of 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
@@ -556,7 +558,7 @@ We use the notation
 </msup>
 </mrow></math>
 
- for 
+ for
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mo stretchy="false">{</mo>
@@ -607,7 +609,7 @@ We use the notation
 </msup>
 </mrow></math>
 
- for 
+ for
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mo stretchy="false">{</mo>
@@ -840,7 +842,7 @@ and
 .
 The input values of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>px</span></font></i></code>
- 
+
 are not specified (must not matter).
 Upon return,
 for 

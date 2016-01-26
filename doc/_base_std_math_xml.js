@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -39,18 +39,18 @@ var list_down1 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_current0 = [
 'base_std_math.xml#Purpose',
 'base_std_math.xml#Unary Standard Math',
 'base_std_math.xml#CPPAD_STANDARD_MATH_UNARY',
-'base_std_math.xml#erf',
+'base_std_math.xml#erf, asinh, acosh, atanh, expm1, log1p',
 'base_std_math.xml#sign',
 'base_std_math.xml#pow',
-'base_std_math.xml#isnan',
-'base_std_math.xml#limits',
-'base_std_math.xml#limits.epsilon'
+'base_std_math.xml#isnan'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

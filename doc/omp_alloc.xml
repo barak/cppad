@@ -6,7 +6,7 @@
 <title>A Quick OpenMP Memory Allocator Used by CppAD</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="A Quick OpenMP Memory Allocator Used by CppAD"/>
-<meta name="keywords" id="keywords" content=" a quick openmp memory allocator used by cppad multi-threading allocation syntax purpose include "/>
+<meta name="keywords" id="keywords" content=" a quick openmp memory allocator used by cppad multi-threading allocation syntax purpose include deprecated 2011-08-23 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,11 +66,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -79,6 +80,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -87,6 +89,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -113,6 +116,7 @@ A:active { color : purple }
 <option>Syntax</option>
 <option>Purpose</option>
 <option>Include</option>
+<option>Deprecated 2011-08-23</option>
 <option>Contents</option>
 </select>
 </td>
@@ -137,7 +141,7 @@ Once memory is obtained for a thread, the <code><font color="blue">omp_alloc</fo
 allocator keeps that memory <a href="omp_available.xml" target="_top"><span style='white-space: nowrap'>omp_available</span></a>
  for the thread so that
 it can be re-used without waiting for a lock.
-All the CppAD memory allocations use this utility. 
+All the CppAD memory allocations use this utility.
 The <a href="omp_free_available.xml" target="_top"><span style='white-space: nowrap'>omp_free_available</span></a>
  function should be used to return memory
 to the system (once it is no longer required by a thread).
@@ -150,6 +154,13 @@ The routines in sections below are defined by <code><font color="blue">cppad/omp
 This file is included by
 <code><font color="blue">cppad/cppad.hpp</font></code>, but it can also be included separately with out
 the rest of the <code><font color="blue">CppAD</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="Deprecated 2011-08-23" id="Deprecated 2011-08-23">Deprecated 2011-08-23</a></big></b>
+<br/>
+Use <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
+ instead.
 
 <br/>
 <br/>

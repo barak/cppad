@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -34,10 +34,11 @@ var list_down1 = [
 ];
 var list_down0 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_current0 = [

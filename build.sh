@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: build.sh 3509 2014-12-27 20:38:37Z bradbell $
+# $Id: build.sh 3762 2015-12-01 14:35:37Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -13,7 +13,7 @@
 # prefix directories for the corresponding packages
 ADOLC_DIR=$HOME/prefix/adolc
 BOOST_DIR=/usr
-CPPAD_DIR=$HOME/prefix/cppad  
+CPPAD_DIR=$HOME/prefix/cppad
 EIGEN_DIR=$HOME/prefix/eigen
 FADBAD_DIR=$HOME/prefix/fadbad
 IPOPT_DIR=$HOME/prefix/ipopt
@@ -54,7 +54,7 @@ then
 	mkdir build
 fi
 # -----------------------------------------------------------------------------
-# Today's date in yyyy-mm-dd decimal digit format where 
+# Today's date in yyyy-mm-dd decimal digit format where
 # yy is year in century, mm is month in year, dd is day in month.
 yyyy_mm_dd=`date +%F`
 #
@@ -63,9 +63,9 @@ if [ "$version_type" == "trunk" ]
 then
 	version=`bin/version.sh get`
 else
-	version=`grep '^ *AC_INIT(' configure.ac | 
-		sed -e 's/[^,]*, *\([^ ,]*\).*/\1/'`
-	yyyy_mm_dd=`echo $version | 
+	version=`grep '^ *AC_INIT(' configure.ac |
+		sed -e 's/[^,]*, *\([^ ,]*\).*/\1/' -e 's|\[||' -e 's|\]||'`
+	yyyy_mm_dd=`echo $version |
 		sed -e 's|\..*||' -e 's|\(....\)\(..\)|\1-\2-|'`
 fi
 #
@@ -80,27 +80,27 @@ configure_file_list="
 if [ "$1" = "version" ]
 then
 	echo 'bin/version.sh copy'
-	bin/version.sh copy 
+	bin/version.sh copy
 	#
 	echo "OK: ./build.sh version"
 	exit 0
 fi
 # -----------------------------------------------------------------------------
-if [ "$1" = "automake" ] 
+if [ "$1" = "automake" ]
 then
 	#
 	# check that autoconf and automake output are in original version
 	makefile_in=`sed configure.ac \
-        	-n \
-        	-e '/END AC_CONFIG_FILES/,$d' \
-        	-e '1,/AC_CONFIG_FILES/d' \
-        	-e 's|/makefile$|&.in|' \
-        	-e '/\/makefile.in/p'`
+	-n \
+	-e '/END AC_CONFIG_FILES/,$d' \
+	-e '1,/AC_CONFIG_FILES/d' \
+	-e 's|/makefile$|&.in|' \
+	-e '/\/makefile.in/p'`
 	auto_output="
-		depcomp 
-		install-sh 
-		missing 
-		configure 
+		depcomp
+		install-sh
+		missing
+		configure
 		config.guess
 		config.sub
 		$makefile_in
@@ -136,7 +136,7 @@ then
 	# echo "libtoolize -c -f -i"
 	# if ! libtoolize -c -f -i
 	# then
-	# 	exit 1
+	#	exit 1
 	# fi
 	#
 	echo "autoconf"
@@ -178,7 +178,7 @@ then
 	"
 	if [ -e $ADOLC_DIR/include/adolc ]
 	then
-		dir_list="$dir_list 
+		dir_list="$dir_list
 			ADOLC_DIR=$ADOLC_DIR"
 	fi
 	if [ -e $BOOST_DIR/include/boost ]
@@ -191,26 +191,26 @@ then
 	fi
 	if [ -e $EIGEN_DIR/include/Eigen ]
 	then
-		dir_list="$dir_list 
+		dir_list="$dir_list
 			EIGEN_DIR=$EIGEN_DIR"
 #_build_test_only:	dir_list="$dir_list --with-eigenvector"
 	fi
 	if [ -e $FADBAD_DIR/include/FADBAD++ ]
 	then
-		dir_list="$dir_list 
+		dir_list="$dir_list
 			FADBAD_DIR=$FADBAD_DIR"
 	fi
 	if [ -e $IPOPT_DIR/include/coin/IpIpoptApplication.hpp ]
 	then
-		dir_list="$dir_list 
+		dir_list="$dir_list
 		IPOPT_DIR=$IPOPT_DIR"
 	fi
 	if [ -e $SACADO_DIR/include/Sacado.hpp ]
 	then
-		dir_list="$dir_list 
+		dir_list="$dir_list
 			SACADO_DIR=$SACADO_DIR"
 	fi
-	# Use =int (a signed type) to do more checking for 
+	# Use =int (a signed type) to do more checking for
 	# slicing from size_t to addr_t.
 	special_types=""
 #_build_test_only:	special_types="TAPE_ADDR_TYPE=int TAPE_ID_TYPE=int"
@@ -227,7 +227,7 @@ $dir_list \\
 CXX_FLAGS=\"$cxx_flags\" \\
 $special_types OPENMP_FLAGS=-fopenmp \\
 --with-sparse_list --with-Documentation \\
---with-implicit_ctor
+--with-deprecated
 EOF
 	#
 	../configure > $log_dir/$log_file \
@@ -235,7 +235,7 @@ EOF
 		CXX_FLAGS="$cxx_flags" \
 		$special_types OPENMP_FLAGS=-fopenmp \
 		--with-sparse_list --with-Documentation \
-		--with-implicit_ctor
+		--with-deprecated
 	#
 	for file in $configure_file_list
 	do
@@ -247,14 +247,14 @@ EOF
 	exit 0
 fi
 # -----------------------------------------------------------------------------
-if [ "$1" = "dist" ] 
+if [ "$1" = "dist" ]
 then
 	# ----------------------------------------------------------------------
 	# Things to do in the original source directory
 	# ----------------------------------------------------------------------
 	echo "Only include the *.xml version of the documentation in distribution"
 	if ! grep < doc.omh > /dev/null \
-		'This comment is used to remove the table below' 
+		'This comment is used to remove the table below'
 	then
 		echo "Missing comment expected in doc.omh"
 		exit 1
@@ -273,7 +273,7 @@ then
 	if ! bin/run_omhelp.sh xml
 	then
 		echo "mv doc.omh.save doc.omh"
-	      	mv doc.omh.save doc.omh
+		mv doc.omh.save doc.omh
 		exit 1
 	fi
 	#
@@ -294,7 +294,7 @@ then
 		check_svn_id.sh
 		check_verbatim.sh
 	"
-	for check in $list 
+	for check in $list
 	do
 		echo "bin/$check"
 		      bin/$check
@@ -310,7 +310,7 @@ then
 		echo "rm -rf cppad-$version"
 		      rm -rf cppad-$version
 	fi
-	for file in cppad-*.tgz 
+	for file in cppad-*.tgz
 	do
 		if [ -e $file ]
 		then
@@ -338,7 +338,7 @@ then
 fi
 # -----------------------------------------------------------------------------
 # omhelp comes after dist because dist only includes one help output
-if [ "$1" = "omhelp" ] 
+if [ "$1" = "omhelp" ]
 then
 	if ! grep < doc.omh > /dev/null \
 		'This comment is used to remove the table below'
@@ -370,7 +370,7 @@ then
 	exit 0
 fi
 # -----------------------------------------------------------------------------
-if [ "$1" = "gpl" ] 
+if [ "$1" = "gpl" ]
 then
 	# create GPL licensed version
 	echo "bin/gpl_license.sh cppad-$version build build"
@@ -380,7 +380,7 @@ then
 	exit 0
 fi
 # -----------------------------------------------------------------------------
-if [ "$1" = "copy2doc" ] 
+if [ "$1" = "copy2doc" ]
 then
 	for ext in epl gpl
 	do
@@ -421,7 +421,7 @@ then
 	exit 0
 fi
 # -----------------------------------------------------------------------------
-if [ "$1" = "test" ] 
+if [ "$1" = "test" ]
 then
 	log_dir=`pwd`
 	log_file="build_test.log"
@@ -463,13 +463,13 @@ then
 	echo "sed -i -e 's|^#_build_test_only:||' build.sh"
 	sed -i -e 's|^#_build_test_only:||' build.sh
 	#
-	echo "./build.sh configure >> $log_file" 
+	echo "./build.sh configure >> $log_file"
 	      ./build.sh configure >> $log_dir/$log_file
 	#
 	# test user documentation
 	echo "bin/run_omhelp.sh xml  >> $log_file"
 	      bin/run_omhelp.sh xml  >> $log_dir/$log_file
-	# 
+	#
 	# test developer documentation
 	echo "./build.sh doxygen   >> $log_file"
 	      ./build.sh doxygen   >> $log_dir/$log_file
@@ -481,7 +481,7 @@ then
 	echo "cd build" >> $log_dir/$log_file
 	      cd build
 	#
-	dir=`pwd` 
+	dir=`pwd`
 	echo "To see progress in the 'make test' log file use"
 	echo "	../temp.sh ( OK | All | tail | follow | file )"
 	cat << EOF > $log_dir/../temp.sh
@@ -533,7 +533,7 @@ EOF
 	#
 	# ignore warning in eigen (that has been reported)
 	if grep ': *warning:' make_test.log
-	then 
+	then
 		echo "There are warnings in $dir/make_test.log"
 		exit 1
 	fi
@@ -568,7 +568,7 @@ usage: ./build.sh option_1 option_2 ...
 options                                                             requires
 -------                                                             --------
 version:  set version in AUTHORS, configure.ac, configure, ...
-omhelp:   build all formats of user documentation in doc/*. 
+omhelp:   build all formats of user documentation in doc/*.
 automake: run the tools required by autoconf and automake.
 configure:run the configure script in the build directory.          automake
 dist:     create the distribution file build/cppad-version.epl.tgz. configure

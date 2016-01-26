@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuInvert</option>
 <option>lu_invert.cpp</option>
@@ -46,7 +46,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -70,9 +70,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -99,9 +97,9 @@ A:active { color : purple }
 <center><b><big><big>LuInvert: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;cstdlib&gt;               // for rand function
-# include &lt;cppad/lu_invert.hpp&gt;      // for CppAD::LuInvert
-# include &lt;cppad/near_equal.hpp&gt;     // for CppAD::NearEqual
-# include &lt;cppad/vector.hpp&gt;  // for CppAD::vector
+# include &lt;cppad/utility/lu_invert.hpp&gt;      // for CppAD::LuInvert
+# include &lt;cppad/utility/near_equal.hpp&gt;     // for CppAD::NearEqual
+# include &lt;cppad/utility/vector.hpp&gt;  // for CppAD::vector
 
 bool LuInvert(void)
 {	bool  ok = true;
@@ -111,18 +109,18 @@ bool LuInvert(void)
 	using std::srand;
 # endif
 
-	size_t  n = 7;                        // number rows in A 
+	size_t  n = 7;                        // number rows in A
 	size_t  m = 3;                        // number columns in B
 	double  rand_max = double(RAND_MAX);  // maximum rand value
 	double  sum;                          // element of L * U
 	size_t  i, j, k;                      // temporary indices
 
 	// dimension matrices
-	CppAD::vector&lt;double&gt; 
+	CppAD::vector&lt;double&gt;
 		A(n*n), X(n*m), B(n*m), LU(n*n), L(n*n), U(n*n);
 
 	// seed the random number generator
-	srand(123); 
+	srand(123);
 
 	// pivot vectors
 	CppAD::vector&lt;size_t&gt; ip(n);
@@ -144,7 +142,7 @@ bool LuInvert(void)
 	// chose U, a random upper triangular matrix with ones on diagonal
 	for(i = 0; i &lt; n; i++)
 	{	for(j = 0; j &lt; i; j++)
-			U [i * n + j]  = 0.; 
+			U [i * n + j]  = 0.;
 		U[ i * n + i ] = 1.;
 		for(j = i+1; j &lt; n; j++)
 			U [i * n + j]  = rand() / rand_max;
@@ -161,7 +159,7 @@ bool LuInvert(void)
 		for(j = i+1; j &lt; n; j++)
 			LU [ ip[i] * n + jp[j] ]  = U[i * n + j];
 	}
-	// set A to a permuted version of L * U 
+	// set A to a permuted version of L * U
 	for(i = 0; i &lt; n; i++)
 	{	for(j = 0; j &lt; n; j++)
 		{	// compute (i,j) entry in permuted matrix

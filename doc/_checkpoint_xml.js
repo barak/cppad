@@ -23,10 +23,11 @@ var list_down3 = [
 ];
 var list_down2 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_down1 = [
@@ -39,6 +40,8 @@ var list_down0 = [
 var list_current0 = [
 'checkpoint.xml#Syntax',
 'checkpoint.xml#Purpose',
+'checkpoint.xml#Purpose.Reduce Memory',
+'checkpoint.xml#Purpose.Faster Recording',
 'checkpoint.xml#Method',
 'checkpoint.xml#constructor',
 'checkpoint.xml#Base',
@@ -46,9 +49,11 @@ var list_current0 = [
 'checkpoint.xml#name',
 'checkpoint.xml#ax',
 'checkpoint.xml#ay',
+'checkpoint.xml#sparsity',
+'checkpoint.xml#size_var',
 'checkpoint.xml#option',
 'checkpoint.xml#algo',
-'checkpoint.xml#afun',
+'checkpoint.xml#atom_fun',
 'checkpoint.xml#clear',
 'checkpoint.xml#clear.Restriction',
 'checkpoint.xml#Example'

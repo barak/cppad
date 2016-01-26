@@ -24,6 +24,7 @@ var list_down3 = [
 var list_down2 = [
 'value.xml',
 'integer.xml',
+'ad_to_string.xml',
 'ad_input.xml',
 'ad_output.xml',
 'printfor.xml',

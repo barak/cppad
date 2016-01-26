@@ -6,7 +6,7 @@
 <title>Simple Checkpointing: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Simple Checkpointing: Example and Test"/>
-<meta name="keywords" id="keywords" content=" simple checkpointing: example and test checkpoint purpose "/>
+<meta name="keywords" id="keywords" content=" simple checkpointing: example and test purpose "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -84,11 +85,11 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Break a large computation into pieces and only store values at the 
+Break a large computation into pieces and only store values at the
 interface of the pieces.
-In actual applications, there may be many functions, but 
+In actual applications, there may be many functions, but
 for this example there are only two.
-The functions 
+The functions
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>F</mi>
@@ -104,7 +105,7 @@ The functions
 </msup>
 </mrow></math>
 
- 
+
 and
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -121,61 +122,11 @@ and
 </msup>
 </mrow></math>
 
- 
+
 defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>F</mi>
-<mo stretchy="false">(</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">)</mo>
-<mo stretchy="false">=</mo>
-<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
-<msub><mi mathvariant='italic'>x</mi>
-<mn>0</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>0</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>0</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>0</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>0</mn>
-</msub>
-</mtd></mtr><mtr><mtd columnalign="center" >
-<msub><mi mathvariant='italic'>x</mi>
-<mn>1</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>1</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>1</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>1</mn>
-</msub>
-<mo stretchy="false">&#x000B7;</mo>
-<msub><mi mathvariant='italic'>x</mi>
-<mn>1</mn>
-</msub>
-</mtd></mtr></mtable>
-</mrow><mo stretchy="true">)</mo></mrow>
-<mspace width='.3em'/>
-<mo stretchy="false">,</mo>
-<mspace width='.3em'/>
-<mi mathvariant='italic'>G</mi>
 <mo stretchy="false">(</mo>
 <mi mathvariant='italic'>y</mi>
 <mo stretchy="false">)</mo>
@@ -206,6 +157,42 @@ defined by
 </msub>
 </mtd></mtr></mtable>
 </mrow><mo stretchy="true">)</mo></mrow>
+<mspace width='.3em'/>
+<mo stretchy="false">,</mo>
+<mspace width='.3em'/>
+<mi mathvariant='italic'>G</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">&#x000B7;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
 </mrow></math>
 
 <code><font color="blue"><pre style='display:inline'> 
@@ -214,18 +201,10 @@ defined by
 
 namespace {
 	using CppAD::AD;
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ADVector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)            ADVector;
+	typedef CppAD::atomic_base&lt;double&gt;::option_enum option_enum;
 
-	void f_algo(const ADVector&amp; x, ADVector&amp; y)
-	{	y[0] = 1.0;
-		y[1] = 1.0;
-		for(size_t k = 0; k &lt; 5; k++)
-		{	y[0] *= x[0];
-			y[1] *= x[1];
-		}
-		return;
-	}
-	void g_algo(const ADVector&amp; y, ADVector&amp; z)
+	void f_algo(const ADVector&amp; y, ADVector&amp; z)
 	{	z[0] = 0.0;
 		z[1] = 0.0;
 		for(size_t k = 0; k &lt; 3; k++)
@@ -234,99 +213,125 @@ namespace {
 		}
 		return;
 	}
+	void g_algo(const ADVector&amp; x, ADVector&amp; y)
+	{	y[0] = 1.0;
+		y[1] = 1.0;
+		for(size_t k = 0; k &lt; 3; k++)
+		{	y[0] *= x[0];
+			y[1] *= x[1];
+		}
+		return;
+	}
+	bool test_case(option_enum f_sparsity, option_enum g_sparsity)
+	{	bool ok = true;
+		using CppAD::checkpoint;
+		using CppAD::ADFun;
+		using CppAD::NearEqual;
+		size_t i, j, k, n = 2, m = n;
+		double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+
+		// checkpoint version of the function F(x)
+		ADVector ax(n), ay(n), az(m);
+		for(j = 0; j &lt; n; j++)
+			ax[j] = double(j + 1);
+		// could also use bool_sparsity_enum or set_sparsity_enum
+		checkpoint&lt;double&gt; atom_f(&quot;atom_f&quot;, f_algo, ax, ay, f_sparsity);
+		checkpoint&lt;double&gt; atom_g(&quot;atom_g&quot;, g_algo, ay, az, g_sparsity);
+
+		// Record a version of z = g[f(x)] without checkpointing
+		<a href="independent.xml" target="_top">Independent</a>(ax);
+		f_algo(ax, ay);
+		g_algo(ay, az);
+		<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; check_not(ax, az);
+
+		// Record a version of z = g[f(x)] with checkpointing
+		<a href="independent.xml" target="_top">Independent</a>(ax);
+		atom_f(ax, ay);
+		atom_g(ay, az);
+		<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; check_yes(ax, az);
+
+		// checkpointing should use fewer operations
+		ok &amp;= check_yes.size_var() &lt; check_not.size_var();
+
+		// this does not really save space becasue f and g are only used once
+		ok &amp;= check_not.size_var() &lt;=
+			check_yes.size_var() + atom_f.size_var() + atom_g.size_var();
+
+		// compare forward mode results for orders 0, 1, 2
+		size_t q = 2;
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x_q(n*(q+1)), z_not(m*(q+1)), z_yes(m*(q+1));
+		for(j = 0; j &lt; n; j++)
+		{	for(k = 0; k &lt;= q; k++)
+				x_q[ j * (q+1) + k ] = 1.0 / (q + 1 - k);
+		}
+		z_not = check_not.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+		z_yes = check_yes.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
+		for(i = 0; i &lt; m; i++)
+		{	for(k = 0; k &lt;= q; k++)
+			{	double zik_not = z_not[ i * (q+1) + k];
+				double zik_yes = z_yes[ i * (q+1) + k];
+				ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(zik_not, zik_yes, eps, eps);
+			}
+		}
+
+		// compare reverse mode results
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m*(q+1)), dw_not(n*(q+1)), dw_yes(n*(q+1));
+		dw_not = check_not.<a href="reverse.xml" target="_top">Reverse</a>(q+1, w);
+		dw_yes = check_yes.<a href="reverse.xml" target="_top">Reverse</a>(q+1, w);
+		for(j = 0; j &lt; n; j++)
+		{	for(k = 0; k &lt;= q; k++)
+			{	double dwjk_not = dw_not[ j * (q+1) + k];
+				double dwjk_yes = dw_yes[ j * (q+1) + k];
+				ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dwjk_not, dwjk_yes, eps, eps);
+			}
+		}
+
+		// compare forward mode Jacobian sparsity patterns
+		CppAD::vector&lt; std::set&lt;size_t&gt; &gt; r(n), s_not(m), s_yes(m);
+		for(j = 0; j &lt; n; j++)
+			r[j].insert(j);
+		s_not = check_not.ForSparseJac(n, r);
+		s_yes = check_yes.ForSparseJac(n, r);
+		for(i = 0; i &lt; m; i++)
+			ok &amp;= s_not[i] == s_yes[i];
+
+		// compare reverse mode Jacobian sparsity patterns
+		CppAD::vector&lt; std::set&lt;size_t&gt; &gt; s(m), r_not(m), r_yes(m);
+		for(i = 0; i &lt; m; i++)
+			s[i].insert(i);
+		r_not = check_not.RevSparseJac(m, s);
+		r_yes = check_yes.RevSparseJac(m, s);
+		for(i = 0; i &lt; m; i++)
+			ok &amp;= s_not[i] == s_yes[i];
+
+
+		// compare reverse mode Hessian sparsity patterns
+		CppAD::vector&lt; std::set&lt;size_t&gt; &gt; s_one(1), h_not(n), h_yes(n);
+		for(i = 0; i &lt; m; i++)
+			s_one[0].insert(i);
+		h_not = check_not.RevSparseHes(n, s_one);
+		h_yes = check_yes.RevSparseHes(n, s_one);
+		for(i = 0; i &lt; n; i++)
+			ok &amp;= h_not[i] == h_yes[i];
+
+		return ok;
+	}
 }
 
 bool checkpoint(void)
 {	bool ok = true;
-	using CppAD::checkpoint;
-	using CppAD::ADFun;
-	using CppAD::NearEqual;
-	size_t i, j, k, n = 2, m = n;
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
 
-	// checkpoint version of the function F(x)
-	ADVector ax(n), ay(n), az(m);
-	for(j = 0; j &lt; n; j++)
-		ax[j] = double(j);
-	checkpoint&lt;double&gt; f_check(&quot;f_check&quot;, f_algo, ax, ay); 
-	checkpoint&lt;double&gt; g_check(&quot;g_check&quot;, g_algo, ay, az); 
+	// different types of sparsity
+	option_enum pack_sparsity = CppAD::atomic_base&lt;double&gt;::pack_sparsity_enum;
+	option_enum bool_sparsity = CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum;
+	option_enum set_sparsity  = CppAD::atomic_base&lt;double&gt;::set_sparsity_enum;
 
-	// Record a version of z = g[f(x)] without checkpointing
-	<a href="independent.xml" target="_top">Independent</a>(ax);
-	f_algo(ax, ay);
-	g_algo(ay, az);
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; check_not(ax, az);
+	// test some different cases
+	ok &amp;= test_case(pack_sparsity, pack_sparsity);
+	ok &amp;= test_case(pack_sparsity, bool_sparsity);
+	ok &amp;= test_case(bool_sparsity, set_sparsity);
+	ok &amp;= test_case(set_sparsity,  set_sparsity);
 
-	// Record a version of z = g[f(x)] with checkpointing
-	<a href="independent.xml" target="_top">Independent</a>(ax);
-	f_check(ax, ay);
-	g_check(ay, az);
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; check_yes(ax, az);
-
-	// checkpointing should use fewer operations
-	ok &amp;= check_yes.size_var() &lt; check_not.size_var();
-
-	// compare forward mode results for orders 0, 1, 2
-	size_t q = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x_q(n*(q+1)), z_not(m*(q+1)), z_yes(m*(q+1));
-	for(j = 0; j &lt; n; j++)
-	{	for(k = 0; k &lt;= q; k++)
-			x_q[ j * (q+1) + k ] = 1.0 / (q + 1 - k);
-	}
-	z_not = check_not.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-	z_yes = check_yes.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-	for(i = 0; i &lt; m; i++)
-	{	for(k = 0; k &lt;= q; k++)
-		{	double zik_not = z_not[ i * (q+1) + k];
-			double zik_yes = z_yes[ i * (q+1) + k];
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(zik_not, zik_yes, eps, eps);
-		}
-	}
-
-	// compare reverse mode results
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m*(q+1)), dw_not(n*(q+1)), dw_yes(n*(q+1));
-	dw_not = check_not.<a href="reverse.xml" target="_top">Reverse</a>(q+1, w);
-	dw_yes = check_yes.<a href="reverse.xml" target="_top">Reverse</a>(q+1, w);
-	for(j = 0; j &lt; n; j++)
-	{	for(k = 0; k &lt;= q; k++)
-		{	double dwjk_not = dw_not[ j * (q+1) + k];
-			double dwjk_yes = dw_yes[ j * (q+1) + k];
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dwjk_not, dwjk_yes, eps, eps);
-		}
-	}
-
-	// mix sparsity so test both cases
-	f_check.option( CppAD::atomic_base&lt;double&gt;::bool_sparsity_enum );
-	g_check.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
-
-	// compare forward mode Jacobian sparsity patterns
-	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; r(n), s_not(m), s_yes(m);
-	for(j = 0; j &lt; n; j++)
-		r[j].insert(j);
-	s_not = check_not.ForSparseJac(n, r);
-	s_yes = check_yes.ForSparseJac(n, r);
-	for(i = 0; i &lt; m; i++)
-		ok &amp;= s_not[i] == s_yes[i];
-
-	// compare reverse mode Jacobian sparsity patterns
-	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; s(m), r_not(m), r_yes(m);
-	for(i = 0; i &lt; m; i++)
-		s[i].insert(i);
-	r_not = check_not.RevSparseJac(m, s);
-	r_yes = check_yes.RevSparseJac(m, s);
-	for(i = 0; i &lt; m; i++)
-		ok &amp;= s_not[i] == s_yes[i];
-	
-
-	// compare reverse mode Hessian sparsity patterns
-	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; s_one(1), h_not(n), h_yes(n); 
-	for(i = 0; i &lt; m; i++)
-		s_one[0].insert(i);
-	h_not = check_not.RevSparseHes(n, s_one);
-	h_yes = check_yes.RevSparseHes(n, s_one);
-	for(i = 0; i &lt; n; i++)
-		ok &amp;= h_not[i] == h_yes[i];
-	
 	return ok;
 }
 </pre>

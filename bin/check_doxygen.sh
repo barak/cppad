@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_doxygen.sh 2921 2013-10-11 13:40:21Z bradbell $
+# $Id: check_doxygen.sh 3768 2015-12-28 18:58:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -18,10 +18,9 @@ fi
 # -----------------------------------------------------------------------------
 if [ ! -e "doxygen.err" ]
 then
-	echo "bin/check_doxygen.sh: cannot find doxygen.err"
-	exit 1
+	bin/run_doxygen.sh
 fi
-doxygen_version=`doxygen --version  | 
+doxygen_version=`doxygen --version  |
 	sed -e 's|\.|*100+|' -e 's|\.|*10+|' -e 's|\..*||'`
 let doxygen_version=$doxygen_version
 if (( $doxygen_version <= 155 ))
@@ -42,6 +41,7 @@ fi
 list=`head doxygen.err`
 if [ "$list" == "" ]
 then
+	echo "$O: OK"
 	exit 0
 fi
 echo bin/"check_doxygen.sh: Doxygen errors or warnings; see doxygen.err"
@@ -49,4 +49,5 @@ if [ "$USER" != "bradbell" ]
 then
 	exit 0
 fi
+echo "$O: Error"
 exit 1

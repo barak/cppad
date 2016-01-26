@@ -1,9 +1,9 @@
-/* $Id: sparse_hessian.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: sparse_hessian.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -18,11 +18,8 @@ $spell
 $$
 
 $section Sparse Hessian: Example and Test$$
+$mindex Hessian spare$$
 
-$index Hessian, sparse$$
-$index example, sparse Hessian$$
-$index test, sparse Hessian$$
-$index spare, Hessian example$$
 
 $code
 $verbatim%example/sparse_hessian.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -161,13 +158,14 @@ bool sparse_hessian(void)
 	x[1]       = 0.5;
 	ell        = 1 * n + 1;
 	check[ell] = 6.0 * x[1];
-	n_sweep    = f.SparseHessian(x, w, p_set, row, col, hes, work);
+	s_vector   not_used;
+	n_sweep    = f.SparseHessian(x, w, not_used, row, col, hes, work);
 	for(k = 0; k < K; k++)
 	{	ell = row[k] * n + col[k];
 		ok &=  NearEqual(w[0] * check[ell], hes[k], eps, eps );
 	}
 	ok &= n_sweep == 2;
-	
+
 
 
 	return ok;

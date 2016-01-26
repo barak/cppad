@@ -6,7 +6,7 @@
 <title>Multi-threading Sum of 1/i Utility Routines</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Multi-threading Sum of 1/i Utility Routines"/>
-<meta name="keywords" id="keywords" content=" harmonic_work multi-threading sum of 1/i utility routines harmonic_setup harmonic_worker harmonic_combine setup harmonic worker combine syntax purpose num_sum num_threads source "/>
+<meta name="keywords" id="keywords" content=" multi-threading sum of 1/i utility routines harmonic_work setup worker combine syntax purpose harmonic_setup num_sum num_threads harmonic_worker harmonic_combine source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -88,7 +88,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
 
 
 
@@ -182,7 +181,7 @@ Calling this function does the computation for one thread.
 Following a call to <code><font color="blue">harmonic_setup</font></code>,
 this function should be called by each of the 
 <code><i><font color="black"><span style='white-space: nowrap'>num_threads</span></font></i></code>
- threads. 
+ threads.
 
 <br/>
 <br/>
@@ -241,7 +240,7 @@ void harmonic_worker(void)
 	size_t i = stop;
 	while( i &gt; start )
 	{	i--;
-		sum += 1. / double(i);	
+		sum += 1. / double(i);
 	}
 
 	work_all_[thread_num]-&gt;sum = sum;
@@ -269,7 +268,7 @@ bool harmonic_setup(size_t num_sum, size_t num_threads)
 			work_all_[0]-&gt;start = 1;
 		else
 		{	size_t index  = (num_sum * thread_num) / num_threads;
-			work_all_[thread_num-1]-&gt;stop = index; 
+			work_all_[thread_num-1]-&gt;stop = index;
 			work_all_[thread_num]-&gt;start  = index;
 		}
 	}
@@ -277,7 +276,7 @@ bool harmonic_setup(size_t num_sum, size_t num_threads)
 	return ok;
 }
 // -----------------------------------------------------------------------
-// get the result of the work 
+// get the result of the work
 bool harmonic_combine(double&amp; sum)
 {	// sum = 1/num_sum + 1/(num_sum-1) + ... + 1
 	bool ok            = true;
@@ -291,7 +290,7 @@ bool harmonic_combine(double&amp; sum)
 		ok  &amp;= work_all_[thread_num]-&gt;ok;
 		// add this threads contribution to the sum
 		sum += work_all_[thread_num]-&gt;sum;
-		// delete problem specific information 
+		// delete problem specific information
 		void* v_ptr = static_cast&lt;void*&gt;( work_all_[thread_num] );
 		thread_alloc::return_memory( v_ptr );
 		// check that there is no longer any memory inuse by this thread

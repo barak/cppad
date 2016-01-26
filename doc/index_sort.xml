@@ -6,7 +6,7 @@
 <title>Returns Indices that Sort a Vector</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Returns Indices that Sort a Vector"/>
-<meta name="keywords" id="keywords" content=" returns indices that sort a vector index_sort index syntax keys ind example "/>
+<meta name="keywords" id="keywords" content=" returns indices that sort a vector index_sort syntax keys ind input return example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>index_sort</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -101,6 +99,8 @@ A:active { color : purple }
 <option>Syntax</option>
 <option>keys</option>
 <option>ind</option>
+<option>---..Input</option>
+<option>---..Return</option>
 <option>Example</option>
 </select>
 </td>
@@ -114,8 +114,10 @@ A:active { color : purple }
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/near_equal.hpp&gt;<br/>
-index_sort(</span></font><i><font color="black"><span style='white-space: nowrap'>keys</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/index_sort.hpp&gt;<br/>
+</span></font></code>
+
+<code><font color="blue"><span style='white-space: nowrap'>index_sort(</span></font><i><font color="black"><span style='white-space: nowrap'>keys</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
 <br/>
@@ -124,14 +126,14 @@ index_sort(</span></font><i><font color="black"><span style='white-space: nowrap
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>keys</span></font></i></code>
- has prototype 
+ has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>VectorKey</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>keys</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>VectorKey</span></font></i></code>
- is 
+ is
 a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with elements that support the <code><font color="blue">&lt;</font></code>
 operation.
@@ -142,28 +144,36 @@ operation.
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i></code>
- has prototype 
+ has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>VectorSize</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>VectorSize</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>VectorSize</span></font></i></code>
- is 
+ is
 a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with elements of type <code><font color="blue">size_t</font></code>.
 The routine <a href="checksimplevector.xml" target="_top"><span style='white-space: nowrap'>CheckSimpleVector</span></a>
  will generate an error message
 if this is not the case.
+
+<br/>
+<br/>
+<b><a name="ind.Input" id="ind.Input">Input</a></b>
+<br/>
 The size of 
 <code><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i></code>
  must be the same as the size of 
 <code><i><font color="black"><span style='white-space: nowrap'>keys</span></font></i></code>
 
 and the value of its input elements does not matter.
-<code><span style='white-space: nowrap'><br/>
+
 <br/>
-</span></code>Upon return, 
+<br/>
+<b><a name="ind.Return" id="ind.Return">Return</a></b>
+<br/>
+Upon return, 
 <code><i><font color="black"><span style='white-space: nowrap'>ind</span></font></i></code>
  is a permutation of the set of indices
 that yields increasing order for 
@@ -193,7 +203,7 @@ and test of this routine.
 It return true if it succeeds and false otherwise.
 
 
-<hr/>Input File: cppad/index_sort.hpp
+<hr/>Input File: cppad/utility/index_sort.hpp
 
 </body>
 </html>

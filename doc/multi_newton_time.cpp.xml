@@ -6,7 +6,7 @@
 <title>Timing Test of Multi-Threaded Newton Method</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Timing Test of Multi-Threaded Newton Method"/>
-<meta name="keywords" id="keywords" content=" multi_newton_time multi_thread Newton Ad speed thread multi_newton newton timing test of multi-threaded method syntax purpose ok time_out test_time num_threads num_zero num_sub num_sum use_ad source "/>
+<meta name="keywords" id="keywords" content=" timing test of multi-threaded newton method multi_newton_time multi_thread Ad speed syntax purpose ok time_out test_time num_threads num_zero num_sub num_sum use_ad source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -95,20 +95,16 @@ A:active { color : purple }
 
 .
 
-
-
-
-
 <center><b><big><big>Timing Test of Multi-Threaded Newton Method</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
-<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;multi_newton_time(</span></font><i><font color="black"><span style='white-space: nowrap'>time_out</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;<br/>
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;multi_newton_time(</span></font><i><font color="black"><span style='white-space: nowrap'>time_out</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_zero</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sub</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 )</span></font></code>
- 
+
 
 <br/>
 <br/>
@@ -145,7 +141,7 @@ This argument has prototype
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;double&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>time_out</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 The input value of the argument does not matter.
-Upon return it is the number of wall clock seconds required for 
+Upon return it is the number of wall clock seconds required for
 the multi-threaded Newton method can compute all the zeros.
 
 <br/>
@@ -154,7 +150,7 @@ the multi-threaded Newton method can compute all the zeros.
 <br/>
 Is the minimum amount of wall clock time that the test should take.
 The number of repeats for the test will be increased until this time
-is reached. 
+is reached.
 The reported 
 <code><i><font color="black"><span style='white-space: nowrap'>time_out</span></font></i></code>
  is the total wall clock time divided by the
@@ -169,9 +165,9 @@ This argument has prototype
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the number of threads that 
+It specifies the number of threads that
 are available for this test.
-If it is zero, the test is run without multi-threading and 
+If it is zero, the test is run without multi-threading and
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;1&#xA0;==&#xA0;CppAD::thread_alloc::num_threads()<br/>
@@ -203,7 +199,7 @@ It specifies the actual number of zeros in the test function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-. 
+.
 To be specific, <code><font color="blue">multi_newton_time</font></code> will attempt to determine
 all of the values of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -319,7 +315,7 @@ If
 <code><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i></code>
  is <code><font color="blue">true</font></code>,
 then derivatives will be computed using CppAD.
-Note that this derivative computation includes 
+Note that this derivative computation includes
 re-taping the function for each
 value of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -331,7 +327,7 @@ value of
 <br/>
 </span></code>If 
 <code><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i></code>
- is <code><font color="blue">false</font></code>, 
+ is <code><font color="blue">false</font></code>,
 derivatives will be computed using a hand coded routine.
 
 <br/>
@@ -342,15 +338,15 @@ derivatives will be computed using a hand coded routine.
 <br/>
 <pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/time_test.hpp&gt;
+# include &lt;cppad/utility/time_test.hpp&gt;
 # include &lt;cmath&gt;
 # include &lt;cstring&gt;
 # include &quot;multi_newton.hpp&quot;
 
-namespace { // empty namespace 
+namespace { // empty namespace
 
 	// values correspond to arguments in previous call to multi_newton_time
-	size_t num_threads_;// value passed to multi_newton_time 
+	size_t num_threads_;// value passed to multi_newton_time
 	size_t num_zero_;   // number of zeros of f(x) in the total interval
 	size_t num_sub_;    // number of sub-intervals to split calculation into
 	size_t num_sum_;    // larger values make f(x) take longer to calculate
@@ -387,7 +383,7 @@ namespace { // empty namespace
 	void fun_ad(double x, double&amp; f, double&amp; df)
 	{	// use CppAD::vector because it uses fast multi-threaded memory alloc
 		using CppAD::vector;
-		using CppAD::AD;	
+		using CppAD::AD;
 		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; X(1), Y(1);
 		X[0] = x;
 		CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
@@ -399,10 +395,10 @@ namespace { // empty namespace
 		f     = Value( Y[0] );
 		df    = dy[0];
 		return;
-	} 
+	}
 
 	// evaulate the function and its derivative
-	void fun_no(double x, double&amp; f, double&amp; df) 
+	void fun_no(double x, double&amp; f, double&amp; df)
 	{	f  = f_eval(x);
 		df = df_direct(x);
 		return;
@@ -415,13 +411,13 @@ namespace { // empty namespace
 		{	std::cerr &lt;&lt; &quot;multi_newton_time: num_zero == 0&quot; &lt;&lt; std::endl;
 			exit(1);
 		}
-		double pi      = 4. * std::atan(1.); 
+		double pi      = 4. * std::atan(1.);
 		double xlow    = 0.;
 		double xup     = (num_zero_ - 1) * pi;
-		double eps     = 
+		double eps     =
 			xup * 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
 		size_t max_itr = 20;
-	
+
 		bool ok = multi_newton(
 			xout_       ,
 			fun_        ,
@@ -430,7 +426,7 @@ namespace { // empty namespace
 			xup         ,
 			eps         ,
 			max_itr     ,
-			num_threads_ 
+			num_threads_
 		);
 		if( ! ok )
 		{	std::cerr &lt;&lt; &quot;multi_newton: error&quot; &lt;&lt; std::endl;
@@ -453,10 +449,10 @@ bool multi_newton_time(
 	double  test_time     ,
 	size_t  num_threads   ,
 	size_t  num_zero      ,
-	size_t  num_sub       , 
+	size_t  num_sub       ,
 	size_t  num_sum       ,
 	bool    use_ad
-) 
+)
 {	bool ok = true;
 	using CppAD::thread_alloc;
 
@@ -478,7 +474,7 @@ bool multi_newton_time(
 	time_out = CppAD::time_test(test_repeat, test_time);
 
 	// Call test_once for a correctness check
-	double pi      = 4. * std::atan(1.); 
+	double pi      = 4. * std::atan(1.);
 	double xup     = (num_zero_ - 1) * pi;
 	double eps     = xup * 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
 	ok        &amp;= (xout_.size() == num_zero);

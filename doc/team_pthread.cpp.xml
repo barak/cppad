@@ -6,7 +6,7 @@
 <title>Pthread Implementation of a Team of AD Threads</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Pthread Implementation of a Team of AD Threads"/>
-<meta name="keywords" id="keywords" content=" pthread Ad team implementation of a ad threads bug in cygwin pthread_exit "/>
+<meta name="keywords" id="keywords" content=" pthread implementation of a team ad threads pthread_exit bug in cygwin "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="team_bthread.cpp.xml" target="_top">Prev</a>
-</td><td><a href="library.xml" target="_top">Next</a>
+</td><td><a href="utility.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -86,9 +86,6 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>Pthread Implementation of a Team of AD Threads</big></big></b></center>
 See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team_thread.hpp</span></a>
  for this routines specifications.
@@ -96,9 +93,6 @@ See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap
 <br/>
 <br/>
 <b><big><a name="Bug in Cygwin" id="Bug in Cygwin">Bug in Cygwin</a></big></b>
-
-
-
 <br/>
 There is a bug in <code><font color="blue">pthread_exit</font></code>,
 using cygwin 5.1 and g++ version 4.3.4,
@@ -125,9 +119,9 @@ namespace {
 	using CppAD::thread_alloc;
 
 	// number of threads in the team
-	size_t num_threads_ = 1; 
+	size_t num_threads_ = 1;
 
-	// key for accessing thread specific information 
+	// key for accessing thread specific information
 	pthread_key_t thread_specific_key_;
 
 	// no need to destroy thread specific information
@@ -172,7 +166,7 @@ namespace {
 	// thread_number()
 	size_t thread_number(void)
 	{	// get thread specific information
-		void*   thread_num_vptr = pthread_getspecific(thread_specific_key_);	
+		void*   thread_num_vptr = pthread_getspecific(thread_specific_key_);
 		size_t* thread_num_ptr  = static_cast&lt;size_t*&gt;(thread_num_vptr);
 		size_t  thread_num      = *thread_num_ptr;
 		if( thread_num &gt;= num_threads_ )
@@ -195,7 +189,7 @@ namespace {
 		size_t thread_num = *static_cast&lt;size_t*&gt;(thread_num_vptr);
 
 		// master thread does not use this routine
-		ok &amp;= thread_num &gt; 0; 
+		ok &amp;= thread_num &gt; 0;
 
 		while( true )
 		{
@@ -213,7 +207,7 @@ namespace {
 			worker_();
 
 			// Use wait_for_work_ to inform master that our work is done and
-			// that this thread will not use global information until 
+			// that this thread will not use global information until
 			// passing its barrier wait_for_job_ above.
 			rc = pthread_barrier_wait(&amp;wait_for_work_);
 			ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
@@ -254,7 +248,7 @@ bool team_create(size_t num_threads)
 	thread_all_[0].pthread_id = pthread_self();
 
 	// create a key for thread specific information
-	rc = pthread_key_create(&amp;thread_specific_key_,thread_specific_destructor); 
+	rc = pthread_key_create(&amp;thread_specific_key_,thread_specific_destructor);
 	ok &amp;= (rc == 0);
 
 	// set thread specific information for this (master thread)
@@ -269,7 +263,7 @@ bool team_create(size_t num_threads)
 	thread_alloc::hold_memory(true);
 	CppAD::parallel_ad&lt;double&gt;();
 
-	// Now change num_threads_ to its final value. Waiting till now allows 
+	// Now change num_threads_ to its final value. Waiting till now allows
 	// calls to thread_number during parallel_setup to check thread_num == 0.
 	num_threads_ = num_threads;
 
@@ -277,13 +271,13 @@ bool team_create(size_t num_threads)
 	pthread_barrierattr_t* no_barrierattr = CPPAD_NULL;
 	rc = pthread_barrier_init(
 		&amp;wait_for_work_, no_barrierattr, num_threads
-	); 
+	);
 	ok &amp;= (rc == 0);
 	rc  = pthread_barrier_init(
 		&amp;wait_for_job_, no_barrierattr, num_threads
-	); 
+	);
 	ok &amp;= (rc == 0);
-	
+
 	// structure used to create the threads
 	pthread_t       pthread_id;
 	// default for pthread_attr_setdetachstate is PTHREAD_CREATE_JOINABLE
@@ -297,7 +291,7 @@ bool team_create(size_t num_threads)
 	// This master thread is already running, we need to create
 	// num_threads - 1 more threads
 	for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
-	{	
+	{
 		// Create the thread with thread number equal to thread_num
 		thread_num_vptr = static_cast&lt;void*&gt; (
 			&amp;(thread_all_[thread_num].thread_num)
@@ -333,7 +327,7 @@ bool team_work(void worker(void))
 	// set the new job that other threads are waiting for
 	thread_job_ = work_enum;
 
-	// enter parallel execution soon as master thread completes wait_for_job_ 
+	// enter parallel execution soon as master thread completes wait_for_job_
 	if( num_threads_ &gt; 1 )
 		sequential_execution_ = false;
 
@@ -368,13 +362,13 @@ bool team_destroy(void)
 	// set the new job that other threads are waiting for
 	thread_job_ = join_enum;
 
-	// Enter parallel exectuion soon as master thread completes wait_for_job_ 
+	// Enter parallel exectuion soon as master thread completes wait_for_job_
 	if( num_threads_ &gt; 1 )
 			sequential_execution_ = false;
 	rc  = pthread_barrier_wait(&amp;wait_for_job_);
 	ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
 
-	// now wait for the other threads to exit 
+	// now wait for the other threads to exit
 	size_t thread_num;
 	for(thread_num = 1; thread_num &lt; num_threads_; thread_num++)
 	{	void* no_status = CPPAD_NULL;
@@ -384,7 +378,7 @@ bool team_destroy(void)
 		ok &amp;= (rc == 0);
 	}
 
-	// now we are down to just the master thread (thread zero) 
+	// now we are down to just the master thread (thread zero)
 	sequential_execution_ = true;
 
 	// destroy the key for thread specific data

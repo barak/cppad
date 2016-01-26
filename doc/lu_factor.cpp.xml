@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuFactor</option>
 <option>lu_factor.cpp</option>
@@ -46,7 +46,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -70,9 +70,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -99,9 +97,9 @@ A:active { color : purple }
 <center><b><big><big>LuFactor: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;cstdlib&gt;               // for rand function
-# include &lt;cppad/lu_factor.hpp&gt;      // for CppAD::LuFactor
-# include &lt;cppad/near_equal.hpp&gt;     // for CppAD::NearEqual
-# include &lt;cppad/vector.hpp&gt;  // for CppAD::vector
+# include &lt;cppad/utility/lu_factor.hpp&gt;      // for CppAD::LuFactor
+# include &lt;cppad/utility/near_equal.hpp&gt;     // for CppAD::NearEqual
+# include &lt;cppad/utility/vector.hpp&gt;  // for CppAD::vector
 
 bool LuFactor(void)
 {	bool  ok = true;
@@ -111,7 +109,7 @@ bool LuFactor(void)
 	using std::srand;
 # endif
 
-	size_t  n = 5;                        // number rows in A 
+	size_t  n = 5;                        // number rows in A
 	double  rand_max = double(RAND_MAX);  // maximum rand value
 	double  sum;                          // element of L * U
 	double  pij;                          // element of permuted A
@@ -144,7 +142,7 @@ bool LuFactor(void)
 			}
 		}
 	}
-	
+
 	// Extract L from LU
 	for(i = 0; i &lt; n; i++)
 	{	// elements along and below the diagonal
@@ -154,7 +152,7 @@ bool LuFactor(void)
 		for(j = i+1; j &lt; n; j++)
 			L[i * n + j] = 0.;
 	}
-	
+
 	// Extract U from LU
 	for(i = 0; i &lt; n; i++)
 	{	// elements below the diagonal
@@ -167,7 +165,7 @@ bool LuFactor(void)
 			U[i * n + j] = LU[ ip[i] * n + jp[j] ];
 	}
 
-	// Compute L * U 
+	// Compute L * U
 	for(i = 0; i &lt; n; i++)
 	{	for(j = 0; j &lt; n; j++)
 		{	// compute element (i,j) entry in L * U

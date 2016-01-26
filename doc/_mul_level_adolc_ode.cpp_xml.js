@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -55,7 +55,8 @@ var list_current0 = [
 'mul_level_adolc_ode.cpp.xml#Taylor\'s Method Using AD',
 'mul_level_adolc_ode.cpp.xml#base_adolc.hpp',
 'mul_level_adolc_ode.cpp.xml#Memory Management',
-'mul_level_adolc_ode.cpp.xml#Configuration Requirement'
+'mul_level_adolc_ode.cpp.xml#Configuration Requirement',
+'mul_level_adolc_ode.cpp.xml#Source'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

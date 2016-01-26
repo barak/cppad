@@ -6,7 +6,7 @@
 <title>Glossary</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Glossary"/>
-<meta name="keywords" id="keywords" content=" ad function of base levels above level Ad type elementary vector operation atomic sequence dependent independent parameter sparsity pattern efficient boolean sets tape active inactive variable variables taylor coefficient "/>
+<meta name="keywords" id="keywords" content=" efficient ad function of base type above elementary vector operation atomic sequence dependent independent parameter sparsity pattern boolean sets tape active inactive variable variables taylor coefficient "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -65,11 +65,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -79,7 +80,7 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>AD Function</option>
 <option>AD of Base</option>
-<option>AD Levels Above Base</option>
+<option>AD Type Above Base</option>
 <option>Base Function</option>
 <option>Base Type</option>
 <option>Elementary Vector</option>
@@ -120,7 +121,7 @@ AD of
  <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 .
 This operation sequence
-defines a function 
+defines a function
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>F</mi>
@@ -153,7 +154,7 @@ We refer to
 <mi mathvariant='italic'>F</mi>
 </mrow></math>
 
- as the AD function corresponding to 
+ as the AD function corresponding to
 the operation sequence stored in the object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
@@ -176,12 +177,12 @@ the operation sequence.)
 <br/>
 An object is called an AD of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- object its type is 
+ object its type is
 either 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- 
+
 (see the default and copy <a href="ad_ctor.xml" target="_top"><span style='white-space: nowrap'>constructors</span></a>
- 
+
 or 
 <code><font color="blue"><span style='white-space: nowrap'>VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::reference</span></font></code>
  (see <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
@@ -192,16 +193,14 @@ for some
 
 <br/>
 <br/>
-<b><big><a name="AD Levels Above Base" id="AD Levels Above Base">AD Levels Above Base</a></big></b>
-
-
+<b><big><a name="AD Type Above Base" id="AD Type Above Base">AD Type Above Base</a></big></b>
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- is a type, 
-the AD levels above 
+ is a type,
+an AD type above 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- 
+
 is the following sequence of types:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -219,7 +218,7 @@ A function
 <mi mathvariant='italic'>B</mi>
 </mrow></math>
 
- 
+
 is referred to as a 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
  function,
@@ -313,7 +312,7 @@ more basic operations.
 <br/>
 A sequence of atomic 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
- operations 
+ operations
 is called a 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
  operation sequence.
@@ -336,7 +335,7 @@ Suppose that
  are 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
  objects and
-the result of 
+the result of
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&lt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
@@ -349,7 +348,7 @@ If one executes the following code
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;if(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&lt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;)<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;cos(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;else&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;sin(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;else&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;sin(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);<br/>
 </span></font></code>
 the choice above depends on the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -403,7 +402,7 @@ does not depend on the value of
 .
 In this case, we say that the 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
- operation sequence 
+ operation sequence
 is independent of 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
  and the elements of 
@@ -422,14 +421,14 @@ An
  object 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
  is currently a parameter if
-its value does not depend on the value of 
+its value does not depend on the value of
 an <a href="independent.xml" target="_top"><span style='white-space: nowrap'>Independent</span></a>
  variable vector for an
 <a href="glossary.xml#Tape.Active" target="_top"><span style='white-space: nowrap'>active&#xA0;tape</span></a>
 .
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
- is a parameter, the function 
+ is a parameter, the function
 <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Parameter(u)</span></a>
  returns true
 and <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Variable(u)</span></a>
@@ -438,12 +437,9 @@ and <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Variabl
 <br/>
 <br/>
 <b><big><a name="Sparsity Pattern" id="Sparsity Pattern">Sparsity Pattern</a></big></b>
-
-
-
 <br/>
 CppAD describes a sparse matrix as a vector of sets with each
-vector component corresponding to a row 
+vector component corresponding to a row
 and the elements of the set corresponding to the possibly non-zero columns.
 A vector of <code><font color="blue">bool</font></code>
 can represent a vector of sets using one bit per element.
@@ -451,7 +447,7 @@ can represent a vector of sets using one bit per element.
 <a href="cppad_vector.xml#vectorBool" target="_top"><span style='white-space: nowrap'>vectorBool</span></a>
  is an example class that
 uses one bit per element.)
-The problem is that this representation uses one bit for both the elements 
+The problem is that this representation uses one bit for both the elements
 that are there and the ones that are not.
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -459,18 +455,18 @@ that are there and the ones that are not.
 represent the elements that are not present,
 but it uses about three <code><font color="blue">size_t</font></code> values
 for each element that is present.
-For example, if <code><font color="blue">size_t</font></code> uses 32 bits, 
+For example, if <code><font color="blue">size_t</font></code> uses 32 bits,
 a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code> uses
-about 100 bits for each element that is present in the 
+about 100 bits for each element that is present in the
 vector of sets.
-Thus, a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code> should be more efficient for 
+Thus, a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code> should be more efficient for
 very sparse matrix representations.
 
 <br/>
 <br/>
 <b><a name="Sparsity Pattern.Vector of Boolean" id="Sparsity Pattern.Vector of Boolean">Vector of Boolean</a></b>
 <br/>
-Given a matrix 
+Given a matrix
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
@@ -496,13 +492,13 @@ a vector of <code><font color="blue">bool</font></code>
 <mi mathvariant='italic'>n</mi>
 </mrow></math>
 
- 
+
 is a sparsity pattern for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
 </mrow></math>
 
- if 
+ if
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>i</mi>
@@ -560,7 +556,7 @@ Given two sparsity patterns
 
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>C</span></font></i></code>
- 
+
 for a matrix 
 <code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
 , we say that 
@@ -608,7 +604,7 @@ defines an efficient sparsity pattern for
 <br/>
 <b><a name="Sparsity Pattern.Vector of Sets" id="Sparsity Pattern.Vector of Sets">Vector of Sets</a></b>
 <br/>
-Given a matrix 
+Given a matrix
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
@@ -632,13 +628,13 @@ a vector of sets
 <mi mathvariant='italic'>m</mi>
 </mrow></math>
 
- is a 
+ is a
 sparsity pattern for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
 </mrow></math>
 
- if 
+ if
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>i</mi>
@@ -651,7 +647,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- 
+
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <msub><mi mathvariant='italic'>A</mi>
@@ -679,7 +675,7 @@ Given two sparsity patterns
 
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>T</span></font></i></code>
- 
+
 for a matrix 
 <code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
 , we say that 
@@ -725,7 +721,7 @@ defines an efficient sparsity pattern for
 <br/>
 <b><a name="Tape.Active" id="Tape.Active">Active</a></b>
 <br/>
-A new tape is created and becomes active 
+A new tape is created and becomes active
 after each call of the form (see <a href="independent.xml" target="_top"><span style='white-space: nowrap'>Independent</span></a>
 )
 
@@ -765,10 +761,10 @@ After such a transfer, the tape becomes inactive.
 <br/>
 While the tape is active, we refer to the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- 
+
 as the independent variables for the tape.
 When the tape becomes inactive,
-the corresponding objects become 
+the corresponding objects become
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameters</span></a>
 .
 
@@ -779,11 +775,11 @@ the corresponding objects become
 While the tape is active, we use the term dependent variables for the tape
 for any objects whose value depends on the independent variables for the tape.
 When the tape becomes inactive,
-the corresponding objects become 
+the corresponding objects become
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameters</span></a>
 .
 
- 
+
 <br/>
 <br/>
 <b><big><a name="Taylor Coefficient" id="Taylor Coefficient">Taylor Coefficient</a></big></b>
@@ -799,7 +795,7 @@ Suppose
 </msup>
 </mrow></math>
 
- is a 
+ is a
 is 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>p</mi>
@@ -818,7 +814,7 @@ For
 <mi mathvariant='italic'>p</mi>
 </mrow></math>
 
-, 
+,
 we use the column vector 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>x</mi>
@@ -833,13 +829,13 @@ we use the column vector
 </msup>
 </mrow></math>
 
- for the <code><i>k</i></code>-th order 
+ for the <code><i>k</i></code>-th order
 Taylor coefficient corresponding to 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>X</mi>
 </mrow></math>
 
- 
+
 which is defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -875,7 +871,7 @@ which is defined by
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-It follows that 
+It follows that
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -931,7 +927,7 @@ where the remainder
 </msup>
 </mrow></math>
 
- 
+
 converges to zero and 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>t</mi>
@@ -956,9 +952,9 @@ If
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
  is a variable,
 <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Variable(u)</span></a>
- returns true and 
+ returns true and
 <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Parameter(u)</span></a>
- returns false. 
+ returns false.
 For example,
 directly after the code sequence
 
@@ -985,7 +981,7 @@ Directly after the code sequence
 (not a variable).
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>Note that we often drop the word currently and 
+</span></code>Note that we often drop the word currently and
 just refer to an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  object as a variable

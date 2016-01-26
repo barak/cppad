@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -48,7 +48,7 @@ var list_down0 = [
 'forward_order.xml',
 'forward_dir.xml',
 'size_order.xml',
-'comparechange.xml',
+'compare_change.xml',
 'capacity_order.xml',
 'number_skip.xml'
 ];

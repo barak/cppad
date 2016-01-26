@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>time_test</option>
 <option>elapsed_seconds</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -123,6 +121,9 @@ A:active { color : purple }
 
 <br/>
 
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/elapsed_seconds.hpp&gt;<br/>
+</span></font></code>
+
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;elapsed_seconds()</span></font></code>
 
 
@@ -135,14 +136,18 @@ This routine is accurate to within .02 seconds
 ).
 It does not necessary work for time intervals that are greater than a day.
 <ol type="1"><li>
-If running under the Microsoft compiler, it uses 
-<code><font color="blue">::GetSystemTime</font></code> for timing.
+If the C++11 <code><font color="blue">std::chrono::high_resolution_clock</font></code> is available,
+it will be used for timing.
 </li><li>
 
-Otherwise, if <code><font color="blue">gettimeofday</font></code> is available, it is used.
+Otherwise, if running under the Microsoft compiler,
+<code><font color="blue">::GetSystemTime</font></code> will be used for timing.
 </li><li>
 
-Otherwise, <code><font color="blue">std::clock()</font></code> is used.
+Otherwise, if <code><font color="blue">gettimeofday</font></code> is available, it is used for timing.
+</li><li>
+
+Otherwise, <code><font color="blue">std::clock()</font></code> will be used for timing.
 </li></ol>
 
 
@@ -150,15 +155,15 @@ Otherwise, <code><font color="blue">std::clock()</font></code> is used.
 <br/>
 <b><big><a name="s" id="s">s</a></big></b>
 <br/>
-is a <code><font color="blue">double</font></code> equal to the 
+is a <code><font color="blue">double</font></code> equal to the
 number of seconds since the first call to <code><font color="blue">elapsed_seconds</font></code>.
 
 <br/>
 <br/>
 <b><big><a name="Microsoft Systems" id="Microsoft Systems">Microsoft Systems</a></big></b>
 <br/>
-It you are using the Microsoft C++ compiler,
-you will need to link in the external routine 
+It you are using <code><font color="blue">::GetSystemTime</font></code>,
+you will need to link in the external routine
 called <a href="microsoft_timer.xml" target="_top"><span style='white-space: nowrap'>microsoft_timer</span></a>
 .
 
@@ -173,7 +178,7 @@ an example and test of this routine.
 
 
 
-<hr/>Input File: cppad/elapsed_seconds.hpp
+<hr/>Input File: cppad/utility/elapsed_seconds.hpp
 
 </body>
 </html>

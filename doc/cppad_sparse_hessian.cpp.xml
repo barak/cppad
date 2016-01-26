@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -114,7 +114,7 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_colpack, 
+	global_onetape, global_colpack,
 	global_atomic, global_optimize, global_boolsparsity;
 
 namespace {
@@ -158,15 +158,20 @@ namespace {
 }
 
 bool link_sparse_hessian(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
-	      CppAD::vector&lt;double&gt;&amp;     x        ,
-	      CppAD::vector&lt;double&gt;&amp;     hessian  )
+	CppAD::vector&lt;double&gt;&amp;           x        ,
+	CppAD::vector&lt;double&gt;&amp;           hessian  ,
+	size_t&amp;                          n_sweep  )
 {
-	if( global_atomic || global_colpack )
+	if( global_atomic )
 		return false;
+# ifndef CPPAD_COLPACK_SPEED
+	if( global_colpack )
+		return false;
+# endif
 	// -----------------------------------------------------
 	// setup
 	typedef vector&lt;double&gt;              DblVector;
@@ -174,15 +179,13 @@ bool link_sparse_hessian(
 	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar;
 	typedef vector&lt;ADScalar&gt;            ADVector;
 
-	size_t i, j, k;
+	size_t j;
 	size_t order = 0;         // derivative order corresponding to function
 	size_t m = 1;             // number of dependent variables
 	size_t n = size;          // number of independent variables
-	size_t K = row.size();    // number of non-zeros in lower triangle
 	ADVector   a_x(n);        // AD domain space vector
 	ADVector   a_y(m);        // AD range space vector
 	DblVector  w(m);          // double range space vector
-	DblVector hes(K);         // non-zeros in lower triangle
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;   // AD function object
 
 	// weights for hessian calculation (only one component of f)
@@ -192,20 +195,15 @@ bool link_sparse_hessian(
 	SetVector  set_sparsity(n);
 	BoolVector bool_sparsity(n * n);
 
-	// initialize all entries as zero
-	for(i = 0; i &lt; n; i++)
-	{	for(j = 0; j &lt; n; j++)
-			hessian[ i * n + j] = 0.;
-	}
 	// ------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
-	{	// choose a value for x 
+	{	// choose a value for x
 		CppAD::uniform_01(n, x);
 		for(j = 0; j &lt; n; j++)
 			a_x[j] = x[j];
 
 		// declare independent variables
-		<a href="independent.xml" target="_top">Independent</a>(a_x);	
+		<a href="independent.xml" target="_top">Independent</a>(a_x);
 
 		// AD computation of f(x)
 		CppAD::sparse_hes_fun&lt;ADScalar&gt;(n, a_x, row, col, order, a_y);
@@ -215,6 +213,9 @@ bool link_sparse_hessian(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		// calculate the Hessian sparsity pattern for this function
 		if( global_boolsparsity )
@@ -224,25 +225,26 @@ bool link_sparse_hessian(
 
 		// structure that holds some of work done by SparseHessian
 		CppAD::sparse_hessian_work work;
-
+# ifdef CPPAD_COLPACK_SPEED
+		if( global_colpack )
+			work.color_method = &quot;colpack.star&quot;;
+# endif
 		// calculate this Hessian at this x
-		if( global_boolsparsity)
-			f.SparseHessian(x, w, bool_sparsity, row, col, hes, work);
-		else
-			f.SparseHessian(x, w, set_sparsity, row, col, hes, work);
-		for(k = 0; k &lt; K; k++)
-		{	hessian[ row[k] * n + col[k] ] = hes[k];
-			hessian[ col[k] * n + row[k] ] = hes[k];
-		}
+		if( global_boolsparsity) n_sweep = f.SparseHessian(
+			x, w, bool_sparsity, row, col, hessian, work
+		);
+		else n_sweep = f.SparseHessian(
+				x, w, set_sparsity, row, col, hessian, work
+		);
 	}
 	else
-	{	// choose a value for x 
+	{	// choose a value for x
 		CppAD::uniform_01(n, x);
 		for(j = 0; j &lt; n; j++)
 			a_x[j] = x[j];
 
 		// declare independent variables
-		<a href="independent.xml" target="_top">Independent</a>(a_x);	
+		<a href="independent.xml" target="_top">Independent</a>(a_x);
 
 		// AD computation of f(x)
 		CppAD::sparse_hes_fun&lt;ADScalar&gt;(n, a_x, row, col, order, a_y);
@@ -253,6 +255,9 @@ bool link_sparse_hessian(
 		if( global_optimize )
 			f.optimize();
 
+		// skip comparison operators
+		f.compare_change_count(0);
+
 		// calculate the Hessian sparsity pattern for this function
 		if( global_boolsparsity)
 			calc_sparsity(bool_sparsity, f);
@@ -261,21 +266,21 @@ bool link_sparse_hessian(
 
 		// declare structure that holds some of work done by SparseHessian
 		CppAD::sparse_hessian_work work;
-
+# ifdef CPPAD_COLPACK_SPEED
+		if( global_colpack )
+			work.color_method = &quot;colpack.star&quot;;
+# endif
 		while(repeat--)
 		{	// choose a value for x
 			CppAD::uniform_01(n, x);
 
-			// calculate sparsity at this x
-			if( global_boolsparsity )
-				f.SparseHessian(x, w, bool_sparsity, row, col, hes, work);
-			else
-				f.SparseHessian(x, w, set_sparsity, row, col, hes, work);
-
-			for(k = 0; k &lt; K; k++)
-			{	hessian[ row[k] * n + col[k] ] = hes[k];
-				hessian[ col[k] * n + row[k] ] = hes[k];
-			}
+			// calculate hessian at this x
+			if( global_boolsparsity ) n_sweep = f.SparseHessian(
+				x, w, bool_sparsity, row, col, hessian, work
+			);
+			else n_sweep = f.SparseHessian(
+				x, w, set_sparsity, row, col, hessian, work
+			);
 		}
 	}
 	return true;

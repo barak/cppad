@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="sparse_hessian.xml" target="_top">Prev</a>
-</td><td><a href="funcheck.xml" target="_top">Next</a>
+</td><td><a href="sub_sparse_hes.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -76,6 +76,8 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>sparse_hessian-&gt;</option>
 <option>sparse_hessian.cpp</option>
+<option>sub_sparse_hes.cpp</option>
+<option>sparse_sub_hes.cpp</option>
 </select>
 </td>
 <td>sparse_hessian.cpp</td>
@@ -216,13 +218,14 @@ bool sparse_hessian(void)
 	x[1]       = 0.5;
 	ell        = 1 * n + 1;
 	check[ell] = 6.0 * x[1];
-	n_sweep    = f.SparseHessian(x, w, p_set, row, col, hes, work);
+	s_vector   not_used;
+	n_sweep    = f.SparseHessian(x, w, not_used, row, col, hes, work);
 	for(k = 0; k &lt; K; k++)
 	{	ell = row[k] * n + col[k];
 		ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(w[0] * check[ell], hes[k], eps, eps );
 	}
 	ok &amp;= n_sweep == 2;
-	
+
 
 
 	return ok;

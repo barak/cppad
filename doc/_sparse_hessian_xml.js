@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -47,7 +47,9 @@ var list_down1 = [
 'sparse_hessian.xml'
 ];
 var list_down0 = [
-'sparse_hessian.cpp.xml'
+'sparse_hessian.cpp.xml',
+'sub_sparse_hes.cpp.xml',
+'sparse_sub_hes.cpp.xml'
 ];
 var list_current0 = [
 'sparse_hessian.xml#Syntax',
@@ -59,13 +61,16 @@ var list_current0 = [
 'sparse_hessian.xml#row, col',
 'sparse_hessian.xml#hes',
 'sparse_hessian.xml#work',
+'sparse_hessian.xml#work.color_method',
+'sparse_hessian.xml#work.p',
 'sparse_hessian.xml#n_sweep',
 'sparse_hessian.xml#VectorBase',
 'sparse_hessian.xml#VectorSet',
 'sparse_hessian.xml#VectorSet.Restrictions',
 'sparse_hessian.xml#VectorSize',
 'sparse_hessian.xml#Uses Forward',
-'sparse_hessian.xml#Example'
+'sparse_hessian.xml#Example',
+'sparse_hessian.xml#Subset Hessian'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

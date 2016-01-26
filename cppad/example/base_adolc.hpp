@@ -1,11 +1,11 @@
-/* $Id: base_adolc.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
-# ifndef CPPAD_BASE_ADOLC_INCLUDED
-# define CPPAD_BASE_ADOLC_INCLUDED
+// $Id: base_adolc.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_BASE_ADOLC_HPP
+# define CPPAD_BASE_ADOLC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -14,6 +14,11 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin base_adolc.hpp$$
 $spell
+	azmul
+	expm1
+	atanh
+	acosh
+	asinh
 	erf
 	ifndef
 	define
@@ -53,9 +58,6 @@ $spell
 	sqrt
 $$
 
-$index Adolc, adouble as Base$$
-$index Base, Adolc's adouble$$
-$index adouble, as Base$$ 
 
 $section Enable use of AD<Base> where Base is Adolc's adouble Type$$
 
@@ -95,7 +97,7 @@ $codei%
 %$$
 This enables one to include conditionals in the recording of
 $code adouble$$ operations and later evaluation for different
-values of the independent variables 
+values of the independent variables
 (in the same spirit as the CppAD $cref CondExp$$ function).
 $codep */
 namespace CppAD {
@@ -141,9 +143,17 @@ namespace CppAD {
 }
 /* $$
 
+$head CondExpRel$$
+The $cref/CPPAD_COND_EXP_REL/base_cond_exp/CondExpRel/$$ macro invocation
+$codep */
+namespace CppAD {
+	CPPAD_COND_EXP_REL(adouble)
+}
+/* $$
+
 $head EqualOpSeq$$
-The Adolc user interface does not specify a way to determine if 
-two $code adouble$$ variables correspond to the same operations sequence. 
+The Adolc user interface does not specify a way to determine if
+two $code adouble$$ variables correspond to the same operations sequence.
 Make $code EqualOpSeq$$ an error if it gets used:
 $codep */
 namespace CppAD {
@@ -159,8 +169,8 @@ namespace CppAD {
 /* $$
 
 $head Identical$$
-The Adolc user interface does not specify a way to determine if an 
-$code adouble$$ depends on the independent variables. 
+The Adolc user interface does not specify a way to determine if an
+$code adouble$$ depends on the independent variables.
 To be safe (but slow) return $code false$$ in all the cases below.
 $codep */
 namespace CppAD {
@@ -181,6 +191,13 @@ $codep */
 	{    return static_cast<int>( x.getValue() ); }
 /* $$
 
+$head azmul$$
+$codep */
+namespace CppAD {
+	CPPAD_AZMUL( adouble )
+}
+/* $$
+
 $head Ordered$$
 $codep */
 namespace CppAD {
@@ -198,7 +215,7 @@ namespace CppAD {
 /* $$
 
 $head Unary Standard Math$$
-The following $cref/required/base_require/$$ functions 
+The following $cref/required/base_require/$$ functions
 are defined by the Adolc package for the $code adouble$$ base case:
 $pre
 $$
@@ -215,29 +232,40 @@ $code sinh$$,
 $code sqrt$$,
 $code tan$$.
 
-$head erf$$
-If the error function is supported by the compiler,
-it must also be supported by a $icode Base$$ type;
-see $cref/erf/base_std_math/erf/$$.
-The adolc package does not support this function:
+$head erf, asinh, acosh, atanh, expm1, log1p$$
+If the
+$cref/erf, asinh, acosh, atanh, expm1, log1p
+	/base_std_math
+	/erf, asinh, acosh, atanh, expm1, log1p
+/$$,
+functions are supported by the compiler,
+they must also be supported by a $icode Base$$ type;
+The adolc package does not support these functions so make
+their use an error:
 $codep */
 namespace CppAD {
-# if CPPAD_COMPILER_HAS_ERF
-	inline adouble erf(const adouble& x)
-	{	CPPAD_ASSERT_KNOWN( 
-			false,
-			"erf: adolc does not support the error function"
-		);
-		return 0;
-	}
+# define CPPAD_BASE_ADOLC_NO_SUPPORT(fun)                         \
+    inline adouble fun(const adouble& x)                          \
+    {   CPPAD_ASSERT_KNOWN(                                       \
+            false,                                                \
+            #fun ": adolc does not support this function"         \
+        );                                                        \
+        return 0.0;                                               \
+    }
+# if CPPAD_USE_CPLUSPLUS_2011
+	CPPAD_BASE_ADOLC_NO_SUPPORT(erf)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(asinh)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(acosh)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(atanh)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(expm1)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(log1p)
 # endif
+# undef CPPAD_BASE_ADOLC_NO_SUPPORT
 }
-/* $$ 
-
-
+/* $$
 
 $head sign$$
-This $cref/required/base_require/$$ function is defined using the 
+This $cref/required/base_require/$$ function is defined using the
 $code codassign$$ function so that its $code adouble$$ operation sequence
 does not depend on the value of $icode x$$.
 $codep */
@@ -255,7 +283,7 @@ namespace CppAD {
 /* $$
 
 $head abs$$
-This $cref/required/base_require/$$ function uses the adolc $code fabs$$ 
+This $cref/required/base_require/$$ function uses the adolc $code fabs$$
 function:
 $codep */
 namespace CppAD {
@@ -265,32 +293,15 @@ namespace CppAD {
 /* $$
 
 $head pow$$
-This $cref/required/base_require/$$ function 
+This $cref/required/base_require/$$ function
 is defined by the Adolc package for the $code adouble$$ base case.
 
-$head limits$$
-The following defines the numeric limits functions
-$code epsilon$$, $code min$$, and $code max$$ for the type
-$code adouble$$.
-It also defines the deprecated $code epsilon$$ function:
+$head numeric_limits$$
+The following defines the CppAD $cref numeric_limits$$
+for the type $code adouble$$:
 $codep */
 namespace CppAD {
-	template <>
-	class numeric_limits<adouble> {
-	public:
-		// machine epsilon
-		static adouble epsilon(void)
-		{	return adouble( std::numeric_limits<double>::epsilon() ); }
-		// minimum positive normalized value
-		static adouble min(void)
-		{	return adouble( std::numeric_limits<float>::min() ); }
-		// maximum finite value
-		static adouble max(void)
-		{	return adouble( std::numeric_limits<float>::max() ); }
-	};
-	// deprecated machine epsilon
-	template <> inline adouble epsilon<adouble>(void)
-	{	return numeric_limits<adouble>::epsilon(); }
+	CPPAD_NUMERIC_LIMITS(double, adouble)
 }
 /* $$
 $end

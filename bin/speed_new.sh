@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: speed_new.sh 3463 2014-12-12 10:59:18Z bradbell $
+# $Id: speed_new.sh 3768 2015-12-28 18:58:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -20,7 +20,7 @@ then
 cat << EOF
 usage: bin/speed_new.sh option_1 option_2 ...
 where the possible options are:
-	onetape, colpack, optimize, atomic, memory, boolsparsity
+	onetape, colpack, optimize, atomic, memory, boolsparsity, colpack
 Use the special value 'none' for no options
 EOF
 	exit 1
@@ -41,7 +41,19 @@ then
 	echo "It contains new source code for the cppad/local (can be empty)."
 	exit 1
 fi
-# Source code files that are changing 
+# -----------------------------------------------------------------------------
+if [ -d '.git' ]
+then
+	revert_cmd='git checkout'
+elif [ -d .svn ]
+then
+	revert_cmd='svn revert'
+else
+	echo 'speed_new.sh: Cannot find ./.git or ./.svn'
+	exit 1
+fi
+# -----------------------------------------------------------------------------
+# Source code files that are changing
 new_cppad=`cd cppad/new ; ls`
 new_local=`cd cppad/local/new ; ls`
 if [ "$new_cppad" == "" ] && [ "$new_local" == "" ]
@@ -58,8 +70,8 @@ then
 	then
 		for file in $new_cppad
 		do
-			echo "svn revert cppad/$file"
-			if ! svn revert cppad/$file
+			echo "$revert_cmd cppad/$file"
+			if ! $revert_cmd cppad/$file
 			then
 				echo "assuming cppad/$file not in repository"
 			fi
@@ -70,8 +82,8 @@ then
 	then
 		for file in $new_local
 		do
-			echo "svn revert cppad/local/$file"
-			if ! svn revert cppad/local/$file
+			echo "$revert_cmd cppad/local/$file"
+			if ! $revert_cmd cppad/local/$file
 			then
 				echo "assuming cppad/local/$file not in repository"
 			fi
@@ -83,7 +95,7 @@ then
 	cd build; make check_speed_cppad; cd speed/cppad
 	#
 	# run speed test for the current version
-	echo "./speed_cppad speed 123 $tmp $* > cur_speed.out"
+	echo "./speed_cppad speed 123 $* > cur_speed.out"
 	./speed_cppad speed 123 $* > cur_speed.out
 	#
 	echo "cd ../../.."
@@ -137,3 +149,6 @@ sed -n -e 's|_rate|_rate_new|' -e '/_rate_/p' \
 #
 echo "cat run.out | sort -u"
 cat run.out | sort -u
+# ----------------------------------------------------------------------------
+echo "$0: OK"
+exit 0

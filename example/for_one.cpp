@@ -1,9 +1,9 @@
-/* $Id: for_one.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: for_one.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -16,9 +16,6 @@ $spell
 	Cpp
 $$
 
-$index partial, example$$
-$index example, partial$$
-$index test, partial$$
 
 $section First Order Partial Driver: Example and Test$$
 
@@ -32,7 +29,7 @@ $end
 # include <cppad/cppad.hpp>
 namespace { // -------------------------------------------------------
 // define the template function ForOneCases<Vector> in empty namespace
-template <typename Vector> 
+template <typename Vector>
 bool ForOneCases()
 {	bool ok = true;
 	using CppAD::AD;
@@ -80,7 +77,7 @@ bool ForOneCases()
 
 	return ok;
 }
-} // End empty namespace 
+} // End empty namespace
 # include <vector>
 # include <valarray>
 bool ForOne(void)

@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>AD&lt;Base&gt; Requirements for Base Type</title>
+<title>AD&lt;Base&gt; Requirements for a CppAD Base Type</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="AD&lt;Base&gt; Requirements for Base Type"/>
-<meta name="keywords" id="keywords" content=" Base require type ad&lt;base&gt; requirements for base syntax warning purpose standard types include order numeric output operator integer Integer suggestion "/>
+<meta name="description" id="description" content="AD&lt;Base&gt; Requirements for a CppAD Base Type"/>
+<meta name="keywords" id="keywords" content=" ad&lt;base&gt; requirements for a cppad base type syntax purpose api warning standard types include order numeric output operator integer suggestion absolute zero azmul "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -78,6 +78,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -85,14 +87,15 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Syntax</option>
-<option>Warning</option>
 <option>Purpose</option>
-<option>---..Standard Base Types</option>
+<option>API Warning</option>
+<option>Standard Base Types</option>
 <option>Include Order</option>
 <option>Numeric Type</option>
 <option>Output Operator</option>
 <option>Integer</option>
 <option>---..Suggestion</option>
+<option>Absolute Zero, azmul</option>
 <option>Contents</option>
 </select>
 </td>
@@ -100,29 +103,18 @@ A:active { color : purple }
 
 
 
-
-
-
-
-<center><b><big><big>AD&lt;Base&gt; Requirements for Base Type</big></big></b></center>
+<center><b><big><big>AD&lt;Base&gt; Requirements for a CppAD Base Type</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <code><font color="blue"><br/>
-include &lt;cppad/base_require.hpp&gt;</font></code>
-
-<br/>
-<br/>
-<b><big><a name="Warning" id="Warning">Warning</a></big></b>
-<br/>
-This is a preliminary version of these specifications
-and it is subject to change in future versions of CppAD.
+# include &lt;cppad/base_require.hpp&gt;</font></code>
 
 <br/>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-This section lists the requirements that the type
+This section lists the requirements for the type
 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
  so that the type 
@@ -131,14 +123,27 @@ This section lists the requirements that the type
 
 <br/>
 <br/>
-<b><a name="Purpose.Standard Base Types" id="Purpose.Standard Base Types">Standard Base Types</a></b>
+<b><big><a name="API Warning" id="API Warning">API Warning</a></big></b>
+<br/>
+Defining a CppAD 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ type is an advanced use of CppAD.
+This part of the CppAD API changes with time. The most common change
+is adding more requirements.
+Search for <code><font color="blue">base_require</font></code> in the
+current <a href="whats_new.xml" target="_top"><span style='white-space: nowrap'>whats_new</span></a>
+ section for these changes.
+
+<br/>
+<br/>
+<b><big><a name="Standard Base Types" id="Standard Base Types">Standard Base Types</a></big></b>
 <br/>
 In the case where 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- is 
-<code><font color="blue">float</font></code>, 
+ is
+<code><font color="blue">float</font></code>,
 <code><font color="blue">double</font></code>,
-<code><font color="blue">std::complex&lt;float&gt;</font></code>, 
+<code><font color="blue">std::complex&lt;float&gt;</font></code>,
 <code><font color="blue">std::complex&lt;double&gt;</font></code>,
 or 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Other</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -152,7 +157,7 @@ these requirements are provided by including the file
 <br/>
 If you are linking a non-standard base type to CppAD,
 you must first include the file <code><font color="blue">cppad/base_require.hpp</font></code>,
-then provide the specifications below, 
+then provide the specifications below,
 and then include the file <code><font color="blue">cppad/cppad.hpp</font></code>.
 
 <br/>
@@ -161,16 +166,13 @@ and then include the file <code><font color="blue">cppad/cppad.hpp</font></code>
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- must support all the operations for a 
+ must support all the operations for a
 <a href="numerictype.xml" target="_top"><span style='white-space: nowrap'>NumericType</span></a>
 .
 
 <br/>
 <br/>
 <b><big><a name="Output Operator" id="Output Operator">Output Operator</a></big></b>
-
-
-
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -185,16 +187,13 @@ where
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  is a <code><font color="blue">const base_alloc&amp;</font></code>.
-For example, see 
+For example, see
 <a href="base_alloc.hpp.xml#Output Operator" target="_top"><span style='white-space: nowrap'>base_alloc</span></a>
 .
 
 <br/>
 <br/>
 <b><big><a name="Integer" id="Integer">Integer</a></big></b>
-
-
-
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -242,10 +241,45 @@ For example, see
 
 <br/>
 <br/>
+<b><big><a name="Absolute Zero, azmul" id="Absolute Zero, azmul">Absolute Zero, azmul</a></big></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ must support the syntax
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;azmul(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+see; <a href="azmul.xml" target="_top"><span style='white-space: nowrap'>azmul</span></a>
+.
+The following preprocessor macro invocation suffices
+(for most 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ types):
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+namespace&#xA0;CppAD&#xA0;{<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CPPAD_AZMUL(</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+}<br/>
+</span></font></code>
+where the macro is defined by
+<code><font color='blue'><pre style='display:inline'> 
+# define CPPAD_AZMUL(Base) \
+    inline Base azmul(const Base&amp; x, const Base&amp; y) \
+    {   Base zero(0.0);   \
+        if( x == zero ) \
+            return zero;  \
+        return x * y;     \
+    }
+</pre></font></code>
+
+
+<br/>
+<br/>
 <b><big><a name="Contents" id="Contents">Contents</a></big></b>
 <br/>
 <table>
-<tr><td><a href="base_member.xml" target="_top">base_member</a></td><td>Required&#xA0;Base&#xA0;Class&#xA0;Member&#xA0;Functions</td></tr><tr><td><a href="base_cond_exp.xml" target="_top">base_cond_exp</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Conditional&#xA0;Expressions</td></tr><tr><td><a href="base_identical.xml" target="_top">base_identical</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Identically&#xA0;Equal&#xA0;Comparisons</td></tr><tr><td><a href="base_ordered.xml" target="_top">base_ordered</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Ordered&#xA0;Comparisons</td></tr><tr><td><a href="base_std_math.xml" target="_top">base_std_math</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Standard&#xA0;Math&#xA0;Functions</td></tr><tr><td><a href="base_example.xml" target="_top">base_example</a></td><td>Example&#xA0;AD&#xA0;Base&#xA0;Types&#xA0;That&#xA0;are&#xA0;not&#xA0;AD&lt;OtherBase&gt;</td></tr></table>
+<tr><td><a href="base_member.xml" target="_top">base_member</a></td><td>Required&#xA0;Base&#xA0;Class&#xA0;Member&#xA0;Functions</td></tr><tr><td><a href="base_cond_exp.xml" target="_top">base_cond_exp</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Conditional&#xA0;Expressions</td></tr><tr><td><a href="base_identical.xml" target="_top">base_identical</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Identically&#xA0;Equal&#xA0;Comparisons</td></tr><tr><td><a href="base_ordered.xml" target="_top">base_ordered</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Ordered&#xA0;Comparisons</td></tr><tr><td><a href="base_std_math.xml" target="_top">base_std_math</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Standard&#xA0;Math&#xA0;Functions</td></tr><tr><td><a href="base_limits.xml" target="_top">base_limits</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Numeric&#xA0;Limits</td></tr><tr><td><a href="base_to_string.xml" target="_top">base_to_string</a></td><td>Extending&#xA0;to_string&#xA0;To&#xA0;Another&#xA0;Floating&#xA0;Point&#xA0;Type</td></tr><tr><td><a href="base_example.xml" target="_top">base_example</a></td><td>Example&#xA0;AD&#xA0;Base&#xA0;Types&#xA0;That&#xA0;are&#xA0;not&#xA0;AD&lt;OtherBase&gt;</td></tr></table>
 <hr/>Input File: cppad/base_require.hpp
 
 </body>

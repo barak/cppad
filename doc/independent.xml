@@ -6,7 +6,7 @@
 <title>Declare Independent Variables and Start Recording</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Declare Independent Variables and Start Recording"/>
-<meta name="keywords" id="keywords" content=" Independent start recording variable independent declare variables and syntax purpose stop x vectorad parallel mode example "/>
+<meta name="keywords" id="keywords" content=" declare independent variables and start recording syntax purpose stop x abort_op_index vectorad parallel mode example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -87,6 +87,7 @@ A:active { color : purple }
 <option>Start Recording</option>
 <option>Stop Recording</option>
 <option>x</option>
+<option>abort_op_index</option>
 <option>VectorAD</option>
 <option>Parallel Mode</option>
 <option>Example</option>
@@ -99,20 +100,21 @@ A:active { color : purple }
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+<code><font color="blue"><span style='white-space: nowrap'>Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
 
-
-<br/>
+<code><font color="blue"><span style='white-space: nowrap'>Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>abort_op_index</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Start recording 
+Start recording
 <a href="glossary.xml#AD of Base" target="_top"><span style='white-space: nowrap'>AD&#xA0;of&#xA0;Base</span></a>
  operations
 with 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  as the independent variable vector.
-Once the 
+Once the
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
  is completed,
 it must be transferred to a function object; see below.
@@ -121,10 +123,11 @@ it must be transferred to a function object; see below.
 <br/>
 <b><big><a name="Start Recording" id="Start Recording">Start Recording</a></big></b>
 <br/>
-An operation sequence recording is started by the command
+An operation sequence recording is started by the commands
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>abort_op_index</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 <br/>
 <b><big><a name="Stop Recording" id="Stop Recording">Stop Recording</a></big></b>
@@ -137,13 +140,13 @@ using either the <a href="funconstruct.xml" target="_top"><span style='white-spa
 
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 or the <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>dependent&#xA0;variable&#xA0;specifier</span></a>
 
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Dependent(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Dependent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 The only other way to stop a recording is using
 <a href="abort_recording.xml" target="_top"><span style='white-space: nowrap'>abort_recording</span></a>
@@ -151,13 +154,13 @@ The only other way to stop a recording is using
 Between when the recording is started and when it stopped,
 we refer to the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
-, 
+,
 and the values that depend on the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 ,
 as 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- variables. 
+ variables.
 
 <br/>
 <br/>
@@ -181,6 +184,24 @@ AD operation sequence.
 
 <br/>
 <br/>
+<b><big><a name="abort_op_index" id="abort_op_index">abort_op_index</a></big></b>
+<br/>
+It specifies the operator index at which the execution is be aborted
+by calling the CppAD <a href="errorhandler.xml" target="_top"><span style='white-space: nowrap'>error&#xA0;handler</span></a>
+.
+When this error handler leads to an assert, the user
+can inspect the call stack to see the source code corresponding to
+this operator index; see
+<a href="compare_change.xml#op_index.Purpose" target="_top"><span style='white-space: nowrap'>purpose</span></a>
+.
+No abort will occur if 
+<code><i><font color="black"><span style='white-space: nowrap'>abort_op_index</span></font></i></code>
+ is zero,
+of if <a href="faq.xml#Speed.NDEBUG" target="_top"><span style='white-space: nowrap'>NDEBUG</span></a>
+ is defined.
+
+<br/>
+<br/>
 <b><big><a name="VectorAD" id="VectorAD">VectorAD</a></big></b>
 <br/>
 The type 
@@ -199,23 +220,22 @@ if this is not the case.
 <br/>
 <br/>
 <b><big><a name="Parallel Mode" id="Parallel Mode">Parallel Mode</a></big></b>
-
-
 <br/>
-The call to <code><font color="blue">Independent</font></code>,
-and the corresponding call to
+Each thread can have one, and only one, active recording.
+A call to <code><font color="blue">Independent</font></code> starts the recording for the current thread.
+The recording must be stopped by a corresponding call to
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-or 
+or
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Dependent(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 or <a href="abort_recording.xml" target="_top"><span style='white-space: nowrap'>abort_recording</span></a>
-,
-must be preformed by the same thread; i.e.,
+
+preformed by the same thread; i.e.,
 <a href="ta_thread_num.xml" target="_top"><span style='white-space: nowrap'>thread_alloc::thread_num</span></a>
  must be the same.
 

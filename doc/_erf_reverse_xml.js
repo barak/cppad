@@ -17,11 +17,12 @@ var list_down3 = [
 'theory.xml',
 'glossary.xml',
 'bib.xml',
-'bugs.xml',
-'wishlist.xml',
+'wish_list.xml',
 'whats_new.xml',
 'deprecated.xml',
 'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
 'license.xml'
 ];
 var list_down2 = [
@@ -30,13 +31,13 @@ var list_down2 = [
 'reverse_identity.xml'
 ];
 var list_down1 = [
-'expreverse.xml',
-'logreverse.xml',
-'sqrtreverse.xml',
-'sincosreverse.xml',
-'atanreverse.xml',
-'asinreverse.xml',
-'acosreverse.xml',
+'exp_reverse.xml',
+'log_reverse.xml',
+'sqrt_reverse.xml',
+'sin_cos_reverse.xml',
+'atan_reverse.xml',
+'asin_reverse.xml',
+'acos_reverse.xml',
 'tan_reverse.xml',
 'erf_reverse.xml'
 ];

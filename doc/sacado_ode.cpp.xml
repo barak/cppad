@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -111,7 +111,7 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 # include &lt;Sacado.hpp&gt;
 // # include &lt;algorithm&gt;
 # include &lt;cassert&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/ode_evaluate.hpp&gt;
 
@@ -146,7 +146,7 @@ bool link_ode(
 
 	// -------------------------------------------------------------
 	while(repeat--)
-	{ 	// choose next x value
+	{	// choose next x value
 		CppAD::uniform_01(n, x);
 		for(j = 0; j &lt; n; j++)
 		{	// set up for X as the independent variable vector

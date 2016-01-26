@@ -1,0 +1,196 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>zdouble: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="zdouble: Example and Test"/>
+<meta name="keywords" id="keywords" content=" zdouble: example and test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_zdouble.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="zdouble.xml" target="_top">Prev</a>
+</td><td><a href="compare_c.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>deprecated</option>
+<option>zdouble</option>
+<option>zdouble.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>wish_list</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>deprecated-&gt;</option>
+<option>include_deprecated</option>
+<option>FunDeprecated</option>
+<option>CompareChange</option>
+<option>omp_max_thread</option>
+<option>TrackNewDel</option>
+<option>omp_alloc</option>
+<option>memory_leak</option>
+<option>epsilon</option>
+<option>test_vector</option>
+<option>cppad_ipopt_nlp</option>
+<option>old_atomic</option>
+<option>zdouble</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>zdouble-&gt;</option>
+<option>zdouble.cpp</option>
+</select>
+</td>
+<td>zdouble.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>zdouble: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+
+namespace {
+	template &lt;class Base&gt; bool test(bool is_double)
+	{	bool ok = true;
+		Base eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+
+		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   a1type;
+		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;a1type&gt; a2type;
+
+		// value during taping
+		size_t n = 2;
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Base) x(n);
+		x[0] = 0.0;
+		x[1] = 0.0;
+
+		// declare independent variable
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2x(n);
+		for (size_t j = 0; j &lt; n; j++)
+			a2x[j] = a2type( a1type(x[j]) );
+		<a href="independent.xml" target="_top">Independent</a>(a2x);
+
+		// zero and one as a2type values
+		a2type a2zero = a2type(0.0);
+		a2type a2one  = a2type(1.0);
+
+		// h(x) = x[0] / x[1] if x[1] &gt; x[0] else 1.0
+		a2type h_x = CondExpGt(a2x[1], a2x[0], a2x[0] / a2x[1], a2one);
+
+		// f(x) = h(x) if x[0] &gt; 0.0 else 0.0
+		//      = x[0] / x[1] if x[1] &gt; x[0]  and x[0] &gt; 0.0
+		//      = 1.0         if x[0] &gt;= x[1] and x[0] &gt; 0.0
+		//      = 0.0         if x[0] &lt;= 0.0
+		a2type f_x = CondExpGt(a2x[0], a2zero, h_x, a2one);
+
+		// define the function f(x)
+		size_t m = 1;
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2y(m);
+		a2y[0] = f_x;
+		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;a1type&gt; af1;
+		af1.Dependent(a2x, a2y);
+
+		// Define function g(x) = gradient of f(x)
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1x(n), a1z(n), a1w(m);
+		for (size_t j = 0; j &lt; n; j++)
+			a1x[j] = a1type(x[j]);
+		a1w[0] = a1type(1.0);
+		<a href="independent.xml" target="_top">Independent</a>(a1x);
+		af1.<a href="forward.xml" target="_top">Forward</a>(0, a1x);
+		a1z = af1.<a href="reverse.xml" target="_top">Reverse</a>(1, a1w);
+		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt; g;
+		g.Dependent(a1x, a1z);
+
+		// check result for a case where f(x) = 0.0;
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Base) z(2);
+		x[0] = 0.0;
+		x[1] = 0.0;
+		z    = g.<a href="forward.xml" target="_top">Forward</a>(0, x);
+		ok &amp;= z[0] == 0.0;
+		ok &amp;= z[1] == 0.0;
+
+		// check result for a case where f(x) = 1.0;
+		x[0] = 1.0;
+		x[1] = 0.5;
+		z    = g.<a href="forward.xml" target="_top">Forward</a>(0, x);
+		ok &amp;= z[0] == 0.0;
+		ok &amp;= z[1] == 0.0;
+
+		// check result for a case where f(x) = x[0] / x[1];
+		x[0] = 1.0;
+		x[1] = 2.0;
+		z    = g.<a href="forward.xml" target="_top">Forward</a>(0, x);
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(z[0], 1.0/x[1], eps, eps);
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(z[1], - x[0]/(x[1]*x[1]), eps, eps);
+
+		return ok;
+	}
+}
+
+bool zdouble(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	using CppAD::zdouble;
+	//
+	bool is_double = false;
+	ok &amp;= test&lt;zdouble&gt;(is_double);
+	//
+	is_double = true;
+	ok &amp;= test&lt;double&gt;(is_double);
+	//
+	return ok;
+}
+
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: test_more/zdouble.cpp
+
+</body>
+</html>

@@ -6,7 +6,7 @@
 <title>exp_eps: Operation Sequence and Zero Order Forward Sweep</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="exp_eps: Operation Sequence and Zero Order Forward Sweep"/>
-<meta name="keywords" id="keywords" content=" exp_eps: operation sequence and zero order forward sweep exp_eps example mathematical form variable parameter index code return value comparisons verification exercises "/>
+<meta name="keywords" id="keywords" content=" exp_eps: operation sequence and zero order forward sweep example mathematical form variable parameter index code return value comparisons verification exercises "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -123,9 +123,9 @@ with
  is equal to .5
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>epsilon</span></font></i></code>
- is equal to .2. 
-For this case, 
-the mathematical form for the operation sequence 
+ is equal to .2.
+For this case,
+the mathematical form for the operation sequence
 corresponding to the <code><font color="blue">exp_eps</font></code> is
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -161,7 +161,7 @@ this is the same as the mathematical form for
 <br/>
 <b><big><a name="Operation Sequence" id="Operation Sequence">Operation Sequence</a></big></b>
 <br/>
-We consider the 
+We consider the
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 
 corresponding to the algorithm <a href="exp_eps.hpp.xml" target="_top"><span style='white-space: nowrap'>exp_eps.hpp</span></a>
@@ -171,7 +171,7 @@ with the argument
  is equal to .5
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>epsilon</span></font></i></code>
- is equal to .2. 
+ is equal to .2.
 
 <br/>
 <br/>
@@ -203,29 +203,29 @@ in the zero order sweep below.
 <b><a name="Operation Sequence.Index" id="Operation Sequence.Index">Index</a></b>
 <br/>
 The Index column contains the index in the operation sequence
-of the corresponding atomic operation and variable. 
-A Forward sweep starts with the first operation 
+of the corresponding atomic operation and variable.
+A Forward sweep starts with the first operation
 and ends with the last.
 
 <br/>
 <br/>
 <b><a name="Operation Sequence.Code" id="Operation Sequence.Code">Code</a></b>
 <br/>
-The Code column contains the C++ source code corresponding 
-to the corresponding atomic operation in the sequence. 
+The Code column contains the C++ source code corresponding
+to the corresponding atomic operation in the sequence.
 
 <br/>
 <br/>
 <b><a name="Operation Sequence.Operation" id="Operation Sequence.Operation">Operation</a></b>
 <br/>
-The Operation column contains the 
+The Operation column contains the
 mathematical function corresponding to each atomic operation in the sequence.
 
 <br/>
 <br/>
 <b><a name="Operation Sequence.Zero Order" id="Operation Sequence.Zero Order">Zero Order</a></b>
 <br/>
-The Zero Order column contains the 
+The Zero Order column contains the
 <a href="exp_2_for0.xml#Zero Order Expansion" target="_top"><span style='white-space: nowrap'>zero&#xA0;order&#xA0;derivative</span></a>
 
 for the corresponding variable in the operation sequence.
@@ -244,7 +244,7 @@ i.e., in order of increasing index.
 <b>Index</b>
 	</td><td align='left'  valign='top'>
  <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
- <b>Code</b> 
+ <b>Code</b>
 	</td><td align='left'  valign='top'>
  <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
  <b>Operation</b>
@@ -563,12 +563,12 @@ or if
  were a much smaller or much larger value,
 the results of the following comparisons could be different:
 <code><font color='blue'><pre style='display:inline'> 
-	if( Type(0) &gt; x ) 
+	if( Type(0) &gt; x )
 	while(term &gt; epsilon)
 </pre></font></code>
 
 This in turn would result in a different operation sequence.
-Thus the operation sequence above only corresponds to 
+Thus the operation sequence above only corresponds to
 <a href="exp_eps.hpp.xml" target="_top"><span style='white-space: nowrap'>exp_eps.hpp</span></a>
 
 for values of 
@@ -584,7 +584,7 @@ of
 <mn>0.5</mn>
 </mrow></math>
 
- for which the comparisons would have the 
+ for which the comparisons would have the
 same result and hence the operation sequence would be the same.
 
 
@@ -594,7 +594,7 @@ same result and hence the operation sequence would be the same.
 <b><big><a name="Verification" id="Verification">Verification</a></big></b>
 <br/>
 The file <a href="exp_eps_for0.cpp.xml" target="_top"><span style='white-space: nowrap'>exp_eps_for0.cpp</span></a>
- contains a routine 
+ contains a routine
 that verifies the values computed above.
 It returns true for success and false for failure.
 
@@ -616,8 +616,8 @@ Suppose that
 </mrow></math>
 
 ,
-what is the result of a zero order forward sweep for 
-the operation sequence above; 
+what is the result of a zero order forward sweep for
+the operation sequence above;
 i.e., what are the corresponding values for
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -651,14 +651,14 @@ i.e., what are the corresponding values for
 .
 </li><li>
 
-Create a modified version of 
+Create a modified version of
 <a href="exp_eps_for0.cpp.xml" target="_top"><span style='white-space: nowrap'>exp_eps_for0.cpp</span></a>
  that verifies the values you obtained
 for the previous exercise.
 </li><li>
 
-Create and run a main program that reports the result of calling 
-the modified version 
+Create and run a main program that reports the result of calling
+the modified version
 of <a href="exp_eps_for0.cpp.xml" target="_top"><span style='white-space: nowrap'>exp_eps_for0.cpp</span></a>
  in the previous exercise.
 </li></ol>

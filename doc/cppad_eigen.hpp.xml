@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -124,7 +124,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Enables the use of the 
+Enables the use of the
 <a href="http://eigen.tuxfamily.org" target="_top"><span style='white-space: nowrap'>eigen</span></a>
 
 linear algebra package with the type 
@@ -137,7 +137,7 @@ linear algebra package with the type
 <br/>
 The files <a href="eigen_array.cpp.xml" target="_top"><span style='white-space: nowrap'>eigen_array.cpp</span></a>
  and <a href="eigen_det.cpp.xml" target="_top"><span style='white-space: nowrap'>eigen_det.cpp</span></a>
- 
+
 contain an example and test of this include file.
 It returns true if it succeeds and false otherwise.
 
@@ -146,12 +146,12 @@ It returns true if it succeeds and false otherwise.
 <b><big><a name="Include Files" id="Include Files">Include Files</a></big></b>
 <br/>
 The file <code><font color="blue">cppad_eigen.hpp</font></code> includes both
-<code><font color="blue">&lt;cppad/cppad.hpp&gt;</font></code> and <code><font color="blue">&lt;Eigen/Core&gt;</font></code>. 
+<code><font color="blue">&lt;cppad/cppad.hpp&gt;</font></code> and <code><font color="blue">&lt;Eigen/Core&gt;</font></code>.
 In addition,
 The file <a href="eigen_plugin.hpp.xml" target="_top"><span style='white-space: nowrap'>eigen_plugin.hpp</span></a>
- 
+
 is used to define <code><font color="blue">value_type</font></code>
-in the Eigen matrix class definition so its vectors are 
+in the Eigen matrix class definition so its vectors are
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
 .
 <code><font color='blue'><pre style='display:inline'> 
@@ -201,8 +201,8 @@ namespace Eigen {
 		// relaxed version of machine epsilon for comparison of different
 		// operations that should result in the same value
 		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; dummy_precision(void)
-		{	return 100. * 
-				CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon(); 
+		{	return 100. *
+				CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon();
 		}
 
 		// minimum normalized positive value
@@ -240,23 +240,23 @@ namespace CppAD {
 		{	return x * x; }
 }
 
-namespace Eigen { 
+namespace Eigen {
 	namespace internal {
 
-		template&lt;class Base&gt; 
+		template&lt;class Base&gt;
 		struct significant_decimals_default_impl&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;, false&gt;
 		{	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; Scalar;
 
-  			typedef typename NumTraits&lt;Scalar&gt;::Real RealScalar;
-  			static inline int run()
-  			{	Scalar neg_log_eps = - log(
+			typedef typename NumTraits&lt;Scalar&gt;::Real RealScalar;
+			static inline int run()
+			{	Scalar neg_log_eps = - log(
 					NumTraits&lt;RealScalar&gt;::epsilon()
 				);
 				int ceil_neg_log_eps = Integer( neg_log_eps );
 				if( Scalar(ceil_neg_log_eps) &lt; neg_log_eps )
 					ceil_neg_log_eps++;
 				return ceil_neg_log_eps;
-  			}
+			}
 		};
 	}
 }

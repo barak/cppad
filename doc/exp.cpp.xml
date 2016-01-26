@@ -6,7 +6,7 @@
 <title>The AD exp Function: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The AD exp Function: Example and Test"/>
-<meta name="keywords" id="keywords" content=" the ad exp function: example and test Ad "/>
+<meta name="keywords" id="keywords" content=" the ad exp function: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,8 +22,8 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="cosh.cpp.xml" target="_top">Prev</a>
-</td><td><a href="log.cpp.xml" target="_top">Next</a>
+<td><a href="exp.xml" target="_top">Prev</a>
+</td><td><a href="log.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -40,49 +40,53 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>std_math_ad</option>
+<option>unary_standard_math</option>
+<option>exp</option>
 <option>exp.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>AD-&gt;</option>
-<option>ad_ctor</option>
-<option>ad_assign</option>
-<option>Convert</option>
-<option>ADValued</option>
-<option>BoolValued</option>
-<option>VecAD</option>
-<option>base_require</option>
-</select>
-</td>
-<td>
-<select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
+<select onchange='choose_down2(this)'>
+<option>unary_standard_math-&gt;</option>
+<option>acos</option>
+<option>asin</option>
+<option>atan</option>
+<option>cos</option>
+<option>cosh</option>
+<option>exp</option>
+<option>log</option>
+<option>log10</option>
+<option>sin</option>
+<option>sinh</option>
+<option>sqrt</option>
+<option>tan</option>
+<option>tanh</option>
+<option>abs</option>
+<option>acosh</option>
+<option>asinh</option>
+<option>atanh</option>
+<option>erf</option>
+<option>expm1</option>
+<option>log1p</option>
+<option>sign</option>
+</select>
+</td>
+<td>
 <select onchange='choose_down1(this)'>
-<option>std_math_ad-&gt;</option>
-<option>Acos.cpp</option>
-<option>Asin.cpp</option>
-<option>atan.cpp</option>
-<option>cos.cpp</option>
-<option>cosh.cpp</option>
+<option>exp-&gt;</option>
 <option>exp.cpp</option>
-<option>log.cpp</option>
-<option>log10.cpp</option>
-<option>sin.cpp</option>
-<option>sinh.cpp</option>
-<option>sqrt.cpp</option>
-<option>tan.cpp</option>
-<option>tanh.cpp</option>
 </select>
 </td>
 <td>exp.cpp</td>
@@ -97,54 +101,54 @@ A:active { color : purple }
 # include &lt;cppad/cppad.hpp&gt;
 # include &lt;cmath&gt;
 
-bool Exp(void)
+bool exp(void)
 {	bool ok = true;
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
 
 	// domain space vector
 	size_t n  = 1;
 	double x0 = 0.5;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
+	ax[0]     = x0;
 
 	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = CppAD::exp(x[0]);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
+	ay[0] = CppAD::exp(ax[0]);
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
-	// check value 
+	// check value
 	double check = std::exp(x0);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , check,  1e-10 , 1e-10);
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[0], check,  eps, eps);
 
 	// forward computation of first partial w.r.t. x[0]
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
 	dx[0] = 1.;
 	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	check = std::exp(x0);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check, 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check, eps, eps);
 
 	// reverse computation of derivative of y[0]
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
 	w[0]  = 1.;
 	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check, 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check, eps, eps);
 
 	// use a VecAD&lt;Base&gt;::reference object with exp
 	CppAD::VecAD&lt;double&gt; v(1);
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
 	v[zero]           = x0;
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; result = CppAD::exp(v[zero]);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(result, check, 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(result, check, eps, eps);
 
 	return ok;
 }

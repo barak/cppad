@@ -1,9 +1,9 @@
-/* $Id: test_more.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
+// $Id: test_more.cpp 3768 2015-12-28 18:58:35Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -14,28 +14,33 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # include <iostream>
 
 // memory leak checker
-# include <cppad/thread_alloc.hpp>
+# include <cppad/utility/thread_alloc.hpp>
 
 // prototype external compiled tests (this line expected by bin/new_test.sh)
 extern bool abs(void);
-extern bool Acos(void);
+extern bool acos(void);
+extern bool acosh(void);
 extern bool adfun_copy(void);
 extern bool Add(void);
 extern bool AddEq(void);
 extern bool AddZero(void);
 extern bool alloc_openmp(void);
-extern bool Asin(void);
+extern bool asin(void);
+extern bool asinh(void);
 extern bool assign(void);
-extern bool Atan(void);
+extern bool atan(void);
+extern bool atanh(void);
 extern bool atan2(void);
+extern bool azmul(void);
 extern bool base_adolc(void);
 extern bool base_alloc_test(void);
 extern bool check_simple_vector(void);
 extern bool checkpoint(void);
 extern bool Compare(void);
-extern bool CompareChange(void);
+extern bool compare_change(void);
 extern bool CondExp(void);
 extern bool CondExpAD(void);
+extern bool cond_exp_rev(void);
 extern bool copy(void);
 extern bool Cos(void);
 extern bool Cosh(void);
@@ -44,8 +49,9 @@ extern bool dbl_epsilon(void);
 extern bool Div(void);
 extern bool DivEq(void);
 extern bool DivZeroOne(void);
-extern bool Erf(void);
+extern bool erf(void);
 extern bool Exp(void);
+extern bool expm1(void);
 extern bool ForHess(void);
 extern bool for_sparse_jac(void);
 extern bool Forward(void);
@@ -55,16 +61,26 @@ extern bool FromBase(void);
 extern bool FunCheck(void);
 extern bool ipopt_solve(void);
 extern bool jacobian(void);
-extern bool limits(void);
-extern bool Log(void);
-extern bool Log10(void);
+extern bool log(void);
+extern bool log10(void);
+extern bool log1p(void);
 extern bool Mul(void);
 extern bool mul_level(void);
+extern bool mul_cond_rev(void);
+extern bool mul_cskip(void);
 extern bool MulEq(void);
+extern bool mul_zdouble(void);
 extern bool MulZeroOne(void);
 extern bool NearEqualExt(void);
 extern bool Neg(void);
+extern bool num_limits(void);
 extern bool ode_err_control(void);
+extern bool old_mat_mul(void);
+extern bool old_reciprocal(void);
+extern bool old_tan(void);
+extern bool old_usead_1(void);
+extern bool old_usead_2(void);
+extern bool omp_alloc(void);
 extern bool optimize(void);
 extern bool parameter(void);
 extern bool Poly(void);
@@ -91,12 +107,14 @@ extern bool Sub(void);
 extern bool SubEq(void);
 extern bool SubZero(void);
 extern bool tan(void);
+extern bool to_string(void);
 extern bool test_vector(void);
 extern bool track_new_del(void);
 extern bool Value(void);
 extern bool VecAD(void);
 extern bool VecADPar(void);
 extern bool VecUnary(void);
+extern bool zdouble(void);
 
 namespace {
 	// function that runs one test
@@ -104,7 +122,7 @@ namespace {
 	static size_t Run_error_count = 0;
 	bool Run(bool TestOk(void), std::string name)
 	{	bool ok               = true;
-		std::streamsize width =  20;         
+		std::streamsize width =  20;
 		std::cout.width( width );
 		std::cout.setf( std::ios_base::left );
 		std::cout << name;
@@ -128,25 +146,30 @@ int main(void)
 {	bool ok = true;
 	using namespace std;
 
-	// This line is used by test_one.sh 
+	// This line is used by test_one.sh
 
 	// run external compiled tests (this line expected by bin/new_test.sh)
 	ok &= Run( abs,             "abs"            );
-	ok &= Run( Acos,            "Acos"           );
+	ok &= Run( acos,            "acos"           );
+	ok &= Run( acosh,           "acosh"          );
 	ok &= Run( adfun_copy,      "adfun_copy"     );
 	ok &= Run( Add,             "Add"            );
 	ok &= Run( AddEq,           "AddEq"          );
 	ok &= Run( AddZero,         "AddZero"        );
-	ok &= Run( Asin,            "Asin"           );
+	ok &= Run( asin,            "asin"           );
+	ok &= Run( asinh,           "asinh"          );
 	ok &= Run( assign,          "assign"         );
-	ok &= Run( Atan,            "Atan"           );
+	ok &= Run( atan,            "atan"           );
+	ok &= Run( atanh,           "atanh"          );
 	ok &= Run( atan2,           "atan2"          );
+	ok &= Run( azmul,           "azmul"          );
 	ok &= Run( check_simple_vector, "check_simple_vector" );
 	ok &= Run( checkpoint,      "checkpoint"     );
 	ok &= Run( Compare,         "Compare"        );
-	ok &= Run( CompareChange,   "CompareChange"  );
+	ok &= Run( compare_change,  "compare_change" );
 	ok &= Run( CondExp,         "CondExp"        );
 	ok &= Run( CondExpAD,       "CondExpAD"      );
+	ok &= Run( cond_exp_rev,    "cond_exp_rev"   );
 	ok &= Run( copy,            "copy"           );
 	ok &= Run( Cos,             "Cos"            );
 	ok &= Run( Cosh,            "Cosh"           );
@@ -154,8 +177,9 @@ int main(void)
 	ok &= Run( Div,             "Div"            );
 	ok &= Run( DivEq,           "DivEq"          );
 	ok &= Run( DivZeroOne,      "DivZeroOne"     );
-	ok &= Run( Erf,             "Erf"            );
+	ok &= Run( erf,             "erf"            );
 	ok &= Run( Exp,             "Exp"            );
+	ok &= Run( expm1,           "expm1"          );
 	ok &= Run( ForHess,         "ForHess"        );
 	ok &= Run( for_sparse_jac,  "for_sparse_jac" );
 	ok &= Run( Forward,         "Forward"        );
@@ -164,16 +188,26 @@ int main(void)
 	ok &= Run( FromBase,        "FromBase"       );
 	ok &= Run( FunCheck,        "FunCheck"       );
 	ok &= Run( jacobian,        "jacobian"       );
-	ok &= Run( limits,          "limits"         );
-	ok &= Run( Log,             "Log"            );
-	ok &= Run( Log10,           "Log10"          );
+	ok &= Run( log,             "log"            );
+	ok &= Run( log10,           "log10"          );
+	ok &= Run( log1p,           "log1p"          );
 	ok &= Run( Mul,             "Mul"            );
 	ok &= Run( mul_level,       "mul_level"      );
+	ok &= Run( mul_cond_rev,    "mul_cond_rev"   );
+	ok &= Run( mul_cskip,       "Mul_cskip"      );
 	ok &= Run( MulEq,           "MulEq"          );
+	ok &= Run( mul_zdouble,     "mul_zdouble"    );
 	ok &= Run( MulZeroOne,      "MulZeroOne"     );
 	ok &= Run( NearEqualExt,    "NearEqualExt"   );
 	ok &= Run( Neg,             "Neg"            );
+	ok &= Run( num_limits,      "num_limits"     );
 	ok &= Run( ode_err_control, "ode_err_control");
+	ok &= Run( old_mat_mul,     "old_mat_mul"    );
+	ok &= Run( old_reciprocal,  "old_reciprocal" );
+	ok &= Run( old_tan,         "old_tan"        );
+	ok &= Run( old_usead_1,     "old_usead_1"    );
+	ok &= Run( old_usead_2,     "old_usead_2"    );
+	ok &= Run( omp_alloc,       "omp_alloc"      );
 	ok &= Run( optimize,        "optimize"       );
 	ok &= Run( parameter,       "parameter"      );
 	ok &= Run( Poly,            "Poly"           );
@@ -200,11 +234,13 @@ int main(void)
 	ok &= Run( SubEq,           "SubEq"          );
 	ok &= Run( SubZero,         "SubZero"        );
 	ok &= Run( tan,             "tan"            );
+	ok &= Run( to_string,       "to_string"      );
 	ok &= Run( track_new_del,   "track_new_del"  );
 	ok &= Run( Value,           "Value"          );
 	ok &= Run( VecAD,           "VecAD"          );
 	ok &= Run( VecADPar,        "VecADPar"       );
 	ok &= Run( VecUnary,        "VecUnary"       );
+	ok &= Run( zdouble,         "zdouble"        );
 # ifdef CPPAD_ADOLC_TEST
 	ok &= Run( base_adolc,      "base_adolc"     );
 # endif

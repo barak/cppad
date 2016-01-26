@@ -1,9 +1,9 @@
-/* $Id: atomic.cpp 3505 2014-12-26 15:06:54Z bradbell $ */
+// $Id: atomic.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -17,7 +17,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # include <cassert>
 
 // for thread_alloc
-# include <cppad/thread_alloc.hpp>
+# include <cppad/utility/thread_alloc.hpp>
 
 // external complied tests
 extern bool checkpoint(void);
@@ -26,12 +26,8 @@ extern bool hes_sparse(void);
 extern bool mat_mul(void);
 extern bool norm_sq(void);
 extern bool reciprocal(void);
+extern bool sparsity(void);
 extern bool tangent(void);
-extern bool old_mat_mul(void);
-extern bool old_reciprocal(void);
-extern bool old_tan(void);
-extern bool old_usead_1(void);
-extern bool old_usead_2(void);
 
 namespace {
 	// function that runs one test
@@ -65,12 +61,8 @@ int main(void)
 	ok &= Run( mat_mul,             "mat_mul"        );
 	ok &= Run( norm_sq,             "norm_sq"        );
 	ok &= Run( reciprocal,          "reciprocal"     );
+	ok &= Run( sparsity,            "sparsity"       );
 	ok &= Run( tangent,             "tangent"        );
-	ok &= Run( old_mat_mul,         "old_mat_mul"    );
-	ok &= Run( old_reciprocal,      "old_reciprocal" );
-	ok &= Run( old_tan,             "old_tan"        );
-	ok &= Run( old_usead_1,         "old_usead_1"    );
-	ok &= Run( old_usead_2,         "old_usead_2"    );
 
 	// check for errors
 	using std::cout;

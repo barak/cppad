@@ -9,7 +9,7 @@ var list_up0 = [
 'cppad.xml',
 'ad.xml',
 'advalued.xml',
-'mathother.xml',
+'unary_standard_math.xml',
 'abs.xml'
 ];
 var list_down3 = [
@@ -23,33 +23,46 @@ var list_down3 = [
 ];
 var list_down2 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_down1 = [
+'acos.xml',
+'asin.xml',
+'atan.xml',
+'cos.xml',
+'cosh.xml',
+'exp.xml',
+'log.xml',
+'log10.xml',
+'sin.xml',
+'sinh.xml',
+'sqrt.xml',
+'tan.xml',
+'tanh.xml',
 'abs.xml',
-'sign.xml',
-'atan2.xml',
+'acosh.xml',
+'asinh.xml',
+'atanh.xml',
 'erf.xml',
-'pow.xml',
-'limits.xml'
+'expm1.xml',
+'log1p.xml',
+'sign.xml'
 ];
 var list_down0 = [
 'abs.cpp.xml'
 ];
 var list_current0 = [
 'abs.xml#Syntax',
-'abs.xml#Purpose',
-'abs.xml#x',
-'abs.xml#y',
-'abs.xml#Operation Sequence',
+'abs.xml#x, y',
+'abs.xml#Atomic',
 'abs.xml#Complex Types',
 'abs.xml#Derivative',
-'abs.xml#Example',
-'abs.xml#Old Derivative'
+'abs.xml#Example'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

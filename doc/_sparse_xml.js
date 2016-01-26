@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -44,7 +44,9 @@ var list_down1 = [
 var list_down0 = [
 'forsparsejac.xml',
 'revsparsejac.xml',
-'revsparsehes.xml'
+'dependency.cpp.xml',
+'revsparsehes.xml',
+'bool_sparsity.cpp.xml'
 ];
 var list_current0 = [
 'sparse.xml#Contents'

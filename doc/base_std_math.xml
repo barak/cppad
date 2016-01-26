@@ -6,7 +6,7 @@
 <title>Base Type Requirements for Standard Math Functions</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Base Type Requirements for Standard Math Functions"/>
-<meta name="keywords" id="keywords" content=" base type requirements for standard math functions require purpose unary cppad_standard_math_unary Cppad_standard_math_unary erf sign pow isnan limits numeric Base numeric_limits epsilon "/>
+<meta name="keywords" id="keywords" content=" base type requirements for standard math functions purpose unary cppad_standard_math_unary erf asinh acosh atanh expm1 log1p sign pow isnan "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="base_ordered.xml" target="_top">Prev</a>
-</td><td><a href="base_example.xml" target="_top">Next</a>
+</td><td><a href="base_limits.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -79,6 +79,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -89,12 +91,10 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>Unary Standard Math</option>
 <option>CPPAD_STANDARD_MATH_UNARY</option>
-<option>erf</option>
+<option>erf, asinh, acosh, atanh, expm1, log1p</option>
 <option>sign</option>
 <option>pow</option>
 <option>isnan</option>
-<option>limits</option>
-<option>---..epsilon</option>
 </select>
 </td>
 </tr></table><br/>
@@ -113,9 +113,6 @@ These definitions are required for the user's code to use the type
 <br/>
 <br/>
 <b><big><a name="Unary Standard Math" id="Unary Standard Math">Unary Standard Math</a></big></b>
- 
-
-
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -124,7 +121,7 @@ unary standard math functions (in the CppAD namespace):
 <table><tr><td align='left'  valign='top'>
 
 <b>Syntax</b> </td><td align='left'  valign='top'>
- <b>Result</b> 
+ <b>Result</b>
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -190,7 +187,7 @@ unary standard math functions (in the CppAD namespace):
 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;tan(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
   </td><td align='left'  valign='top'>
- tangent           
+ tangent
 </td></tr>
 </table>
 where the arguments and return value have the prototypes
@@ -207,7 +204,6 @@ For example,
 <br/>
 <br/>
 <b><big><a name="CPPAD_STANDARD_MATH_UNARY" id="CPPAD_STANDARD_MATH_UNARY">CPPAD_STANDARD_MATH_UNARY</a></big></b>
-
 <br/>
 The macro invocation, within the CppAD namespace,
 
@@ -225,43 +221,66 @@ This macro uses the functions
 must be defined and have the same prototype as 
 <code><font color="blue"><span style='white-space: nowrap'>CppAD::</span></font><i><font color="black"><span style='white-space: nowrap'>Fun</span></font></i></code>
 .
-For example, 
+For example,
 <a href="base_float.hpp.xml#Unary Standard Math" target="_top"><span style='white-space: nowrap'>float</span></a>
 .
 
 <br/>
 <br/>
-<b><big><a name="erf" id="erf">erf</a></big></b>
-
-
-
+<b><big><a name="erf, asinh, acosh, atanh, expm1, log1p" id="erf, asinh, acosh, atanh, expm1, log1p">erf, asinh, acosh, atanh, expm1, log1p</a></big></b>
 <br/>
-If the error function is supported by the compiler,
-<a href="erf.xml#Method.CPPAD_COMPILER_HAS_ERF" target="_top"><span style='white-space: nowrap'>CPPAD_COMPILER_HAS_ERF</span></a>
-
-is one,
-the type 
+If this preprocessor symbol
+<code><font color="blue">CPPAD_USE_CPLUSPLUS_2011</font></code> is true (<code><font color="blue">1</font></code>),
+when compiling for c++11, the type
+<code><font color="blue">double</font></code> is supported for the functions listed below.
+In this case, the type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- must support the syntax
+ must also support these functions:
+<table><tr><td align='left'  valign='top'>
+
+<b>Syntax</b> </td><td align='left'  valign='top'>
+ <b>Result</b>
+</td></tr><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;erf(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+    </td><td align='left'  valign='top'>
+ error function                </td></tr><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;asinh(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+  </td><td align='left'  valign='top'>
+ inverse hyperbolic sin        </td></tr><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;acosh(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+  </td><td align='left'  valign='top'>
+ inverse hyperbolic cosine     </td></tr><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;atanh(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+  </td><td align='left'  valign='top'>
+ inverse hyperbolic tangent    </td></tr><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;expm1(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+  </td><td align='left'  valign='top'>
+ exponential of x minus one    </td></tr><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;log1p(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+  </td><td align='left'  valign='top'>
+ logarithm of one plus x
+</td></tr>
+</table>
+where the arguments and return value have the prototypes
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;CppAD::erf(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-where 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- and 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- have the same prototype as above.
-For example, see
-<a href="base_alloc.hpp.xml#erf" target="_top"><span style='white-space: nowrap'>base_alloc</span></a>
-.
-
-<br/>
 <br/>
 <b><big><a name="sign" id="sign">sign</a></big></b>
-
-
-
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -325,9 +344,6 @@ the <code><font color="blue">code sign</font></code> function should generate an
 <br/>
 <br/>
 <b><big><a name="pow" id="pow">pow</a></big></b>
-
-
-
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -371,8 +387,6 @@ For example, see
 <br/>
 <br/>
 <b><big><a name="isnan" id="isnan">isnan</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -384,41 +398,6 @@ For example, see
 .
 
 
-<br/>
-<br/>
-<b><big><a name="limits" id="limits">limits</a></big></b>
-
-
-
-<br/>
-The <a href="limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
- functions
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;CppAD::numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::epsilon()<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;CppAD::numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::min()<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;CppAD::numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::max()<br/>
-</span></font></code>
-must return machine epsilon,
-minimum positive normalize value,
-and maximum finite value for the type 
-<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
-.
-
-<br/>
-<br/>
-<b><a name="limits.epsilon" id="limits.epsilon">epsilon</a></b>
-<br/>
-The deprecated function <a href="epsilon.xml" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
- function
-must also be included. It can be implemented using
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-namespace&#xA0;CppAD&#xA0;{<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;template&#xA0;&lt;&gt;&#xA0;inline&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;epsilon&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(void)<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{&#xA0;&#xA0;&#xA0;&#xA0;return&#xA0;numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::epsilon();&#xA0;}<br/>
-}<br/>
-</span></font></code>
 
 <hr/>Input File: cppad/local/base_std_math.hpp
 

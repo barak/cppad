@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: get_adolc.sh 3488 2014-12-19 12:04:15Z bradbell $
+# $Id: get_adolc.sh 3730 2015-09-23 15:56:53Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -19,15 +19,12 @@
 # $$
 #
 # $section Download and Install Adolc in Build Directory$$
-# $index adolc, download and install$$
-# $index download, install adolc$$
-# $index install, adolc$$ 
 #
 # $head Syntax$$
 # $code bin/get_adolc.sh$$
 #
 # $head Purpose$$
-# If you are using Unix, this command will download and install 
+# If you are using Unix, this command will download and install
 # $href%https://projects.coin-or.org/ADOL-C%ADOL-C%$$ in the
 # CppAD $code build$$ directory.
 #
@@ -36,7 +33,7 @@
 # $code ColPack$$ (coloring algorithms used for sparse matrix derivatives).
 #
 # $head Distribution Directory$$
-# This command must be executed in the 
+# This command must be executed in the
 # $cref/distribution directory/download/Distribution Directory/$$.
 #
 # $head External Directory$$
@@ -74,7 +71,14 @@ echo 'Download adolc to build/external and install it to build/prefix'
 #	http://list.coin-or.org/pipermail/adol-c/2014-December/001023.html
 version='2.4.1'
 web_page="http://www.coin-or.org/download/source/ADOL-C"
-prefix=`pwd`'/build/prefix'
+cppad_dir=`pwd`
+prefix="$cppad_dir/build/prefix"
+installed_flag="build/external/adolc-${version}.installed"
+if [ -e "$installed_flag" ]
+then
+	echo "$installed_flag exists: Skipping get_adolc.sh"
+	exit 0
+fi
 # --------------------------------------------------------------------------
 if [ -e /usr/lib64 ]
 then
@@ -109,12 +113,7 @@ system=`uname | tr [A-Z] [a-z] | sed -e 's|\([a-z][a-z]*\).*|\1|'`
 # -----------------------------------------------------------------------------
 if which autoconf >& /dev/null
 then
-	ac_version=`autoconf --version | sed -n -e '/^autoconf/p' | \
-		sed -e 's|[^0-9]*\([0-9.]*\)[.]\([0-9]*\).*|\1 * 100 + \2|' | bc`
-	if [ "$ac_version" -ge 267 ]
-	then
-		echo_eval autoreconf -f -i
-	fi
+	echo_eval autoreconf --install --force
 fi
 # -----------------------------------------------------------------------------
 if [ ! -e build ]
@@ -134,4 +133,5 @@ fi
 echo_eval ../configure $flags
 echo_eval make install
 # -----------------------------------------------------------------------------
+echo_eval touch $cppad_dir/$installed_flag
 echo "get_adolc: OK"

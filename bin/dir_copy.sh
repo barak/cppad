@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: dir_copy.sh 2683 2012-12-30 18:17:03Z bradbell $
+# $Id: dir_copy.sh 3768 2015-12-28 18:58:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -15,7 +15,7 @@ then
 	echo "bin/dir_copy.sh: must be executed from its parent directory"
 	exit 1
 fi
-if [ "$3" == "" ] 
+if [ "$3" == "" ]
 then
 	echo "usage: bin/dir_copy.sh file_list direction dir"
 	echo "	file_list: a file containing a list of file names to copy,"
@@ -76,4 +76,6 @@ else
 		cp $directory/$path $path
 	done
 fi
+# ----------------------------------------------------------------------------
+echo "$0: OK"
 exit 0

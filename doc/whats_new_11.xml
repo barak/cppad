@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,17 +66,19 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
@@ -197,23 +199,21 @@ assist you in learning about changes between various versions of CppAD.
 There was a bug when using <a href="abs.xml" target="_top"><span style='white-space: nowrap'>abs</span></a>
  with an <code><font color="blue">AD&lt; AD&lt;double&gt; &gt;</font></code>
 argument, whereby the corresponding <code><font color="blue">AD&lt;double&gt;</font></code> operation sequence
-depended on the value of the argument to the <code><font color="blue">abs</font></code> function.  
+depended on the value of the argument to the <code><font color="blue">abs</font></code> function.
 </li><li>
 
 Change the specifications for the derivative of the <a href="abs.xml" target="_top"><span style='white-space: nowrap'>abs</span></a>
 
 function to be the <a href="sign.xml" target="_top"><span style='white-space: nowrap'>sign</span></a>
- function; see to 
-<a href="abs.xml#Old Derivative" target="_top"><span style='white-space: nowrap'>old&#xA0;derivative</span></a>
- specifications.
+ function instead of a directional derivative.
 </li><li>
 
 Add the <a href="sign.xml" target="_top"><span style='white-space: nowrap'>sign</span></a>
  function to the 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  list of
-available functions. 
-In addition, add the 
+available functions.
+In addition, add the
 <a href="base_std_math.xml#sign" target="_top"><span style='white-space: nowrap'>sign</span></a>
  function to the list of
 <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base&#xA0;type&#xA0;requirements</span></a>
@@ -234,14 +234,14 @@ This has been fixed.
 <br/>
 <b><big><a name="12-21" id="12-21">12-21</a></big></b>
 <br/>
-The types 
+The types
 <code><font color="blue">SizeVector</font></code>,
 <code><font color="blue">NumberVector</font></code>,
 <code><font color="blue">ADNumber</font></code>, and
 <code><font color="blue">ADVector</font></code>,
-were in the global namespace and this was causing warnings 
-about the shadowing of these declarations. 
-The 
+were in the global namespace and this was causing warnings
+about the shadowing of these declarations.
+The
 <a href="cppad_ipopt_nlp.xml#cppad_ipopt namespace" target="_top"><span style='white-space: nowrap'>cppad_ipopt&#xA0;namespace</span></a>
 
 was created to avoid these problems.
@@ -264,7 +264,7 @@ and <code><font color="blue">team_stop</font></code> to <a href="team_thread.hpp
 .
 </li><li>
 
-Change <code><font color="blue">NDEBUG</font></code> mentions to include link to 
+Change <code><font color="blue">NDEBUG</font></code> mentions to include link to
 <a href="faq.xml#Speed.NDEBUG" target="_top"><span style='white-space: nowrap'>NDEBUG</span></a>
 .
 </li><li>
@@ -279,7 +279,7 @@ Improve <a href="memory_leak.xml" target="_top"><span style='white-space: nowrap
 <b><big><a name="11-29" id="11-29">11-29</a></big></b>
 <br/>
 THe <a href="time_test.xml" target="_top"><span style='white-space: nowrap'>time_test</span></a>
- routine was still executing the 
+ routine was still executing the
 test at least twice, even if that was not necessary for the specified
 minimum time. This has been fixed.
 
@@ -304,13 +304,13 @@ preprocessor symbols that are in the CppAD API.
 <br/>
 <b><big><a name="11-21" id="11-21">11-21</a></big></b>
 <br/>
-Separate <a href="installunix.xml#--with-testvector" target="_top"><span style='white-space: nowrap'>--with-boostvector</span></a>
+Separate <a href="auto_tools.xml#--with-testvector" target="_top"><span style='white-space: nowrap'>--with-boostvector</span></a>
 
-for <a href="installunix.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
+for <a href="auto_tools.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
 .
 This enables one to specify 
 <code><i><font color="black"><span style='white-space: nowrap'>boost_dir</span></font></i></code>
- for 
+ for
 <a href="team_bthread.cpp.xml" target="_top"><span style='white-space: nowrap'>team_bthread.cpp</span></a>
  with out using boost vectors.
 
@@ -323,7 +323,7 @@ Move <code><font color="blue">sum_i_inv.cpp</font></code> to <a href="harmonic.c
 .
 </li><li>
 
-Include the date, time, CppAD version, and 
+Include the date, time, CppAD version, and
 <a href="team_thread.hpp.xml#team_name" target="_top"><span style='white-space: nowrap'>team_name</span></a>
  in the
 <a href="thread_test.cpp.xml" target="_top"><span style='white-space: nowrap'>thread_test.cpp</span></a>
@@ -362,7 +362,7 @@ test so that an extra call is not necessary (to make the tests run faster
 when only a few repetitions are necessary).
 </li></ol>
 
- 
+
 
 <br/>
 <br/>
@@ -373,7 +373,7 @@ Create another speed testing routine <a href="time_test.xml" target="_top"><span
  which is
 like <a href="speed_test.xml" target="_top"><span style='white-space: nowrap'>speed_test</span></a>
  but it returns the time instead of rate
-and as a <code><font color="blue">double</font></code> instead of a <code><font color="blue">size_t</font></code>. 
+and as a <code><font color="blue">double</font></code> instead of a <code><font color="blue">size_t</font></code>.
 The use it for the timing tests in
 <code><font color="blue">sum_i_inv_time.cpp</font></code> and <a href="multi_newton_time.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
 .
@@ -486,7 +486,7 @@ Update the README file.
 Remove the <code><font color="blue">bug/optimize.sh</font></code> file (no longer a bug).
 </li><li>
 
-Make <code><font color="blue">arc_tan.cpp</font></code> 
+Make <code><font color="blue">arc_tan.cpp</font></code>
 utility that can be used by multiple multi-threading tests.
 </li><li>
 
@@ -536,7 +536,7 @@ unless <code><font color="blue">pthread_barrier_wait</font></code> is present.
 </li><li>
 
 The <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
- routine has been changed to 
+ routine has been changed to
 <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
  the functions 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -560,9 +560,9 @@ The <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap
 <b><big><a name="09-06" id="09-06">09-06</a></big></b>
 
 <ol type="1"><li>
-Add the 
+Add the
 <a href="http://www.boost.org/doc/libs/1_47_0/doc/html/thread.html" target="_top"><span style='white-space: nowrap'>boost&#xA0;multi-threading</span></a>
- 
+
 examples <a href="a11c_bthread.cpp.xml" target="_top"><span style='white-space: nowrap'>a11c_bthread.cpp</span></a>
  and <code><font color="blue">bthread_simple_ad.cpp</font></code>.
 </li><li>
@@ -590,13 +590,13 @@ including avoiding a <a href="team_pthread.cpp.xml#Bug in Cygwin" target="_top">
 <b><big><a name="09-02" id="09-02">09-02</a></big></b>
 
 <ol type="1"><li>
-The OpenMP speed test program <code><font color="blue">openmp/run.cpp</font></code> was not setting 
+The OpenMP speed test program <code><font color="blue">openmp/run.cpp</font></code> was not setting
 the number of threads for the one thread case (so dynamic thread adjustment was
 used). This has been fixed.
 </li><li>
 
 The <a href="thread_alloc.cpp.xml" target="_top"><span style='white-space: nowrap'>thread_alloc.cpp</span></a>
- example was missing from the 
+ example was missing from the
 Microsoft <code><font color="blue">example/example.vcproj</font></code> file and a attempt was made
 to link to missing OpenMP routines (this has been fixed).
 In addition,
@@ -604,16 +604,16 @@ some Microsoft compiler warning have been fixed; see the examples and tests
 in the Windows install instructions.
 </li><li>
 
-There was an oversight, 
+There was an oversight,
 and <code><font color="blue">CPPAD_MAX_NUM_THREAD</font></code>
 was being set to 2 when <code><font color="blue">_OPENMP</font></code> was not defined.
-This has been fixed and 
+This has been fixed and
 <a href="multi_thread.xml#CPPAD_MAX_NUM_THREADS" target="_top"><span style='white-space: nowrap'>CPPAD_MAX_NUM_THREADS</span></a>
- 
+
 has been documented and is now part of the CppAD API.
 </li><li>
 
-The <code><font color="blue">pthread_simple_ad.cpp</font></code> test failed under cygwin. 
+The <code><font color="blue">pthread_simple_ad.cpp</font></code> test failed under cygwin.
 This was because the previous test <code><font color="blue">openmp_ad.cpp</font></code> was
 set up calls to OpenMP routines that were still in effect
 when <code><font color="blue">pthread/simple_ad</font></code> ran.
@@ -639,7 +639,7 @@ changes from svn revision 2060 to revision 2081 in the branch
 
 These changes are described below under the headings
 <a href="whats_new_11.xml#09-01.08-21" target="_top"><span style='white-space: nowrap'>08-21</span></a>
- through 
+ through
 <a href="whats_new_11.xml#09-01.08-31" target="_top"><span style='white-space: nowrap'>08-31</span></a>
 .
 </li><li>
@@ -655,7 +655,7 @@ In addition, <a href="old_tan.cpp.xml" target="_top"><span style='white-space: n
 case and this has also been fixed (in addition to including an example
 for this case).
 </li></ol>
- 
+
 
 <br/>
 <br/>
@@ -667,7 +667,7 @@ Move the <code><font color="blue">sum_i_inv_time.cpp</font></code> test from
 </li><li>
 
 Change <code><font color="blue">--with-openmp</font></code> to
-<a href="installunix.xml#openmp_flags" target="_top"><span style='white-space: nowrap'>OPENMP_FLAGS=openmp_flags</span></a>
+<a href="auto_tools.xml#openmp_flags" target="_top"><span style='white-space: nowrap'>OPENMP_FLAGS=openmp_flags</span></a>
  configure
 command line argument.
 </li></ol>
@@ -678,10 +678,10 @@ command line argument.
 <b><a name="09-01.08-30" id="09-01.08-30">08-30</a></b>
 
 <ol type="1"><li>
-Create the <code><font color="blue">openmp/run.cpp</font></code> program 
+Create the <code><font color="blue">openmp/run.cpp</font></code> program
 and move the <code><font color="blue">openmp_multi_newton.cpp</font></code> test from
 <code><font color="blue">openmp/run.sh</font></code> to <code><font color="blue">openmp/run.cpp</font></code>.
-This uses <a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+This uses <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
 
 information for building the tests.
 </li><li>
@@ -690,9 +690,9 @@ Document the <code><font color="blue">--with-openmp</font></code> configure
 command line argument.
 </li><li>
 
-Move <code><font color="blue">openmp/multi_newton.hpp</font></code> to 
+Move <code><font color="blue">openmp/multi_newton.hpp</font></code> to
 <code><font color="blue">openmp/newton_method.hpp</font></code> and
-<code><font color="blue">openmp/multi_newton.cpp</font></code> to 
+<code><font color="blue">openmp/multi_newton.cpp</font></code> to
 <code><font color="blue">openmp/newton_example.cpp</font></code>.
 </li></ol>
 
@@ -704,7 +704,7 @@ Move <code><font color="blue">openmp/multi_newton.hpp</font></code> to
 <ol type="1"><li>
 Replace <a href="omp_alloc.xml" target="_top"><span style='white-space: nowrap'>omp_alloc</span></a>
  by <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
- in 
+ in
 <a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi_thread</span></a>
 , the section on how to use CppAD in parallel.
 </li><li>
@@ -720,12 +720,12 @@ pthread library.
 In addition, fix some problems in <code><font color="blue">openmp_simple_ad.cpp</font></code>
 </li><li>
 
-Move <code><font color="blue">openmp/example_a11c.cpp</font></code> to 
+Move <code><font color="blue">openmp/example_a11c.cpp</font></code> to
 <a href="a11c_openmp.cpp.xml" target="_top"><span style='white-space: nowrap'>example/a11c_openmp.cpp</span></a>
 .
 </li><li>
 
-Move <code><font color="blue">openmp/parallel_ad.cpp</font></code> to 
+Move <code><font color="blue">openmp/parallel_ad.cpp</font></code> to
 <code><font color="blue">openmp_simple_ad.cpp</font></code>.
 </li></ol>
 
@@ -741,7 +741,7 @@ Beginning steps in replacing <a href="omp_alloc.xml" target="_top"><span style='
 Replace <a href="omp_alloc.xml" target="_top"><span style='white-space: nowrap'>omp_alloc</span></a>
  by <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
 
-in the <a href="library.xml" target="_top"><span style='white-space: nowrap'>library</span></a>
+in the <a href="utility.xml" target="_top"><span style='white-space: nowrap'>utilities</span></a>
 .
 </li><li>
 
@@ -795,7 +795,7 @@ changes from svn revision 2044 to revision 2056 in the branch
 
 These changes are described below under the headings
 <a href="whats_new_11.xml#08-11.08-04" target="_top"><span style='white-space: nowrap'>08-04</span></a>
- through 
+ through
 <a href="whats_new_11.xml#08-11.08-10" target="_top"><span style='white-space: nowrap'>08-10</span></a>
 .
 
@@ -827,9 +827,9 @@ Improve <a href="omp_alloc.cpp.xml" target="_top"><span style='white-space: nowr
 <b><a name="08-11.08-09" id="08-11.08-09">08-09</a></b>
 
 <ol type="1"><li>
-<a href="base_require.xml#Warning" target="_top"><span style='white-space: nowrap'>Warning:</span></a>
-
-Add <a href="base_std_math.xml#limits" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
+<a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
+:
+Add <a href="numeric_limits.xml#epsilon" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
  to the
 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -850,14 +850,14 @@ Improve the <a href="base_require.xml" target="_top"><span style='white-space: n
 <a href="base_std_math.xml" target="_top"><span style='white-space: nowrap'>standard&#xA0;math&#xA0;functions</span></a>
 .
 </li><li>
- 
-<a href="base_require.xml#Warning" target="_top"><span style='white-space: nowrap'>Warning:</span></a>
 
+<a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
+:
 Add <code><font color="blue">abs_geq</font></code> to the <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>requirements</span></a>
 
 for a user defined 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- type. 
+ type.
 </li><li>
 
 Check that zero order forward mode results are approximately equal,
@@ -875,13 +875,13 @@ and hence the zero order forward mode results may not be exactly the same.)
 <b><a name="08-11.08-07" id="08-11.08-07">08-07</a></b>
 <br/>
 Improve the <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
- documentation for 
+ documentation for
 <a href="base_identical.xml#EqualOpSeq" target="_top"><span style='white-space: nowrap'>EqualOpSeq</span></a>
 ,
 <a href="base_identical.xml#Identical" target="_top"><span style='white-space: nowrap'>Identical</span></a>
- 
+
 <a href="base_require.xml#Integer" target="_top"><span style='white-space: nowrap'>Integer</span></a>
-, and 
+, and
 <a href="base_ordered.xml" target="_top"><span style='white-space: nowrap'>Ordered</span></a>
 
 operations.
@@ -891,8 +891,8 @@ operations.
 <b><a name="08-11.08-06" id="08-11.08-06">08-06</a></b>
 <br/>
 Add the <a href="base_cond_exp.xml#CondExpRel" target="_top"><span style='white-space: nowrap'>CondExpRel</span></a>
- paragraph to the 
-base requirements documentation. 
+ paragraph to the
+base requirements documentation.
 This was missing and are required for
 <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
  to work with 
@@ -907,8 +907,8 @@ and a non-standard
 <b><a name="08-11.08-04" id="08-11.08-04">08-04</a></b>
 
 <ol type="1"><li>
-<a href="base_require.xml#Warning" target="_top"><span style='white-space: nowrap'>Warning:</span></a>
-
+<a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
+:
 Change the <a href="base_require.xml#Include Order" target="_top"><span style='white-space: nowrap'>include</span></a>
  file name to
 <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require.hpp</span></a>
@@ -929,7 +929,7 @@ requirements.
 <b><big><a name="08-03" id="08-03">08-03</a></big></b>
 <br/>
 Change <a href="printfor.xml" target="_top"><span style='white-space: nowrap'>PrintFor</span></a>
- condition from less than or equal zero 
+ condition from less than or equal zero
 to not greater than zero;i.e., not positive.
 This makes <code><font color="blue">nan</font></code> print because it results in false for all comparisons.
 
@@ -972,16 +972,16 @@ reporting when the argument to the <code><font color="blue">log</font></code> fu
 
 <ol type="1"><li>
 The routines <a href="omp_max_num_threads.xml" target="_top"><span style='white-space: nowrap'>set_max_num_threads</span></a>
- and 
+ and
 <code><font color="blue">get_max_num_threads</font></code> were created.
-User's will need to replace calls to 
+User's will need to replace calls to
 <a href="old_max_num_threads.xml" target="_top"><span style='white-space: nowrap'>max_num_threads</span></a>
- 
+
 by calls to <code><font color="blue">set_max_num_threads</font></code>.
 </li><li>
 
 The functions <a href="omp_efficient.xml" target="_top"><span style='white-space: nowrap'>omp_efficient</span></a>
- was deprecated because it 
+ was deprecated because it
 has not been shown to be useful.
 </li></ol>
 
@@ -1040,7 +1040,7 @@ The reverse mode formulas for
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- need to involve 
+ need to involve
 the lower order Taylor coefficients for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>Y</mi>
@@ -1069,7 +1069,7 @@ To be specific, the Taylor coefficients for
 of order less than 
 <code><i><font color="black"><span style='white-space: nowrap'>k</span></font></i></code>
 ,
-were not passed into the <code><font color="blue">old_atomic</font></code> 
+were not passed into the <code><font color="blue">old_atomic</font></code>
 <a href="old_atomic.xml#forward" target="_top"><span style='white-space: nowrap'>forward</span></a>
  callback function.
 </li><li>
@@ -1077,12 +1077,12 @@ were not passed into the <code><font color="blue">old_atomic</font></code>
 Derive the theory for including the tangent and hyperbolic tangent
 as CppAD atomic operations <a href="tan_forward.xml" target="_top"><span style='white-space: nowrap'>tan_forward</span></a>
  and <a href="tan_reverse.xml" target="_top"><span style='white-space: nowrap'>tan_reverse</span></a>
-; 
+;
 see the wish list item <code><font color="blue">Tan and Tanh</font></code>.
 </li><li>
 
 Implement and test forward mode calculation of derivative for
-the tangent and hyperbolic tangent functions; 
+the tangent and hyperbolic tangent functions;
 see the new <a href="old_atomic.xml" target="_top"><span style='white-space: nowrap'>old_atomic</span></a>
  example <a href="old_tan.cpp.xml" target="_top"><span style='white-space: nowrap'>old_tan.cpp</span></a>
 .
@@ -1094,11 +1094,11 @@ see the new <a href="old_atomic.xml" target="_top"><span style='white-space: now
 <b><big><a name="07-14" id="07-14">07-14</a></big></b>
 
 <ol type="1"><li>
-The <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>InstallUnix</span></a>
+The <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
  instructions for running the individual
-correctness and speed tests were out of date. 
-This has been fixed; see 
-<a href="installunix.xml#make.Examples and Tests" target="_top"><span style='white-space: nowrap'>example&#xA0;and&#xA0;tests</span></a>
+correctness and speed tests were out of date.
+This has been fixed; see
+<a href="auto_tools.xml#make.Examples and Tests" target="_top"><span style='white-space: nowrap'>example&#xA0;and&#xA0;tests</span></a>
 .
 </li><li>
 
@@ -1122,7 +1122,7 @@ the compiler debugging flags.
 static hash code data that was begin used by multiple threads
 when recording 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- operations 
+ operations
 <a href="omp_in_parallel.xml" target="_top"><span style='white-space: nowrap'>omp_in_parallel</span></a>
  execution mode. This has been fixed.
 </li><li>
@@ -1146,7 +1146,7 @@ Change <code><font color="blue">example_a11c.cpp</font></code> example so that i
 <b><big><a name="07-11" id="07-11">07-11</a></big></b>
 
 <ol type="1"><li>
-Change the upper limit for 
+Change the upper limit for
 <a href="omp_max_num_threads.xml" target="_top"><span style='white-space: nowrap'>omp_max_num_threads</span></a>
  from 32 to 48.
 </li><li>
@@ -1181,7 +1181,7 @@ maximum number of threads
 instead of specifying the entire set of values to be tested.
 </li><li>
 
-Change settings for 
+Change settings for
 <code><font color="blue">newton_example</font></code>
 so that <code><font color="blue">n_gird</font></code> is a multiple of the maximum number of threads.
 </li><li>
@@ -1198,7 +1198,7 @@ The documentation for <code><font color="blue">openmp/run.sh</font></code> was m
 <code><font color="blue">multi_thread</font></code> section.
 </li></ol>
 
- 
+
 
 <br/>
 <br/>
@@ -1212,14 +1212,14 @@ Add link to <a href="discrete.xml" target="_top">Discrete AD Functions</a> in <a
 Make use of the <a href="tracknewdel.xml" target="_top"><span style='white-space: nowrap'>TrackNewDel</span></a>
  routines
 <a href="omp_in_parallel.xml" target="_top"><span style='white-space: nowrap'>omp_in_parallel</span></a>
- execution mode an error (it never worked properly); 
+ execution mode an error (it never worked properly);
 see <a href="tracknewdel.xml#Multi-Threading" target="_top"><span style='white-space: nowrap'>TrackNewDel&#xA0;multi-threading</span></a>
 .
 </li><li>
 
 Change <a href="memory_leak.xml" target="_top"><span style='white-space: nowrap'>memory_leak</span></a>
  so that it checks for a leak in all threads.
-This is what <code><font color="blue">openmp_newton_example.cpp</font></code> and 
+This is what <code><font color="blue">openmp_newton_example.cpp</font></code> and
 <code><font color="blue">sum_i_inv_time.cpp</font></code>
 assumed was being done.
 </li></ol>
@@ -1261,7 +1261,7 @@ sometimes occurred.
 </li><li>
 
 The routine <a href="omp_max_thread.xml" target="_top"><span style='white-space: nowrap'>omp_max_thread</span></a>
- was deprecated, 
+ was deprecated,
 use the routine <a href="omp_max_num_threads.xml" target="_top"><span style='white-space: nowrap'>omp_max_num_threads</span></a>
  instead.
 </li><li>
@@ -1281,13 +1281,13 @@ The <code><font color="blue">openmp/run.sh</font></code> routine was changed to 
 instead of <code><font color="blue">automatic</font></code>, for automatic choice of
 <code><font color="blue">openmp/run.sh</font></code>
 number of repeats
-and 
+and
 maximum number of threads.
 
 </li><li>
 
 The output of each of the OpenMP examples / speed tests
-(run by <code><font color="blue">openmp/run.sh</font></code>) 
+(run by <code><font color="blue">openmp/run.sh</font></code>)
 was changed to be valid matlab / octave assignment statements.
 
 </li><li>
@@ -1304,15 +1304,15 @@ the <code><font color="blue">openmp/run.sh</font></code> output.
 <b><big><a name="06-18" id="06-18">06-18</a></big></b>
 
 <ol type="1"><li>
-The <a href="installunix.xml#tape_addr_type" target="_top"><span style='white-space: nowrap'>tape_addr_type</span></a>
+The <a href="auto_tools.xml#tape_addr_type" target="_top"><span style='white-space: nowrap'>tape_addr_type</span></a>
  option was added
-to the <a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+to the <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command line.
 </li><li>
 
 The function <a href="seq_property.xml#size_op_seq" target="_top"><span style='white-space: nowrap'>size_op_seq</span></a>
  results uses
-<code><font color="blue">sizeof(CppAD_TAPE_ADDR_TYPE)</font></code> 
+<code><font color="blue">sizeof(CppAD_TAPE_ADDR_TYPE)</font></code>
 where it used to use <code><font color="blue">sizeof(size_t)</font></code>.
 </li><li>
 
@@ -1322,7 +1322,7 @@ This removes the need to undefine symbols that were
 defined by <code><font color="blue">cppad/config.h</font></code> and that did not begin with <code><font color="blue">CPPAD_</font></code>.
 </li><li>
 
-Change <a href="installunix.xml#adolc_dir" target="_top"><span style='white-space: nowrap'>adolc</span></a>
+Change <a href="auto_tools.xml#adolc_dir" target="_top"><span style='white-space: nowrap'>adolc</span></a>
  library linkage so it
 works with version <code><font color="blue">ADOL-C-2.2.0</font></code>.
 </li></ol>
@@ -1357,11 +1357,11 @@ as returned to the user (not an offset version of that pointer).
 <br/>
 <b><big><a name="05-26" id="05-26">05-26</a></big></b>
 <br/>
-Fix Visual Studio project files that were broken during the change on 05-22. 
+Fix Visual Studio project files that were broken during the change on 05-22.
 In addition, in the file <code><font color="blue">cppad/omp_alloc.hpp</font></code>,
 suppress the following Microsoft Visual Studio warning
 <code><font color='blue'><pre style='display:inline'> 
-	warning C4345: behavior change: an object of POD type constructed with 
+	warning C4345: behavior change: an object of POD type constructed with
 	an initializer of the form () will be default-initialized
 </pre></font></code>
 
@@ -1376,7 +1376,7 @@ The old memory tracking routines <a href="tracknewdel.xml" target="_top"><span s
  have been deprecated.
 Their use should be replaced using the <a href="omp_alloc.xml" target="_top"><span style='white-space: nowrap'>omp_alloc</span></a>
 
-a memory allocator which is designed to work well in a multi-threading OpenMP 
+a memory allocator which is designed to work well in a multi-threading OpenMP
 environment; see <a href="omp_alloc.xml#Purpose" target="_top"><span style='white-space: nowrap'>purpose</span></a>
 .
 </li><li>
@@ -1413,7 +1413,7 @@ The <a href="cppad_vector.xml#capacity" target="_top"><span style='white-space: 
 to the CppAD vector class.
 </li><li>
 
-The simple vector 
+The simple vector
 <a href="simplevector.xml#Element Constructor and Destructor" target="_top"><span style='white-space: nowrap'>element&#xA0;constructor&#xA0;and&#xA0;destructor</span></a>
 
 description has been changed to explicitly specify that the
@@ -1431,12 +1431,12 @@ has been improved to mention that the allocated memory may be larger.
 <b><big><a name="05-11" id="05-11">05-11</a></big></b>
 
 <ol type="1"><li>
-Avoid ambiguity in the definition of the 
+Avoid ambiguity in the definition of the
 <a href="base_complex.hpp.xml#isnan" target="_top"><span style='white-space: nowrap'>complex&#xA0;isnan</span></a>
  function.
 </li><li>
 
-Errors during <code><font color="blue">make test</font></code> were not 
+Errors during <code><font color="blue">make test</font></code> were not
 being detected.
 This has been fixed.
 </li></ol>
@@ -1449,9 +1449,9 @@ This has been fixed.
 <ol type="1"><li>
 If <code><font color="blue">NDEBUG</font></code> is not defined,
 the <a href="nan.xml" target="_top"><span style='white-space: nowrap'>hasnan</span></a>
- function is used to make sure that the 
+ function is used to make sure that the
 results of any <a href="forward.xml" target="_top"><span style='white-space: nowrap'>Forward</span></a>
- operation does not contain a 
+ operation does not contain a
 nan (not a number).
 If so, an error message is generated and the program terminates.
 This error message and termination can be caught; see <a href="errorhandler.xml" target="_top"><span style='white-space: nowrap'>ErrorHandler</span></a>
@@ -1459,12 +1459,12 @@ This error message and termination can be caught; see <a href="errorhandler.xml"
 
 </li><li>
 
-In the event that the 
+In the event that the
 <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
  objective function, the constraints,
-or their derivatives are infinite, 
+or their derivatives are infinite,
 an error message is generated and the program terminates
-(proved that <code><font color="blue">NDEBUG</font></code> is not defined and the default error 
+(proved that <code><font color="blue">NDEBUG</font></code> is not defined and the default error
 handler has not been replaced).
 </li></ol>
 
@@ -1474,7 +1474,7 @@ handler has not been replaced).
 <b><big><a name="04-29" id="04-29">04-29</a></big></b>
 
 <ol type="1"><li>
-The Microsoft Visual Studio 2003 project files 
+The Microsoft Visual Studio 2003 project files
 for the Windows examples and tests no longer worked because
 the current version of CppAD uses local types in template instantiation; see
 <a href="http://msdn.microsoft.com/en-us/library/bh44f2cb(v=vs.71).aspx" target="_top"><span style='white-space: nowrap'>Compiler&#xA0;Error&#xA0;C2918</span></a>
@@ -1508,14 +1508,14 @@ Also improve the openmp test program output formatting.
 <br/>
 The 
 <code><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i></code>
- option was added to the 
+ option was added to the
 <code><font color="blue">openmp_newton_example.cpp</font></code> test case.
 
 <br/>
 <br/>
 <b><big><a name="03-19" id="03-19">03-19</a></big></b>
 <br/>
-The subversion write protected directory 
+The subversion write protected directory
 <code><font color="blue">bin/.svn</font></code> was mistakenly part of the
 <a href="download.xml#Compressed Archives" target="_top"><span style='white-space: nowrap'>compressed&#xA0;tar&#xA0;file</span></a>
 .
@@ -1525,7 +1525,7 @@ It has been removed.
 <br/>
 <b><big><a name="03-11" id="03-11">03-11</a></big></b>
 <br/>
-The vector of sets argument 
+The vector of sets argument
 <a href="old_atomic.xml#rev_hes_sparse.r" target="_top"><span style='white-space: nowrap'>r</span></a>
 
 to the <code><font color="blue">old_atomic</font></code> function 
@@ -1551,8 +1551,8 @@ Add the <a href="conj_grad.cpp.xml" target="_top"><span style='white-space: nowr
 <b><big><a name="02-22" id="02-22">02-22</a></big></b>
 <br/>
 Add the <a href="speed_main.xml#option_list.atomic" target="_top"><span style='white-space: nowrap'>atomic</span></a>
- option to the 
-speed test program and use 
+ option to the
+speed test program and use
 <a href="old_mat_mul.hpp.xml" target="_top"><span style='white-space: nowrap'>old_mat_mul.hpp</span></a>
  during the
 <a href="cppad_mat_mul.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_mat_mul.cpp</span></a>
@@ -1567,7 +1567,7 @@ There was a bug when <a href="omp_max_thread.xml" target="_top"><span style='whi
  was set to one,
 and <code><font color="blue">NDEBUG</font></code> was not defined,
 the thread corresponding to parameters was one, but the only valid thread
-number was zero (only one thread) 
+number was zero (only one thread)
 and an CPPAD stopped with an assertion error.
 This has been fixed.
 
@@ -1576,7 +1576,7 @@ This has been fixed.
 <b><big><a name="02-17" id="02-17">02-17</a></big></b>
 <br/>
 There was a mistake in <code><font color="blue">openmp/run.sh</font></code> where it attempted
-to remove a non-existent file in the case where 
+to remove a non-existent file in the case where
 <code><font color="blue">openmp/run.sh</font></code>
 openmp_flag was not <code><font color="blue">&quot;&quot;</font></code>.
 This has been fixed.
@@ -1607,7 +1607,7 @@ This has been fixed.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The <a href="old_mat_mul.hpp.xml" target="_top"><span style='white-space: nowrap'>old_mat_mul.hpp</span></a>
- example has been improved by 
+ example has been improved by
 caching the 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -1615,7 +1615,7 @@ caching the
 
  variable information and using it during
 <a href="old_atomic.xml#rev_hes_sparse" target="_top"><span style='white-space: nowrap'>reverse&#xA0;Hessian&#xA0;sparsity</span></a>
- calculations. 
+ calculations.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Some of the <a href="old_atomic.xml" target="_top"><span style='white-space: nowrap'>old_atomic</span></a>
@@ -1631,7 +1631,7 @@ The use can now define complex <a href="old_atomic.xml" target="_top"><span styl
 and store them in a CppAD <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
  object.
 This item has been remove from the
-<a href="wishlist.xml" target="_top"><span style='white-space: nowrap'>wish&#xA0;list</span></a>
+<a href="wish_list.xml" target="_top"><span style='white-space: nowrap'>wish&#xA0;list</span></a>
 .
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -1641,7 +1641,7 @@ This has been fixed.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>A faster set operations item was added to the wish list.
-This has since been satisfied by 
+This has since been satisfied by
 <a href="cmake.xml#cppad_sparse_list" target="_top"><span style='white-space: nowrap'>cppad_sparse_list</span></a>
  choice during
 the install process.
@@ -1658,7 +1658,7 @@ The errors have been fix and the documentation has been improved.
 <br/>
 <b><big><a name="02-01" id="02-01">02-01</a></big></b>
 <br/>
-The subversion 
+The subversion
 install instructions were brought up to date.
 They have since been replaced by just separate
 <a href="download.xml#Subversion" target="_top"><span style='white-space: nowrap'>subversion&#xA0;download</span></a>
@@ -1671,11 +1671,11 @@ instructions.
 <b><big><a name="01-19" id="01-19">01-19</a></big></b>
 <br/>
 The directory where the <a href="pkgconfig.xml" target="_top"><span style='white-space: nowrap'>pkgconfig</span></a>
- file <code><font color="blue">cppad.pc</font></code> 
-is stored has been moved from 
+ file <code><font color="blue">cppad.pc</font></code>
+is stored has been moved from
 
 <code><i><font color="black"><span style='white-space: nowrap'>prefixdir</span></font></i><font color="blue"><span style='white-space: nowrap'>/lib/pkgconfig/cppad.pc</span></font></code>
-  
+
 to
 
 <code><i><font color="black"><span style='white-space: nowrap'>prefixdir</span></font></i><font color="blue"><span style='white-space: nowrap'>/share/pkgconfig/cppad.pc</span></font></code>
@@ -1694,13 +1694,13 @@ The install of the documentation failed
 when it was done from a directory other than the top source directory.
 </li><li>
 
-The GPL distribution had the output of the 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+The GPL distribution had the output of the
+<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command in it.
 </li><li>
 
-Since the change on 01-09, the file 
-<code><font color="blue">omh/whats_new_11.omh</font></code> has been required to build the 
+Since the change on 01-09, the file
+<code><font color="blue">omh/whats_new_11.omh</font></code> has been required to build the
 documentation (and it has been missing from the distribution).
 </li><li>
 
@@ -1709,7 +1709,7 @@ with the <code><font color="blue">g++</font></code> compiler.
 The Fadbad <a href="speed_fadbad.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
  tests have a special
 flag with this warning removed from the
-<a href="installunix.xml#cxx_flags" target="_top"><span style='white-space: nowrap'>cxx_flags</span></a>
+<a href="auto_tools.xml#cxx_flags" target="_top"><span style='white-space: nowrap'>cxx_flags</span></a>
 .
 </li></ol>
 
@@ -1731,9 +1731,9 @@ The version of automake used to build the corresponding
 <code><font color="blue">makefile.in</font></code> files did not define <code><font color="blue">abs_top_builddir</font></code>.
 </li><li>
 
-The include file <code><font color="blue">cppad_ipopt_nlp.hpp</font></code> was always installed, even if 
-<a href="installunix.xml#ipopt_dir" target="_top"><span style='white-space: nowrap'>ipopt_dir</span></a>
- was not defined on the 
+The include file <code><font color="blue">cppad_ipopt_nlp.hpp</font></code> was always installed, even if
+<a href="auto_tools.xml#ipopt_dir" target="_top"><span style='white-space: nowrap'>ipopt_dir</span></a>
+ was not defined on the
 <code><font color="blue">configure</font></code> command line.
 </li><li>
 
@@ -1741,8 +1741,8 @@ The speed test library <code><font color="blue">libspeed.a</font></code> was bei
 (it is only intended for testing).
 </li></ol>
 
-These problems are fixed in the trunk 
-and these fixes will be copied to the corresponding stable and 
+These problems are fixed in the trunk
+and these fixes will be copied to the corresponding stable and
 release versions; i.e.,
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>

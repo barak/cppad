@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>OdeGearControl</option>
 <option>ode_gear_control.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -103,7 +101,7 @@ A:active { color : purple }
 
 
 <center><b><big><big>OdeGearControl: Example and Test</big></big></b></center>
-Define 
+Define
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -278,7 +276,7 @@ The example tests OdeGearControl using the relations above:
 <pre style='display:inline'> 
 
 # include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/ode_gear_control.hpp&gt;   // CppAD::OdeGearControl
+# include &lt;cppad/utility/ode_gear_control.hpp&gt;   // CppAD::OdeGearControl
 
 namespace {
 	// --------------------------------------------------------------
@@ -288,25 +286,25 @@ namespace {
 	public:
 		// constructor
 		Fun(const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;w_) : w(w_)
-		{ } 
+		{ }
 
 		// set f = x'(t)
 		template &lt;typename Scalar&gt;
 		void Ode(
-			const Scalar                    &amp;t, 
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) &amp;x, 
+			const Scalar                    &amp;t,
+			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) &amp;x,
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar)       &amp;f)
 		{	f[0] = - w[0] * x[0];
-			f[1] = + w[0] * x[0] - w[1] * x[1];	
+			f[1] = + w[0] * x[0] - w[1] * x[1];
 		}
 
 		void Ode_dep(
-			const double                    &amp;t, 
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x, 
+			const double                    &amp;t,
+			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x,
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       &amp;f_x)
 		{	using namespace CppAD;
 
-			size_t n  = x.size();	
+			size_t n  = x.size();
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) T(1);
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) F(n);
@@ -372,7 +370,7 @@ bool OdeGearControl(void)
 	double smax = 1.;
 	double sini = 1e-10;
 	double erel = 0.;
-	
+
 	xf = CppAD::OdeGearControl(F, M,
 		ti, tf, xi, smin, smax, sini, eabs, erel, ef, maxabs, nstep);
 

@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="erf.xml" target="_top">Prev</a>
-</td><td><a href="pow.xml" target="_top">Next</a>
+</td><td><a href="expm1.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
 <option>erf</option>
 <option>erf.cpp</option>
 </select>
@@ -49,22 +49,38 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>MathOther-&gt;</option>
+<option>unary_standard_math-&gt;</option>
+<option>acos</option>
+<option>asin</option>
+<option>atan</option>
+<option>cos</option>
+<option>cosh</option>
+<option>exp</option>
+<option>log</option>
+<option>log10</option>
+<option>sin</option>
+<option>sinh</option>
+<option>sqrt</option>
+<option>tan</option>
+<option>tanh</option>
 <option>abs</option>
-<option>sign</option>
-<option>atan2</option>
+<option>acosh</option>
+<option>asinh</option>
+<option>atanh</option>
 <option>erf</option>
-<option>pow</option>
-<option>limits</option>
+<option>expm1</option>
+<option>log1p</option>
+<option>sign</option>
 </select>
 </td>
 <td>
@@ -102,18 +118,18 @@ bool Erf(void)
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
 	ay[0] = CppAD::erf(ax[0]);
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
-	// check relative erorr 
+	// check relative erorr
 	double erf_x0 = 0.52050;
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[0] , erf_x0,  0.,    4e-4);
-# if CPPAD_COMPILER_HAS_ERF
+# if CPPAD_USE_CPLUSPLUS_2011
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[0] , erf_x0,  0.,    1e-5);
 # endif
 
@@ -128,7 +144,7 @@ bool Erf(void)
 	dx[0] = 1.;
 	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check,  0.,  1e-3);
-# if CPPAD_COMPILER_HAS_ERF
+# if CPPAD_USE_CPLUSPLUS_2011
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check,  0.,  eps);
 # endif
 
@@ -138,7 +154,7 @@ bool Erf(void)
 	w[0]  = 1.;
 	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check,  0., 1e-1);
-# if CPPAD_COMPILER_HAS_ERF
+# if CPPAD_USE_CPLUSPLUS_2011
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check,  0., eps);
 # endif
 

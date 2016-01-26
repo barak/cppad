@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>Check an ADFun Object For Nan</title>
+<title>Check an ADFun Object For Nan Results</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="Check an ADFun Object For Nan"/>
-<meta name="keywords" id="keywords" content=" check an adfun object for nan Adfun in syntax purpose f b default example "/>
+<meta name="description" id="description" content="Check an ADFun Object For Nan Results"/>
+<meta name="keywords" id="keywords" content=" check an adfun object for nan results syntax debugging f b default error message vector_size file_name index get_check_for_nan vec file example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -83,41 +83,47 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Syntax</option>
-<option>Purpose</option>
+<option>Debugging</option>
 <option>f</option>
 <option>b</option>
 <option>Default</option>
+<option>Error Message</option>
+<option>---..vector_size</option>
+<option>---..file_name</option>
+<option>---..index</option>
+<option>get_check_for_nan</option>
+<option>---..vec</option>
+<option>---..file</option>
 <option>Example</option>
 </select>
 </td>
 </tr></table><br/>
 
 
-<center><b><big><big>Check an ADFun Object For Nan</big></big></b></center>
-.
-
-<br/>
+<center><b><big><big>Check an ADFun Object For Nan Results</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>f</span></font><i><font color="black"><span style='white-space: nowrap'>.check_for_nan(</span></font></i><font color="blue"><span style='white-space: nowrap'>b</span></font><i><font color="black"><span style='white-space: nowrap'>)<br/>
-</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.check_for_nan(</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.check_for_nan()<br/>
 </span></font></code>
+
+<code><font color="blue"><span style='white-space: nowrap'>get_check_for_nan(</span></font><i><font color="black"><span style='white-space: nowrap'>vec</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>file</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
 <br/>
-<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<b><big><a name="Debugging" id="Debugging">Debugging</a></big></b>
 <br/>
-If <code><font color="blue">NDEBUG</font></code> is not defined and
+If <code><font color="blue">NDEBUG</font></code> is not defined, and
 the result of a <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
  or <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
 
 calculation contains a  <a href="nan.xml" target="_top"><span style='white-space: nowrap'>nan</span></a>
 ,
-CppAD halts with an error message.
-This can be suppressed using <code><font color="blue">check_for_nan</font></code>.
+CppAD can halt with an error message.
 
 <br/>
 <br/>
@@ -125,7 +131,7 @@ This can be suppressed using <code><font color="blue">check_for_nan</font></code
 <br/>
 For the syntax where 
 <code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i></code>
- is an argument, 
+ is an argument,
 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  has prototype
@@ -139,7 +145,7 @@ For the syntax where
 ).
 For the syntax where 
 <code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i></code>
- is the result, 
+ is the result,
 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  has prototype
@@ -169,9 +175,109 @@ depending on if
 The value for this setting after construction of 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 ) is true.
-The value of this setting is not affected by calling 
+The value of this setting is not affected by calling
 <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>Dependent</span></a>
  for this function object.
+
+<br/>
+<br/>
+<b><big><a name="Error Message" id="Error Message">Error Message</a></big></b>
+<br/>
+If this error is detected during zero order forward mode,
+the values of the independent variables that resulted in the <code><font color="blue">nan</font></code>
+are written to a temporary binary file.
+This is so that you can run the original source code with those values
+to see what is causing the <code><font color="blue">nan</font></code>.
+
+<br/>
+<br/>
+<b><a name="Error Message.vector_size" id="Error Message.vector_size">vector_size</a></b>
+<br/>
+The error message with contain the text
+
+<code><font color="blue"><span style='white-space: nowrap'>vector_size&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector_size</span></font></i></code>
+ followed the newline character
+<code><font color="blue">'\n'</font></code>.
+The value of 
+<code><i><font color="black"><span style='white-space: nowrap'>vector_size</span></font></i></code>
+ is the number of elements
+in the independent vector.
+
+<br/>
+<br/>
+<b><a name="Error Message.file_name" id="Error Message.file_name">file_name</a></b>
+<br/>
+The error message with contain the text
+
+<code><font color="blue"><span style='white-space: nowrap'>file_name&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>file_name</span></font></i></code>
+ followed the newline character
+<code><font color="blue">'\n'</font></code>.
+The value of 
+<code><i><font color="black"><span style='white-space: nowrap'>file_name</span></font></i></code>
+ is the name of the temporary file
+that contains the dependent variable values.
+
+<br/>
+<br/>
+<b><a name="Error Message.index" id="Error Message.index">index</a></b>
+<br/>
+The error message will contain the text
+
+<code><font color="blue"><span style='white-space: nowrap'>index&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>index</span></font></i></code>
+ followed by the newline character <code><font color="blue">'\n'</font></code>.
+The value of 
+<code><i><font color="black"><span style='white-space: nowrap'>index</span></font></i></code>
+ is the lowest dependent variable index
+that has the value <code><font color="blue">nan</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="get_check_for_nan" id="get_check_for_nan">get_check_for_nan</a></big></b>
+<br/>
+This routine can be used to get the independent variable
+values that result in a <code><font color="blue">nan</font></code>.
+
+<br/>
+<br/>
+<b><a name="get_check_for_nan.vec" id="get_check_for_nan.vec">vec</a></b>
+<br/>
+This argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vec</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It size must be equal to the corresponding value of
+<a href="check_for_nan.xml#Error Message.vector_size" target="_top"><span style='white-space: nowrap'>vector_size</span></a>
+
+in the corresponding error message.
+The input value of its elements does not matter.
+Upon return, it will contain the values for the independent variables,
+in the corresponding call to <a href="independent.xml" target="_top"><span style='white-space: nowrap'>Independent</span></a>
+,
+that resulted in the <code><font color="blue">nan</font></code>.
+(Note that the call to <code><font color="blue">Independent</font></code> uses an vector with elements
+of type 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>vec</span></font></i></code>
+ has elements of type
+
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+.)
+
+<br/>
+<br/>
+<b><a name="get_check_for_nan.file" id="get_check_for_nan.file">file</a></b>
+<br/>
+This argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;std::string&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>file</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It must be the value of
+<a href="check_for_nan.xml#Error Message.file_name" target="_top"><span style='white-space: nowrap'>file_name</span></a>
+
+in the corresponding error message.
 
 <br/>
 <br/>
@@ -180,12 +286,12 @@ The value of this setting is not affected by calling
 <br/>
 The file
 <a href="check_for_nan.cpp.xml" target="_top"><span style='white-space: nowrap'>check_for_nan.cpp</span></a>
- 
+
 contains an example and test of these operations.
 It returns true if it succeeds and false otherwise.
 
 
-<hr/>Input File: omh/check_for_nan.omh
+<hr/>Input File: cppad/local/check_for_nan.hpp
 
 </body>
 </html>

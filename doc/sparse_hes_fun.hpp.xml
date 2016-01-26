@@ -85,25 +85,25 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: sparse_hes_fun</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_SPARSE_HES_FUN_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_SPARSE_HES_FUN_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_SPARSE_HES_FUN_INCLUDED 
+</span></code># define CPPAD_SPARSE_HES_FUN_HPP
 
 <pre style='display:inline'> 
 # include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/check_numeric_type.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/check_numeric_type.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 
 // following needed by gcc under fedora 17 so that exp(double) is defined
-# include &lt;cppad/base_require.hpp&gt; 
+# include &lt;cppad/base_require.hpp&gt;
 
 namespace CppAD {
 	template &lt;class Float, class FloatVector&gt;
 	void sparse_hes_fun(
 		size_t                       n    ,
 		const FloatVector&amp;           x    ,
-		const CppAD::vector&lt;size_t&gt;&amp; row  , 
-		const CppAD::vector&lt;size_t&gt;&amp; col  , 
+		const CppAD::vector&lt;size_t&gt;&amp; row  ,
+		const CppAD::vector&lt;size_t&gt;&amp; col  ,
 		size_t                       p    ,
 		FloatVector&amp;                fp    )
 	{
@@ -112,48 +112,78 @@ namespace CppAD {
 
 		// check value of p
 		CPPAD_ASSERT_KNOWN(
-			p &lt; 3,
-			&quot;sparse_hes_fun: p &gt; 2&quot;
+			p == 0 || p == 2,
+			&quot;sparse_hes_fun: p != 0 and p != 2&quot;
 		);
 
-		size_t i, j, k;
-		size_t size = 1;
-		for(k = 0; k &lt; p; k++)
-			size *= n;
-		for(k = 0; k &lt; size; k++)
-			fp[k] = Float(0);
-
 		size_t K = row.size();
+		size_t i, j, k;
+		if( p == 0 )
+			fp[0] = Float(0);
+		else
+		{	for(k = 0; k &lt; K; k++)
+				fp[k] = Float(0);
+		}
+
+		// determine which diagonal entries are present in row[k], col[k]
+		CppAD::vector&lt;size_t&gt; diagonal(n);
+		for(i = 0; i &lt; n; i++)
+			diagonal[i] = K;   // no diagonal entry for this row
+		for(k = 0; k &lt; K; k++)
+		{	if( row[k] == col[k] )
+			{	CPPAD_ASSERT_UNKNOWN( diagonal[row[k]] == K );
+				// index of the diagonal entry
+				diagonal[ row[k] ] = k;
+			}
+		}
+
+		// determine which entries must be multiplied by a factor of two
+		CppAD::vector&lt;Float&gt; factor(K);
+		for(k = 0; k &lt; K; k++)
+		{	factor[k] = Float(1);
+			for(size_t k1 = 0; k1 &lt; K; k1++)
+			{	bool reflected = true;
+				reflected &amp;= k != k1;
+				reflected &amp;= row[k] != col[k];
+				reflected &amp;= row[k] == col[k1];
+				reflected &amp;= col[k] == row[k1];
+				if( reflected )
+					factor[k] = Float(2);
+			}
+		}
+
 		Float t;
-		Float dt_i;
-		Float dt_j;
 		for(k = 0; k &lt; K; k++)
 		{	i    = row[k];
 			j    = col[k];
-			t    = exp( x[i] * x[j] );	
-			dt_i = t * x[j];
-			dt_j = t * x[i];
+			t    = exp( x[i] * x[j] );
 			switch(p)
 			{
 				case 0:
 				fp[0] += t;
 				break;
 
-				case 1:
-				fp[i] += dt_i;
-				fp[j] += dt_j;
-				break;
-
 				case 2:
-				fp[i * n + i] += dt_i * x[j];
-				fp[i * n + j] += t + dt_j * x[j];
-				//
-				fp[j * n + i] += t + dt_i * x[i];
-				fp[j * n + j] += dt_j * x[i];
+				if( i == j )
+				{	// dt_dxi = 2.0 * xi * t
+					fp[k] += ( Float(2) + Float(4) * x[i] * x[i] ) * t;
+				}
+				else
+				{	// dt_dxi = xj * t
+					fp[k] += factor[k] * ( Float(1) + x[i] * x[j] ) * t;
+					if( diagonal[i] != K )
+					{	size_t ki = diagonal[i];
+						fp[ki] += x[j] * x[j] * t;
+					}
+					if( diagonal[j] != K )
+					{	size_t kj = diagonal[j];
+						fp[kj] += x[i] * x[i] * t;
+					}
+				}
 				break;
 			}
 		}
-			
+
 	}
 }
 </pre>

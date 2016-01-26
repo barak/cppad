@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -109,7 +109,7 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;Sacado.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
@@ -117,8 +117,8 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_mat_mul(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	CppAD::vector&lt;double&gt;&amp;           x        ,
 	CppAD::vector&lt;double&gt;&amp;           z        ,
 	CppAD::vector&lt;double&gt;&amp;           dz       )
@@ -130,8 +130,8 @@ bool link_mat_mul(
 	// setup
 
 	// object for computing determinant
-	typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar; 
-	typedef CppAD::vector&lt;ADScalar&gt;       ADVector; 
+	typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar;
+	typedef CppAD::vector&lt;ADScalar&gt;       ADVector;
 
 	size_t j;                // temporary index
 	size_t m = 1;            // number of dependent variables
@@ -140,7 +140,7 @@ bool link_mat_mul(
 	ADVector   Y(n);         // Store product matrix
 	ADVector   Z(m);         // AD range space vector
 	ADScalar   f;
-	
+
 	// ------------------------------------------------------
 	while(repeat--)
 	{	// get the next matrix

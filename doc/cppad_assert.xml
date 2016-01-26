@@ -6,7 +6,7 @@
 <title>CppAD Assertions During Execution</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Assertions During Execution"/>
-<meta name="keywords" id="keywords" content=" assert error macro cppad assertions during execution syntax purpose ndebug Ndebug restriction known Cppad_assert_known unknown Cppad_assert_unknown exp msg handler "/>
+<meta name="keywords" id="keywords" content=" cppad assertions during execution assert macro Cppad_assert_known Cppad_assert_unknown syntax purpose ndebug restriction known unknown exp msg error handler "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>ErrorHandler</option>
 <option>cppad_assert</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -105,17 +103,14 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>NDEBUG</option>
 <option>Restriction</option>
-<option>---..Known</option>
-<option>---..Unknown</option>
+<option>Known</option>
+<option>Unknown</option>
 <option>Exp</option>
 <option>Msg</option>
 <option>Error Handler</option>
 </select>
 </td>
 </tr></table><br/>
-
-
-
 
 
 
@@ -144,9 +139,8 @@ source code that the error is reported at.
 <br/>
 <br/>
 <b><big><a name="NDEBUG" id="NDEBUG">NDEBUG</a></big></b>
-
 <br/>
-If the preprocessor symbol 
+If the preprocessor symbol
 <a href="faq.xml#Speed.NDEBUG" target="_top"><span style='white-space: nowrap'>NDEBUG</span></a>
  is defined,
 these macros do nothing; i.e., they are optimized out.
@@ -162,8 +156,7 @@ and that call the <a href="errorhandler.xml" target="_top"><span style='white-sp
 
 <br/>
 <br/>
-<b><a name="Restriction.Known" id="Restriction.Known">Known</a></b>
-
+<b><big><a name="Known" id="Known">Known</a></big></b>
 <br/>
 The <code><font color="blue">CPPAD_ASSERT_KNOWN</font></code> macro is used to check for an error
 with a known cause.
@@ -172,12 +165,11 @@ to make sure their arguments conform to their specifications.
 
 <br/>
 <br/>
-<b><a name="Restriction.Unknown" id="Restriction.Unknown">Unknown</a></b>
-
+<b><big><a name="Unknown" id="Unknown">Unknown</a></big></b>
 <br/>
-The <code><font color="blue">CPPAD_ASSERT_UNKNOWN</font></code> macro is used to check that the 
+The <code><font color="blue">CPPAD_ASSERT_UNKNOWN</font></code> macro is used to check that the
 CppAD internal data structures conform as expected.
-If this is not the case, CppAD does not know why the error has 
+If this is not the case, CppAD does not know why the error has
 occurred; for example, the user may have written past the end
 of an allocated array.
 
@@ -190,7 +182,7 @@ The argument
  is a C++ source code expression
 that results in a <code><font color="blue">bool</font></code> value that should be true.
 If it is false, an error has occurred.
-This expression may be execute any number of times 
+This expression may be execute any number of times
 (including zero times) so it must have not side effects.
 
 <br/>
@@ -205,7 +197,7 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;char&#xA0;*</span></font><i><font color="black"><span style='white-space: nowrap'>msg</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 and contains a <code><font color="blue">'\0'</font></code> terminated character string.
-This string is a description of the error 
+This string is a description of the error
 corresponding to 
 <code><i><font color="black"><span style='white-space: nowrap'>exp</span></font></i></code>
  being false.
@@ -214,7 +206,7 @@ corresponding to
 <br/>
 <b><big><a name="Error Handler" id="Error Handler">Error Handler</a></big></b>
 <br/>
-These macros use the 
+These macros use the
 <a href="errorhandler.xml" target="_top"><span style='white-space: nowrap'>CppAD&#xA0;error&#xA0;handler</span></a>
  to report errors.
 This error handler can be replaced by the user.

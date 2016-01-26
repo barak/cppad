@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -144,8 +144,8 @@ namespace {
 }
 
 bool link_sparse_jacobian(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	size_t                           m        ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
@@ -162,39 +162,31 @@ bool link_sparse_jacobian(
 	// -----------------------------------------------------
 	// setup
 	typedef vector&lt; std::set&lt;size_t&gt; &gt;  SetVector;
-	typedef CppAD::vector&lt;double&gt;       DblVector;
 	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar;
 	typedef CppAD::vector&lt;ADScalar&gt;     ADVector;
 
-	size_t i, j, k;
-	size_t order = 0;         // derivative order corresponding to function 
-	size_t K     = row.size();// number of row and column indices 
+	size_t j;
+	size_t order = 0;         // derivative order corresponding to function
 	size_t n     = size;      // number of independent variables
 	ADVector   a_x(n);        // AD domain space vector
 	ADVector   a_y(m);        // AD range space vector y = g(x)
-	DblVector  jac(K);        // non-zeros in Jacobian
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;   // AD function object
 
 	// declare sparsity pattern
 	SetVector  set_sparsity(m);
 	BoolVector bool_sparsity(m * n);
 
-	// initialize all entries as zero
-	for(i = 0; i &lt; m; i++)
-	{	for(j = 0; j &lt; n; j++)
-			jacobian[ i * n + j ] = 0.;
-	}
 	// ------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
-	{	// choose a value for x 
+	{	// choose a value for x
 		CppAD::uniform_01(n, x);
-		for(k = 0; k &lt; n; k++)
-			a_x[k] = x[k];
+		for(j = 0; j &lt; n; j++)
+			a_x[j] = x[j];
 
 		// declare independent variables
-		<a href="independent.xml" target="_top">Independent</a>(a_x);	
+		<a href="independent.xml" target="_top">Independent</a>(a_x);
 
-		// AD computation of f (x) 
+		// AD computation of f (x)
 		CppAD::sparse_jac_fun&lt;ADScalar&gt;(m, n, a_x, row, col, order, a_y);
 
 		// create function object f : X -&gt; Y
@@ -202,6 +194,9 @@ bool link_sparse_jacobian(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		// calculate the Jacobian sparsity pattern for this function
 		if( global_boolsparsity )
@@ -218,24 +213,22 @@ bool link_sparse_jacobian(
 		// calculate the Jacobian at this x
 		// (use forward mode because m &gt; n ?)
 		if( global_boolsparsity) n_sweep = f.SparseJacobianForward(
-				x, bool_sparsity, row, col, jac, work
+				x, bool_sparsity, row, col, jacobian, work
 		);
 		else n_sweep = f.SparseJacobianForward(
-				x, set_sparsity, row, col, jac, work
+				x, set_sparsity, row, col, jacobian, work
 		);
-		for(k = 0; k &lt; K; k++)
-			jacobian[ row[k] * n + col[k] ] = jac[k];
 	}
 	else
-	{	// choose a value for x 
+	{	// choose a value for x
 		CppAD::uniform_01(n, x);
-		for(k = 0; k &lt; n; k++)
-			a_x[k] = x[k];
+		for(j = 0; j &lt; n; j++)
+			a_x[j] = x[j];
 
 		// declare independent variables
-		<a href="independent.xml" target="_top">Independent</a>(a_x);	
+		<a href="independent.xml" target="_top">Independent</a>(a_x);
 
-		// AD computation of f (x) 
+		// AD computation of f (x)
 		CppAD::sparse_jac_fun&lt;ADScalar&gt;(m, n, a_x, row, col, order, a_y);
 
 		// create function object f : X -&gt; Y
@@ -243,6 +236,9 @@ bool link_sparse_jacobian(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		// calculate the Jacobian sparsity pattern for this function
 		if( global_boolsparsity )
@@ -256,21 +252,18 @@ bool link_sparse_jacobian(
 		if( global_colpack )
 			work.color_method = &quot;colpack&quot;;
 # endif
-
 		while(repeat--)
-		{	// choose a value for x 
+		{	// choose a value for x
 			CppAD::uniform_01(n, x);
 
 			// calculate the Jacobian at this x
 			// (use forward mode because m &gt; n ?)
 			if( global_boolsparsity ) n_sweep = f.SparseJacobianForward(
-					x, bool_sparsity, row, col, jac, work
+					x, bool_sparsity, row, col, jacobian, work
 			);
 			else n_sweep = f.SparseJacobianForward(
-					x, set_sparsity, row, col, jac, work
+					x, set_sparsity, row, col, jacobian, work
 			);
-			for(k = 0; k &lt; K; k++)
-				jacobian[ row[k] * n + col[k] ] = jac[k];
 		}
 	}
 	return true;

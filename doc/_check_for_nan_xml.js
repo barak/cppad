@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -40,10 +40,17 @@ var list_down0 = [
 ];
 var list_current0 = [
 'check_for_nan.xml#Syntax',
-'check_for_nan.xml#Purpose',
+'check_for_nan.xml#Debugging',
 'check_for_nan.xml#f',
 'check_for_nan.xml#b',
 'check_for_nan.xml#Default',
+'check_for_nan.xml#Error Message',
+'check_for_nan.xml#Error Message.vector_size',
+'check_for_nan.xml#Error Message.file_name',
+'check_for_nan.xml#Error Message.index',
+'check_for_nan.xml#get_check_for_nan',
+'check_for_nan.xml#get_check_for_nan.vec',
+'check_for_nan.xml#get_check_for_nan.file',
 'check_for_nan.xml#Example'
 ];
 function choose_across0(item)

@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -97,7 +97,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-This example demonstrates how CppAD can be used in a 
+This example demonstrates how CppAD can be used in a
 boost multi-threading environment.
 
 <br/>
@@ -214,13 +214,13 @@ namespace {
 
 		// inform CppAD that we now may be in parallel execution mode
 		sequential_execution_ = false;
-	
+
 		// This master thread is already running, we need to create
 		// num_threads - 1 more threads
 		thread_all_[0].bthread = CPPAD_NULL;
 		for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
 		{	// Create the thread with thread number equal to thread_num
-			thread_all_[thread_num].bthread = 
+			thread_all_[thread_num].bthread =
 				new boost::thread(run_one_worker, thread_num);
 		}
 
@@ -229,7 +229,7 @@ namespace {
 		ok &amp;= thread_num == 0;
 		ok &amp;= worker(thread_num, thread_all_[thread_num].info);
 
-		// now wait for the other threads to finish 
+		// now wait for the other threads to finish
 		for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
 		{	thread_all_[thread_num].bthread-&gt;join();
 			delete thread_all_[thread_num].bthread;
@@ -251,7 +251,7 @@ namespace {
 		return ok;
 	}
 	// =====================================================================
-	// End of General purpose code 
+	// End of General purpose code
 	// =====================================================================
 	// function that does the work for one thread
 	bool worker(size_t thread_num, problem_specific* info)
@@ -262,9 +262,9 @@ namespace {
 		ax[0] = info-&gt;x;
 		<a href="independent.xml" target="_top">Independent</a>(ax);
 		ay[0] = sqrt( ax[0] * ax[0] );
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay); 
+		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
-		// Check function value corresponds to the identity 
+		// Check function value corresponds to the identity
 		double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
 		ok        &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(ay[0], ax[0], eps, eps);
 
@@ -285,8 +285,8 @@ bool simple_ad(void)
 	// (using thread_alloc in sequential mode)
 	size_t thread_num;
 	for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-	{	ok &amp;= thread_alloc::inuse(thread_num) == 0; 
-		ok &amp;= thread_alloc::available(thread_num) == 0; 
+	{	ok &amp;= thread_alloc::inuse(thread_num) == 0;
+		ok &amp;= thread_alloc::available(thread_num) == 0;
 	}
 
 	// initialize info_all
@@ -309,9 +309,9 @@ bool simple_ad(void)
 		void* v_ptr = static_cast&lt;void*&gt;( info_all[thread_num] );
 		thread_alloc::return_memory( v_ptr );
 		// check that there is no longer any memory inuse by this thread
-		ok &amp;= thread_alloc::inuse(thread_num) == 0; 
+		ok &amp;= thread_alloc::inuse(thread_num) == 0;
 		// return all memory being held for future use by this thread
-		thread_alloc::free_available(thread_num); 
+		thread_alloc::free_available(thread_num);
 	}
 
 	return ok;

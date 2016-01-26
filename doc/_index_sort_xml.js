@@ -7,7 +7,7 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'library.xml',
+'utility.xml',
 'index_sort.xml'
 ];
 var list_down2 = [
@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -47,9 +47,7 @@ var list_down1 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'benderquad.xml',
-'opt_val_hes.xml',
-'luratio.xml'
+'to_string.xml'
 ];
 var list_down0 = [
 'index_sort.cpp.xml'
@@ -58,6 +56,8 @@ var list_current0 = [
 'index_sort.xml#Syntax',
 'index_sort.xml#keys',
 'index_sort.xml#ind',
+'index_sort.xml#ind.Input',
+'index_sort.xml#ind.Return',
 'index_sort.xml#Example'
 ];
 function choose_across0(item)

@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>SimpleVector</option>
 <option>simple_vector.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -108,8 +106,8 @@ A:active { color : purple }
 
 # include &lt;vector&gt;                     // std::vector
 # include &lt;valarray&gt;                   // std::valarray
-# include &lt;cppad/vector.hpp&gt;       // CppAD::vector
-# include &lt;cppad/check_simple_vector.hpp&gt;  // CppAD::CheckSimpleVector
+# include &lt;cppad/utility/vector.hpp&gt;       // CppAD::vector
+# include &lt;cppad/utility/check_simple_vector.hpp&gt;  // CppAD::CheckSimpleVector
 namespace {
 	template &lt;typename Vector&gt;
 	bool Ok(void)
@@ -124,12 +122,12 @@ namespace {
 		ok &amp;= (y.size() == 2);      // size for an vector with elements
 
 		// non-const access to the elements of y
-		size_t i;                   
+		size_t i;
 		for(i = 0; i &lt; 2; i++)
-			y[i] = Scalar(i); 
+			y[i] = Scalar(i);
 
 		const Vector z(y);          // copy constructor
-		x.resize(2);                // resize 
+		x.resize(2);                // resize
 		x = z;                      // vector assignment
 
 		// use the const access to the elements of x
@@ -150,8 +148,8 @@ bool SimpleVector (void)
 	ok &amp;= Ok&lt; std::valarray&lt;float&gt; &gt;();
 	ok &amp;= Ok&lt; CppAD::vector&lt;int&gt; &gt;();
 # ifndef _MSC_VER
-	// Avoid Microsoft following compiler warning:  'size_t' : 
-	// forcing value to bool 'true' or 'false' (performance warning) 
+	// Avoid Microsoft following compiler warning:  'size_t' :
+	// forcing value to bool 'true' or 'false' (performance warning)
 	ok &amp;= Ok&lt; std::vector&lt;bool&gt; &gt;();
 	ok &amp;= Ok&lt; CppAD::vector&lt;bool&gt; &gt;();
 # endif

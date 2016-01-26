@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -28,7 +28,7 @@ var list_down1 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_current0 = [
 'download.xml#Purpose',
@@ -38,7 +38,7 @@ var list_current0 = [
 'download.xml#Compressed Archives.Release Versions',
 'download.xml#Compressed Archives.Monthly Versions',
 'download.xml#Compressed Archives.Unix File Extraction',
-'download.xml#Compressed Archives.Windows File Extraction',
+'download.xml#Compressed Archives.Windows File Extraction and Testing',
 'download.xml#Compressed Archives.Install Instructions',
 'download.xml#Subversion',
 'download.xml#Subversion.Limitations',

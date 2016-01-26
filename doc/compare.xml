@@ -6,7 +6,7 @@
 <title>AD Binary Comparison Operators</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Binary Comparison Operators"/>
-<meta name="keywords" id="keywords" content=" binary Ad compare operator &lt; &lt;= &gt; &gt;= == != ad comparison operators syntax purpose op x y b operation sequence assumptions example "/>
+<meta name="keywords" id="keywords" content=" ad binary comparison operators compare &lt; &lt;= &gt; &gt;= == != syntax purpose op x y b operation sequence assumptions example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -121,7 +121,7 @@ Compares two operands where one of the operands is an
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  object.
-The comparison has the same interpretation as for 
+The comparison has the same interpretation as for
 the 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
  type.
@@ -244,7 +244,7 @@ AD of
 .
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>For example, suppose 
+</span></code>For example, suppose
 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  and 
@@ -263,7 +263,7 @@ and the subsequent code is
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;if(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;)<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;cos(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;else&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;sin(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;else&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;sin(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);<br/>
 </span></font></code>
 only the assignment 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;cos(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
@@ -271,16 +271,16 @@ only the assignment
 (if 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  is a <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
-, 
+,
 nothing is recorded).
 The <a href="comparechange.xml" target="_top"><span style='white-space: nowrap'>CompareChange</span></a>
  function can yield
 some information about changes in comparison operation results.
 You can use <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
  to obtain comparison operations
-that depends on the 
+that depends on the
 <a href="glossary.xml#Tape.Independent Variable" target="_top"><span style='white-space: nowrap'>independent&#xA0;variable</span></a>
- 
+
 values with out re-taping the AD sequence of operations.
 
 <br/>
@@ -293,7 +293,7 @@ If one of the
 is used with an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  object,
-it is assumed that the same operator is supported by the base type 
+it is assumed that the same operator is supported by the base type
 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 .

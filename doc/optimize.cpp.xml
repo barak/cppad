@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -89,38 +89,49 @@ A:active { color : purple }
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
 namespace {
-	template &lt;class Float&gt;
-	void fun(const Float&amp; x, Float&amp; y, size_t&amp; n_var, size_t&amp; n_opt)
-	{	using CppAD::exp;
+	template &lt;class VectorFloat&gt; void fun(
+		const VectorFloat&amp; x, VectorFloat&amp; y, size_t&amp; n_var, size_t&amp; n_opt )
+	{	typedef typename VectorFloat::value_type Float;
 
-	 	// Create a variable that is optimized out because 
-	 	// it is only used in the comparision operation.
-		Float a = 1. / x;
-		n_var += 1;
-		n_opt += 0;
+		// One for each independent variable and one phantom variable at
+		// the beginning of operation sequence.
+		n_var = 1 + x.size();
 
-		// Create a variable that is used by the result
-		Float b = x * 5.;
+		// One operator for each independent variable and one to mark
+		// beginning of operation sequence.
+		n_opt = 1 + x.size();
+
+		// Create a variable that is is only used in the comparision operation
+		// (was optimized out until 2015-01-12).
+		Float a = 1. / x[0];
 		n_var += 1;
 		n_opt += 1;
 
+		// Create a variable that is used by the result
+		Float b = x[0] * 5.;
+		n_var += 1;
+		n_opt += 1;
+
+		// only one variable created for this comparison operation
+		// but the value depends on which branch is taken.
 		Float c;
-		if( a &lt; x )  
-			c = b / 3.; // only one variable created by this choice
-		else	c = b / 2.;
+		if( a &lt; x[0] )
+			c = 2.0 * b;
+		else
+			c = 3.0 * b;
 		n_var += 1;
 		n_opt += 1;
 
 		// Create a variable that is optimized out because it
 		// will always have the same value as b
-		Float d = 5. * x;
+		Float d = 5. * x[0];
 		n_var += 1;
 		n_opt += 0;
 
 		// Create three variables that will be converted to one
-		// cumulative summation. Note that a is not connected to 
+		// cumulative summation. Note that a is not connected to
 		// the result y (in the operation sequence).
-		y      = 1. + b + c + d; 
+		y[0]   = 1.0 + b + c + d;
 		n_var += 3;
 		n_opt += 1;
 	}
@@ -132,41 +143,52 @@ bool optimize(void)
 
 	// domain space vector
 	size_t n  = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0]      = .5; 
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
+	ax[0] = 0.5;
 
 	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
-	size_t n_var = 1 + n; // one phantom variable at the beginning
-	size_t n_opt = 1 + n; // and one for each independent variable
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
-	fun(X[0], Y[0], n_var, n_opt);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
+	size_t n_var, n_opt;
+	fun(ax, ay, n_var, n_opt);
 
-	// create f: X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; F(X, Y);
-	ok &amp;= (F.size_var() == n_var);
-
-	// Check zero order forward mode on the original operation sequence
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n), y(m);
-	x[0] = Value(X[0]);
-	size_t i = 0; // temporary variable (we do not use value)
-	double check;
-	fun(x[0], check, i, i);
-	y   = F.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= (y[0] == check);
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+	ok &amp;= (f.size_var() == n_var);
 
 	// Optimize the operation sequence
-	F.optimize();
-	ok &amp;= (F.size_var() == n_opt);
+	f.optimize();
+	ok &amp;= (f.size_var() == n_opt);
 
-	// Check result for a zero order calculation.
-	// This has already been checked if NDEBUG is not defined.
-	fun(x[0], check, i, i);
-	ok &amp;= (y[0] == check);
-	y   = F.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	// Check result for a zero order calculation for a different x,
+	// where the result of the comparison is he same.
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n), y(m), check(m);
+	x[0] = 0.75;
+	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	ok  &amp;= f.CompareChange() == 0;
+	fun(x, check, n_var, n_opt);
+	ok  &amp;= (y[0] == check[0]);
+
+	// Check case where result of the comparision is differnent
+	x[0] = 2.0;
+	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	ok  &amp;= f.CompareChange() == 1;
+	fun(x, check, n_var, n_opt);
+	ok &amp;= (y[0] != check[0]);
+
+	// re-tape at new x value, re-optimize, and re-evaluate forward
+	ax[0] = x[0];
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+	fun(ax, ay, n_var, n_opt);
+	f.Dependent(ax, ay);
+	f.optimize();
+	y   = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	ok &amp;= f.CompareChange() == 0;
+	ok &amp;= (y[0] == check[0]);
+
 	return ok;
 }
 

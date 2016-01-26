@@ -27,6 +27,8 @@ var list_down2 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_down1 = [
@@ -45,16 +47,18 @@ var list_current0 = [
 'base_adolc.hpp.xml#Example',
 'base_adolc.hpp.xml#Include Files',
 'base_adolc.hpp.xml#CondExpOp',
+'base_adolc.hpp.xml#CondExpRel',
 'base_adolc.hpp.xml#EqualOpSeq',
 'base_adolc.hpp.xml#Identical',
 'base_adolc.hpp.xml#Integer',
+'base_adolc.hpp.xml#azmul',
 'base_adolc.hpp.xml#Ordered',
 'base_adolc.hpp.xml#Unary Standard Math',
-'base_adolc.hpp.xml#erf',
+'base_adolc.hpp.xml#erf, asinh, acosh, atanh, expm1, log1p',
 'base_adolc.hpp.xml#sign',
 'base_adolc.hpp.xml#abs',
 'base_adolc.hpp.xml#pow',
-'base_adolc.hpp.xml#limits'
+'base_adolc.hpp.xml#numeric_limits'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

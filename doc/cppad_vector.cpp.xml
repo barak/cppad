@@ -6,7 +6,7 @@
 <title>CppAD::vector Template Class: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD::vector Template Class: Example and Test"/>
-<meta name="keywords" id="keywords" content=" cppad::vector template class: example and test vector Cppad Cppad::vector "/>
+<meta name="keywords" id="keywords" content=" cppad::vector template class: example and test vector Cppad "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>CppAD_vector</option>
 <option>cppad_vector.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -106,53 +104,56 @@ A:active { color : purple }
 <center><b><big><big>CppAD::vector Template Class: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
-# include &lt;cppad/vector.hpp&gt;
-# include &lt;cppad/check_simple_vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
+# include &lt;cppad/utility/check_simple_vector.hpp&gt;
 # include &lt;sstream&gt; // sstream and string are used to test output operation
 # include &lt;string&gt;
 
 bool CppAD_vector(void)
 {	bool ok = true;
-	using CppAD::vector;     // so can use vector instead of CppAD::vector 
+	using CppAD::vector;     // so can use vector instead of CppAD::vector
 	typedef double Type;     // change double to test other types
 
 	// check Simple Vector specifications
 	CppAD::CheckSimpleVector&lt; Type, vector&lt;Type&gt; &gt;();
 
-	vector&lt;Type&gt; x;          // default constructor 
+	vector&lt;Type&gt; x;          // default constructor
 	ok &amp;= (x.size() == 0);
 
 	x.resize(2);             // resize and set element assignment
 	ok &amp;= (x.size() == 2);
-	x[0] = Type(0);
-	x[1] = Type(1);
+	x[0] = Type(1);
+	x[1] = Type(2);
 
 	vector&lt;Type&gt; y(2);       // sizing constructor
 	ok &amp;= (y.size() == 2);
 
 	const vector&lt;Type&gt; z(x); // copy constructor and const element access
 	ok &amp;= (z.size() == 2);
-	ok &amp;= ( (z[0] == Type(0)) &amp;&amp; (z[1] == Type(1)) );
+	ok &amp;= ( (z[0] == Type(1)) &amp;&amp; (z[1] == Type(2)) );
 
 	x[0] = Type(2);          // modify, assignment changes x
 	ok &amp;= (x[0] == Type(2));
 
 	x = y = z;               // vector assignment
-	ok &amp;= ( (x[0] == Type(0)) &amp;&amp; (x[1] == Type(1)) );
-	ok &amp;= ( (y[0] == Type(0)) &amp;&amp; (y[1] == Type(1)) );
-	ok &amp;= ( (z[0] == Type(0)) &amp;&amp; (z[1] == Type(1)) );
+	ok &amp;= ( (x[0] == Type(1)) &amp;&amp; (x[1] == Type(2)) );
+	ok &amp;= ( (y[0] == Type(1)) &amp;&amp; (y[1] == Type(2)) );
+	ok &amp;= ( (z[0] == Type(1)) &amp;&amp; (z[1] == Type(2)) );
 
 	// test of output
-	std::string        correct= &quot;{ 0, 1 }&quot;;
+	std::string        correct= &quot;{ 1, 2 }&quot;;
 	std::string        str;
 	std::ostringstream buf;
 	buf &lt;&lt; z;
 	str = buf.str();
 	ok &amp;= (str == correct);
 
-	// test resize(0), capacity, and clear
+	// test resize(1), resize(0), capacity, and clear
 	size_t i = x.capacity();
-	ok      &amp;= i &gt; 0;
+	ok      &amp;= i &gt;= 2;
+	x.resize(1);
+	ok      &amp;= x[0] == Type(1);
+	ok      &amp;= i == x.capacity();
 	x.resize(0);
 	ok      &amp;= i == x.capacity();
 	x.clear();
@@ -161,11 +162,11 @@ bool CppAD_vector(void)
 	// test of push_back scalar and capacity
 	size_t N = 100;
 	for(i = 0; i &lt; N; i++)
-	{	size_t old_capacity = x.capacity();	
+	{	size_t old_capacity = x.capacity();
 		x.push_back( Type(i) );
 		ok &amp;= (i+1) == x.size();
 		ok &amp;= i &lt; x.capacity();
-		ok &amp;= (i == old_capacity) || old_capacity == x.capacity(); 
+		ok &amp;= (i == old_capacity) || old_capacity == x.capacity();
 	}
 	for(i = 0; i &lt; N; i++)
 		ok &amp;= ( x[i] == Type(i) );
@@ -178,7 +179,7 @@ bool CppAD_vector(void)
 		ok &amp;= x[i] == Type(N - i);
 	}
 
-	// test of push_vector 
+	// test of push_vector
 	x.push_vector(x);
 	ok &amp;= (x.size() == 2 * N);
 	for(i = 0; i &lt; N; i++)

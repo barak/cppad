@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -39,6 +39,8 @@ var list_down1 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_current0 = [

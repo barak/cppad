@@ -6,7 +6,7 @@
 <title>An Introduction by Example to Algorithmic Differentiation</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="An Introduction by Example to Algorithmic Differentiation"/>
-<meta name="keywords" id="keywords" content=" introduction Ad Algorithmic Differentiation Automatic an by example to algorithmic differentiation purpose preface forward mode reverse operation count efficiency outline reference "/>
+<meta name="keywords" id="keywords" content=" an introduction by example to algorithmic differentiation Ad Automatic purpose preface forward mode reverse operation count efficiency outline reference "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="installunix.xml" target="_top">Prev</a>
+<td><a href="auto_tools.xml" target="_top">Prev</a>
 </td><td><a href="get_started.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -50,7 +50,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -90,7 +90,7 @@ This is an introduction by example
 to Algorithmic Differentiation.
 Its purpose is to aid in understand what AD calculates,
 how the calculations are preformed,
-and the amount of computation and memory required 
+and the amount of computation and memory required
 for a forward or reverse sweep.
 
 
@@ -103,39 +103,39 @@ for a forward or reverse sweep.
 <br/>
 <b><a name="Preface.Algorithmic Differentiation" id="Preface.Algorithmic Differentiation">Algorithmic Differentiation</a></b>
 <br/>
-Algorithmic Differentiation 
+Algorithmic Differentiation
 (often referred to as Automatic Differentiation or just AD)
-uses the software representation 
+uses the software representation
 of a function to obtain an efficient method for calculating its derivatives.
-These derivatives can be of arbitrary order and are analytic in nature 
+These derivatives can be of arbitrary order and are analytic in nature
 (do not have any truncation error).
 
 <br/>
 <br/>
 <b><a name="Preface.Forward Mode" id="Preface.Forward Mode">Forward Mode</a></b>
 <br/>
-A forward mode sweep computes 
+A forward mode sweep computes
 the partial derivative of all the dependent variables with respect
-to one independent variable (or independent variable direction). 
+to one independent variable (or independent variable direction).
 
 <br/>
 <br/>
 <b><a name="Preface.Reverse Mode" id="Preface.Reverse Mode">Reverse Mode</a></b>
 <br/>
-A reverse mode sweep computes 
+A reverse mode sweep computes
 the derivative of one dependent variable
-(or one dependent variable direction) 
+(or one dependent variable direction)
 with respect to all the independent variables.
 
 <br/>
 <br/>
 <b><a name="Preface.Operation Count" id="Preface.Operation Count">Operation Count</a></b>
 <br/>
-The number of floating point operations for either a 
+The number of floating point operations for either a
 forward or reverse mode sweep
-is a small multiple of the number required to evaluate the original function. 
+is a small multiple of the number required to evaluate the original function.
 Thus, using reverse mode,
-you can evaluate the derivative of a scalar valued function 
+you can evaluate the derivative of a scalar valued function
 with respect to thousands of variables in a small multiple of the
 work to evaluate the original function.
 
@@ -156,7 +156,7 @@ the derivative of the determinant
 <b><big><a name="Outline" id="Outline">Outline</a></big></b>
 
 <ol type="A"><li>
-Demonstrate the use of CppAD to calculate derivatives of a 
+Demonstrate the use of CppAD to calculate derivatives of a
 polynomial: <a href="get_started.cpp.xml" target="_top"><span style='white-space: nowrap'>get_started.cpp</span></a>
 .
 
@@ -164,7 +164,7 @@ polynomial: <a href="get_started.cpp.xml" target="_top"><span style='white-space
 
 Present two algorithms that approximate the exponential function.
 The first algorithm <a href="exp_2.hpp.xml" target="_top"><span style='white-space: nowrap'>exp_2.hpp</span></a>
- is simpler and does not 
+ is simpler and does not
 include any logical variables or loops.
 The second algorithm <a href="exp_eps.hpp.xml" target="_top"><span style='white-space: nowrap'>exp_eps.hpp</span></a>
  includes
@@ -198,7 +198,7 @@ Compute a reverse sweep derivative of the operation sequence
 ).
 </li><li>
 
-Use CppAD to compute both a forward and reverse sweep 
+Use CppAD to compute both a forward and reverse sweep
 of the operation sequence
 (<a href="exp_2_cppad.xml" target="_top"><span style='white-space: nowrap'>exp_2_cppad</span></a>
  and <a href="exp_eps_cppad.xml" target="_top"><span style='white-space: nowrap'>exp_eps_cppad</span></a>
@@ -221,16 +221,15 @@ and <a href="exp_eps.xml" target="_top"><span style='white-space: nowrap'>exp_ep
 <br/>
 <b><big><a name="Reference" id="Reference">Reference</a></big></b>
 <br/>
-An in-depth review of AD theory and methods can be found in 
+An in-depth review of AD theory and methods can be found in
 the book
 
-<code><i><font color="black"><span style='white-space: nowrap'><br/>
-Evaluating&#xA0;Derivatives:<br/>
+<code><i><font color="black"><span style='white-space: nowrap'>Evaluating&#xA0;Derivatives:<br/>
 Principles&#xA0;and&#xA0;Techniques&#xA0;of&#xA0;Algorithmic&#xA0;Differentiation<br/>
 </span></font></i></code>
 ,
 Andreas Griewank,
-SIAM Frontiers in Applied Mathematics, 
+SIAM Frontiers in Applied Mathematics,
 2000.
 
 <br/>

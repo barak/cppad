@@ -6,7 +6,7 @@
 <title>A Simple Parallel Pthread Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="A Simple Parallel Pthread Example and Test"/>
-<meta name="keywords" id="keywords" content=" Openmp example A.1.1c thread a simple parallel pthread and test purpose source code "/>
+<meta name="keywords" id="keywords" content=" a simple parallel pthread example and test Openmp A.1.1c thread purpose source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -93,10 +93,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
 <center><b><big><big>A Simple Parallel Pthread Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -117,7 +113,7 @@ This example just demonstrates pthreads and does not use CppAD at all.
 
 // define CPPAD_NULPTR
 # include &lt;cppad/configure.hpp&gt;
-# if CPPAD_HAS_NULLPTR
+# if CPPAD_USE_CPLUSPLUS_2011
 # define CPPAD_NULL nullptr
 # else
 # define CPPAD_NULL 0
@@ -136,7 +132,7 @@ namespace {
 	{	int i;
 		// for some reason this function is missing on some systems
 		// assert( pthread_is_multithreaded_np() &gt; 0 );
-		for(i = 1; i &lt; n; i++) 
+		for(i = 1; i &lt; n; i++)
 			b[i] = (a[i] + a[i-1]) / 2.0;
 		return;
 	}
@@ -167,7 +163,7 @@ bool a11c(void)
 	int n_thread = NUMBER_THREADS;
 	// the threads
 	pthread_t thread[NUMBER_THREADS];
- 	// arguments to start_routine
+	// arguments to start_routine
 	struct start_arg arg[NUMBER_THREADS];
 	// attr
 	pthread_attr_t attr;
@@ -201,7 +197,7 @@ bool a11c(void)
 	// check the result
 	float eps = 100. * std::numeric_limits&lt;float&gt;::epsilon();
 	for(i = 1; i &lt; n ; i++)
-		ok &amp;= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) &lt;= eps; 
+		ok &amp;= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) &lt;= eps;
 
 	delete [] a;
 	delete [] b;

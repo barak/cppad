@@ -6,7 +6,7 @@
 <title>One DimensionalRomberg Integration</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="One DimensionalRomberg Integration"/>
-<meta name="keywords" id="keywords" content=" one dimensionalromberg integration integrate Romberg Integrate syntax description include r f a b n p e float example source code "/>
+<meta name="keywords" id="keywords" content=" one dimensionalromberg integration integrate Romberg syntax description include r f a b n p e float example source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>RombergOne</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -121,10 +119,11 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
-<code><font color="blue"><br/>
-# include &lt;cppad/romberg_one.hpp&gt;</font></code>
-<code><span style='white-space: nowrap'><br/>
-</span></code>
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/romberg_one.hpp&gt;<br/>
+</span></font></code>
+
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;RombergOne(</span></font><i><font color="black"><span style='white-space: nowrap'>F</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>e</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
@@ -183,7 +182,7 @@ Returns the Romberg integration estimate
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
 The file <code><font color="blue">cppad/romberg_one.hpp</font></code> is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of 
+but it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
@@ -205,7 +204,7 @@ It is the estimate computed by <code><font color="blue">RombergOne</font></code>
 <br/>
 The object 
 <code><i><font color="black"><span style='white-space: nowrap'>F</span></font></i></code>
- can be of any type, but it must support 
+ can be of any type, but it must support
 the operation
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -226,7 +225,7 @@ The return value of
 <code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
  object
 (see description of <a href="rombergone.xml#Float" target="_top"><span style='white-space: nowrap'>Float</span></a>
- below). 
+ below).
 
 <br/>
 <br/>
@@ -299,7 +298,7 @@ It must be less than or equal
 
 
 and determines the accuracy order in the approximation for the integral
-that is returned by <code><font color="blue">RombergOne</font></code>. 
+that is returned by <code><font color="blue">RombergOne</font></code>.
 To be specific
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -353,7 +352,7 @@ The argument
 The input value of 
 <code><i><font color="black"><span style='white-space: nowrap'>e</span></font></i></code>
  does not matter
-and its output value is an approximation for the error in 
+and its output value is an approximation for the error in
 the integral estimates; i.e.,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -399,7 +398,7 @@ In addition, if
 </span></font></code>
 returns the <code><font color="blue">bool</font></code> value true if 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- is less than 
+ is less than
 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
  and false otherwise.
@@ -424,7 +423,7 @@ The source code for this routine is in the file
 <code><font color="blue">cppad/romberg_one.hpp</font></code>.
 
 
-<hr/>Input File: cppad/romberg_one.hpp
+<hr/>Input File: cppad/utility/romberg_one.hpp
 
 </body>
 </html>

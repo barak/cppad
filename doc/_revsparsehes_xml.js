@@ -32,10 +32,13 @@ var list_down2 = [
 var list_down1 = [
 'forsparsejac.xml',
 'revsparsejac.xml',
-'revsparsehes.xml'
+'dependency.cpp.xml',
+'revsparsehes.xml',
+'bool_sparsity.cpp.xml'
 ];
 var list_down0 = [
-'rev_sparse_hes.cpp.xml'
+'rev_sparse_hes.cpp.xml',
+'sparsity_sub.cpp.xml'
 ];
 var list_current0 = [
 'revsparsehes.xml#Syntax',

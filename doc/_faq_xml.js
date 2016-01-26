@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -28,11 +28,12 @@ var list_down1 = [
 'theory.xml',
 'glossary.xml',
 'bib.xml',
-'bugs.xml',
-'wishlist.xml',
+'wish_list.xml',
 'whats_new.xml',
 'deprecated.xml',
 'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
 'license.xml'
 ];
 var list_current0 = [
@@ -42,7 +43,6 @@ var list_current0 = [
 'faq.xml#Complex Types',
 'faq.xml#Exceptions',
 'faq.xml#Independent Variables',
-'faq.xml#Math Functions',
 'faq.xml#Matrix Inverse',
 'faq.xml#Mode: Forward or Reverse',
 'faq.xml#Namespace',

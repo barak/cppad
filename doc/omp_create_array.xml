@@ -6,7 +6,7 @@
 <title>Allocate Memory and Create A Raw Array</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Allocate Memory and Create A Raw Array"/>
-<meta name="keywords" id="keywords" content=" allocate memory and create a raw array deprecated create_array omp_alloc syntax purpose type size_min size_out delta example "/>
+<meta name="keywords" id="keywords" content=" allocate memory and create a raw array create_array deprecated 2011-08-31 syntax purpose type size_min size_out delta example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -96,7 +99,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Deprecated</option>
+<option>Deprecated 2011-08-31</option>
 <option>Syntax</option>
 <option>Purpose</option>
 <option>Type</option>
@@ -113,9 +116,7 @@ A:active { color : purple }
 
 <center><b><big><big>Allocate Memory and Create A Raw Array</big></big></b></center>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
-
-
+<b><big><a name="Deprecated 2011-08-31" id="Deprecated 2011-08-31">Deprecated 2011-08-31</a></big></b>
 <br/>
 Use the function <a href="ta_create_array.xml" target="_top"><span style='white-space: nowrap'>thread_alloc::create_array</span></a>
  instead.
@@ -126,6 +127,9 @@ Use the function <a href="ta_create_array.xml" target="_top"><span style='white-
 
 <br/>
 
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/omp_alloc.hpp&gt;<br/>
+</span></font></code>
+
 <code><i><font color="black"><span style='white-space: nowrap'>array</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;omp_alloc::create_array&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(</span></font><i><font color="black"><span style='white-space: nowrap'>size_min</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_out</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 .
 
@@ -134,7 +138,7 @@ Use the function <a href="ta_create_array.xml" target="_top"><span style='white-
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
 Create a new raw array using <a href="omp_alloc.xml" target="_top"><span style='white-space: nowrap'>omp_alloc</span></a>
- a fast memory allocator 
+ a fast memory allocator
 that works well in a multi-threading OpenMP environment.
 
 <br/>
@@ -167,10 +171,10 @@ This argument has prototype
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_out</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 The input value of this argument does not matter.
-Upon return, it is the actual number of elements 
+Upon return, it is the actual number of elements
 in 
 <code><i><font color="black"><span style='white-space: nowrap'>array</span></font></i></code>
- 
+
 (
 <code><i><font color="black"><span style='white-space: nowrap'>&#xA0;size_min&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;=</span></font><i><font color="black"><span style='white-space: nowrap'>&#xA0;size_out</span></font></i></code>
 ).
@@ -191,7 +195,7 @@ It is array with
  elements.
 The default constructor for 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
- is used to initialize the 
+ is used to initialize the
 elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>array</span></font></i></code>
 .
@@ -204,7 +208,7 @@ should be used to destroy the array when it is no longer needed.
 <b><big><a name="Delta" id="Delta">Delta</a></big></b>
 <br/>
 The amount of memory <a href="omp_inuse.xml" target="_top"><span style='white-space: nowrap'>omp_inuse</span></a>
- by the current thread, 
+ by the current thread,
 will increase 
 <code><i><font color="black"><span style='white-space: nowrap'>delta</span></font></i></code>
  where
@@ -222,7 +226,7 @@ if a previous allocation with
  between its current value
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>size_out</span></font></i></code>
- is available. 
+ is available.
 
 <br/>
 <br/>
@@ -233,7 +237,7 @@ and
 
 
 
-<hr/>Input File: cppad/omp_alloc.hpp
+<hr/>Input File: cppad/utility/omp_alloc.hpp
 
 </body>
 </html>

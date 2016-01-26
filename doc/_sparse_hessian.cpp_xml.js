@@ -35,7 +35,9 @@ var list_down2 = [
 'sparse_hessian.xml'
 ];
 var list_down1 = [
-'sparse_hessian.cpp.xml'
+'sparse_hessian.cpp.xml',
+'sub_sparse_hes.cpp.xml',
+'sparse_sub_hes.cpp.xml'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

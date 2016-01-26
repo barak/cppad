@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,17 +66,19 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
@@ -202,7 +204,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Introduction" id="Introduction">Introduction</a></big></b>
 <br/>
-This section contains a list of the changes plus future plans for 
+This section contains a list of the changes plus future plans for
 CppAD during 2004
 (in reverse order by date).
 The purpose of this section is to
@@ -217,8 +219,8 @@ The documentation for the CppAD error macros was improved.
 The package title in <a href="cppad.xml" target="_top"><span style='white-space: nowrap'>cppad</span></a>
  was changed.
 The documentation for <a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>CppAD::vector</span></a>
- 
-was improved and the corresponding source code 
+
+was improved and the corresponding source code
 <code><font color="blue">cppad/vector.hpp</font></code> was included.
 
 <br/>
@@ -251,7 +253,7 @@ make them more in line with the introduction to C++ AD book.
 <br/>
 Changing to Autoconf and Automake on
 <a href="whats_new_04.xml#08-24" target="_top"><span style='white-space: nowrap'>08-24</span></a>
- mistakenly forgot 
+ mistakenly forgot
 the <code><font color="blue">-Wall</font></code> compiler switch (all warnings).
 This has been added and the corresponding warnings
 have been fixed.
@@ -260,7 +262,7 @@ have been fixed.
 <br/>
 <b><big><a name="11-16" id="11-16">11-16</a></big></b>
 <br/>
-The 11-15 Debug version would not compile under Visual C++ version 7.0 
+The 11-15 Debug version would not compile under Visual C++ version 7.0
 because a declaration of <code><font color="blue">LessThanOrZero</font></code> was missing.
 This has been fixed.
 
@@ -301,12 +303,12 @@ just <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-
 If <code><font color="blue">NDEBUG</font></code> is not defined during compile time,
 all 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- 
+
 <a href="compare.xml" target="_top"><span style='white-space: nowrap'>comparison</span></a>
  operations are checked during
 <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>zero&#xA0;order</span></a>
  forward mode calculations.
-The 
+The
 <a href="comparechange.xml" target="_top"><span style='white-space: nowrap'>CompareChange</span></a>
  function
 returns the number of comparison operations that have changed.
@@ -316,13 +318,13 @@ returns the number of comparison operations that have changed.
 <b><big><a name="11-10" id="11-10">11-10</a></big></b>
 <br/>
 The <a href="get_started.cpp.xml" target="_top"><span style='white-space: nowrap'>get_started.cpp</span></a>
- example was changed to use the 
+ example was changed to use the
 <a href="jacobian.xml" target="_top"><span style='white-space: nowrap'>Jacobian</span></a>
  driver.
 In addition, more <a href="_index.xml" target="_top"><span style='white-space: nowrap'>index</span></a>
  entries,
 that point to the <a href="drivers.xml" target="_top"><span style='white-space: nowrap'>easy&#xA0;to&#xA0;use&#xA0;drivers</span></a>
-, 
+,
 were added.
 
 <br/>
@@ -339,7 +341,7 @@ This has been fixed.
 <br/>
 <b><big><a name="11-02" id="11-02">11-02</a></big></b>
 <br/>
-The <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
+The <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
  required the user
 to touch the files to get the dates in proper order.
 This is no longer necessary.
@@ -348,7 +350,7 @@ This is no longer necessary.
 <br/>
 <b><big><a name="11-01" id="11-01">11-01</a></big></b>
 <br/>
-Some of the dependency directories and files, for example 
+Some of the dependency directories and files, for example
 <code><font color="blue">PrintFor/.deps</font></code> and
 <code><font color="blue">PrintFor/.deps/PrintFor.Po</font></code> had an extra <code><font color="blue">?</font></code>
 at the end of their names.
@@ -360,16 +362,16 @@ and automake tools.
 <b><big><a name="10-29" id="10-29">10-29</a></big></b>
 <br/>
 Add the example and test <a href="simple_vector.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_vector.cpp</span></a>
- 
+
 to the <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  documentation.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The specifications for 
+</span></code>The specifications for
 <a href="preprocessor.xml" target="_top"><span style='white-space: nowrap'>preprocessor&#xA0;symbols</span></a>
 
 state that all the CppAD preprocessor symbols
-begin with <code><font color="blue">CppAD</font></code> 
+begin with <code><font color="blue">CppAD</font></code>
 (so they do not conflict with other packages).
 Some preprocessor symbols in the file <code><font color="blue">cppad/config.h</font></code> did
 began with <code><font color="blue">WITH_</font></code>.
@@ -379,7 +381,7 @@ This has been fixed.
 <br/>
 <b><big><a name="10-28" id="10-28">10-28</a></big></b>
 <br/>
-The examples 
+The examples
 <a href="hes_lu_det.cpp.xml" target="_top"><span style='white-space: nowrap'>hes_lu_det.cpp</span></a>
 ,
 <a href="hes_minor_det.cpp.xml" target="_top"><span style='white-space: nowrap'>hes_minor_det.cpp</span></a>
@@ -416,7 +418,7 @@ One declaration (for the <a href="value.xml" target="_top"><span style='white-sp
  function) was missing
 from the file <code><font color="blue">cppad/local/Declare.h</font></code>.
 This has been added and CppAD should now compile and run
-under both Microsoft VC 6.0 and 7.0. 
+under both Microsoft VC 6.0 and 7.0.
 
 <br/>
 <br/>
@@ -448,19 +450,19 @@ This has been fixed.
 <br/>
 <b><big><a name="10-06" id="10-06">10-06</a></big></b>
 <br/>
-The test 
+The test
 <code><font color="blue">TapeDetLu</font></code> was added to <code><font color="blue">speed_cppad/DetLuSpeed.cpp</font></code>
-and 
+and
 <code><font color="blue">TapeDetMinor</font></code> was added to <code><font color="blue">speed_cppad/DetMinorSpeed.cpp</font></code>.
 These tests just tape the calculations without computing any derivatives.
-Using this, and the other tests, one can to separate the taping time 
+Using this, and the other tests, one can to separate the taping time
 from the derivative calculation time.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The 
+</span></code>The
 windows installation steps
 do not build a <code><font color="blue">config.h</font></code> file.
-Hence a default <code><font color="blue">config.h</font></code> file was added to the 
+Hence a default <code><font color="blue">config.h</font></code> file was added to the
 distribution for use with Microsoft Visual Studio.
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -469,16 +471,16 @@ developer documentation was brought up to date.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Links to the ADOLC and FADBAD download pages were added
-to the <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
+to the <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
  instructions.
 
 <br/>
 <br/>
 <b><big><a name="09-29" id="09-29">09-29</a></big></b>
 <br/>
-The include files for the <a href="library.xml" target="_top"><span style='white-space: nowrap'>library</span></a>
+The include files for the <a href="utility.xml" target="_top"><span style='white-space: nowrap'>utilities</span></a>
  are now included
-by the root file <code><font color="blue">cppad/cppad.hpp</font></code>. 
+by the root file <code><font color="blue">cppad/cppad.hpp</font></code>.
 They can still be included individually with out the rest of
 the CppAD package.
 
@@ -497,8 +499,8 @@ all uses of greater than and less than comparisons were removed.
 </span></code>The changes on <a href="whats_new_04.xml#09-21" target="_top"><span style='white-space: nowrap'>09-21</span></a>
  did not fix all
 the file date and time problems; i.e., automake was still running
-in response to the <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
- 
+in response to the <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
+
 <code><font color="blue">make</font></code> command.
 
 
@@ -511,7 +513,7 @@ There was a reference to
  that should have been 
 <code><i><font color="black"><span style='white-space: nowrap'>X</span></font></i></code>
 
-in the description of the 
+in the description of the
 <a href="lusolve.xml#X" target="_top"><span style='white-space: nowrap'>X</span></a>
  argument of <code><font color="blue">LuSolve</font></code>.
 This has been fixed.
@@ -530,8 +532,8 @@ it now works for multiple levels of taping.
 <br/>
 </span></code>The date of the files <code><font color="blue">aclocal.m4</font></code> and <code><font color="blue">config.h.in</font></code>
 were later than the date of top level <code><font color="blue">Makefile.am</font></code>.
-This caused the <code><font color="blue">make</font></code> command during the 
-<a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
+This caused the <code><font color="blue">make</font></code> command during the
+<a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;installation</span></a>
 
 to try to run <code><font color="blue">autoconf</font></code>
 and this did not work on systems with very old versions of <code><font color="blue">autoconf</font></code>.
@@ -547,14 +549,14 @@ to be below that operation in the documentation tree.
 For example
 <a href="add.cpp.xml" target="_top"><span style='white-space: nowrap'>add.cpp</span></a>
  is below <a href="ad_binary.xml" target="_top"><span style='white-space: nowrap'>ad_binary</span></a>
- 
+
 in the documentation tree.
 
 <br/>
 <br/>
 <b><big><a name="09-10" id="09-10">09-10</a></big></b>
 <br/>
-The version released on 04-09-09 did not have the 
+The version released on 04-09-09 did not have the
 new file <code><font color="blue">PrintFor.h</font></code> in <code><font color="blue">cppad/local</font></code>.
 This has been fixed.
 <code><span style='white-space: nowrap'><br/>
@@ -564,7 +566,7 @@ This has been fixed.
  type requirements were simplified.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
+</span></code>The <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
  instructions
 were modified so just one make command was executed at the top level.
 This was necessary because the order of the makes is now important
@@ -583,7 +585,7 @@ at arguments that are different from those used when taping.
 <br/>
 <b><big><a name="09-07" id="09-07">09-07</a></big></b>
 <br/>
-In the <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
+In the <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
  instructions
 place <code><font color="blue">./</font></code> in front of current directory program names; for example,
 <code><font color="blue">./GetStarted</font></code> instead of <code><font color="blue">GetStarted</font></code>
@@ -595,31 +597,31 @@ in the default executable path).
 <br/>
 <b><big><a name="09-04" id="09-04">09-04</a></big></b>
 <br/>
-A library containing the 
+A library containing the
 <a href="speedtest.xml" target="_top"><span style='white-space: nowrap'>SpeedTest</span></a>
  and <a href="nearequal.xml" target="_top"><span style='white-space: nowrap'>NearEqual</span></a>
  object files
 was added to the distribution.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>All of the include files of the form 
+</span></code>All of the include files of the form
 
 <code><font color="blue"><span style='white-space: nowrap'>&lt;cppad/library/</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>.h&gt;</span></font></code>
  were moved to
 
 <code><font color="blue"><span style='white-space: nowrap'>&lt;cppad/</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>.h&gt;</span></font></code>
-. 
+.
 
 <br/>
 <br/>
 <b><big><a name="09-02" id="09-02">09-02</a></big></b>
 <br/>
 Some more messages were added to the output of <code><font color="blue">configure</font></code>
-during the <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
+during the <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
 .
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The suggested compression program during 
+</span></code>The suggested compression program during
 Windows installation
 was changed from
 <a href="http://www.7-zip.org" target="_top"><span style='white-space: nowrap'>7-zip</span></a>
@@ -633,8 +635,8 @@ to
 <br/>
 <b><big><a name="08-27" id="08-27">08-27</a></big></b>
 <br/>
-The error messages printed by the default version of 
-the CppAD error macros had <code><font color="blue">YY-MM-DD</font></code> in place of the 
+The error messages printed by the default version of
+the CppAD error macros had <code><font color="blue">YY-MM-DD</font></code> in place of the
 date for the current version.
 This has been fixed.
 <code><span style='white-space: nowrap'><br/>
@@ -645,7 +647,7 @@ command line option
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The <a href="install.xml" target="_top"><span style='white-space: nowrap'>installation&#xA0;instructions</span></a>
- for 
+ for
 Unix and Windows were split into separate pages.
 
 <br/>
@@ -655,7 +657,7 @@ Unix and Windows were split into separate pages.
 The <a href="install.xml" target="_top"><span style='white-space: nowrap'>installation</span></a>
  now automates the replacement
 of <a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>CppAD::vector</span></a>
- by 
+ by
 either the <code><font color="blue">std::vector</font></code>
 or <code><font color="blue">boost::numeric::ublas::vector</font></code>.
 
@@ -671,7 +673,7 @@ This automates the building of the make files for the
 way to distribute open source software.
 This caused some organizational changes,
 for example, the <a href="get_started.cpp.xml" target="_top"><span style='white-space: nowrap'>GetStarted</span></a>
- example now 
+ example now
 has its own directory and
 the distribution directory is named
 
@@ -711,7 +713,7 @@ works for any type of vector (not just <code><font color="blue">CppADvector</fon
 The file <code><font color="blue">cppad/example/NearEqual.h</font></code> has been moved
 to <code><font color="blue">cppad/example/NearEqualExt.h</font></code> because it contains
 extensions of the <a href="nearequal.xml" target="_top"><span style='white-space: nowrap'>NearEqual</span></a>
- routine to <code><font color="blue">AD</font></code> types. 
+ routine to <code><font color="blue">AD</font></code> types.
 
 <br/>
 <br/>
@@ -720,7 +722,7 @@ extensions of the <a href="nearequal.xml" target="_top"><span style='white-space
 The <code><font color="blue">double</font></code> and <code><font color="blue">std::complex&lt;double&gt;</font></code>
 cases for the <a href="nearequal.xml" target="_top"><span style='white-space: nowrap'>NearEqual</span></a>
  routine arguments
-has been moved to the general purpose <a href="library.xml" target="_top"><span style='white-space: nowrap'>library</span></a>
+has been moved to the general purpose <a href="utility.xml" target="_top"><span style='white-space: nowrap'>utilities</span></a>
 .
 
 <br/>
@@ -748,7 +750,7 @@ the number of digits in the size changed.
 <br/>
 <b><big><a name="06-29" id="06-29">06-29</a></big></b>
 <br/>
-Added code to trap and report memory allocation errors during 
+Added code to trap and report memory allocation errors during
 <code><font color="blue">new</font></code> operations.
 
 <br/>
@@ -758,12 +760,12 @@ Added code to trap and report memory allocation errors during
 A discussion of the order dependence of the
 <a href="ad_assign.xml" target="_top"><span style='white-space: nowrap'>assignment</span></a>
  operator
-and the 
+and the
 <a href="independent.xml" target="_top"><span style='white-space: nowrap'>independent&#xA0;function</span></a>
 
 was added to the
 <a href="faq.xml#Assignment and Independent" target="_top"><span style='white-space: nowrap'>Faq</span></a>
-. 
+.
 In addition,
 a similar discussion
 was added to the documentation for the
@@ -771,13 +773,13 @@ was added to the documentation for the
  function.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The definition of a 
+</span></code>The definition of a
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
 
-and 
+and
 <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variable</span></a>
 
-were changed to reflect that fact that 
+were changed to reflect that fact that
 these are time dependent (current) properties
 of an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -788,13 +790,13 @@ of an
 <br/>
 <b><big><a name="06-12" id="06-12">06-12</a></big></b>
 <br/>
-All of the 
+All of the
 <a href="arithmetic.xml" target="_top"><span style='white-space: nowrap'>arithmetic&#xA0;operators</span></a>
- 
+
 (except for the unary operators)
 can now accept <code><font color="blue">int</font></code> arguments.
 The documentation for these arguments has been changed to reflect this.
-In addition, 
+In addition,
 the corresponding test cases have been changed to test this and to
 test high order derivative cases.
 The old versions of these tests were moved into the
@@ -812,14 +814,14 @@ The <a href="atan2.xml" target="_top"><span style='white-space: nowrap'>atan2</s
 <br/>
 <b><big><a name="06-03" id="06-03">06-03</a></big></b>
 <br/>
-The <code><font color="blue">asin</font></code> and <code><font color="blue">acos</font></code> 
-<a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>AD&#xA0;standard&#xA0;math&#xA0;unary&#xA0;functions</span></a>
- were added.
+The <code><font color="blue">asin</font></code> and <code><font color="blue">acos</font></code>
+<a href="unary_standard_math.xml" target="_top"><span style='white-space: nowrap'>unary_standard_math</span></a>
+ functions were added.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>There was a bug the reverse mode theory and calculation of 
-derivatives of <a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>sqrt</span></a>
- for fourth and higher orders. 
+</span></code>There was a bug the reverse mode theory and calculation of
+derivatives of <a href="sqrt.xml" target="_top"><span style='white-space: nowrap'>sqrt</span></a>
+ for fourth and higher orders.
 This has been fixed.
 In addition,
 the following examples have been changed
@@ -844,8 +846,8 @@ so that they test derivative up to fifth order:
 <br/>
 <b><big><a name="06-01" id="06-01">06-01</a></big></b>
 <br/>
-There was a bug in the <a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>atan</span></a>
- function 
+There was a bug in the <a href="atan.xml" target="_top"><span style='white-space: nowrap'>atan</span></a>
+ function
 <a href="forward.xml" target="_top"><span style='white-space: nowrap'>forward&#xA0;mode</span></a>
  calculations for Taylor coefficient
 orders greater than two.
@@ -865,14 +867,14 @@ changed so that they tested higher order derivatives.
 <br/>
 <b><big><a name="05-29" id="05-29">05-29</a></big></b>
 <br/>
-The forward mode recursion formulas for each of the 
+The forward mode recursion formulas for each of the
 <a href="forwardtheory.xml#Standard Math Functions.Cases that Apply Recursion Above" target="_top"><span style='white-space: nowrap'>standard&#xA0;math&#xA0;functions</span></a>
 
 has been split into separate sections.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>A roman (instead of italic) font was used for the name of
-for the name of each of the standard math functions 
+for the name of each of the standard math functions
 in the assumption statements below the section
 for the standard math functions.
 For example, 
@@ -900,13 +902,13 @@ For example,
 <br/>
 In the documentation for <a href="poly.xml" target="_top"><span style='white-space: nowrap'>Poly</span></a>
 ,
-the reference to <code><font color="blue">example/Poly.h</font></code> 
+the reference to <code><font color="blue">example/Poly.h</font></code>
 was corrected to <code><font color="blue">cppad/library/Poly.h</font></code>.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>In the documentation for <a href="speedtest.xml" target="_top"><span style='white-space: nowrap'>SpeedTest</span></a>
 ,
-the reference to <code><font color="blue">Lib/SpeedTest.h</font></code> 
+the reference to <code><font color="blue">Lib/SpeedTest.h</font></code>
 was corrected to <code><font color="blue">cppad/library/SpeedTest.h</font></code>.
 In addition, the example case was corrected.
 <code><span style='white-space: nowrap'><br/>
@@ -971,12 +973,12 @@ it was installed in a standard include directory; for example
 <code><font color="blue">/usr/local/include/cppad</font></code>.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The user documentation was moved from the directory 
+</span></code>The user documentation was moved from the directory
 <code><font color="blue">cppad/User</font></code> to the directory <code><font color="blue">cppad/Doc</font></code>.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The directory <code><font color="blue">cppad/Lib</font></code> was moved to <code><font color="blue">cppad/library</font></code>
-to reflect that fact that it is not what one expects in a standard 
+to reflect that fact that it is not what one expects in a standard
 <code><font color="blue">lib</font></code> directory or a standard <code><font color="blue">include</font></code> directory.
 
 
@@ -984,10 +986,10 @@ to reflect that fact that it is not what one expects in a standard
 <br/>
 <b><big><a name="05-12" id="05-12">05-12</a></big></b>
 <br/>
-The string <code><font color="blue">YY-MM-DD</font></code> in the preprocessor symbol <code><font color="blue">CppADVersion</font></code> 
+The string <code><font color="blue">YY-MM-DD</font></code> in the preprocessor symbol <code><font color="blue">CppADVersion</font></code>
 was not being replaced by the current date during distribution.
-This resulted in the <code><font color="blue">CppADExternalAssert</font></code> macro printing 
-<code><font color="blue">YY-MM-DD</font></code> where is should have printed the date of distribution.  
+This resulted in the <code><font color="blue">CppADExternalAssert</font></code> macro printing
+<code><font color="blue">YY-MM-DD</font></code> where is should have printed the date of distribution.
 This has been fixed.
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -1005,18 +1007,18 @@ have been changed to the form
 </span></font></code>
 This will avoid mistakenly loading a file from another package
 that is in the set of directories being searched by the compiler.
-It is therefore necessary to specify that the directory above the 
+It is therefore necessary to specify that the directory above the
 <code><font color="blue">CppAD</font></code> directory be searched by the compiler.
 For example,
 if <code><font color="blue">CppAD</font></code> is in <code><font color="blue">/usr/local/cppad</font></code>,
 you must specify that <code><font color="blue">/usr/local</font></code> be searched by the compiler.
 Note that if <code><font color="blue">/usr/local/cppad/</font></code> is no longer searched,
-you will have to change 
+you will have to change
 <code><font color='blue'><pre style='display:inline'> 
 	# include &quot;cppad.hpp&quot;
 </pre></font></code>
 
-to 
+to
 <code><font color='blue'><pre style='display:inline'> 
 	# include &quot;cppad/cppad.hpp&quot;
 </pre></font></code>
@@ -1066,7 +1068,7 @@ respectively.
 <b><big><a name="05-03" id="05-03">05-03</a></big></b>
 <br/>
 The <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>Reverse</span></a>
- mode calculations for 
+ mode calculations for
 <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>conditional&#xA0;expressions</span></a>
  were mistakenly left out.
 This has been fixed.
@@ -1075,8 +1077,8 @@ This has been fixed.
 <br/>
 <b><big><a name="04-29" id="04-29">04-29</a></big></b>
 <br/>
-The unary functions, such as <a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>sin</span></a>
- and <a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>cos</span></a>
+The unary functions, such as <a href="sin.xml" target="_top"><span style='white-space: nowrap'>sin</span></a>
+ and <a href="cos.xml" target="_top"><span style='white-space: nowrap'>cos</span></a>
 ,
 were not defined for elements of an <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  vector.
@@ -1121,7 +1123,7 @@ and an increase in the speed for <a href="vecad.xml" target="_top"><span style='
  operations.
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The <a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>log10</span></a>
+</span></code>The <a href="log10.xml" target="_top"><span style='white-space: nowrap'>log10</span></a>
  function was added.
 
 
@@ -1151,8 +1153,8 @@ The <a href="abs.xml" target="_top"><span style='white-space: nowrap'>absolute&#
 <br/>
 </span></code>The value 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
- for 
-<code><font color="blue">OdeExplicit</font></code> and <code><font color="blue">OdeImplicit</font></code> 
+ for
+<code><font color="blue">OdeExplicit</font></code> and <code><font color="blue">OdeImplicit</font></code>
 is deduced from the argument 
 <code><i><font color="black"><span style='white-space: nowrap'>x0</span></font></i></code>
  and is not passed
@@ -1167,7 +1169,7 @@ This documentation has been fixed to this effect.
 <br/>
 The <a href="compute_assign.xml" target="_top"><span style='white-space: nowrap'>+=</span></a>
  operator did not function correctly
-when the left hand operand was a 
+when the left hand operand was a
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
 
 and the right hand operand was a variable
@@ -1181,13 +1183,13 @@ This has been fixed.
 <b><big><a name="04-09" id="04-09">04-09</a></big></b>
 <br/>
 Adding special operators for using parameters to index <code><font color="blue">VecAD</font></code> objects
-increased the speed and reduced the memory requirements (by about 20%) for 
+increased the speed and reduced the memory requirements (by about 20%) for
 the <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  case in the <code><font color="blue">speed_cppad/LuSolveSpeed.cpp/</font></code> test.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
- objects are not being handled correctly by the 
+ objects are not being handled correctly by the
 <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>Reverse</span></a>
  function.
 The <code><font color="blue">VecAD</font></code> test was extended to demonstrate the problem
@@ -1199,17 +1201,17 @@ and the problem was fixed
 <b><big><a name="04-08" id="04-08">04-08</a></big></b>
 <br/>
 The example <a href="lu_vec_ad_ok.cpp.xml" target="_top"><span style='white-space: nowrap'>lu_vec_ad_ok.cpp</span></a>
- 
+
 uses <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
- to executes different pivoting operations 
+ to executes different pivoting operations
 during the solution of linear equations with out having to retape.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The speed test <code><font color="blue">speed_cppad/LuSolveSpeed.cpp/</font></code> has been added.
 It shows that the initial implementation of <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  is slow
-(and uses a lot of memory.) 
-In fact, 
+(and uses a lot of memory.)
+In fact,
 it is faster to use <a href="lusolve.xml" target="_top"><span style='white-space: nowrap'>LuSolve</span></a>
  and retape for each set of equations
 than it is to use <a href="lu_vec_ad.cpp.xml" target="_top"><span style='white-space: nowrap'>lu_vec_ad.cpp</span></a>
@@ -1248,7 +1250,7 @@ Some memory savings is done with regard to equal parameter values
 being stored in the tape. There was a bug in this logic when parameter
 in an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;&gt;</span></font></code>
- class had values that were variables in the 
+ class had values that were variables in the
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  class.
@@ -1258,7 +1260,7 @@ This has been fixed.
 <br/>
 <b><big><a name="04-01" id="04-01">04-01</a></big></b>
 <br/>
-The name of the class that tapes indexing operations 
+The name of the class that tapes indexing operations
 was changed from <code><font color="blue">ADVec</font></code> to <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
 .
 This class was extended so that
@@ -1279,11 +1281,11 @@ avoid multiple copies of parameters on tape (use less tape memory).
 <b><big><a name="03-28" id="03-28">03-28</a></big></b>
 <br/>
 The version <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>ADVec</span></a>
-, 
+,
 a vector class that tapes indexing operations,
 is now available.
 It is currently restricted by the fact that all the
-values in the vector must be 
+values in the vector must be
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameters</span></a>
 .
 
@@ -1294,7 +1296,7 @@ values in the vector must be
 <b><big><a name="03-25" id="03-25">03-25</a></big></b>
 <br/>
 The internal taping structure has been changed to have variable length
-instructions. 
+instructions.
 This is to save memory on the tape.
 In addition, it may help in the implementation of the
 vector class that tracks indexing.
@@ -1336,11 +1338,11 @@ This has been fixed.
 <br/>
 <b><big><a name="03-12" id="03-12">03-12</a></big></b>
 <br/>
-The user defined unary functions were removed and 
+The user defined unary functions were removed and
 the user defined <a href="discrete.xml" target="_top"><span style='white-space: nowrap'>discrete&#xA0;functions</span></a>
  were
-added. 
-These discrete functions add the capability of conditional expressions 
+added.
+These discrete functions add the capability of conditional expressions
 (alternate calculations)
 being included in an <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
  object.
@@ -1352,7 +1354,7 @@ being included in an <a href="adfun.xml" target="_top"><span style='white-space:
 The classes <a href="det_by_minor.xml" target="_top"><span style='white-space: nowrap'>det_by_minor</span></a>
  and <a href="det_by_lu.xml" target="_top"><span style='white-space: nowrap'>det_by_lu</span></a>
  were added
-and used these to simplify the 
+and used these to simplify the
 examples that compute determinants.
 
 <br/>
@@ -1404,7 +1406,7 @@ into sorted subheadings.
 The <code><font color="blue">Grad</font></code> routine,
 which only computed first derivatives of scalar valued functions,
 has been replaced by the <a href="jacobian.xml" target="_top"><span style='white-space: nowrap'>Jacobian</span></a>
- routine which 
+ routine which
 computes the derivative of vector valued functions.
 
 <br/>
@@ -1420,14 +1422,14 @@ have been added to the <code><font color="blue">cppad/Test</font></code> directo
 </span></code>The <a href="seq_property.xml#Parameter" target="_top"><span style='white-space: nowrap'>f.Parameter()</span></a>
  function was added so that
 one can count how many components of the range space depend
-on the value of the domain space components. 
+on the value of the domain space components.
 This helps when deciding whether to use forward or reverse mode.
 
 <br/>
 <br/>
 <b><big><a name="03-03" id="03-03">03-03</a></big></b>
 <br/>
-Special operators were added to distinguish the cases where 
+Special operators were added to distinguish the cases where
 one of the operands is a
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
 .
@@ -1455,11 +1457,11 @@ comparison tests.
 <br/>
 <b><big><a name="02-29" id="02-29">02-29</a></big></b>
 <br/>
-Under certain optimization flag values, 
+Under certain optimization flag values,
 and on certain systems,
 an error was reported by the
 ADOLC correctness comparison.
-It turned out that CppAD was not initializing a particular index 
+It turned out that CppAD was not initializing a particular index
 when debugging was turned off. This has been fixed.
 
 
@@ -1467,7 +1469,7 @@ when debugging was turned off. This has been fixed.
 <br/>
 <b><big><a name="02-28" id="02-28">02-28</a></big></b>
 <br/>
-A set of routines for comparing CppAD with 
+A set of routines for comparing CppAD with
 ADOLC has been added to the distribution.
 In addition, documentation for compiling and linking the
 <a href="example.xml" target="_top"><span style='white-space: nowrap'>Examples</span></a>
@@ -1493,7 +1495,7 @@ and <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>Revers
 <br/>
 <b><big><a name="02-20" id="02-20">02-20</a></big></b>
 <br/>
-A user interface to arbitrary order 
+A user interface to arbitrary order
 <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>reverse&#xA0;mode</span></a>
  calculations was implemented.
 In addition, the <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
@@ -1503,7 +1505,7 @@ because it is easier to use the uniform syntax below:
 <table><tr><td align='left'  valign='top'>
 
 <b>Old Syntax</b> </td><td align='left'  valign='top'>
- <b>Uniform Syntax</b> 
+ <b>Uniform Syntax</b>
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -1531,15 +1533,15 @@ because it is easier to use the uniform syntax below:
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The <a href="theory.xml" target="_top"><span style='white-space: nowrap'>Theory</span></a>
- section has been completely changed so that 
+ section has been completely changed so that
 it corresponds to the arbitrary order calculations.
 (Some of this change was made when the arbitrary forward mode
-interface was added on 
+interface was added on
 <a href="whats_new_04.xml#02-15" target="_top"><span style='white-space: nowrap'>04-02-15</span></a>
 .
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The directory <code><font color="blue">cppad/Test</font></code> has been added. 
+</span></code>The directory <code><font color="blue">cppad/Test</font></code> has been added.
 It contains tests cases that are not intended as examples.
 
 <br/>
@@ -1547,7 +1549,7 @@ It contains tests cases that are not intended as examples.
 <b><big><a name="02-17" id="02-17">02-17</a></big></b>
 <br/>
 There was a bug in the way CppAD handled the parameters zero and one
-when they were variables on a lower level tape; i.e. x might be a 
+when they were variables on a lower level tape; i.e. x might be a
 parameter on an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;&gt;</span></font></code>
  tape and a its value
@@ -1570,7 +1572,7 @@ A bug in <a href="forward.xml" target="_top"><span style='white-space: nowrap'>F
  prevented the calculation of derivatives
 with higher order than two.
 In addition, this checking for user errors in the use of <code><font color="blue">Forward</font></code>
-was also faulty. 
+was also faulty.
 This has been fixed.
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -1580,7 +1582,7 @@ was out of date. This has been fixed.
 <br/>
 </span></code>The example that <a href="mul_level.xml" target="_top"><span style='white-space: nowrap'>tapes&#xA0;derivative&#xA0;calculations</span></a>
 
-has been changed to an application of 
+has been changed to an application of
 <a href="mul_level_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>Taylor's&#xA0;method</span></a>
  for solving ordinary differential
 equations.
@@ -1589,7 +1591,7 @@ equations.
 <br/>
 <b><big><a name="02-15" id="02-15">02-15</a></big></b>
 <br/>
-A user interface to arbitrary order 
+A user interface to arbitrary order
 <a href="forward.xml" target="_top"><span style='white-space: nowrap'>forward&#xA0;mode</span></a>
  calculations was implemented.
 In addition, the <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
@@ -1599,7 +1601,7 @@ because it is easier to use the uniform syntax below:
 <table><tr><td align='left'  valign='top'>
 
 <b>Old Syntax</b> </td><td align='left'  valign='top'>
- <b>Uniform Syntax</b> 
+ <b>Uniform Syntax</b>
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -1640,11 +1642,11 @@ of calculation.
 <br/>
 <b><big><a name="02-01" id="02-01">02-01</a></big></b>
 <br/>
-The definition of a 
+The definition of a
 <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficient</span></a>
 
 was changed to include the factorial factor.
-This change was also made to the output specifications for the 
+This change was also made to the output specifications for the
 <code><font color="blue">FunForTwo</font></code> routine.
 
 <br/>
@@ -1656,7 +1658,7 @@ that were fixed.
 <ol type="1"><li>
 If one of the dependent variables was a
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
- 
+
 <code><font color="blue">FunArg</font></code> did not set it's value properly.
 (All its derivatives are zero and this was handled properly.)
 </li><li>
@@ -1675,15 +1677,15 @@ were modified so that they could be used with out side effects.
 <br/>
 Some corrections and improvements were made to the documentation including:
 <code><font color="blue">CppADvector</font></code> was placed before its use,
-a reference to <code><font color="blue">Ode_ind</font></code> and <code><font color="blue">Ode_dep</font></code> was fixed in 
+a reference to <code><font color="blue">Ode_ind</font></code> and <code><font color="blue">Ode_dep</font></code> was fixed in
 <code><font color="blue">OdeImplicit</font></code>.
 
 <br/>
 <br/>
 <b><big><a name="01-22" id="01-22">01-22</a></big></b>
 <br/>
-The specifications for the routine <code><font color="blue">FunForTwo</font></code> 
-was changed to use 
+The specifications for the routine <code><font color="blue">FunForTwo</font></code>
+was changed to use
 <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
 .
 This makes the interface to CppAD closer to the interface for

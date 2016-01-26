@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -108,35 +108,35 @@ See <a href="link_det_minor.xml" target="_top"><span style='white-space: nowrap'
 # include &lt;Sacado.hpp&gt;
 # include &lt;cppad/speed/det_by_minor.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 
 // list of possible options
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_det_minor(
-	size_t                     size     , 
-	size_t                     repeat   , 
+	size_t                     size     ,
+	size_t                     repeat   ,
 	CppAD::vector&lt;double&gt;     &amp;matrix   ,
 	CppAD::vector&lt;double&gt;     &amp;gradient )
 {
 	// speed test global option values
 	if( global_atomic )
-		return false; 
+		return false;
 	if( global_memory || global_onetape || global_optimize )
-		return false; 
+		return false;
 	// -----------------------------------------------------
 	// setup
 
 	// object for computing determinant
-	typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar; 
-	typedef CppAD::vector&lt;ADScalar&gt;       ADVector; 
+	typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar;
+	typedef CppAD::vector&lt;ADScalar&gt;       ADVector;
 	CppAD::det_by_minor&lt;ADScalar&gt;         Det(size);
 
 	size_t i;                // temporary index
 	size_t n = size * size;  // number of independent variables
 	ADScalar   detA;         // AD value of the determinant
-	ADVector   A(n);         // AD version of matrix 
-	
+	ADVector   A(n);         // AD version of matrix
+
 	// ------------------------------------------------------
 	while(repeat--)
 	{	// get the next matrix
@@ -152,7 +152,7 @@ bool link_det_minor(
 		// reverse mode compute gradient of last computed value; i.e., detA
 		ADScalar::Gradcomp();
 
-		// return gradient 
+		// return gradient
 		for(i =0; i &lt; n; i++)
 			gradient[i] = A[i].adj(); // partial detA w.r.t A[i]
 	}

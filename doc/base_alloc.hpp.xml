@@ -6,7 +6,7 @@
 <title>Example AD&lt;Base&gt; Where Base Constructor Allocates Memory</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Example AD&lt;Base&gt; Where Base Constructor Allocates Memory"/>
-<meta name="keywords" id="keywords" content=" example ad&lt;base&gt; where base constructor allocates memory purpose include file computed assignment macro binary operator boolean class definition condexpop condexprel equalopseq identical output integer ordered unary standard math erf sign pow limits "/>
+<meta name="keywords" id="keywords" content=" example ad&lt;base&gt; where base constructor allocates memory purpose include file computed assignment macro binary operator boolean class definition condexpop condexprel equalopseq identical output integer azmul ordered unary standard math erf asinh acosh atanh expm1 log1p sign pow numeric_limits "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -64,6 +64,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -94,12 +96,13 @@ A:active { color : purple }
 <option>Identical</option>
 <option>Output Operator</option>
 <option>Integer</option>
+<option>azmul</option>
 <option>Ordered</option>
 <option>Unary Standard Math</option>
-<option>erf</option>
+<option>erf, asinh, acosh, atanh, expm1, log1p</option>
 <option>sign</option>
 <option>pow</option>
-<option>limits</option>
+<option>numeric_limits</option>
 </select>
 </td>
 </tr></table><br/>
@@ -109,11 +112,11 @@ A:active { color : purple }
 <br/>
 Demonstrate use of 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- 
+
 where memory is allocated for each element of the type 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 .
-In addition, this is a complete example where all the 
+In addition, this is a complete example where all the
 <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required&#xA0;Base</span></a>
  type
 operations are defined (as apposed to other examples where
@@ -129,7 +132,7 @@ and <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>t
 .
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;cppad/base_require.hpp&gt;
-# include &lt;cppad/thread_alloc.hpp&gt;
+# include &lt;cppad/utility/thread_alloc.hpp&gt;
 </pre></font></code>
 
 
@@ -137,8 +140,8 @@ and <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>t
 <br/>
 <b><big><a name="Computed Assignment Macro" id="Computed Assignment Macro">Computed Assignment Macro</a></big></b>
 <br/>
-This macro is used for the 
-<code><font color="blue">base_alloc</font></code> computed assignment operators; to be specific, 
+This macro is used for the
+<code><font color="blue">base_alloc</font></code> computed assignment operators; to be specific,
 used with 
 <code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
  equal to
@@ -157,8 +160,8 @@ used with
 <br/>
 <b><big><a name="Binary Operator Macro" id="Binary Operator Macro">Binary Operator Macro</a></big></b>
 <br/>
-This macro is used for the 
-<code><font color="blue">base_alloc</font></code> binary operators (as member functions); to be specific, 
+This macro is used for the
+<code><font color="blue">base_alloc</font></code> binary operators (as member functions); to be specific,
 used with 
 <code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
  equal to
@@ -182,9 +185,9 @@ used with
 <br/>
 <b><big><a name="Boolean Operator Macro" id="Boolean Operator Macro">Boolean Operator Macro</a></big></b>
 <br/>
-This macro can be used for the 
-<code><font color="blue">base_alloc</font></code> binary operators that have a 
-<code><font color="blue">bool</font></code> result; to be specific, 
+This macro can be used for the
+<code><font color="blue">base_alloc</font></code> binary operators that have a
+<code><font color="blue">bool</font></code> result; to be specific,
 used with 
 <code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
  equal to
@@ -208,7 +211,7 @@ used with
 <br/>
 <b><big><a name="Class Definition" id="Class Definition">Class Definition</a></big></b>
 <br/>
-The following example class 
+The following example class
 defines the necessary <a href="base_member.xml" target="_top"><span style='white-space: nowrap'>base_member</span></a>
  functions.
 It is made more complicated by storing a pointer to a <code><font color="blue">double</font></code>
@@ -221,18 +224,18 @@ public:
 
 	base_alloc(void)
 	{	size_t cap;
-		void* v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		void* v  = CppAD::thread_alloc::get_memory(sizeof(double), cap);
 		ptrdbl_  = static_cast&lt;double*&gt;(v);
 	}
 	base_alloc(double dbl)
 	{	size_t cap;
-		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap);
 		ptrdbl_  = static_cast&lt;double*&gt;(v);
 		*ptrdbl_ = dbl;
 	}
 	base_alloc(const base_alloc&amp; x)
 	{	size_t cap;
-		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap);
 		ptrdbl_  = static_cast&lt;double*&gt;(v);
 		*ptrdbl_ = *x.ptrdbl_;
 	}
@@ -259,7 +262,7 @@ public:
 	BASE_ALLOC_BINARY_OPERATOR(/)
 	BASE_ALLOC_BOOL_OPERATOR(==)
 	BASE_ALLOC_BOOL_OPERATOR(!=)
-	// The &lt;= operator is not necessary for the base type requirements 
+	// The &lt;= operator is not necessary for the base type requirements
 	// (needed so we can use NearEqual with base_alloc arguments).
 	BASE_ALLOC_BOOL_OPERATOR(&lt;=)
 };
@@ -275,11 +278,11 @@ The type <code><font color="blue">base_alloc</font></code> does not use <a href=
 Hence its <code><font color="blue">CondExpOp</font></code> function is defined by
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline base_alloc CondExpOp( 
+	inline base_alloc CondExpOp(
 		enum CompareOp     cop          ,
 		const base_alloc&amp;       left         ,
-		const base_alloc&amp;       right        , 
-		const base_alloc&amp;       exp_if_true  , 
+		const base_alloc&amp;       right        ,
+		const base_alloc&amp;       exp_if_true  ,
 		const base_alloc&amp;       exp_if_false )
 	{	// not used
 		assert(false);
@@ -372,6 +375,17 @@ namespace CppAD {
 
 <br/>
 <br/>
+<b><big><a name="azmul" id="azmul">azmul</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_AZMUL( base_alloc )
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
 <b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
 <br/>
 The <code><font color="blue">base_alloc</font></code> type supports ordered comparisons
@@ -406,7 +420,7 @@ a special macro for this type:
 	{ return   std::fun(*x.ptrdbl_); }
 </pre></font></code>
 
-The following invocations of the macro above define the 
+The following invocations of the macro above define the
 <a href="base_std_math.xml#Unary Standard Math" target="_top"><span style='white-space: nowrap'>unary&#xA0;standard&#xA0;math</span></a>
  functions
 (except for <code><font color="blue">abs</font></code>):
@@ -428,7 +442,7 @@ namespace CppAD {
 }
 </pre></font></code>
 
-The absolute value function is special because its <code><font color="blue">std</font></code> name is 
+The absolute value function is special because its <code><font color="blue">std</font></code> name is
 <code><font color="blue">fabs</font></code>
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
@@ -440,14 +454,20 @@ namespace CppAD {
 
 <br/>
 <br/>
-<b><big><a name="erf" id="erf">erf</a></big></b>
+<b><big><a name="erf, asinh, acosh, atanh, expm1, log1p" id="erf, asinh, acosh, atanh, expm1, log1p">erf, asinh, acosh, atanh, expm1, log1p</a></big></b>
 <br/>
-The following defines the <code><font color="blue">CppAD::erf</font></code> function that
-is required th use <code><font color="blue">AD&lt;Base_alloc&gt;</font></code>:
+The following defines the
+<a href="base_std_math.xml#erf, asinh, acosh, atanh, expm1, log1p" target="_top"><span style='white-space: nowrap'>erf,&#xA0;asinh,&#xA0;acosh,&#xA0;atanh,&#xA0;expm1,&#xA0;log1p</span></a>
+ functions
+required by <code><font color="blue">AD&lt;base_alloc&gt;</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
-# if CPPAD_COMPILER_HAS_ERF
-	inline base_alloc erf(const base_alloc&amp; x)
-	{	return std::erf(*x.ptrdbl_); }
+# if CPPAD_USE_CPLUSPLUS_2011
+	BASE_ALLOC_STD_MATH(erf)
+	BASE_ALLOC_STD_MATH(asinh)
+	BASE_ALLOC_STD_MATH(acosh)
+	BASE_ALLOC_STD_MATH(atanh)
+	BASE_ALLOC_STD_MATH(expm1)
+	BASE_ALLOC_STD_MATH(log1p)
 # endif
 </pre></font></code>
 
@@ -470,7 +490,7 @@ namespace CppAD {
 }
 </pre></font></code>
 
- 
+
 <br/>
 <br/>
 <b><big><a name="pow" id="pow">pow</a></big></b>
@@ -487,27 +507,14 @@ namespace CppAD {
 
 <br/>
 <br/>
-<b><big><a name="limits" id="limits">limits</a></big></b>
+<b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
+<br/>
+The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
 
+for the type <code><font color="blue">base_alloc</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	template &lt;&gt;
-	class numeric_limits&lt;base_alloc&gt; {
-	public:
-		// machine epsilon
-		static base_alloc epsilon(void)
-		{	return std::numeric_limits&lt;base_alloc&gt;::epsilon(); }
-		// minimum positive normalized value
-		static base_alloc min(void)
-		{	return std::numeric_limits&lt;base_alloc&gt;::min(); }
-		// maximum finite value
-		static base_alloc max(void)
-		{	return std::numeric_limits&lt;base_alloc&gt;::max(); }
-	};
-	// deprecated machine epsilon
-	template &lt;&gt; 
-	inline base_alloc epsilon&lt;base_alloc&gt;(void)
-	{	return numeric_limits&lt;base_alloc&gt;::epsilon(); }
+	CPPAD_NUMERIC_LIMITS(double, base_alloc)
 }
 </pre></font></code>
 

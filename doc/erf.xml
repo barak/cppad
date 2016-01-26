@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>The AD Error Function</title>
+<title>The Error Function</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="The AD Error Function"/>
-<meta name="keywords" id="keywords" content=" the ad error function erf Ad syntax description x operation sequence method cppad_compiler_has_erf Cppad_compiler_has_erf other example "/>
+<meta name="description" id="description" content="The Error Function"/>
+<meta name="keywords" id="keywords" content=" the error function syntax description x y cppad_use_cplusplus_2011 true false example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="atan2.cpp.xml" target="_top">Prev</a>
+<td><a href="atanh.cpp.xml" target="_top">Prev</a>
 </td><td><a href="erf.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
 <option>erf</option>
 </select>
 </td>
@@ -60,22 +60,38 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>MathOther-&gt;</option>
+<option>unary_standard_math-&gt;</option>
+<option>acos</option>
+<option>asin</option>
+<option>atan</option>
+<option>cos</option>
+<option>cosh</option>
+<option>exp</option>
+<option>log</option>
+<option>log10</option>
+<option>sin</option>
+<option>sinh</option>
+<option>sqrt</option>
+<option>tan</option>
+<option>tanh</option>
 <option>abs</option>
-<option>sign</option>
-<option>atan2</option>
+<option>acosh</option>
+<option>asinh</option>
+<option>atanh</option>
 <option>erf</option>
-<option>pow</option>
-<option>limits</option>
+<option>expm1</option>
+<option>log1p</option>
+<option>sign</option>
 </select>
 </td>
 <td>
@@ -89,25 +105,23 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Syntax</option>
 <option>Description</option>
-<option>x</option>
-<option>Operation Sequence</option>
-<option>Method</option>
-<option>---..CPPAD_COMPILER_HAS_ERF</option>
-<option>---..Other</option>
+<option>x, y</option>
+<option>CPPAD_USE_CPLUSPLUS_2011</option>
+<option>CPPAD_USE_CPLUSPLUS_2011.true</option>
+<option>CPPAD_USE_CPLUSPLUS_2011.false</option>
 <option>Example</option>
 </select>
 </td>
 </tr></table><br/>
 
 
-<center><b><big><big>The AD Error Function</big></big></b></center>
+<center><b><big><big>The Error Function</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;erf(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
-
 
 
 <br/>
@@ -148,65 +162,34 @@ Returns the value of the error function which is defined by
 </mrow></math>
 
 <br/>
-<b><big><a name="x" id="x">x</a></big></b>
+<b><big><a name="x, y" id="x, y">x, y</a></big></b>
 <br/>
-The argument 
+See the <a href="unary_standard_math.xml#Possible Types" target="_top"><span style='white-space: nowrap'>possible&#xA0;types</span></a>
+
+for a unary standard math function.
+
+<br/>
+<br/>
+<b><big><a name="CPPAD_USE_CPLUSPLUS_2011" id="CPPAD_USE_CPLUSPLUS_2011">CPPAD_USE_CPLUSPLUS_2011</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="CPPAD_USE_CPLUSPLUS_2011.true" id="CPPAD_USE_CPLUSPLUS_2011.true">true</a></b>
+<br/>
+If this preprocessor symbol is true (<code><font color="blue">1</font></code>),
+and 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
-, and the result 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
-
-have one of the following paris of prototypes:
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;float</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;float</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;double</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;double</span></font><i><font color="black"></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::reference&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-<br/>
-<b><big><a name="Operation Sequence" id="Operation Sequence">Operation Sequence</a></big></b>
-<br/>
-The AD of 
-<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
-
-operation sequence used to calculate 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- is
-<a href="glossary.xml#Operation.Independent" target="_top"><span style='white-space: nowrap'>independent</span></a>
-
-of 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ is an AD type,
+this is an <a href="glossary.xml#Operation.Atomic" target="_top"><span style='white-space: nowrap'>atomic&#xA0;operation</span></a>
 .
 
 <br/>
 <br/>
-<b><big><a name="Method" id="Method">Method</a></big></b>
-
-
+<b><a name="CPPAD_USE_CPLUSPLUS_2011.false" id="CPPAD_USE_CPLUSPLUS_2011.false">false</a></b>
 <br/>
-<br/>
-<b><a name="Method.CPPAD_COMPILER_HAS_ERF" id="Method.CPPAD_COMPILER_HAS_ERF">CPPAD_COMPILER_HAS_ERF</a></b>
-
-<br/>
-This preprocessor symbol is one if
-the function 
-<code><font color="blue"><span style='white-space: nowrap'>std::erf(double&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
- is defined the in the
-include file <code><font color="blue">&lt;cmath&gt;</font></code>.
-Otherwise this preprocessor symbol is zero.
-If this preprocessor symbols is one,
-CppAD uses the compiler's version of <code><font color="blue">erf</font></code>
-and it corresponds to an <a href="glossary.xml#Operation.Atomic" target="_top"><span style='white-space: nowrap'>atomic</span></a>
- operation.
-
-<br/>
-<br/>
-<b><a name="Method.Other" id="Method.Other">Other</a></b>
-<br/>
-If the function 
-<code><font color="blue"><span style='white-space: nowrap'>std::erf(double&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
- is not defined, 
-CppAD uses a fast approximation (few numerical operations) 
+If this preprocessor symbol is false (<code><font color="blue">0</font></code>),
+CppAD uses a fast approximation (few numerical operations)
 with relative error bound 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mn>4</mn>
@@ -222,10 +205,10 @@ Vedder, J.D.,
 
 <code><i><font color="black"><span style='white-space: nowrap'>Simple&#xA0;approximations&#xA0;for&#xA0;the&#xA0;error&#xA0;function&#xA0;and&#xA0;its&#xA0;inverse</span></font></i></code>
 ,
-American Journal of Physics, 
-v 55, 
-n 8, 
-1987, 
+American Journal of Physics,
+v 55,
+n 8,
+1987,
 p 762-3.
 
 <br/>
@@ -236,7 +219,7 @@ p 762-3.
 The file
 <a href="erf.cpp.xml" target="_top"><span style='white-space: nowrap'>erf.cpp</span></a>
 
-contains an example and test of this function.   
+contains an example and test of this function.
 It returns true if it succeeds and false otherwise.
 
 

@@ -1,9 +1,9 @@
-/* $Id: hes_minor_det.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: hes_minor_det.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -17,11 +17,7 @@ $spell
 $$
 
 $section Gradient of Determinant Using Expansion by Minors: Example and Test$$
-$mindex gradient minors expansion$$
-$index example, gradient$$
-$index test, gradient$$
-$index example, minors expansion$$
-$index test, minors expansion$$
+$mindex minors$$
 
 $code
 $verbatim%example/hes_minor_det.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -64,7 +60,7 @@ bool HesMinorDet(void)
 	Independent(X);
 
 	// comupute the determinant
-	D[0] = Det(X); 
+	D[0] = Det(X);
 
 	// create the function object
 	ADFun<Complex> f(X, D);
@@ -84,7 +80,7 @@ bool HesMinorDet(void)
 	*/
 	Complex zero(0., 0.);
 	Complex one(1., 0.);
-	Complex Htrue[]  = { 
+	Complex Htrue[]  = {
 		zero, zero, zero,  one,
 		zero, zero, -one, zero,
 		zero, -one, zero, zero,

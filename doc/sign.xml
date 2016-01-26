@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>Sign Function</title>
+<title>The Sign: sign</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="Sign Function"/>
-<meta name="keywords" id="keywords" content=" sign Ad function syntax purpose x y operation sequence complex types derivative example "/>
+<meta name="description" id="description" content="The Sign: sign"/>
+<meta name="keywords" id="keywords" content=" the sign: sign syntax description x y atomic derivative example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="abs.cpp.xml" target="_top">Prev</a>
+<td><a href="log1p.cpp.xml" target="_top">Prev</a>
 </td><td><a href="sign.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
 <option>sign</option>
 </select>
 </td>
@@ -60,22 +60,38 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>MathOther-&gt;</option>
+<option>unary_standard_math-&gt;</option>
+<option>acos</option>
+<option>asin</option>
+<option>atan</option>
+<option>cos</option>
+<option>cosh</option>
+<option>exp</option>
+<option>log</option>
+<option>log10</option>
+<option>sin</option>
+<option>sinh</option>
+<option>sqrt</option>
+<option>tan</option>
+<option>tanh</option>
 <option>abs</option>
-<option>sign</option>
-<option>atan2</option>
+<option>acosh</option>
+<option>asinh</option>
+<option>atanh</option>
 <option>erf</option>
-<option>pow</option>
-<option>limits</option>
+<option>expm1</option>
+<option>log1p</option>
+<option>sign</option>
 </select>
 </td>
 <td>
@@ -88,11 +104,9 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Syntax</option>
-<option>Purpose</option>
-<option>x</option>
-<option>y</option>
-<option>Operation Sequence</option>
-<option>Complex Types</option>
+<option>Description</option>
+<option>x, y</option>
+<option>Atomic</option>
 <option>Derivative</option>
 <option>Example</option>
 </select>
@@ -100,10 +114,7 @@ A:active { color : purple }
 </tr></table><br/>
 
 
-
-
-
-<center><b><big><big>Sign Function</big></big></b></center>
+<center><b><big><big>The Sign: sign</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
@@ -112,10 +123,9 @@ A:active { color : purple }
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;sign(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
-
 <br/>
 <br/>
-<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<b><big><a name="Description" id="Description">Description</a></big></b>
 <br/>
 Evaluates the <code><font color="blue">sign</font></code> function which is defined by
 
@@ -159,49 +169,18 @@ Evaluates the <code><font color="blue">sign</font></code> function which is defi
 </mrow></math>
 
 <br/>
-<b><big><a name="x" id="x">x</a></big></b>
+<b><big><a name="x, y" id="x, y">x, y</a></big></b>
 <br/>
-The argument 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- has one of the following prototypes
+See the <a href="unary_standard_math.xml#Possible Types" target="_top"><span style='white-space: nowrap'>possible&#xA0;types</span></a>
 
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::reference&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
+for a unary standard math function.
+
 <br/>
-<b><big><a name="y" id="y">y</a></big></b>
 <br/>
-The result 
-<code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- has prototype
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
+<b><big><a name="Atomic" id="Atomic">Atomic</a></big></b>
 <br/>
-<b><big><a name="Operation Sequence" id="Operation Sequence">Operation Sequence</a></big></b>
-<br/>
-This is an AD of 
-<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
-
-<a href="glossary.xml#Operation.Atomic" target="_top"><span style='white-space: nowrap'>atomic&#xA0;operation</span></a>
-
-and hence is part of the current
-AD of 
-<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
-
-<a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
+This is an <a href="glossary.xml#Operation.Atomic" target="_top"><span style='white-space: nowrap'>atomic&#xA0;operation</span></a>
 .
-
-<br/>
-<br/>
-<b><big><a name="Complex Types" id="Complex Types">Complex Types</a></big></b>
-<br/>
-The <code><font color="blue">sign</font></code> function is not defined for the AD type sequences
-above <code><font color="blue">std::complex&lt;float&gt;</font></code> or <code><font color="blue">std::complex&lt;double&gt;</font></code>
-because these are not <a href="base_ordered.xml#Ordered Type" target="_top"><span style='white-space: nowrap'>ordered&#xA0;types</span></a>
-. 
 
 <br/>
 <br/>
@@ -215,12 +194,13 @@ The correct mathematical derivative is different and
 is given by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
-<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>sign</mi>
+<msup><mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>sign</mi>
 </mstyle></mrow>
 <mrow><mo stretchy="false">(</mo>
 <mn>1</mn>
 <mo stretchy="false">)</mo>
 </mrow>
+</msup>
 <mo stretchy="false">(</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">)</mo>
@@ -250,7 +230,7 @@ where
 The file
 <a href="sign.cpp.xml" target="_top"><span style='white-space: nowrap'>sign.cpp</span></a>
 
-contains an example and test of this function.   
+contains an example and test of this function.
 It returns true if it succeeds and false otherwise.
 
 

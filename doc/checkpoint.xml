@@ -6,7 +6,7 @@
 <title>Checkpointing Functions</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Checkpointing Functions"/>
-<meta name="keywords" id="keywords" content=" checkpointing functions function checkpoint syntax purpose method constructor base advector name ax ay option algo afun clear restriction example "/>
+<meta name="keywords" id="keywords" content=" checkpointing functions syntax purpose reduce memory faster recording method constructor base advector name ax ay sparsity size_var option algo atom_fun clear restriction example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -60,10 +60,11 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -85,6 +86,8 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Syntax</option>
 <option>Purpose</option>
+<option>---..Reduce Memory</option>
+<option>---..Faster Recording</option>
 <option>Method</option>
 <option>constructor</option>
 <option>Base</option>
@@ -92,9 +95,11 @@ A:active { color : purple }
 <option>name</option>
 <option>ax</option>
 <option>ay</option>
+<option>sparsity</option>
+<option>size_var</option>
 <option>option</option>
 <option>algo</option>
-<option>afun</option>
+<option>atom_fun</option>
 <option>clear</option>
 <option>---..Restriction</option>
 <option>Example</option>
@@ -107,18 +112,24 @@ A:active { color : purple }
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
-</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.option(</span></font><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+<code><font color="blue"><span style='white-space: nowrap'>checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>sv</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_var()<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>.option(</span></font><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
-</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::clear()</span></font></code>
 
 
 <br/>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+
+
 <br/>
-You can reduce the size of the tape and memory required for AD by 
+<br/>
+<b><a name="Purpose.Reduce Memory" id="Purpose.Reduce Memory">Reduce Memory</a></b>
+<br/>
+You can reduce the size of the tape and memory required for AD by
 checkpointing functions of the form 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>y</mi>
@@ -144,6 +155,39 @@ checkpointing functions of the form
 </mrow></math>
 
 .
+The <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
+
+representing 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ cannot depend on the value of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><a name="Purpose.Faster Recording" id="Purpose.Faster Recording">Faster Recording</a></b>
+<br/>
+It may also reduce the time to make a recording the same function
+for different values of the independent variable.
+Note that the operation sequence for a recording that uses 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+
+may depend on its independent variables.
 
 <br/>
 <br/>
@@ -157,28 +201,42 @@ It implements all the <code><font color="blue">atomic_base</font></code>
 and hence its source code <code><font color="blue">cppad/local/checkpoint.hpp</font></code>
 provides an example implementation of <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
 .
-The difference is that <code><font color="blue">checkpoint.hpp</font></code> uses AD 
+The difference is that <code><font color="blue">checkpoint.hpp</font></code> uses AD
 instead of user provided derivatives.
 
 <br/>
 <br/>
 <b><big><a name="constructor" id="constructor">constructor</a></big></b>
 <br/>
-The constructor 
+The syntax for the checkpoint constructor is
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-cannot be called in <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
+<ol type="1"><li>This constructor cannot be called in <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
  mode.
-In addition, you cannot currently be recording 
+</li><li>
+
+You cannot currently be recording
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  operations when the constructor is called.
+</li><li>
+
+This object 
+<code><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i></code>
+ must not be destructed for as long
+as any 
+<code><font color="blue"><span style='white-space: nowrap'>ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ object uses its atomic operation.
+</li><li>
+
 This class is implemented as a derived class of
 <a href="atomic_ctor.xml#atomic_base" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
- and hence 
+ and hence
 some of its error message will refer to <code><font color="blue">atomic_base</font></code>.
+</li></ol>
+
 
 <br/>
 <br/>
@@ -216,9 +274,9 @@ It is the name used for error reporting.
 The suggested value for 
 <code><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
  is 
-<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i></code>
 ; i.e.,
-the same name as used for the function.
+the same name as used for the object being constructed.
 
 <br/>
 <br/>
@@ -241,10 +299,10 @@ It specifies vector
 </msup>
 </mrow></math>
 
- 
+
 at which an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- version of 
+ version of
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>y</mi>
@@ -272,7 +330,7 @@ Its input size must be equal to
 The input values of its elements do not matter.
 Upon return, it is an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- version of 
+ version of
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>y</mi>
@@ -287,11 +345,53 @@ Upon return, it is an
 
 <br/>
 <br/>
+<b><big><a name="sparsity" id="sparsity">sparsity</a></big></b>
+<br/>
+This argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::option_enum&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It specifies <a href="atomic_ctor.xml#atomic_base.sparsity" target="_top"><span style='white-space: nowrap'>sparsity</span></a>
+
+in the <code><font color="blue">atomic_base</font></code> constructor and must be either
+
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::pack_sparsity_enum</span></font></code>
+,
+
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::bool_sparsity_enum</span></font></code>
+, or
+
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::set_sparsity_enum</span></font></code>
+.
+This argument is optional and its default value is unspecified.
+
+
+<br/>
+<br/>
+<b><big><a name="size_var" id="size_var">size_var</a></big></b>
+<br/>
+This <code><font color="blue">size_var</font></code> member function return value has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sv</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It is the <a href="seq_property.xml#size_var" target="_top"><span style='white-space: nowrap'>size_var</span></a>
+ for the
+
+<code><font color="blue"><span style='white-space: nowrap'>ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+ object is used to store the operation sequence
+corresponding to 
+<code><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i></code>
+.
+
+<br/>
+<br/>
 <b><big><a name="option" id="option">option</a></big></b>
 <br/>
 The <code><font color="blue">option</font></code> syntax can be used to set the type of sparsity
 pattern used by 
-<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i></code>
 .
 This is an 
 <code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -325,7 +425,7 @@ must evaluate the function
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  operations.
-In addition, we assume that the 
+In addition, we assume that the
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 
 does not depend on the value of 
@@ -334,7 +434,7 @@ does not depend on the value of
 
 <br/>
 <br/>
-<b><big><a name="afun" id="afun">afun</a></big></b>
+<b><big><a name="atom_fun" id="atom_fun">atom_fun</a></big></b>
 <br/>
 Given 
 <code><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i></code>
@@ -343,7 +443,7 @@ Given
 
 using the operation sequence corresponding to 
 <code><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i></code>
-. 
+.
 If 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  operations are being recorded,
@@ -351,13 +451,13 @@ it enters the computation as single operation in the recording
 see <a href="independent.xml#Start Recording" target="_top"><span style='white-space: nowrap'>start&#xA0;recording</span></a>
 .
 (Currently each use of 
-<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i></code>
  actually corresponds to
 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>+</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>+2</span></font></code>
  operations and creates 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
- new variables, 
+ new variables,
 but this is not part of the CppAD specifications and my change.)
 
 <br/>
@@ -369,7 +469,7 @@ increase speed by avoiding system memory allocation calls.
 This call makes to work space <a href="ta_available.xml" target="_top"><span style='white-space: nowrap'>available</span></a>
  to
 for other uses by the same thread.
-This should be called when you are done using the 
+This should be called when you are done using the
 user atomic functions for a specific value of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 .

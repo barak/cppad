@@ -38,53 +38,31 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>Appendix</option>
+<option>numeric_ad</option>
 <option>BenderQuad</option>
 <option>bender_quad.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>CppAD-&gt;</option>
-<option>Install</option>
-<option>Introduction</option>
-<option>AD</option>
-<option>ADFun</option>
-<option>preprocessor</option>
-<option>multi_thread</option>
-<option>library</option>
-<option>ipopt_solve</option>
-<option>Example</option>
-<option>speed</option>
-<option>Appendix</option>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>wish_list</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
+<option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
-<option>ErrorHandler</option>
-<option>NearEqual</option>
-<option>speed_test</option>
-<option>SpeedTest</option>
-<option>time_test</option>
-<option>NumericType</option>
-<option>CheckNumericType</option>
-<option>SimpleVector</option>
-<option>CheckSimpleVector</option>
-<option>nan</option>
-<option>pow_int</option>
-<option>Poly</option>
-<option>LuDetAndSolve</option>
-<option>RombergOne</option>
-<option>RombergMul</option>
-<option>Runge45</option>
-<option>Rosen34</option>
-<option>OdeErrControl</option>
-<option>OdeGear</option>
-<option>OdeGearControl</option>
-<option>CppAD_vector</option>
-<option>thread_alloc</option>
-<option>index_sort</option>
+<option>numeric_ad-&gt;</option>
 <option>BenderQuad</option>
 <option>opt_val_hes</option>
 <option>LuRatio</option>
@@ -103,7 +81,7 @@ A:active { color : purple }
 
 
 <center><b><big><big>BenderQuad: Example and Test</big></big></b></center>
-Define 
+Define
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>F</mi>
@@ -261,7 +239,7 @@ Furthermore if we define
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 as the argmin of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>F</mi>
@@ -367,8 +345,8 @@ as the argmin of
 
 namespace {
 	using CppAD::AD;
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)         BAvector;
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)   ADvector;
+	typedef CPPAD_TESTVECTOR(double)         BAvector;
+	typedef CPPAD_TESTVECTOR(AD&lt;double&gt;)   ADvector;
 
 	class Fun {
 	private:
@@ -409,11 +387,11 @@ namespace {
 			}
 			return fy;
 		}
-		// Fun.dy(x, y, h) = - H_y (x,y)^{-1} * h 
+		// Fun.dy(x, y, h) = - H_y (x,y)^{-1} * h
 		//                 = - F_yy (x, y)^{-1} * h
 		ADvector dy(
-			const BAvector &amp;x , 
-			const BAvector &amp;y , 
+			const BAvector &amp;x ,
+			const BAvector &amp;y ,
 			const ADvector &amp;H )
 		{	size_t i;
 			size_t N = size_t(z_.size());
@@ -438,7 +416,7 @@ namespace {
 		size_t k;
 		for(k = 0; k &lt; size_t(t.size()); k++)
 		{	numerator   += sin( x[0] * t[k] ) * z[k];
-			denominator += sin( x[0] * t[k] ) * sin( x[0] * t[k] ); 	
+			denominator += sin( x[0] * t[k] ) * sin( x[0] * t[k] );
 		}
 		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; y = numerator / denominator;
 
@@ -479,7 +457,7 @@ bool BenderQuad(void)
 		z[i] = y[0] * sin( x[0] * t[i] );   // data without noise
 	}
 
-	// construct the function object 
+	// construct the function object
 	Fun fun(t, z);
 
 	// evaluate the G(x), G'(x) and G''(x)
@@ -491,22 +469,22 @@ bool BenderQuad(void)
 	ADvector a_x(n), a_g(1);
 	for(j = 0; j &lt; n; j++)
 		a_x[j] = x[j];
-	<a href="independent.xml" target="_top">Independent</a>(a_x);
+	Independent(a_x);
 	a_g[0] = G(a_x, t, z);
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; Gfun(a_x, a_g);
+	CppAD::ADFun&lt;double&gt; Gfun(a_x, a_g);
 
 	// accuracy for checks
 	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
 
 	// check Jacobian
-	BAvector check_gx = Gfun.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+	BAvector check_gx = Gfun.Jacobian(x);
 	for(j = 0; j &lt; n; j++)
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(gx[j], check_gx[j], eps, eps);
+		ok &amp;= NearEqual(gx[j], check_gx[j], eps, eps);
 
 	// check Hessian
 	BAvector check_gxx = Gfun.Hessian(x, 0);
 	for(j = 0; j &lt; n*n; j++)
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(gxx[j], check_gxx[j], eps, eps);
+		ok &amp;= NearEqual(gxx[j], check_gxx[j], eps, eps);
 
 	return ok;
 }

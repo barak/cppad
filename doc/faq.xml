@@ -6,7 +6,7 @@
 <title>Frequently Asked Questions and Answers</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Frequently Asked Questions and Answers"/>
-<meta name="keywords" id="keywords" content=" Faq frequently asked questions and answers assignment independent operator bugs reporting comparechange Comparechange Ndebug complex types faq exceptions test exception Errorhandler variables variable tape avoid record speed taping math functions function matrix inverse mode: forward or reverse mode namespace vector preprocessor symbol Cppad_testvector symbols using standard ndebug optimize memory allocation storage: disk storage "/>
+<meta name="keywords" id="keywords" content=" frequently asked questions and answers Faq operator reporting Errorhandler avoid record taping mode Cppad_testvector standard math function storage assignment independent bugs comparechange complex types exceptions variables matrix inverse mode: forward or reverse namespace test vector preprocessor symbol using speed ndebug optimize memory allocation tape storage: disk "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -65,11 +65,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -83,7 +84,6 @@ A:active { color : purple }
 <option>Complex Types</option>
 <option>Exceptions</option>
 <option>Independent Variables</option>
-<option>Math Functions</option>
 <option>Matrix Inverse</option>
 <option>Mode: Forward or Reverse</option>
 <option>Namespace</option>
@@ -100,9 +100,6 @@ A:active { color : purple }
 <center><b><big><big>Frequently Asked Questions and Answers</big></big></b></center>
 <br/>
 <b><big><a name="Assignment and Independent" id="Assignment and Independent">Assignment and Independent</a></big></b>
-
-
-
 <br/>
 Why does the code sequence
 
@@ -131,7 +128,6 @@ and in the second case it is a parameter.
 <br/>
 <br/>
 <b><big><a name="Bugs" id="Bugs">Bugs</a></big></b>
-
 <br/>
 What should I do if I suspect that there is a bug in CppAD ?
 <code><span style='white-space: nowrap'><br/>
@@ -143,9 +139,9 @@ If this does not solve your problem, continue
 to the next step.
 </li><li>
 
-The second step is to check the 
+The second step is to check the
 <a href="whats_new.xml" target="_top"><span style='white-space: nowrap'>whats_new</span></a>
- messages from the date 
+ messages from the date
 of the release that you are using to the current date.
 If the bug has been mentioned and fixed,
 then <a href="install.xml" target="_top"><span style='white-space: nowrap'>install</span></a>
@@ -154,23 +150,25 @@ If this does not solve your problem, continue
 to the next step.
 </li><li>
 
-Send an e-mail message to the mailing list 
+Create a simple as possible demonstration of the bug;
+see the file <code><font color="blue">bug/template.sh</font></code> for a template that you can
+edit for that purpose.
+The smaller the program, the better the bug report.
+</li><li>
+
+Send an e-mail message to the mailing list
 <a href="http://list.coin-or.org/mailman/listinfo/cppad" target="_top"><span style='white-space: nowrap'>cppad@list.coin-or.org</span></a>
 
 with a description of the bug.
-Attaching a small source code sample program that 
-demonstrates the bug is always helpful.
-The smaller the program, the better the bug report.
+Attaching your program that demonstrates the bug.
 </li></ol>
 
 
 <br/>
 <br/>
 <b><big><a name="CompareChange" id="CompareChange">CompareChange</a></big></b>
-
-
 <br/>
-If you attempt to use the 
+If you attempt to use the
 <a href="comparechange.xml" target="_top"><span style='white-space: nowrap'>CompareChange</span></a>
 
 function when <code><font color="blue">NDEBUG</font></code> is true,
@@ -182,7 +180,6 @@ you will get an error message stating that
 <br/>
 <br/>
 <b><big><a name="Complex Types" id="Complex Types">Complex Types</a></big></b>
-
 <br/>
 Which of the following complex types is better:
 
@@ -199,22 +196,19 @@ Thus one would prefer to use
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;std::complex&lt;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;&gt;<br/>
 </span></font></code>
-On the other hand, the C++ standard only specifies 
+On the other hand, the C++ standard only specifies
 
 <code><font color="blue"><span style='white-space: nowrap'>std::complex&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  where 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
- is 
+ is
 <code><font color="blue">float</font></code>, <code><font color="blue">double</font></code>, or <code><font color="blue">lone double</font></code>.
-The effect of instantiating the template complex for any other type 
-is unspecified. 
+The effect of instantiating the template complex for any other type
+is unspecified.
 
 <br/>
 <br/>
 <b><big><a name="Exceptions" id="Exceptions">Exceptions</a></big></b>
-
-
-
 <br/>
 Why, in all the examples, do you pass back a boolean variable instead
 of throwing an exception ?
@@ -232,68 +226,39 @@ Specifications for redefining this action are provided.
 <br/>
 <br/>
 <b><big><a name="Independent Variables" id="Independent Variables">Independent Variables</a></big></b>
-
-
-
-
 <br/>
-Is it possible to evaluate the same tape recording with different values 
+Is it possible to evaluate the same tape recording with different values
 for the independent variables ?
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Yes (see <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
-). 
-
-<br/>
-<br/>
-<b><big><a name="Math Functions" id="Math Functions">Math Functions</a></big></b>
-
-
-<br/>
-Are there plans to add more math functions to CppAD ?
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>Yes. The <a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>std_math_ad</span></a>
- and <a href="mathother.xml" target="_top"><span style='white-space: nowrap'>MathOther</span></a>
- section contains
-a list of the math functions included so far.
-Contact the mailing list 
-<a href="http://list.coin-or.org/mailman/listinfo/cppad" target="_top"><span style='white-space: nowrap'>cppad@list.coin-or.org</span></a>
-
-if you need a math function that is has not yet been included.
-
-
+).
 
 <br/>
 <br/>
 <b><big><a name="Matrix Inverse" id="Matrix Inverse">Matrix Inverse</a></big></b>
-
-
 <br/>
 Is it possible to differentiate (with respect to the matrix elements)
-the computation of the inverse of a matrix 
-where the computation of the inverse uses pivoting ? 
+the computation of the inverse of a matrix
+where the computation of the inverse uses pivoting ?
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>The example routine <a href="lusolve.xml" target="_top"><span style='white-space: nowrap'>LuSolve</span></a>
  can be used to do this
 because the inverse is a special case of the solution of linear equations.
-The examples 
+The examples
 <a href="jac_lu_det.cpp.xml" target="_top"><span style='white-space: nowrap'>jac_lu_det.cpp</span></a>
  and <a href="hes_lu_det.cpp.xml" target="_top"><span style='white-space: nowrap'>hes_lu_det.cpp</span></a>
 
-use LuSolve to compute derivatives of the 
+use LuSolve to compute derivatives of the
 determinant with respect to the components of the matrix.
 
 <br/>
 <br/>
 <b><big><a name="Mode: Forward or Reverse" id="Mode: Forward or Reverse">Mode: Forward or Reverse</a></big></b>
-
-
-
 <br/>
-When evaluating derivatives, 
-one always has a choice between 
+When evaluating derivatives,
+one always has a choice between
 forward and reverse mode.
 How does one decide which mode to use ?
 <code><span style='white-space: nowrap'><br/>
@@ -301,16 +266,16 @@ How does one decide which mode to use ?
 </span></code>In general, the best mode depends on the number of domain and range
 components in the function that your are differentiating.
 Each call to <a href="forward.xml" target="_top"><span style='white-space: nowrap'>Forward</span></a>
- computes the derivative of all 
+ computes the derivative of all
 the range directions with respect to one domain direction.
 Each call to <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>Reverse</span></a>
- computes the derivative of one 
+ computes the derivative of one
 range direction with respect to all the domain directions.
-The times required for (speed of) 
-calls <code><font color="blue">Forward</font></code> and <code><font color="blue">Reverse</font></code> are about equal.  
+The times required for (speed of)
+calls <code><font color="blue">Forward</font></code> and <code><font color="blue">Reverse</font></code> are about equal.
 The <a href="seq_property.xml#Parameter" target="_top"><span style='white-space: nowrap'>Parameter</span></a>
- 
-function can be used to quickly determine that 
+
+function can be used to quickly determine that
 some range directions have derivative zero.
 
 
@@ -321,20 +286,16 @@ some range directions have derivative zero.
 
 
 
-
 <br/>
 <br/>
 <b><a name="Namespace.Test Vector Preprocessor Symbol" id="Namespace.Test Vector Preprocessor Symbol">Test Vector Preprocessor Symbol</a></b>
-
-
-
 <br/>
 Why do you use <code><font color="blue">CPPAD_TESTVECTOR</font></code> instead of a namespace for
 the CppAD <a href="testvector.xml" target="_top"><span style='white-space: nowrap'>testvector</span></a>
  class ?
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>The preprocessor symbol 
+</span></code>The preprocessor symbol
 <small><a href="testvector.xml" target="_top"><span style='white-space: nowrap'>CPPAD_TESTVECTOR</span></a>
  </small>
 determines which
@@ -350,16 +311,13 @@ by CppAD begin with either <code><font color="blue">CPPAD</font></code>
 <br/>
 <br/>
 <b><a name="Namespace.Using" id="Namespace.Using">Using</a></b>
-
-
-
 <br/>
 Why do I have trouble when the following command
 <code><font color='blue'><pre style='display:inline'> 
 	using namespace CppAD
 </pre></font></code>
 
-is at the global level 
+is at the global level
 (not within a function or some other limited scope).
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -377,8 +335,6 @@ in order to shadow these improper global definitions.
 <br/>
 <br/>
 <b><big><a name="Speed" id="Speed">Speed</a></big></b>
-
-
 <br/>
 How do I get the best speed performance out of CppAD ?
 
@@ -393,13 +349,13 @@ and with the preprocessor symbol <code><font color="blue">NDEBUG</font></code> d
 Note that defining <code><font color="blue">NDEBUG</font></code>
 will turn off all of the error checking and reporting that
 is done using <a href="errorhandler.xml" target="_top"><span style='white-space: nowrap'>ErrorHandler</span></a>
-. 
+.
 
 <br/>
 <br/>
 <b><a name="Speed.Optimize" id="Speed.Optimize">Optimize</a></b>
 <br/>
-It is also possible that preforming a tape 
+It is also possible that preforming a tape
 <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimization</span></a>
  will improve the speed of evaluation
 more than the time required for the optimization.
@@ -416,10 +372,6 @@ by calling <code><font color="blue">hold_memory</font></code> with
 <br/>
 <br/>
 <b><big><a name="Tape Storage: Disk or Memory" id="Tape Storage: Disk or Memory">Tape Storage: Disk or Memory</a></big></b>
-
-
-
-
 <br/>
 Does CppAD store the tape on disk or in memory ?
 <code><span style='white-space: nowrap'><br/>
@@ -430,7 +382,7 @@ for each
  type that is used.
 If you have a very large number calculations that are recorded
 on a tape, the tape will keep growing to hold the necessary information.
-Eventually, virtual memory may be used to store the tape 
+Eventually, virtual memory may be used to store the tape
 and the calculations may slow down because of necessary disk access.
 
 

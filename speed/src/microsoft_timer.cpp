@@ -1,9 +1,9 @@
-/* $Id: microsoft_timer.cpp 3223 2014-03-19 15:13:26Z bradbell $ */
+/* $Id: microsoft_timer.cpp 3724 2015-09-21 05:04:18Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -14,6 +14,7 @@ $begin microsoft_timer$$
 $spell
 	Microsoft
 	cpp
+	src
 $$
 
 $section Microsoft Version of Elapsed Number of Seconds$$
@@ -24,18 +25,18 @@ $icode%s% = microsoft_timer()%$$
 
 $head Purpose$$
 This routine is accurate to within .02 seconds
-(see $cref elapsed_seconds$$ which uses this routine when 
+(see $cref elapsed_seconds$$ which uses this routine when
 the preprocessor symbol $code _MSC_VER$$ is defined).
 It does not necessary work for time intervals that are greater than a day.
 It uses $code ::GetSystemTime$$ for timing.
 
 $head s$$
-is a $code double$$ equal to the 
+is a $code double$$ equal to the
 number of seconds since the first call to $code microsoft_timer$$.
 
 $head Linking$$
-The source code for this routine is located in 
-$code speed/microsoft_timer.cpp$$.
+The source code for this routine is located in
+$code speed/src/microsoft_timer.cpp$$.
 The preprocessor symbol $code _MSC_VER$$ must
 be defined, or this routine is not compiled.
 

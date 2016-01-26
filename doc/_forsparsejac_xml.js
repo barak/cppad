@@ -32,7 +32,9 @@ var list_down2 = [
 var list_down1 = [
 'forsparsejac.xml',
 'revsparsejac.xml',
-'revsparsehes.xml'
+'dependency.cpp.xml',
+'revsparsehes.xml',
+'bool_sparsity.cpp.xml'
 ];
 var list_down0 = [
 'for_sparse_jac.cpp.xml'
@@ -46,6 +48,7 @@ var list_current0 = [
 'forsparsejac.xml#x',
 'forsparsejac.xml#q',
 'forsparsejac.xml#transpose',
+'forsparsejac.xml#dependency',
 'forsparsejac.xml#r',
 'forsparsejac.xml#r.transpose false',
 'forsparsejac.xml#r.transpose true',

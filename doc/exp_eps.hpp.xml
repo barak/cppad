@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -96,7 +96,7 @@ Type exp_eps(const Type &amp;x, const Type &amp;epsilon)
 	if( Type(0) &gt; x )
 		abs_x = - x;
 	// initialize
-	int  k    = 0;          // initial order 
+	int  k    = 0;          // initial order
 	Type term = 1.;         // term = |x|^k / k !
 	Type sum  = term;       // initial sum
 	while(term &gt; epsilon)
@@ -106,7 +106,7 @@ Type exp_eps(const Type &amp;x, const Type &amp;epsilon)
 		sum       = sum + term;     // sum  = 1 + ... + |x|^k / k !
 	}
 	// In the case where x is negative, use exp(x) = 1 / exp(-|x|)
-	if( Type(0) &gt; x ) 
+	if( Type(0) &gt; x )
 		sum = Type(1) / sum;
 	return sum;
 }

@@ -16,7 +16,7 @@ var list_down1 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -27,14 +27,14 @@ var list_down0 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_current0 = [
 'install.xml#Instructions',
 'install.xml#Instructions.Step 1: Download',
 'install.xml#Instructions.Step 2: Cmake',
 'install.xml#Instructions.Step 3: Check',
-'install.xml#Instructions.Step 4: Install',
+'install.xml#Instructions.Step 4: Installation',
 'install.xml#Contents'
 ];
 function choose_across0(item)

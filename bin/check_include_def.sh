@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_include_def.sh 3308 2014-05-26 14:29:01Z bradbell $
+# $Id: check_include_def.sh 3757 2015-11-30 12:03:07Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -19,10 +19,10 @@ fi
 echo "Differences between include file names and ifndef at top directives."
 echo "Also make sure same ifndef not used by two different files."
 echo "-------------------------------------------------------------------"
-list=`bin/list_files.sh .hpp`
+list=`bin/list_files.sh | sed -n -e '/\.hpp$/p'`
 #
-grep '^# *ifndef *CPPAD_[0-9a-zA-Z_]*_INCLUDED$' $list \
-	| sed -e 's|.*# *ifndef *CPPAD_\([0-9a-zA-Z_]*\)_INCLUDED$|\1.HPP|' \
+grep '^# *ifndef *CPPAD_[0-9a-zA-Z_]*_HPP$' $list \
+	| sed -e 's|.*# *ifndef *CPPAD_\([0-9a-zA-Z_]*\)_HPP$|\1.HPP|' \
 	| tr [a-zA-Z] [A-Za-z] \
 	| sort \
 	> bin/check_include_def.1.$$

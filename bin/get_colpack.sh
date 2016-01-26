@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: get_colpack.sh 3017 2013-12-01 09:49:25Z bradbell $
+# $Id: get_colpack.sh 3730 2015-09-23 15:56:53Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -19,20 +19,17 @@
 # $$
 #
 # $section Download and Install ColPack in Build Directory$$
-# $index colpack, download and install$$
-# $index download, install colpack$$
-# $index install, colpack$$ 
 #
 # $head Syntax$$
 # $code bin/get_colpack.sh$$
 #
 # $head Purpose$$
-# If you are using Unix, this command will download and install 
-# $href%http://www.cs.odu.edu/~dnguyen/dox/colpack/html/%ColPack%$$ in the
+# If you are using Unix, this command will download and install
+# $href%http://cscapes.cs.purdue.edu/dox/ColPack/html/%ColPack%$$ in the
 # CppAD $code build$$ directory.
 #
 # $head Distribution Directory$$
-# This command must be executed in the 
+# This command must be executed in the
 # $cref/distribution directory/download/Distribution Directory/$$.
 #
 # $head External Directory$$
@@ -66,7 +63,14 @@ echo_eval() {
 echo 'Download colpack to build/external and install it to build/prefix'
 version='1.0.9'
 web_page='http://cscapes.cs.purdue.edu/download/ColPack'
-prefix=`pwd`'/build/prefix'
+cppad_dir=`pwd`
+prefix="$cppad_dir/build/prefix"
+installed_flag="build/external/colpack-${version}.installed"
+if [ -e "$installed_flag" ]
+then
+	echo "$installed_flag exists: Skipping get_colpack.sh"
+	exit 0
+fi
 # --------------------------------------------------------------------------
 if [ -e /usr/lib64 ]
 then
@@ -96,7 +100,7 @@ if which autoconf >& /dev/null
 then
 	echo_eval rm aclocal.m4 ltmain.sh
 	echo_eval libtoolize
-	echo_eval autoreconf --force
+	echo_eval autoreconf --install --force
 fi
 # -----------------------------------------------------------------------------
 #
@@ -116,4 +120,5 @@ echo_eval ./configure \
 #
 echo_eval make install
 # -----------------------------------------------------------------------------
+echo_eval touch $cppad_dir/$installed_flag
 echo "get_colpack: OK"

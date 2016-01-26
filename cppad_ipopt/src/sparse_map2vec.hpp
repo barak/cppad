@@ -1,11 +1,11 @@
-/* $Id: sparse_map2vec.hpp 2622 2012-12-23 11:45:24Z bradbell $ */
-# ifndef  CPPAD_SPARSE_MAP2VEC_INCLUDED
-# define  CPPAD_SPARSE_MAP2VEC_INCLUDED
+// $Id: sparse_map2vec.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_SPARSE_MAP2VEC_HPP
+# define CPPAD_SPARSE_MAP2VEC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.

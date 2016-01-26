@@ -6,7 +6,7 @@
 <title>Run One Speed Test and Print Results</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Run One Speed Test and Print Results"/>
-<meta name="keywords" id="keywords" content=" Speedtest test speed run one and print results syntax purpose motivation include size repeat name first last inc rate errors example "/>
+<meta name="keywords" id="keywords" content=" run one speed test and print results Speedtest syntax purpose motivation include size repeat name first last inc rate errors example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>SpeedTest</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -119,17 +117,16 @@ A:active { color : purple }
 
 
 
-
-
 <center><b><big><big>Run One Speed Test and Print Results</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 
-<code><font color="blue"><br/>
-# include &lt;cppad/speed_test.hpp&gt;</font></code>
-<code><span style='white-space: nowrap'><br/>
-</span></code>
+<br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/speed_test.hpp&gt;<br/>
+</span></font></code>
+
 <code><font color="blue"><span style='white-space: nowrap'>SpeedTest(</span></font><i><font color="black"><span style='white-space: nowrap'>Test</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>first</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>inc</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>last</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
@@ -156,13 +153,13 @@ It is important to separate small calculation units
 and test them individually.
 This way individual changes can be tested in the context of the
 routine that they are in.
-On many machines, accurate timing of a very short execution 
+On many machines, accurate timing of a very short execution
 sequences is not possible.
 In addition,
 there may be set up time for a test that
 we do not really want included in the timing.
 For this reason <code><font color="blue">SpeedTest</font></code>
-automatically determines how many times to 
+automatically determines how many times to
 repeat the section of the test that we wish to time.
 
 
@@ -170,10 +167,10 @@ repeat the section of the test that we wish to time.
 <br/>
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
-The file <code><font color="blue">speed_test.hpp</font></code> contains the 
+The file <code><font color="blue">speed_test.hpp</font></code> contains the
 <code><font color="blue">SpeedTest</font></code> function.
 This file is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of 
+but it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
@@ -237,13 +234,13 @@ It is assumed that,
 for the duration of this call to <code><font color="blue">SpeedTest</font></code>,
 
 <code><i><font color="black"><span style='white-space: nowrap'>Test</span></font></i></code>
- will always return 
+ will always return
 the same value for 
 <code><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
 .
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
- is the empty string, 
+ is the empty string,
 no test name is reported by <code><font color="blue">SpeedTest</font></code>.
 
 <br/>
@@ -257,9 +254,9 @@ The <code><font color="blue">SpeedTest</font></code> argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>first</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the size of the first test problem reported by this call to 
+It specifies the size of the first test problem reported by this call to
 <code><font color="blue">SpeedTest</font></code>.
-	
+
 <br/>
 <br/>
 <b><big><a name="last" id="last">last</a></big></b>
@@ -271,7 +268,7 @@ The <code><font color="blue">SpeedTest</font></code> argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>last</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the size of the last test problem reported by this call to 
+It specifies the size of the last test problem reported by this call to
 <code><font color="blue">SpeedTest</font></code>.
 
 <br/>
@@ -305,7 +302,7 @@ The values
 <code><i><font color="black"><span style='white-space: nowrap'>last</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>inc</span></font></i></code>
- must 
+ must
 satisfy the relation
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -326,7 +323,7 @@ satisfy the relation
 The value displayed in the <code><font color="blue">rate</font></code> column on <code><font color="blue">std::cout</font></code>
 is defined as the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>repeat</span></font></i></code>
- divided by the 
+ divided by the
 corresponding elapsed execution time in seconds.
 The elapsed execution time is measured by the difference in
 <code><font color='blue'><pre style='display:inline'> 
@@ -356,7 +353,7 @@ The program <a href="speed_program.cpp.xml" target="_top"><span style='white-spa
 of <code><font color="blue">SpeedTest</font></code>.
 
 
-<hr/>Input File: cppad/speed_test.hpp
+<hr/>Input File: cppad/utility/speed_test.hpp
 
 </body>
 </html>

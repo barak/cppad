@@ -6,7 +6,7 @@
 <title>Creating Your Own Interface to an ADFun Object</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Creating Your Own Interface to an ADFun Object"/>
-<meta name="keywords" id="keywords" content=" creating your own interface to an adfun object Adfun example test "/>
+<meta name="keywords" id="keywords" content=" creating your own interface to an adfun object example test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -101,37 +101,37 @@ namespace {
 	// This class is an example of a different interface to an AD function object
 	template &lt;class Base&gt;
 	class my_ad_fun {
-	
+
 	private:
 		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt; f;
-	
+
 	public:
 		// default constructor
 		my_ad_fun(void)
 		{ }
-	
+
 		// destructor
 		~ my_ad_fun(void)
 		{ }
-	
+
 		// Construct an my_ad_fun object with an operation sequence.
-		// This is the same as for <a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt; except that no zero 
-		// order forward sweep is done. Note Hessian and Jacobian do 
-		// their own zero order forward mode sweep. 
+		// This is the same as for <a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt; except that no zero
+		// order forward sweep is done. Note Hessian and Jacobian do
+		// their own zero order forward mode sweep.
 		template &lt;class ADvector&gt;
 		my_ad_fun(const ADvector&amp; x, const ADvector&amp; y)
 		{	f.Dependent(x, y); }
-	
+
 		// same as <a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt;::Jacobian
 		template &lt;class VectorBase&gt;
-		VectorBase jacobian(const VectorBase&amp; x) 
+		VectorBase jacobian(const VectorBase&amp; x)
 		{	return f.<a href="jacobian.xml" target="_top">Jacobian</a>(x); }
 
 		// same as <a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt;::Hessian
 	        template &lt;typename VectorBase&gt;
 		VectorBase hessian(const VectorBase &amp;x, const VectorBase &amp;w)
 		{	return f.Hessian(x, w); }
-	}; 
+	};
 
 } // End empty namespace
 

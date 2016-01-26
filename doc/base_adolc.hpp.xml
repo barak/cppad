@@ -6,7 +6,7 @@
 <title>Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type"/>
-<meta name="keywords" id="keywords" content=" Adolc adouble as Base Adolc's enable use of ad&lt;base&gt; where base is adolc's type syntax example include files condexpop equalopseq identical integer ordered unary standard math erf sign abs pow limits "/>
+<meta name="keywords" id="keywords" content=" enable use of ad&lt;base&gt; where base is adolc's adouble type syntax example include files condexpop condexprel equalopseq identical integer azmul ordered unary standard math erf asinh acosh atanh expm1 log1p sign abs pow numeric_limits "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -64,6 +64,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -91,25 +93,24 @@ A:active { color : purple }
 <option>Example</option>
 <option>Include Files</option>
 <option>CondExpOp</option>
+<option>CondExpRel</option>
 <option>EqualOpSeq</option>
 <option>Identical</option>
 <option>Integer</option>
+<option>azmul</option>
 <option>Ordered</option>
 <option>Unary Standard Math</option>
-<option>erf</option>
+<option>erf, asinh, acosh, atanh, expm1, log1p</option>
 <option>sign</option>
 <option>abs</option>
 <option>pow</option>
-<option>limits</option>
+<option>numeric_limits</option>
 </select>
 </td>
 </tr></table><br/>
 
 
 
-
-
- 
 
 <center><b><big><big>Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type</big></big></b></center>
 <br/>
@@ -163,7 +164,7 @@ which evaluates to
 </span></font></code>
 This enables one to include conditionals in the recording of
 <code><font color="blue">adouble</font></code> operations and later evaluation for different
-values of the independent variables 
+values of the independent variables
 (in the same spirit as the CppAD <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
  function).
 <code><font color='blue'><pre style='display:inline'> 
@@ -213,10 +214,23 @@ namespace CppAD {
 
 <br/>
 <br/>
+<b><big><a name="CondExpRel" id="CondExpRel">CondExpRel</a></big></b>
+<br/>
+The <a href="base_cond_exp.xml#CondExpRel" target="_top"><span style='white-space: nowrap'>CPPAD_COND_EXP_REL</span></a>
+ macro invocation
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_COND_EXP_REL(adouble)
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
 <b><big><a name="EqualOpSeq" id="EqualOpSeq">EqualOpSeq</a></big></b>
 <br/>
-The Adolc user interface does not specify a way to determine if 
-two <code><font color="blue">adouble</font></code> variables correspond to the same operations sequence. 
+The Adolc user interface does not specify a way to determine if
+two <code><font color="blue">adouble</font></code> variables correspond to the same operations sequence.
 Make <code><font color="blue">EqualOpSeq</font></code> an error if it gets used:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
@@ -236,8 +250,8 @@ namespace CppAD {
 <br/>
 <b><big><a name="Identical" id="Identical">Identical</a></big></b>
 <br/>
-The Adolc user interface does not specify a way to determine if an 
-<code><font color="blue">adouble</font></code> depends on the independent variables. 
+The Adolc user interface does not specify a way to determine if an
+<code><font color="blue">adouble</font></code> depends on the independent variables.
 To be safe (but slow) return <code><font color="blue">false</font></code> in all the cases below.
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
@@ -260,6 +274,17 @@ namespace CppAD {
 <code><font color='blue'><pre style='display:inline'> 
 	inline int Integer(const adouble &amp;x)
 	{    return static_cast&lt;int&gt;( x.getValue() ); }
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="azmul" id="azmul">azmul</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_AZMUL( adouble )
+}
 </pre></font></code>
 
 
@@ -288,7 +313,7 @@ namespace CppAD {
 <b><big><a name="Unary Standard Math" id="Unary Standard Math">Unary Standard Math</a></big></b>
 <br/>
 The following <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
- functions 
+ functions
 are defined by the Adolc package for the <code><font color="blue">adouble</font></code> base case:
 <code><span style='white-space: nowrap'><br/>
 </span></code><code><font color="blue">acos</font></code>,
@@ -306,30 +331,38 @@ are defined by the Adolc package for the <code><font color="blue">adouble</font>
 
 <br/>
 <br/>
-<b><big><a name="erf" id="erf">erf</a></big></b>
+<b><big><a name="erf, asinh, acosh, atanh, expm1, log1p" id="erf, asinh, acosh, atanh, expm1, log1p">erf, asinh, acosh, atanh, expm1, log1p</a></big></b>
 <br/>
-If the error function is supported by the compiler,
-it must also be supported by a 
+If the
+<a href="base_std_math.xml#erf, asinh, acosh, atanh, expm1, log1p" target="_top"><span style='white-space: nowrap'>erf,&#xA0;asinh,&#xA0;acosh,&#xA0;atanh,&#xA0;expm1,&#xA0;log1p</span></a>
+,
+functions are supported by the compiler,
+they must also be supported by a 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
  type;
-see <a href="base_std_math.xml#erf" target="_top"><span style='white-space: nowrap'>erf</span></a>
-.
-The adolc package does not support this function:
+The adolc package does not support these functions so make
+their use an error:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-# if CPPAD_COMPILER_HAS_ERF
-	inline adouble erf(const adouble&amp; x)
-	{	CPPAD_ASSERT_KNOWN( 
-			false,
-			&quot;erf: adolc does not support the error function&quot;
-		);
-		return 0;
-	}
+# define CPPAD_BASE_ADOLC_NO_SUPPORT(fun)                         \
+    inline adouble fun(const adouble&amp; x)                          \
+    {   CPPAD_ASSERT_KNOWN(                                       \
+            false,                                                \
+            #fun &quot;: adolc does not support this function&quot;         \
+        );                                                        \
+        return 0.0;                                               \
+    }
+# if CPPAD_USE_CPLUSPLUS_2011
+	CPPAD_BASE_ADOLC_NO_SUPPORT(erf)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(asinh)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(acosh)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(atanh)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(expm1)
+	CPPAD_BASE_ADOLC_NO_SUPPORT(log1p)
 # endif
+# undef CPPAD_BASE_ADOLC_NO_SUPPORT
 }
 </pre></font></code>
- 
-
 
 
 <br/>
@@ -337,7 +370,7 @@ namespace CppAD {
 <b><big><a name="sign" id="sign">sign</a></big></b>
 <br/>
 This <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
- function is defined using the 
+ function is defined using the
 <code><font color="blue">codassign</font></code> function so that its <code><font color="blue">adouble</font></code> operation sequence
 does not depend on the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -362,7 +395,7 @@ namespace CppAD {
 <b><big><a name="abs" id="abs">abs</a></big></b>
 <br/>
 This <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
- function uses the adolc <code><font color="blue">fabs</font></code> 
+ function uses the adolc <code><font color="blue">fabs</font></code>
 function:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
@@ -377,35 +410,19 @@ namespace CppAD {
 <b><big><a name="pow" id="pow">pow</a></big></b>
 <br/>
 This <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>required</span></a>
- function 
+ function
 is defined by the Adolc package for the <code><font color="blue">adouble</font></code> base case.
 
 <br/>
 <br/>
-<b><big><a name="limits" id="limits">limits</a></big></b>
+<b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
 <br/>
-The following defines the numeric limits functions
-<code><font color="blue">epsilon</font></code>, <code><font color="blue">min</font></code>, and <code><font color="blue">max</font></code> for the type
-<code><font color="blue">adouble</font></code>.
-It also defines the deprecated <code><font color="blue">epsilon</font></code> function:
+The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
+
+for the type <code><font color="blue">adouble</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	template &lt;&gt;
-	class numeric_limits&lt;adouble&gt; {
-	public:
-		// machine epsilon
-		static adouble epsilon(void)
-		{	return adouble( std::numeric_limits&lt;double&gt;::epsilon() ); }
-		// minimum positive normalized value
-		static adouble min(void)
-		{	return adouble( std::numeric_limits&lt;float&gt;::min() ); }
-		// maximum finite value
-		static adouble max(void)
-		{	return adouble( std::numeric_limits&lt;float&gt;::max() ); }
-	};
-	// deprecated machine epsilon
-	template &lt;&gt; inline adouble epsilon&lt;adouble&gt;(void)
-	{	return numeric_limits&lt;adouble&gt;::epsilon(); }
+	CPPAD_NUMERIC_LIMITS(double, adouble)
 }
 </pre></font></code>
 

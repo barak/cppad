@@ -6,7 +6,7 @@
 <title>Nonlinear Programming Using CppAD and Ipopt: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Nonlinear Programming Using CppAD and Ipopt: Example and Test"/>
-<meta name="keywords" id="keywords" content=" example nonlinear programming ipopt Ad using cppad and ipopt: test purpose configuration requirement "/>
+<meta name="keywords" id="keywords" content=" nonlinear programming using cppad and ipopt: example test ipopt Ad purpose configuration requirement "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -94,14 +97,11 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>Nonlinear Programming Using CppAD and Ipopt: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-This example program demonstrates how to use the class cppad_ipopt_nlp to 
+This example program demonstrates how to use the class cppad_ipopt_nlp to
 solve the example problem in the Ipopt documentation; i.e., the problem
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -212,9 +212,9 @@ solve the example problem in the Ipopt documentation; i.e., the problem
 This example will be compiled and tested provided that
 a value for 
 <code><i><font color="black"><span style='white-space: nowrap'>ipopt_prefix</span></font></i></code>
- 
+
 is specified on the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command line. 
+ command line.
 
 <code><font color="blue">
 <pre style='display:inline'> 
@@ -238,7 +238,7 @@ namespace {
 		ADVector eval_r(size_t k, const ADVector&amp;  x)
 		{	ADVector fg(3);
 
-			// Fortran style indexing 
+			// Fortran style indexing
 			ADNumber x1 = x[0];
 			ADNumber x2 = x[1];
 			ADNumber x3 = x[2];
@@ -255,14 +255,14 @@ namespace {
 		{	return retape_; }
 	};
 }
-	
+
 bool ipopt_get_started(void)
 {	bool ok = true;
 	size_t j;
 
 
 	// number of independent variables (domain dimension for f and g)
-	size_t n = 4;  
+	size_t n = 4;
 	// number of constraints (range dimension for g)
 	size_t m = 2;
 	// initial value of the independent variables
@@ -282,12 +282,12 @@ bool ipopt_get_started(void)
 	NumberVector g_l(m);
 	NumberVector g_u(m);
 	g_l[0] = 25.0;     g_u[0] = 1.0e19;
-  	g_l[1] = 40.0;     g_u[1] = 40.0;
+	g_l[1] = 40.0;     g_u[1] = 40.0;
 
 	size_t icase;
 	for(icase = 0; icase &lt;= 1; icase++)
 	{	// Should cppad_ipopt_nlp retape the operation sequence for
-		// every new x. Can test both true and false cases because 
+		// every new x. Can test both true and false cases because
 		// the operation sequence does not depend on x (for this case).
 		bool retape = icase != 0;
 
@@ -312,7 +312,7 @@ bool ipopt_get_started(void)
 		app-&gt;Options()-&gt;SetIntegerValue(&quot;max_iter&quot;, 10);
 
 		// approximate accuracy in first order necessary conditions;
-		// see Mathematical Programming, Volume 106, Number 1, 
+		// see Mathematical Programming, Volume 106, Number 1,
 		// Pages 25-57, Equation (6)
 		app-&gt;Options()-&gt;SetNumericValue(&quot;tol&quot;, 1e-9);
 
@@ -332,8 +332,8 @@ bool ipopt_get_started(void)
 		ok    &amp;= status == Ipopt::Solve_Succeeded;
 
 		/*
- 		Check some of the solution values
- 		*/
+		Check some of the solution values
+		*/
 		ok &amp;= solution.status == cppad_ipopt_solution::success;
 		//
 		double check_x[]   = { 1.000000, 4.743000, 3.82115, 1.379408 };

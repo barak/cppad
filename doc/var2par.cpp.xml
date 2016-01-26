@@ -61,6 +61,7 @@ A:active { color : purple }
 <option>Convert-&gt;</option>
 <option>Value</option>
 <option>Integer</option>
+<option>ad_to_string</option>
 <option>ad_input</option>
 <option>ad_output</option>
 <option>PrintFor</option>
@@ -100,15 +101,15 @@ bool Var2Par(void)
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = - x[1] * Var2Par(x[0]);    // same as y[0] = -x[1] * 3.;
 
 	// cannot call Value(x[j]) or Value(y[0]) here (currently variables)
 	ok &amp;= ( Value( Var2Par(x[0]) ) == 3. );
-	ok &amp;= ( Value( Var2Par(x[1]) ) == 4. ); 
-	ok &amp;= ( Value( Var2Par(y[0]) ) == -12. ); 
+	ok &amp;= ( Value( Var2Par(x[1]) ) == 4. );
+	ok &amp;= ( Value( Var2Par(y[0]) ) == -12. );
 
 	// create f: x -&gt; y and stop tape recording
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);

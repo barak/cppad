@@ -25,7 +25,7 @@ var list_down2 = [
 'forward_order.xml',
 'forward_dir.xml',
 'size_order.xml',
-'comparechange.xml',
+'compare_change.xml',
 'capacity_order.xml',
 'number_skip.xml'
 ];

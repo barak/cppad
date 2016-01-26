@@ -6,7 +6,7 @@
 <title>Compute Determinant and Solve Linear Equations</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Compute Determinant and Solve Linear Equations"/>
-<meta name="keywords" id="keywords" content=" Lusolve linear equation determinant Lu solve compute and equations syntax description include factor invert matrix storage signdet n m a b x logdet float floatvector leqzero absgeq example source "/>
+<meta name="keywords" id="keywords" content=" compute determinant and solve linear equations Lusolve Lu syntax description include factor invert matrix storage signdet n m a b x logdet float floatvector leqzero absgeq example source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuSolve</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -132,10 +130,11 @@ A:active { color : purple }
 <center><b><big><big>Compute Determinant and Solve Linear Equations</big></big></b></center>
 <code><span style='white-space: nowrap'><br/>
 </span></code><b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
- <code><font color="blue"><br/>
-# include &lt;cppad/lu_solve.hpp&gt;</font></code>
-<code><span style='white-space: nowrap'><br/>
-</span></code>
+ <br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>&#xA0;include&#xA0;&lt;cppad/utility/lu_solve.hpp&gt;<br/>
+</span></font></code>
+
 <code><i><font color="black"><span style='white-space: nowrap'>signdet</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;LuSolve(</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>A</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>B</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>X</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>logdet</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
@@ -147,7 +146,7 @@ A:active { color : purple }
 Use an LU factorization of the matrix 
 <code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
  to
-compute its determinant 
+compute its determinant
 and solve for 
 <code><i><font color="black"><span style='white-space: nowrap'>X</span></font></i></code>
  in the linear of equation
@@ -162,7 +161,7 @@ and solve for
 
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
- is an 
+ is an
 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
  by 
@@ -170,7 +169,7 @@ where
  matrix,
 
 <code><i><font color="black"><span style='white-space: nowrap'>X</span></font></i></code>
- is an 
+ is an
 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
  by 
@@ -192,7 +191,7 @@ where
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
 The file <code><font color="blue">cppad/lu_solve.hpp</font></code> is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of 
+but it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
@@ -310,7 +309,7 @@ This determinant of
  is zero if and only if 
 <code><i><font color="black"><span style='white-space: nowrap'>signdet</span></font></i></code>
 
-is zero. 
+is zero.
 
 <br/>
 <br/>
@@ -318,7 +317,7 @@ is zero.
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
- has type <code><font color="blue">size_t</font></code> 
+ has type <code><font color="blue">size_t</font></code>
 and specifies the number of rows in the matrices
 
 <code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
@@ -341,7 +340,7 @@ The number of columns in
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
- has type <code><font color="blue">size_t</font></code> 
+ has type <code><font color="blue">size_t</font></code>
 and specifies the number of columns in the matrices
 
 <code><i><font color="black"><span style='white-space: nowrap'>X</span></font></i></code>
@@ -391,8 +390,8 @@ This is the
 
  by 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
- matrix that 
-we are computing the determinant of 
+ matrix that
+we are computing the determinant of
 and that defines the linear equation.
 
 <br/>
@@ -425,7 +424,7 @@ This is the
 
  by 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
- matrix that 
+ matrix that
 defines the right hand side of the linear equations.
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
@@ -486,10 +485,10 @@ The argument
 On input, the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>logdet</span></font></i></code>
  does not matter.
-On output, it has been set to the 
+On output, it has been set to the
 log of the determinant of 
 <code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
- 
+
 (but not quite).
 To be more specific,
 the determinant of 
@@ -558,7 +557,7 @@ if this is not the case.
 <br/>
 <b><big><a name="LeqZero" id="LeqZero">LeqZero</a></big></b>
 <br/>
-Including the file <code><font color="blue">lu_solve.hpp</font></code> defines the template function 
+Including the file <code><font color="blue">lu_solve.hpp</font></code> defines the template function
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;template&#xA0;&lt;typename&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;<br/>
@@ -573,10 +572,10 @@ It is used by <code><font color="blue">LuSolve</font></code> to avoid taking the
 zero (or a negative number if 
 <code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
  corresponds to real numbers).
-This template function definition assumes that the operator 
+This template function definition assumes that the operator
 <code><font color="blue">&lt;=</font></code> is defined for 
 <code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
- objects. 
+ objects.
 If this operator is not defined for your use of 
 <code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
 ,
@@ -585,7 +584,7 @@ use of <code><font color="blue">LuSolve</font></code>.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Complex numbers do not have the operation or <code><font color="blue">&lt;=</font></code> defined.
-In addition, in the complex case, 
+In addition, in the complex case,
 one can take the log of a negative number.
 The specializations
 
@@ -602,7 +601,7 @@ These return true if
 <br/>
 <b><big><a name="AbsGeq" id="AbsGeq">AbsGeq</a></big></b>
 <br/>
-Including the file <code><font color="blue">lu_solve.hpp</font></code> defines the template function 
+Including the file <code><font color="blue">lu_solve.hpp</font></code> defines the template function
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;template&#xA0;&lt;typename&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;<br/>
@@ -613,14 +612,14 @@ If the type
  does not support the <code><font color="blue">&lt;=</font></code> operation
 and it is not <code><font color="blue">std::complex&lt;float&gt;</font></code> or <code><font color="blue">std::complex&lt;double&gt;</font></code>,
 see the documentation for <code><font color="blue">AbsGeq</font></code> in <a href="lufactor.xml#AbsGeq" target="_top"><span style='white-space: nowrap'>LuFactor</span></a>
-. 
+.
 
 
 <br/>
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
 <br/>
-The file 
+The file
 <a href="lu_solve.cpp.xml" target="_top"><span style='white-space: nowrap'>lu_solve.cpp</span></a>
 
 contains an example and test of using this routine.
@@ -635,7 +634,7 @@ The file <a href="lu_solve.hpp.xml" target="_top"><span style='white-space: nowr
 current source code that implements these specifications.
 
 
-<hr/>Input File: cppad/lu_solve.hpp
+<hr/>Input File: cppad/utility/lu_solve.hpp
 
 </body>
 </html>

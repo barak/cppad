@@ -27,6 +27,8 @@ var list_down2 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_down1 = [

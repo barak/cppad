@@ -6,7 +6,7 @@
 <title>Set Atomic Function Options</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Set Atomic Function Options"/>
-<meta name="keywords" id="keywords" content=" set atomic function options syntax atomic_sparsity sparsity bool_sparsity_enum set_sparsity_enum "/>
+<meta name="keywords" id="keywords" content=" set atomic function options syntax atomic_sparsity pack_sparsity_enum bool_sparsity_enum set_sparsity_enum "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -89,6 +91,7 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Syntax</option>
 <option>atomic_sparsity</option>
+<option>---..pack_sparsity_enum</option>
 <option>---..bool_sparsity_enum</option>
 <option>---..set_sparsity_enum</option>
 </select>
@@ -105,39 +108,71 @@ A:active { color : purple }
 
 <code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.option(</span></font><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
+These settings do not apply to individual 
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+ calls,
+but rather all subsequent uses of the corresponding atomic operation
+in an <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ object.
 
 <br/>
 <br/>
 <b><big><a name="atomic_sparsity" id="atomic_sparsity">atomic_sparsity</a></big></b>
-
+<br/>
+Note that, if you use <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
+, these sparsity patterns are used
+to determine the <a href="dependency.cpp.xml" target="_top"><span style='white-space: nowrap'>dependency</span></a>
+ relationship between
+argument and result variables.
 
 <br/>
-You can used this option to set to type used for 
-
-<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
- sparsity patterns.
-This does not apply individual calls to 
-<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+<br/>
+<b><a name="atomic_sparsity.pack_sparsity_enum" id="atomic_sparsity.pack_sparsity_enum">pack_sparsity_enum</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i></code>
+ is 
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::pack_sparsity_enum</span></font></code>
 ,
-but rather all its uses between when the sparsity pattern is set and when
-it is changed.
-If neither the <code><font color="blue">set_sparsity_enum</font></code> or 
-<code><font color="blue">bool_sparsity_enum</font></code> option is set,
-the type for 
-<code><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i></code>
- is one of the two choices below
-(and otherwise unspecified).
+then the type used by 
+<code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
+ for
+<a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;patterns</span></a>
+,
+(after the option is set) will be
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;typedef&#xA0;CppAD::vectorBool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
+ is a sparsity pattern
+for a matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>R</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mrow><mi mathvariant='italic'>p</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow>
+</msup>
+</mrow></math>
+
+:
+
+<code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
+.
 
 <br/>
 <br/>
 <b><a name="atomic_sparsity.bool_sparsity_enum" id="atomic_sparsity.bool_sparsity_enum">bool_sparsity_enum</a></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i></code>
  is 
 <code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::bool_sparsity_enum</span></font></code>
-, 
+,
 then the type used by 
 <code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
  for
@@ -150,7 +185,7 @@ then the type used by
 </span></font></code>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
- is a sparsity pattern 
+ is a sparsity pattern
 for a matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -171,13 +206,12 @@ for a matrix
 <br/>
 <br/>
 <b><a name="atomic_sparsity.set_sparsity_enum" id="atomic_sparsity.set_sparsity_enum">set_sparsity_enum</a></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i></code>
  is 
 <code><i><font color="black"><span style='white-space: nowrap'>atomic_base&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Base</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;::set_sparsity_enum</span></font></i></code>
-, 
+,
 then the type used by 
 <code><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i></code>
  for
@@ -190,7 +224,7 @@ then the type used by
 </span></font></code>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
- is a sparsity pattern 
+ is a sparsity pattern
 for a matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -227,7 +261,7 @@ the elements of
 <mn>-1</mn>
 </mrow></math>
 
- inclusive. 
+ inclusive.
 
 
 <hr/>Input File: cppad/local/atomic_base.hpp

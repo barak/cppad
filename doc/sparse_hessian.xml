@@ -6,7 +6,7 @@
 <title>Sparse Hessian: Easy Driver</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Sparse Hessian: Easy Driver"/>
-<meta name="keywords" id="keywords" content=" sparse hessian: easy driver Sparsehessian hessian syntax purpose f x w p row col hes work n_sweep vectorbase vectorset restrictions vectorsize uses forward example "/>
+<meta name="keywords" id="keywords" content=" sparse hessian: easy driver Sparsehessian syntax purpose f x w p row col hes work color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example subset hessian "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -91,6 +91,8 @@ A:active { color : purple }
 <select onchange='choose_down0(this)'>
 <option>sparse_hessian-&gt;</option>
 <option>sparse_hessian.cpp</option>
+<option>sub_sparse_hes.cpp</option>
+<option>sparse_sub_hes.cpp</option>
 </select>
 </td>
 <td>
@@ -105,6 +107,8 @@ A:active { color : purple }
 <option>row, col</option>
 <option>hes</option>
 <option>work</option>
+<option>---..color_method</option>
+<option>---..p</option>
 <option>n_sweep</option>
 <option>VectorBase</option>
 <option>VectorSet</option>
@@ -112,6 +116,7 @@ A:active { color : purple }
 <option>VectorSize</option>
 <option>Uses Forward</option>
 <option>Example</option>
+<option>Subset Hessian</option>
 </select>
 </td>
 </tr></table><br/>
@@ -167,10 +172,10 @@ We use
 
 corresponding to 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
-. 
+.
 The syntax above sets 
 <code><i><font color="black"><span style='white-space: nowrap'>hes</span></font></i></code>
- to the Hessian 
+ to the Hessian
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>H</mi>
@@ -258,7 +263,7 @@ The argument
 </span></font></code>
 (see <a href="sparse_hessian.xml#VectorBase" target="_top"><span style='white-space: nowrap'>VectorBase</span></a>
  below)
-and its size 
+and its size
 must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 , the dimension of the
@@ -293,7 +298,7 @@ It specifies the value of
 </msub>
 </mrow></math>
 
- in the expression 
+ in the expression
 for 
 <code><i><font color="black"><span style='white-space: nowrap'>hes</span></font></i></code>
 .
@@ -347,7 +352,7 @@ zero and
 .
 It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the Hessian 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>H</mi>
@@ -359,7 +364,7 @@ for the Hessian
 .
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>If this sparsity pattern does not change between calls to 
+</span></code>If this sparsity pattern does not change between calls to
 
 <code><font color="blue"><span style='white-space: nowrap'>SparseHessian</span></font></code>
 , it should be faster to calculate 
@@ -368,7 +373,17 @@ for the Hessian
 pass this argument to 
 <code><font color="blue"><span style='white-space: nowrap'>SparseHessian</span></font></code>
 .
-In addition,
+Furthermore, if you specify 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ in the calling sequence,
+it is not necessary to keep the sparsity pattern; see the heading
+<a href="sparse_hessian.xml#work.p" target="_top"><span style='white-space: nowrap'>p</span></a>
+ under the 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ description.
+<code><span style='white-space: nowrap'><br/>
+<br/>
+</span></code>In addition,
 if you specify 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
 , CppAD will use the same
@@ -452,7 +467,7 @@ for
 </mrow></math>
 
 .
-In addition, 
+In addition,
 all of the 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mo stretchy="false">(</mo>
@@ -520,7 +535,7 @@ In this case, for
 <mn>1</mn>
 </mrow></math>
 
- 
+
 and 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>ell</mi>
@@ -584,7 +599,7 @@ we use
 
  to denote the size of 
 <code><i><font color="black"><span style='white-space: nowrap'>hes</span></font></i></code>
-. 
+.
 The input value of its elements does not matter.
 Upon return, for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -666,7 +681,7 @@ This object can only be used with the routines <code><font color="blue">SparseHe
 During its the first use, information is stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
 .
-This is used to reduce the work done by future calls to <code><font color="blue">SparseHessian</font></code> 
+This is used to reduce the work done by future calls to <code><font color="blue">SparseHessian</font></code>
 with the same 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 , 
@@ -676,11 +691,73 @@ with the same
 , and 
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
 .
-If a future call is make where any of these values have changed,
+If a future call is made where any of these values have changed,
 you must first call 
 <code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i><font color="blue"><span style='white-space: nowrap'>.clear()</span></font></code>
 
 to inform CppAD that this information needs to be recomputed.
+
+<br/>
+<br/>
+<b><a name="work.color_method" id="work.color_method">color_method</a></b>
+<br/>
+The coloring algorithm determines which rows and columns
+can be computed during the same sweep.
+This field has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;std::string&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>work</span></font></i><font color="blue"><span style='white-space: nowrap'>.color_method<br/>
+</span></font></code>
+This value only matters on the first call to <code><font color="blue">sparse_hessian</font></code> that
+follows the 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ constructor or a call to
+
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i><font color="blue"><span style='white-space: nowrap'>.clear()</span></font></code>
+.
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+<br/>
+&quot;cppad.symmetric&quot;<br/>
+</span></font></code>
+This is the default coloring method (after a constructor or <code><font color="blue">clear()</font></code>).
+It takes advantage of the fact that the Hessian matrix
+is symmetric to find a coloring that requires fewer
+<a href="sparse_hessian.xml#n_sweep" target="_top"><span style='white-space: nowrap'>sweeps</span></a>
+.
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+<br/>
+&quot;cppad.general&quot;<br/>
+</span></font></code>
+This is the same as the <code><font color="blue">&quot;cppad&quot;</font></code> method for the
+<a href="sparse_jacobian.xml#work.color_method" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
+ calculation.
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+<br/>
+&quot;colpack.star&quot;<br/>
+</span></font></code>
+This method requires that
+<a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
+ was specified on the
+<a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
+ line.
+It also takes advantage of the fact that the Hessian matrix is symmetric.
+
+<br/>
+<br/>
+<b><a name="work.p" id="work.p">p</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ is present, and it is not the first call after
+its construction or a clear,
+the sparsity pattern 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+ is not used.
+This enables one to free the sparsity pattern
+and still compute corresponding sparse Hessians.
 
 <br/>
 <br/>
@@ -693,13 +770,13 @@ The return value
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It is the number of first order forward sweeps 
+It is the number of first order forward sweeps
 used to compute the requested Hessian values.
-Each first forward sweep is followed by a second order reverse sweep 
+Each first forward sweep is followed by a second order reverse sweep
 so it is also the number of reverse sweeps.
-This is proportional to the total work that <code><font color="blue">SparseHessian</font></code> does, 
-not counting the zero order forward sweep, 
-or the work to combine multiple columns into a single 
+This is proportional to the total work that <code><font color="blue">SparseHessian</font></code> does,
+not counting the zero order forward sweep,
+or the work to combine multiple columns into a single
 forward-reverse sweep pair.
 
 <br/>
@@ -746,11 +823,11 @@ If
  has elements of <code><font color="blue">std::set&lt;size_t&gt;</font></code>,
 then 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
- must return a reference (not a copy) to the 
+ must return a reference (not a copy) to the
 corresponding set.
 According to section 26.3.2.3 of the 1998 C++ standard,
 <code><font color="blue">std::valarray&lt; std::set&lt;size_t&gt; &gt;</font></code> does not satisfy
-this condition. 
+this condition.
 
 <br/>
 <br/>
@@ -775,7 +852,7 @@ After each call to <a href="forward.xml" target="_top"><span style='white-space:
 ,
 the object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- contains the corresponding 
+ contains the corresponding
 <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
 .
 After a call to any of the sparse Hessian routines,
@@ -785,17 +862,29 @@ the zero order Taylor coefficients correspond to
 
 and the other coefficients are unspecified.
 
+
+
 <br/>
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
-
 <br/>
 The routine
 <a href="sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian.cpp</span></a>
- 
+
 is examples and tests of <code><font color="blue">sparse_hessian</font></code>.
 It return <code><font color="blue">true</font></code>, if it succeeds and <code><font color="blue">false</font></code> otherwise.
 
+<br/>
+<br/>
+<b><big><a name="Subset Hessian" id="Subset Hessian">Subset Hessian</a></big></b>
+<br/>
+The routines
+<a href="sub_sparse_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>sub_sparse_hes.cpp</span></a>
+ and <a href="sparse_sub_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_sub_hes.cpp</span></a>
+
+are examples and tests that compute a sparse Hessian
+for a subset of the variables.
+They return <code><font color="blue">true</font></code>, if they succeed and <code><font color="blue">false</font></code> otherwise.
 
 
 <hr/>Input File: cppad/local/sparse_hessian.hpp

@@ -6,7 +6,7 @@
 <title>Jacobian and Hessian of Optimal Values</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Jacobian and Hessian of Optimal Values"/>
-<meta name="keywords" id="keywords" content=" Jacobian Hessian optimal value opt_val_hes jacobian and hessian of values syntax see also reference purpose basevector x y fun fun::ad_vector fun.ell fun.s fun.sy jac hes signdet example "/>
+<meta name="keywords" id="keywords" content=" jacobian and hessian of optimal values opt_val_hes syntax see also reference purpose basevector x y fun fun::ad_vector fun.ell fun.s fun.sy jac hes signdet example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,12 +38,13 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>Appendix</option>
+<option>numeric_ad</option>
 <option>opt_val_hes</option>
 </select>
 </td>
 <td>
-<select onchange='choose_down2(this)'>
+<select onchange='choose_down3(this)'>
 <option>CppAD-&gt;</option>
 <option>Install</option>
 <option>Introduction</option>
@@ -51,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -59,31 +60,24 @@ A:active { color : purple }
 </select>
 </td>
 <td>
+<select onchange='choose_down2(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>wish_list</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
+<option>License</option>
+</select>
+</td>
+<td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
-<option>ErrorHandler</option>
-<option>NearEqual</option>
-<option>speed_test</option>
-<option>SpeedTest</option>
-<option>time_test</option>
-<option>NumericType</option>
-<option>CheckNumericType</option>
-<option>SimpleVector</option>
-<option>CheckSimpleVector</option>
-<option>nan</option>
-<option>pow_int</option>
-<option>Poly</option>
-<option>LuDetAndSolve</option>
-<option>RombergOne</option>
-<option>RombergMul</option>
-<option>Runge45</option>
-<option>Rosen34</option>
-<option>OdeErrControl</option>
-<option>OdeGear</option>
-<option>OdeGearControl</option>
-<option>CppAD_vector</option>
-<option>thread_alloc</option>
-<option>index_sort</option>
+<option>numeric_ad-&gt;</option>
 <option>BenderQuad</option>
 <option>opt_val_hes</option>
 <option>LuRatio</option>
@@ -122,11 +116,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
 <center><b><big><big>Jacobian and Hessian of Optimal Values</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -134,7 +123,7 @@ A:active { color : purple }
 <br/>
 
 <code><i><font color="black"><span style='white-space: nowrap'>signdet</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;opt_val_hes(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>fun</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>jac</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>hes</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
-  
+
 
 <br/>
 <br/>
@@ -156,7 +145,7 @@ Bradley M. Bell and James V. Burke, Advances in Automatic Differentiation,
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-We are given a function 
+We are given a function
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -277,7 +266,7 @@ and
 </mtd></mtr></mtable>
 </mrow></math>
 
-We wish to compute the Jacobian 
+We wish to compute the Jacobian
 and possibly also the Hessian, of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>V</mi>
@@ -294,12 +283,12 @@ and possibly also the Hessian, of
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>BaseVector</span></font></i></code>
- must be a 
+ must be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
- class. 
+ class.
 We use 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- to refer to the type of the elements of 
+ to refer to the type of the elements of
 
 <code><i><font color="black"><span style='white-space: nowrap'>BaseVector</span></font></i></code>
 ; i.e.,
@@ -320,7 +309,7 @@ The argument
 and its size must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 .
-It specifies the point at which we evaluating 
+It specifies the point at which we evaluating
 the Jacobian 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>V</mi>
@@ -373,7 +362,7 @@ It must be equal to
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-; i.e., 
+; i.e.,
 it must solve the implicit equation
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -397,7 +386,7 @@ The argument
 <code><i><font color="black"><span style='white-space: nowrap'>fun</span></font></i></code>
  is an object of type 
 <code><i><font color="black"><span style='white-space: nowrap'>Fun</span></font></i></code>
- 
+
 which must support the member functions listed below.
 CppAD will may be recording operations of the type 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -413,7 +402,7 @@ they must not call <a href="abort_recording.xml" target="_top"><span style='whit
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>Fun</span></font></i><font color="blue"><span style='white-space: nowrap'>::ad_vector</span></font></code>
- must be a 
+ must be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with elements of type 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -455,7 +444,7 @@ the number of terms in the summation.
 <br/>
 </span></code>One can choose 
 <code><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i></code>
- equal to one, and have 
+ equal to one, and have
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -489,7 +478,7 @@ Each of the functions
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-, 
+,
 (in the summation defining 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>F</mi>
@@ -704,7 +693,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>jac</mi>
@@ -779,7 +768,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>hes</mi>
@@ -835,7 +824,7 @@ the return value
 </mrow></math>
 
 .
-If it is zero, then the matrix is singular and 
+If it is zero, then the matrix is singular and
 the Hessian is not computed (
 <code><i><font color="black"><span style='white-space: nowrap'>hes</span></font></i></code>
  is not changed).
@@ -848,7 +837,7 @@ the Hessian is not computed (
 The file
 <a href="opt_val_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>opt_val_hes.cpp</span></a>
 
-contains an example and test of this operation.   
+contains an example and test of this operation.
 It returns true if it succeeds and false otherwise.
 
 

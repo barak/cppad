@@ -1,9 +1,9 @@
-/* $Id: ad_input.cpp 2693 2012-12-31 02:59:12Z bradbell $ */
+// $Id: ad_input.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -18,11 +18,8 @@ $spell
 $$
 
 $section AD Output Operator: Example and Test$$
+$mindex << input$$
 
-$index <<, AD example$$
-$index input, AD example$$
-$index example, AD input$$
-$index test, AD input$$
 
 $code
 $verbatim%example/ad_input.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -51,14 +48,14 @@ bool ad_input(void)
 	CppAD::AD<double> z = x[0];
 	ok &= Variable(z);
 
-	// read first number into z and second into y[0] 
+	// read first number into z and second into y[0]
 	is >> z >> y[0];
 	ok   &= Parameter(z);
 	ok   &= (z == 123.);
 	ok   &= Parameter(y[0]);
 	ok   &= (y[0] == 456.);
 	//
-	// terminate recording starting by call to Independent 
+	// terminate recording starting by call to Independent
 	CppAD::ADFun<double> f(x, y);
 
 	return ok;

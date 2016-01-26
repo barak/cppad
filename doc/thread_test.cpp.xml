@@ -6,7 +6,7 @@
 <title>Run Multi-Threading Examples and Speed Tests</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Run Multi-Threading Examples and Speed Tests"/>
-<meta name="keywords" id="keywords" content=" thread_test example speed thread multi run multi-threading examples and tests syntax running threading openmp pthread bthread purpose a11c simple_ad team_example harmonic test_time max_threads mega_sum multi_newton num_zero num_sub num_sum use_ad team implementations source "/>
+<meta name="keywords" id="keywords" content=" run multi-threading examples and speed tests thread_test multi openmp pthread bthread syntax running threading purpose a11c simple_ad team_example harmonic test_time max_threads mega_sum multi_newton num_zero num_sub num_sum use_ad team implementations source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -111,11 +111,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
 <center><b><big><big>Run Multi-Threading Examples and Speed Tests</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -147,12 +142,9 @@ for the different valid values of
 <br/>
 <br/>
 <b><a name="Running Tests.threading" id="Running Tests.threading">threading</a></b>
-
-
-
 <br/>
 If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command output indicates that 
+ command output indicates that
 <code><font color="blue">openmp</font></code> is supported by your system,
 you can execute the syntax above with
 
@@ -161,7 +153,7 @@ you can execute the syntax above with
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command output indicates that 
+ command output indicates that
 <code><font color="blue">pthreads</font></code> with barriers is supported by your system,
 you can execute the syntax above with
 
@@ -170,7 +162,7 @@ you can execute the syntax above with
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command output indicates that 
+ command output indicates that
 <code><font color="blue">boost</font></code> threads is supported is by your system,
 you can execute the syntax above with
 
@@ -190,21 +182,21 @@ Runs the CppAD multi-threading examples and timing tests:
 <br/>
 <b><big><a name="a11c" id="a11c">a11c</a></big></b>
 <br/>
-The examples 
+The examples
 <a href="a11c_openmp.cpp.xml" target="_top"><span style='white-space: nowrap'>a11c_openmp.cpp</span></a>
 ,
 <a href="a11c_bthread.cpp.xml" target="_top"><span style='white-space: nowrap'>a11c_bthread.cpp</span></a>
 , and
 <a href="a11c_pthread.cpp.xml" target="_top"><span style='white-space: nowrap'>a11c_pthread.cpp</span></a>
 
-demonstrate simple multi-threading, 
+demonstrate simple multi-threading,
 without algorithmic differentiation.
 
 <br/>
 <br/>
 <b><big><a name="simple_ad" id="simple_ad">simple_ad</a></big></b>
 <br/>
-The examples 
+The examples
 <a href="simple_ad_openmp.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_openmp.cpp</span></a>
 ,
 <a href="simple_ad_bthread.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_bthread.cpp</span></a>
@@ -212,7 +204,7 @@ The examples
 and
 <a href="simple_ad_pthread.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_pthread.cpp</span></a>
 
-demonstrate simple multi-threading, 
+demonstrate simple multi-threading,
 with algorithmic differentiation, using
 OpenMP, boost threads and pthreads respectively.
 
@@ -224,7 +216,7 @@ The <a href="team_example.cpp.xml" target="_top"><span style='white-space: nowra
  routine
 demonstrates simple multi-threading with algorithmic differentiation
 and using a <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team&#xA0;of&#xA0;threads</span></a>
-. 
+.
 
 <br/>
 <br/>
@@ -232,7 +224,7 @@ and using a <a href="team_thread.hpp.xml" target="_top"><span style='white-space
 <br/>
 The <a href="harmonic_time.cpp.xml" target="_top"><span style='white-space: nowrap'>harmonic_time.cpp</span></a>
  routine
-preforms a timing test for a multi-threading 
+preforms a timing test for a multi-threading
 example without algorithmic differentiation using a team of threads.
 
 <br/>
@@ -241,7 +233,7 @@ example without algorithmic differentiation using a team of threads.
 <br/>
 Is the minimum amount of wall clock time that the test should take.
 The number of repeats for the test will be increased until this time
-is reached. 
+is reached.
 The reported time is the total wall clock time divided by the
 number of repeats.
 
@@ -266,7 +258,7 @@ The value of zero corresponds to not using the multi-threading system.
 <br/>
 The command line argument 
 <code><i><font color="black"><span style='white-space: nowrap'>mega_sum</span></font></i></code>
- 
+
 is an integer greater than or equal one and has the same meaning as in
 <a href="harmonic_time.cpp.xml#mega_sum" target="_top"><span style='white-space: nowrap'>harmonic_time.cpp</span></a>
 .
@@ -277,7 +269,7 @@ is an integer greater than or equal one and has the same meaning as in
 <br/>
 The <a href="multi_newton_time.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
  routine
-preforms a timing test for a multi-threading 
+preforms a timing test for a multi-threading
 example with algorithmic differentiation using a team of threads.
 
 <br/>
@@ -286,7 +278,7 @@ example with algorithmic differentiation using a team of threads.
 <br/>
 Is the minimum amount of wall clock time that the test should take.
 The number of repeats for the test will be increased until this time
-is reached. 
+is reached.
 The reported time is the total wall clock time divided by the
 number of repeats.
 
@@ -311,7 +303,7 @@ The value of zero corresponds to not using the multi-threading system.
 <br/>
 The command line argument 
 <code><i><font color="black"><span style='white-space: nowrap'>num_zero</span></font></i></code>
- 
+
 is an integer greater than or equal two and has the same meaning as in
 <a href="multi_newton_time.cpp.xml#num_zero" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
 .
@@ -322,7 +314,7 @@ is an integer greater than or equal two and has the same meaning as in
 <br/>
 The command line argument 
 <code><i><font color="black"><span style='white-space: nowrap'>num_sub</span></font></i></code>
- 
+
 is an integer greater than or equal one and has the same meaning as in
 <a href="multi_newton_time.cpp.xml#num_sub" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
 .
@@ -333,7 +325,7 @@ is an integer greater than or equal one and has the same meaning as in
 <br/>
 The command line argument 
 <code><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i></code>
- 
+
 is an integer greater than or equal one and has the same meaning as in
 <a href="multi_newton_time.cpp.xml#num_sum" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
 .
@@ -344,7 +336,7 @@ is an integer greater than or equal one and has the same meaning as in
 <br/>
 The command line argument 
 <code><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i></code>
- is either 
+ is either
 <code><font color="blue">true</font></code> or <code><font color="blue">false</font></code> and has the same meaning as in
 <a href="multi_newton_time.cpp.xml#use_ad" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
 .
@@ -393,8 +385,8 @@ extern bool simple_ad(void);
 
 namespace {
 	size_t arg2size_t(
-		const char* arg       , 
-		int limit             , 
+		const char* arg       ,
+		int limit             ,
 		const char* error_msg )
 	{	int i = std::atoi(arg);
 		if( i &gt;= limit )
@@ -404,8 +396,8 @@ namespace {
 		exit(1);
 	}
 	double arg2double(
-		const char* arg       , 
-		double limit          , 
+		const char* arg       ,
+		double limit          ,
 		const char* error_msg )
 	{	double d = std::atof(arg);
 		if( d &gt;= limit )
@@ -423,7 +415,7 @@ int main(int argc, char *argv[])
 	using std::endl;
 
 	// commnd line usage message
-	const char* usage = 
+	const char* usage =
 	&quot;./&lt;thread&gt;_test a11c\n&quot;
 	&quot;./&lt;thread&gt;_test simple_ad\n&quot;
 	&quot;./&lt;thread&gt;_test team_example\n&quot;
@@ -442,12 +434,12 @@ int main(int argc, char *argv[])
 	const char* gmt = std::asctime( std::gmtime( &amp;rawtime ) );
 	size_t len = size_t( std::strlen(gmt) );
 	cout &lt;&lt; &quot;gmtime        = '&quot;;
-	for(size_t i = 0; i &lt; len; i++) 
+	for(size_t i = 0; i &lt; len; i++)
 		if( gmt[i] != '\n' ) cout &lt;&lt; gmt[i];
 	cout &lt;&lt; &quot;';&quot; &lt;&lt; endl;
 
 	// CppAD version number
-	cout &lt;&lt; &quot;cppad_version = '&quot; &lt;&lt; CPPAD_PACKAGE_STRING &lt;&lt; &quot;';&quot; &lt;&lt; endl; 
+	cout &lt;&lt; &quot;cppad_version = '&quot; &lt;&lt; CPPAD_PACKAGE_STRING &lt;&lt; &quot;';&quot; &lt;&lt; endl;
 
 	// put the team name in the output file
 	cout &lt;&lt; &quot;team_name     = '&quot; &lt;&lt; team_name() &lt;&lt; &quot;';&quot; &lt;&lt; endl;
@@ -470,12 +462,12 @@ int main(int argc, char *argv[])
 	if( run_a11c || run_simple_ad || run_team_example )
 		ok = (argc == 2);
 	else if( run_harmonic )
-		ok = (argc == 5);  
+		ok = (argc == 5);
 	else if( run_multi_newton )
 		ok = (argc == 8);
 	if( ! ok )
-	{	std::cerr &lt;&lt; &quot;test_name     = &quot; &lt;&lt; test_name &lt;&lt; endl;	
-		std::cerr &lt;&lt; &quot;argc          = &quot; &lt;&lt; argc      &lt;&lt; endl;	
+	{	std::cerr &lt;&lt; &quot;test_name     = &quot; &lt;&lt; test_name &lt;&lt; endl;
+		std::cerr &lt;&lt; &quot;argc          = &quot; &lt;&lt; argc      &lt;&lt; endl;
 		std::cerr &lt;&lt; usage &lt;&lt; endl;
 		exit(1);
 	}
@@ -497,20 +489,20 @@ int main(int argc, char *argv[])
 		return ! ok;
 	}
 
-	// test_time 
-	double test_time = arg2double( *++argv, 0., 
+	// test_time
+	double test_time = arg2double( *++argv, 0.,
 		&quot;run: test_time is less than zero&quot;
 	);
 
-	// max_threads 
-	size_t max_threads = arg2size_t( *++argv, 0, 
+	// max_threads
+	size_t max_threads = arg2size_t( *++argv, 0,
 		&quot;run: max_threads is less than zero&quot;
 	);
 
 	size_t mega_sum = 0; // assignment to avoid compiler warning
 	if( run_harmonic )
 	{	// mega_sum
-		mega_sum = arg2size_t( *++argv, 1, 
+		mega_sum = arg2size_t( *++argv, 1,
 			&quot;run: mega_sum is less than one&quot;
 		);
 	}
@@ -526,8 +518,8 @@ int main(int argc, char *argv[])
 		num_sub = arg2size_t( *++argv, 1,
 			&quot;run: num_sub is less than one&quot;
 		);
-       
-		// num_sum 
+
+		// num_sum
 		num_sum = arg2size_t( *++argv, 1,
 			&quot;run: num_sum is less than one&quot;
 		);
@@ -560,7 +552,7 @@ int main(int argc, char *argv[])
 		inuse_this_thread = thread_alloc::inuse(0);
 
 		// run the requested test
-		if( run_harmonic ) ok &amp;= 
+		if( run_harmonic ) ok &amp;=
 			harmonic_time(time_out, test_time, num_threads, mega_sum);
 		else
 		{	ok &amp;= run_multi_newton;

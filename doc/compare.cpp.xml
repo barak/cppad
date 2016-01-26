@@ -6,7 +6,7 @@
 <title>AD Binary Comparison Operators: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Binary Comparison Operators: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad binary comparison operators: example and test compare Ad &lt; &lt;= &gt; &gt;= == != "/>
+<meta name="keywords" id="keywords" content=" ad binary comparison operators: example and test compare &lt; &lt;= &gt; &gt;= == != "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -92,8 +92,8 @@ bool Compare(void)
 	double x0 = 0.5;
 	double x1 = 1.5;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0; 
-	x[1]      = x1; 
+	x[0]      = x0;
+	x[1]      = x1;
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 
 	// some binary comparision operations
@@ -105,27 +105,27 @@ bool Compare(void)
 		p *= x[0];  // values in x choose this case
 	else	p *= x[1];
 	if( x[0] &gt;  x[1] )
-		p *= x[0]; 
+		p *= x[0];
 	else	p *= x[1];  // values in x choose this case
 	if( x[0] &gt;= x[1] )
-		p *= x[0]; 
+		p *= x[0];
 	else	p *= x[1];  // values in x choose this case
 	if( x[0] == x[1] )
-		p *= x[0]; 
+		p *= x[0];
 	else	p *= x[1];  // values in x choose this case
 	if( x[0] != x[1] )
 		p *= x[0];  // values in x choose this case
-	else	p *= x[1]; 
+	else	p *= x[1];
 
-	// dependent variable vector 
+	// dependent variable vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = p;
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
-	// check value 
+	// check value
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , x0*x0*x1*x1*x1*x0,  1e-10 , 1e-10);
 
 	// forward computation of partials w.r.t. x[0]

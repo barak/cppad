@@ -6,7 +6,7 @@
 <title>Sparse Jacobian: Easy Driver</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Sparse Jacobian: Easy Driver"/>
-<meta name="keywords" id="keywords" content=" sparse jacobian: easy driver Sparsejacobian jacobian syntax purpose f x p row col jac work color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example "/>
+<meta name="keywords" id="keywords" content=" sparse jacobian: easy driver Sparsejacobian syntax purpose f x p row col jac work color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -105,6 +105,7 @@ A:active { color : purple }
 <option>jac</option>
 <option>work</option>
 <option>---..color_method</option>
+<option>---..p</option>
 <option>n_sweep</option>
 <option>VectorBase</option>
 <option>VectorSet</option>
@@ -168,10 +169,10 @@ We use
 
 corresponding to 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
-. 
+.
 The syntax above sets 
 <code><i><font color="black"><span style='white-space: nowrap'>jac</span></font></i></code>
- to the Jacobian 
+ to the Jacobian
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>jac</mi>
@@ -233,7 +234,7 @@ The argument
 </span></font></code>
 (see <a href="sparse_jacobian.xml#VectorBase" target="_top"><span style='white-space: nowrap'>VectorBase</span></a>
  below)
-and its size 
+and its size
 must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 , the dimension of the
@@ -281,9 +282,9 @@ zero and
 </mrow></math>
 
 .
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the Jacobian 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>F</mi>
@@ -300,12 +301,12 @@ for the Jacobian
 .
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code>If this sparsity pattern does not change between calls to 
+</span></code>If this sparsity pattern does not change between calls to
 
 <code><font color="blue"><span style='white-space: nowrap'>SparseJacobian</span></font></code>
 , it should be faster to calculate 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
- once 
+ once
 (using <a href="forsparsejac.xml" target="_top"><span style='white-space: nowrap'>ForSparseJac</span></a>
  or <a href="revsparsejac.xml" target="_top"><span style='white-space: nowrap'>RevSparseJac</span></a>
 )
@@ -314,11 +315,21 @@ and then pass
  to 
 <code><font color="blue"><span style='white-space: nowrap'>SparseJacobian</span></font></code>
 .
-In addition,
+Furthermore, if you specify 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ in the calling sequence,
+it is not necessary to keep the sparsity pattern; see the heading
+<a href="sparse_jacobian.xml#work.p" target="_top"><span style='white-space: nowrap'>p</span></a>
+ under the 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ description.
+<code><span style='white-space: nowrap'><br/>
+<br/>
+</span></code>In addition,
 if you specify 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
 , CppAD will use the same
-type of sparsity representation 
+type of sparsity representation
 (vectors of <code><font color="blue">bool</font></code> or vectors of <code><font color="blue">std::set&lt;size_t&gt;</font></code>)
 for its internal calculations.
 Otherwise, the representation
@@ -517,7 +528,7 @@ we use
 
  to denote the size of 
 <code><i><font color="black"><span style='white-space: nowrap'>jac</span></font></i></code>
-. 
+.
 The input value of its elements does not matter.
 Upon return, for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -587,13 +598,13 @@ If this argument is present, it has prototype
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;sparse_jacobian_work&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>work</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-This object can only be used with the routines 
+This object can only be used with the routines
 <code><font color="blue">SparseJacobianForward</font></code> and <code><font color="blue">SparseJacobianReverse</font></code>.
 During its the first use, information is stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
 .
 This is used to reduce the work done by future calls to the same mode
-(forward or reverse), 
+(forward or reverse),
 the same 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 , 
@@ -621,7 +632,7 @@ This field has prototype
 	std::string %work%.color_method
 </pre></font></code>
 
-and its default value (after a constructor or <code><font color="blue">clear()</font></code>) 
+and its default value (after a constructor or <code><font color="blue">clear()</font></code>)
 is <code><font color="blue">&quot;cppad&quot;</font></code>.
 If <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
  is specified on the
@@ -629,9 +640,26 @@ If <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>
  line,
 you can set this method to <code><font color="blue">&quot;colpack&quot;</font></code>.
 This value only matters on the first call to <code><font color="blue">sparse_jacobian</font></code>
-after the 
+that follows the 
 <code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
- constructor or a call to <code><font color="blue">clear</font></code>.
+ constructor or a call to
+
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i><font color="blue"><span style='white-space: nowrap'>.clear()</span></font></code>
+.
+
+<br/>
+<br/>
+<b><a name="work.p" id="work.p">p</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ is present, and it is not the first call after
+its construction or a clear,
+the sparsity pattern 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
+ is not used.
+This enables one to free the sparsity pattern
+and still compute corresponding sparse Jacobians.
 
 <br/>
 <br/>
@@ -644,15 +672,15 @@ The return value
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-If <code><font color="blue">SparseJacobianForward</font></code> (<code><font color="blue">SparseJacobianReverse</font></code>) is used, 
+If <code><font color="blue">SparseJacobianForward</font></code> (<code><font color="blue">SparseJacobianReverse</font></code>) is used,
 
 <code><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i></code>
- is the number of first order forward (reverse) sweeps 
-used to compute the requested Jacobian values. 
+ is the number of first order forward (reverse) sweeps
+used to compute the requested Jacobian values.
 (This is also the number of colors determined by the coloring method
 mentioned above).
-This is proportional to the total work that <code><font color="blue">SparseJacobian</font></code> does, 
-not counting the zero order forward sweep, 
+This is proportional to the total work that <code><font color="blue">SparseJacobian</font></code> does,
+not counting the zero order forward sweep,
 or the work to combine multiple columns (rows) into a single sweep.
 
 <br/>
@@ -699,11 +727,11 @@ If
  has elements of <code><font color="blue">std::set&lt;size_t&gt;</font></code>,
 then 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
- must return a reference (not a copy) to the 
+ must return a reference (not a copy) to the
 corresponding set.
 According to section 26.3.2.3 of the 1998 C++ standard,
 <code><font color="blue">std::valarray&lt; std::set&lt;size_t&gt; &gt;</font></code> does not satisfy
-this condition. 
+this condition.
 
 <br/>
 <br/>
@@ -728,7 +756,7 @@ After each call to <a href="forward.xml" target="_top"><span style='white-space:
 ,
 the object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- contains the corresponding 
+ contains the corresponding
 <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
 .
 After a call to any of the sparse Jacobian routines,

@@ -1,9 +1,9 @@
-/* $Id: a11c_pthread.cpp 2939 2013-10-14 11:06:18Z bradbell $ */
+// $Id: a11c_pthread.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -18,12 +18,9 @@ $spell
 	CppAD
 	const
 $$
-$index OpenMP, example A.1.1c$$
-$index example, OpenMP A.1.1c$$
-$index A.1.1c, OpenMP example$$
-$index thread, OpenMP example$$
 
 $section A Simple Parallel Pthread Example and Test$$
+$mindex OpenMP A.1.1c thread$$
 
 $head Purpose$$
 This example just demonstrates pthreads and does not use CppAD at all.
@@ -43,7 +40,7 @@ $end
 
 // define CPPAD_NULPTR
 # include <cppad/configure.hpp>
-# if CPPAD_HAS_NULLPTR
+# if CPPAD_USE_CPLUSPLUS_2011
 # define CPPAD_NULL nullptr
 # else
 # define CPPAD_NULL 0
@@ -62,7 +59,7 @@ namespace {
 	{	int i;
 		// for some reason this function is missing on some systems
 		// assert( pthread_is_multithreaded_np() > 0 );
-		for(i = 1; i < n; i++) 
+		for(i = 1; i < n; i++)
 			b[i] = (a[i] + a[i-1]) / 2.0;
 		return;
 	}
@@ -93,7 +90,7 @@ bool a11c(void)
 	int n_thread = NUMBER_THREADS;
 	// the threads
 	pthread_t thread[NUMBER_THREADS];
- 	// arguments to start_routine
+	// arguments to start_routine
 	struct start_arg arg[NUMBER_THREADS];
 	// attr
 	pthread_attr_t attr;
@@ -127,7 +124,7 @@ bool a11c(void)
 	// check the result
 	float eps = 100. * std::numeric_limits<float>::epsilon();
 	for(i = 1; i < n ; i++)
-		ok &= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) <= eps; 
+		ok &= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) <= eps;
 
 	delete [] a;
 	delete [] b;

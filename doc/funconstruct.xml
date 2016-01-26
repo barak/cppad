@@ -6,7 +6,7 @@
 <title>Construct an ADFun Object and Stop Recording</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Construct an ADFun Object and Stop Recording"/>
-<meta name="keywords" id="keywords" content=" construct an adfun object and stop recording Adfun tape syntax purpose x y vectorad default constructor sequence copy assignment operator taylor coefficients sparsity patterns parallel mode example "/>
+<meta name="keywords" id="keywords" content=" construct an adfun object and stop recording tape syntax purpose x y vectorad default constructor sequence copy assignment operator taylor coefficients sparsity patterns parallel mode example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -127,7 +127,7 @@ The
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- can 
+ can
 store an AD of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 
@@ -178,7 +178,7 @@ between calling
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-and 
+and
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -211,7 +211,7 @@ The type
  must be a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with
 <a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
- 
+
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
 .
@@ -222,16 +222,13 @@ if this is not the case.
 <br/>
 <br/>
 <b><big><a name="Default Constructor" id="Default Constructor">Default Constructor</a></big></b>
-
-
-
 <br/>
-The default constructor 
+The default constructor
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-creates an 
+creates an
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  object with no corresponding operation sequence; i.e.,
@@ -245,11 +242,8 @@ returns the value zero (see <a href="seq_property.xml#size_var" target="_top"><s
 <br/>
 <br/>
 <b><big><a name="Sequence Constructor" id="Sequence Constructor">Sequence Constructor</a></big></b>
-
-
-
 <br/>
-The sequence constructor 
+The sequence constructor
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -270,7 +264,7 @@ corresponding to the call
 and stores the corresponding operation sequence in the object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
-It then stores the zero order Taylor coefficients 
+It then stores the zero order Taylor coefficients
 (corresponding to the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 ) in 
@@ -296,7 +290,7 @@ Stop the tape and storing the operation sequence using
 ).
 </li><li>
 
-Calculate the zero order Taylor coefficients for all 
+Calculate the zero order Taylor coefficients for all
 the variables in the operation sequence using
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -318,9 +312,6 @@ equal to the corresponding elements of
 <br/>
 <br/>
 <b><big><a name="Copy Constructor" id="Copy Constructor">Copy Constructor</a></big></b>
-
-
-
 <br/>
 It is an error to attempt to use the 
 <code><font color="blue"><span style='white-space: nowrap'>ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -342,9 +333,6 @@ and its assignment operator.
 <br/>
 <br/>
 <b><big><a name="Assignment Operator" id="Assignment Operator">Assignment Operator</a></big></b>
-
-
-
 <br/>
 The 
 <code><font color="blue"><span style='white-space: nowrap'>ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
@@ -378,9 +366,9 @@ and any information originally in
 <br/>
 The Taylor coefficient information currently stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- 
+
 (computed by <a href="forward.xml" target="_top"><span style='white-space: nowrap'>f.Forward</span></a>
-) is 
+) is
 copied to 
 <code><i><font color="black"><span style='white-space: nowrap'>g</span></font></i></code>
 .
@@ -394,9 +382,9 @@ Hence, directly after this operation
 <br/>
 The forward Jacobian sparsity pattern currently stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- 
+
 (computed by <a href="forsparsejac.xml" target="_top"><span style='white-space: nowrap'>f.ForSparseJac</span></a>
-) is 
+) is
 copied to 
 <code><i><font color="black"><span style='white-space: nowrap'>g</span></font></i></code>
 .
@@ -408,8 +396,6 @@ Hence, directly after this operation
 </span></font></code>
 <br/>
 <b><big><a name="Parallel Mode" id="Parallel Mode">Parallel Mode</a></big></b>
-
-
 <br/>
 The call to <code><font color="blue">Independent</font></code>,
 and the corresponding call to
@@ -417,7 +403,7 @@ and the corresponding call to
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ADFun&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-or 
+or
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Dependent(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -439,7 +425,7 @@ must be preformed by the same thread; i.e.,
 <br/>
 The file
 <a href="independent.cpp.xml" target="_top"><span style='white-space: nowrap'>independent.cpp</span></a>
- 
+
 contains an example and test of the sequence constructor.
 It returns true if it succeeds and false otherwise.
 
@@ -449,7 +435,7 @@ It returns true if it succeeds and false otherwise.
 <br/>
 The files
 <a href="fun_check.cpp.xml" target="_top"><span style='white-space: nowrap'>fun_check.cpp</span></a>
- 
+
 and
 <a href="hes_lagrangian.cpp.xml" target="_top"><span style='white-space: nowrap'>hes_lagrangian.cpp</span></a>
 
@@ -461,7 +447,7 @@ They return true if they succeed and false otherwise.
 <br/>
 <b><a name="Example.Assignment Operator" id="Example.Assignment Operator">Assignment Operator</a></b>
 <br/>
-The file 
+The file
 <a href="fun_assign.cpp.xml" target="_top"><span style='white-space: nowrap'>fun_assign.cpp</span></a>
 
 contains an example and test of the 

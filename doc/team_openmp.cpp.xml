@@ -6,7 +6,7 @@
 <title>OpenMP Implementation of a Team of AD Threads</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="OpenMP Implementation of a Team of AD Threads"/>
-<meta name="keywords" id="keywords" content=" openmp Ad team implementation of a ad threads "/>
+<meta name="keywords" id="keywords" content=" openmp implementation of a team ad threads "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -81,9 +81,6 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>OpenMP Implementation of a Team of AD Threads</big></big></b></center>
 See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team_thread.hpp</span></a>
  for this routines specifications.
@@ -102,11 +99,11 @@ namespace {
 
 	// used to inform CppAD when we are in parallel execution mode
 	bool in_parallel(void)
-	{	return static_cast&lt;bool&gt; ( omp_in_parallel() ); }
+	{	return omp_in_parallel() != 0; }
 
 	// used to inform CppAD of the current thread number
 	size_t thread_num(void)
-	{	return static_cast&lt;size_t&gt;( omp_get_thread_num() ); } 
+	{	return static_cast&lt;size_t&gt;( omp_get_thread_num() ); }
 }
 
 bool team_create(size_t num_threads)
@@ -121,7 +118,7 @@ bool team_create(size_t num_threads)
 	// Set the number of OpenMP threads
 	omp_set_num_threads( int(num_threads) );
 
-	// setup for using CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; in parallel 
+	// setup for using CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; in parallel
 	thread_alloc::parallel_setup(num_threads, in_parallel, thread_num);
 	thread_alloc::hold_memory(true);
 	CppAD::parallel_ad&lt;double&gt;();
@@ -142,7 +139,7 @@ bool team_work(void worker(void))
 # pragma omp parallel for
 	for(thread_num = 0; thread_num &lt; number_threads; thread_num++)
 		worker();
-// end omp parallel for	
+// end omp parallel for
 
 	return ok;
 }

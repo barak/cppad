@@ -6,7 +6,7 @@
 <title>The AD Power Function: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The AD Power Function: Example and Test"/>
-<meta name="keywords" id="keywords" content=" the ad power function: example and test pow Ad "/>
+<meta name="keywords" id="keywords" content=" the ad power function: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="pow.xml" target="_top">Prev</a>
-</td><td><a href="limits.xml" target="_top">Next</a>
+</td><td><a href="azmul.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>binary_math</option>
 <option>pow</option>
 <option>pow.cpp</option>
 </select>
@@ -49,22 +49,20 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>MathOther-&gt;</option>
-<option>abs</option>
-<option>sign</option>
+<option>binary_math-&gt;</option>
 <option>atan2</option>
-<option>erf</option>
 <option>pow</option>
-<option>limits</option>
+<option>azmul</option>
 </select>
 </td>
 <td>
@@ -85,38 +83,39 @@ A:active { color : purple }
 # include &lt;cppad/cppad.hpp&gt;
 # include &lt;cmath&gt;
 
-bool Pow(void)
+bool pow(void)
 {	bool ok = true;
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
 
 	// domain space vector
 	size_t n  = 2;
 	double x = 0.5;
 	double y = 2.;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) XY(n);
-	XY[0]      = x;
-	XY[1]      = y;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) axy(n);
+	axy[0]      = x;
+	axy[1]      = y;
 
 	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(XY);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(axy);
 
-	// range space vector 
+	// range space vector
 	size_t m = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Z(m);
-	Z[0] = CppAD::pow(XY[0], XY[1]);  // pow(variable, variable)
-	Z[1] = CppAD::pow(XY[0], y);      // pow(variable, parameter)
-	Z[2] = CppAD::pow(x,     XY[1]);  // pow(parameter, variable)
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) az(m);
+	az[0] = CppAD::pow(axy[0], axy[1]); // pow(variable, variable)
+	az[1] = CppAD::pow(axy[0], y);      // pow(variable, parameter)
+	az[2] = CppAD::pow(x,     axy[1]);  // pow(parameter, variable)
 
-	// create f: XY -&gt; Z and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(XY, Z); 
+	// create f: axy -&gt; az and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(axy, az);
 
-	// check value 
+	// check value
 	double check = std::pow(x, y);
 	size_t i;
 	for(i = 0; i &lt; m; i++)
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Z[i] , check,  1e-10 , 1e-10);
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(az[i] , check,  eps, eps);
 
 	// forward computation of first partial w.r.t. x
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dxy(n);
@@ -125,18 +124,18 @@ bool Pow(void)
 	dxy[1] = 0.;
 	dz    = f.<a href="forward.xml" target="_top">Forward</a>(1, dxy);
 	check = y * std::pow(x, y-1.);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[0], check, 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[1], check, 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[2],    0., 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[0], check, eps, eps);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[1], check, eps, eps);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[2],    0., eps, eps);
 
 	// forward computation of first partial w.r.t. y
 	dxy[0] = 0.;
 	dxy[1] = 1.;
 	dz    = f.<a href="forward.xml" target="_top">Forward</a>(1, dxy);
 	check = std::log(x) * std::pow(x, y);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[0], check, 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[1],    0., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[2], check, 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[0], check, eps, eps);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[1],    0., eps, eps);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dz[2], check, eps, eps);
 
 	// reverse computation of derivative of z[0] + z[1] + z[2]
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
@@ -146,18 +145,18 @@ bool Pow(void)
 	w[2]  = 1.;
 	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 	check = y * std::pow(x, y-1.);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], 2. * check, 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], 2. * check, eps, eps);
 	check = std::log(x) * std::pow(x, y);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], 2. * check, 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], 2. * check, eps, eps);
 
 	// use a VecAD&lt;Base&gt;::reference object with pow
 	CppAD::VecAD&lt;double&gt; v(2);
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; one(1);
-	v[zero]           = XY[0];
-	v[one]            = XY[1];
+	v[zero]           = axy[0];
+	v[one]            = axy[1];
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; result = CppAD::pow(v[zero], v[one]);
-	ok               &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(result, Z[0], 1e-10, 1e-10);
+	ok               &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(result, az[0], eps, eps);
 
 	return ok;
 }

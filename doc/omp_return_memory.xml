@@ -6,7 +6,7 @@
 <title>Return Memory to omp_alloc</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Return Memory to omp_alloc"/>
-<meta name="keywords" id="keywords" content=" return memory to omp_alloc deprecated return_memory syntax purpose v_ptr thread ndebug example "/>
+<meta name="keywords" id="keywords" content=" return memory to omp_alloc return_memory deprecated 2011-08-31 syntax purpose v_ptr thread ndebug example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -96,7 +99,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Deprecated</option>
+<option>Deprecated 2011-08-31</option>
 <option>Syntax</option>
 <option>Purpose</option>
 <option>v_ptr</option>
@@ -111,9 +114,7 @@ A:active { color : purple }
 
 <center><b><big><big>Return Memory to omp_alloc</big></big></b></center>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
-
-
+<b><big><a name="Deprecated 2011-08-31" id="Deprecated 2011-08-31">Deprecated 2011-08-31</a></big></b>
 <br/>
 Use the function <a href="ta_return_memory.xml" target="_top"><span style='white-space: nowrap'>thread_alloc::return_memory</span></a>
  instead.
@@ -123,6 +124,9 @@ Use the function <a href="ta_return_memory.xml" target="_top"><span style='white
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
+
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/omp_alloc.hpp&gt;<br/>
+</span></font></code>
 
 <code><font color="blue"><span style='white-space: nowrap'>omp_alloc::return_memory(</span></font><i><font color="black"><span style='white-space: nowrap'>v_ptr</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
@@ -160,7 +164,7 @@ Either the <a href="omp_get_thread_num.xml" target="_top"><span style='white-spa
  must be the same as during
 the corresponding call to <a href="omp_get_memory.xml" target="_top"><span style='white-space: nowrap'>omp_get_memory</span></a>
 ,
-or the current execution mode must be sequential 
+or the current execution mode must be sequential
 (not <a href="omp_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
 ).
 
@@ -174,7 +178,7 @@ If <code><font color="blue">NDEBUG</font></code> is defined,
 Otherwise, a list of in use pointers is searched to make sure
 that 
 <code><i><font color="black"><span style='white-space: nowrap'>v_ptr</span></font></i></code>
- is in the list. 
+ is in the list.
 
 <br/>
 <br/>
@@ -185,7 +189,7 @@ that
 
 
 
-<hr/>Input File: cppad/omp_alloc.hpp
+<hr/>Input File: cppad/utility/omp_alloc.hpp
 
 </body>
 </html>

@@ -6,7 +6,7 @@
 <title>AD Output Operator: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Output Operator: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad output operator: example and test &lt;&lt; Ad input "/>
+<meta name="keywords" id="keywords" content=" ad output operator: example and test &lt;&lt; input "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -61,6 +61,7 @@ A:active { color : purple }
 <option>Convert-&gt;</option>
 <option>Value</option>
 <option>Integer</option>
+<option>ad_to_string</option>
 <option>ad_input</option>
 <option>ad_output</option>
 <option>PrintFor</option>
@@ -101,14 +102,14 @@ bool ad_input(void)
 	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; z = x[0];
 	ok &amp;= Variable(z);
 
-	// read first number into z and second into y[0] 
+	// read first number into z and second into y[0]
 	is &gt;&gt; z &gt;&gt; y[0];
 	ok   &amp;= Parameter(z);
 	ok   &amp;= (z == 123.);
 	ok   &amp;= Parameter(y[0]);
 	ok   &amp;= (y[0] == 456.);
 	//
-	// terminate recording starting by call to Independent 
+	// terminate recording starting by call to Independent
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
 	return ok;

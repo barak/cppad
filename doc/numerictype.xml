@@ -6,7 +6,7 @@
 <title>Definition of a Numeric Type</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Definition of a Numeric Type"/>
-<meta name="keywords" id="keywords" content=" numeric type definition of a requirements default constructor from integer int copy assignment operators example exercise "/>
+<meta name="keywords" id="keywords" content=" definition of a numeric type int requirements default constructor from integer copy assignment operators example exercise "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>NumericType</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -113,8 +111,6 @@ A:active { color : purple }
 
 
 
-
-
 <center><b><big><big>Definition of a Numeric Type</big></big></b></center>
 <br/>
 <b><big><a name="Type Requirements" id="Type Requirements">Type Requirements</a></big></b>
@@ -124,7 +120,7 @@ A
  is any type
 that satisfies the requirements below.
 The following is a list of some numeric types:
-<code><font color="blue">int</font></code>, <code><font color="blue">float</font></code>, <code><font color="blue">double</font></code>, 
+<code><font color="blue">int</font></code>, <code><font color="blue">float</font></code>, <code><font color="blue">double</font></code>,
 <code><font color="blue">AD&lt;double&gt;</font></code>, <code><font color="blue">AD&lt; AD&lt;double&gt; &gt;</font></code>.
 The routine <a href="checknumerictype.xml" target="_top"><span style='white-space: nowrap'>CheckNumericType</span></a>
  can be used to check
@@ -133,10 +129,8 @@ that a type satisfies these conditions.
 <br/>
 <br/>
 <b><big><a name="Default Constructor" id="Default Constructor">Default Constructor</a></big></b>
-
-
 <br/>
-The syntax 
+The syntax
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>NumericType</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
@@ -149,13 +143,11 @@ with an unspecified value.
 <br/>
 <br/>
 <b><big><a name="Constructor From Integer" id="Constructor From Integer">Constructor From Integer</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>i</span></font></i></code>
  is an <code><font color="blue">int</font></code>,
-the syntax 
+the syntax
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>NumericType</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>);<br/>
@@ -172,15 +164,13 @@ equal to
 <br/>
 <br/>
 <b><big><a name="Copy Constructor" id="Copy Constructor">Copy Constructor</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  is a 
 <code><i><font color="black"><span style='white-space: nowrap'>NumericType</span></font></i></code>
  object
-the syntax 
+the syntax
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>NumericType</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>);<br/>
@@ -251,7 +241,7 @@ Suppose
 In the result type column,
 
 <code><i><font color="black"><span style='white-space: nowrap'>NumericType</span></font></i></code>
- can be replaced by any type that can 
+ can be replaced by any type that can
 be used just like a 
 <code><i><font color="black"><span style='white-space: nowrap'>NumericType</span></font></i></code>
  object.
@@ -342,7 +332,7 @@ be used just like a
   </td><td align='left'  valign='top'>
  computed assignment division       </td><td align='left'  valign='top'>
 
-	unspecified      
+	unspecified
 </td></tr>
 </table>
 <br/>
@@ -361,12 +351,11 @@ It returns true if it succeeds and false otherwise.
 <b><big><a name="Exercise" id="Exercise">Exercise</a></big></b>
 
 
-
 <ol type="1"><li>
 List three operators that are not supported by every
 numeric type but that are supported by the numeric types
-<code><font color="blue">int</font></code>, 
-<code><font color="blue">float</font></code>, 
+<code><font color="blue">int</font></code>,
+<code><font color="blue">float</font></code>,
 <code><font color="blue">double</font></code>.
 
 </li><li>

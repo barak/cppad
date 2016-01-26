@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -29,7 +29,7 @@ var list_down2 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_down1 = [
 'adolc_prefix.xml',
@@ -42,7 +42,8 @@ var list_down1 = [
 ];
 var list_current0 = [
 'cppad_testvector.xml#Purpose',
-'cppad_testvector.xml#cppad_testvector',
+'cppad_testvector.xml#std',
+'cppad_testvector.xml#cppad',
 'cppad_testvector.xml#boost',
 'cppad_testvector.xml#eigen'
 ];

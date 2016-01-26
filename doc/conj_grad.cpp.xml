@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -105,8 +105,8 @@ A:active { color : purple }
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
 The conjugate gradient algorithm is sparse linear solver and
-a good example where checkpointing can be applied (for each iteration). 
-This example is a preliminary version of a new library routine 
+a good example where checkpointing can be applied (for each iteration).
+This example is a preliminary version of a new library routine
 for the conjugate gradient algorithm.
 
 <br/>
@@ -154,7 +154,7 @@ the conjugate gradient algorithm finds an
 </msup>
 </mrow></math>
 
- 
+
 such that 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mo stretchy="false">&#x02016;</mo>
@@ -177,7 +177,7 @@ such that
 (or it terminates at a specified maximum number of iterations).
 
 <ol type="1"><li>
-Input: 
+Input:
 <code><span style='white-space: nowrap'><br/>
 </span></code>The matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -192,7 +192,7 @@ Input:
 </msup>
 </mrow></math>
 
-, 
+,
 the vector 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>b</mi>
@@ -339,7 +339,7 @@ return
 </msup>
 </mrow></math>
 
- 
+
 as the approximate solution.
 
 </li><li>
@@ -516,7 +516,7 @@ Next
 
 </li><li>
 
-Iterate: 
+Iterate:
 <code><span style='white-space: nowrap'><br/>
 </span></code>
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -541,7 +541,7 @@ goto Convergence Check.
 namespace { // Begin empty namespace
 	using CppAD::AD;
 
-	// A simple matrix multiply c = a * b , where a has n columns 
+	// A simple matrix multiply c = a * b , where a has n columns
 	// and b has n rows. This should be changed to a function so that
 	// it can efficiently handle the case were A is large and sparse.
 	template &lt;class Vector&gt; // a simple vector class
@@ -612,7 +612,7 @@ namespace { // Begin empty namespace
 			// mu = s / d^T * A * d
 			mu = s_previous / dAd[0];
 
-			// g = g + mu * A * d 
+			// g = g + mu * A * d
 			for(i = 0; i &lt; n; i++)
 			{	x[i] = x[i] + mu * d[i];
 				g[i] = g[i] + mu * Ad[i];
@@ -644,7 +644,7 @@ bool conj_grad(void)
 	size_t i, j;
 
 
-	// size of the vectors  
+	// size of the vectors
 	size_t n  = 40;
 	vector&lt;double&gt; D(n * n), Dt(n * n), A(n * n), x(n), b(n), c(n);
 	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; a_A(n * n), a_x(n), a_b(n);
@@ -716,7 +716,7 @@ bool conj_grad(void)
 		db[j] = 0.;
 	db[0] = 1.;
 
-	// check db = A * dx 
+	// check db = A * dx
 	delta = 5. * delta;
 	dx = f.<a href="forward.xml" target="_top">Forward</a>(1, db);
 	mat_mul(n, A, dx, c);

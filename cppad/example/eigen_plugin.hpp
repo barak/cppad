@@ -1,11 +1,11 @@
-/* $Id: eigen_plugin.hpp 2572 2012-11-15 19:43:06Z bradbell $ */
-# ifndef CPPAD_EIGEN_PLUGIN_INCLUDED
-# define CPPAD_EIGEN_PLUGIN_INCLUDED
+// $Id: eigen_plugin.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_EIGEN_PLUGIN_HPP
+# define CPPAD_EIGEN_PLUGIN_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.

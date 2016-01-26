@@ -17,7 +17,7 @@ var list_down3 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_down2 = [
 'adolc_prefix.xml',
@@ -29,7 +29,8 @@ var list_down2 = [
 'cppad_testvector.xml'
 ];
 var list_down1 = [
-'colpack.cpp.xml',
+'colpack_jac.cpp.xml',
+'colpack_hes.cpp.xml',
 'get_colpack.sh.xml'
 ];
 var list_current0 = [

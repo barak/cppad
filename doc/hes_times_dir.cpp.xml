@@ -6,7 +6,7 @@
 <title>Hessian Times Direction: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Hessian Times Direction: Example and Test"/>
-<meta name="keywords" id="keywords" content=" hessian times direction: example and test Hessian direction "/>
+<meta name="keywords" id="keywords" content=" hessian times direction: example and test direction "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -90,7 +90,7 @@ namespace { // put this function in the empty namespace
 		while(i--)
 			sum += x[i] * x[i];
 		return sum;
-	} 
+	}
 }
 
 bool HesTimesDir(void)
@@ -101,10 +101,10 @@ bool HesTimesDir(void)
 	using CppAD::NearEqual;
 
 	// domain space vector
-	size_t n = 5; 
+	size_t n = 5;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)  X(n);
 	for(j = 0; j &lt; n; j++)
-		X[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt;(j); 
+		X[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt;(j);
 
 	// declare independent variables and start recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
@@ -129,7 +129,7 @@ bool HesTimesDir(void)
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) ddw(2 * n);
 	w[0] = 1.;
 	ddw  = f.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
-	
+
 	// F(x)        = x[0]^2 + x[1]^2 + ... + x[n-1]^2
 	// F''(x)      = 2 * Identity_Matrix
 	// F''(x) * dx = 2 * dx

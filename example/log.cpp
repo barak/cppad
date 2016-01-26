@@ -1,9 +1,9 @@
-/* $Id: log.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: log.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -19,9 +19,6 @@ $$
 
 $section The AD log Function: Example and Test$$
 
-$index log, AD example$$
-$index example, AD log$$
-$index test, AD log$$
 
 $code
 $verbatim%example/log.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -33,7 +30,7 @@ $end
 
 # include <cppad/cppad.hpp>
 
-bool Log(void)
+bool log(void)
 {	bool ok = true;
 
 	using CppAD::AD;
@@ -51,15 +48,15 @@ bool Log(void)
 	// a temporary value
 	AD<double> exp_of_x0 = CppAD::exp(x[0]);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	CPPAD_TESTVECTOR(AD<double>) y(m);
 	y[0] = CppAD::log(exp_of_x0);
 
 	// create f: x -> y and stop tape recording
-	CppAD::ADFun<double> f(x, y); 
+	CppAD::ADFun<double> f(x, y);
 
-	// check value 
+	// check value
 	ok &= NearEqual(y[0] , x0,  1e-10 , 1e-10);
 
 	// forward computation of first partial w.r.t. x[0]

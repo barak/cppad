@@ -6,7 +6,7 @@
 <title>ADFun Checking For Nan: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="ADFun Checking For Nan: Example and Test"/>
-<meta name="keywords" id="keywords" content=" adfun checking for nan: example and test check_for_nan "/>
+<meta name="keywords" id="keywords" content=" adfun checking for nan: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -88,6 +88,7 @@ A:active { color : purple }
 <center><b><big><big>ADFun Checking For Nan: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
+# include &lt;cctype&gt;
 
 namespace {
 	void myhandler(
@@ -97,27 +98,31 @@ namespace {
 		const char *exp  ,
 		const char *msg  )
 	{	// error handler must not return, so throw an exception
-		throw std::string(&quot;myhandler&quot;);
+		std::string message = msg;
+		throw message;
 	}
 }
 
 bool check_for_nan(void)
 {	bool ok = true;
 	using CppAD::AD;
+	using std::string;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
 
 	// replace the default CppAD error handler
 	CppAD::ErrorHandler info(myhandler);
 
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(2), ay(2);
-	ax[0] = 0.0;
+	ax[0] = 2.0;
 	ax[1] = 1.0;
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
-	ay    = ax;
+	ay[0] = sqrt( ax[0] );
+	ay[1] = sqrt( ax[1] );
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(2), y(2);
 	x[0] = 2.0;
-	x[1] = CppAD::nan(0.0);
+	x[1] = -1.0;
 
 	// use try / catch because this causes an exception
 	// (assuming that NDEBUG is not defined)
@@ -125,19 +130,52 @@ bool check_for_nan(void)
 	try {
 		y = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
 
-		// should never reach here
+# ifndef NDEBUG
+		// When compiled with NDEBUG defined,
+		// CppAD does not spend time checking for nan.
 		ok = false;
+# endif
 	}
 	catch(std::string msg)
-	{	ok &amp;= msg == &quot;myhandler&quot;;
-	} 
+	{
+		// get and check size of the independent variable vector
+		string pattern = &quot;vector_size = &quot;;
+		size_t start   = msg.find(pattern) + pattern.size();
+		string number;
+		for(size_t i = start; msg[i] != '\n'; i++)
+			number += msg[i];
+		size_t vector_size = std::atoi(number.c_str());
+		ok &amp;= vector_size == 2;
+
+		// get and check first dependent varialbe index that is nan
+		pattern = &quot;index = &quot;;
+		start   = msg.find(pattern) + pattern.size();
+		number  = &quot;&quot;;
+		for(size_t i = start; msg[i] != '\n'; i++)
+			number += msg[i];
+		size_t index = std::atoi(number.c_str());
+		ok &amp;= index == 1;
+
+		// get the name of the file
+		pattern = &quot;file_name = &quot;;
+		start   = msg.find(pattern) + pattern.size();
+		string file_name;
+		for(size_t i = start; msg[i] != '\n'; i++)
+			file_name += msg[i];
+
+		// get and check independent variable vector that resulted in the nan
+		CppAD::vector&lt;double&gt; vec(vector_size);
+		CppAD::get_check_for_nan(vec, file_name);
+		for(size_t i = 0; i &lt; vector_size; i++)
+			ok &amp;= vec[i] == x[i];
+	}
 
 	// now do calculation without an exception
 	f.check_for_nan(false);
 	y = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= y[0] == x[0];
-	ok &amp;= CppAD::isnan( y[1] ); 
-	
+	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(y[0], std::sqrt(x[0]), eps, eps);
+	ok &amp;= CppAD::isnan( y[1] );
+
 	return ok;
 }
 

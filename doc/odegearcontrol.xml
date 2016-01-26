@@ -6,7 +6,7 @@
 <title>An Error Controller for Gear's Ode Solvers</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="An Error Controller for Gear's Ode Solvers"/>
-<meta name="keywords" id="keywords" content=" Odegearcontrol control Ode Gear error differential equation an controller for gear's ode solvers syntax purpose include notation xf fun t x f f_x warning m ti tf xi smin smax sini eabs erel ef maxabs nstep criteria discussion scalar vector example theory source code "/>
+<meta name="keywords" id="keywords" content=" an error controller for gear's ode solvers Odegearcontrol Gear differential equation syntax purpose include notation xf fun t x f f_x warning m ti tf xi smin smax sini eabs erel ef maxabs nstep criteria discussion scalar vector example theory source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>OdeGearControl</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -135,18 +133,13 @@ A:active { color : purple }
 
 
 
-
-
-
-
- 
 <center><b><big><big>An Error Controller for Gear's Ode Solvers</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/ode_gear_control.hpp&gt;<br/>
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/ode_gear_control.hpp&gt;<br/>
 </span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>xf</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;OdeGearControl(</span></font><i><font color="black"><span style='white-space: nowrap'>F</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>M</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ti</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>tf</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xi</span></font></i><font color="blue"><span style='white-space: nowrap'>,<br/>
@@ -200,7 +193,7 @@ We define
 </msup>
 </mrow></math>
 
- by 
+ by
 the following initial value problem:
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -244,9 +237,9 @@ and controls the error during such an approximation.
 <br/>
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
-The file <code><font color="blue">cppad/ode_gear_control.hpp</font></code> 
+The file <code><font color="blue">cppad/ode_gear_control.hpp</font></code>
 is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of 
+but it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
@@ -292,7 +285,7 @@ It is the approximation for
 <br/>
 The class 
 <code><i><font color="black"><span style='white-space: nowrap'>Fun</span></font></i></code>
- 
+
 and the object 
 <code><i><font color="black"><span style='white-space: nowrap'>F</span></font></i></code>
  satisfy the prototype
@@ -317,7 +310,7 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>t</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 (see description of <a href="odegear.xml#Scalar" target="_top"><span style='white-space: nowrap'>Scalar</span></a>
- below). 
+ below).
 
 <br/>
 <br/>
@@ -334,7 +327,7 @@ and has size
 <code><i><font color="black"><span style='white-space: nowrap'>N</span></font></i></code>
 
 (see description of <a href="odegear.xml#Vector" target="_top"><span style='white-space: nowrap'>Vector</span></a>
- below). 
+ below).
 
 <br/>
 <br/>
@@ -374,7 +367,7 @@ On output,
 (see 
 <code><i><font color="black"><span style='white-space: nowrap'>f(t,&#xA0;x)</span></font></i></code>
  in <a href="odegear.xml#Purpose" target="_top"><span style='white-space: nowrap'>Purpose</span></a>
-). 
+).
 
 <br/>
 <br/>
@@ -400,7 +393,7 @@ On input and output,
 and the input values of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>f_x</span></font></i></code>
  do not matter.
-On output, 
+On output,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -440,7 +433,7 @@ The arguments
 <code><i><font color="black"><span style='white-space: nowrap'>f_x</span></font></i></code>
 
 must have a call by reference in their prototypes; i.e.,
-do not forget the <code><font color="blue">&amp;</font></code> in the prototype for 
+do not forget the <code><font color="blue">&amp;</font></code> in the prototype for
 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  and 
@@ -476,7 +469,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>ti</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the initial time for the integration of 
+It specifies the initial time for the integration of
 the differential equation.
 
 <br/>
@@ -490,7 +483,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>tf</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the final time for the integration of 
+It specifies the final time for the integration of
 the differential equation.
 
 <br/>
@@ -574,7 +567,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>smax</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the maximum step size to use during the integration; 
+It specifies the maximum step size to use during the integration;
 i.e., the maximum value for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>T</mi>
@@ -589,7 +582,7 @@ i.e., the maximum value for
 <mo stretchy="false">]</mo>
 </mrow></math>
 
- 
+
 in a call to <code><font color="blue">OdeGear</font></code>.
 
 <br/>
@@ -605,7 +598,7 @@ The argument
 </span></font></code>
 The value of 
 <code><i><font color="black"><span style='white-space: nowrap'>sini</span></font></i></code>
- is the minimum 
+ is the minimum
 step size to use during initialization of the multi-step method; i.e.,
 for calls to <code><font color="blue">OdeGear</font></code> where 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -640,7 +633,7 @@ and size
 .
 Each of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>eabs</span></font></i></code>
- must be 
+ must be
 greater than or equal zero.
 It specifies a bound for the absolute
 error in the return value 
@@ -654,10 +647,10 @@ error in the return value
 </mrow></math>
 
 .
-(see the 
+(see the
 <a href="odegearcontrol.xml#Error Criteria Discussion" target="_top"><span style='white-space: nowrap'>error&#xA0;criteria&#xA0;discussion</span></a>
- 
-below). 
+
+below).
 
 <br/>
 <br/>
@@ -671,7 +664,7 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>erel</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 and is greater than or equal zero.
-It specifies a bound for the relative 
+It specifies a bound for the relative
 error in the return value 
 <code><i><font color="black"><span style='white-space: nowrap'>xf</span></font></i></code>
  as an approximation for 
@@ -683,10 +676,10 @@ error in the return value
 </mrow></math>
 
 
-(see the 
+(see the
 <a href="odegearcontrol.xml#Error Criteria Discussion" target="_top"><span style='white-space: nowrap'>error&#xA0;criteria&#xA0;discussion</span></a>
- 
-below). 
+
+below).
 
 <br/>
 <br/>
@@ -703,8 +696,8 @@ and size
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 .
 The input value of its elements does not matter.
-On output, 
-it contains an estimated bound for the 
+On output,
+it contains an estimated bound for the
 absolute error in the approximation 
 <code><i><font color="black"><span style='white-space: nowrap'>xf</span></font></i></code>
 ; i.e.,
@@ -743,8 +736,8 @@ and size
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 .
 The input value of its elements does not matter.
-On output, 
-it contains an estimate for the 
+On output,
+it contains an estimate for the
 maximum absolute value of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -827,7 +820,7 @@ at time
 <mi mathvariant='italic'>t</mi>
 </mrow></math>
 
-, 
+,
 
 <code><i><font color="black"><span style='white-space: nowrap'>ta</span></font></i></code>
  is the initial step time,
@@ -914,7 +907,7 @@ and one uses an absolute error criteria
 
  of zero,
 the error criteria above will force <code><font color="blue">OdeGearControl</font></code>
-to use step sizes equal to 
+to use step sizes equal to
 <a href="odegearcontrol.xml#smin" target="_top"><span style='white-space: nowrap'>smin</span></a>
 
 for steps ending near 
@@ -931,8 +924,8 @@ If
 <code><i><font color="black"><span style='white-space: nowrap'>ef</span></font></i></code>
  is to large relative to 
 <code><i><font color="black"><span style='white-space: nowrap'>maxabs</span></font></i></code>
-, 
-<code><font color="blue">OdeGearControl</font></code> can be called again 
+,
+<code><font color="blue">OdeGearControl</font></code> can be called again
 with a smaller value of 
 <code><i><font color="black"><span style='white-space: nowrap'>smin</span></font></i></code>
 .
@@ -949,7 +942,7 @@ for a <a href="numerictype.xml" target="_top"><span style='white-space: nowrap'>
 The routine <a href="checknumerictype.xml" target="_top"><span style='white-space: nowrap'>CheckNumericType</span></a>
  will generate an error message
 if this is not the case.
-In addition, the following operations must be defined for 
+In addition, the following operations must be defined for
 
 <code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
  objects 
@@ -969,7 +962,7 @@ In addition, the following operations must be defined for
 
 	returns true (false) if 
 <code><i><font color="black"><span style='white-space: nowrap'>a</span></font></i></code>
- is less than or equal 
+ is less than or equal
 	(greater than) 
 <code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i></code>
 .
@@ -1212,13 +1205,13 @@ would be ok provided that
 </mtd></mtr></mtable>
 </mrow></math>
 
-Thus if the right hand side of the last inequality is greater 
+Thus if the right hand side of the last inequality is greater
 than or equal to one, the step of size 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>s</mi>
 </mrow></math>
 
- is ok. 
+ is ok.
 
 <br/>
 <br/>
@@ -1228,7 +1221,7 @@ The source code for this routine is in the file
 <code><font color="blue">cppad/ode_gear_control.hpp</font></code>.
 
 
-<hr/>Input File: cppad/ode_gear_control.hpp
+<hr/>Input File: cppad/utility/ode_gear_control.hpp
 
 </body>
 </html>

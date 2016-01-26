@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_svn_id.sh 3495 2014-12-24 01:16:15Z bradbell $
+# $Id: check_svn_id.sh 3762 2015-12-01 14:35:37Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -17,26 +17,38 @@ then
 fi
 # -----------------------------------------------------------------------------
 echo "Checking for \$Id.*\$ in beginning of source code"
-echo "-------------------------------------------------------" 
+echo "-------------------------------------------------------"
 ok="yes"
-list=`bin/list_files.sh .hpp .cpp .omh .sh .in .am .txt | sed \
+list=`bin/list_files.sh | sed -n \
 	-e '/^gpl-3.0.txt$/d' \
 	-e '/^epl-v10.txt$/d' \
 	-e '/cppad\/local\/config.h.in$/d' \
 	-e '/^makefile.in$/d' \
 	-e '/^svn_commit.sh$/d' \
 	-e '/^git_commit.sh$/d' \
-	-e '/\/makefile.in$/d' `
+	-e '/\/makefile.in$/d'  \
+	-e '/\.hpp$/p' \
+	-e '/\.cpp$/p' \
+	-e '/\.omh$/p' \
+	-e '/\.txt$/p' \
+	-e '/\.sh$/p'  \
+	-e '/\.in$/p'  \
+	-e '/\.am$/p'`
 #
 for file in $list
 do
-	if ! head -2 $file | grep '$Id.*\$' > /dev/null
+	# deprecated link files have just one line
+	lines=`cat $file | wc -l`
+	if [ "$lines" != 1 ]
 	then
-		echo "$file does not have '\$Id.*\$' in first two lines"
-		ok="no"
+		if ! head -2 $file | grep '$Id.*\$' > /dev/null
+		then
+			echo "$file does not have '\$Id.*\$' in first two lines"
+			ok="no"
+		fi
 	fi
 done
-echo "-------------------------------------------------------" 
+echo "-------------------------------------------------------"
 if [ "$ok" = "no" ]
 then
 	echo "Error: nothing should be between the two dashed lines above"

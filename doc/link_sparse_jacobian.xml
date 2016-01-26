@@ -6,7 +6,7 @@
 <title>Speed Testing Sparse Jacobian</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Speed Testing Sparse Jacobian"/>
-<meta name="keywords" id="keywords" content=" link_sparse_jacobian sparse speed test testing jacobian prototype method size repeat m row col x n_sweep double "/>
+<meta name="keywords" id="keywords" content=" speed testing sparse jacobian link_sparse_jacobian test prototype method size repeat m row col x n_sweep double "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -106,10 +106,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
 <center><b><big><big>Speed Testing Sparse Jacobian</big></big></b></center>
 <br/>
 <b><big><a name="Prototype" id="Prototype">Prototype</a></big></b>
@@ -121,7 +117,7 @@ A:active { color : purple }
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>repeat</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>jacobian</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&amp;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
@@ -159,7 +155,7 @@ a corresponding function
 </msup>
 </mrow></math>
 
- 
+
 is defined by <a href="sparse_jac_fun.xml" target="_top"><span style='white-space: nowrap'>sparse_jac_fun</span></a>
 .
 The non-zero entries in the Jacobian of this function have the form
@@ -226,47 +222,12 @@ is the dimension of the domain space for
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>repeat</span></font></i></code>
- is the number of different functions
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>f</mi>
-<mo stretchy="false">(</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">)</mo>
-</mrow></math>
-
- for which the Jacobian is computed for.
-Each function corresponds to a randomly chosen index vectors, i.e.,
-for each repetition a random choice is made for
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>row</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>k</mi>
-<mo stretchy="false">]</mo>
-</mrow></math>
-
- and 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>col</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>k</mi>
-<mo stretchy="false">]</mo>
-</mrow></math>
-
- for 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>k</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>K</mi>
-<mn>-1</mn>
-</mrow></math>
-
-.
+ is the number of times
+to repeat the test
+(with a different value for 
+<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
+ corresponding to
+each repetition).
 
 <br/>
 <br/>
@@ -328,9 +289,7 @@ All the elements of
 </mrow></math>
 
 .
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>There are no duplicate row and column entires; i.e., if 
+There are no duplicate row and column entires; i.e., if 
 <code><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i></code>
 ,
 
@@ -358,7 +317,7 @@ and its size is
 The input value of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  does not matter.
-On output, it has been set to the 
+On output, it has been set to the
 argument value for which the function,
 or its derivative, is being evaluated and placed in 
 <code><i><font color="black"><span style='white-space: nowrap'>jacobian</span></font></i></code>
@@ -371,16 +330,15 @@ The value of this vector need not change with each repetition.
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>jacobian</span></font></i></code>
- is a vector with 
+ has prototype
 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>m</mi>
-<mo stretchy="false">&#x000D7;</mo>
-<mi mathvariant='italic'>n</mi>
-</mrow></math>
-
- elements.
-The input value of its elements does not matter. 
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>jacobian</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and its size is 
+<code><i><font color="black"><span style='white-space: nowrap'>K</span></font></i></code>
+.
+The input value of its elements does not matter.
 The output value of its elements is the Jacobian of the function 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -389,35 +347,19 @@ The output value of its elements is the Jacobian of the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-
-that corresponds to output values of 
-<code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 .
 To be more specific, for
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">=</mo>
 <mn>0</mn>
 <mo stretchy="false">,</mo>
 <mo stretchy="false">&#x02026;</mo>
 <mo stretchy="false">,</mo>
-<mi mathvariant='italic'>m</mi>
+<mi mathvariant='italic'>K</mi>
 <mo stretchy="false">-</mo>
 <mn>1</mn>
-</mrow></math>
-
-,
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
-<mn>-1</mn>
 </mrow></math>
 
 ,
@@ -426,13 +368,21 @@ To be more specific, for
 <mfrac><mrow><mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>f</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>row</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 </mrow>
 <mrow><mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>j</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>col</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 </mrow>
 </mfrac>
@@ -440,13 +390,10 @@ To be more specific, for
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">)</mo>
 <mo stretchy="false">=</mo>
-<mi mathvariant='italic'>jacobian</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>jacobian</mi>
+</mstyle></mrow>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">*</mo>
-<mi mathvariant='italic'>n</mi>
-<mo stretchy="false">+</mo>
-<mi mathvariant='italic'>j</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">]</mo>
 </mrow></math>
 
@@ -461,11 +408,11 @@ it is the value <a href="sparse_jacobian.xml#n_sweep" target="_top"><span style=
 to the evaluation of 
 <code><i><font color="black"><span style='white-space: nowrap'>jacobian</span></font></i></code>
 .
-This is also the number of colors corresponding to the 
+This is also the number of colors corresponding to the
 <a href="sparse_jacobian.xml#work.color_method" target="_top"><span style='white-space: nowrap'>coloring&#xA0;method</span></a>
-
+,
 which can be set to <a href="speed_main.xml#Sparsity Options.colpack" target="_top"><span style='white-space: nowrap'>colpack</span></a>
-
+,
 and is otherwise <code><font color="blue">cppad</font></code>.
 
 <br/>
@@ -480,7 +427,7 @@ only the first
 <mi mathvariant='italic'>m</mi>
 </mrow></math>
 
- 
+
 elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>jacobian</span></font></i></code>
  are used and they are set to

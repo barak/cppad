@@ -61,6 +61,7 @@ A:active { color : purple }
 <option>Convert-&gt;</option>
 <option>Value</option>
 <option>Integer</option>
+<option>ad_to_string</option>
 <option>ad_input</option>
 <option>ad_output</option>
 <option>PrintFor</option>
@@ -101,7 +102,7 @@ To build this program and run its correctness test see <a href="cmake_check.xml"
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { 
+namespace {
 	using std::cout;
 	using std::endl;
 	using CppAD::AD;
@@ -116,7 +117,7 @@ namespace {
 		PrintFor(y, &quot;check_log: y == &quot;, y , &quot; which is &lt;= 0\n&quot;);
 
 		return log(y);
-	} 
+	}
 }
 
 void print_for(void)
@@ -132,11 +133,11 @@ void print_for(void)
 	CppAD::VecAD&lt;double&gt; av(1);
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; Zero(0);
 	av[Zero] = 0.;
-	PrintFor(&quot;v[0] = &quot;, av[Zero]); 
+	PrintFor(&quot;v[0] = &quot;, av[Zero]);
 
 	// Print a newline to separate this from previous output,
 	// then print an <a href="ad.xml" target="_top">AD</a>&lt;double&gt; object that is a variable.
-	PrintFor(&quot;\nv[0] + x[0] = &quot;, av[0] + ax[0]); 
+	PrintFor(&quot;\nv[0] + x[0] = &quot;, av[0] + ax[0]);
 
 	// A conditional print that will not generate output when x[0] = 2.
 	PrintFor(ax[0], &quot;\n  2. + x[0] = &quot;,   2. + ax[0], &quot;\n&quot;);
@@ -148,25 +149,25 @@ void print_for(void)
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; var     = 2. - ax[0];
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; log_var = check_log(var);
 
-	// dependent variable vector 
+	// dependent variable vector
 	size_t m = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
 	ay[0] = av[Zero] + ax[0];
 
 	// define f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
-	// zero order forward with x[0] = 2 
+	// zero order forward with x[0] = 2
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
 	x[0] = 2.;
 
-	cout &lt;&lt; &quot;v[0] = 0&quot; &lt;&lt; endl; 
-	cout &lt;&lt; &quot;v[0] + x[0] = 2&quot; &lt;&lt; endl; 
-	cout &lt;&lt; &quot;  3. + x[0] = 5&quot; &lt;&lt; endl; 
+	cout &lt;&lt; &quot;v[0] = 0&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;v[0] + x[0] = 2&quot; &lt;&lt; endl;
+	cout &lt;&lt; &quot;  3. + x[0] = 5&quot; &lt;&lt; endl;
 	cout &lt;&lt; &quot;check_log: y == 0 which is &lt;= 0&quot; &lt;&lt; endl;
 	// ./makefile.am expects &quot;Test passes&quot; at beginning of next output line
 	cout &lt;&lt; &quot;Test passes if four lines above repeat below:&quot; &lt;&lt; endl;
-	f.<a href="forward.xml" target="_top">Forward</a>(0, x);	
+	f.<a href="forward.xml" target="_top">Forward</a>(0, x);
 
 	return;
 }

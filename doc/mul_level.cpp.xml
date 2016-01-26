@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>Multiple Tapes: Example and Test</title>
+<title>Multiple Level of AD: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="Multiple Tapes: Example and Test"/>
-<meta name="keywords" id="keywords" content=" multiple tapes: example and test Ad level purpose "/>
+<meta name="description" id="description" content="Multiple Level of AD: Example and Test"/>
+<meta name="keywords" id="keywords" content=" multiple level of ad: example and test purpose source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="mul_level.xml" target="_top">Prev</a>
-</td><td><a href="change_const.cpp.xml" target="_top">Next</a>
+</td><td><a href="change_param.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -77,7 +77,7 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>mul_level-&gt;</option>
 <option>mul_level.cpp</option>
-<option>change_const.cpp</option>
+<option>change_param.cpp</option>
 </select>
 </td>
 <td>mul_level.cpp</td>
@@ -85,13 +85,14 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Purpose</option>
+<option>Source</option>
 </select>
 </td>
 </tr></table><br/>
 
 
 
-<center><b><big><big>Multiple Tapes: Example and Test</big></big></b></center>
+<center><b><big><big>Multiple Level of AD: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
@@ -109,7 +110,7 @@ the compute values of the function
 </mstyle></mrow>
 </mrow></math>
 
- where 
+ where
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -252,15 +253,21 @@ The example <a href="mul_level_adolc.cpp.xml" target="_top"><span style='white-s
  computes the same values using
 Adolc's type <code><font color="blue">adouble</font></code> and CppAD's type <code><font color="blue">AD&lt;adouble&gt;</font></code>.
 
+
+<br/>
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+
 <code><font color="blue">
+<br/>
 <pre style='display:inline'> 
 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { 
+namespace {
 	// f(x) = |x|^2 / 2 = .5 * ( x[0]^2 + ... + x[n-1]^2 )
 	template &lt;class Type&gt;
-	Type f(CPPAD_TESTVECTOR(Type) &amp;x)
+	Type f(const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Type)&amp; x)
 	{	Type sum;
 
 		sum  = 0.;
@@ -269,63 +276,68 @@ namespace {
 			sum += x[i] * x[i];
 
 		return .5 * sum;
-	} 
+	}
 }
 
-bool mul_level(void) 
+bool mul_level(void)
 {	bool ok = true;                          // initialize test result
 
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;    A1_double;  // for one level of taping
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;A1_double&gt; A2_double;  // for two levels of taping
-	size_t n = 5;                            // dimension for example
-	size_t j;                                // a temporary index variable
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;   a1type;    // for one level of taping
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;a1type&gt;    a2type;    // for two levels of taping
+	size_t n = 5;                           // dimension for example
+	size_t j;                               // a temporary index variable
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       x(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(A1_double)  a1_x(n), a1_v(n), a1_dy(1) ;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(A2_double)  a2_x(n), a2_y(1);
+	// 10 times machine epsilon
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type)  a1x(n), a1v(n), a1dy(1) ;
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type)  a2x(n), a2y(1);
 
 	// Values for the independent variables while taping the function f(x)
 	for(j = 0; j &lt; n; j++)
-		a2_x[j] = a1_x[j] = x[j] = double(j);
+		a2x[j] = a1x[j] = x[j] = double(j);
 	// Declare the independent variable for taping f(x)
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a2_x); 
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a2x);
 
 	// Use <a href="ad.xml" target="_top">AD</a>&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; to tape the evaluation of f(x)
-	a2_y[0] = f(a2_x); 
+	a2y[0] = f(a2x);
 
-	// Declare a1_F as the corresponding <a href="funconstruct.xml" target="_top">ADFun</a>&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; value a2_y
+	// Declare a1f as the corresponding <a href="funconstruct.xml" target="_top">ADFun</a>&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;
 	// (make sure we do not run zero order forward during constructor)
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;A1_double&gt; a1_F;
-	a1_F.Dependent(a2_x, a2_y);
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;a1type&gt; a1f;
+	a1f.Dependent(a2x, a2y);
 
 	// Values for the independent variables while taping f'(x) * v
 	// Declare the independent variable for taping f'(x) * v
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a1_x); 
+	// (Note we did not have to tape the creationg of a1f.)
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a1x);
+
 	// set the argument value x for computing f'(x) * v
-	a1_F.<a href="forward.xml" target="_top">Forward</a>(0, a1_x);
+	a1f.<a href="forward.xml" target="_top">Forward</a>(0, a1x);
 	// compute f'(x) * v
 	for(j = 0; j &lt; n; j++)
-		a1_v[j] = double(n - j);
-	a1_dy = a1_F.<a href="forward.xml" target="_top">Forward</a>(1, a1_v); 
+		a1v[j] = double(n - j);
+	a1dy = a1f.<a href="forward.xml" target="_top">Forward</a>(1, a1v);
 
-	// declare dF as <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; function corresponding to f'(x) * v
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; dF;
-	dF.Dependent(a1_x, a1_dy);
+	// declare g as <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; function corresponding to f'(x) * v
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; g;
+	g.Dependent(a1x, a1dy);
 
 	// optimize out operations not necessary for function f'(x) * v
-	dF.optimize();
+	g.optimize();
 
 	// Evaluate f'(x) * v
-	dF.<a href="forward.xml" target="_top">Forward</a>(0, x);
+	g.<a href="forward.xml" target="_top">Forward</a>(0, x);
 
 	// compute the d/dx of f'(x) * v = f''(x) * v = v
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(1);
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
 	w[0] = 1.;
-	dw   = dF.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
+	dw   = g.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 
 	for(j = 0; j &lt; n; j++)
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], a1_v[j], 1e-10, 1e-10);
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], a1v[j], eps, eps);
 
 	return ok;
 }

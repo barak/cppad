@@ -6,7 +6,7 @@
 <title>Hessian Sparsity Pattern: Reverse Mode</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Hessian Sparsity Pattern: Reverse Mode"/>
-<meta name="keywords" id="keywords" content=" hessian sparsity pattern: reverse mode Revsparsehes sparse Hessian pattern syntax purpose f x q transpose r s h false true vectorset entire example "/>
+<meta name="keywords" id="keywords" content=" hessian sparsity pattern: reverse mode syntax purpose f x q transpose r s h false true vectorset entire pattern example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="rev_sparse_jac.cpp.xml" target="_top">Prev</a>
+<td><a href="dependency.cpp.xml" target="_top">Prev</a>
 </td><td><a href="rev_sparse_hes.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -72,13 +72,16 @@ A:active { color : purple }
 <option>Sparse-&gt;</option>
 <option>ForSparseJac</option>
 <option>RevSparseJac</option>
+<option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>bool_sparsity.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down0(this)'>
 <option>RevSparseHes-&gt;</option>
 <option>rev_sparse_hes.cpp</option>
+<option>sparsity_sub.cpp</option>
 </select>
 </td>
 <td>
@@ -154,7 +157,7 @@ For a fixed matrix
 </msup>
 </mrow></math>
 
- 
+
 and a fixed vector 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -169,7 +172,7 @@ and a fixed vector
 </mrow></math>
 
 ,
-we define 
+we define
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtable rowalign="center" ><mtr><mtd columnalign="right" >
@@ -255,7 +258,7 @@ we define
 
 Given a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -350,7 +353,7 @@ and the number of rows in
 
 .
 It must be the same value as in the previous <a href="forsparsejac.xml" target="_top"><span style='white-space: nowrap'>ForSparseJac</span></a>
- call 
+ call
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.ForSparseJac(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r_transpose</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -412,7 +415,7 @@ see <a href="forsparsejac.xml#r" target="_top"><span style='white-space: nowrap'
 .
 The type of the elements of
 <a href="revsparsehes.xml#VectorSet" target="_top"><span style='white-space: nowrap'>VectorSet</span></a>
- must be the 
+ must be the
 same as the type of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
 .
@@ -449,9 +452,9 @@ are between zero and
 </mrow></math>
 
 .
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the vector 
 <code><i><font color="black"><span style='white-space: nowrap'>S</span></font></i></code>
 .
@@ -495,9 +498,9 @@ its size is
 zero and 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>-1</span></font></code>
  inclusive.
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>H</mi>
@@ -533,9 +536,9 @@ its size is
 zero and 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>-1</span></font></code>
  inclusive.
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>H</mi>
@@ -565,7 +568,7 @@ see <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-spa
 of the difference.
 The type of the elements of
 <a href="revsparsehes.xml#VectorSet" target="_top"><span style='white-space: nowrap'>VectorSet</span></a>
- must be the 
+ must be the
 same as the type of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
 .
@@ -638,7 +641,7 @@ Further suppose that the
 In this case,
 the corresponding value 
 <code><i><font color="black"><span style='white-space: nowrap'>h</span></font></i></code>
- is a 
+ is a
 sparsity pattern for the Hessian matrix
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -674,6 +677,11 @@ The file
 
 contains an example and test of this operation.
 It returns true if it succeeds and false otherwise.
+The file
+<a href="sparsity_sub.cpp.xml#RevSparseHes" target="_top"><span style='white-space: nowrap'>sparsity_sub.cpp</span></a>
+
+contains an example and test of using <code><font color="blue">RevSparseHes</font></code>
+to compute the sparsity pattern for a subset of the Hessian.
 
 
 <hr/>Input File: cppad/local/rev_sparse_hes.hpp

@@ -6,7 +6,7 @@
 <title>Source: LuSolve</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Source: LuSolve"/>
-<meta name="keywords" id="keywords" content=" source: lusolve Lusolve source "/>
+<meta name="keywords" id="keywords" content=" source: lusolve source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuSolve</option>
 <option>lu_solve.hpp</option>
@@ -46,7 +46,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -70,9 +70,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -97,9 +95,9 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: LuSolve</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_LU_SOLVE_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_LU_SOLVE_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_LU_SOLVE_INCLUDED
+</span></code># define CPPAD_LU_SOLVE_HPP
 
 <pre style='display:inline'> 
 # include &lt;complex&gt;
@@ -109,10 +107,10 @@ A:active { color : purple }
 # include &lt;cppad/base_require.hpp&gt;
 
 # include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/check_simple_vector.hpp&gt;
-# include &lt;cppad/check_numeric_type.hpp&gt;
-# include &lt;cppad/lu_factor.hpp&gt;
-# include &lt;cppad/lu_invert.hpp&gt;
+# include &lt;cppad/utility/check_simple_vector.hpp&gt;
+# include &lt;cppad/utility/check_numeric_type.hpp&gt;
+# include &lt;cppad/utility/lu_factor.hpp&gt;
+# include &lt;cppad/utility/lu_invert.hpp&gt;
 
 namespace CppAD { // BEGIN CppAD namespace
 
@@ -129,12 +127,12 @@ inline bool LeqZero( const std::complex&lt;float&gt; &amp;x )
 template &lt;typename Float, typename FloatVector&gt;
 int LuSolve(
 	size_t             n      ,
-	size_t             m      , 
-	const FloatVector &amp;A      , 
-	const FloatVector &amp;B      , 
-	FloatVector       &amp;X      , 
+	size_t             m      ,
+	const FloatVector &amp;A      ,
+	const FloatVector &amp;B      ,
+	FloatVector       &amp;X      ,
 	Float        &amp;logdet      )
-{	
+{
 	// check numeric type specifications
 	CheckNumericType&lt;Float&gt;();
 
@@ -204,7 +202,7 @@ int LuSolve(
 	// return the sign factor for the determinant
 	return signdet;
 }
-} // END CppAD namespace 
+} // END CppAD namespace
 </pre>
 
 

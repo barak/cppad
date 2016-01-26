@@ -6,7 +6,7 @@
 <title>Controlling Taylor Coefficients Memory Allocation</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Controlling Taylor Coefficients Memory Allocation"/>
-<meta name="keywords" id="keywords" content=" Forward capacity capacity_order control memory controlling taylor coefficients allocation syntax see also purpose f c pre-allocating freeing original state example "/>
+<meta name="keywords" id="keywords" content=" controlling taylor coefficients memory allocation Forward capacity_order control syntax see also purpose f c pre-allocating freeing original state example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -76,7 +76,7 @@ A:active { color : purple }
 <option>forward_order</option>
 <option>forward_dir</option>
 <option>size_order</option>
-<option>CompareChange</option>
+<option>compare_change</option>
 <option>capacity_order</option>
 <option>number_skip</option>
 </select>
@@ -106,11 +106,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
 <center><b><big><big>Controlling Taylor Coefficients Memory Allocation</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -135,7 +130,7 @@ A:active { color : purple }
 The Taylor coefficients calculated by <a href="forward.xml" target="_top"><span style='white-space: nowrap'>Forward</span></a>
  mode calculations
 are retained in an <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
- object for subsequent use during 
+ object for subsequent use during
 <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>Reverse</span></a>
  mode and higher order Forward mode calculations.
 For example, a call to <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>Forward</span></a>
@@ -147,13 +142,13 @@ For example, a call to <a href="forward_order.xml" target="_top"><span style='wh
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;&#xA0;0</span></font></code>
  and  <code><font color="blue">%xq%.size() == %f%.Domain()%</font></code>,
-uses the lower order Taylor coefficients and 
+uses the lower order Taylor coefficients and
 computes the <code><i>q</i></code>-th order Taylor coefficients for all
 the variables in the operation sequence corresponding to 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
-The <code><font color="blue">capacity_order</font></code> operation allows you to control that 
-amount of memory that is retained by an AD function object 
+The <code><font color="blue">capacity_order</font></code> operation allows you to control that
+amount of memory that is retained by an AD function object
 (to hold <code><font color="blue">Forward</font></code> results for subsequent calculations).
 
 <br/>
@@ -177,7 +172,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the number of Taylor coefficient orders that are allocated 
+It specifies the number of Taylor coefficient orders that are allocated
 in the AD operation sequence corresponding to 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
@@ -186,7 +181,7 @@ in the AD operation sequence corresponding to
 <br/>
 <b><a name="c.Pre-Allocating Memory" id="c.Pre-Allocating Memory">Pre-Allocating Memory</a></b>
 <br/>
-If you plan to make calls to <code><font color="blue">Forward</font></code> with the maximum value of 
+If you plan to make calls to <code><font color="blue">Forward</font></code> with the maximum value of
 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
  equal to 
@@ -213,7 +208,7 @@ and will copy the results to a larger buffer, when necessary.
 <br/>
 </span></code>Note that each call to <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>Dependent</span></a>
  frees the old memory
-connected to the function object and sets the corresponding 
+connected to the function object and sets the corresponding
 taylor capacity to zero.
 
 <br/>
@@ -225,7 +220,7 @@ If you no longer need the Taylor coefficients of order
 
 and higher (that are stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
-), 
+),
 you can reduce the memory allocated to 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  using
@@ -239,8 +234,8 @@ with
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
 .
 Note that, if <a href="ta_hold_memory.xml" target="_top"><span style='white-space: nowrap'>ta_hold_memory</span></a>
- is true, this memory is not actually 
-returned to the system, but rather held for future use by the same thread. 
+ is true, this memory is not actually
+returned to the system, but rather held for future use by the same thread.
 
 <br/>
 <br/>
@@ -258,10 +253,10 @@ If
 there is an implicit call to <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
  with 
 <code><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i></code>
- equal to 
+ equal to
 the value of the
 <a href="glossary.xml#Tape.Independent Variable" target="_top"><span style='white-space: nowrap'>independent&#xA0;variables</span></a>
- 
+
 when the AD operation sequence was recorded.
 This corresponds to 
 <code><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;1</span></font></code>
@@ -272,7 +267,7 @@ This corresponds to
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
 <br/>
-The file 
+The file
 <a href="capacity_order.cpp.xml" target="_top"><span style='white-space: nowrap'>capacity_order.cpp</span></a>
 
 contains an example and test of these operations.

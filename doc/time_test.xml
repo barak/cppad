@@ -6,7 +6,7 @@
 <title>Determine Amount of Time to Execute a Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Determine Amount of Time to Execute a Test"/>
-<meta name="keywords" id="keywords" content=" time_test test speed time determine amount of to execute a syntax purpose motivation include size repeat time_min test_size timing example "/>
+<meta name="keywords" id="keywords" content=" determine amount of time to execute a test time_test speed syntax purpose motivation include size repeat time_min test_size timing example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>time_test</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -118,16 +116,13 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>Determine Amount of Time to Execute a Test</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/time_test.hpp&gt;<br/>
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/time_test.hpp&gt;<br/>
 </span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>time</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;time_test(</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>time_min</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
@@ -151,23 +146,23 @@ It is important to separate small calculation units
 and test them individually.
 This way individual changes can be tested in the context of the
 routine that they are in.
-On many machines, accurate timing of a very short execution 
+On many machines, accurate timing of a very short execution
 sequences is not possible.
 In addition,
 there may be set up and tear down time for a test that
 we do not really want included in the timing.
 For this reason <code><font color="blue">time_test</font></code>
-automatically determines how many times to 
+automatically determines how many times to
 repeat the section of the test that we wish to time.
 
 <br/>
 <br/>
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
-The file <code><font color="blue">cppad/time_test.hpp</font></code> defines the 
+The file <code><font color="blue">cppad/time_test.hpp</font></code> defines the
 <code><font color="blue">time_test</font></code> function.
 This file is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-and it can also be included separately with out the rest of 
+and it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
@@ -180,7 +175,7 @@ The <code><font color="blue">time_test</font></code> argument
 or function object.
 In the case where 
 <code><i><font color="black"><span style='white-space: nowrap'>test_size</span></font></i></code>
- is not present, 
+ is not present,
 
 <code><i><font color="black"><span style='white-space: nowrap'>test</span></font></i></code>
  supports the syntax
@@ -190,7 +185,7 @@ In the case where
 </span></font></code>
 In the case where 
 <code><i><font color="black"><span style='white-space: nowrap'>test_size</span></font></i></code>
- is present, 
+ is present,
 
 <code><i><font color="black"><span style='white-space: nowrap'>test</span></font></i></code>
  supports the syntax
@@ -308,7 +303,7 @@ The routine <a href="time_test.cpp.xml" target="_top"><span style='white-space: 
 of <code><font color="blue">time_test</font></code>.
 
 
-<hr/>Input File: cppad/time_test.hpp
+<hr/>Input File: cppad/utility/time_test.hpp
 
 </body>
 </html>

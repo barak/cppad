@@ -6,7 +6,7 @@
 <title>Independent and ADFun Constructor: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Independent and ADFun Constructor: Example and Test"/>
-<meta name="keywords" id="keywords" content=" independent and adfun constructor: example test Independent "/>
+<meta name="keywords" id="keywords" content=" independent and adfun constructor: example test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -104,7 +104,7 @@ bool Test(void)
 	X[0] = 0.;
 	X[1] = 1.;
 
-	// declare independent variables and start recording 
+	// declare independent variables and start recording
 	// use the template parameter VectorAD for the vector type
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
 
@@ -119,9 +119,9 @@ bool Test(void)
 
 	// create f: X -&gt; Y and stop tape recording
 	// use the template parameter VectorAD for the vector type
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
 
-	// check value 
+	// check value
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Y[0] , 1.,  1e-10 , 1e-10);
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Y[1] , 0.,  1e-10 , 1e-10);
 

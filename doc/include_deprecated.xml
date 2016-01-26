@@ -6,7 +6,7 @@
 <title>Deprecated Include Files</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Deprecated Include Files"/>
-<meta name="keywords" id="keywords" content=" deprecated include files file purpose linking new to commands "/>
+<meta name="keywords" id="keywords" content=" deprecated include files 2015-11-30 2006-12-17 linking new to commands "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,11 +66,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -79,6 +80,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -87,23 +89,41 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>include_deprecated</td>
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Purpose</option>
+<option>Deprecated 2015-11-30</option>
+<option>Deprecated 2006-12-17</option>
 <option>Linking New Files to Deprecated Commands</option>
 </select>
 </td>
 </tr></table><br/>
 <center><b><big><big>Deprecated Include Files</big></big></b></center>
 <br/>
-<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<b><big><a name="Deprecated 2015-11-30" id="Deprecated 2015-11-30">Deprecated 2015-11-30</a></big></b>
 <br/>
-The following is a list of deprecated include file names 
-and the corresponding names that should be used. 
+The <a href="utility.xml" target="_top"><span style='white-space: nowrap'>utility</span></a>
+ individual include files have been deprecated; e.g.,
+<code><font color='blue'><pre style='display:inline'> 
+	# include &lt;cppad/runge_45.hpp&gt;
+</pre></font></code>
+
+You should instead use
+<code><font color='blue'><pre style='display:inline'> 
+	# include &lt;cppad/utility.hpp&gt;
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="Deprecated 2006-12-17" id="Deprecated 2006-12-17">Deprecated 2006-12-17</a></big></b>
+<br/>
+The following is a list of deprecated include file names
+and the corresponding names that should be used.
 For example, if your program uses the deprecated preprocessor command
 <code><font color='blue'><pre style='display:inline'> 
 	# include &lt;CppAD/CppAD.h&gt;
@@ -125,7 +145,7 @@ On Unix systems, references in your source code of the from
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;#&#xA0;include&#xA0;&lt;CppAD/</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>.h&gt;<br/>
 </span></font></code>
-will refer to the older versions of CppAD unless you preform the 
+will refer to the older versions of CppAD unless you preform the
 following steps (this only needs to be done once, not for every install):
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -133,11 +153,11 @@ following steps (this only needs to be done once, not for every install):
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;sudo&#xA0;mv&#xA0;CppAD&#xA0;CppAD.old<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;sudo&#xA0;ln&#xA0;-s&#xA0;cppad&#xA0;CppAD<br/>
 </span></font></code>
-where 
-<a href="installunix.xml#prefix_dir" target="_top"><span style='white-space: nowrap'>prefix_dir</span></a>
+where
+<a href="auto_tools.xml#prefix_dir" target="_top"><span style='white-space: nowrap'>prefix_dir</span></a>
 
 is the prefix directory corresponding to your
-<a href="installunix.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
+<a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>Unix&#xA0;installation</span></a>
 .
 This will link form the deprecated commands
 to the commands that should be used:
@@ -145,7 +165,7 @@ to the commands that should be used:
 <table><tr><td align='left'  valign='top'>
 
 <b>Deprecated</b>         <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
- <b>Should Use</b>   
+ <b>Should Use</b>
 	<code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
  <b>Documentation</b>
 </td></tr><tr><td align='left'  valign='top'>
@@ -251,6 +271,14 @@ CppAD/Poly.h               <code><span style='white-space: nowrap'>&#xA0;&#xA0;<
  cppad/poly.hpp
 	<code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
  <a href="poly.xml" target="_top"><span style='white-space: nowrap'>Poly</span></a>
+
+</td></tr><tr><td align='left'  valign='top'>
+
+
+CppAD/PowInt.h             <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
+ cppad/pow_int.hpp
+	<code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
+ <a href="pow_int.xml" target="_top"><span style='white-space: nowrap'>pow_int</span></a>
 
 </td></tr><tr><td align='left'  valign='top'>
 

@@ -6,7 +6,7 @@
 <title>AD Output Operator: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Output Operator: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad output operator: example and test &lt;&lt; Ad "/>
+<meta name="keywords" id="keywords" content=" ad output operator: example and test &lt;&lt; "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -61,6 +61,7 @@ A:active { color : purple }
 <option>Convert-&gt;</option>
 <option>Value</option>
 <option>Integer</option>
+<option>ad_to_string</option>
 <option>ad_input</option>
 <option>ad_output</option>
 <option>PrintFor</option>
@@ -91,7 +92,7 @@ A:active { color : purple }
 namespace {
 	template &lt;class S&gt;
 	void set_ostream(S &amp;os)
-	{	os 
+	{	os
 		&lt;&lt; std::setprecision(4) // 4 digits of precision
 		&lt;&lt; std::setw(6)         // 6 characters per field
 		&lt;&lt; std::setfill(' ')    // fill with spaces
@@ -115,7 +116,7 @@ bool ad_output(void)
 	CppAD::VecAD&lt;double&gt; v(1);
 	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
 	v[zero]   = exp(1.);                  // 2.7182818285
-	set_ostream(stream); 
+	set_ostream(stream);
 	stream &lt;&lt; v[zero];
 
 	// convert output from stream to string

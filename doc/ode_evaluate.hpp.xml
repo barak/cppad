@@ -85,32 +85,32 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: ode_evaluate</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_ODE_EVALUATE_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_ODE_EVALUATE_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_ODE_EVALUATE_INCLUDED 
+</span></code># define CPPAD_ODE_EVALUATE_HPP
 
 <pre style='display:inline'> 
-# include &lt;cppad/vector.hpp&gt;
-# include &lt;cppad/ode_err_control.hpp&gt;
-# include &lt;cppad/runge_45.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
+# include &lt;cppad/utility/ode_err_control.hpp&gt;
+# include &lt;cppad/utility/runge_45.hpp&gt;
 
-namespace CppAD { 
+namespace CppAD {
 
 	template &lt;class Float&gt;
 	class ode_evaluate_fun {
 	public:
-		// Given that y_i (0) = x_i, 
+		// Given that y_i (0) = x_i,
 		// the following y_i (t) satisfy the ODE below:
 		// y_0 (t) = x[0]
-		// y_1 (t) = x[1] + x[0] * t 
+		// y_1 (t) = x[1] + x[0] * t
 		// y_2 (t) = x[2] + x[1] * t + x[0] * t^2/2
 		// y_3 (t) = x[3] + x[2] * t + x[1] * t^2/2 + x[0] * t^3 / 3!
 		// ...
 		void Ode(
-			const Float&amp;                    t, 
-			const CppAD::vector&lt;Float&gt;&amp;     y, 
+			const Float&amp;                    t,
+			const CppAD::vector&lt;Float&gt;&amp;     y,
 			CppAD::vector&lt;Float&gt;&amp;           f)
-		{	size_t n  = y.size();	
+		{	size_t n  = y.size();
 			f[0]      = 0.;
 			for(size_t k = 1; k &lt; n; k++)
 				f[k] = y[k-1];
@@ -119,8 +119,8 @@ namespace CppAD {
 	//
 	template &lt;class Float&gt;
 	void ode_evaluate(
-		const CppAD::vector&lt;Float&gt;&amp; x  , 
-		size_t                      p  , 
+		const CppAD::vector&lt;Float&gt;&amp; x  ,
+		size_t                      p  ,
 		CppAD::vector&lt;Float&gt;&amp;       fp )
 	{	using CppAD::vector;
 		typedef vector&lt;Float&gt; VectorFloat;
@@ -129,7 +129,7 @@ namespace CppAD {
 		CPPAD_ASSERT_KNOWN( p == 0 || p == 1,
 			&quot;ode_evaluate: p is not zero or one&quot;
 		);
-		CPPAD_ASSERT_KNOWN( 
+		CPPAD_ASSERT_KNOWN(
 			((p==0) &amp; (fp.size()==n)) || ((p==1) &amp; (fp.size()==n*n)),
 			&quot;ode_evaluate: the size of fp is not correct&quot;
 		);
@@ -151,7 +151,7 @@ namespace CppAD {
 			// final value for y(x, t); i.e., y(x, 1)
 			// (is a reference to fp)
 			VectorFloat&amp; yf = fp;
-			
+
 			// Use fourth order Runge-Kutta to solve ODE
 			yf = CppAD::Runge45(F, M, ti, tf, yi);
 
@@ -159,7 +159,7 @@ namespace CppAD {
 		}
 		/* Compute derivaitve of y(x, 1) w.r.t x
 		y_0 (x, t) = x[0]
-		y_1 (x, t) = x[1] + x[0] * t 
+		y_1 (x, t) = x[1] + x[0] * t
 		y_2 (x, t) = x[2] + x[1] * t + x[0] * t^2/2
 		y_3 (x, t) = x[3] + x[2] * t + x[1] * t^2/2 + x[0] * t^3 / 3!
 		...
@@ -172,7 +172,7 @@ namespace CppAD {
 		size_t factorial = 1;
 		for(k = 0; k &lt; n; k++)
 		{	if( k &gt; 1 )
-				factorial *= k; 
+				factorial *= k;
 			for(i = k; i &lt; n; i++)
 			{	// partial w.r.t x[i-k] of x[i-k] * t^k / k!
 				j = i - k;

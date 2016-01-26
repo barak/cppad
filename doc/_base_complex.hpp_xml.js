@@ -27,6 +27,8 @@ var list_down2 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_down1 = [
@@ -48,13 +50,14 @@ var list_current0 = [
 'base_complex.hpp.xml#EqualOpSeq',
 'base_complex.hpp.xml#Identical',
 'base_complex.hpp.xml#Ordered',
-'base_complex.hpp.xml#erf',
 'base_complex.hpp.xml#Integer',
+'base_complex.hpp.xml#azmul',
 'base_complex.hpp.xml#isnan',
 'base_complex.hpp.xml#Valid Unary Math',
 'base_complex.hpp.xml#Invalid Unary Math',
 'base_complex.hpp.xml#pow',
-'base_complex.hpp.xml#limits'
+'base_complex.hpp.xml#numeric_limits',
+'base_complex.hpp.xml#to_string'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

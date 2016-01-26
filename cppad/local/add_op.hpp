@@ -1,12 +1,12 @@
-/* $Id: add_op.hpp 3321 2014-09-12 09:50:39Z bradbell $ */
-# ifndef CPPAD_ADD_OP_INCLUDED
-# define CPPAD_ADD_OP_INCLUDED
+// $Id: add_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_ADD_OP_HPP
+# define CPPAD_ADD_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -36,8 +36,8 @@ and the argument \a parameter is not used.
 
 template <class Base>
 inline void forward_addvv_op(
-	size_t        p           , 
-	size_t        q           , 
+	size_t        p           ,
+	size_t        q           ,
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -74,8 +74,8 @@ and the argument \a parameter is not used.
 
 template <class Base>
 inline void forward_addvv_op_dir(
-	size_t        q           , 
-	size_t        r           , 
+	size_t        q           ,
+	size_t        r           ,
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -149,7 +149,7 @@ and the argument \a parameter is not used.
 
 template <class Base>
 inline void reverse_addvv_op(
-	size_t        d           , 
+	size_t        d           ,
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -193,8 +193,8 @@ this operations is for the case where x is a parameter and y is a variable.
 */
 template <class Base>
 inline void forward_addpv_op(
-	size_t        p           , 
-	size_t        q           , 
+	size_t        p           ,
+	size_t        q           ,
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -234,8 +234,8 @@ this operations is for the case where x is a parameter and y is a variable.
 */
 template <class Base>
 inline void forward_addpv_op_dir(
-	size_t        q           , 
-	size_t        r           , 
+	size_t        q           ,
+	size_t        r           ,
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,
@@ -307,7 +307,7 @@ this operations is for the case where x is a parameter and y is a variable.
 
 template <class Base>
 inline void reverse_addpv_op(
-	size_t        d           , 
+	size_t        d           ,
 	size_t        i_z         ,
 	const addr_t* arg         ,
 	const Base*   parameter   ,

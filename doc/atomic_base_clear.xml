@@ -6,7 +6,7 @@
 <title>Free Static Variables</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Free Static Variables"/>
-<meta name="keywords" id="keywords" content=" free static variables atomic clear syntax purpose future use restriction "/>
+<meta name="keywords" id="keywords" content=" free static variables clear syntax purpose future use restriction "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -115,12 +117,12 @@ avoid repeated memory allocation calls and thereby increase speed
 (until it is deleted).
 If an the <code><font color="blue">atomic_base</font></code> object is global or static because,
 the it does not get deleted.
-This is a problem when using 
+This is a problem when using
 <code><font color="blue">thread_alloc</font></code> <a href="ta_free_all.xml" target="_top"><span style='white-space: nowrap'>free_all</span></a>
- 
-to check that all allocated memory has been freed. 
+
+to check that all allocated memory has been freed.
 Calling this <code><font color="blue">clear</font></code> function will free all the
-memory currently being held onto by the 
+memory currently being held onto by the
 
 <code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  class.

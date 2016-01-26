@@ -1,9 +1,9 @@
-/* $Id: ad_assign.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: ad_assign.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -17,10 +17,8 @@ $spell
 $$
 
 $section AD Assignment: Example and Test$$
+$mindex assign object$$
 
-$index assign, AD object$$
-$index example, assign AD object$$
-$index test, assign AD object$$
 
 $code
 $verbatim%example/ad_assign.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -36,12 +34,12 @@ bool ad_assign(void)
 	using CppAD::AD;  // so can use AD in place of CppAD::AD
 
 	// assignment to base value
-	AD<double> a;   
+	AD<double> a;
 	a = 1.;
 	ok &= a == 1.;
 
 	// assignment to a value that converts to the base type
-	a = 2; 
+	a = 2;
 	ok &= a == 2.;
 
 	// assignment to an AD<Base>

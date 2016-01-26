@@ -16,7 +16,7 @@ var list_down1 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -26,7 +26,8 @@ var list_current0 = [
 'preprocessor.xml#Purpose',
 'preprocessor.xml#Documented Here',
 'preprocessor.xml#Documented Here.CPPAD_NULL',
-'preprocessor.xml#CPPAD_PACKAGE_STRING',
+'preprocessor.xml#Documented Here.CPPAD_PACKAGE_STRING',
+'preprocessor.xml#Documented Here.CPPAD_USE_CPLUSPLUS_2011',
 'preprocessor.xml#Documented Elsewhere',
 'preprocessor.xml#Deprecated'
 ];

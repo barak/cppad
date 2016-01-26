@@ -7,7 +7,7 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'library.xml',
+'utility.xml',
 'cppad_vector.xml'
 ];
 var list_down2 = [
@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -47,9 +47,7 @@ var list_down1 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'benderquad.xml',
-'opt_val_hes.xml',
-'luratio.xml'
+'to_string.xml'
 ];
 var list_down0 = [
 'cppad_vector.cpp.xml',
@@ -73,6 +71,7 @@ var list_current0 = [
 'cppad_vector.xml#data',
 'cppad_vector.xml#vectorBool',
 'cppad_vector.xml#vectorBool.Memory',
+'cppad_vector.xml#vectorBool.bit_per_unit',
 'cppad_vector.xml#vectorBool.data',
 'cppad_vector.xml#vectorBool.Output',
 'cppad_vector.xml#vectorBool.Element Type',

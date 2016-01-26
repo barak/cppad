@@ -119,7 +119,7 @@ bool exp_eps_rev2(void)
 	ok &amp;= std::fabs( f_v0[5] - 0.  ) &lt;= 1e-10; // partial f_5 w.r.t. v_5^0
 	ok &amp;= std::fabs( f_v1[5] - 0.5 ) &lt;= 1e-10; // partial f_5 w.r.t. v_5^1
 
-	// f_4 = f_5( v_1^0 , ... , v_4^1 , v_3^0 * v_1^0 , 
+	// f_4 = f_5( v_1^0 , ... , v_4^1 , v_3^0 * v_1^0 ,
 	//            v_3^1 * v_1^0 + v_3^0 * v_1^1 )
 	f_v0[1] += f_v0[5] * v0[3] + f_v1[5] * v1[3];
 	f_v0[3] += f_v0[5] * v0[1] + f_v1[5] * v1[1];

@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: svn_ignore.sh 3492 2014-12-21 16:23:41Z bradbell $
+# $Id: svn_ignore.sh 3768 2015-12-28 18:58:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -43,4 +43,6 @@ EOF
 svn propset svn:ignore --recursive -F bin/svn_ignore.$$ .
 rm bin/svn_ignore.$$
 #
-exit 0 
+# ----------------------------------------------------------------------------
+echo "$0: OK"
+exit 0

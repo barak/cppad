@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -29,16 +29,18 @@ var list_down2 = [
 'theory.xml',
 'glossary.xml',
 'bib.xml',
-'bugs.xml',
-'wishlist.xml',
+'wish_list.xml',
 'whats_new.xml',
 'deprecated.xml',
 'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
 'license.xml'
 ];
 var list_down1 = [
 'include_deprecated.xml',
 'fundeprecated.xml',
+'comparechange.xml',
 'omp_max_thread.xml',
 'tracknewdel.xml',
 'omp_alloc.xml',
@@ -46,7 +48,8 @@ var list_down1 = [
 'epsilon.xml',
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
-'old_atomic.xml'
+'old_atomic.xml',
+'zdouble.xml'
 ];
 var list_down0 = [
 'old_reciprocal.cpp.xml',
@@ -56,11 +59,11 @@ var list_down0 = [
 'old_mat_mul.cpp.xml'
 ];
 var list_current0 = [
-'old_atomic.xml#Syntax',
-'old_atomic.xml#Syntax.Define Function',
-'old_atomic.xml#Syntax.Use Function',
-'old_atomic.xml#Syntax.Callback Routines',
-'old_atomic.xml#Syntax.Free Static Memory',
+'old_atomic.xml#Deprecated 2013-05-27',
+'old_atomic.xml#Syntax Function',
+'old_atomic.xml#Syntax Function.Use Function',
+'old_atomic.xml#Syntax Function.Callback Routines',
+'old_atomic.xml#Syntax Function.Free Static Memory',
 'old_atomic.xml#Purpose',
 'old_atomic.xml#Partial Implementation',
 'old_atomic.xml#CPPAD_USER_ATOMIC',

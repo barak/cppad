@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -29,16 +29,18 @@ var list_down2 = [
 'theory.xml',
 'glossary.xml',
 'bib.xml',
-'bugs.xml',
-'wishlist.xml',
+'wish_list.xml',
 'whats_new.xml',
 'deprecated.xml',
 'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
 'license.xml'
 ];
 var list_down1 = [
 'include_deprecated.xml',
 'fundeprecated.xml',
+'comparechange.xml',
 'omp_max_thread.xml',
 'tracknewdel.xml',
 'omp_alloc.xml',
@@ -46,7 +48,8 @@ var list_down1 = [
 'epsilon.xml',
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
-'old_atomic.xml'
+'old_atomic.xml',
+'zdouble.xml'
 ];
 var list_down0 = [
 'ipopt_nlp_get_started.cpp.xml',
@@ -54,7 +57,7 @@ var list_down0 = [
 'ipopt_ode_speed.cpp.xml'
 ];
 var list_current0 = [
-'cppad_ipopt_nlp.xml#Deprecated',
+'cppad_ipopt_nlp.xml#Deprecated 2012-11-28',
 'cppad_ipopt_nlp.xml#Syntax',
 'cppad_ipopt_nlp.xml#Purpose',
 'cppad_ipopt_nlp.xml#cppad_ipopt namespace',

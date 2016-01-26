@@ -50,6 +50,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -58,6 +59,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -131,7 +133,7 @@ can be changed and the example should still run
 
    </td><td align='left'  valign='top'>
  number of parameters to fit </td><td align='left'  valign='top'>
- 3 
+ 3
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -163,8 +165,8 @@ can be changed and the example should still run
 </mrow></math>
 
  </td><td align='left'  valign='top'>
- 
-number of grid points between <code><i>i-1</i></code>-th and <code><i>i</i></code>-th measurement 
+
+number of grid points between <code><i>i-1</i></code>-th and <code><i>i</i></code>-th measurement
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -320,7 +322,7 @@ The function and
 </msup>
 </mrow></math>
 
- 
+
 is defined by the equation above
 where 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -367,8 +369,8 @@ determine the value of
 <mi mathvariant='italic'>R</mi>
 </mrow></math>
 
-, that 
-solves the initial value problem above. 
+, that
+solves the initial value problem above.
 
 <br/>
 <br/>
@@ -403,7 +405,7 @@ and for
 <mi mathvariant='italic'>Nz</mi>
 </mrow></math>
 
-, 
+,
 we model 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msub><mi mathvariant='italic'>z</mi>
@@ -577,7 +579,7 @@ to simulate a data set:
 </mrow></math>
 
  <code><span style='white-space: nowrap'>&#xA0;</span></code> </td><td align='left'  valign='top'>
- 
+
 	initial value of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msub><mi mathvariant='italic'>y</mi>
@@ -590,7 +592,7 @@ to simulate a data set:
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -605,7 +607,7 @@ to simulate a data set:
 </mrow></math>
 
  <code><span style='white-space: nowrap'>&#xA0;</span></code> </td><td align='left'  valign='top'>
- 
+
 	transfer rate from compartment zero to compartment one
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -621,7 +623,7 @@ to simulate a data set:
 </mrow></math>
 
  <code><span style='white-space: nowrap'>&#xA0;</span></code> </td><td align='left'  valign='top'>
- 
+
 	transfer rate from compartment one to outside world
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -633,7 +635,7 @@ to simulate a data set:
 </mrow></math>
 
  <code><span style='white-space: nowrap'>&#xA0;</span></code> </td><td align='left'  valign='top'>
- 
+
 	standard deviation of measurement noise
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -674,7 +676,7 @@ to simulate a data set:
 </mrow></math>
 
  <code><span style='white-space: nowrap'>&#xA0;</span></code> </td><td align='left'  valign='top'>
- 
+
 	time corresponding to the <code><i>i</i></code>-th measurement,
 	
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -1131,7 +1133,7 @@ the implicit equation defining
 
  can be solved
 inverting the a set of linear equations.
-In the general case, 
+In the general case,
 where 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>G</mi>
@@ -1171,7 +1173,7 @@ from
 <br/>
 <b><a name="Trapezoidal Approximation.Trapezoidal Time Grid" id="Trapezoidal Approximation.Trapezoidal Time Grid">Trapezoidal Time Grid</a></b>
 <br/>
-The discrete time grid, used for the trapezoidal approximation, is 
+The discrete time grid, used for the trapezoidal approximation, is
 denoted by 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mo stretchy="false">{</mo>
@@ -1217,7 +1219,7 @@ for
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtable rowalign="center" ><mtr><mtd columnalign="right" >
@@ -1464,8 +1466,8 @@ and the other for solving the trapezoidal approximation equation.
 <br/>
 In addition, in the black box approach, differentiating the ODE solution
 often involves differentiating an iterative procedure.
-Direct application of AD to compute these derivatives 
-requires a huge amount of memory and calculations to differentiate the 
+Direct application of AD to compute these derivatives
+requires a huge amount of memory and calculations to differentiate the
 iterative procedure.
 (There are special techniques for applying AD to the solutions of iterative
 procedures, but that is outside the scope of this presentation).
@@ -1474,8 +1476,8 @@ procedures, but that is outside the scope of this presentation).
 <br/>
 <b><big><a name="Simultaneous Method" id="Simultaneous Method">Simultaneous Method</a></big></b>
 <br/>
-The simultaneous forward and inverse method 
-uses constraints to include the solution of 
+The simultaneous forward and inverse method
+uses constraints to include the solution of
 the forward problem in the inverse problem.
 To be specific for our example,
 
@@ -1706,7 +1708,7 @@ do not involve an iterative procedure.
 <b><big><a name="Source" id="Source">Source</a></big></b>
 <br/>
 The file <a href="ipopt_nlp_ode_problem.hpp.xml" target="_top"><span style='white-space: nowrap'>ipopt_nlp_ode_problem.hpp</span></a>
- contains 
+ contains
 source code that defines the example values and functions defined above.
 
 
