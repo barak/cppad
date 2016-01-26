@@ -6,7 +6,7 @@
 <title>Obtain Nan or Determine if a Value is Nan</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Obtain Nan or Determine if a Value is Nan"/>
-<meta name="keywords" id="keywords" content=" obtain nan or determine if a value is isnan hasnan syntax purpose include macros macro z s b v scalar vector example "/>
+<meta name="keywords" id="keywords" content=" obtain nan or determine if a value is syntax purpose include macros isnan s b hasnan v nan(zero) deprecated 2015-10-04 z scalar vector example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>nan</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -102,15 +100,17 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>Include</option>
 <option>---..Macros</option>
-<option>nan</option>
-<option>---..z</option>
-<option>---..s</option>
 <option>isnan</option>
 <option>---..s</option>
 <option>---..b</option>
 <option>hasnan</option>
 <option>---..v</option>
 <option>---..b</option>
+<option>nan(zero)</option>
+<option>---..Deprecated 2015-10-04</option>
+<option>---..Syntax</option>
+<option>---..z</option>
+<option>---..s</option>
 <option>Scalar</option>
 <option>Vector</option>
 <option>Example</option>
@@ -126,10 +126,7 @@ A:active { color : purple }
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/nan.hpp&gt;<br/>
-</span></font></code>
-
-<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;nan(</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/nan.hpp&gt;<br/>
 </span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;isnan(</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -145,7 +142,7 @@ A:active { color : purple }
 It obtain and check for the value not a number <code><font color="blue">nan</font></code>.
 The IEEE standard specifies that a floating point value 
 <code><i><font color="black"><span style='white-space: nowrap'>a</span></font></i></code>
- 
+
 is <code><font color="blue">nan</font></code> if and only if the following returns true
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -155,59 +152,17 @@ is <code><font color="blue">nan</font></code> if and only if the following retur
 <b><big><a name="Include" id="Include">Include</a></big></b>
 <br/>
 The file <code><font color="blue">cppad/nan.hpp</font></code> is included by <code><font color="blue">cppad/cppad.hpp</font></code>
-but it can also be included separately with out the rest of 
+but it can also be included separately with out the rest of
 the <code><font color="blue">CppAD</font></code> routines.
 
 <br/>
 <br/>
 <b><a name="Include.Macros" id="Include.Macros">Macros</a></b>
-
-
-
-
 <br/>
-Some C++ compilers use preprocessor symbols called <code><font color="blue">nan</font></code> 
+Some C++ compilers use preprocessor symbols called <code><font color="blue">nan</font></code>
 and <code><font color="blue">isnan</font></code>.
-These preprocessor symbols will no longer be defined after 
-this file is included. 
-
-<br/>
-<br/>
-<b><big><a name="nan" id="nan">nan</a></big></b>
-<br/>
-This routine returns a <code><font color="blue">nan</font></code> with the same type as 
-<code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
-.
-
-<br/>
-<br/>
-<b><a name="nan.z" id="nan.z">z</a></b>
-<br/>
-The argument 
-<code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
- has prototype
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;<br/>
-</span></font></code>
-and its value is zero
-(see <a href="nan.xml#Scalar" target="_top"><span style='white-space: nowrap'>Scalar</span></a>
- for the definition of 
-<code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
-).
-
-<br/>
-<br/>
-<b><a name="nan.s" id="nan.s">s</a></b>
-<br/>
-The return value 
-<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
- has prototype
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-It is the value <code><font color="blue">nan</font></code> for this floating point type.
+These preprocessor symbols will no longer be defined after
+this file is included.
 
 <br/>
 <br/>
@@ -244,7 +199,7 @@ It is true if the value
 <br/>
 <b><big><a name="hasnan" id="hasnan">hasnan</a></big></b>
 <br/>
-This routine determines if a 
+This routine determines if a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  has an element that is <code><font color="blue">nan</font></code>.
 
@@ -278,6 +233,57 @@ The return value
 It is true if the vector 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
  has a <code><font color="blue">nan</font></code>.
+
+
+<br/>
+<br/>
+<b><big><a name="nan(zero)" id="nan(zero)">nan(zero)</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="nan(zero).Deprecated 2015-10-04" id="nan(zero).Deprecated 2015-10-04">Deprecated 2015-10-04</a></b>
+<br/>
+This routine has been deprecated, use CppAD numeric limits
+<a href="numeric_limits.xml#quiet_NaN" target="_top"><span style='white-space: nowrap'>quiet_NaN</span></a>
+ in its place.
+
+<br/>
+<br/>
+<b><a name="nan(zero).Syntax" id="nan(zero).Syntax">Syntax</a></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;nan(</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+<br/>
+<b><a name="nan(zero).z" id="nan(zero).z">z</a></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>z</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>z</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and its value is zero
+(see <a href="nan.xml#Scalar" target="_top"><span style='white-space: nowrap'>Scalar</span></a>
+ for the definition of 
+<code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
+).
+
+<br/>
+<br/>
+<b><a name="nan(zero).s" id="nan(zero).s">s</a></b>
+<br/>
+The return value 
+<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It is the value <code><font color="blue">nan</font></code> for this floating point type.
 
 <br/>
 <br/>
@@ -345,7 +351,7 @@ contains an example and test of this routine.
 It returns true if it succeeds and false otherwise.
 
 
-<hr/>Input File: cppad/nan.hpp
+<hr/>Input File: cppad/utility/nan.hpp
 
 </body>
 </html>

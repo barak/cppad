@@ -6,7 +6,7 @@
 <title>CppAD Speed: Matrix Multiplication (Double Version)</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Speed: Matrix Multiplication (Double Version)"/>
-<meta name="keywords" id="keywords" content=" cppad speed: matrix multiplication (double version) speed multiply specifications implementation link_mat_mul "/>
+<meta name="keywords" id="keywords" content=" cppad speed: matrix multiplication (double version) speed multiply link_mat_mul specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -106,8 +106,6 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 <br/>
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
-
-
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
@@ -118,8 +116,8 @@ extern bool
 	global_onetape, global_atomic, global_optimize;
 
 bool link_mat_mul(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	CppAD::vector&lt;double&gt;&amp;           x        ,
 	CppAD::vector&lt;double&gt;&amp;           z        ,
 	CppAD::vector&lt;double&gt;&amp;           dz
@@ -137,7 +135,7 @@ bool link_mat_mul(
 
 		// do computation
 		mat_sum_sq(size, x, y, z);
-	
+
 	}
 	return true;
 }

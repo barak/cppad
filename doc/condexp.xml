@@ -6,7 +6,7 @@
 <title>AD Conditional Expressions</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Conditional Expressions"/>
-<meta name="keywords" id="keywords" content=" conditional expression assign ad expressions syntax purpose rel type left right if_true if_false result optimize deprecated operation sequence example test atan2 "/>
+<meta name="keywords" id="keywords" content=" ad conditional expressions assign syntax purpose rel type left right if_true if_false result optimize deprecate 2005-08-07 operation sequence example test atan2 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="limits.cpp.xml" target="_top">Prev</a>
+<td><a href="azmul.cpp.xml" target="_top">Prev</a>
 </td><td><a href="cond_exp.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -75,10 +75,11 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -101,7 +102,7 @@ A:active { color : purple }
 <option>if_false</option>
 <option>result</option>
 <option>Optimize</option>
-<option>Deprecated</option>
+<option>Deprecate 2005-08-07</option>
 <option>Operation Sequence</option>
 <option>Example</option>
 <option>Test</option>
@@ -109,9 +110,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 
 
 
@@ -130,13 +128,13 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Record, 
+Record,
 as part of an AD of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 ,
-the conditional result 
+the conditional result
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;if(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>left</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Cop</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>right</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;)<br/>
@@ -147,8 +145,8 @@ The relational
 <code><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
  and comparison operator 
 <code><i><font color="black"><span style='white-space: nowrap'>Cop</span></font></i></code>
- 
-above have the following correspondence: 
+
+above have the following correspondence:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;Lt&#xA0;&#xA0;&#xA0;Le&#xA0;&#xA0;&#xA0;Eq&#xA0;&#xA0;&#xA0;Ge&#xA0;&#xA0;&#xA0;Gt<br/>
@@ -165,12 +163,12 @@ the assignment choice for
 in an AD conditional expression is made each time
 <a href="forward.xml" target="_top"><span style='white-space: nowrap'>f.Forward</span></a>
  is used to evaluate the zero order Taylor
-coefficients with new values for the 
+coefficients with new values for the
 <a href="glossary.xml#Tape.Independent Variable" target="_top"><span style='white-space: nowrap'>independent&#xA0;variables</span></a>
 .
 This is in contrast to the <a href="compare.xml" target="_top"><span style='white-space: nowrap'>AD&#xA0;comparison&#xA0;operators</span></a>
 
-which are boolean valued and not included in the AD operation sequence. 
+which are boolean valued and not included in the AD operation sequence.
 
 <br/>
 <br/>
@@ -179,7 +177,7 @@ which are boolean valued and not included in the AD operation sequence.
 In the syntax above, the relation 
 <code><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
  represents one of the following
-two characters: <code><font color="blue">Lt</font></code>, <code><font color="blue">Le</font></code>, <code><font color="blue">Eq</font></code>, <code><font color="blue">Ge</font></code>, <code><font color="blue">Gt</font></code>. 
+two characters: <code><font color="blue">Lt</font></code>, <code><font color="blue">Le</font></code>, <code><font color="blue">Eq</font></code>, <code><font color="blue">Ge</font></code>, <code><font color="blue">Gt</font></code>.
 As in the table above,
 
 <code><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
@@ -204,7 +202,7 @@ These functions are defined in the CppAD namespace for arguments of
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
 .
 (Note that all four arguments must have the same type.)
- 
+
 <br/>
 <br/>
 <b><big><a name="left" id="left">left</a></big></b>
@@ -217,7 +215,7 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>left</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 It specifies the value for the left side of the comparison operator.
- 
+
 <br/>
 <br/>
 <b><big><a name="right" id="right">right</a></big></b>
@@ -280,26 +278,26 @@ once the value of the
 <code><i><font color="black"><span style='white-space: nowrap'>left</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>right</span></font></i></code>
- have been determined, 
+ have been determined,
 it is known if the true or false case is required.
 From this point on, values corresponding to the case that is not required
-are not computed. 
+are not computed.
 This optimization is done for the rest of zero order forward mode
 as well as forward and reverse derivatives calculations.
 There is one exception to this optimization; see
-<a href="wishlist.xml#Conditional Expressions" target="_top"><span style='white-space: nowrap'>wish&#xA0;list</span></a>
+<a href="wish_list.xml#Optimizing Nested Conditional Expressions" target="_top"><span style='white-space: nowrap'>optimizing&#xA0;nested&#xA0;conditional&#xA0;expressions</span></a>
 .
 
 <br/>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
+<b><big><a name="Deprecate 2005-08-07" id="Deprecate 2005-08-07">Deprecate 2005-08-07</a></big></b>
 <br/>
-Previous versions of CppAD used 
+Previous versions of CppAD used
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CondExp(</span></font><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>if_true</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>if_false</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-for the same meaning as 
+for the same meaning as
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CondExpGt(</span></font><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i><font color="blue"><span style='white-space: nowrap'>(0),&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>if_true</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>if_false</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -336,7 +334,7 @@ AD of
 The file
 <a href="cond_exp.cpp.xml" target="_top"><span style='white-space: nowrap'>cond_exp.cpp</span></a>
 
-contains an example and test of this function.   
+contains an example and test of this function.
 It returns true if it succeeds and false otherwise.
 
 <br/>
@@ -363,18 +361,18 @@ template &lt;class Base&gt;
 	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; ay = abs(y);
 
 	// if( ax &gt; ay )
-	// 	theta = atan(ay / ax);
+	//	theta = atan(ay / ax);
 	// else	theta = pi2 - atan(ax / ay);
 	alpha = atan(ay / ax);
 	beta  = pi2 - atan(ax / ay);
 	theta = CondExpGt(ax, ay, alpha, beta);         // use of CondExp
 
 	// if( x &lt;= 0 )
-	// 	theta = pi - theta;
+	//	theta = pi - theta;
 	theta = CondExpLe(x, zero, pi - theta, theta);  // use of CondExp
-	
+
 	// if( y &lt;= 0 )
-	// 	theta = - theta;
+	//	theta = - theta;
 	theta = CondExpLe(y, zero, -theta, theta);      // use of CondExp
 
 	return theta;

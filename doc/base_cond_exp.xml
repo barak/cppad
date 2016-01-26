@@ -6,7 +6,7 @@
 <title>Base Type Requirements for Conditional Expressions</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Base Type Requirements for Conditional Expressions"/>
-<meta name="keywords" id="keywords" content=" base type requirements for conditional expressions Condexp require purpose compareop condexptemplate ordered not condexprel Cppad_cond_exp_rel "/>
+<meta name="keywords" id="keywords" content=" base type requirements for conditional expressions Condexp require Cppad_cond_exp_rel purpose compareop condexptemplate ordered not condexprel "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -79,6 +79,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -102,7 +104,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-These definitions are required by the user's code to support the 
+These definitions are required by the user's code to support the
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  type for <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
@@ -116,7 +118,7 @@ The following <code><font color="blue">enum</font></code> type is used in the sp
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
 	// The conditional expression operator enum type
-	enum CompareOp 
+	enum CompareOp
 	{	CompareLt, // less than
 		CompareLe, // less than or equal
 		CompareEq, // equal
@@ -142,7 +144,7 @@ The type
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;)<br/>
 </span></font></code>
 which computes implements the corresponding <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
- 
+
 function when the result has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -158,10 +160,10 @@ The argument
 The other arguments have the prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>left</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>right</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>left</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>right</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>exp_if_true</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>exp_if_false</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>exp_if_false</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 <br/>
 <b><a name="CondExpTemplate.Ordered Type" id="CondExpTemplate.Ordered Type">Ordered Type</a></b>
@@ -186,7 +188,7 @@ namespace&#xA0;CppAD&#xA0;{<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;}<br/>
 }<br/>
 </span></font></code>
-For example, see 
+For example, see
 <a href="base_alloc.hpp.xml#CondExpOp" target="_top"><span style='white-space: nowrap'>double&#xA0;CondExpOp</span></a>
 .
 For an example of and implementation of <code><font color="blue">CondExpOp</font></code> with
@@ -195,7 +197,7 @@ a more involved
  type see
 <a href="base_adolc.hpp.xml#CondExpOp" target="_top"><span style='white-space: nowrap'>adolc&#xA0;CondExpOp</span></a>
 .
- 
+
 
 <br/>
 <br/>
@@ -224,11 +226,10 @@ namespace&#xA0;CppAD&#xA0;{<br/>
 For example, see
 <a href="base_complex.hpp.xml#CondExpOp" target="_top"><span style='white-space: nowrap'>complex&#xA0;CondExpOp</span></a>
 .
- 
+
 <br/>
 <br/>
 <b><big><a name="CondExpRel" id="CondExpRel">CondExpRel</a></big></b>
-
 <br/>
 The macro invocation
 

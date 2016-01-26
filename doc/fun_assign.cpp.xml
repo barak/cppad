@@ -6,7 +6,7 @@
 <title>ADFun Assignment: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="ADFun Assignment: Example and Test"/>
-<meta name="keywords" id="keywords" content=" adfun assignment: example and test Adfun assignment "/>
+<meta name="keywords" id="keywords" content=" adfun assignment: example and test assignment "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -111,7 +111,7 @@ bool fun_assign(void)
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 
-	// range space vector 
+	// range space vector
 	size_t m = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = x[0] + x[0] * x[1];
@@ -126,7 +126,7 @@ bool fun_assign(void)
 		r[j].insert(j);
 
 	// Store forward mode sparsity pattern in f
-	f.ForSparseJac(n, r); 
+	f.ForSparseJac(n, r);
 
 	// make a copy in g
 	g = f;
@@ -143,8 +143,8 @@ bool fun_assign(void)
 		dx[i] = 0.;
 	dx[1] = 1;
 	dy    = g.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], x[0], eps, eps); // partial y[0] w.r.t x[1] 
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], x[2], eps, eps); // partial y[1] w.r.t x[1] 
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], x[0], eps, eps); // partial y[0] w.r.t x[1]
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], x[2], eps, eps); // partial y[1] w.r.t x[1]
 
 	// Use forward Jacobian sparsity pattern from f to calculate
 	// Hessian sparsity pattern using g.
@@ -152,18 +152,18 @@ bool fun_assign(void)
 	s[0].insert(0); // Compute sparsity pattern for Hessian of y[0]
 	h =  f.RevSparseHes(n, s);
 
-	// check sparsity pattern for Hessian of y[0] = x[0] + x[0] * x[1] 
-	ok  &amp;= ( h[0].find(0) == h[0].end() ); // zero     w.r.t x[0], x[0] 
-	ok  &amp;= ( h[0].find(1) != h[0].end() ); // non-zero w.r.t x[0], x[1] 
-	ok  &amp;= ( h[0].find(2) == h[0].end() ); // zero     w.r.t x[0], x[2] 
+	// check sparsity pattern for Hessian of y[0] = x[0] + x[0] * x[1]
+	ok  &amp;= ( h[0].find(0) == h[0].end() ); // zero     w.r.t x[0], x[0]
+	ok  &amp;= ( h[0].find(1) != h[0].end() ); // non-zero w.r.t x[0], x[1]
+	ok  &amp;= ( h[0].find(2) == h[0].end() ); // zero     w.r.t x[0], x[2]
 
-	ok  &amp;= ( h[1].find(0) != h[1].end() ); // non-zero w.r.t x[1], x[0] 
-	ok  &amp;= ( h[1].find(1) == h[1].end() ); // zero     w.r.t x[1], x[1] 
-	ok  &amp;= ( h[1].find(2) == h[1].end() ); // zero     w.r.t x[1], x[2] 
+	ok  &amp;= ( h[1].find(0) != h[1].end() ); // non-zero w.r.t x[1], x[0]
+	ok  &amp;= ( h[1].find(1) == h[1].end() ); // zero     w.r.t x[1], x[1]
+	ok  &amp;= ( h[1].find(2) == h[1].end() ); // zero     w.r.t x[1], x[2]
 
-	ok  &amp;= ( h[2].find(0) == h[2].end() ); // zero     w.r.t x[2], x[0] 
-	ok  &amp;= ( h[2].find(1) == h[2].end() ); // zero     w.r.t x[2], x[1] 
-	ok  &amp;= ( h[2].find(2) == h[2].end() ); // zero     w.r.t x[2], x[2] 
+	ok  &amp;= ( h[2].find(0) == h[2].end() ); // zero     w.r.t x[2], x[0]
+	ok  &amp;= ( h[2].find(1) == h[2].end() ); // zero     w.r.t x[2], x[1]
+	ok  &amp;= ( h[2].find(2) == h[2].end() ); // zero     w.r.t x[2], x[2]
 
 	return ok;
 }

@@ -6,7 +6,7 @@
 <title>AD Binary Subtraction: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Binary Subtraction: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad binary subtraction: example and test - Ad subtract minus "/>
+<meta name="keywords" id="keywords" content=" ad binary subtraction: example and test - subtract minus "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -99,10 +100,10 @@ bool Sub(void)
 
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; a = 2. * x[0] - 1.; // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; - double
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; b = a  - 2;         // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; - int
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; c = 3. - b;         // double     - <a href="ad.xml" target="_top">AD</a>&lt;double&gt; 
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; d = 4  - c;         // int        - <a href="ad.xml" target="_top">AD</a>&lt;double&gt; 
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; c = 3. - b;         // double     - <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; d = 4  - c;         // int        - <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = x[0] - d;              // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; - <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
@@ -110,7 +111,7 @@ bool Sub(void)
 	// create f: x -&gt; y and stop tape recording
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
-	// check value 
+	// check value
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0], x0-4.+3.+2.-2.*x0+1.,  1e-10 , 1e-10);
 
 	// forward computation of partials w.r.t. x[0]

@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>CppAD Speed: Matrix Multiplication</title>
+<title>CppAD Speed, Matrix Multiplication</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="CppAD Speed: Matrix Multiplication"/>
-<meta name="keywords" id="keywords" content=" cppad speed: matrix multiplication link_mat_mul speed multiply specifications implementation "/>
+<meta name="description" id="description" content="CppAD Speed, Matrix Multiplication"/>
+<meta name="keywords" id="keywords" content=" cppad speed matrix multiplication link_mat_mul multiply specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -95,7 +95,7 @@ A:active { color : purple }
 
 
 
-<center><b><big><big>CppAD Speed: Matrix Multiplication</big></big></b></center>
+<center><b><big><big>CppAD Speed, Matrix Multiplication</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
 <br/>
@@ -115,11 +115,11 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize;
+	global_onetape, global_atomic, global_optimize, global_boolsparsity;
 
 bool link_mat_mul(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	CppAD::vector&lt;double&gt;&amp;           x        ,
 	CppAD::vector&lt;double&gt;&amp;           z        ,
 	CppAD::vector&lt;double&gt;&amp;           dz
@@ -127,8 +127,8 @@ bool link_mat_mul(
 {
 	// -----------------------------------------------------
 	// setup
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar; 
-	typedef CppAD::vector&lt;ADScalar&gt;     ADVector; 
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar;
+	typedef CppAD::vector&lt;ADScalar&gt;     ADVector;
 
 	size_t j;               // temporary index
 	size_t m = 1;           // number of dependent variables
@@ -137,8 +137,8 @@ bool link_mat_mul(
 	ADVector   Y(n);        // Store product matrix
 	ADVector   Z(m);        // AD range space vector
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f; // AD function object
-	
-	// vectors of reverse mode weights 
+
+	// vectors of reverse mode weights
 	CppAD::vector&lt;double&gt; w(1);
 	w[0] = 1.;
 
@@ -148,7 +148,11 @@ bool link_mat_mul(
 	size_t n_middle  = size;
 	size_t nc_result = size;
 	matrix_mul atom_mul(nr_result, n_middle, nc_result);
-
+	//
+	if( global_boolsparsity )
+		atom_mul.option( CppAD::atomic_base&lt;double&gt;::pack_sparsity_enum );
+	else
+		atom_mul.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
 	// ------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
 	{	// get the next matrix
@@ -172,12 +176,15 @@ bool link_mat_mul(
 			Z[0] = 0.;
 			for(j = 0; j &lt; n; j++)
 				Z[0] += ay[j];
-		} 
+		}
 		// create function object f : X -&gt; Z
 		f.Dependent(X, Z);
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		// evaluate and return gradient using reverse mode
 		z  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
@@ -205,13 +212,17 @@ bool link_mat_mul(
 			Z[0] = 0.;
 			for(j = 0; j &lt; n; j++)
 				Z[0] += ay[j];
-		} 
-	
+		}
+
 		// create function object f : X -&gt; Z
 		f.Dependent(X, Z);
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
+
 		while(repeat--)
 		{	// get a next matrix
 			CppAD::uniform_01(n, x);
@@ -222,7 +233,7 @@ bool link_mat_mul(
 		}
 	}
 	// --------------------------------------------------------------------
-	// Free temporary work space. (If there are future calls to 
+	// Free temporary work space. (If there are future calls to
 	// mat_mul they would create new temporary work space.)
 	CppAD::user_atomic&lt;double&gt;::clear();
 

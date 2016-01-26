@@ -6,7 +6,7 @@
 <title>One Dimensional Romberg Integration: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="One Dimensional Romberg Integration: Example and Test"/>
-<meta name="keywords" id="keywords" content=" one dimensional romberg integration: example and test Romberg "/>
+<meta name="keywords" id="keywords" content=" one dimensional romberg integration: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>RombergMul</option>
 <option>Rombergmul.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -105,9 +103,9 @@ A:active { color : purple }
 <center><b><big><big>One Dimensional Romberg Integration: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
-# include &lt;cppad/romberg_mul.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
-# include &lt;cppad/near_equal.hpp&gt;
+# include &lt;cppad/utility/romberg_mul.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
+# include &lt;cppad/utility/near_equal.hpp&gt;
 
 
 namespace {
@@ -117,7 +115,7 @@ namespace {
 		const CppAD::vector&lt;size_t&gt; deg;
 	public:
 		// constructor
-		TestFun(const CppAD::vector&lt;size_t&gt; deg_) 
+		TestFun(const CppAD::vector&lt;size_t&gt; deg_)
 		: deg(deg_)
 		{ }
 
@@ -146,9 +144,9 @@ bool RombergMul(void)
 	TestFun F(deg);
 
 	CppAD::RombergMul&lt;
-		TestFun              , 
-		CppAD::vector&lt;size_t&gt;, 
-		CppAD::vector&lt;double&gt;, 
+		TestFun              ,
+		CppAD::vector&lt;size_t&gt;,
+		CppAD::vector&lt;double&gt;,
 		2                    &gt; RombergMulTest;
 
 	// arugments to RombergMul
@@ -165,21 +163,21 @@ bool RombergMul(void)
 	double r, e;
 
 	// int_a1^b1 dx1 int_a0^b0 F(x0,x1) dx0
-	//	= [ b0^(deg[0]+1) - a0^(deg[0]+1) ] / (deg[0]+1) 
-	//	* [ b1^(deg[1]+1) - a1^(deg[1]+1) ] / (deg[1]+1) 
+	//	= [ b0^(deg[0]+1) - a0^(deg[0]+1) ] / (deg[0]+1)
+	//	* [ b1^(deg[1]+1) - a1^(deg[1]+1) ] / (deg[1]+1)
 	double bpow = 1.;
 	double apow = 1.;
 	for(i = 0; i &lt;= deg[0]; i++)
 	{	bpow *= b[0];
 		apow *= a[0];
-	}  
+	}
 	double check = (bpow - apow) / (deg[0]+1);
 	bpow = 1.;
 	apow = 1.;
 	for(i = 0; i &lt;= deg[1]; i++)
 	{	bpow *= b[1];
 		apow *= a[1];
-	}  
+	}
 	check *= (bpow - apow) / (deg[1]+1);
 
 	double step = (b[1] - a[1]) / exp(log(2.)*(n[1]-1));
@@ -193,7 +191,7 @@ bool RombergMul(void)
 		r    = RombergMulTest(F, a, b, n, p, e);
 
 		ok  &amp;= e &lt; bnd;
-		ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check, r, 0., e);	
+		ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check, r, 0., e);
 
 	}
 

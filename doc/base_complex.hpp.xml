@@ -6,7 +6,7 @@
 <title>Enable use of AD&lt;Base&gt; where Base is std::complex&lt;double&gt;</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is std::complex&lt;double&gt;"/>
-<meta name="keywords" id="keywords" content=" complex double Base enable use of ad&lt;base&gt; where base is std::complex&lt;double&gt; example include order condexpop condexprel equalopseq identical ordered erf integer isnan valid unary math invalid pow limits "/>
+<meta name="keywords" id="keywords" content=" enable use of ad&lt;base&gt; where base is std::complex&lt;double&gt; example include order condexpop condexprel equalopseq identical ordered integer azmul isnan valid unary math invalid pow numeric_limits to_string "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -64,6 +64,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -94,19 +96,17 @@ A:active { color : purple }
 <option>EqualOpSeq</option>
 <option>Identical</option>
 <option>Ordered</option>
-<option>erf</option>
 <option>Integer</option>
+<option>azmul</option>
 <option>isnan</option>
 <option>Valid Unary Math</option>
 <option>Invalid Unary Math</option>
 <option>pow</option>
-<option>limits</option>
+<option>numeric_limits</option>
+<option>to_string</option>
 </select>
 </td>
 </tr></table><br/>
-
-
-
 
 
 
@@ -193,14 +193,14 @@ and
 <br/>
 <b><big><a name="EqualOpSeq" id="EqualOpSeq">EqualOpSeq</a></big></b>
 <br/>
-Complex numbers do not carry operation sequence information. 
-Thus they are equal in this sense if and only if there values are equal.  
+Complex numbers do not carry operation sequence information.
+Thus they are equal in this sense if and only if there values are equal.
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
 	inline bool EqualOpSeq(
-		const std::complex&lt;double&gt; &amp;x , 
+		const std::complex&lt;double&gt; &amp;x ,
 		const std::complex&lt;double&gt; &amp;y )
-	{	return x == y; 
+	{	return x == y;
 	}
 }
 </pre></font></code>
@@ -210,7 +210,7 @@ namespace CppAD {
 <br/>
 <b><big><a name="Identical" id="Identical">Identical</a></big></b>
 <br/>
-Complex numbers do not carry operation sequence information. 
+Complex numbers do not carry operation sequence information.
 Thus they are all parameters so the identical functions just check values.
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
@@ -231,7 +231,7 @@ namespace CppAD {
 <br/>
 <b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
 <br/>
-Complex types do not support comparison operators, 
+Complex types do not support comparison operators,
 <code><font color='blue'><pre style='display:inline'> 
 # undef  CPPAD_USER_MACRO
 # define CPPAD_USER_MACRO(Fun)                                     \
@@ -249,27 +249,11 @@ namespace CppAD {
 	CPPAD_USER_MACRO(GreaterThanOrZero)
 	CPPAD_USER_MACRO(GreaterThanZero)
 	inline bool abs_geq(
-		const std::complex&lt;double&gt;&amp; x , 
+		const std::complex&lt;double&gt;&amp; x ,
 		const std::complex&lt;double&gt;&amp; y )
 	{	return std::abs(x) &gt;= std::abs(y); }
 }
 </pre></font></code>
-
-
-<br/>
-<br/>
-<b><big><a name="erf" id="erf">erf</a></big></b>
-<br/>
-Complex types do not support the error function
-(use CPPAD_USER_MACRO define above).
-<code><font color='blue'><pre style='display:inline'> 
-# if CPPAD_COMPILER_HAS_ERF
-namespace CppAD {
-	CPPAD_USER_MACRO(erf)
-}
-# endif
-</pre></font></code>
-
 
 
 <br/>
@@ -284,6 +268,17 @@ with the CppAD user specifications for complex arguments to the
 namespace CppAD {
 	inline int Integer(const std::complex&lt;double&gt; &amp;x)
 	{	return static_cast&lt;int&gt;( x.real() ); }
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="azmul" id="azmul">azmul</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_AZMUL( std::complex&lt;double&gt; )
 }
 </pre></font></code>
 
@@ -316,7 +311,7 @@ namespace CppAD {
 <br/>
 <b><big><a name="Valid Unary Math" id="Valid Unary Math">Valid Unary Math</a></big></b>
 <br/>
-The following macro invocations define the standard unary 
+The following macro invocations define the standard unary
 math functions that are valid with complex arguments and are
 required to use <code><font color="blue">AD&lt; std::complex&lt;double&gt; &gt;</font></code>.
 <code><font color='blue'><pre style='display:inline'> 
@@ -336,7 +331,7 @@ namespace CppAD {
 <br/>
 <b><big><a name="Invalid Unary Math" id="Invalid Unary Math">Invalid Unary Math</a></big></b>
 <br/>
-The following macro definition and invocations define the standard unary 
+The following macro definition and invocations define the standard unary
 math functions that are invalid with complex arguments and are
 required to use <code><font color="blue">AD&lt; std::complex&lt;double&gt; &gt;</font></code>.
 <code><font color='blue'><pre style='display:inline'> 
@@ -356,6 +351,14 @@ namespace CppAD {
 	CPPAD_USER_MACRO(asin)
 	CPPAD_USER_MACRO(atan)
 	CPPAD_USER_MACRO(sign)
+# if CPPAD_USE_CPLUSPLUS_2011
+	CPPAD_USER_MACRO(erf)
+	CPPAD_USER_MACRO(asinh)
+	CPPAD_USER_MACRO(acosh)
+	CPPAD_USER_MACRO(atanh)
+	CPPAD_USER_MACRO(expm1)
+	CPPAD_USER_MACRO(log1p)
+# endif
 }
 </pre></font></code>
 
@@ -369,7 +372,7 @@ is required to use <code><font color="blue">AD&lt; std::complex&lt;double&gt; &g
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
 	inline std::complex&lt;double&gt; pow(
-		const std::complex&lt;double&gt; &amp;x , 
+		const std::complex&lt;double&gt; &amp;x ,
 		const std::complex&lt;double&gt; &amp;y )
 	{	return std::pow(x, y); }
 }
@@ -378,37 +381,28 @@ namespace CppAD {
 
 <br/>
 <br/>
-<b><big><a name="limits" id="limits">limits</a></big></b>
+<b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
 <br/>
-The following defines the numeric limits functions
-<code><font color="blue">epsilon</font></code>, <code><font color="blue">min</font></code>, and <code><font color="blue">max</font></code> for the type
-<code><font color="blue">std::complex&lt;double&gt;</font></code>.
-It also defines the deprecated <code><font color="blue">epsilon</font></code> function:
+The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
+
+for the type <code><font color="blue">std::complex&lt;double&gt;</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	template &lt;&gt;
-	class numeric_limits&lt; std::complex&lt;double&gt; &gt; {
-	public:
-		// machine epsilon
-		static  std::complex&lt;double&gt; epsilon(void)
-		{	double eps = std::numeric_limits&lt;double&gt;::epsilon();
-			return std::complex&lt;double&gt;(eps, 0.0);
-		}
-		// minimum positive normalized value
-		static  std::complex&lt;double&gt; min(void)
-		{	double min = std::numeric_limits&lt;double&gt;::min();
-			return std::complex&lt;double&gt;(min, 0.0);
-		}
-		// maximum finite value
-		static  std::complex&lt;double&gt; max(void)
-		{	double max = std::numeric_limits&lt;double&gt;::max();
-			return std::complex&lt;double&gt;(max, 0.0);
-		}
-	};
-	// deprecated machine epsilon
-	template &lt;&gt; 
-	inline std::complex&lt;double&gt; epsilon&lt; std::complex&lt;double&gt; &gt; (void)
-	{	return numeric_limits&lt; std::complex&lt;double&gt; &gt;::epsilon(); }
+	CPPAD_NUMERIC_LIMITS(double, std::complex&lt;double&gt;)
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="to_string" id="to_string">to_string</a></big></b>
+<br/>
+The following defines the function CppAD <a href="to_string.xml" target="_top"><span style='white-space: nowrap'>to_string</span></a>
+
+for the type <code><font color="blue">std::complex&lt;double&gt;</font></code>:
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_TO_STRING(std::complex&lt;double&gt;)
 }
 </pre></font></code>
 

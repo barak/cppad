@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -111,7 +111,7 @@ See <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: n
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;adolc/adolc.h&gt;
 # include &lt;adolc/adolc_sparse.h&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/sparse_jac_fun.hpp&gt;
 
@@ -120,8 +120,8 @@ extern bool global_memory, global_onetape, global_atomic, global_optimize;
 extern bool global_colpack, global_boolsparsity;
 
 bool link_sparse_jacobian(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	size_t                           m        ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
@@ -130,9 +130,9 @@ bool link_sparse_jacobian(
 	      size_t&amp;                    n_sweep  )
 {
 	if( global_atomic || (! global_colpack) )
-		return false; 
+		return false;
 	if( global_memory || global_optimize )
-		return false; 
+		return false;
 	// -----------------------------------------------------
 	// setup
 	typedef unsigned int*    SizeVector;
@@ -140,8 +140,8 @@ bool link_sparse_jacobian(
 	typedef adouble          ADScalar;
 	typedef ADScalar*        ADVector;
 
-	size_t i, j;                // temporary indices
-	size_t n = size;            // number of independent variables
+	size_t i, j, k;            // temporary indices
+	size_t n = size;           // number of independent variables
 	size_t order = 0;          // derivative order corresponding to function
 
 	// set up for thread_alloc memory allocator (fast and checks for leaks)
@@ -159,7 +159,7 @@ bool link_sparse_jacobian(
 	// function value in double
 	DblVector y = thread_alloc::create_array&lt;double&gt;(m, capacity);
 
-	
+
 	// options that control sparse_jac
 	int        options[4];
 	extern bool global_boolsparsity;
@@ -177,22 +177,16 @@ bool link_sparse_jacobian(
 	SizeVector cind   = CPPAD_NULL;   // column indices
 	DblVector  values = CPPAD_NULL;   // Jacobian values
 
-	// initialize all entries as zero
-	for(i = 0; i &lt; m; i++)
-	{	for(j = 0; j &lt; n; j++)
-			jacobian[ i * n + j ] = 0.;
-	}
-
 	// choose a value for x
 	CppAD::uniform_01(n, x);
 
 	// declare independent variables
-	int keep = 0; // keep forward mode results 
+	int keep = 0; // keep forward mode results
 	trace_on(tag, keep);
 	for(j = 0; j &lt; n; j++)
 		a_x[j] &lt;&lt;= x[j];
 
-	// AD computation of f (x) 
+	// AD computation of f (x)
 	CppAD::sparse_jac_fun&lt;ADScalar&gt;(m, n, a_x, row, col, order, a_y);
 
 	// create function object f : x -&gt; y
@@ -203,7 +197,7 @@ bool link_sparse_jacobian(
 	// Retrieve n_sweep using undocumented feature of sparsedrivers.cpp
 	int same_pattern = 0;
 	options[2]       = -1;
-	n_sweep = sparse_jac(tag, int(m), int(n), 
+	n_sweep = sparse_jac(tag, int(m), int(n),
 		same_pattern, x, &amp;nnz, &amp;rind, &amp;cind, &amp;values, options
 	);
 	options[2]       = 0;
@@ -217,10 +211,10 @@ bool link_sparse_jacobian(
 		for(j = 0; j &lt; n; j++)
 			a_x[j] &lt;&lt;= x[j];
 
-		// AD computation of f (x) 
+		// AD computation of f (x)
 		CppAD::sparse_jac_fun&lt;ADScalar&gt;(m, n, a_x, row, col, order, a_y);
 
-		// create function object f : x -&gt; y 
+		// create function object f : x -&gt; y
 		for(i = 0; i &lt; m; i++)
 			a_y[i] &gt;&gt;= y[i];
 		trace_off();
@@ -232,12 +226,21 @@ bool link_sparse_jacobian(
 		rind   = CPPAD_NULL;
 		cind   = CPPAD_NULL;
 		values = CPPAD_NULL;
-		sparse_jac(tag, int(m), int(n), 
+		sparse_jac(tag, int(m), int(n),
 			same_pattern, x, &amp;nnz, &amp;rind, &amp;cind, &amp;values, options
 		);
-		int int_n = int(n);
-		for(int k = 0; k &lt; nnz; k++)
-			jacobian[ rind[k] * int_n + cind[k] ] = values[k];
+		// only needed last time through loop
+		if( repeat == 0 )
+		{	size_t K = row.size();
+			for(int ell = 0; ell &lt; nnz; ell++)
+			{	i = size_t(rind[ell]);
+				j = size_t(cind[ell]);
+				for(k = 0; k &lt; K; k++)
+				{	if( row[k]==i &amp;&amp; col[k]==j )
+						jacobian[k] = values[ell];
+				}
+			}
+		}
 
 		// free raw memory allocated by sparse_jac
 		free(rind);
@@ -250,14 +253,20 @@ bool link_sparse_jacobian(
 			CppAD::uniform_01(n, x);
 
 			// calculate the jacobian at this x
-			sparse_jac(tag, int(m), int(n), 
+			sparse_jac(tag, int(m), int(n),
 				same_pattern, x, &amp;nnz, &amp;rind, &amp;cind, &amp;values, options
 			);
 			same_pattern = 1;
 		}
-		int int_n = int(n);
-		for(int k = 0; k &lt; nnz; k++)
-			jacobian[ rind[k] * int_n + cind[k] ] = values[k];
+		size_t K = row.size();
+		for(int ell = 0; ell &lt; nnz; ell++)
+		{	i = size_t(rind[ell]);
+			j = size_t(cind[ell]);
+			for(k = 0; k &lt; K; k++)
+			{	if( row[k]==i &amp;&amp; col[k]==j )
+					jacobian[k] = values[ell];
+			}
+		}
 
 		// free raw memory allocated by sparse_jac
 		free(rind);
@@ -265,7 +274,7 @@ bool link_sparse_jacobian(
 		free(values);
 	}
 	// --------------------------------------------------------------------
-	// return argument 
+	// return argument
 	for(j = 0; j &lt; n; j++)
 		x_return[j] = x[j];
 

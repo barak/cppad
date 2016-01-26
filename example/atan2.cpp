@@ -1,9 +1,9 @@
-/* $Id: atan2.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: atan2.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -19,9 +19,6 @@ $$
 
 $section The AD atan2 Function: Example and Test$$
 
-$index atan2, AD example$$
-$index example, AD atan2$$
-$index test, AD atan2$$
 
 $code
 $verbatim%example/atan2.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -33,7 +30,7 @@ $end
 
 # include <cppad/cppad.hpp>
 
-bool Atan2(void)
+bool atan2(void)
 {	bool ok = true;
 
 	using CppAD::AD;
@@ -52,15 +49,15 @@ bool Atan2(void)
 	AD<double> sin_of_x0 = CppAD::sin(x[0]);
 	AD<double> cos_of_x0 = CppAD::cos(x[0]);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	CPPAD_TESTVECTOR(AD<double>) y(m);
 	y[0] = CppAD::atan2(sin_of_x0, cos_of_x0);
 
 	// create f: x -> y and stop tape recording
-	CppAD::ADFun<double> f(x, y); 
+	CppAD::ADFun<double> f(x, y);
 
-	// check value 
+	// check value
 	ok &= NearEqual(y[0] , x0,  1e-10 , 1e-10);
 
 	// forward computation of first partial w.r.t. x[0]

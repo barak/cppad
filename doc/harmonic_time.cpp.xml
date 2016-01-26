@@ -6,7 +6,7 @@
 <title>Timing Test of Multi-Threaded Summation of 1/i</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Timing Test of Multi-Threaded Summation of 1/i"/>
-<meta name="keywords" id="keywords" content=" harmonic_time summation multi_thread speed time timing test of multi-threaded 1/i syntax purpose ok time_out test_time num_threads mega_sum source "/>
+<meta name="keywords" id="keywords" content=" timing test of multi-threaded summation 1/i harmonic_time multi_thread speed syntax purpose ok time_out test_time num_threads mega_sum source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -92,11 +92,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
 <center><b><big><big>Timing Test of Multi-Threaded Summation of 1/i</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -110,8 +105,8 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Runs a correctness and timing test for a multi-threaded 
-computation of the summation that defines the harmonic series 
+Runs a correctness and timing test for a multi-threaded
+computation of the summation that defines the harmonic series
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mn>1</mn>
@@ -161,7 +156,7 @@ This argument has prototype
 </span></font></code>
 The input value of the argument does not matter.
 Upon return it is the number of wall clock seconds required for
-to compute the 
+to compute the
 <a href="harmonic_time.cpp.xml#Purpose" target="_top"><span style='white-space: nowrap'>summation</span></a>
 .
 
@@ -171,7 +166,7 @@ to compute the
 <br/>
 Is the minimum amount of wall clock time that the test should take.
 The number of repeats for the test will be increased until this time
-is reached. 
+is reached.
 The reported 
 <code><i><font color="black"><span style='white-space: nowrap'>time_out</span></font></i></code>
  is the total wall clock time divided by the
@@ -215,7 +210,7 @@ The value
 <mi mathvariant='italic'>n</mi>
 </mrow></math>
 
- in the 
+ in the
 <a href="harmonic_time.cpp.xml#Purpose" target="_top"><span style='white-space: nowrap'>summation</span></a>
 .
 is equal to 
@@ -227,7 +222,7 @@ is equal to
 
  times 
 <code><i><font color="black"><span style='white-space: nowrap'>mega_sum</span></font></i></code>
-. 
+.
 
 <br/>
 <br/>
@@ -242,10 +237,11 @@ is equal to
 # include &lt;vector&gt;
 # include &lt;iostream&gt;
 # include &lt;cstdlib&gt;
+# include &lt;algorithm&gt;
 
 // Note there is no mention of parallel mode in the documentation for
 // speed_test (so it is safe to use without special consideration).
-# include &lt;cppad/time_test.hpp&gt;
+# include &lt;cppad/utility/time_test.hpp&gt;
 # include &quot;harmonic.hpp&quot;
 
 namespace { // empty namespace
@@ -265,7 +261,7 @@ namespace { // empty namespace
 			exit(1);
 		}
 		size_t num_sum = mega_sum_ * 1000000;
-		bool ok = harmonic(sum_, num_sum, num_threads_); 
+		bool ok = harmonic(sum_, num_sum, num_threads_);
 		if( ! ok )
 		{	std::cerr &lt;&lt; &quot;harmonic: error&quot; &lt;&lt; std::endl;
 			exit(1);
@@ -304,7 +300,7 @@ bool harmonic_time(
 	size_t i     = mega_sum_ * 1000000;
 	double check = 0.;
 	while(i)
-		check += 1. / double(i--); 
+		check += 1. / double(i--);
 	ok &amp;= std::fabs(sum_ - check) &lt;= eps;
 
 	return ok;

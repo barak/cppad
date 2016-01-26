@@ -85,9 +85,9 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: det_by_lu</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_DET_BY_LU_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_DET_BY_LU_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_DET_BY_LU_INCLUDED
+</span></code># define CPPAD_DET_BY_LU_HPP
 
 <pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
@@ -96,7 +96,7 @@ A:active { color : purple }
 // BEGIN CppAD namespace
 namespace CppAD {
 
-// The AD complex case is used by examples by not used by speed tests 
+// The AD complex case is used by examples by not used by speed tests
 // Must define a specializatgion of LeqZero,AbsGeq for the ADComplex case
 typedef std::complex&lt;double&gt;     Complex;
 typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Complex&gt;     ADComplex;
@@ -128,13 +128,13 @@ public:
 		// copy matrix so it is not overwritten
 		for(i = 0; i &lt; n_ * n_; i++)
 			A_[i] = x[i];
- 
+
 		// comput log determinant
 		signdet = CppAD::LuSolve(
 			n_, m_, A_, B_, X_, logdet);
 
 /*
-		// Do not do this for speed test because it makes floating 
+		// Do not do this for speed test because it makes floating
 		// point operation sequence very simple.
 		if( signdet == 0 )
 			det = 0;
@@ -142,7 +142,7 @@ public:
 */
 
 		// convert to determinant
-		det     = Scalar( signdet ) * exp( logdet ); 
+		det     = Scalar( signdet ) * exp( logdet );
 
 # ifdef FADBAD
 		// Fadbad requires tempories to be set to constants

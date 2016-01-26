@@ -6,7 +6,7 @@
 <title>Speed Testing Gradient of Determinant by Minor Expansion</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Speed Testing Gradient of Determinant by Minor Expansion"/>
-<meta name="keywords" id="keywords" content=" link_det_minor det_minor speed test testing gradient of determinant by minor expansion prototype purpose method return value size repeat matrix double "/>
+<meta name="keywords" id="keywords" content=" speed testing gradient of determinant by minor expansion link_det_minor test prototype purpose method return value size repeat matrix double "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -104,10 +104,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
 <center><b><big><big>Speed Testing Gradient of Determinant by Minor Expansion</big></big></b></center>
 <br/>
 <b><big><a name="Prototype" id="Prototype">Prototype</a></big></b>
@@ -115,10 +111,10 @@ A:active { color : purple }
 <br/>
 
 <code><font color="blue"><span style='white-space: nowrap'>extern&#xA0;bool&#xA0;link_det_minor(<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,&#xA0;<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>repeat</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;,&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>repeat</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>matrix</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>gradient</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>gradient</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 );<br/>
 </span></font></code>
 <br/>
@@ -128,7 +124,7 @@ Each <a href="speed_main.xml#package" target="_top"><span style='white-space: no
 
 must define a version of this routine as specified below.
 This is used by the <a href="speed_main.xml" target="_top"><span style='white-space: nowrap'>speed_main</span></a>
- program 
+ program
 to run the corresponding speed and correctness tests.
 
 <br/>
@@ -147,7 +143,7 @@ If this speed test is not yet
 supported by a particular 
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i></code>
 ,
-the corresponding return value for <code><font color="blue">link_det_minor</font></code> 
+the corresponding return value for <code><font color="blue">link_det_minor</font></code>
 should be <code><font color="blue">false</font></code>.
 
 <br/>
@@ -174,11 +170,11 @@ that the gradient (or determinant) is computed for.
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>matrix</span></font></i></code>
- is a vector with 
+ is a vector with
 
 <code><i><font color="black"><span style='white-space: nowrap'>size</span></font></i><font color="blue"><span style='white-space: nowrap'>*</span></font><i><font color="black"><span style='white-space: nowrap'>size</span></font></i></code>
  elements.
-The input value of its elements does not matter. 
+The input value of its elements does not matter.
 The output value of its elements is the last matrix that the
 gradient (or determinant) is computed for.
 
@@ -188,11 +184,11 @@ gradient (or determinant) is computed for.
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>gradient</span></font></i></code>
- is a vector with 
+ is a vector with
 
 <code><i><font color="black"><span style='white-space: nowrap'>size</span></font></i><font color="blue"><span style='white-space: nowrap'>*</span></font><i><font color="black"><span style='white-space: nowrap'>size</span></font></i></code>
  elements.
-The input value of its elements does not matter. 
+The input value of its elements does not matter.
 The output value of its elements is the gradient of the
 determinant of 
 <code><i><font color="black"><span style='white-space: nowrap'>matrix</span></font></i></code>
@@ -204,10 +200,10 @@ determinant of
 <br/>
 In the case where 
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i></code>
- is <code><font color="blue">double</font></code>, 
+ is <code><font color="blue">double</font></code>,
 only the first element of 
 <code><i><font color="black"><span style='white-space: nowrap'>gradient</span></font></i></code>
- is used and it is actually 
+ is used and it is actually
 the determinant value (the gradient value is not computed).
 
 

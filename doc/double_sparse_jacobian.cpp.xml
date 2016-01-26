@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -108,7 +108,7 @@ See <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: n
 
 
 <code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/sparse_jac_fun.hpp&gt;
 
@@ -117,8 +117,8 @@ extern bool
 	global_onetape, global_atomic, global_optimize, global_boolsparsity;
 
 bool link_sparse_jacobian(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	size_t                           m        ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
@@ -140,7 +140,7 @@ bool link_sparse_jacobian(
 	while(repeat--)
 	{	// choose a value for x
 		CppAD::uniform_01(n, x);
-	
+
 		// computation of the function
 		CppAD::sparse_jac_fun&lt;double&gt;(m, n, x, row, col, order, yp);
 	}

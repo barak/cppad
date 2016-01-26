@@ -6,7 +6,7 @@
 <title>Atomic Reverse Jacobian Sparsity Patterns</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Atomic Reverse Jacobian Sparsity Patterns"/>
-<meta name="keywords" id="keywords" content=" atomic reverse jacobian sparsity patterns rev_sparse_jac callback virtual syntax purpose implementation q rt st ok examples define use "/>
+<meta name="keywords" id="keywords" content=" atomic reverse jacobian sparsity patterns syntax purpose implementation q rt st ok examples define rev_sparse_jac use "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -210,7 +212,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the number of rows in 
+It specifies the number of rows in
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -223,7 +225,7 @@ It specifies the number of rows in
 </msup>
 </mrow></math>
 
- and the Jacobian 
+ and the Jacobian
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -239,7 +241,7 @@ It specifies the number of rows in
 </msup>
 </mrow></math>
 
-. 
+.
 
 <br/>
 <br/>
@@ -250,7 +252,7 @@ This argument has prototype
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>rt</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-and is a 
+and is a
 <a href="atomic_option.xml#atomic_sparsity" target="_top"><span style='white-space: nowrap'>atomic_sparsity</span></a>
  pattern for
 
@@ -279,11 +281,11 @@ This argument has prototype
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>st</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-The input value of its elements 
+The input value of its elements
 are not specified (must not matter).
 Upon return, 
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
- is a 
+ is a
 <a href="atomic_option.xml#atomic_sparsity" target="_top"><span style='white-space: nowrap'>atomic_sparsity</span></a>
  pattern for
 
@@ -304,7 +306,7 @@ Upon return,
 </msup>
 </mrow></math>
 
-. 
+.
 
 <br/>
 <br/>

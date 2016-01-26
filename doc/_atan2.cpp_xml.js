@@ -9,25 +9,23 @@ var list_up0 = [
 'cppad.xml',
 'ad.xml',
 'advalued.xml',
-'mathother.xml',
+'binary_math.xml',
 'atan2.xml',
 'atan2.cpp.xml'
 ];
 var list_down3 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_down2 = [
-'abs.xml',
-'sign.xml',
 'atan2.xml',
-'erf.xml',
 'pow.xml',
-'limits.xml'
+'azmul.xml'
 ];
 var list_down1 = [
 'atan2.cpp.xml'

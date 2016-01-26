@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -109,8 +109,8 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 
 
 <code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/vector.hpp&gt;
-# include &lt;cppad/poly.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
+# include &lt;cppad/utility/poly.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;Sacado.hpp&gt;
 
@@ -118,11 +118,11 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_poly(
-	size_t                     size     , 
-	size_t                     repeat   , 
+	size_t                     size     ,
+	size_t                     repeat   ,
 	CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
 	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z  
+	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
 {
 	if( global_atomic )
 		return false;
@@ -133,9 +133,9 @@ bool link_poly(
 	typedef Sacado::Tay::Taylor&lt;double&gt;  ADScalar;
 	CppAD::vector&lt;ADScalar&gt;              A(size);
 
-	size_t i;               // temporary index     
+	size_t i;               // temporary index
 	ADScalar   Z;           // domain space AD value
-	ADScalar   P;           // range space AD value 
+	ADScalar   P;           // range space AD value
 	unsigned int order = 2; // order of Taylor coefficients
 	Z.resize(order+1, false);
 	P.resize(order+1, false);

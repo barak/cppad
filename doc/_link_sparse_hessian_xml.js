@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -52,7 +52,8 @@ var list_current0 = [
 'link_sparse_hessian.xml#row',
 'link_sparse_hessian.xml#col',
 'link_sparse_hessian.xml#hessian',
-'link_sparse_hessian.xml#hessian.double'
+'link_sparse_hessian.xml#n_sweep',
+'link_sparse_hessian.xml#n_sweep.double'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

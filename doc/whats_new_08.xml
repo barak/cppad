@@ -6,7 +6,7 @@
 <title>Changes and Additions to CppAD During 2008</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Changes and Additions to CppAD During 2008"/>
-<meta name="keywords" id="keywords" content=" changes and additions to cppad during 2008 introduction 12-19 12-14 12-04 11-22 11-21 11-20 erf 10-27 10-17 10-16 09-30 09-26 09-18 09-17 09-16 09-12 09-10 09-09 09-07 09-06 09-05 09-04 09-03 09-01 08-29 ipopt_cppad_nlp 08-19 08-08 07-02 06-18 06-15 06-11 06-10 05-08 05-03 04-20 04-18 04-10 04-06 04-04 03-27 02-05 02-03 01-26 01-24 01-21 01-20 01-11 01-08 "/>
+<meta name="keywords" id="keywords" content=" changes and additions to cppad during 2008 erf ipopt_cppad_nlp introduction 12-19 12-14 12-04 11-22 11-21 11-20 10-27 10-17 10-16 09-30 09-26 09-18 09-17 09-16 09-12 09-10 09-09 09-07 09-06 09-05 09-04 09-03 09-01 08-29 08-19 08-08 07-02 06-18 06-15 06-11 06-10 05-08 05-03 04-20 04-18 04-10 04-06 04-04 03-27 02-05 02-03 01-26 01-24 01-21 01-20 01-11 01-08 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,17 +66,19 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
@@ -170,7 +172,7 @@ from
 <code><font color="blue"><span style='white-space: nowrap'>const&#xA0;int&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
 .
 In the implementation for <a href="pow.xml" target="_top"><span style='white-space: nowrap'>pow</span></a>
- make the integer base case 
+ make the integer base case
 agree with the documentation; i.e., change
 from 
 <code><font color="blue"><span style='white-space: nowrap'>int&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -183,7 +185,7 @@ from
 <b><big><a name="12-14" id="12-14">12-14</a></big></b>
 <br/>
 Added another test of <a href="mul_level.xml" target="_top"><span style='white-space: nowrap'>mul_level</span></a>
- calculations (in the 
+ calculations (in the
 <code><font color="blue">test_more</font></code> directory).
 
 <br/>
@@ -201,7 +203,7 @@ provided in the section <a href="ipopt_nlp_ode.xml" target="_top"><span style='w
 The CppAD interface to the Ipopt nonlinear programming solver
 <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
 
-has been moved from <code><font color="blue">example/ipopt_cppad_nlp</font></code> to 
+has been moved from <code><font color="blue">example/ipopt_cppad_nlp</font></code> to
 <code><font color="blue">ipopt_cppad/ipopt_cppad_nlp</font></code>.
 
 <br/>
@@ -211,7 +213,7 @@ has been moved from <code><font color="blue">example/ipopt_cppad_nlp</font></cod
 The Microsoft's Visual C++ Version 9.0 generates a warning of the form
 
 <code><font color="blue"><span style='white-space: nowrap'>warning&#xA0;C4396:%...%</span></font></code>
- 
+
 for every template function that is declared as a both a friend and inline
 (it thinks it is only doing this for specializations of template functions).
 The warnings are no longer generated because
@@ -222,12 +224,11 @@ empty code when a Microsoft Visual C++ is used.
 <br/>
 <br/>
 <b><big><a name="11-20" id="11-20">11-20</a></big></b>
-
 <br/>
 The function 
 <code><font color="blue"><span style='white-space: nowrap'>tanh(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
- was added to the 
-<a href="std_math_ad.xml" target="_top"><span style='white-space: nowrap'>std_math_ad</span></a>
+ was added to the
+<a href="unary_standard_math.xml" target="_top"><span style='white-space: nowrap'>unary_standard_math</span></a>
  functions.
 The <code><font color="blue">abs</font></code> and <code><font color="blue">erf</font></code> functions were removed from the
 <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>Base&#xA0;requirements</span></a>
@@ -244,11 +245,10 @@ The restrictions about the Base class were removed from
 constants in the CppAD <a href="erf.xml" target="_top"><span style='white-space: nowrap'>erf</span></a>
  function.
 This function was changed to a simpler representation
-that is much faster and that 
+that is much faster and that
 is differentiable at all points (not defined differently on subregions).
-The down side to this is that the new version 
-is not as accurate (see <a href="erf.xml#Method" target="_top"><span style='white-space: nowrap'>method</span></a>
-).
+The down side to this is that the new version
+is not as accurate.
 
 <br/>
 <br/>
@@ -267,7 +267,7 @@ Major improvements to the <code><font color="blue">ipopt_cppad/ipopt_cppad_ode</
 <br/>
 <b><big><a name="10-16" id="10-16">10-16</a></big></b>
 <br/>
-Minor improvement to description of optimization argument in 
+Minor improvement to description of optimization argument in
 <code><font color="blue">ipopt_cppad/ipopt_cppad_ode</font></code>.
 
 <br/>
@@ -280,7 +280,7 @@ multiple argument forward (completed with <a href="forward_dir.xml" target="_top
 ),
 and sparsity patterns
 (<a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;patterns</span></a>
- has been fulfilled). 
+ has been fulfilled).
 
 
 <br/>
@@ -396,14 +396,14 @@ was different for different values of
 ,
 combined 
 <code><i><font color="black"><span style='white-space: nowrap'>fg_info</span></font></i><font color="blue"><span style='white-space: nowrap'>-&gt;domain_index()</span></font></code>
- and 
+ and
 
 <code><i><font color="black"><span style='white-space: nowrap'>fg_info</span></font></i><font color="blue"><span style='white-space: nowrap'>-&gt;range_index()</span></font></code>
  into a single function called
 
 <code><i><font color="black"><span style='white-space: nowrap'>fg_info</span></font></i><font color="blue"><span style='white-space: nowrap'>-&gt;index()</span></font></code>
 .
-Also added more error checking (if <code><font color="blue">NDEBUG</font></code> is not defined). 
+Also added more error checking (if <code><font color="blue">NDEBUG</font></code> is not defined).
 
 <br/>
 <br/>
@@ -450,7 +450,7 @@ This is more versatile that the single summation representation.
 Checked in a major change to <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>ipopt_cppad_nlp</span></a>
 
 whereby the object and constraints can be expressed as the
-sum of simpler functions. 
+sum of simpler functions.
 This is the first step in what will eventually be a more versatile
 representation.
 
@@ -460,7 +460,7 @@ representation.
 <br/>
 Fix bug in <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>ipopt_cppad_nlp</span></a>
  (not recording the function
-at the proper location. Here is the difference that occurred 
+at the proper location. Here is the difference that occurred
 multiple places in the <code><font color="blue">ipopt_cppad/ipopt_cppad_nlp.cpp</font></code> source:
 <code><font color='blue'><pre style='display:inline'> 
 	for(j = 0; j &lt; n_; j++)
@@ -512,7 +512,7 @@ that motivated the change).
 <br/>
 The <code><font color="blue">push_vector</font></code> member function was missing from the
 <a href="cppad_vector.xml#vectorBool" target="_top"><span style='white-space: nowrap'>vectorBool</span></a>
- class. 
+ class.
 This has been fixed.
 In addition, it seems that for some cases (or compilers)
 the assignment
@@ -524,7 +524,7 @@ did not work properly when both
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- 
+
 had type <code><font color="blue">vectorBool</font></code>.
 This has been fixed.
 <code><span style='white-space: nowrap'><br/>
@@ -555,14 +555,14 @@ This makes it easy to accumulate multiple scalars and
 <br/>
 <b><big><a name="08-08" id="08-08">08-08</a></big></b>
 <br/>
-There was an indexing bug in the 
+There was an indexing bug in the
 <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>ipopt_cppad_nlp</span></a>
  example
 that affected the 
 <code><i><font color="black"><span style='white-space: nowrap'>retape</span></font></i></code>
  equal to <code><font color="blue">false</font></code> case.
 This has been fixed.
-In addition, the missing 
+In addition, the missing
 
 <code><i><font color="black"><span style='white-space: nowrap'>retape</span></font></i></code>
  documentation was added.
@@ -571,7 +571,7 @@ In addition, the missing
 <br/>
 <b><big><a name="07-02" id="07-02">07-02</a></big></b>
 <br/>
-Extend <a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+Extend <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command to check for
 extras libraries that are necessary for linking the ipopt example.
 
@@ -581,7 +581,7 @@ extras libraries that are necessary for linking the ipopt example.
 <br/>
 Add specifications for the Ipopt class <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>ipopt_cppad_nlp</span></a>
 .
-This is only an example class it may change with future 
+This is only an example class it may change with future
 versions of CppAD.
 
 <br/>
@@ -645,7 +645,7 @@ In addition the routines
 pass this flag along to the speed test implementations
 (because the corresponding tests have a fixed operation sequence).
 If this flag is false, a test implementation is allowed to just tape
-the operation sequence once and reuse it. 
+the operation sequence once and reuse it.
 The following tests use this flag:
 <a href="adolc_det_minor.cpp.xml" target="_top"><span style='white-space: nowrap'>adolc_det_minor.cpp</span></a>
 ,
@@ -670,12 +670,12 @@ but does not test out as faster under cygwin g++ (GCC) 3.4.4.
 <b><big><a name="04-20" id="04-20">04-20</a></big></b>
 <br/>
 Added the <a href="ode_evaluate.xml" target="_top"><span style='white-space: nowrap'>ode_evaluate</span></a>
- speed test utility in 
+ speed test utility in
 preparation for having ode speed tests.
-Created ode speed test for the <code><font color="blue">cppad</font></code> and <code><font color="blue">double</font></code> 
+Created ode speed test for the <code><font color="blue">cppad</font></code> and <code><font color="blue">double</font></code>
 cases; see <a href="speed_main.xml" target="_top"><span style='white-space: nowrap'>speed_main</span></a>
 .
-In addition, 
+In addition,
 added the examples <a href="ode_evaluate.cpp.xml" target="_top"><span style='white-space: nowrap'>ode_evaluate.cpp</span></a>
  and <a href="sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian.cpp</span></a>
 .
@@ -689,7 +689,7 @@ from
 <code><font color="blue"><span style='white-space: nowrap'>link_</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
 .
 For example, in <code><font color="blue">speed/cppad/det_minor.cpp</font></code>,
-the function name 
+the function name
 <code><font color="blue">compute_det_minor</font></code> was changed to <code><font color="blue">link_det_minor</font></code>.
 
 
@@ -700,7 +700,7 @@ the function name
 Fix a problem in the <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link_poly</span></a>
  correctness test.
 Also add <a href="double_sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>double_sparse_hessian.cpp</span></a>
- to the set 
+ to the set
 speed and correctness tests (now available).
 
 
@@ -708,7 +708,7 @@ speed and correctness tests (now available).
 <br/>
 <b><big><a name="04-10" id="04-10">04-10</a></big></b>
 <br/>
-Change all the 
+Change all the
 <a href="speed_adolc.xml" target="_top"><span style='white-space: nowrap'>Adolc&#xA0;speed</span></a>
  examples to use
 <a href="tracknewdel.xml" target="_top"><span style='white-space: nowrap'>TrackNewDel</span></a>
@@ -716,7 +716,7 @@ Change all the
 directly.
 This makes it easy to check for memory allocation errors and leaks
 (when <code><font color="blue">NDEBUG</font></code> is not defined).
-Also include in documentation sub functions that indicate 
+Also include in documentation sub functions that indicate
 the <code><font color="blue">sparse_hessian</font></code> speed test is not available for
 <a href="double_sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>double_sparse_hessian.cpp</span></a>
 ,
@@ -729,8 +729,8 @@ the <code><font color="blue">sparse_hessian</font></code> speed test is not avai
 <br/>
 <b><big><a name="04-06" id="04-06">04-06</a></big></b>
 <br/>
-The following <a href="wishlist.xml" target="_top"><span style='white-space: nowrap'>wish&#xA0;list</span></a>
- 
+The following <a href="wish_list.xml" target="_top"><span style='white-space: nowrap'>wish&#xA0;list</span></a>
+
 entry has been completed and removed from the list:
 &quot;Change private member variables names
 (not part of the user interface)
@@ -750,12 +750,12 @@ Fix a problem compiling the speed test
 <br/>
 Corrected <a href="cppad_sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_sparse_hessian.cpp</span></a>
 
-so that it uses the sparse case when 
+so that it uses the sparse case when
 <code><font color="blue">USE_CPPAD_SPARSE_HESSIAN</font></code> is <code><font color="blue">1</font></code>.
 Also added a wish list sparsity pattern entry
 (the <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
  entry
-has been fulfilled). 
+has been fulfilled).
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Change the name of <code><font color="blue">speedtest.cpp</font></code> to <a href="speed_program.cpp.xml" target="_top"><span style='white-space: nowrap'>speed_program.cpp</span></a>
@@ -766,7 +766,7 @@ has been fulfilled).
 <br/>
 <b><big><a name="02-05" id="02-05">02-05</a></big></b>
 <br/>
-Change windows install instructions 
+Change windows install instructions
 to use Unix formatted files (so only two instead of
 four tarballs are necessary for each version).
 The Microsoft project files for
@@ -777,7 +777,7 @@ were missing. This has also been fixed.
 <br/>
 <b><big><a name="02-03" id="02-03">02-03</a></big></b>
 <br/>
-There was an ambiguity problem 
+There was an ambiguity problem
 (detected by g++ 4.3) with the following operations
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -792,16 +792,15 @@ where
 <code><i><font color="black"><span style='white-space: nowrap'>op</span></font></i></code>
  was a member operator of that class.
 This has been fixed by making all such member functions friends
-instead of members of <code><font color="blue">AD&lt;double&gt;</font></code>. 
+instead of members of <code><font color="blue">AD&lt;double&gt;</font></code>.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Remove computed assignment entry from wish list
 (it was fixed on <a href="whats_new_07.xml#05-26" target="_top"><span style='white-space: nowrap'>2007-05-26</span></a>
 ).
-Add 
-<a href="wishlist.xml#Optimization.Expression Hashing" target="_top"><span style='white-space: nowrap'>expression&#xA0;hashing</span></a>
+Add an expression hashing entry to the <a href="wish_list.xml" target="_top"><span style='white-space: nowrap'>wish_list</span></a>
 
-to the wish list.
+(it has since been removed).
 Add Library and Scripting Languages to the wish list
 (this has since been fulfilled by the example <a href="ad_in_c.cpp.xml" target="_top"><span style='white-space: nowrap'>ad_in_c.cpp</span></a>
 ).
@@ -811,7 +810,7 @@ Add Library and Scripting Languages to the wish list
 <b><big><a name="01-26" id="01-26">01-26</a></big></b>
 <br/>
 The <a href="lufactor.xml" target="_top"><span style='white-space: nowrap'>LuFactor</span></a>
- routine gave a misleading error message 
+ routine gave a misleading error message
 when the input matrix had not a number or infinity in it.
 This has been fixed.
 
@@ -819,7 +818,7 @@ This has been fixed.
 <br/>
 <b><big><a name="01-24" id="01-24">01-24</a></big></b>
 <br/>
-The <a href="installunix.xml#postfix_dir" target="_top"><span style='white-space: nowrap'>postfix_dir</span></a>
+The <a href="auto_tools.xml#postfix_dir" target="_top"><span style='white-space: nowrap'>postfix_dir</span></a>
 
 has been added to the <code><font color="blue">configure</font></code> command line options.
 
@@ -836,7 +835,7 @@ A sparse Hessian case was added to the <a href="speed.xml" target="_top"><span s
 <br/>
 <b><big><a name="01-20" id="01-20">01-20</a></big></b>
 <br/>
-CppAD can now be installed using <code><font color="blue">yum</font></code> on 
+CppAD can now be installed using <code><font color="blue">yum</font></code> on
 <code><font color="blue">Fedora</font></code> operating systems.
 
 

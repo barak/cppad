@@ -6,7 +6,7 @@
 <title>ADFun Sequence Properties: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="ADFun Sequence Properties: Example and Test"/>
-<meta name="keywords" id="keywords" content=" adfun sequence properties: example and test Domain Adfun Range Parameter size_var size_par size_op size_op_arg size_vecad "/>
+<meta name="keywords" id="keywords" content=" adfun sequence properties: example and test Domain Range Parameter size_var size_par size_op_arg size_vecad "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -128,14 +128,14 @@ bool seq_property(void)
 	x[1]     = 1.;
 
 	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x); 
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 	nvar    += n;
 	nop     += n;
 
 	// a computation that adds to the operation sequence
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; I = 0;
-	v[I]         = x[0]; 
-	nvecad      +=   3;  // one for vector, two for its elements 
+	v[I]         = x[0];
+	nvecad      +=   3;  // one for vector, two for its elements
 	npar        +=   2;  // need parameters 0 and 1 for initial v
 	nop         +=   1;  // operator for storing in a VecAD object
 	narg        +=   3;  // the three arguments are v, I, and x[0]
@@ -145,7 +145,7 @@ bool seq_property(void)
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; w = x[1];  // use same variable as x[1]
 
 	// a computation that adds to the operation sequence
-	w      = w * (u + w); 
+	w      = w * (u + w);
 	nop   += 2;   // requires two new operators, an add and a multiply
 	nvar  += 2;   // each operator results in its own variable
 	narg  += 4;   // each operator has two arguments
@@ -155,7 +155,7 @@ bool seq_property(void)
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 
 	// operations that do not add to the operation sequence
-	y[0]   = 1.;  // re-use the parameter 1   
+	y[0]   = 1.;  // re-use the parameter 1
 	y[1]   = u;   // use same variable as u
 
 	// a computation that adds to the operation sequence
@@ -166,7 +166,7 @@ bool seq_property(void)
 	narg  += 2;   // operator has two arguments
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 	nop   += 1;   // special operator for y[0] becasue it is a parameter
 	nvar  += 1;   // special variable for y[0] because it is a parameter
 	narg  += 1;   // identifies which parameter corresponds to y[0]

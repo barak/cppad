@@ -17,16 +17,18 @@ var list_down3 = [
 'theory.xml',
 'glossary.xml',
 'bib.xml',
-'bugs.xml',
-'wishlist.xml',
+'wish_list.xml',
 'whats_new.xml',
 'deprecated.xml',
 'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
 'license.xml'
 ];
 var list_down2 = [
 'include_deprecated.xml',
 'fundeprecated.xml',
+'comparechange.xml',
 'omp_max_thread.xml',
 'tracknewdel.xml',
 'omp_alloc.xml',
@@ -34,7 +36,8 @@ var list_down2 = [
 'epsilon.xml',
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
-'old_atomic.xml'
+'old_atomic.xml',
+'zdouble.xml'
 ];
 var list_down1 = [
 'omp_max_num_threads.xml',
@@ -52,7 +55,7 @@ var list_down1 = [
 'omp_alloc.cpp.xml'
 ];
 var list_current0 = [
-'omp_in_parallel.xml#Deprecated',
+'omp_in_parallel.xml#Deprecated 2011-08-31',
 'omp_in_parallel.xml#Syntax',
 'omp_in_parallel.xml#Purpose',
 'omp_in_parallel.xml#flag',

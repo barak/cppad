@@ -1,4 +1,4 @@
-/* $Id: erf.cpp 3647 2015-02-15 01:06:13Z bradbell $ */
+/* $Id: erf.cpp 3685 2015-05-10 23:17:11Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
@@ -19,7 +19,7 @@ namespace {
 		using CppAD::atan;
 		using CppAD::exp;
 		using CppAD::sqrt;
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		double eps = 100.0 * std::numeric_limits<double>::epsilon();
 	# endif
 		// Construct function object corresponding to erf
@@ -50,7 +50,7 @@ namespace {
 		y1    = f.Forward(1, x1);
 		check = df.Forward(0, x0);
 		ok   &= NearEqual(check[0], y1[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok   &= NearEqual(check[0], y1[0], eps, eps);
 	# endif
 
@@ -60,7 +60,7 @@ namespace {
 		y2    = f.Forward(2, x2);
 		check = df.Forward(1, x1);
 		ok   &= NearEqual(check[0] / 2.0, y2[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok   &= NearEqual(check[0] / 2.0, y2[0], eps, eps);
 	# endif
 
@@ -70,7 +70,7 @@ namespace {
 		y3    = f.Forward(3, x3);
 		check = df.Forward(2, x2);
 		ok   &= NearEqual(check[0] / 3.0, y3[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok   &= NearEqual(check[0] / 3.0, y3[0], eps, eps);
 	# endif
 
@@ -82,27 +82,28 @@ namespace {
 		y4    = f.Forward(4, x4);
 		//
 		ok  &= NearEqual(dy[0], y1[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok  &= NearEqual(dy[0], y1[0], eps, eps);
 	# endif
 		//
 		ok  &= NearEqual(dy[1], 2.0 * y2[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok  &= NearEqual(dy[1], 2.0 * y2[0], eps, eps);
 	# endif
 		//
 		ok  &= NearEqual(dy[2], 3.0 * y3[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok  &= NearEqual(dy[2], 3.0 * y3[0], eps, eps);
 	# endif
 		//
 		ok  &= NearEqual(dy[3], 4.0 * y4[0], 0., 2e-3);
-	# if CPPAD_COMPILER_HAS_ERF
+	# if CPPAD_USE_CPLUSPLUS_2011
 		ok  &= NearEqual(dy[3], 4.0 * y4[0], eps, eps);
 	# endif
 
 		return ok;
 	}
+# if CPPAD_USE_CPLUSPLUS_2011
 	bool hessian(void)
 	{	bool ok = true;
 		double eps = 1.0 * std::numeric_limits<double>::epsilon();
@@ -145,11 +146,12 @@ namespace {
 		}
 		return ok;
 	}
+# endif
 }
-bool Erf(void)
+bool erf(void)
 {	bool ok = true;
 	ok     &= old_example();
-# if CPPAD_COMPILER_HAS_ERF
+# if CPPAD_USE_CPLUSPLUS_2011
 	ok     &= hessian();
 # endif
 	return ok;

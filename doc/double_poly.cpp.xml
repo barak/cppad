@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -116,11 +116,11 @@ extern bool
 	global_onetape, global_atomic, global_optimize;
 
 bool link_poly(
-	size_t                     size     , 
-	size_t                     repeat   , 
+	size_t                     size     ,
+	size_t                     repeat   ,
 	CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
 	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-	CppAD::vector&lt;double&gt;     &amp;p        )  // second derivative w.r.t z  
+	CppAD::vector&lt;double&gt;     &amp;p        )  // second derivative w.r.t z
 {
 	if(global_onetape||global_atomic||global_optimize)
 		return false;

@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -28,7 +28,7 @@ var list_down1 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_current0 = [
 'pkgconfig.xml#Purpose',

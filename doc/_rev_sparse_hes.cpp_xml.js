@@ -21,10 +21,13 @@ var list_down3 = [
 var list_down2 = [
 'forsparsejac.xml',
 'revsparsejac.xml',
-'revsparsehes.xml'
+'dependency.cpp.xml',
+'revsparsehes.xml',
+'bool_sparsity.cpp.xml'
 ];
 var list_down1 = [
-'rev_sparse_hes.cpp.xml'
+'rev_sparse_hes.cpp.xml',
+'sparsity_sub.cpp.xml'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

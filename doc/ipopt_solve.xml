@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="lu_ratio.cpp.xml" target="_top">Prev</a>
+<td><a href="to_string.cpp.xml" target="_top">Prev</a>
 </td><td><a href="ipopt_solve_get_started.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -50,7 +50,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -160,16 +160,16 @@ problems of the form
 </mtd></mtr></mtable>
 </mrow></math>
 
-This is done using 
+This is done using
 <a href="http://www.coin-or.org/projects/Ipopt.xml" target="_top"><span style='white-space: nowrap'>Ipopt</span></a>
 
-optimizer and CppAD for the derivative and sparsity calculations. 
+optimizer and CppAD for the derivative and sparsity calculations.
 
 <br/>
 <br/>
 <b><big><a name="Include File" id="Include File">Include File</a></big></b>
 <br/>
-Currently, this routine 
+Currently, this routine
 <a href="ipopt_solve.xml" target="_top"><span style='white-space: nowrap'>ipopt::solve</span></a>
  is not included by the command
 
@@ -178,7 +178,7 @@ Currently, this routine
 </span></font></code>
 (Doing so would require the ipopt library to link
 the corresponding program (even if <code><font color="blue">ipopt::solve</font></code>) was not used.)
-For this reason, 
+For this reason,
 if you are using <code><font color="blue">ipopt::solve</font></code> you should use
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -195,7 +195,7 @@ The type
  must be a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with
 <a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
- 
+
 <code><font color="blue">bool</font></code>.
 
 <br/>
@@ -207,7 +207,7 @@ The type
  must be a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with
 <a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
- 
+
 <code><font color="blue">double</font></code>.
 
 <br/>
@@ -222,7 +222,7 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;std::string&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>options</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 It contains a list of options.
-Each option, including the last option, 
+Each option, including the last option,
 is terminated by the <code><font color="blue">'\n'</font></code> character.
 Each line consists of two or three tokens separated by one or more spaces.
 
@@ -245,7 +245,7 @@ If the value is <code><font color="blue">false</font></code>, <code><font color=
 will tape the operation sequence at the value
 of 
 <code><i><font color="black"><span style='white-space: nowrap'>xi</span></font></i></code>
- and use that sequence for the entire optimization process.  
+ and use that sequence for the entire optimization process.
 The default value is <code><font color="blue">false</font></code>.
 
 <br/>
@@ -259,7 +259,7 @@ You can set the sparse Jacobian and Hessian flag with the following syntax:
 </span></font></code>
 If the value is <code><font color="blue">true</font></code>, <code><font color="blue">ipopt::solve</font></code> will use a sparse
 matrix representation for the computation of Jacobians and Hessians.
-Otherwise, it will use a full matrix representation for 
+Otherwise, it will use a full matrix representation for
 these calculations.
 The default for 
 <code><i><font color="black"><span style='white-space: nowrap'>value</span></font></i></code>
@@ -270,18 +270,18 @@ If sparse is true, retape must be false.
 </span></code>It is unclear if <a href="sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
  would be faster user
 forward or reverse mode so you are able to choose the direction.
-If  
+If
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>value</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;true&#xA0;&amp;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>direction</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;forward<br/>
 </span></font></code>
-the Jacobians will be calculated using <code><font color="blue">SparseJacobianForward</font></code>. 
-If 
+the Jacobians will be calculated using <code><font color="blue">SparseJacobianForward</font></code>.
+If
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>value</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;true&#xA0;&amp;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>direction</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;reverse<br/>
 </span></font></code>
-the Jacobians will be calculated using <code><font color="blue">SparseJacobianReverse</font></code>. 
+the Jacobians will be calculated using <code><font color="blue">SparseJacobianReverse</font></code>.
 
 <br/>
 <br/>
@@ -294,7 +294,7 @@ You can set any Ipopt string option using a line with the following syntax:
 </span></font></code>
 Here 
 <code><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
- is any valid Ipopt string option 
+ is any valid Ipopt string option
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>value</span></font></i></code>
  is its setting.
@@ -310,7 +310,7 @@ You can set any Ipopt numeric option using a line with the following syntax:
 </span></font></code>
 Here 
 <code><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
- is any valid Ipopt numeric option 
+ is any valid Ipopt numeric option
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>value</span></font></i></code>
  is its setting.
@@ -326,7 +326,7 @@ You can set any Ipopt integer option using a line with the following syntax:
 </span></font></code>
 Here 
 <code><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
- is any valid Ipopt integer option 
+ is any valid Ipopt integer option
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>value</span></font></i></code>
  is its setting.
@@ -449,7 +449,7 @@ The type
  must be a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with
 <a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
- 
+
 <code><font color="blue">AD&lt;double&gt;</font></code>.
 
 <br/>
@@ -562,7 +562,7 @@ The
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ipopt::solve_result&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Dvector</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::status_type&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>solution</span></font></i><font color="blue"><span style='white-space: nowrap'>.status<br/>
 </span></font></code>
-It is the final Ipopt status for the optimizer. 
+It is the final Ipopt status for the optimizer.
 Here is a list of the possible values for the status:
 
 <table><tr><td align='left'  valign='top'>
@@ -586,7 +586,7 @@ documentation for <code><font color="blue">finalize_solution</font></code>.
 
 success </td><td align='left'  valign='top'>
 
-Algorithm terminated successfully at a point satisfying the convergence 
+Algorithm terminated successfully at a point satisfying the convergence
 tolerances (see Ipopt options).
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -602,8 +602,8 @@ Algorithm terminated because progress was very slow.
 
 stop_at_acceptable_point </td><td align='left'  valign='top'>
 
-Algorithm stopped at a point that was converged, 
-not to the 'desired' tolerances, but to 'acceptable' tolerances 
+Algorithm stopped at a point that was converged,
+not to the 'desired' tolerances, but to 'acceptable' tolerances
 (see Ipopt options).
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -630,13 +630,13 @@ Restoration phase failed, algorithm doesn't know how to proceed.
 
 error_in_step_computation </td><td align='left'  valign='top'>
 
-An unrecoverable error occurred while Ipopt tried to 
+An unrecoverable error occurred while Ipopt tried to
 compute the search direction.
 </td></tr><tr><td align='left'  valign='top'>
 
 invalid_number_detected </td><td align='left'  valign='top'>
 
-Algorithm received an invalid number (such as <code><font color="blue">nan</font></code> or <code><font color="blue">inf</font></code>) 
+Algorithm received an invalid number (such as <code><font color="blue">nan</font></code> or <code><font color="blue">inf</font></code>)
 from the users function 
 <code><i><font color="black"><span style='white-space: nowrap'>fg_info</span></font></i><font color="blue"><span style='white-space: nowrap'>.eval</span></font></code>
  or from the CppAD evaluations
@@ -684,7 +684,7 @@ The <code><font color="blue">zl</font></code> field of
 and its size is equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>nx</span></font></i></code>
 .
-It is the final Lagrange multipliers for the 
+It is the final Lagrange multipliers for the
 lower bounds on 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -706,7 +706,7 @@ The <code><font color="blue">zu</font></code> field of
 and its size is equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>nx</span></font></i></code>
 .
-It is the final Lagrange multipliers for the 
+It is the final Lagrange multipliers for the
 upper bounds on 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -752,7 +752,7 @@ The <code><font color="blue">lambda</font></code> field of
 and its size is equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>ng</span></font></i></code>
 .
-It is the final value for the 
+It is the final value for the
 Lagrange multipliers corresponding to the constraint function.
 
 <br/>
@@ -812,7 +812,7 @@ The file
 <a href="ipopt_solve_ode_inverse.cpp.xml" target="_top"><span style='white-space: nowrap'>example/ipopt_solve/ode_inverse.cpp</span></a>
 
 demonstrates using Ipopt to solve for parameters in an ODE model.
-	
+
 
 <hr/>Input File: cppad/ipopt/solve.hpp
 

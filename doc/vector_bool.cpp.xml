@@ -6,7 +6,7 @@
 <title>CppAD::vectorBool Class: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD::vectorBool Class: Example and Test"/>
-<meta name="keywords" id="keywords" content=" cppad::vectorbool class: example and test bool Cppad::vector vectorbool Cppad Cppad::vectorbool "/>
+<meta name="keywords" id="keywords" content=" cppad::vectorbool class: example and test bool vectorbool Cppad "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>CppAD_vector</option>
 <option>vector_bool.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -106,8 +104,8 @@ A:active { color : purple }
 <center><b><big><big>CppAD::vectorBool Class: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
-# include &lt;cppad/vector.hpp&gt;
-# include &lt;cppad/check_simple_vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
+# include &lt;cppad/utility/check_simple_vector.hpp&gt;
 # include &lt;sstream&gt; // sstream and string are used to test output operation
 # include &lt;string&gt;
 
@@ -115,7 +113,7 @@ bool vectorBool(void)
 {	bool ok = true;
 	using CppAD::vectorBool;
 
-	vectorBool x;          // default constructor 
+	vectorBool x;          // default constructor
 	ok &amp;= (x.size() == 0);
 
 	x.resize(2);             // resize and set element assignment to bool
@@ -133,7 +131,13 @@ bool vectorBool(void)
 	x[0] = true;           // modify, assignment changes x
 	ok &amp;= (x[0] == true);
 
-	x = y = z;              // vector assignment
+	// resize x to zero and check that vector assignment works for both
+	// size zero and mathching sizes
+	x.resize(0);
+	ok &amp;= (x.size() == 0);
+	ok &amp;= (y.size() == z.size());
+	//
+	x = y = z;
 	ok &amp;= ( (x[0] == false) &amp;&amp; (x[1] == true) );
 	ok &amp;= ( (y[0] == false) &amp;&amp; (y[1] == true) );
 	ok &amp;= ( (z[0] == false) &amp;&amp; (z[1] == true) );

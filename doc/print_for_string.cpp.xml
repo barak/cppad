@@ -61,6 +61,7 @@ A:active { color : purple }
 <option>Convert-&gt;</option>
 <option>Value</option>
 <option>Integer</option>
+<option>ad_to_string</option>
 <option>ad_input</option>
 <option>ad_output</option>
 <option>PrintFor</option>
@@ -84,7 +85,7 @@ A:active { color : purple }
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { 
+namespace {
 	using std::endl;
 	using CppAD::AD;
 
@@ -98,7 +99,7 @@ namespace {
 		PrintFor(y, &quot;check_log: y == &quot;, y , &quot; which is &lt;= 0\n&quot;);
 
 		return log(y);
-	} 
+	}
 }
 
 bool print_for(void)
@@ -117,18 +118,18 @@ bool print_for(void)
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; log_var = check_log(var, stream_out);
 	ok &amp;= stream_out.str() == &quot;&quot;;
 
-	// dependent variable vector 
+	// dependent variable vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
 	ay[0]    = log_var;
 
 	// define f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 
-	// zero order forward with x[0] = 2 
+	// zero order forward with x[0] = 2
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
 	x[0] = 2.;
-	f.<a href="forward.xml" target="_top">Forward</a>(0, x, stream_out);	
+	f.<a href="forward.xml" target="_top">Forward</a>(0, x, stream_out);
 
 	std::string string_out = stream_out.str();
 	ok &amp;= stream_out.str() == &quot;check_log: y == 0 which is &lt;= 0\n&quot;;

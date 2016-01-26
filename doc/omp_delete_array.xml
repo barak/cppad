@@ -6,7 +6,7 @@
 <title>Return A Raw Array to The Available Memory for a Thread</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Return A Raw Array to The Available Memory for a Thread"/>
-<meta name="keywords" id="keywords" content=" return a raw array to the available memory for thread deprecated delete_array omp_alloc syntax purpose type delta example "/>
+<meta name="keywords" id="keywords" content=" return a raw array to the available memory for thread delete_array deprecated 2011-08-31 syntax purpose type delta example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -96,7 +99,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Deprecated</option>
+<option>Deprecated 2011-08-31</option>
 <option>Syntax</option>
 <option>Purpose</option>
 <option>Type</option>
@@ -112,9 +115,7 @@ A:active { color : purple }
 
 <center><b><big><big>Return A Raw Array to The Available Memory for a Thread</big></big></b></center>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
-
-
+<b><big><a name="Deprecated 2011-08-31" id="Deprecated 2011-08-31">Deprecated 2011-08-31</a></big></b>
 <br/>
 Use the function <a href="ta_delete_array.xml" target="_top"><span style='white-space: nowrap'>thread_alloc::delete_array</span></a>
  instead.
@@ -125,6 +126,9 @@ Use the function <a href="ta_delete_array.xml" target="_top"><span style='white-
 
 <br/>
 
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/omp_alloc.hpp&gt;<br/>
+</span></font></code>
+
 <code><font color="blue"><span style='white-space: nowrap'>omp_alloc::delete_array(</span></font><i><font color="black"><span style='white-space: nowrap'>array</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 .
 
@@ -132,9 +136,9 @@ Use the function <a href="ta_delete_array.xml" target="_top"><span style='white-
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Returns memory corresponding to a raw array 
+Returns memory corresponding to a raw array
 (create by <a href="omp_create_array.xml" target="_top"><span style='white-space: nowrap'>omp_create_array</span></a>
-) to the 
+) to the
 <a href="omp_available.xml" target="_top"><span style='white-space: nowrap'>omp_available</span></a>
  memory pool for the current thread.
 
@@ -189,7 +193,7 @@ and the <a href="omp_available.xml" target="_top"><span style='white-space: nowr
 <code><i><font color="black"><span style='white-space: nowrap'>delta</span></font></i></code>
 ,
 where <a href="omp_create_array.xml#Delta" target="_top"><span style='white-space: nowrap'>delta</span></a>
- 
+
 is the same as for the corresponding call to <code><font color="blue">create_array</font></code>.
 
 <br/>
@@ -201,7 +205,7 @@ is the same as for the corresponding call to <code><font color="blue">create_arr
 
 
 
-<hr/>Input File: cppad/omp_alloc.hpp
+<hr/>Input File: cppad/utility/omp_alloc.hpp
 
 </body>
 </html>

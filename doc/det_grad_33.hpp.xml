@@ -84,17 +84,20 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: det_grad_33</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_DET_GRAD_33_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_DET_GRAD_33_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_DET_GRAD_33_INCLUDED
+</span></code># define CPPAD_DET_GRAD_33_HPP
 
 <pre style='display:inline'> 
-# include &lt;cppad/near_equal.hpp&gt;
+# include &lt;limits&gt;
+# include &lt;cppad/utility/near_equal.hpp&gt;
 namespace CppAD {
 template &lt;class Vector&gt;
 	bool det_grad_33(const Vector &amp;x, const Vector &amp;g)
 	{	bool ok = true;
-	
+		typedef typename Vector::value_type Float;
+		Float eps = 10. * Float( std::numeric_limits&lt;double&gt;::epsilon() );
+
 		// use expansion by minors to compute the derivative by hand
 		double check[9];
 		check[0] = + ( x[4] * x[8] - x[5] * x[7] );
@@ -107,12 +110,11 @@ template &lt;class Vector&gt;
 		//
 		check[6] = + ( x[1] * x[5] - x[2] * x[4] );
 		check[7] = - ( x[0] * x[5] - x[2] * x[3] );
-		check[8] = + ( x[0] * x[4] - x[1] * x[3] ); 
+		check[8] = + ( x[0] * x[4] - x[1] * x[3] );
 		//
-		size_t i;
-		for(i = 0; i &lt; 3 * 3; i++)
-			ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check[i], g[i], 1e-10, 1e-10);
-		
+		for(size_t i = 0; i &lt; 3 * 3; i++)
+			ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check[i], g[i], eps, eps);
+
 		return ok;
 	}
 }

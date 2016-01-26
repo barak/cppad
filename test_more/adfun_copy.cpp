@@ -1,4 +1,4 @@
-/* $Id: adfun_copy.cpp 3526 2014-12-29 21:56:45Z bradbell $ */
+/* $Id: adfun_copy.cpp 3519 2014-12-28 16:22:57Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-10 Bradley M. Bell
 

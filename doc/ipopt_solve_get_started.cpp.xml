@@ -6,7 +6,7 @@
 <title>Nonlinear Programming Using CppAD and Ipopt: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Nonlinear Programming Using CppAD and Ipopt: Example and Test"/>
-<meta name="keywords" id="keywords" content=" example nonlinear programming ipopt Ad using cppad and ipopt: test purpose configuration requirement "/>
+<meta name="keywords" id="keywords" content=" nonlinear programming using cppad and ipopt: example test ipopt Ad purpose configuration requirement "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -75,9 +75,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 
 
 
@@ -213,7 +210,7 @@ namespace {
 		{	assert( fg.size() == 3 );
 			assert( x.size()  == 4 );
 
-			// Fortran style indexing 
+			// Fortran style indexing
 			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x1 = x[0];
 			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x2 = x[1];
 			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x3 = x[2];
@@ -229,14 +226,14 @@ namespace {
 		}
 	};
 }
-	
+
 bool get_started(void)
 {	bool ok = true;
 	size_t i;
 	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) Dvector;
 
 	// number of independent variables (domain dimension for f and g)
-	size_t nx = 4;  
+	size_t nx = 4;
 	// number of constraints (range dimension for g)
 	size_t ng = 2;
 	// initial value of the independent variables
@@ -254,25 +251,25 @@ bool get_started(void)
 	// lower and upper limits for g
 	Dvector gl(ng), gu(ng);
 	gl[0] = 25.0;     gu[0] = 1.0e19;
-  	gl[1] = 40.0;     gu[1] = 40.0;
+	gl[1] = 40.0;     gu[1] = 40.0;
 
 	// object that computes objective and constraints
 	FG_eval fg_eval;
 
-	// options 
+	// options
 	std::string options;
 	// turn off any printing
-	options += &quot;Integer print_level  0\n&quot;; 
+	options += &quot;Integer print_level  0\n&quot;;
 	options += &quot;String  sb           yes\n&quot;;
 	// maximum number of iterations
 	options += &quot;Integer max_iter     10\n&quot;;
 	// approximate accuracy in first order necessary conditions;
-	// see Mathematical Programming, Volume 106, Number 1, 
+	// see Mathematical Programming, Volume 106, Number 1,
 	// Pages 25-57, Equation (6)
 	options += &quot;Numeric tol          1e-6\n&quot;;
 	// derivative testing
 	options += &quot;String  derivative_test            second-order\n&quot;;
-	// maximum amount of random pertubation; e.g., 
+	// maximum amount of random pertubation; e.g.,
 	// when evaluation finite diff
 	options += &quot;Numeric point_perturbation_radius  0.\n&quot;;
 
@@ -284,8 +281,8 @@ bool get_started(void)
 		options, xi, xl, xu, gl, gu, fg_eval, solution
 	);
 	//
- 	// Check some of the solution values
- 	//
+	// Check some of the solution values
+	//
 	ok &amp;= solution.status == CppAD::ipopt::solve_result&lt;Dvector&gt;::success;
 	//
 	double check_x[]  = { 1.000000, 4.743000, 3.82115, 1.379408 };

@@ -84,17 +84,17 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: det_33</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_DET_33_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_DET_33_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_DET_33_INCLUDED
+</span></code># define CPPAD_DET_33_HPP
 
 <pre style='display:inline'> 
-# include &lt;cppad/near_equal.hpp&gt;
+# include &lt;cppad/utility/near_equal.hpp&gt;
 namespace CppAD {
 template &lt;class Vector&gt;
 	bool det_33(const Vector &amp;x, const Vector &amp;d)
 	{	bool ok = true;
-	
+
 		// use expansion by minors to compute the determinant by hand
 		double check = 0.;
 		check += x[0] * ( x[4] * x[8] - x[5] * x[7] );
@@ -102,7 +102,7 @@ template &lt;class Vector&gt;
 		check += x[2] * ( x[3] * x[7] - x[4] * x[6] );
 
 		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check, d[0], 1e-10, 1e-10);
-		
+
 		return ok;
 	}
 }

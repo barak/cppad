@@ -1,9 +1,9 @@
-/* $Id: solve.cpp 2859 2013-05-28 06:03:21Z bradbell $ */
+/* $Id: solve.cpp 3746 2015-11-09 04:50:27Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -51,11 +51,13 @@ namespace {
 int main(void)
 {	bool ok = true;
 
+	// This line is used by test_one.sh
+
 	// external compiled tests
 	ok &= Run( get_started,         "get_started"  );
 	ok &= Run( ode_inverse,         "ode_inverse"  );
 	ok &= Run( retape,              "retape"       );
-	
+
 	// check for errors
 	using std::cout;
 	using std::endl;

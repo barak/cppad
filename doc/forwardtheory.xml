@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="theory.xml" target="_top">Prev</a>
-</td><td><a href="expforward.xml" target="_top">Next</a>
+</td><td><a href="exp_forward.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,11 +66,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -85,13 +86,13 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down0(this)'>
 <option>ForwardTheory-&gt;</option>
-<option>ExpForward</option>
-<option>LogForward</option>
-<option>SqrtForward</option>
-<option>SinCosForward</option>
-<option>AtanForward</option>
-<option>AsinForward</option>
-<option>AcosForward</option>
+<option>exp_forward</option>
+<option>log_forward</option>
+<option>sqrt_forward</option>
+<option>sin_cos_forward</option>
+<option>atan_forward</option>
+<option>asin_forward</option>
+<option>acos_forward</option>
 <option>tan_forward</option>
 <option>erf_forward</option>
 </select>
@@ -117,11 +118,11 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Taylor Notation" id="Taylor Notation">Taylor Notation</a></big></b>
 <br/>
-In Taylor notation, each variable corresponds to 
+In Taylor notation, each variable corresponds to
 a function of a single argument which we denote by 
 <code><i><font color="black"><span style='white-space: nowrap'>t</span></font></i></code>
 
-(see Section 10.2 of 
+(see Section 10.2 of
 <a href="bib.xml#Evaluating Derivatives" target="_top"><span style='white-space: nowrap'>Evaluating&#xA0;Derivatives</span></a>
 ).
 Here and below
@@ -143,7 +144,7 @@ Here and below
 
 , and 
 <code><i><font color="black"><span style='white-space: nowrap'>Z(t)</span></font></i></code>
- are scalar valued functions 
+ are scalar valued functions
 and the corresponding <code><i>p</i></code>-th order Taylor coefficients row vectors are
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -919,7 +920,7 @@ We use
 <mi mathvariant='italic'>d</mi>
 </mrow></math>
 
- to denote the 
+ to denote the
 <code><i>p</i></code>-th order Taylor coefficient row vectors for
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -961,7 +962,7 @@ We assume that these coefficients are known functions of
 <mi mathvariant='italic'>x</mi>
 </mrow></math>
 
-, 
+,
 the <code><i>p</i></code>-th order Taylor coefficients for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -981,7 +982,7 @@ Our problem here is to express
 <mi mathvariant='italic'>z</mi>
 </mrow></math>
 
-, 
+,
 the <code><i>p</i></code>-th order Taylor coefficient row vector for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>Z</mi>
@@ -1187,7 +1188,7 @@ Suppose by induction (on
 <mi mathvariant='italic'>j</mi>
 </mrow></math>
 
-) that we are given the 
+) that we are given the
 Taylor coefficients of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>E</mi>
@@ -1226,7 +1227,7 @@ Taylor coefficients of
 </mrow></math>
 
 
-and the coefficients 
+and the coefficients
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>z</mi>
@@ -1259,7 +1260,7 @@ We can compute
 </msup>
 </mrow></math>
 
- using the formula 
+ using the formula
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <msup><mi mathvariant='italic'>e</mi>
@@ -1312,10 +1313,10 @@ We need to complete the induction by finding formulas for
 </msup>
 </mrow></math>
 
-. 
-It follows for the formula for the 
+.
+It follows for the formula for the
 <a href="forwardtheory.xml#Binary Operators.Multiplication" target="_top"><span style='white-space: nowrap'>multiplication</span></a>
- 
+
 operator that
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -1627,32 +1628,32 @@ and
 
 <table><tr><td align='left'  valign='top'>
 
-<a href="expforward.xml" target="_top">ExpForward</a></td><td>
-Exponential Function Forward Taylor Polynomial Theory</td></tr>
+<a href="exp_forward.xml" target="_top">exp_forward</a></td><td>
+Exponential Function Forward Mode Theory</td></tr>
 <tr><td>
 
-<a href="logforward.xml" target="_top">LogForward</a></td><td>
-Logarithm Function Forward Taylor Polynomial Theory</td></tr>
+<a href="log_forward.xml" target="_top">log_forward</a></td><td>
+Logarithm Function Forward Mode Theory</td></tr>
 <tr><td>
 
-<a href="sqrtforward.xml" target="_top">SqrtForward</a></td><td>
-Square Root Function Forward Taylor Polynomial Theory</td></tr>
+<a href="sqrt_forward.xml" target="_top">sqrt_forward</a></td><td>
+Square Root Function Forward Mode Theory</td></tr>
 <tr><td>
 
-<a href="sincosforward.xml" target="_top">SinCosForward</a></td><td>
+<a href="sin_cos_forward.xml" target="_top">sin_cos_forward</a></td><td>
 Trigonometric and Hyperbolic Sine and Cosine Forward Theory</td></tr>
 <tr><td>
 
-<a href="atanforward.xml" target="_top">AtanForward</a></td><td>
-Arctangent Function Forward Taylor Polynomial Theory</td></tr>
+<a href="atan_forward.xml" target="_top">atan_forward</a></td><td>
+Inverse Tangent and Hyperbolic Tangent Forward Mode Theory</td></tr>
 <tr><td>
 
-<a href="asinforward.xml" target="_top">AsinForward</a></td><td>
-Arcsine Function Forward Taylor Polynomial Theory</td></tr>
+<a href="asin_forward.xml" target="_top">asin_forward</a></td><td>
+Inverse Sine and Hyperbolic Sine Forward Mode Theory</td></tr>
 <tr><td>
 
-<a href="acosforward.xml" target="_top">AcosForward</a></td><td>
-Arccosine Function Forward Taylor Polynomial Theory</td></tr>
+<a href="acos_forward.xml" target="_top">acos_forward</a></td><td>
+Inverse Cosine and Hyperbolic Cosine Forward Mode Theory</td></tr>
 <tr><td>
 
 </td></tr>

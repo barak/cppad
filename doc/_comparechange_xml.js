@@ -7,50 +7,57 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'adfun.xml',
-'funeval.xml',
-'forward.xml',
+'appendix.xml',
+'deprecated.xml',
 'comparechange.xml'
 ];
 var list_down3 = [
-'independent.xml',
-'funconstruct.xml',
-'dependent.xml',
-'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
-'drivers.xml',
-'funcheck.xml',
-'optimize.xml',
-'check_for_nan.xml'
+'install.xml',
+'introduction.xml',
+'ad.xml',
+'adfun.xml',
+'preprocessor.xml',
+'multi_thread.xml',
+'utility.xml',
+'ipopt_solve.xml',
+'example.xml',
+'speed.xml',
+'appendix.xml'
 ];
 var list_down2 = [
-'forward.xml',
-'reverse.xml',
-'sparse.xml'
+'faq.xml',
+'theory.xml',
+'glossary.xml',
+'bib.xml',
+'wish_list.xml',
+'whats_new.xml',
+'deprecated.xml',
+'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
+'license.xml'
 ];
 var list_down1 = [
-'forward_zero.xml',
-'forward_one.xml',
-'forward_two.xml',
-'forward_order.xml',
-'forward_dir.xml',
-'size_order.xml',
+'include_deprecated.xml',
+'fundeprecated.xml',
 'comparechange.xml',
-'capacity_order.xml',
-'number_skip.xml'
-];
-var list_down0 = [
-'compare_change.cpp.xml'
+'omp_max_thread.xml',
+'tracknewdel.xml',
+'omp_alloc.xml',
+'memory_leak.xml',
+'epsilon.xml',
+'test_vector.xml',
+'cppad_ipopt_nlp.xml',
+'old_atomic.xml',
+'zdouble.xml'
 ];
 var list_current0 = [
 'comparechange.xml#Syntax',
+'comparechange.xml#Deprecated 2015-01-20',
 'comparechange.xml#Purpose',
 'comparechange.xml#f',
 'comparechange.xml#c',
-'comparechange.xml#Discussion',
-'comparechange.xml#Restrictions',
-'comparechange.xml#Example'
+'comparechange.xml#Discussion'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

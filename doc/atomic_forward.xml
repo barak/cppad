@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -136,7 +138,7 @@ This virtual function must be defined by the
  class.
 It can just return 
 <code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;false</span></font></code>
- 
+
 (and not compute anything) for values
 of 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;&#xA0;0</span></font></code>
@@ -155,7 +157,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the lowest order Taylor coefficient that we are evaluating. 
+It specifies the lowest order Taylor coefficient that we are evaluating.
 During calls to <a href="atomic_afun.xml" target="_top"><span style='white-space: nowrap'>atomic_afun</span></a>
 , 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;0</span></font></code>
@@ -172,7 +174,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the highest order Taylor coefficient that we are evaluating. 
+It specifies the highest order Taylor coefficient that we are evaluating.
 During calls to <a href="atomic_afun.xml" target="_top"><span style='white-space: nowrap'>atomic_afun</span></a>
 , 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;0</span></font></code>
@@ -191,13 +193,13 @@ The <code><font color="blue">forward</font></code> argument
 </span></font></code>
 The case 
 <code><i><font color="black"><span style='white-space: nowrap'>vx</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;&gt;&#xA0;0</span></font></code>
- only occurs while evaluating a call to 
+ only occurs while evaluating a call to
 <a href="atomic_afun.xml" target="_top"><span style='white-space: nowrap'>atomic_afun</span></a>
 .
 In this case,
 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;0</span></font></code>
-, 
+,
 
 <code><i><font color="black"><span style='white-space: nowrap'>vx</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 , and
@@ -220,15 +222,15 @@ for
 
 <code><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
  is a <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variable</span></a>
- 
-in the corresponding call to 
+
+in the corresponding call to
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>id</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>vx</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;0</span></font></code>
-, 
+,
 then 
 <code><i><font color="black"><span style='white-space: nowrap'>vy</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;0</span></font></code>
  and neither of these vectors
@@ -248,7 +250,7 @@ The <code><font color="blue">forward</font></code> argument
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>vy</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;0</span></font></code>
 , it should not be used.
-Otherwise, 
+Otherwise,
 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;0</span></font></code>
  and 
@@ -256,7 +258,7 @@ Otherwise,
 .
 The input values of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>vy</span></font></i></code>
- 
+
 are not specified (must not matter).
 Upon return, for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -663,7 +665,7 @@ If
 <mn>0</mn>
 </mrow></math>
 
-, 
+,
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>i</mi>
@@ -1016,7 +1018,7 @@ For
 <mn>2</mn>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>ty</mi>
@@ -1074,7 +1076,7 @@ The following are links to user atomic function forward uses:
 <a href="atomic_mat_mul.cpp.xml#Use Atomic Function.forward" target="_top"><span style='white-space: nowrap'>mat_mul.cpp</span></a>
 .
 
- 
+
 
 <hr/>Input File: cppad/local/atomic_base.hpp
 

@@ -7,7 +7,7 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'library.xml',
+'utility.xml',
 'ludetandsolve.xml',
 'luinvert.xml',
 'lu_invert.cpp.xml'
@@ -36,9 +36,7 @@ var list_down3 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'benderquad.xml',
-'opt_val_hes.xml',
-'luratio.xml'
+'to_string.xml'
 ];
 var list_down2 = [
 'lusolve.xml',

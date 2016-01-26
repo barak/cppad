@@ -1,9 +1,9 @@
-/* $Id: a11c_openmp.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: a11c_openmp.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -16,12 +16,9 @@ $spell
 	CppAD
 	const
 $$
-$index OpenMP, example A.1.1c$$
-$index example, OpenMP A.1.1c$$
-$index A.1.1c, OpenMP example$$
-$index thread, OpenMP example$$
 
 $section A Simple OpenMP Example and Test$$
+$mindex A.1.1c thread$$
 
 $head Purpose$$
 This example just demonstrates OpenMP and does not use CppAD at all.
@@ -47,7 +44,7 @@ namespace {
 	# pragma omp parallel for
 		for(i = 1; i < n; i++) /* i is private by default */
 		{	assert( omp_get_num_threads() == NUMBER_THREADS );
-			b[i] = (a[i] + a[i-1]) / 2.0;
+			b[i] = (a[i] + a[i-1]) / float(2);
 		}
 	}
 	// End of Example A.1.1.1c of OpenMP 2.5 standard document ---------------
@@ -64,14 +61,14 @@ bool a11c(void)
 
 	int n_thread = NUMBER_THREADS;   // number of threads in parallel regions
 	omp_set_dynamic(0);              // off dynamic thread adjust
-	omp_set_num_threads(n_thread);   // set the number of threads 
+	omp_set_num_threads(n_thread);   // set the number of threads
 
 	a1(n, a, b);
 
 	// check the result
-	float eps = 100. * std::numeric_limits<float>::epsilon();
+	float eps = float(100) * std::numeric_limits<float>::epsilon();
 	for(i = 1; i < n ; i++)
-		ok &= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) <= eps; 
+		ok &= std::fabs( (float(2) * b[i] - a[i] - a[i-1]) / b[i] ) <= eps;
 
 	delete [] a;
 	delete [] b;

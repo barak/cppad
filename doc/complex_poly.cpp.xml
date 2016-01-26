@@ -53,6 +53,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -103,11 +105,11 @@ bool complex_poly(void)
 
 	using CppAD::AD;
 	using CppAD::Poly;
-	typedef std::complex&lt;double&gt; Complex; 
+	typedef std::complex&lt;double&gt; Complex;
 
 	// polynomial coefficients
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( Complex )     a   (deg + 1); // coefficients for p(z)
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;) A   (deg + 1); 
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;) A   (deg + 1);
 	size_t i;
 	for(i = 0; i &lt;= deg; i++)
 		A[i] = a[i] = Complex(i, i);
@@ -115,7 +117,7 @@ bool complex_poly(void)
 	// independent variable vector
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;) Z(1);
 	Complex z = Complex(1., 2.);
- 	Z[0]      = z;
+	Z[0]      = z;
 	<a href="independent.xml" target="_top">Independent</a>(Z);
 
 	// dependent variable vector and indices

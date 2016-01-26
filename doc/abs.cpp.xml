@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="abs.xml" target="_top">Prev</a>
-</td><td><a href="sign.xml" target="_top">Next</a>
+</td><td><a href="acosh.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
 <option>abs</option>
 <option>abs.cpp</option>
 </select>
@@ -49,22 +49,38 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>MathOther-&gt;</option>
+<option>unary_standard_math-&gt;</option>
+<option>acos</option>
+<option>asin</option>
+<option>atan</option>
+<option>cos</option>
+<option>cosh</option>
+<option>exp</option>
+<option>log</option>
+<option>log10</option>
+<option>sin</option>
+<option>sinh</option>
+<option>sqrt</option>
+<option>tan</option>
+<option>tanh</option>
 <option>abs</option>
-<option>sign</option>
-<option>atan2</option>
+<option>acosh</option>
+<option>asinh</option>
+<option>atanh</option>
 <option>erf</option>
-<option>pow</option>
-<option>limits</option>
+<option>expm1</option>
+<option>log1p</option>
+<option>sign</option>
 </select>
 </td>
 <td>
@@ -76,6 +92,9 @@ A:active { color : purple }
 <td>abs.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
+
+
+
 <center><b><big><big>AD Absolute Value Function: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
@@ -142,19 +161,19 @@ bool abs(void)
 	ok  &amp;= (dy[4] ==   0.   ); // used to be (dy[1] == - dx[0]);
 	ok  &amp;= (dy[5] == + dx[0]);
 
-	// reverse computation of derivative of y[0] 
+	// reverse computation of derivative of y[0]
 	p    = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m), dw(n);
 	w[0] = 1.; w[1] = 0.; w[2] = 0.; w[3] = 0.; w[4] = 0.; w[5] = 0.;
 	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
 	ok  &amp;= (dw[0] == -1.);
 
-	// reverse computation of derivative of y[1] 
+	// reverse computation of derivative of y[1]
 	w[0] = 0.; w[1] = 1.;
 	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
 	ok  &amp;= (dw[0] == 0.);
 
-	// reverse computation of derivative of y[5] 
+	// reverse computation of derivative of y[5]
 	w[1] = 0.; w[5] = 1.;
 	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
 	ok  &amp;= (dw[0] == 1.);

@@ -6,7 +6,7 @@
 <title>Printing AD Values During Forward Mode</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Printing AD Values During Forward Mode"/>
-<meta name="keywords" id="keywords" content=" print forward mode text output debug printing ad values during syntax purpose f.forward(0 x) pos before var after discussion alternative example "/>
+<meta name="keywords" id="keywords" content=" printing ad values during forward mode print text output debug syntax purpose f.forward(0 x) pos before var after discussion alternative example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -76,6 +76,7 @@ A:active { color : purple }
 <option>Convert-&gt;</option>
 <option>Value</option>
 <option>Integer</option>
+<option>ad_to_string</option>
 <option>ad_input</option>
 <option>ad_output</option>
 <option>PrintFor</option>
@@ -109,12 +110,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
-
 <center><b><big><big>Printing AD Values During Forward Mode</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -138,13 +133,13 @@ The <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>z
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Forward(0,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-assigns the 
+assigns the
 <a href="glossary.xml#Tape.Independent Variable" target="_top"><span style='white-space: nowrap'>independent&#xA0;variable</span></a>
  vector
 equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 .
-It then computes a value for all of the dependent variables in the 
+It then computes a value for all of the dependent variables in the
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
  corresponding
 to 
@@ -203,7 +198,7 @@ The argument
 </span></font></code>
 This text is written to <code><font color="blue">std::cout</font></code> before 
 <code><i><font color="black"><span style='white-space: nowrap'>var</span></font></i></code>
-. 
+.
 
 <br/>
 <br/>
@@ -222,7 +217,7 @@ The value of
 , that corresponds to 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 ,
-is written to <code><font color="blue">std::cout</font></code> during the execution of 
+is written to <code><font color="blue">std::cout</font></code> during the execution of
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Forward(0,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -231,10 +226,10 @@ Note that
 <code><i><font color="black"><span style='white-space: nowrap'>var</span></font></i></code>
  may be a
 <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variable</span></a>
- or 
+ or
 <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
 .
-(A parameters value does not depend on the value of 
+(A parameters value does not depend on the value of
 the independent variable vector 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 .)
@@ -252,8 +247,8 @@ The argument
 </span></font></code>
 This text is written to <code><font color="blue">std::cout</font></code> after 
 <code><i><font color="black"><span style='white-space: nowrap'>var</span></font></i></code>
-. 
-	
+.
+
 <br/>
 <br/>
 <b><big><a name="Discussion" id="Discussion">Discussion</a></big></b>
@@ -276,7 +271,7 @@ the corresponding result will be <a href="nan.xml" target="_top"><span style='wh
 <b><big><a name="Alternative" id="Alternative">Alternative</a></big></b>
 <br/>
 The <a href="ad_output.xml" target="_top"><span style='white-space: nowrap'>ad_output</span></a>
- section describes the normal 
+ section describes the normal
 printing of values; i.e., printing when the corresponding
 code is executed.
 

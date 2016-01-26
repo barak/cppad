@@ -6,7 +6,7 @@
 <title>Reverse Mode Hessian Sparsity: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Reverse Mode Hessian Sparsity: Example and Test"/>
-<meta name="keywords" id="keywords" content=" reverse mode hessian sparsity: example and test Revsparsehes sparsity Hessian "/>
+<meta name="keywords" id="keywords" content=" reverse mode hessian sparsity: example and test Revsparsehes sparsity "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="revsparsehes.xml" target="_top">Prev</a>
-</td><td><a href="drivers.xml" target="_top">Next</a>
+</td><td><a href="sparsity_sub.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -58,13 +58,16 @@ A:active { color : purple }
 <option>Sparse-&gt;</option>
 <option>ForSparseJac</option>
 <option>RevSparseJac</option>
+<option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>bool_sparsity.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>RevSparseHes-&gt;</option>
 <option>rev_sparse_hes.cpp</option>
+<option>sparsity_sub.cpp</option>
 </select>
 </td>
 <td>rev_sparse_hes.cpp</td>
@@ -98,9 +101,9 @@ bool BoolCases(void)
 	using CppAD::AD;
 
 	// domain space vector
-	size_t n = 3; 
+	size_t n = 3;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.; 
+	X[0] = 0.;
 	X[1] = 1.;
 	X[2] = 2.;
 
@@ -137,7 +140,7 @@ bool BoolCases(void)
 
 	// check values
 	for(i = 0; i &lt; n; i++)
-		for(j = 0; j &lt; n; j++) 
+		for(j = 0; j &lt; n; j++)
 			ok &amp;= (h[ i * n + j ] == check_f0[ i * n + j ] );
 
 	// compute sparsity pattern for H(x) = F_1^{(2)} (x)
@@ -148,7 +151,7 @@ bool BoolCases(void)
 
 	// check values
 	for(i = 0; i &lt; n; i++)
-		for(j = 0; j &lt; n; j++) 
+		for(j = 0; j &lt; n; j++)
 			ok &amp;= (h[ i * n + j ] == check_f1[ i * n + j ] );
 
 	// call that transposed the result
@@ -157,7 +160,7 @@ bool BoolCases(void)
 
 	// This h is symmetric, because R is symmetric, not really testing here
 	for(i = 0; i &lt; n; i++)
-		for(j = 0; j &lt; n; j++) 
+		for(j = 0; j &lt; n; j++)
 			ok &amp;= (h[ j * n + i ] == check_f1[ i * n + j ] );
 
 	return ok;
@@ -169,9 +172,9 @@ bool SetCases(void)
 	using CppAD::AD;
 
 	// domain space vector
-	size_t n = 3; 
+	size_t n = 3;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.; 
+	X[0] = 0.;
 	X[1] = 1.;
 	X[2] = 2.;
 
@@ -253,18 +256,18 @@ bool RevSparseHes(void)
 	// all of which are Simple Vectors with elements of type bool.
 	ok &amp;= BoolCases&lt; CppAD::vector  &lt;bool&gt; &gt;();
 	ok &amp;= BoolCases&lt; CppAD::vectorBool     &gt;();
-	ok &amp;= BoolCases&lt; std::vector    &lt;bool&gt; &gt;(); 
-	ok &amp;= BoolCases&lt; std::valarray  &lt;bool&gt; &gt;(); 
+	ok &amp;= BoolCases&lt; std::vector    &lt;bool&gt; &gt;();
+	ok &amp;= BoolCases&lt; std::valarray  &lt;bool&gt; &gt;();
 
-	// Run with Vector equal to two different cases both of which are 
+	// Run with Vector equal to two different cases both of which are
 	// Simple Vectors with elements of type std::set&lt;size_t&gt;
 	typedef std::set&lt;size_t&gt; set;
 	ok &amp;= SetCases&lt; CppAD::vector  &lt;set&gt; &gt;();
-	ok &amp;= SetCases&lt; std::vector    &lt;set&gt; &gt;(); 
+	ok &amp;= SetCases&lt; std::vector    &lt;set&gt; &gt;();
 
 	// Do not use valarray because its element access in the const case
 	// returns a copy instead of a reference
-	// ok &amp;= SetCases&lt; std::valarray  &lt;set&gt; &gt;(); 
+	// ok &amp;= SetCases&lt; std::valarray  &lt;set&gt; &gt;();
 
 	return ok;
 }

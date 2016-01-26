@@ -6,7 +6,7 @@
 <title>ADFun Sequence Properties</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="ADFun Sequence Properties"/>
-<meta name="keywords" id="keywords" content=" adfun sequence properties syntax see also purpose f domain Adfun Domain range Range parameter Parameter size_var size_par size_op size_op_arg size_text size_vecad size_op_seq example "/>
+<meta name="keywords" id="keywords" content=" adfun sequence properties syntax see also purpose f domain range parameter size_var size_par size_op size_op_arg size_text size_vecad size_op_seq example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -158,7 +158,7 @@ AD of
 
 stored in the ADFun object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
-. 
+.
 (If there is no operation sequence stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 ,
@@ -183,8 +183,6 @@ The object
 <br/>
 <br/>
 <b><big><a name="Domain" id="Domain">Domain</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
@@ -203,19 +201,17 @@ This is equal to the size of the vector
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Independent(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-that starting recording the operation sequence 
+that starting recording the operation sequence
 currently stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 
 (see <a href="funconstruct.xml" target="_top"><span style='white-space: nowrap'>FunConstruct</span></a>
  and <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>Dependent</span></a>
-). 
+).
 
 <br/>
 <br/>
 <b><big><a name="Range" id="Range">Range</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
@@ -244,13 +240,11 @@ depending on which stored the operation sequence currently in
 
 (see <a href="funconstruct.xml" target="_top"><span style='white-space: nowrap'>FunConstruct</span></a>
  and <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>Dependent</span></a>
-). 
+).
 
 <br/>
 <br/>
 <b><big><a name="Parameter" id="Parameter">Parameter</a></big></b>
-
-
 <br/>
 The argument 
 <code><i><font color="black"><span style='white-space: nowrap'>i</span></font></i></code>
@@ -338,8 +332,6 @@ for
 <br/>
 <br/>
 <b><big><a name="size_var" id="size_var">size_var</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
@@ -358,7 +350,7 @@ and derivatives using
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
 .
 (The function call <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>f.size_order()</span></a>
- 
+
 returns the number of Taylor coefficient orders, per variable,direction,
 currently stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
@@ -375,8 +367,6 @@ currently stored in
 <br/>
 <br/>
 <b><big><a name="size_par" id="size_par">size_par</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
@@ -388,8 +378,8 @@ The result
 and is the number of parameters in the operation sequence.
 Parameters differ from variables in that only values
 (and not derivatives) need to be stored for each parameter.
-These parameters are considered part of the operation 
-sequence, as opposed to the Taylor coefficients which are 
+These parameters are considered part of the operation
+sequence, as opposed to the Taylor coefficients which are
 considered extra data in the function object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
@@ -408,14 +398,14 @@ The result
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-and is the number of operations in the operation sequence. 
+and is the number of operations in the operation sequence.
 Some operators, like comparison operators,
 do not correspond to a variable.
 Other operators, like the sine operator,
 correspond to two variables.
-Thus, this value will be different from 
+Thus, this value will be different from
 <a href="seq_property.xml#size_var" target="_top"><span style='white-space: nowrap'>size_var</span></a>
-. 
+.
 Note that one <code><font color="blue">enum</font></code> value is required for each operator.
 
 <br/>
@@ -433,7 +423,7 @@ and is the total number of operator arguments in the operation sequence.
 For example, Binary operators (e.g. addition) have two arguments.
 Note that one integer index is stored in the operation sequence
 for each argument.
-Also note that, as of 2013-10-20, there is an extra 
+Also note that, as of 2013-10-20, there is an extra
 phantom argument with index 0 that is not used.
 
 <br/>
@@ -454,8 +444,6 @@ in this operation sequence.
 <br/>
 <br/>
 <b><big><a name="size_VecAD" id="size_VecAD">size_VecAD</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
@@ -467,7 +455,7 @@ The result
 and is the number of <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  vectors,
 plus the number of elements in the vectors.
-Only <code><font color="blue">VecAD</font></code> vectors that depend on the 
+Only <code><font color="blue">VecAD</font></code> vectors that depend on the
 independent variables are stored in the operation sequence.
 
 <br/>
@@ -507,7 +495,7 @@ for the operations sequence may be larger.
 <br/>
 The file
 <a href="seq_property.cpp.xml" target="_top"><span style='white-space: nowrap'>seq_property.cpp</span></a>
- 
+
 contains an example and test of these operations.
 It returns true if it succeeds and false otherwise.
 

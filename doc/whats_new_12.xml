@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,17 +66,19 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
@@ -206,7 +208,7 @@ assist you in learning about changes between various versions of CppAD.
 
 <ol type="1"><li>
 Merge changes in <code><font color="blue">branches/ipopt_solve</font></code> to <code><font color="blue">trunk</font></code>,
-delete that branch, and 
+delete that branch, and
 advance version number to <code><font color="blue">cppad-20121230</font></code>.
 </li><li>
 
@@ -237,12 +239,12 @@ sparse Jacobians.
 The <a href="ipopt_solve.xml" target="_top"><span style='white-space: nowrap'>ipopt_solve</span></a>
  routine seems to be faster and simpler
 than <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
-. 
+.
 More speed comparisons would be good to have.
 </li><li>
 
 All of the <a href="drivers.xml" target="_top"><span style='white-space: nowrap'>ADFun&#xA0;Drivers</span></a>
- 
+
 have added specifications for the zero order Taylor coefficients
 after the routine is called.
 For example, see
@@ -291,14 +293,14 @@ to distinguish them from <a href="ipopt_solve.xml" target="_top"><span style='wh
 In <code><font color="blue">branches/ipopt_solve</font></code>:
 <ol type="1"><li>
 Convert documentation most all documentation references from
-the deprecated <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>InstallUnix</span></a>
+the deprecated <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
  instructions to the new <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
 
 instructions.
 </li><li>
 
 Include the <a href="introduction.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
- programs in the 
+ programs in the
 <a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>cmake_check</span></a>
  built using <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
 .
@@ -331,7 +333,7 @@ Define a doxygen module (group) for each file that has doxygen documentation.
 
 <ol type="1"><li>
 The <a href="install.xml#Instructions" target="_top"><span style='white-space: nowrap'>install&#xA0;instructions</span></a>
- 
+
 were installing <code><font color="blue">cppad/CMakeLists.txt</font></code> and <code><font color="blue">cppad/configure.hpp.in</font></code>
 in the <code><font color="blue">cppad</font></code> include directory.
 This has been fixed so that only 
@@ -350,7 +352,7 @@ Advance the version number to <code><font color="blue">cppad-20121220</font></co
 <br/>
 <b><big><a name="12-19" id="12-19">12-19</a></big></b>
 <br/>
-The files <code><font color="blue">&lt;stdbool.h&gt;</font></code> and <code><font color="blue">&lt;sys/time.h&gt;</font></code> 
+The files <code><font color="blue">&lt;stdbool.h&gt;</font></code> and <code><font color="blue">&lt;sys/time.h&gt;</font></code>
 do not exist for all C compilers,
 and this caused a problem when using the Windows compiler.
 This has been fixed by defining the type bool inside the
@@ -364,7 +366,7 @@ There was a mistake in a check for a valid op code in the
 file <code><font color="blue">hash_code.hpp</font></code>.
 This mistake could generate a C++ assertion with an unknown error source.
 It has been fixed.
-  
+
 
 <br/>
 <br/>
@@ -372,29 +374,29 @@ It has been fixed.
 
 <ol type="1"><li>
 Advance version number from <code><font color="blue">20121120</font></code> to <code><font color="blue">20121215</font></code>.
-Note that the CppAD version number no longer automatically advances with the 
+Note that the CppAD version number no longer automatically advances with the
 date and is rather chosen to advance to the current date.
 </li><li>
 
 The <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
  installation was putting the <code><font color="blue">cppad.pc</font></code>
 <a href="pkgconfig.xml" target="_top"><span style='white-space: nowrap'>pkgconfig</span></a>
- file in 
+ file in
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cmake_install_prefix</span></font><i><font color="black"><span style='white-space: nowrap'>/cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad.pc<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad_prefix</span></font><i><font color="black"><span style='white-space: nowrap'>/cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad.pc<br/>
 </span></font></code>
 This has been fixed and is now
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cmake_install_prefix</span></font><i><font color="black"><span style='white-space: nowrap'>/cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>/pkgconfig/cppad.pc<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad_prefix</span></font><i><font color="black"><span style='white-space: nowrap'>/cmake_install_datadir</span></font></i><font color="blue"><span style='white-space: nowrap'>/pkgconfig/cppad.pc<br/>
 </span></font></code>
 </li><li>
 The <a href="pkgconfig.xml" target="_top"><span style='white-space: nowrap'>pkgconfig</span></a>
  documentation has been improved.
 </li><li>
 
-The command for running the 
+The command for running the
 <a href="adolc_prefix.xml#Examples" target="_top"><span style='white-space: nowrap'>adolc&#xA0;examples</span></a>
  and
 <a href="eigen_prefix.xml#Examples" target="_top"><span style='white-space: nowrap'>eigen&#xA0;examples</span></a>
@@ -410,13 +412,13 @@ was fixed
 <b><big><a name="12-14" id="12-14">12-14</a></big></b>
 
 <ol type="1"><li>
-Fix the old <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>InstallUnix</span></a>
+Fix the old <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
  so that it works with the
 new <code><font color="blue">cppad.pc</font></code>.
 </li><li>
 
-Fix the old installation 
-<a href="installunix.xml#--with-Documentation" target="_top"><span style='white-space: nowrap'>--with-Documentation</span></a>
+Fix the old installation
+<a href="auto_tools.xml#--with-Documentation" target="_top"><span style='white-space: nowrap'>--with-Documentation</span></a>
  option
 (it was attempting to copy from the wrong directory).
 </li></ol>
@@ -447,7 +449,7 @@ when <a href="ipopt_prefix.xml" target="_top"><span style='white-space: nowrap'>
 <br/>
 <b><big><a name="11-28" id="11-28">11-28</a></big></b>
 <br/>
-Update the <a href="wishlist.xml" target="_top"><span style='white-space: nowrap'>WishList</span></a>
+Update the <a href="wish_list.xml" target="_top"><span style='white-space: nowrap'>wish_list</span></a>
 :
 <ol type="1"><li>
 Remove Microsoft compiler warning item that has been fixed.
@@ -463,7 +465,7 @@ Remove <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake
 </li><li>
 
 Remove <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
- items related to using 
+ items related to using
 <code><font color="blue">AD&lt; std::complex&lt;double&gt; &gt;</font></code> types because it is better to use
 <code><font color="blue">std::complex&lt; AD&lt;double&gt; &gt;</font></code>.
 </li><li>
@@ -476,17 +478,17 @@ Remove <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD
  item about slicing from floating point type to <code><font color="blue">int</font></code>
 (not important).
 </li><li>
- 
+
 Change an Ipopt item to a <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
 
 (which was removed because <code><font color="blue">cppad_ipopt_nlp</font></code> is now deprecated).
 Add new <code><font color="blue">cppad_ipopt_sum</font></code> item to the wish list.
 (This has been removed because <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpointing</span></a>
- 
+
 can now be used for this purpose.)
 </li><li>
 
-Add new <code><font color="blue">old_atomic</font></code> <a href="wishlist.xml" target="_top"><span style='white-space: nowrap'>WishList</span></a>
+Add new <code><font color="blue">old_atomic</font></code> <a href="wish_list.xml" target="_top"><span style='white-space: nowrap'>wish_list</span></a>
  item (since removed).
 
 </li></ol>
@@ -497,7 +499,7 @@ Add new <code><font color="blue">old_atomic</font></code> <a href="wishlist.xml"
 <b><big><a name="11-21" id="11-21">11-21</a></big></b>
 
 <ol type="1"><li>
-Fix the version number in link to the 
+Fix the version number in link to the
 <a href="download.xml#Compressed Archives.Current Version" target="_top"><span style='white-space: nowrap'>current&#xA0;download&#xA0;files</span></a>
 .
 </li><li>
@@ -516,8 +518,8 @@ This avoids downloading the source code control files.
 
 <ol type="1"><li>
 The <code><font color="blue">cmake</font></code> variables
-<code><font color="blue">cmake_install_includedir</font></code> and 
-<code><font color="blue">cmake_install_libdir</font></code> 
+<code><font color="blue">cmake_install_includedir</font></code> and
+<code><font color="blue">cmake_install_libdir</font></code>
 were changed to
 <a href="cmake.xml#cmake_install_includedirs" target="_top"><span style='white-space: nowrap'>cmake_install_includedirs</span></a>
  and
@@ -537,7 +539,7 @@ Advance version number to <code><font color="blue">cppad-20121120</font></code>.
 <ol type="1"><li>
 Finish documenting the new <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
  configuration instructions
-and deprecate the old <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix</span></a>
+and deprecate the old <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix</span></a>
  instructions.
 </li><li>
 
@@ -570,21 +572,21 @@ when it was compiled with the preprocessor symbol <code><font color="blue">NDEBU
 Advanced the CppAD version to <code><font color="blue">cppad-20121114</font></code>.
 
 <ol type="1"><li>
-Started documenting the 
+Started documenting the
 <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
  configuration procedure during installation.
-This included factoring out the 
+This included factoring out the
 <a href="download.xml" target="_top"><span style='white-space: nowrap'>download</span></a>
  procedure as a separate section
-so that the same download instruction also apply to the 
-<a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix</span></a>
+so that the same download instruction also apply to the
+<a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix</span></a>
  install procedure.
 
 </li><li>
 
-Changed 
+Changed
 <a href="compare_change.cpp.xml" target="_top"><span style='white-space: nowrap'>example/compare_change.cpp</span></a>
- 
+
 to just return true when <code><font color="blue">NDEBUG</font></code> is defined.
 This enabled all the tests in the
 <code><font color="blue">example</font></code> directory to be compiled
@@ -593,16 +595,16 @@ with <code><font color="blue">NDEBUG</font></code> is defined and to pass.
 </li><li>
 
 In the case where <code><font color="blue">NDEBUG</font></code> is defined,
-removed detection of <code><font color="blue">nan</font></code> during forward mode from 
+removed detection of <code><font color="blue">nan</font></code> during forward mode from
 <code><font color="blue">test_more/forward.cpp%</font></code>.
-This enables all the tests in the 
+This enables all the tests in the
 <code><font color="blue">test_more</font></code> directory to be compiled
 with <code><font color="blue">NDEBUG</font></code> is defined and to pass.
 
 </li><li>
 
 Started a wish list for CppAD's use of <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
-. 
+.
 The wish list items were completed and removed.
 
 </li></ol>
@@ -652,17 +654,17 @@ This has been fixed and the comments for this example have been improved.
 <br/>
 <b><big><a name="10-31" id="10-31">10-31</a></big></b>
 <br/>
-The CppAD <a href="installunix.xml#Profiling CppAD" target="_top"><span style='white-space: nowrap'>profiling</span></a>
+The CppAD <a href="auto_tools.xml#Profiling CppAD" target="_top"><span style='white-space: nowrap'>profiling</span></a>
  was not compiling
 the <code><font color="blue">speed/src/*.cpp</font></code> files with the profiling flag.
-This has been changes 
+This has been changes
 (only for the profiling speed test).
 
 <br/>
 <br/>
 <b><big><a name="10-30" id="10-30">10-30</a></big></b>
 <br/>
-The <a href="installunix.xml#fadbad_dir" target="_top"><span style='white-space: nowrap'>fadbad_dir</span></a>
+The <a href="auto_tools.xml#fadbad_dir" target="_top"><span style='white-space: nowrap'>fadbad_dir</span></a>
  directory install instructions
 were changed.
 To be specific, <code><font color="blue">FADBAD++</font></code> was changed to <code><font color="blue">include/FADBAD++</font></code>.
@@ -673,7 +675,7 @@ This makes it more like the other optional packages.
 <b><big><a name="10-25" id="10-25">10-25</a></big></b>
 <br/>
 The test <a href="runge45_1.cpp.xml" target="_top"><span style='white-space: nowrap'>runge45_1.cpp</span></a>
- was failing when using gcc-4.5.2. 
+ was failing when using gcc-4.5.2.
 This has been fixed by properly defining 
 <code><font color="blue"><span style='white-space: nowrap'>fabs(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
  where
@@ -693,10 +695,10 @@ EPL-1.0 and GPL-3.0.
 <b><big><a name="10-12" id="10-12">10-12</a></big></b>
 
 <ol type="1"><li>
-Change all the multiple levels of AD examples to 
+Change all the multiple levels of AD examples to
 start with <a href="mul_level.xml" target="_top"><span style='white-space: nowrap'>mul_level</span></a>
 .
-To be specific, move 
+To be specific, move
 <code><font color="blue">ode_taylor.cpp</font></code> to <a href="mul_level_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>mul_level_ode.cpp</span></a>
  and
 <code><font color="blue">ode_taylor_adolc.cpp</font></code> to <a href="mul_level_adolc_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>mul_level_adolc_ode.cpp</span></a>
@@ -753,11 +755,11 @@ Fix another problem with Debian's <code><font color="blue">/bin/sh</font></code>
 <br/>
 <b><big><a name="09-24" id="09-24">09-24</a></big></b>
 <br/>
-Improve documentation for the 
+Improve documentation for the
 <a href="old_atomic.xml" target="_top"><span style='white-space: nowrap'>old_atomic</span></a>
- 
+
 <a href="old_atomic.xml#rev_hes_sparse" target="_top"><span style='white-space: nowrap'>rev_hes_sparse</span></a>
- 
+
 argument
 <a href="old_atomic.xml#rev_hes_sparse.v" target="_top"><span style='white-space: nowrap'>v</span></a>
 .
@@ -782,7 +784,7 @@ A new type was added for the internal representation of
 <a href="glossary.xml#Sparsity Pattern.Vector of Sets" target="_top"><span style='white-space: nowrap'>vector&#xA0;of&#xA0;sets</span></a>
 
 sparsity patterns; see the configure
-<a href="installunix.xml#--with-sparse_option" target="_top"><span style='white-space: nowrap'>--with-sparse_option</span></a>
+<a href="auto_tools.xml#--with-sparse_option" target="_top"><span style='white-space: nowrap'>--with-sparse_option</span></a>
 .
 </li><li>
 
@@ -798,7 +800,7 @@ source code compiled with C and C++.
 
 <ol type="1"><li>
 The <a href="cppad_vector.xml#clear" target="_top"><span style='white-space: nowrap'>clear</span></a>
- function was added to 
+ function was added to
 <code><font color="blue">CppAD::vector</font></code>.
 </li><li>
 
@@ -815,7 +817,7 @@ the corresponding memory (use
 
 Fix a bug in error checking during <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
  procedure
-had the following <code><font color="blue">valgrind</font></code> symptom during the 
+had the following <code><font color="blue">valgrind</font></code> symptom during the
 <a href="optimize.cpp.xml" target="_top"><span style='white-space: nowrap'>optimize.cpp</span></a>
  example:
 <code><font color='blue'><pre style='display:inline'> 
@@ -830,7 +832,7 @@ was missing before the call
 <code><font color='blue'><pre style='display:inline'> 
 	     dw    = F.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 </pre></font></code>
- 
+
 </li></ol>
 
 
@@ -855,8 +857,8 @@ for the example <code><font color="blue">example/vector_bool.cpp</font></code>.
 <br/>
 <b><big><a name="07-07" id="07-07">07-07</a></big></b>
 <br/>
-Add the <code><font color="blue">CPPAD_TAPE_ID_TYPE</font></code> argument to the 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+Add the <code><font color="blue">CPPAD_TAPE_ID_TYPE</font></code> argument to the
+<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command line.
 
 <br/>
@@ -876,13 +878,13 @@ used <code><font color="blue">CPPAD_TEST_VECTOR</font></code> would no longer wo
 
 <ol type="1"><li>
 Replace the requirement that the <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
- 
+
 <a href="simplevector.xml#Size" target="_top"><span style='white-space: nowrap'>size</span></a>
  function return a <code><font color="blue">size_t</font></code> value to
 the requirement that it can be converted to a <code><font color="blue">size_t</font></code> value.
 </li><li>
 
-The <a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>--with-eigenvector</span></a>
+The <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>--with-eigenvector</span></a>
  option was
 added to the <code><font color="blue">configure</font></code> command line.
 </li></ol>
@@ -908,7 +910,7 @@ at line 262 in the file cppad/local/dependent.hpp
 <b><big><a name="07-02" id="07-02">07-02</a></big></b>
 <br/>
 Add  <a href="eigen_plugin.hpp.xml" target="_top"><span style='white-space: nowrap'>eigen_plugin.hpp</span></a>
- so that 
+ so that
 an Eigen vector can be used as a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
 .
@@ -919,8 +921,8 @@ an Eigen vector can be used as a
 
 <ol type="1"><li>
 Change <a href="cppad_eigen.hpp.xml" target="_top"><span style='white-space: nowrap'>cppad_eigen.hpp</span></a>
- 
-to match new specifications and example in eigen help files on 
+
+to match new specifications and example in eigen help files on
 <a href="http://eigen.tuxfamily.org/dox/TopicCustomizingEigen.html" target="_top"><span style='white-space: nowrap'>customizing&#xA0;and&#xA0;extending&#xA0;eigen.</span></a>
 
 </li><li>
@@ -949,8 +951,8 @@ Add the <a href="eigen_array.cpp.xml" target="_top"><span style='white-space: no
 
 <ol type="1"><li>
 Move <a href="epsilon.xml" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
- to <a href="limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
- 
+ to <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
+
 and add the functions <code><font color="blue">min</font></code> and <code><font color="blue">max</font></code>
 in 
 <code><i><font color="black"><span style='white-space: nowrap'>CppAD::numeric_limits&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Type</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;</span></font></i></code>
@@ -959,12 +961,12 @@ in
 
 Convert use of the deprecated <a href="epsilon.xml" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
  in examples
-to use of <a href="limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
- <code><font color="blue">epsilon</font></code>.
+to use of <code><font color="blue">numeric_limits</font></code> <a href="numeric_limits.xml#epsilon" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
+.
 </li><li>
 
 Complete <a href="cppad_eigen.hpp.xml" target="_top"><span style='white-space: nowrap'>cppad_eigen.hpp</span></a>
- interface to 
+ interface to
 <code><font color="blue">lowest</font></code> and <code><font color="blue">highest</font></code> functions for
 all non-complex AD types.
 </li></ol>
@@ -976,7 +978,7 @@ all non-complex AD types.
 <b><big><a name="06-16" id="06-16">06-16</a></big></b>
 <br/>
 Add the example <a href="eigen_det.cpp.xml" target="_top"><span style='white-space: nowrap'>eigen_det.cpp</span></a>
- that uses the 
+ that uses the
 <a href="http://eigen.tuxfamily.org" target="_top"><span style='white-space: nowrap'>Eigen</span></a>
 
 linear algebra package.
@@ -987,15 +989,15 @@ linear algebra package.
 <br/>
 Include the <a href="base_adolc.hpp.xml" target="_top"><span style='white-space: nowrap'>base_adolc.hpp</span></a>
  as
-<code><font color="blue">&lt;cppad/example/base_adolc.hpp&gt;</font></code> under the 
-<a href="installunix.xml#prefix_dir" target="_top"><span style='white-space: nowrap'>prefix_dir</span></a>
+<code><font color="blue">&lt;cppad/example/base_adolc.hpp&gt;</font></code> under the
+<a href="auto_tools.xml#prefix_dir" target="_top"><span style='white-space: nowrap'>prefix_dir</span></a>
  directory.
 
 <br/>
 <br/>
 <b><big><a name="06-12" id="06-12">06-12</a></big></b>
 <br/>
-Increase the size and of the 
+Increase the size and of the
 <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse&#xA0;Jacobian&#xA0;speed&#xA0;tests</span></a>
 .
 
@@ -1007,7 +1009,7 @@ Increase the size and of the
 Add the <a href="speed_main.xml#option_list.memory" target="_top"><span style='white-space: nowrap'>hold_memory</span></a>
  option
 to the speed test main program.
-This was changed to just <code><font color="blue">memory</font></code>; see 
+This was changed to just <code><font color="blue">memory</font></code>; see
 <a href="whats_new_12.xml#10-03" target="_top"><span style='white-space: nowrap'>10-03</span></a>
 .
 </li><li>
@@ -1015,7 +1017,7 @@ This was changed to just <code><font color="blue">memory</font></code>; see
 In <a href="cppad_sparse_jacobian.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_sparse_jacobian.cpp</span></a>
 ,
 change <code><font color="blue">USE_BOOL_SPARSITY</font></code> from true to false.
-In addition, change the number of non-zeros per row from about approximately 
+In addition, change the number of non-zeros per row from about approximately
 three to approximately ten.
 </li></ol>
 
@@ -1094,7 +1096,7 @@ Add the <a href="adolc_ode.cpp.xml" target="_top"><span style='white-space: nowr
  and <a href="fadbad_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>fadbad_ode.cpp</span></a>
  speed tests
 (and edit the <a href="cppad_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_ode.cpp</span></a>
- test). 
+ test).
 </li></ol>
 
 
@@ -1120,7 +1122,7 @@ A memory leak and a bug in <code><font color="blue">cppad_mat_mul.cpp</font></co
 
 <ol type="1"><li>
 Remove the deprecated symbol
-<a href="test_vector.xml#Deprecated" target="_top"><span style='white-space: nowrap'>CppADvector</span></a>
+<a href="test_vector.xml#Deprecated 2012-07-03" target="_top"><span style='white-space: nowrap'>CppADvector</span></a>
  from the
 <a href="det_by_lu.xml" target="_top"><span style='white-space: nowrap'>det_by_lu</span></a>
  speed test source code <a href="det_by_lu.hpp.xml" target="_top"><span style='white-space: nowrap'>det_by_lu.hpp</span></a>
@@ -1128,13 +1130,13 @@ Remove the deprecated symbol
 </li><li>
 
 Include <a href="memory_leak.xml" target="_top"><span style='white-space: nowrap'>memory_leak</span></a>
- in the list of 
+ in the list of
 <a href="deprecated.xml" target="_top"><span style='white-space: nowrap'>deprecated</span></a>
  features.
 </li><li>
 
 Change the <a href="ode_evaluate.xml" target="_top"><span style='white-space: nowrap'>ode_evaluate</span></a>
- speed test utility so that its 
+ speed test utility so that its
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 
 does not depend on the repetition; see
@@ -1153,9 +1155,9 @@ in <a href="cppad_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>c
 .
 </li><li>
 
-Have 
+Have
 <a href="cppad_det_lu.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_det_lu.cpp</span></a>
-, 
+,
 <a href="cppad_det_minor.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_det_minor.cpp</span></a>
 ,
 and <a href="cppad_poly.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_poly.cpp</span></a>
@@ -1166,11 +1168,11 @@ Do the same for
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i><font color="blue"><span style='white-space: nowrap'>_</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>.cpp</span></font></code>
  for 
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i></code>
- equal to 
-<code><font color="blue">adolc</font></code>, <code><font color="blue">fadbad</font></code>, and <code><font color="blue">sacado</font></code> and 
+ equal to
+<code><font color="blue">adolc</font></code>, <code><font color="blue">fadbad</font></code>, and <code><font color="blue">sacado</font></code> and
 for 
 <code><i><font color="black"><span style='white-space: nowrap'>test</span></font></i></code>
- equal to 
+ equal to
 <code><font color="blue">det_lu</font></code>, <code><font color="blue">det_minor</font></code>, <code><font color="blue">poly</font></code>.
 </li></ol>
 
@@ -1179,11 +1181,11 @@ for
 <br/>
 <b><big><a name="06-01" id="06-01">06-01</a></big></b>
 <br/>
-Change 
+Change
 <a href="cppad_sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_sparse_hessian.cpp</span></a>
  and
 <a href="cppad_sparse_jacobian.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_sparse_jacobian.cpp</span></a>
- 
+
 to use
 the 
 <code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
@@ -1191,7 +1193,7 @@ the
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
  interface to <a href="sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
 .
-In addition, implement the speed test 
+In addition, implement the speed test
 <code><font color="blue">retape</font></code> speed test option for these tests.
 
 <br/>
@@ -1199,21 +1201,21 @@ In addition, implement the speed test
 <b><big><a name="05-31" id="05-31">05-31</a></big></b>
 <br/>
 Add the <code><font color="blue">cppad_print_optimize</font></code> routine to so that the corresponding
-code does not need to be reproduced for all the 
+code does not need to be reproduced for all the
 <a href="speed_cppad.xml" target="_top"><span style='white-space: nowrap'>speed_cppad</span></a>
  tests.
-In addition, during CppAD speed tests, 
+In addition, during CppAD speed tests,
 print out the optimization results for each test size.
 
 <br/>
 <br/>
 <b><big><a name="05-30" id="05-30">05-30</a></big></b>
 <br/>
-Change specifications for 
+Change specifications for
 <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_hessian</span></a>
- so that the row and column indices are 
+ so that the row and column indices are
 inputs (instead of being chosen randomly by the test for each repetition).
-This enables use of the 
+This enables use of the
 <code><font color="blue">retape</font></code> speed test option
 during sparse Hessian speed tests.
 
@@ -1222,7 +1224,7 @@ during sparse Hessian speed tests.
 <b><big><a name="05-29" id="05-29">05-29</a></big></b>
 <br/>
 Add <a href="index_sort.xml" target="_top"><span style='white-space: nowrap'>index_sort</span></a>
- to the general purpose template <a href="library.xml" target="_top"><span style='white-space: nowrap'>library</span></a>
+ to the general purpose template <a href="utility.xml" target="_top"><span style='white-space: nowrap'>utilities</span></a>
 
 so that it can be used by the implementations of
 <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_jacobian</span></a>
@@ -1268,11 +1270,11 @@ The examples
 <a href="sparse_jacobian.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian.cpp</span></a>
  and
 <a href="sparse_hessian.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian.cpp</span></a>
-  were improved 
+  were improved
 and extended to include the new interface.
 </li><li>
 
-The definition of an 
+The definition of an
 <a href="glossary.xml#AD Function" target="_top"><span style='white-space: nowrap'>AD&#xA0;function</span></a>
  was improved
 to include definition of the corresponding 
@@ -1288,8 +1290,8 @@ to include definition of the corresponding
 <br/>
 <b><big><a name="04-19" id="04-19">04-19</a></big></b>
 <br/>
-The <a href="installunix.xml#boost_dir" target="_top"><span style='white-space: nowrap'>BOOST_DIR</span></a>
- 
+The <a href="auto_tools.xml#boost_dir" target="_top"><span style='white-space: nowrap'>BOOST_DIR</span></a>
+
 configure command line value has been changed to be the corresponding
 prefix during the installation of boost.
 To be specific, it used to be that
@@ -1310,7 +1312,7 @@ multi-threading library.
 <b><big><a name="04-18" id="04-18">04-18</a></big></b>
 <br/>
 Add documentation and testing for not using <a href="ta_free_all.xml" target="_top"><span style='white-space: nowrap'>free_all</span></a>
- and 
+ and
 <a href="old_atomic.xml#clear" target="_top"><span style='white-space: nowrap'>old_atomic&#xA0;clear</span></a>
  while in
 <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
@@ -1321,7 +1323,7 @@ Add documentation and testing for not using <a href="ta_free_all.xml" target="_t
 <b><big><a name="04-17" id="04-17">04-17</a></big></b>
 <br/>
 Fix bug when using <a href="old_atomic.xml" target="_top"><span style='white-space: nowrap'>old_atomic</span></a>
- functions with 
+ functions with
 <a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi_threading</span></a>
 .
 
@@ -1329,11 +1331,11 @@ Fix bug when using <a href="old_atomic.xml" target="_top"><span style='white-spa
 <br/>
 <b><big><a name="04-10" id="04-10">04-10</a></big></b>
 <br/>
-Add control of the 
-<a href="installunix.xml#max_num_threads" target="_top"><span style='white-space: nowrap'>max_num_threads</span></a>
+Add control of the
+<a href="auto_tools.xml#max_num_threads" target="_top"><span style='white-space: nowrap'>max_num_threads</span></a>
  argument
-to the unix 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+to the unix
+<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command.
 
 <br/>
@@ -1341,18 +1343,18 @@ to the unix
 <b><big><a name="04-06" id="04-06">04-06</a></big></b>
 
 <ol type="1"><li>
-A change was made to the way that the tapes were managed to reduce 
+A change was made to the way that the tapes were managed to reduce
 false sharing during <a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi-threading</span></a>
 .
-Because of this change, it is now suggest that the user call 
+Because of this change, it is now suggest that the user call
 <a href="parallel_ad.xml" target="_top"><span style='white-space: nowrap'>parallel_ad</span></a>
  after the multi-threading section of the program.
 </li><li>
 
 The routine <a href="ta_free_all.xml" target="_top"><span style='white-space: nowrap'>ta_free_all</span></a>
- was created to make it easier 
+ was created to make it easier
 to manage memory and the routine <a href="memory_leak.xml" target="_top"><span style='white-space: nowrap'>memory_leak</span></a>
- 
+
 was deprecated.
 </li><li>
 
@@ -1377,12 +1379,12 @@ This was necessary inorder to initialize some new statics in the tape.
 <br/>
 <b><big><a name="04-01" id="04-01">04-01</a></big></b>
 <br/>
-Fixed a race condition when using CppAD with 
+Fixed a race condition when using CppAD with
 <a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi-threading</span></a>
-. 
+.
 This has been fixed and the error message below no longer occurs.
-Suppose that you ran the CppAD 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+Suppose that you ran the CppAD
+<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command in the <code><font color="blue">work</font></code>
 directory.
 If you then edited the file <code><font color="blue">work/multi_thread/makefile</font></code>
@@ -1448,11 +1450,11 @@ This includes separating generic code that can be used for all applications
 from problem specific code.
 </li><li>
 
-Add initialization of statics in 
+Add initialization of statics in
 <a href="parallel_ad.xml#CheckSimpleVector" target="_top"><span style='white-space: nowrap'>CheckSimpleVector</span></a>
- 
+
 during <code><font color="blue">parallel_ad</font></code> call.
-These statics are required to use 
+These statics are required to use
 <a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>CppAD::vector</span></a>
 .
 </li><li>
@@ -1469,8 +1471,8 @@ is initialized in sequential mode.
 <br/>
 Fix an incorrect error check in <code><font color="blue">thread_alloc</font></code>
 that did not allow <a href="ta_return_memory.xml" target="_top"><span style='white-space: nowrap'>ta_return_memory</span></a>
- 
-to return memory in sequential execution mode that was allocated by a 
+
+to return memory in sequential execution mode that was allocated by a
 different thread during parallel execution.
 
 <br/>
@@ -1481,7 +1483,7 @@ Debian recently converted the default shell corresponding to
 <code><font color="blue">/bin/sh</font></code> to  <code><font color="blue">dash</font></code>
 (which caused <code><font color="blue">multi_thread/test.sh</font></code> to fail).
 This has been fixed.
-In general, Debian's policy is that <code><font color="blue">bin/sh</font></code> will be a 
+In general, Debian's policy is that <code><font color="blue">bin/sh</font></code> will be a
 <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html" target="_top"><span style='white-space: nowrap'>Posix&#xA0;Shell</span></a>
 .
 
@@ -1493,7 +1495,7 @@ There was a bug in <a href="thread_alloc.xml" target="_top"><span style='white-s
  where extra memory was held
 onto even if <a href="ta_hold_memory.xml" target="_top"><span style='white-space: nowrap'>hold_memory</span></a>
  was never called
-and only one thread was used by the program.  This caused 
+and only one thread was used by the program.  This caused
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 valgrind&#xA0;--leak-check=full&#xA0;--show-reachable=yes<br/>
@@ -1501,13 +1503,13 @@ valgrind&#xA0;--leak-check=full&#xA0;--show-reachable=yes<br/>
 to generate an error message.
 If <a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multiple&#xA0;threads</span></a>
  are used,
-one should free this 
+one should free this
 <a href="ta_free_available.xml#Purpose.Extra Memory" target="_top"><span style='white-space: nowrap'>extra&#xA0;memory</span></a>
 
 for threads other than thread zero.
 If <code><font color="blue">hold_memory</font></code> is used,
 one should call <a href="ta_free_available.xml" target="_top"><span style='white-space: nowrap'>free_available</span></a>
- for all threads. 
+ for all threads.
 
 
 <br/>
@@ -1515,7 +1517,7 @@ one should call <a href="ta_free_available.xml" target="_top"><span style='white
 <b><big><a name="03-03" id="03-03">03-03</a></big></b>
 
 <ol type="1"><li>
-Add the examples 
+Add the examples
 <a href="simple_ad_openmp.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_openmp.cpp</span></a>
 ,
 <a href="simple_ad_bthread.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_bthread.cpp</span></a>
@@ -1525,8 +1527,8 @@ and <a href="simple_ad_pthread.cpp.xml" target="_top"><span style='white-space: 
 </li><li>
 
 Fix bug in finding boost multi-threading library
-(due to fact that <a href="installunix.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
- 
+(due to fact that <a href="auto_tools.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
+
 is not the prefix during the boost installation).
 </li></ol>
 
@@ -1540,7 +1542,7 @@ Change the name <code><font color="blue">simple_ad.cpp</font></code> to <a href=
 
 </li><li>
 
-The multi-threading <code><font color="blue">team_example.cpp</font></code> example was changed to use 
+The multi-threading <code><font color="blue">team_example.cpp</font></code> example was changed to use
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -1605,7 +1607,7 @@ is true for all
 <b><big><a name="02-11" id="02-11">02-11</a></big></b>
 
 <ol type="1"><li>
-The requirements in 
+The requirements in
 <a href="base_member.xml" target="_top"><span style='white-space: nowrap'>base_member</span></a>
  were missing from the <a href="base_require.xml" target="_top"><span style='white-space: nowrap'>base_require</span></a>
  documentation.
@@ -1618,9 +1620,9 @@ The specifications for <a href="memory_leak.xml" target="_top"><span style='whit
  where changes so that
 calling routine specifies the amount of static memory to add.
 In addition,
-it is now possible to call 
+it is now possible to call
 <code><font color="blue">memory_leak</font></code> when <a href="ta_num_threads.xml" target="_top"><span style='white-space: nowrap'>num_threads</span></a>
- 
+
 is greater than one
 (still can't be in parallel mode).
 
@@ -1669,7 +1671,7 @@ when each element of the <a href="base_require.xml" target="_top"><span style='w
 <br/>
 Make another attempt to fix linking with boost threads where the wrong
 version of the library is in the system include directory; i.e.,
-to have <a href="installunix.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
+to have <a href="auto_tools.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
  override the default
 library.
 
@@ -1677,10 +1679,10 @@ library.
 <br/>
 <b><big><a name="01-27" id="01-27">01-27</a></big></b>
 <br/>
-There were some problems with 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure's</span></a>
+There were some problems with
+<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure's</span></a>
  automatic detection of
-the boost multi-threading library. 
+the boost multi-threading library.
 These have been fixed.
 
 <br/>
@@ -1698,7 +1700,7 @@ Holding onto memory is now controlled by the separate routine
 <a href="ta_hold_memory.xml" target="_top"><span style='white-space: nowrap'>hold_memory</span></a>
 .
 This give the user more control over the memory allocator
-and the ability to obtain a speed up even 
+and the ability to obtain a speed up even
 when there is only one thread.
 To convert old code to the new interface, after each call to
 
@@ -1723,11 +1725,11 @@ Change variable notation and use <a href="optimize.xml" target="_top"><span styl
 <b><big><a name="01-20" id="01-20">01-20</a></big></b>
 
 <ol type="1"><li>
-Add the example <a href="change_const.cpp.xml" target="_top"><span style='white-space: nowrap'>change_const.cpp</span></a>
+Add the example <a href="change_param.cpp.xml" target="_top"><span style='white-space: nowrap'>change_param.cpp</span></a>
 
 which shows how to compute derivatives of functions that have
-parameters that can change (but derivatives are not computed 
-				    with respect to these parameters).
+parameters that change, but derivatives are not computed
+with respect to these parameters.
 </li><li>
 
 The documentation for machine <a href="epsilon.xml" target="_top"><span style='white-space: nowrap'>epsilon</span></a>
@@ -1761,21 +1763,21 @@ Run <code><font color="blue">multi_thread/test.sh</font></code> from source dire
 <br/>
 <b><big><a name="01-16" id="01-16">01-16</a></big></b>
 <br/>
-The test program <code><font color="blue">multi_thread/test.sh</font></code> failed if the 
-<a href="installunix.xml#openmp_flags" target="_top"><span style='white-space: nowrap'>openmp_flags</span></a>
+The test program <code><font color="blue">multi_thread/test.sh</font></code> failed if the
+<a href="auto_tools.xml#openmp_flags" target="_top"><span style='white-space: nowrap'>openmp_flags</span></a>
  not present in the
 <code><font color="blue">configure</font></code> command.
 This has been fixed.
 In addition, this <code><font color="blue">test.sh</font></code> has been made faster by cycling through
 the available threading systems instead of doing every system for every
-test. 
+test.
 
 <br/>
 <br/>
 <b><big><a name="01-15" id="01-15">01-15</a></big></b>
 <br/>
-Fix <code><font color="blue">make test</font></code> so it works when 
-<a href="installunix.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+Fix <code><font color="blue">make test</font></code> so it works when
+<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  is run in the distribution directory
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>yyyymmdd</span></font></i></code>
@@ -1787,7 +1789,7 @@ Fix <code><font color="blue">make test</font></code> so it works when
 <br/>
 <b><big><a name="01-12" id="01-12">01-12</a></big></b>
 <br/>
-The <code><font color="blue">-lpthread</font></code> library was missing from the 
+The <code><font color="blue">-lpthread</font></code> library was missing from the
 <a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi_thread</span></a>
  test program linker command.
 This has been fixed.
@@ -1884,14 +1886,14 @@ There was a problem with the way that
 <a href="multi_newton_work.cpp.xml#multi_newton_combine" target="_top"><span style='white-space: nowrap'>multi_newton_combine</span></a>
 
 joined two solutions into one.
-It is possible that one of the solutions that needs to be joined is on 
+It is possible that one of the solutions that needs to be joined is on
 the  boundary and very close to a solution in the next (or previous interval)
 that is not on the  boundary. In this case,
 the one with the smaller function value is chosen.
 
 </li></ol>
 
-for the previous 
+for the previous
 
 
 <hr/>Input File: omh/whats_new/whats_new_12.omh

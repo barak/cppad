@@ -6,7 +6,7 @@
 <title>Base Type Requirements for Identically Equal Comparisons</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Base Type Requirements for Identically Equal Comparisons"/>
-<meta name="keywords" id="keywords" content=" base type requirements for identically equal comparisons equalopseq Equalopseq require the simple case more complicated cases identical identicalpar prototypes functions examples "/>
+<meta name="keywords" id="keywords" content=" base type requirements for identically equal comparisons require equalopseq the simple case more complicated cases identical identicalpar prototypes functions examples "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -79,6 +79,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -103,12 +105,9 @@ A:active { color : purple }
 <center><b><big><big>Base Type Requirements for Identically Equal Comparisons</big></big></b></center>
 <br/>
 <b><big><a name="EqualOpSeq" id="EqualOpSeq">EqualOpSeq</a></big></b>
-
-
-
 <br/>
 If function <a href="equalopseq.xml" target="_top"><span style='white-space: nowrap'>EqualOpSeq</span></a>
- is used with 
+ is used with
 arguments of type 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
 ,
@@ -119,7 +118,7 @@ the type
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;CppAD::EqualOpSeq(</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
-This should return true if and only if 
+This should return true if and only if
 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
  is identically equal to 
@@ -189,7 +188,7 @@ and then
 <code><i><font color="black"><span style='white-space: nowrap'>u&#xA0;=&#xA0;x[0]</span></font></i></code>
 , 
 <code><i><font color="black"><span style='white-space: nowrap'>v&#xA0;=&#xA0;x[1]</span></font></i></code>
-, 
+,
 Note that during a future <a href="forward.xml" target="_top"><span style='white-space: nowrap'>Forward</span></a>
  calculation,
 
@@ -206,9 +205,6 @@ For example, see
 <b><big><a name="Identical" id="Identical">Identical</a></big></b>
 
 
-
-
-
 <br/>
 <br/>
 <b><a name="Identical.IdenticalPar" id="Identical.IdenticalPar">IdenticalPar</a></b>
@@ -216,7 +212,7 @@ For example, see
 A 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
  is a <a href="glossary.xml#Parameter" target="_top"><span style='white-space: nowrap'>parameter</span></a>
- 
+
 when used in an 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  operation sequence.
@@ -295,7 +291,7 @@ The type
 	</td><td align='left'  valign='top'>
  the 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- value will always be the same 
+ value will always be the same
 </td></tr><tr><td align='left'  valign='top'>
 
 
@@ -329,10 +325,10 @@ The type
  equals 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
 ,
- 	
+	
 <code><font color="blue"><span style='white-space: nowrap'>IdenticalPar(</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
  and
- 	
+	
 <code><font color="blue"><span style='white-space: nowrap'>IdenticalPar(</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 </td></tr>
@@ -340,12 +336,12 @@ The type
 <br/>
 <b><a name="Identical.Examples" id="Identical.Examples">Examples</a></b>
 <br/>
-See 
+See
 <a href="base_alloc.hpp.xml#Identical" target="_top"><span style='white-space: nowrap'>base_alloc</span></a>
 .
 
 
-<hr/>Input File: omh/base_identical.omh
+<hr/>Input File: omh/base_require/base_identical.omh
 
 </body>
 </html>

@@ -6,7 +6,7 @@
 <title>Nonlinear Programming Using the CppAD Interface to Ipopt</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Nonlinear Programming Using the CppAD Interface to Ipopt"/>
-<meta name="keywords" id="keywords" content=" nonlinear programming using the cppad interface to ipopt Cppad deprecated Ipopt Ad syntax purpose cppad_ipopt namespace ipopt_library_paths fg(x) index vector projection injection representation simple sizevector numbervector adnumber advector n m x_i x_l x_u g_l g_u fg_info fg_info.number_functions fg_info.eval_r fg_info.retape fg_info.domain_size fg_info.range_size fg_info.number_terms fg_info.index solution status x z_l z_u g lambda obj_value example wish list "/>
+<meta name="keywords" id="keywords" content=" nonlinear programming using the cppad interface to ipopt Ad deprecated 2012-11-28 syntax purpose cppad_ipopt namespace ipopt_library_paths fg(x) index vector projection injection representation simple sizevector numbervector adnumber advector n m x_i x_l x_u g_l g_u fg_info fg_info.number_functions fg_info.eval_r fg_info.retape fg_info.domain_size fg_info.range_size fg_info.number_terms fg_info.index solution status x z_l z_u g lambda obj_value example wish list "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,11 +66,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -79,6 +80,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -87,6 +89,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -100,7 +103,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Deprecated</option>
+<option>Deprecated 2012-11-28</option>
 <option>Syntax</option>
 <option>Purpose</option>
 <option>cppad_ipopt namespace</option>
@@ -148,7 +151,7 @@ A:active { color : purple }
 
 <center><b><big><big>Nonlinear Programming Using the CppAD Interface to Ipopt</big></big></b></center>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
+<b><big><a name="Deprecated 2012-11-28" id="Deprecated 2012-11-28">Deprecated 2012-11-28</a></big></b>
 <br/>
 This interface to Ipopt is deprecated, use <a href="ipopt_solve.xml" target="_top"><span style='white-space: nowrap'>ipopt_solve</span></a>
  instead.
@@ -222,10 +225,10 @@ problems of the form
 </mtd></mtr></mtable>
 </mrow></math>
 
-This is done using 
+This is done using
 <a href="http://www.coin-or.org/projects/Ipopt.xml" target="_top"><span style='white-space: nowrap'>Ipopt</span></a>
 
-optimizer and 
+optimizer and
 <a href="http://www.coin-or.org/CppAD/" target="_top"><span style='white-space: nowrap'>CppAD</span></a>
 
 Algorithmic Differentiation package.
@@ -235,7 +238,7 @@ Algorithmic Differentiation package.
 <b><big><a name="cppad_ipopt namespace" id="cppad_ipopt namespace">cppad_ipopt namespace</a></big></b>
 <br/>
 All of the declarations for these routines
-are in the <code><font color="blue">cppad_ipopt</font></code> namespace 
+are in the <code><font color="blue">cppad_ipopt</font></code> namespace
 (not the <code><font color="blue">CppAD</font></code> namespace).
 For example; <a href="cppad_ipopt_nlp.xml#SizeVector" target="_top"><span style='white-space: nowrap'>SizeVector</span></a>
  below
@@ -246,7 +249,7 @@ actually denotes the type <code><font color="blue">cppad_ipopt::SizeVector</font
 <b><big><a name="ipopt_library_paths" id="ipopt_library_paths">ipopt_library_paths</a></big></b>
 <br/>
 If you are linking to a shared version of the Ipopt library,
-you may have to add some paths the <code><font color="blue">LD_LIBRARY_PATH</font></code> 
+you may have to add some paths the <code><font color="blue">LD_LIBRARY_PATH</font></code>
 shell variable using the <code><font color="blue">export</font></code> command in the syntax above.
 For example, if the file the ipopt library is
 
@@ -641,7 +644,7 @@ to compute its derivatives.
 </msup>
 </mrow></math>
 
- 
+
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>k</mi>
@@ -805,7 +808,7 @@ for
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mo stretchy="false">&#x02016;</mo>
@@ -853,7 +856,7 @@ for
 <mi mathvariant='italic'>m</mi>
 </mrow></math>
 
-. 
+.
 
 <br/>
 <br/>
@@ -965,10 +968,10 @@ and
 <br/>
 The type 
 <code><font color="blue"><span style='white-space: nowrap'>SizeVector</span></font></code>
- is defined by the 
+ is defined by the
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad_ipopt_nlp.hpp</span></font></code>
- include file to be a 
+ include file to be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with elements of type
 <code><font color="blue">size_t</font></code>.
@@ -979,10 +982,10 @@ The type
 <br/>
 The type 
 <code><font color="blue"><span style='white-space: nowrap'>NumberVector</span></font></code>
- is defined by the 
+ is defined by the
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad_ipopt_nlp.hpp</span></font></code>
- include file to be a 
+ include file to be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with elements of type
 <code><font color="blue">Ipopt::Number</font></code>.
@@ -993,10 +996,10 @@ The type
 <br/>
 The type 
 <code><font color="blue"><span style='white-space: nowrap'>ADNumber</span></font></code>
- is defined by the 
+ is defined by the
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad_ipopt_nlp.hpp</span></font></code>
- include file to be a 
+ include file to be a
 an AD type that can be used to compute derivatives.
 
 <br/>
@@ -1005,13 +1008,13 @@ an AD type that can be used to compute derivatives.
 <br/>
 The type 
 <code><font color="blue"><span style='white-space: nowrap'>ADVector</span></font></code>
- is defined by the 
+ is defined by the
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad_ipopt_nlp.hpp</span></font></code>
- include file to be a 
+ include file to be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
  class with elements of type
-<code><font color="blue">ADNumber</font></code>. 
+<code><font color="blue">ADNumber</font></code>.
 
 <br/>
 <br/>
@@ -1024,7 +1027,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies the dimension of the argument space; 
+It specifies the dimension of the argument space;
 i.e., 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -1053,7 +1056,7 @@ It specifies the dimension of the range space for
 <mi mathvariant='italic'>g</mi>
 </mrow></math>
 
-; 
+;
 i.e., 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>g</mi>
@@ -1211,11 +1214,11 @@ The argument
 </span></font></code>
 where the class 
 <code><i><font color="black"><span style='white-space: nowrap'>FG_info</span></font></i></code>
- is derived from the 
+ is derived from the
 base class <code><font color="blue">cppad_ipopt_fg_info</font></code>.
 Certain virtual member functions of 
 <code><i><font color="black"><span style='white-space: nowrap'>fg_info</span></font></i></code>
- are used to 
+ are used to
 compute the value of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>fg</mi>
@@ -1279,7 +1282,7 @@ This member function has the prototype
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 virtual&#xA0;ADVector&#xA0;cppad_ipopt_fg_info::eval_r(size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;const&#xA0;ADVector&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>)&#xA0;=&#xA0;0;<br/>
 </span></font></code>
-Thus it is a pure virtual function and must be defined in the 
+Thus it is a pure virtual function and must be defined in the
 derived class 
 <code><i><font color="black"><span style='white-space: nowrap'>FG_info</span></font></i></code>
 .
@@ -1326,7 +1329,7 @@ If
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
  is an <code><font color="blue">ADVector</font></code> of size 
 <code><i><font color="black"><span style='white-space: nowrap'>q(k)</span></font></i></code>
- 
+
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  is an <code><font color="blue">ADVector</font></code> of size 
@@ -1388,8 +1391,8 @@ sets
  to true or false.
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>retape</span></font></i></code>
- is true, 
-<code><font color="blue">cppad_ipopt_nlp</font></code> will retape the operation sequence 
+ is true,
+<code><font color="blue">cppad_ipopt_nlp</font></code> will retape the operation sequence
 corresponding to 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msub><mi mathvariant='italic'>r</mi>
@@ -1403,12 +1406,12 @@ corresponding to
  for
 every value of 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
-. 
+.
 An <code><font color="blue">cppad_ipopt_nlp</font></code> object
 should use much less memory and run faster if 
 <code><i><font color="black"><span style='white-space: nowrap'>retape</span></font></i></code>
  is false.
-You can test both the true and false cases to make sure 
+You can test both the true and false cases to make sure
 the operation sequence does not depend on 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
 .
@@ -1417,7 +1420,7 @@ the operation sequence does not depend on
 </span></code>The <code><font color="blue">cppad_ipopt_fg_info</font></code> implementation of this function
 sets 
 <code><i><font color="black"><span style='white-space: nowrap'>retape</span></font></i></code>
- to true 
+ to true
 (while slower it is also safer to always retape).
 
 <br/>
@@ -1631,9 +1634,9 @@ This member function has prototype
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;SizeVector&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>I</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;SizeVector&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>J</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;)<br/>
 </span></font></code>
-The argument 
+The argument
 
-<code><i><font color="black"><span style='white-space: nowrap'>&#xA0;<br/>
+<code><i><font color="black"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;k<br/>
 </span></font></i></code>
 has type 
@@ -1646,9 +1649,9 @@ and is a value between zero and
 </mrow></math>
 
  inclusive.
-The argument 
+The argument
 
-<code><i><font color="black"><span style='white-space: nowrap'>&#xA0;<br/>
+<code><i><font color="black"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;ell<br/>
 </span></font></i></code>
 has type 
@@ -1664,7 +1667,7 @@ and is a value between zero and
 </mrow></math>
 
  inclusive.
-The argument 
+The argument
 
 <code><i><font color="black"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;I<br/>
@@ -1694,7 +1697,7 @@ the first
 
  elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>I</span></font></i></code>
- 
+
 must be the corresponding elements of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msub><mi mathvariant='italic'>I</mi>
@@ -1705,10 +1708,10 @@ must be the corresponding elements of
 </msub>
 </mrow></math>
 
- 
+
 in the <a href="cppad_ipopt_nlp.xml#fg(x).Representation" target="_top"><span style='white-space: nowrap'>representation</span></a>
  above.
-The argument 
+The argument
 
 <code><i><font color="black"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;J<br/>
@@ -1727,7 +1730,7 @@ of type <code><font color="blue">size_t</font></code> and size greater than or e
 The input value of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>J</span></font></i></code>
  does not matter.
-The output value of 
+The output value of
 the first 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>q</mi>
@@ -1738,7 +1741,7 @@ the first
 
  elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>J</span></font></i></code>
- 
+
 must be the corresponding elements of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msub><mi mathvariant='italic'>J</mi>
@@ -1749,7 +1752,7 @@ must be the corresponding elements of
 </msub>
 </mrow></math>
 
- 
+
 in the <a href="cppad_ipopt_nlp.xml#fg(x).Representation" target="_top"><span style='white-space: nowrap'>representation</span></a>
  above.
 <code><span style='white-space: nowrap'><br/>
@@ -1810,7 +1813,7 @@ The
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad_ipopt_solution::solution_status&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>solution</span></font></i><font color="blue"><span style='white-space: nowrap'>.status<br/>
 </span></font></code>
-It is the final Ipopt status for the optimizer. 
+It is the final Ipopt status for the optimizer.
 Here is a list of the possible values for the status:
 
 <table><tr><td align='left'  valign='top'>
@@ -1835,7 +1838,7 @@ documentation for <code><font color="blue">finalize_solution</font></code>.
 
 success </td><td align='left'  valign='top'>
 
-Algorithm terminated successfully at a point satisfying the convergence 
+Algorithm terminated successfully at a point satisfying the convergence
 tolerances (see Ipopt options).
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -1851,8 +1854,8 @@ Algorithm terminated because progress was very slow.
 
 stop_at_acceptable_point </td><td align='left'  valign='top'>
 
-Algorithm stopped at a point that was converged, 
-not to the 'desired' tolerances, but to 'acceptable' tolerances 
+Algorithm stopped at a point that was converged,
+not to the 'desired' tolerances, but to 'acceptable' tolerances
 (see Ipopt options).
 </td></tr><tr><td align='left'  valign='top'>
 
@@ -1879,13 +1882,13 @@ Restoration phase failed, algorithm doesn't know how to proceed.
 
 error_in_step_computation </td><td align='left'  valign='top'>
 
-An unrecoverable error occurred while Ipopt tried to 
+An unrecoverable error occurred while Ipopt tried to
 compute the search direction.
 </td></tr><tr><td align='left'  valign='top'>
 
 invalid_number_detected </td><td align='left'  valign='top'>
 
-Algorithm received an invalid number (such as <code><font color="blue">nan</font></code> or <code><font color="blue">inf</font></code>) 
+Algorithm received an invalid number (such as <code><font color="blue">nan</font></code> or <code><font color="blue">inf</font></code>)
 from the users function 
 <code><i><font color="black"><span style='white-space: nowrap'>fg_info</span></font></i><font color="blue"><span style='white-space: nowrap'>.eval</span></font></code>
  or from the CppAD evaluations
@@ -1939,7 +1942,7 @@ and its size is equal to
 </mrow></math>
 
 .
-It is the final Lagrange multipliers for the 
+It is the final Lagrange multipliers for the
 lower bounds on 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -1964,7 +1967,7 @@ and its size is equal to
 </mrow></math>
 
 .
-It is the final Lagrange multipliers for the 
+It is the final Lagrange multipliers for the
 upper bounds on 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -2016,7 +2019,7 @@ and its size is equal to
 </mrow></math>
 
 .
-It is the final value for the 
+It is the final value for the
 Lagrange multipliers corresponding to the constraint function.
 
 <br/>
@@ -2047,10 +2050,10 @@ It is the final value of the objective function
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
 <br/>
-The file 
+The file
 <a href="ipopt_nlp_get_started.cpp.xml" target="_top"><span style='white-space: nowrap'>ipopt_nlp_get_started.cpp</span></a>
- is an example and test of 
-<code><font color="blue">cppad_ipopt_nlp</font></code>  that uses the 
+ is an example and test of
+<code><font color="blue">cppad_ipopt_nlp</font></code>  that uses the
 <a href="cppad_ipopt_nlp.xml#Simple Representation" target="_top"><span style='white-space: nowrap'>simple&#xA0;representation</span></a>
 .
 It returns true if it succeeds and false otherwise.
@@ -2062,16 +2065,16 @@ uses a more complex representation.
 <br/>
 <b><big><a name="Wish List" id="Wish List">Wish List</a></big></b>
 <br/>
-This is a list of possible future improvements to 
+This is a list of possible future improvements to
 <code><font color="blue">cppad_ipopt_nlp</font></code> that would require changed to the user interface:
 <ol type="1"><li>
 The routine 
 <code><font color="blue"><span style='white-space: nowrap'>fg_info.eval_r(</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>u</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
- should also support 
+ should also support
 
 <code><font color="blue"><span style='white-space: nowrap'>NumberVector</span></font></code>
  for the type of the argument <code><font color="blue">u</font></code>
-(this would certainly be more efficient when 
+(this would certainly be more efficient when
 
 <code><font color="blue"><span style='white-space: nowrap'>fg_info.retape(</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
  is true and 

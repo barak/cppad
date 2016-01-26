@@ -88,7 +88,7 @@ A:active { color : purple }
 <code><font color="blue"><pre style='display:inline'> 
 # include &lt;vector&gt;
 # include &lt;cstddef&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/mat_sum_sq.hpp&gt;
 
 bool mat_sum_sq()
@@ -110,24 +110,24 @@ bool mat_sum_sq()
 
 	// check y_00
 	check = x_00 * x_00 + x_01 * x_10;
-	ok   &amp;= (check == y[0]); 
+	ok   &amp;= (check == y[0]);
 
 	// check y_01
 	check = x_00 * x_01 + x_01 * x_11;
-	ok   &amp;= (check == y[1]); 
+	ok   &amp;= (check == y[1]);
 
 	// check y_10
 	check = x_10 * x_00 + x_11 * x_10;
-	ok   &amp;= (check == y[2]); 
+	ok   &amp;= (check == y[2]);
 
 	// check y_11
 	check = x_10 * x_01 + x_11 * x_11;
-	ok   &amp;= (check == y[3]); 
-	
+	ok   &amp;= (check == y[3]);
+
 	// check z
 	check = y[0] + y[1] + y[2] + y[3];
-	ok   &amp;= (check == z[0]); 
-	
+	ok   &amp;= (check == z[0]);
+
 	return ok;
 }
 </pre>

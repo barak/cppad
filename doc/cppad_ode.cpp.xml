@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -145,7 +145,7 @@ bool link_ode(
 
 	// -------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
-	{ 	// choose next x value
+	{	// choose next x value
 		uniform_01(n, x);
 		for(j = 0; j &lt; n; j++)
 			X[j] = x[j];
@@ -161,11 +161,14 @@ bool link_ode(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		jacobian = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
 	}
 	else
-	{ 	// an x value
+	{	// an x value
 		uniform_01(n, x);
 		for(j = 0; j &lt; n; j++)
 			X[j] = x[j];
@@ -181,6 +184,10 @@ bool link_ode(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
+
 		while(repeat--)
 		{	// get next argument value
 			uniform_01(n, x);

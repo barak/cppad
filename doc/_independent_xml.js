@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -44,6 +44,7 @@ var list_current0 = [
 'independent.xml#Start Recording',
 'independent.xml#Stop Recording',
 'independent.xml#x',
+'independent.xml#abort_op_index',
 'independent.xml#VectorAD',
 'independent.xml#Parallel Mode',
 'independent.xml#Example'

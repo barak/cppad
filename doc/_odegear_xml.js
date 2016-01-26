@@ -7,7 +7,7 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'library.xml',
+'utility.xml',
 'odegear.xml'
 ];
 var list_down2 = [
@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -47,9 +47,7 @@ var list_down1 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'benderquad.xml',
-'opt_val_hes.xml',
-'luratio.xml'
+'to_string.xml'
 ];
 var list_down0 = [
 'ode_gear.cpp.xml'

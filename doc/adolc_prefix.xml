@@ -6,7 +6,7 @@
 <title>Including the ADOL-C Examples and Tests</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Including the ADOL-C Examples and Tests"/>
-<meta name="keywords" id="keywords" content=" including the adol-c examples and tests adolc example test purpose adolc_prefix prefix speed unix cygwin get_adolc get "/>
+<meta name="keywords" id="keywords" content=" including the adol-c examples and tests adolc prefix get purpose adolc_prefix speed unix cygwin get_adolc "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,7 +66,7 @@ A:active { color : purple }
 <option>cmake</option>
 <option>cmake_check</option>
 <option>pkgconfig</option>
-<option>InstallUnix</option>
+<option>auto_tools</option>
 </select>
 </td>
 <td>
@@ -115,7 +115,7 @@ The includes speed comparison with other AD packages; see
 <a href="speed_adolc.xml" target="_top"><span style='white-space: nowrap'>speed_adolc</span></a>
 .
 It also includes examples that combine ADOL-C with
-CppAD; see 
+CppAD; see
 <table><tr><td align='left'  valign='top'>
 
 <a href="base_adolc.hpp.xml" target="_top">base_adolc.hpp</a></td><td>
@@ -125,19 +125,17 @@ Enable use of AD&lt;Base&gt; where Base is Adolc's adouble Type</td></tr>
 <a href="mul_level_adolc.cpp.xml" target="_top">mul_level_adolc.cpp</a></td><td>
 Using Adolc with Multiple Levels of Taping: Example and Test</td></tr>
 <tr><td>
- 
+
 <a href="mul_level_adolc_ode.cpp.xml" target="_top">mul_level_adolc_ode.cpp</a></td><td>
-Using Adolc with Taylor's Ode Solver: An Example and Test</td></tr>
+Taylor's Ode Solver: A Multi-Level Adolc Example and Test</td></tr>
 <tr><td>
 
 </td></tr>
 </table>
 <br/>
 <b><big><a name="adolc_prefix" id="adolc_prefix">adolc_prefix</a></big></b>
-
-
 <br/>
-If ADOL-C is installed on your system, you can 
+If ADOL-C is installed on your system, you can
 specify a value for its install 
 <code><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i></code>
  on the
@@ -155,7 +153,7 @@ for one of the directories
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>/</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>/adolc/adouble.h<br/>
 </span></font></code>
-is a valid way to reference to the include file <code><font color="blue">adouble.h</font></code>; 
+is a valid way to reference to the include file <code><font color="blue">adouble.h</font></code>;
 Note that CppAD assumes ADOL-C has been configured with
 its sparse matrix computations enabled; i.e, using
 
@@ -170,8 +168,6 @@ with the same prefix as ACOL-C; see
 <br/>
 <br/>
 <b><big><a name="Examples" id="Examples">Examples</a></big></b>
-
-
 <br/>
 If you include 
 <code><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i></code>
@@ -194,14 +190,12 @@ have passed their correctness check.
 <br/>
 <br/>
 <b><big><a name="Speed Tests" id="Speed Tests">Speed Tests</a></big></b>
-
-
 <br/>
 If you include 
 <code><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i></code>
  on the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
  command line,
-you will be able to run the ADOL-C speed correctness tests 
+you will be able to run the ADOL-C speed correctness tests
 by executing the following commands starting in the
 <a href="download.xml#Distribution Directory" target="_top"><span style='white-space: nowrap'>distribution&#xA0;directory</span></a>
 :
@@ -210,8 +204,8 @@ by executing the following commands starting in the
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cd&#xA0;build/speed/adolc<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;make&#xA0;check_speed_adolc<br/>
 </span></font></code>
-After executing <code><font color="blue">make check_speed_adolc</font></code>, 
-you can run a specific ADOL-C speed tests 
+After executing <code><font color="blue">make check_speed_adolc</font></code>,
+you can run a specific ADOL-C speed tests
 by executing the command <code><font color="blue">./speed_adolc</font></code>;
 see <a href="speed_main.xml" target="_top"><span style='white-space: nowrap'>speed_main</span></a>
  for the meaning of the command line
@@ -220,11 +214,9 @@ options to this program.
 <br/>
 <br/>
 <b><big><a name="Unix" id="Unix">Unix</a></big></b>
-
-
 <br/>
-If you are using Unix, 
-you may have to add 
+If you are using Unix,
+you may have to add
 
 <code><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i></code>
  to <code><font color="blue">LD_LIBRARY_PATH</font></code>.
@@ -240,10 +232,8 @@ in your <code><font color="blue">$HOME/.bashrc</font></code> file.
 <br/>
 <br/>
 <b><big><a name="Cygwin" id="Cygwin">Cygwin</a></big></b>
-
-
 <br/>
-If you are using Cygwin, 
+If you are using Cygwin,
 you may have to add to following lines to the file
 <code><font color="blue">.bashrc</font></code> in your home directory:
 
@@ -256,7 +246,7 @@ If
 <code><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i></code>
  begins with a disk specification,
 you must use the Cygwin format for the disk specification.
-For example, 
+For example,
 if <code><font color="blue">d:/adolc_base</font></code> is the proper directory,
 <code><font color="blue">/cygdrive/d/adolc_base</font></code> should be used for 
 <code><i><font color="black"><span style='white-space: nowrap'>adolc_prefix</span></font></i></code>
@@ -266,8 +256,6 @@ if <code><font color="blue">d:/adolc_base</font></code> is the proper directory,
 <br/>
 <br/>
 <b><big><a name="get_adolc" id="get_adolc">get_adolc</a></big></b>
-
-
 <br/>
 If you are using Unix, you can download and install
 a copy of Adolc using <a href="get_adolc.sh.xml" target="_top"><span style='white-space: nowrap'>get_adolc.sh</span></a>

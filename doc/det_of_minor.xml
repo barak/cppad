@@ -6,7 +6,7 @@
 <title>Determinant of a Minor</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Determinant of a Minor"/>
-<meta name="keywords" id="keywords" content=" det_of_minor determinant matrix minor of a syntax inclusion purpose m n r c d scalar example source code "/>
+<meta name="keywords" id="keywords" content=" determinant of a minor det_of_minor matrix syntax inclusion purpose m n r c d scalar example source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -116,10 +116,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
 <center><b><big><big>Determinant of a Minor</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -130,7 +126,7 @@ A:active { color : purple }
 </span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>d</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;det_of_minor(</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
- 
+
 
 
 <br/>
@@ -138,10 +134,10 @@ A:active { color : purple }
 <b><big><a name="Inclusion" id="Inclusion">Inclusion</a></big></b>
 <br/>
 The template function <code><font color="blue">det_of_minor</font></code> is defined in the <code><font color="blue">CppAD</font></code>
-namespace by including 
-the file <code><font color="blue">cppad/speed/det_of_minor.hpp</font></code> 
+namespace by including
+the file <code><font color="blue">cppad/speed/det_of_minor.hpp</font></code>
 (relative to the CppAD distribution directory).
-It is only intended for example and testing purposes, 
+It is only intended for example and testing purposes,
 so it is not automatically included by
 <a href="cppad.xml" target="_top"><span style='white-space: nowrap'>cppad.hpp</span></a>
 .
@@ -170,7 +166,7 @@ The elements of the
 <mi mathvariant='italic'>M</mi>
 </mrow></math>
 
- 
+
 of the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
@@ -225,7 +221,7 @@ for
 </msub>
 </mrow></math>
 
-where the functions 
+where the functions
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -254,7 +250,7 @@ Expansion by minors is chosen as an example because it uses
 a lot of floating point operations yet does not require much source code
 (on the order of 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
- factorial floating point operations and 
+ factorial floating point operations and
 about 70 lines of source code including comments).
 This is not an efficient method for computing a determinant;
 for example, using an LU factorization would be better.
@@ -312,7 +308,7 @@ for
 <mn>1</mn>
 </mrow></math>
 
-, 
+,
 and 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>r</mi>
@@ -505,7 +501,7 @@ This vector defines the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 which specifies the rows of the minor 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>M</mi>
@@ -520,7 +516,7 @@ To be specific, the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>i</mi>
@@ -533,7 +529,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- is defined by 
+ is defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtable rowalign="center" ><mtr><mtd columnalign="right" >
@@ -576,7 +572,7 @@ less than or equal
 .
 The elements of vector 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
- are modified during the computation, 
+ are modified during the computation,
 and restored to their original value before the return from
 <code><font color="blue">det_of_minor</font></code>.
 
@@ -607,7 +603,7 @@ This vector defines the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 which specifies the rows of the minor 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>M</mi>
@@ -622,7 +618,7 @@ To be specific, the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>j</mi>
@@ -635,7 +631,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- is defined by 
+ is defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtable rowalign="center" ><mtr><mtd columnalign="right" >
@@ -678,7 +674,7 @@ less than or equal
 .
 The elements of vector 
 <code><i><font color="black"><span style='white-space: nowrap'>c</span></font></i></code>
- are modified during the computation, 
+ are modified during the computation,
 and restored to their original value before the return from
 <code><font color="blue">det_of_minor</font></code>.
 
@@ -719,7 +715,7 @@ the
  must support the following operations:
 <table><tr><td align='left'  valign='top'>
 
-<b>Syntax</b> 
+<b>Syntax</b>
 	</td><td align='left'  valign='top'>
  <b>Description</b>
 	</td><td align='left'  valign='top'>
@@ -807,7 +803,7 @@ the
 <br/>
 The file
 <a href="det_of_minor.cpp.xml" target="_top"><span style='white-space: nowrap'>det_of_minor.cpp</span></a>
- 
+
 contains an example and test of <code><font color="blue">det_of_minor.hpp</font></code>.
 It returns true if it succeeds and false otherwise.
 
@@ -817,7 +813,7 @@ It returns true if it succeeds and false otherwise.
 <br/>
 The file
 <a href="det_of_minor.hpp.xml" target="_top"><span style='white-space: nowrap'>det_of_minor.hpp</span></a>
- 
+
 contains the source for this template function.
 
 

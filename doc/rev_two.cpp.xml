@@ -6,7 +6,7 @@
 <title>Second Partials Reverse Driver: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Second Partials Reverse Driver: Example and Test"/>
-<meta name="keywords" id="keywords" content=" second partials reverse driver: example and test partial "/>
+<meta name="keywords" id="keywords" content=" second partials reverse driver: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -90,7 +90,7 @@ A:active { color : purple }
 namespace { // -----------------------------------------------------
 // define the template function in empty namespace
 // bool RevTwoCases&lt;VectorBase, VectorSize_t&gt;(void)
-template &lt;class VectorBase, class VectorSize_t&gt; 
+template &lt;class VectorBase, class VectorSize_t&gt;
 bool RevTwoCases()
 {	bool ok = true;
 	using CppAD::AD;
@@ -138,18 +138,18 @@ bool RevTwoCases()
 	ddw = f.RevTwo(x, i, j);
 
 	// partials of y[0] w.r.t x[0] is 2 * x[0] * exp(x[1])
-	// check partials of y[0] w.r.t x[0] and x[k] for k = 0, 1 
+	// check partials of y[0] w.r.t x[0] and x[k] for k = 0, 1
 	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(      2.*exp(x[1]), ddw[0*p+0], 1e-10, 1e-10 );
 	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*x[0]*exp(x[1]), ddw[1*p+0], 1e-10, 1e-10 );
 
 	// partials of y[1] w.r.t x[1] is x[0] * x[0] * cos(x[1])
-	// check partials of F_1 w.r.t x[1] and x[k] for k = 0, 1 
+	// check partials of F_1 w.r.t x[1] and x[k] for k = 0, 1
 	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(    2.*x[0]*cos(x[1]), ddw[0*p+1], 1e-10, 1e-10 );
 	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( -x[0]*x[0]*sin(x[1]), ddw[1*p+1], 1e-10, 1e-10 );
 
 	return ok;
 }
-} // End empty namespace 
+} // End empty namespace
 # include &lt;vector&gt;
 # include &lt;valarray&gt;
 bool RevTwo(void)

@@ -6,7 +6,7 @@
 <title>Evaluate a Function That Has a Sparse Hessian</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Evaluate a Function That Has a Sparse Hessian"/>
-<meta name="keywords" id="keywords" content=" evaluate a function that has sparse hessian sparse_hes_fun syntax purpose inclusion float floatvector n x row col p fp gradient example source code "/>
+<meta name="keywords" id="keywords" content=" evaluate a function that has sparse hessian sparse_hes_fun syntax purpose inclusion float floatvector n x row col p fp example source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -108,7 +108,6 @@ A:active { color : purple }
 <option>p</option>
 <option>fp</option>
 <option>---..Function</option>
-<option>---..Gradient</option>
 <option>---..Hessian</option>
 <option>Example</option>
 <option>Source Code</option>
@@ -197,13 +196,13 @@ The function
 </mstyle></mrow>
 </mrow></math>
 
- only depends on the 
+ only depends on the
 size and contents of the index vectors 
 <code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
-. 
-The non-zero entries in the Hessian of this function have 
+.
+The non-zero entries in the Hessian of this function have
 one of the following forms:
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -328,11 +327,11 @@ All the other terms of the Hessian are zero.
 <br/>
 <b><big><a name="Inclusion" id="Inclusion">Inclusion</a></big></b>
 <br/>
-The template function <code><font color="blue">sparse_hes_fun</font></code> 
-is defined in the <code><font color="blue">CppAD</font></code> namespace by including 
-the file <code><font color="blue">cppad/speed/sparse_hes_fun.hpp</font></code> 
+The template function <code><font color="blue">sparse_hes_fun</font></code>
+is defined in the <code><font color="blue">CppAD</font></code> namespace by including
+the file <code><font color="blue">cppad/speed/sparse_hes_fun.hpp</font></code>
 (relative to the CppAD distribution directory).
-It is only intended for example and testing purposes, 
+It is only intended for example and testing purposes,
 so it is not automatically included by
 <a href="cppad.xml" target="_top"><span style='white-space: nowrap'>cppad.hpp</span></a>
 .
@@ -377,7 +376,7 @@ The type
 <code><i><font color="black"><span style='white-space: nowrap'>FloatVector</span></font></i></code>
  is any
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
-, or it can be a raw pointer, 
+, or it can be a raw pointer,
 with elements of type 
 <code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
 .
@@ -436,7 +435,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It specifies one of the first 
+It specifies one of the first
 index of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -478,7 +477,7 @@ and its size must be
 ; i.e., the same as for 
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
 .
-It specifies the second 
+It specifies the second
 index of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -490,8 +489,14 @@ All the elements of
  must be between zero and 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>-1</span></font></code>
 .
+There are no duplicated entries requested, to be specific,
+if 
+<code><i><font color="black"><span style='white-space: nowrap'>k1</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k2</span></font></i></code>
+ then
 
-<br/>
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k1</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k1</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;)&#xA0;!=&#xA0;(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k2</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k2</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;)<br/>
+</span></font></code>
 <br/>
 <b><big><a name="p" id="p">p</a></big></b>
 <br/>
@@ -502,7 +507,7 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It is between zero and two and
+It is either zero or two and
 specifies the order of the derivative of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -562,48 +567,6 @@ If
 
 <br/>
 <br/>
-<b><a name="fp.Gradient" id="fp.Gradient">Gradient</a></b>
-<br/>
-If 
-<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
- is one, 
-<code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
- has size 
-<code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
- and 
-for 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
-<mn>-1</mn>
-</mrow></math>
-
-
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
-<mfrac><mrow><mo stretchy="false">&#x02202;</mo>
-<mi mathvariant='italic'>f</mi>
-</mrow>
-<mrow><mo stretchy="false">&#x02202;</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">]</mo>
-</mrow>
-</mfrac>
-<mo stretchy="false">=</mo>
-<mi mathvariant='italic'>fp</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">]</mo>
-</mrow></math>
-
-<br/>
 <b><a name="fp.Hessian" id="fp.Hessian">Hessian</a></b>
 <br/>
 If 
@@ -611,34 +574,21 @@ If
  is two, 
 <code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
  has size 
-<code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>K</span></font></i></code>
  and
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">=</mo>
 <mn>0</mn>
 <mo stretchy="false">,</mo>
 <mo stretchy="false">&#x02026;</mo>
 <mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
+<mi mathvariant='italic'>K</mi>
 <mn>-1</mn>
 </mrow></math>
 
 ,
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
-<mn>-1</mn>
-</mrow></math>
-
-
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mfrac><mrow><msup><mo stretchy="false">&#x02202;</mo>
@@ -649,23 +599,27 @@ for
 <mrow><mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>row</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 <mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>j</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>col</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 </mrow>
 </mfrac>
 <mo stretchy="false">=</mo>
 <mi mathvariant='italic'>fp</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">*</mo>
-<mi mathvariant='italic'>n</mi>
-<mo stretchy="false">+</mo>
-<mi mathvariant='italic'>j</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">]</mo>
 </mrow></math>
 
@@ -682,7 +636,7 @@ It returns true if it succeeds and false otherwise.
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 <br/>
-The file 
+The file
 <a href="sparse_hes_fun.hpp.xml" target="_top"><span style='white-space: nowrap'>sparse_hes_fun.hpp</span></a>
 
 contains the source code for this template function.

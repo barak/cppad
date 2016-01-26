@@ -6,7 +6,7 @@
 <title>Source: LuFactor</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Source: LuFactor"/>
-<meta name="keywords" id="keywords" content=" source: lufactor Lufactor source "/>
+<meta name="keywords" id="keywords" content=" source: lufactor source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuFactor</option>
 <option>lu_factor.hpp</option>
@@ -46,7 +46,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -70,9 +70,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -97,9 +95,9 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: LuFactor</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_LU_FACTOR_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_LU_FACTOR_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_LU_FACTOR_INCLUDED
+</span></code># define CPPAD_LU_FACTOR_HPP
 
 <pre style='display:inline'> 
 
@@ -107,8 +105,8 @@ A:active { color : purple }
 # include &lt;vector&gt;
 
 # include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/check_simple_vector.hpp&gt;
-# include &lt;cppad/check_numeric_type.hpp&gt;
+# include &lt;cppad/utility/check_simple_vector.hpp&gt;
+# include &lt;cppad/utility/check_numeric_type.hpp&gt;
 
 namespace CppAD { // BEGIN CppAD namespace
 
@@ -124,7 +122,7 @@ inline bool AbsGeq(const Float &amp;x, const Float &amp;y)
 	return xabs &gt;= yabs;
 }
 inline bool AbsGeq(
-	const std::complex&lt;double&gt; &amp;x, 
+	const std::complex&lt;double&gt; &amp;x,
 	const std::complex&lt;double&gt; &amp;y)
 {	double xsq = x.real() * x.real() + x.imag() * x.imag();
 	double ysq = y.real() * y.real() + y.imag() * y.imag();
@@ -132,7 +130,7 @@ inline bool AbsGeq(
 	return xsq &gt;= ysq;
 }
 inline bool AbsGeq(
-	const std::complex&lt;float&gt; &amp;x, 
+	const std::complex&lt;float&gt; &amp;x,
 	const std::complex&lt;float&gt; &amp;y)
 {	float xsq = x.real() * x.real() + x.imag() * x.imag();
 	float ysq = y.real() * y.real() + y.imag() * y.imag();
@@ -143,7 +141,7 @@ inline bool AbsGeq(
 // Lines that are different from code in cppad/local/lu_ratio.hpp end with //
 template &lt;class SizeVector, class FloatVector&gt;                          //
 int LuFactor(SizeVector &amp;ip, SizeVector &amp;jp, FloatVector &amp;LU)           //
-{	
+{
 	// type of the elements of LU                                   //
 	typedef typename FloatVector::value_type Float;                 //
 
@@ -187,7 +185,7 @@ int LuFactor(SizeVector &amp;ip, SizeVector &amp;jp, FloatVector &amp;LU)       
 
 	// Reduce the matrix P to L * U using n pivots
 	for(p = 0; p &lt; n; p++)
-	{	// determine row and column corresponding to element of 
+	{	// determine row and column corresponding to element of
 		// maximum absolute value in remaining part of P
 		imax = jmax = n;
 		emax = zero;
@@ -206,11 +204,11 @@ int LuFactor(SizeVector &amp;ip, SizeVector &amp;jp, FloatVector &amp;LU)       
 				}
 			}
 		}
-		CPPAD_ASSERT_KNOWN( 
+		CPPAD_ASSERT_KNOWN(
 		(imax &lt; n) &amp; (jmax &lt; n) ,
 		&quot;LuFactor can't determine an element with &quot;
 		&quot;maximum absolute value.\n&quot;
-		&quot;Perhaps original matrix contains not a number or infinity.\n&quot; 
+		&quot;Perhaps original matrix contains not a number or infinity.\n&quot;
 		&quot;Perhaps your specialization of AbsGeq is not correct.&quot;
 		);
 		if( imax != p )
@@ -236,28 +234,28 @@ int LuFactor(SizeVector &amp;ip, SizeVector &amp;jp, FloatVector &amp;LU)       
 			return   0;
 		}
 
-		// Reduce U by the elementary transformations that maps 
+		// Reduce U by the elementary transformations that maps
 		// LU( ip[p], jp[p] ) to one.  Only need transform elements
 		// above the diagonal in U and LU( ip[p] , jp[p] ) is
 		// corresponding value below diagonal in L.
 		for(j = p+1; j &lt; n; j++)
 			LU[ ip[p] * n + jp[j] ] /= pivot;
 
-		// Reduce U by the elementary transformations that maps 
-		// LU( ip[i], jp[p] ) to zero. Only need transform elements 
-		// above the diagonal in U and LU( ip[i], jp[p] ) is 
+		// Reduce U by the elementary transformations that maps
+		// LU( ip[i], jp[p] ) to zero. Only need transform elements
+		// above the diagonal in U and LU( ip[i], jp[p] ) is
 		// corresponding value below diagonal in L.
 		for(i = p+1; i &lt; n; i++ )
 		{	etmp = LU[ ip[i] * n + jp[p] ];
 			for(j = p+1; j &lt; n; j++)
-			{	LU[ ip[i] * n + jp[j] ] -= 
+			{	LU[ ip[i] * n + jp[j] ] -=
 					etmp * LU[ ip[p] * n + jp[j] ];
-			} 
+			}
 		}
 	}
 	return sign;
 }
-} // END CppAD namespace 
+} // END CppAD namespace
 </pre>
 
 

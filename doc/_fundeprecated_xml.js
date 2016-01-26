@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -29,16 +29,18 @@ var list_down2 = [
 'theory.xml',
 'glossary.xml',
 'bib.xml',
-'bugs.xml',
-'wishlist.xml',
+'wish_list.xml',
 'whats_new.xml',
 'deprecated.xml',
 'compare_c.xml',
+'numeric_ad.xml',
+'addon.xml',
 'license.xml'
 ];
 var list_down1 = [
 'include_deprecated.xml',
 'fundeprecated.xml',
+'comparechange.xml',
 'omp_max_thread.xml',
 'tracknewdel.xml',
 'omp_alloc.xml',
@@ -46,27 +48,28 @@ var list_down1 = [
 'epsilon.xml',
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
-'old_atomic.xml'
+'old_atomic.xml',
+'zdouble.xml'
 ];
 var list_current0 = [
 'fundeprecated.xml#Syntax',
 'fundeprecated.xml#Purpose',
 'fundeprecated.xml#Dependent',
-'fundeprecated.xml#Dependent.Deprecated',
+'fundeprecated.xml#Dependent.Deprecated 2007-08-07',
 'fundeprecated.xml#Order',
-'fundeprecated.xml#Order.Deprecated',
+'fundeprecated.xml#Order.Deprecated 2006-03-31',
 'fundeprecated.xml#Memory',
-'fundeprecated.xml#Memory.Deprecated',
+'fundeprecated.xml#Memory.Deprecated 2006-03-31',
 'fundeprecated.xml#Size',
-'fundeprecated.xml#Size.Deprecated',
+'fundeprecated.xml#Size.Deprecated 2006-04-03',
 'fundeprecated.xml#taylor_size',
-'fundeprecated.xml#taylor_size.Deprecated',
+'fundeprecated.xml#taylor_size.Deprecated 2006-06-17',
 'fundeprecated.xml#use_VecAD',
-'fundeprecated.xml#use_VecAD.Deprecated',
+'fundeprecated.xml#use_VecAD.Deprecated 2006-04-08',
 'fundeprecated.xml#size_taylor',
-'fundeprecated.xml#size_taylor.Deprecated',
+'fundeprecated.xml#size_taylor.Deprecated 2014-03-18',
 'fundeprecated.xml#capacity_taylor',
-'fundeprecated.xml#capacity_taylor.Deprecated'
+'fundeprecated.xml#capacity_taylor.Deprecated 2014-03-18'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

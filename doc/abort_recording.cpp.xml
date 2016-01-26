@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -98,7 +98,7 @@ bool abort_recording(void)
 
 	using CppAD::AD;
 
-	try 
+	try
 	{	// domain space vector
 		size_t n = 1;
 		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
@@ -119,23 +119,23 @@ bool abort_recording(void)
 		<a href="ad.xml" target="_top">AD</a>&lt;double&gt;::abort_recording();
 	}
 	/*
- 	Now make sure that we can start another recording
+	Now make sure that we can start another recording
 	*/
 
 	// declare independent variables and start tape recording
 	size_t n  = 1;
 	double x0 = 0.5;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0; 
+	x[0]      = x0;
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = 2 * x[0];
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
 	// forward computation of partials w.r.t. x[0]
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);

@@ -6,7 +6,7 @@
 <title>ADFun Object Deprecated Member Functions</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="ADFun Object Deprecated Member Functions"/>
-<meta name="keywords" id="keywords" content=" adfun object deprecated member functions syntax purpose dependent Adfun Dependent order Order memory Memory size Size taylor_size use_vecad size_taylor capacity_taylor "/>
+<meta name="keywords" id="keywords" content=" adfun object deprecated member functions syntax purpose dependent 2007-08-07 order 2006-03-31 memory size 2006-04-03 taylor_size 2006-06-17 use_vecad 2006-04-08 size_taylor 2014-03-18 capacity_taylor "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="include_deprecated.xml" target="_top">Prev</a>
-</td><td><a href="omp_max_thread.xml" target="_top">Next</a>
+</td><td><a href="comparechange.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,11 +66,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -79,6 +80,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -87,6 +89,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>FunDeprecated</td>
@@ -96,21 +99,21 @@ A:active { color : purple }
 <option>Syntax</option>
 <option>Purpose</option>
 <option>Dependent</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2007-08-07</option>
 <option>Order</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2006-03-31</option>
 <option>Memory</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2006-03-31</option>
 <option>Size</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2006-04-03</option>
 <option>taylor_size</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2006-06-17</option>
 <option>use_VecAD</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2006-04-08</option>
 <option>size_taylor</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2014-03-18</option>
 <option>capacity_taylor</option>
-<option>---..Deprecated</option>
+<option>---..Deprecated 2014-03-18</option>
 </select>
 </td>
 </tr></table><br/>
@@ -155,8 +158,6 @@ version of CppAD.
 <br/>
 <br/>
 <b><big><a name="Dependent" id="Dependent">Dependent</a></big></b>
-
-
 <br/>
 A recording of and AD of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -181,24 +182,22 @@ See <a href="dependent.xml" target="_top"><span style='white-space: nowrap'>Depe
 
 <br/>
 <br/>
-<b><a name="Dependent.Deprecated" id="Dependent.Deprecated">Deprecated</a></b>
+<b><a name="Dependent.Deprecated 2007-08-07" id="Dependent.Deprecated 2007-08-07">Deprecated 2007-08-07</a></b>
 <br/>
 This syntax was deprecated when CppAD was extended to allow
 for more than one 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  recording to be
-active at one time. 
+active at one time.
 This was necessary to allow for multiple threading applications.
 
 <br/>
 <br/>
 <b><big><a name="Order" id="Order">Order</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>o</span></font></i></code>
- has prototype 
+ has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>o</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
@@ -207,7 +206,7 @@ and is the order of the previous forward operation
 using the function 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
-This is the highest order of the 
+This is the highest order of the
 <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
 
 that are currently stored in 
@@ -216,7 +215,7 @@ that are currently stored in
 
 <br/>
 <br/>
-<b><a name="Order.Deprecated" id="Order.Deprecated">Deprecated</a></b>
+<b><a name="Order.Deprecated 2006-03-31" id="Order.Deprecated 2006-03-31">Deprecated 2006-03-31</a></b>
 <br/>
 Zero order corresponds to function values being stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
@@ -224,24 +223,22 @@ Zero order corresponds to function values being stored in
 In the future, we would like to be able to erase the function
 values so that 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- uses less memory. 
+ uses less memory.
 In this case, the return value of <code><font color="blue">Order</font></code> would not make sense.
 Use <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
- to obtain 
+ to obtain
 the number of Taylor coefficients currently stored
 in the ADFun object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- 
+
 (which is equal to the order plus one).
 
 
 <br/>
 <br/>
 <b><big><a name="Memory" id="Memory">Memory</a></big></b>
-
-
 <br/>
-The result 
+The result
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
@@ -250,14 +247,14 @@ and is the number of memory units (<code><font color="blue">sizeof</font></code>
 information currently stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
 .
-This memory is returned to the system when the destructor for 
+This memory is returned to the system when the destructor for
 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  is called.
 
 <br/>
 <br/>
-<b><a name="Memory.Deprecated" id="Memory.Deprecated">Deprecated</a></b>
+<b><a name="Memory.Deprecated 2006-03-31" id="Memory.Deprecated 2006-03-31">Deprecated 2006-03-31</a></b>
 <br/>
 It used to be the case that an ADFun object just kept increasing its
 buffers to the maximum size necessary during its lifetime.
@@ -270,8 +267,6 @@ Thus the <code><font color="blue">Memory</font></code> function is no longer wel
 <br/>
 <br/>
 <b><big><a name="Size" id="Size">Size</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
@@ -292,20 +287,18 @@ and derivatives using
 
 <br/>
 <br/>
-<b><a name="Size.Deprecated" id="Size.Deprecated">Deprecated</a></b>
+<b><a name="Size.Deprecated 2006-04-03" id="Size.Deprecated 2006-04-03">Deprecated 2006-04-03</a></b>
 <br/>
 There are other sizes attached to an ADFun object, for example,
 the number of operations in the sequence.
 In order to avoid confusion with these other sizes,
 use <a href="seq_property.xml#size_var" target="_top"><span style='white-space: nowrap'>size_var</span></a>
- to obtain 
+ to obtain
 the number of variables in the operation sequence.
 
 <br/>
 <br/>
 <b><big><a name="taylor_size" id="taylor_size">taylor_size</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>t</span></font></i></code>
@@ -321,7 +314,7 @@ currently calculated and stored in the ADFun object
 
 <br/>
 <br/>
-<b><a name="taylor_size.Deprecated" id="taylor_size.Deprecated">Deprecated</a></b>
+<b><a name="taylor_size.Deprecated 2006-06-17" id="taylor_size.Deprecated 2006-06-17">Deprecated 2006-06-17</a></b>
 <br/>
 This function has been replaced by <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
 .
@@ -329,8 +322,6 @@ This function has been replaced by <a href="size_order.xml" target="_top"><span 
 <br/>
 <br/>
 <b><big><a name="use_VecAD" id="use_VecAD">use_VecAD</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>u</span></font></i></code>
@@ -347,7 +338,7 @@ AD of
 
 stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- contains 
+ contains
 <a href="vecad.xml#VecAD&lt;Base&gt;::reference" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  operands.
 Otherwise 
@@ -356,7 +347,7 @@ Otherwise
 
 <br/>
 <br/>
-<b><a name="use_VecAD.Deprecated" id="use_VecAD.Deprecated">Deprecated</a></b>
+<b><a name="use_VecAD.Deprecated 2006-04-08" id="use_VecAD.Deprecated 2006-04-08">Deprecated 2006-04-08</a></b>
 <br/>
 You can instead use
 
@@ -365,8 +356,6 @@ You can instead use
 </span></font></code>
 <br/>
 <b><big><a name="size_taylor" id="size_taylor">size_taylor</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
@@ -382,7 +371,7 @@ currently calculated and stored in the ADFun object
 
 <br/>
 <br/>
-<b><a name="size_taylor.Deprecated" id="size_taylor.Deprecated">Deprecated</a></b>
+<b><a name="size_taylor.Deprecated 2014-03-18" id="size_taylor.Deprecated 2014-03-18">Deprecated 2014-03-18</a></b>
 <br/>
 This function has been replaced by <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
 .
@@ -390,8 +379,6 @@ This function has been replaced by <a href="size_order.xml" target="_top"><span 
 <br/>
 <br/>
 <b><big><a name="capacity_taylor" id="capacity_taylor">capacity_taylor</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>w</span></font></i></code>
@@ -407,7 +394,7 @@ in the ADFun object
 
 <br/>
 <br/>
-<b><a name="capacity_taylor.Deprecated" id="capacity_taylor.Deprecated">Deprecated</a></b>
+<b><a name="capacity_taylor.Deprecated 2014-03-18" id="capacity_taylor.Deprecated 2014-03-18">Deprecated 2014-03-18</a></b>
 <br/>
 This function has been replaced by <a href="capacity_order.xml" target="_top"><span style='white-space: nowrap'>capacity_order</span></a>
 .

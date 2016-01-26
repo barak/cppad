@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_include_omh.sh 3526 2014-12-29 21:56:45Z bradbell $
+# $Id: check_include_omh.sh 3711 2015-08-20 14:57:57Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -20,7 +20,14 @@ fi
 echo "Checking difference between OMhelp include directives and file names."
 echo "----------------------------------------------------------------------"
 # super list of file names that are referenced by omhelp commands
-bin/list_files.sh .c .cpp .hpp .omh .txt .am  > bin/check_include_omh.1.$$
+bin/list_files.sh | sed -n \
+	-e '/\.c$/p' \
+	-e '/\.cpp$/p' \
+	-e '/\.hpp$/p' \
+	-e '/\.omh$/p' \
+	-e '/\.txt$/p' \
+	-e '/\.am$/p' \
+	> bin/check_include_omh.1.$$
 #
 # add *.sh files with omhelp documentation
 ls bin/get_*.sh >> bin/check_include_omh.1.$$
@@ -36,7 +43,7 @@ do
 		-e '/$childtable%/,/%$\$/p' \
 		-e '/$children%/,/%$\$/p' \
 		-e '/$contents%/,/%$\$/p' \
-		-e '/$verbatim%/p' 
+		-e '/$verbatim%/p'
 done
 sed < bin/check_include_omh.2.$$ > bin/check_include_omh.3.$$ \
 	-e 's/$childtable//' \
@@ -46,7 +53,7 @@ sed < bin/check_include_omh.2.$$ > bin/check_include_omh.3.$$ \
 	-e 's/%//' \
 	-e 's/$\$//' \
 	-e '/^ *$/d' \
-	-e 's/^[ 	]*//' \
+	-e 's/^[	]*//' \
 	-e 's|\\|/|g'
 #
 different="no"
@@ -66,7 +73,8 @@ done
 echo "-------------------------------------------------------------------"
 if [ $different = "yes" ]
 then
-	echo "Error: nothing should be between the two dashed lines above"
+	echo "Error: nothing should be between the two dashed lines above."
+	echo 'Perhaps this file is not and has not yet been added to repository ?'
 	exit 1
 else
 	echo "Ok: nothing is between the two dashed lines above"

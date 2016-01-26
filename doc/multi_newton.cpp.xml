@@ -6,7 +6,7 @@
 <title>A Multi-Threaded Newton's Method</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="A Multi-Threaded Newton's Method"/>
-<meta name="keywords" id="keywords" content=" multi_newton threading thread newton multi-threading a multi-threaded newton's method syntax purpose ok xout fun num_sub xlow xup epsilon max_itr num_threads source "/>
+<meta name="keywords" id="keywords" content=" a multi-threaded newton's method multi_newton threading thread multi-threading syntax purpose ok xout fun num_sub xlow xup epsilon max_itr num_threads source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -112,16 +112,13 @@ A:active { color : purple }
 
 
 
-
-
-
 <center><b><big><big>A Multi-Threaded Newton's Method</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
 <br/>
 
-<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>multi_newton(</span></font></i><font color="blue"><span style='white-space: nowrap'>xout</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;<br/>
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>multi_newton(</span></font></i><font color="blue"><span style='white-space: nowrap'>xout</span></font><i><font color="black"><span style='white-space: nowrap'>,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>fun</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>num_sub</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>xlow</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>xup</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>epsilon</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>max_itr</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>num_threads</span></font><i><font color="black"><span style='white-space: nowrap'><br/>
 )</span></font></i></code>
 
@@ -135,7 +132,7 @@ Multi-threaded determination of the argument values
 <mi mathvariant='italic'>x</mi>
 </mrow></math>
 
-, 
+,
 in the interval 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mo stretchy="false">[</mo>
@@ -152,7 +149,7 @@ in the interval
 <mi mathvariant='italic'>b</mi>
 </mrow></math>
 
-), 
+),
 such that 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -180,7 +177,7 @@ For
 <mi mathvariant='italic'>n</mi>
 </mrow></math>
 
-,  
+,
 we define the <code><i>i</i></code>-th grid point 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msub><mi mathvariant='italic'>g</mi>
@@ -224,7 +221,7 @@ For
 <mn>-1</mn>
 </mrow></math>
 
-,  
+,
 we define the <code><i>i</i></code>-th sub-interval of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mo stretchy="false">[</mo>
@@ -309,7 +306,7 @@ The input size and value of the elements of
 Upon return from <code><font color="blue">multi_newton</font></code>,
 the size of 
 <code><i><font color="black"><span style='white-space: nowrap'>xout</span></font></i></code>
- is less than or equal 
+ is less than or equal
 the number of sub-intervals 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>n</mi>
@@ -387,7 +384,7 @@ and its derivative
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-, 
+,
 using the syntax
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -398,7 +395,7 @@ where the arguments to
  have the prototypes
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;double&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;double&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;double&amp;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;double&amp;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>df</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
@@ -536,21 +533,21 @@ If it is zero, the test is run without the multi-threading environment.
 <code><font color="blue">
 <br/>
 <pre style='display:inline'> 
-// general purpose multi-threading interface 
+// general purpose multi-threading interface
 # include &quot;team_thread.hpp&quot;
 // special utilities for the multi_newton problem
 # include &quot;multi_newton_work.hpp&quot;
 
 bool multi_newton(
-	CppAD::vector&lt;double&gt; &amp;xout                , 
-	void fun(double x, double&amp; f, double&amp; df)  , 
-	size_t num_sub                             , 
-	double xlow                                , 
-	double xup                                 , 
-	double epsilon                             , 
+	CppAD::vector&lt;double&gt; &amp;xout                ,
+	void fun(double x, double&amp; f, double&amp; df)  ,
+	size_t num_sub                             ,
+	double xlow                                ,
+	double xup                                 ,
+	double epsilon                             ,
 	size_t max_itr                             ,
 	size_t num_threads                         )
-{	
+{
 	bool ok = true;
 	using CppAD::AD;
 	using CppAD::vector;

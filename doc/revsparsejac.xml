@@ -6,7 +6,7 @@
 <title>Jacobian Sparsity Pattern: Reverse Mode</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Jacobian Sparsity Pattern: Reverse Mode"/>
-<meta name="keywords" id="keywords" content=" jacobian sparsity pattern: reverse mode Revsparsejac sparse Jacobian pattern syntax purpose f x q transpose nz_compare r false true s vectorset entire example "/>
+<meta name="keywords" id="keywords" content=" jacobian sparsity pattern: reverse mode Revsparsejac sparse syntax purpose f x q transpose dependency r false true s vectorset entire pattern example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -72,7 +72,9 @@ A:active { color : purple }
 <option>Sparse-&gt;</option>
 <option>ForSparseJac</option>
 <option>RevSparseJac</option>
+<option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>bool_sparsity.cpp</option>
 </select>
 </td>
 <td>
@@ -90,7 +92,7 @@ A:active { color : purple }
 <option>x</option>
 <option>q</option>
 <option>transpose</option>
-<option>nz_compare</option>
+<option>dependency</option>
 <option>r</option>
 <option>---..transpose false</option>
 <option>---..transpose true</option>
@@ -115,7 +117,7 @@ A:active { color : purple }
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.RevSparseJac(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 
-<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.RevSparseJac(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>transpose</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+<code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.RevSparseJac(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>transpose</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dependency</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
 <br/>
@@ -192,7 +194,7 @@ with respect to
 
 Given a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -223,7 +225,7 @@ The object
 <br/>
 <b><big><a name="x" id="x">x</a></big></b>
 <br/>
-the sparsity pattern is valid for all values of the independent 
+the sparsity pattern is valid for all values of the independent
 variables in 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -262,7 +264,7 @@ It specifies the number of rows in
 </msup>
 </mrow></math>
 
- and the 
+ and the
 Jacobian 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -278,7 +280,7 @@ Jacobian
 </msup>
 </mrow></math>
 
-. 
+.
 
 <br/>
 <br/>
@@ -297,36 +299,21 @@ The default value <code><font color="blue">false</font></code> is used when
 
 <br/>
 <br/>
-<b><big><a name="nz_compare" id="nz_compare">nz_compare</a></big></b>
+<b><big><a name="dependency" id="dependency">dependency</a></big></b>
 <br/>
 The argument 
-<code><i><font color="black"><span style='white-space: nowrap'>nz_compare</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>dependency</span></font></i></code>
  has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>nz_compare</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dependency</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 If 
-<code><i><font color="black"><span style='white-space: nowrap'>nz_compare</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>dependency</span></font></i></code>
  is true,
-the derivatives with respect to left and right of the 
-<a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
- below are considered to be non-zero:
+the <a href="dependency.cpp.xml#Dependency Pattern" target="_top"><span style='white-space: nowrap'>dependency&#xA0;pattern</span></a>
 
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>CondExp</span></font></i><font color="blue"><span style='white-space: nowrap'>Rel</span></font><i><font color="black"><span style='white-space: nowrap'>(</span></font></i><font color="blue"><span style='white-space: nowrap'>left</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>right</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>if_true</span></font><i><font color="black"><span style='white-space: nowrap'>,&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>if_false</span></font><i><font color="black"><span style='white-space: nowrap'>)<br/>
-</span></font></i></code>
-This is used by the 
-<a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimizer</span></a>
- with <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
- functions
-to obtain the correct dependency relations.
-The default value 
-<code><i><font color="black"><span style='white-space: nowrap'>nz_compare</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;false</span></font></code>
- is used when 
-
-<code><i><font color="black"><span style='white-space: nowrap'>nz_compare</span></font></i></code>
- is not present.
+(instead of sparsity pattern) is computed.
 
 <br/>
 <br/>
@@ -369,9 +356,9 @@ zero and
 </mrow></math>
 
 .
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -413,9 +400,9 @@ zero and
 </mrow></math>
 
 .
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>R</mi>
@@ -472,9 +459,9 @@ zero and
 </mrow></math>
 
 .
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -515,9 +502,9 @@ zero and
 </mrow></math>
 
 .
-It specifies a 
+It specifies a
 <a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- 
+
 for the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>
@@ -576,10 +563,10 @@ Suppose that
 </mrow></math>
 
  identity matrix.
-In this case, 
+In this case,
 the corresponding value for 
 <code><i><font color="black"><span style='white-space: nowrap'>s</span></font></i></code>
- is a 
+ is a
 sparsity pattern for the Jacobian 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>S</mi>

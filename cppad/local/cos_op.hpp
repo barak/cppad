@@ -1,12 +1,12 @@
-/* $Id: cos_op.hpp 3320 2014-09-11 23:06:21Z bradbell $ */
-# ifndef CPPAD_COS_OP_INCLUDED
-# define CPPAD_COS_OP_INCLUDED
+// $Id: cos_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_COS_OP_HPP
+# define CPPAD_COS_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -42,9 +42,9 @@ inline void forward_cos_op(
 	size_t q           ,
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
-{	
+{
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(CosOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(CosOp) == 2 );
@@ -100,9 +100,9 @@ inline void forward_cos_op_dir(
 	size_t r           ,
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
-{	
+{
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(CosOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(CosOp) == 2 );
@@ -151,7 +151,7 @@ template <class Base>
 inline void forward_cos_op_0(
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
 {
 	// check assumptions
@@ -188,7 +188,7 @@ inline void reverse_cos_op(
 	size_t      d            ,
 	size_t      i_z          ,
 	size_t      i_x          ,
-	size_t      cap_order    , 
+	size_t      cap_order    ,
 	const Base* taylor       ,
 	size_t      nc_partial   ,
 	Base*       partial      )
@@ -222,17 +222,17 @@ inline void reverse_cos_op(
 		pc[j]   /= Base(j);
 		for(k = 1; k <= j; k++)
 		{
-			px[k]   += ps[j] * Base(k) * c[j-k];
-			px[k]   -= pc[j] * Base(k) * s[j-k];
-	
-			ps[j-k] -= pc[j] * Base(k) * x[k];
-			pc[j-k] += ps[j] * Base(k) * x[k];
+			px[k]   += Base(k) * azmul(ps[j], c[j-k]);
+			px[k]   -= Base(k) * azmul(pc[j], s[j-k]);
+
+			ps[j-k] -= Base(k) * azmul(pc[j], x[k]);
+			pc[j-k] += Base(k) * azmul(ps[j], x[k]);
 
 		}
 		--j;
 	}
-	px[0] += ps[0] * c[0];
-	px[0] -= pc[0] * s[0];
+	px[0] += azmul(ps[0], c[0]);
+	px[0] -= azmul(pc[0], s[0]);
 }
 
 } // END_CPPAD_NAMESPACE

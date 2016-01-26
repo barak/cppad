@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -186,13 +186,13 @@ The function
 </msup>
 </mrow></math>
 
- only depends on the 
+ only depends on the
 size and contents of the index vectors 
 <code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
-. 
-The non-zero entries in the Jacobian of this function have 
+.
+The non-zero entries in the Jacobian of this function have
 one of the following forms:
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -235,11 +235,11 @@ All the other terms of the Jacobian are zero.
 <br/>
 <b><big><a name="Inclusion" id="Inclusion">Inclusion</a></big></b>
 <br/>
-The template function <code><font color="blue">sparse_jac_fun</font></code> 
-is defined in the <code><font color="blue">CppAD</font></code> namespace by including 
-the file <code><font color="blue">cppad/speed/sparse_jac_fun.hpp</font></code> 
+The template function <code><font color="blue">sparse_jac_fun</font></code>
+is defined in the <code><font color="blue">CppAD</font></code> namespace by including
+the file <code><font color="blue">cppad/speed/sparse_jac_fun.hpp</font></code>
 (relative to the CppAD distribution directory).
-It is only intended for example and testing purposes, 
+It is only intended for example and testing purposes,
 so it is not automatically included by
 <a href="cppad.xml" target="_top"><span style='white-space: nowrap'>cppad.hpp</span></a>
 .
@@ -284,7 +284,7 @@ The type
 <code><i><font color="black"><span style='white-space: nowrap'>FloatVector</span></font></i></code>
  is any
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
-, or it can be a raw pointer, 
+, or it can be a raw pointer,
 with elements of type 
 <code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
 .
@@ -414,7 +414,7 @@ It specifies the component of
 <mi mathvariant='italic'>x</mi>
 </mrow></math>
 
- for 
+ for
 the non-zero Jacobian terms.
 All the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
@@ -466,6 +466,14 @@ The argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>FloatVector</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;0</span></font></code>
+, it size is 
+<code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
+
+otherwise its size is 
+<code><i><font color="black"><span style='white-space: nowrap'>K</span></font></i></code>
+.
 The input value of the elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
  does not matter.
@@ -505,57 +513,48 @@ If
  is one, 
 <code><i><font color="black"><span style='white-space: nowrap'>fp</span></font></i></code>
  has size 
-<code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
- and 
+<code><i><font color="black"><span style='white-space: nowrap'>K</span></font></i></code>
+ and
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">=</mo>
 <mn>0</mn>
 <mo stretchy="false">,</mo>
 <mo stretchy="false">&#x02026;</mo>
 <mo stretchy="false">,</mo>
-<mi mathvariant='italic'>m</mi>
+<mi mathvariant='italic'>K</mi>
 <mn>-1</mn>
 </mrow></math>
 
 ,
 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
-<mn>-1</mn>
-</mrow></math>
-
-
-
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mfrac><mrow><mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>f</mi>
 <mo stretchy="false">[</mo>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>row</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
 <mi mathvariant='italic'>i</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 </mrow>
 <mrow><mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">[</mo>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>col</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
 <mi mathvariant='italic'>j</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 </mrow>
 </mfrac>
 <mo stretchy="false">=</mo>
 <mi mathvariant='italic'>fp</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">*</mo>
-<mi mathvariant='italic'>n</mi>
-<mo stretchy="false">+</mo>
-<mi mathvariant='italic'>j</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">]</mo>
 </mrow></math>
 
@@ -572,7 +571,7 @@ It returns true if it succeeds and false otherwise.
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 <br/>
-The file 
+The file
 <a href="sparse_jac_fun.hpp.xml" target="_top"><span style='white-space: nowrap'>sparse_jac_fun.hpp</span></a>
 
 contains the source code for this template function.

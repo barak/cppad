@@ -6,7 +6,7 @@
 <title>Allocate An Array and Call Default Constructor for its Elements</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Allocate An Array and Call Default Constructor for its Elements"/>
-<meta name="keywords" id="keywords" content=" allocate an array and call default constructor for its elements create_array thread_alloc syntax purpose type size_min size_out delta alignment example "/>
+<meta name="keywords" id="keywords" content=" allocate an array and call default constructor for its elements create_array syntax purpose type size_min size_out delta alignment example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>thread_alloc</option>
 <option>ta_create_array</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -142,7 +140,7 @@ A:active { color : purple }
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
 Create a new raw array using <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
- memory allocator 
+ memory allocator
 (works well in a multi-threading environment)
 and call default constructor for each element.
 
@@ -176,10 +174,10 @@ This argument has prototype
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>size_out</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 The input value of this argument does not matter.
-Upon return, it is the actual number of elements 
+Upon return, it is the actual number of elements
 in 
 <code><i><font color="black"><span style='white-space: nowrap'>array</span></font></i></code>
- 
+
 (
 <code><i><font color="black"><span style='white-space: nowrap'>&#xA0;size_min&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;=</span></font><i><font color="black"><span style='white-space: nowrap'>&#xA0;size_out</span></font></i></code>
 ).
@@ -200,7 +198,7 @@ It is array with
  elements.
 The default constructor for 
 <code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
- is used to initialize the 
+ is used to initialize the
 elements of 
 <code><i><font color="black"><span style='white-space: nowrap'>array</span></font></i></code>
 .
@@ -213,7 +211,7 @@ should be used to destroy the array when it is no longer needed.
 <b><big><a name="Delta" id="Delta">Delta</a></big></b>
 <br/>
 The amount of memory <a href="ta_inuse.xml" target="_top"><span style='white-space: nowrap'>inuse</span></a>
- by the current thread, 
+ by the current thread,
 will increase 
 <code><i><font color="black"><span style='white-space: nowrap'>delta</span></font></i></code>
  where
@@ -231,7 +229,7 @@ if a previous allocation with
  between its current value
 and 
 <code><i><font color="black"><span style='white-space: nowrap'>size_out</span></font></i></code>
- is available. 
+ is available.
 
 <br/>
 <br/>
@@ -253,7 +251,7 @@ pointer is also aligned.
 
 
 
-<hr/>Input File: cppad/thread_alloc.hpp
+<hr/>Input File: cppad/utility/thread_alloc.hpp
 
 </body>
 </html>

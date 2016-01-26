@@ -6,7 +6,7 @@
 <title>AD Vectors that Record Index Operations</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Vectors that Record Index Operations"/>
-<meta name="keywords" id="keywords" content=" Vecad vector Ad index record tape ad vectors that operations syntax purpose alternatives vecad&lt;base&gt;::reference Vecad&lt;base&gt;::reference reference Vecad&lt;base&gt; exceptions constructor v n size size_t indexing i b x r example speed and memory "/>
+<meta name="keywords" id="keywords" content=" ad vectors that record index operations Vecad tape reference Vecad&lt;base&gt; syntax purpose alternatives vecad&lt;base&gt;::reference exceptions constructor v n size size_t indexing i b x r example speed and memory "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -103,11 +103,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
-
 <center><b><big><big>AD Vectors that Record Index Operations</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -137,7 +132,7 @@ If either
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
  or 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- is a 
+ is a
 <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variable</span></a>
 ,
 the indexing operation
@@ -150,7 +145,7 @@ AD of
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
- and 
+ and
 transferred to the corresponding <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
  object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
@@ -160,15 +155,15 @@ zero order <a href="forward.xml" target="_top"><span style='white-space: nowrap'
  is used; i.e.,
 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- is evaluated with new value for the 
+ is evaluated with new value for the
 <a href="glossary.xml#Tape.Independent Variable" target="_top"><span style='white-space: nowrap'>independent&#xA0;variables</span></a>
-. 
+.
 Note that the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
  depends on the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 
-in a discrete fashion and CppAD computes its partial derivative with 
+in a discrete fashion and CppAD computes its partial derivative with
 respect to 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  as zero.
@@ -177,8 +172,8 @@ respect to
 <br/>
 <b><big><a name="Alternatives" id="Alternatives">Alternatives</a></big></b>
 <br/>
-If only the values in the vector, 
-and not the indices, 
+If only the values in the vector,
+and not the indices,
 depend on the independent variables,
 the class 
 <code><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;&gt;</span></font></code>
@@ -187,8 +182,8 @@ storing AD values where
 <code><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i></code>
  is any
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
- template class, 
-If only the indices, 
+ template class,
+If only the indices,
 and not the values in the vector,
 depend on the independent variables,
 The <a href="discrete.xml" target="_top"><span style='white-space: nowrap'>Discrete</span></a>
@@ -198,8 +193,6 @@ way to represent these vectors.
 <br/>
 <br/>
 <b><big><a name="VecAD&lt;Base&gt;::reference" id="VecAD&lt;Base&gt;::reference">VecAD&lt;Base&gt;::reference</a></big></b>
-
-
 <br/>
 The result 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
@@ -210,7 +203,7 @@ The result
 </span></font></code>
 which is very much like the 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
- type 
+ type
 with some notable exceptions:
 
 <br/>
@@ -245,9 +238,9 @@ The object
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
  cannot be used
 with the <a href="arithmetic.xml" target="_top"><span style='white-space: nowrap'>computed&#xA0;assignments&#xA0;operators</span></a>
- 
-<code><font color="blue">+=</font></code>, 
-<code><font color="blue">-=</font></code>, 
+
+<code><font color="blue">+=</font></code>,
+<code><font color="blue">-=</font></code>,
 <code><font color="blue">*=</font></code>, or
 <code><font color="blue">/=</font></code>.
 For example, the following syntax is not valid:
@@ -278,7 +271,7 @@ no matter what the types of
 </li><li>
 
 The <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
- functions do not accept 
+ functions do not accept
 
 <code><font color="blue"><span style='white-space: nowrap'>VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::reference</span></font></code>
  arguments.
@@ -322,7 +315,7 @@ cannot be passed to <code><font color="blue">Independent</font></code>.
 
 </li><li>
 
-If one uses this type in a 
+If one uses this type in a
 AD of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
 
@@ -347,14 +340,14 @@ elements of the vector cannot be separated.
 <br/>
 <b><a name="Constructor.v" id="Constructor.v">v</a></b>
 <br/>
-The syntax 
+The syntax
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;VecAD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 creates an <code><font color="blue">VecAD</font></code> object 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
- with 
+ with
 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
  elements.
@@ -400,7 +393,7 @@ We refer to the syntax
 as <code><font color="blue">size_t</font></code> indexing of a <code><font color="blue">VecAD</font></code> object.
 This indexing is only valid if the vector 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
- is a 
+ is a
 <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>parameter</span></a>
 ; i.e.,
 it does not depend on the independent variables.
@@ -422,7 +415,7 @@ and less than
 ; i.e., less than
 the number of elements in 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
-. 
+.
 
 <br/>
 <br/>
@@ -489,7 +482,7 @@ and less than
 ; i.e., less than
 the number of elements in 
 <code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
-. 
+.
 
 <br/>
 <br/>
@@ -504,7 +497,7 @@ The result
 </span></font></code>
 The object 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
- has an AD type and its 
+ has an AD type and its
 operations are recorded as part of the same
 AD of 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
@@ -514,7 +507,7 @@ AD of
 for 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  objects.
-It acts as a reference to the 
+It acts as a reference to the
 element with index 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>floor</mi>
@@ -536,7 +529,7 @@ element with index
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- is 
+ is
 the greatest integer less than or equal 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 ).
@@ -580,7 +573,7 @@ It returns true if it succeeds and false otherwise.
 <br/>
 The <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  vector type is inefficient because every
-time an element of a vector is accessed, a new CppAD 
+time an element of a vector is accessed, a new CppAD
 <a href="glossary.xml#Variable" target="_top"><span style='white-space: nowrap'>variable</span></a>
  is created on the tape
 using either the <code><font color="blue">Ldp</font></code> or <code><font color="blue">Ldv</font></code> operation

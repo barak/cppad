@@ -6,7 +6,7 @@
 <title>Check an ADFun Sequence of Operations</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Check an ADFun Sequence of Operations"/>
-<meta name="keywords" id="keywords" content=" Funcheck check Adfun an adfun sequence of operations syntax purpose f g x y r a ok vector funcheck uses forward discussion example "/>
+<meta name="keywords" id="keywords" content=" check an adfun sequence of operations syntax purpose f g x y r a ok vector funcheck uses forward discussion example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="sparse_hessian.cpp.xml" target="_top">Prev</a>
+<td><a href="sparse_sub_hes.cpp.xml" target="_top">Prev</a>
 </td><td><a href="fun_check.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -99,9 +99,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 
 
 
@@ -271,7 +268,7 @@ The
 </span></font></code>
 (see <a href="funcheck.xml#Vector" target="_top"><span style='white-space: nowrap'>Vector</span></a>
  below)
-and its size 
+and its size
 must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 , the dimension of the
@@ -304,7 +301,7 @@ and its value is
 .
 The size of 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- 
+
 is equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
 , the dimension of the
@@ -324,7 +321,7 @@ The <code><font color="blue">FunCheck</font></code> argument
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&amp;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-and its size 
+and its size
 must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 , the dimension of the
@@ -337,7 +334,7 @@ calculated by
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>G</span></font></i></code>
-. 
+.
 
 <br/>
 <br/>
@@ -422,7 +419,7 @@ It is true, if for
 <mn>-1</mn>
 </mrow></math>
 
- 
+
 either the relative error bound is satisfied
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -523,7 +520,7 @@ After each call to <a href="forward.xml" target="_top"><span style='white-space:
 ,
 the object 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- contains the corresponding 
+ contains the corresponding
 <a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
 .
 After <code><font color="blue">FunCheck</font></code>,
@@ -550,7 +547,7 @@ where
  are 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;double&gt;</span></font></code>
  objects.
-It follows that the 
+It follows that the
 AD of <code><font color="blue">double</font></code> <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 
 depends on the value of 
@@ -558,7 +555,7 @@ depends on the value of
 .
 If the sequence of operations stored in 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
- corresponds to 
+ corresponds to
 
 <code><i><font color="black"><span style='white-space: nowrap'>g</span></font></i></code>
  with 
@@ -568,7 +565,7 @@ If the sequence of operations stored in
 <mn>0</mn>
 </mrow></math>
 
-, 
+,
 the function values computed using 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
  when 
@@ -604,10 +601,10 @@ performed by
 <code><i><font color="black"><span style='white-space: nowrap'>g</span></font></i></code>
  with the
 <a href="glossary.xml#Tape.Independent Variable" target="_top"><span style='white-space: nowrap'>independent&#xA0;variables</span></a>
- 
+
 equal to the values in 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
- 
+
 (so AD operation sequence properly represents the algorithm
 for this value of independent variables).
 
@@ -620,7 +617,7 @@ for this value of independent variables).
 The file
 <a href="fun_check.cpp.xml" target="_top"><span style='white-space: nowrap'>fun_check.cpp</span></a>
 
-contains an example and test of this function.   
+contains an example and test of this function.
 It returns true if it succeeds and false otherwise.
 
 

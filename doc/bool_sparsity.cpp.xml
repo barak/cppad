@@ -1,0 +1,271 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using vectorBool Sparsity To Conserve Memory: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Using vectorBool Sparsity To Conserve Memory: Example and Test"/>
+<meta name="keywords" id="keywords" content=" using vectorbool sparsity to conserve memory: example and test purpose "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_bool_sparsity.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sparsity_sub.cpp.xml" target="_top">Prev</a>
+</td><td><a href="drivers.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>FunEval</option>
+<option>Sparse</option>
+<option>bool_sparsity.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>FunEval-&gt;</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>Sparse</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Sparse-&gt;</option>
+<option>ForSparseJac</option>
+<option>RevSparseJac</option>
+<option>dependency.cpp</option>
+<option>RevSparseHes</option>
+<option>bool_sparsity.cpp</option>
+</select>
+</td>
+<td>bool_sparsity.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Using vectorBool Sparsity To Conserve Memory: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This example show how to conserve memory when computing sparsity patterns.
+
+<code><font color="blue">
+<pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+namespace {
+	using CppAD::vector;
+	using std::cout;
+	using CppAD::vectorBool;
+	using CppAD::AD;
+	using CppAD::ADFun;
+
+	// function f(x) that we are computing sparsity patterns for
+	template &lt;class Float&gt;
+	vector&lt;Float&gt; fun(const vector&lt;Float&gt;&amp; x)
+	{	size_t n  = x.size();
+		vector&lt;Float&gt; ret(n + 1);
+		for(size_t j = 0; j &lt; n; j++)
+		{	size_t k = (j + 1) % n;
+			ret[j] = x[j] * x[j] * x[k];
+		}
+		ret[n] = 0.0;
+		return ret;
+	}
+	// check sparsity pattern for f(x)
+	bool check_jac(const vectorBool&amp; pattern, size_t n)
+	{	bool ok = true;
+		for(size_t i = 0; i &lt; n; i++)
+		{	size_t k = (i + 1) % n;
+			for(size_t j = 0; j &lt; n; j++)
+			{	bool non_zero = (i == j) || (j == k);
+				ok &amp;= pattern[ i * n + j] == non_zero;
+			}
+		}
+		for(size_t j = 0; j &lt; n; j++)
+			ok &amp;= pattern[ n * n + j] == false;
+		return ok;
+	}
+	// check sparsity pattern for the Hessian of sum_i f_i(x)
+	bool check_hes(const vectorBool&amp; pattern, size_t n)
+	{	bool ok = true;
+		for(size_t i = 0; i &lt; n; i++)
+		{	size_t k1 = (i + 1) % n;
+			size_t k2 = (n + i - 1) % n;
+			for(size_t j = 0; j &lt; n; j++)
+			{	bool non_zero = (i == j) || (j == k1) || (j == k2);
+				ok &amp;= pattern[ i * n + j] == non_zero;
+			}
+		}
+		return ok;
+	}
+	// compute sparsity for Jacobian of f(x) using forward mode
+	bool for_sparse_jac(ADFun&lt;double&gt;&amp; f)
+	{	bool ok = true;
+		size_t n = f.Domain();
+		size_t m = f.Range();
+		//
+		// number of columns of the sparsity patter to compute at a time
+		size_t n_col = vectorBool::bit_per_unit();
+		vectorBool pattern(m * n), s(m * n_col), r(n * n_col);
+		//
+		size_t n_loop = (n - 1) / n_col + 1;
+		for(size_t i_loop = 0; i_loop &lt; n_loop; i_loop++)
+		{	size_t j_col = i_loop * n_col;
+
+			for(size_t i = 0; i &lt; n; i++)
+			{	for(size_t j = 0; j &lt; n_col; j++)
+					r[i * n_col + j] = (i == j_col + j);
+			}
+			s = f.ForSparseJac(n_col, r);
+			for(size_t i = 0; i &lt; m; i++)
+			{	for(size_t j = 0; j &lt; n_col; j++)
+					if( j_col + j &lt; n )
+						pattern[ i * n + j_col + j ] = s[ i * n_col + j];
+			}
+		}
+		ok &amp;= check_jac(pattern, n);
+		//
+		return ok;
+	}
+	// compute sparsity for Jacobian of f(x) using reverse mode
+	bool rev_sparse_jac(ADFun&lt;double&gt;&amp; f)
+	{	bool ok = true;
+		size_t n = f.Domain();
+		size_t m = f.Range();
+		//
+		// number of rows of the sparsity patter to compute at a time
+		size_t n_row = vectorBool::bit_per_unit();
+		vectorBool pattern(m * n), s(n_row * n), r(n_row * m);
+		//
+		size_t n_loop = (m - 1) / n_row + 1;
+		for(size_t i_loop = 0; i_loop &lt; n_loop; i_loop++)
+		{	size_t i_row = i_loop * n_row;
+
+			for(size_t i = 0; i &lt; n_row; i++)
+			{	for(size_t j = 0; j &lt; m; j++)
+					r[i * m + j] = (i_row + i == j);
+			}
+			s = f.RevSparseJac(n_row, r);
+			for(size_t i = 0; i &lt; n_row; i++)
+			{	for(size_t j = 0; j &lt; n; j++)
+					if( i_row + i &lt; m )
+						pattern[ (i_row + i) * n + j ] = s[ i * n + j];
+			}
+		}
+		ok &amp;= check_jac(pattern, n);
+		//
+		return ok;
+	}
+	// compute sparsity for Hessian of sum_i f_i (x)
+	bool rev_sparse_hes(ADFun&lt;double&gt;&amp; f)
+	{	bool ok = true;
+		size_t n = f.Domain();
+		size_t m = f.Range();
+		//
+		// number of columns of the sparsity patter to compute at a time
+		size_t n_col = vectorBool::bit_per_unit();
+		vectorBool pattern(n * n), r(n * n_col), h(n * n_col);
+
+		// consider case where Hessian for sum of f_i(x) w.r.t i
+		vectorBool s(m);
+		for(size_t i = 0; i &lt; m; i++)
+			s[i] = true;
+		//
+		size_t n_loop = (n - 1) / n_col + 1;
+		for(size_t i_loop = 0; i_loop &lt; n_loop; i_loop++)
+		{	size_t j_col = i_loop * n_col;
+
+			for(size_t i = 0; i &lt; n; i++)
+			{	for(size_t j = 0; j &lt; n_col; j++)
+					r[i * n_col + j] = (i == j_col + j);
+			}
+			//
+			f.ForSparseJac(n_col, r);
+			bool transpose = true;
+			h = f.RevSparseHes(n_col, s, transpose);
+			//
+			for(size_t i = 0; i &lt; n; i++)
+			{	for(size_t j = 0; j &lt; n_col; j++)
+					if( j_col + j &lt; n )
+						pattern[ i * n + j_col + j ] = h[ i * n_col + j];
+			}
+		}
+		ok &amp;= check_hes(pattern, n);
+		//
+		return ok;
+	}
+}
+// driver for all of the cases above
+bool bool_sparsity(void)
+{	bool ok = true;
+	//
+	// record the funcion
+	size_t n = 100;
+	size_t m = n + 1;
+	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; x(n), y(m);
+	for(size_t j = 0; j &lt; n; j++)
+		x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt;(j+1);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+	y = fun(x);
+	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+	//
+	// run the three example / tests
+	ok &amp;= for_sparse_jac(f);
+	ok &amp;= rev_sparse_jac(f);
+	ok &amp;= rev_sparse_hes(f);
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/bool_sparsity.cpp
+
+</body>
+</html>

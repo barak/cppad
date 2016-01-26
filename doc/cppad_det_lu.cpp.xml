@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -107,7 +107,7 @@ See <a href="link_det_lu.xml" target="_top"><span style='white-space: nowrap'>li
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/det_by_lu.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
@@ -116,8 +116,8 @@ extern bool
 	global_onetape, global_atomic, global_optimize;
 
 bool link_det_lu(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	CppAD::vector&lt;double&gt;           &amp;matrix   ,
 	CppAD::vector&lt;double&gt;           &amp;gradient )
 {
@@ -127,8 +127,8 @@ bool link_det_lu(
 
 	// -----------------------------------------------------
 	// setup
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar; 
-	typedef CppAD::vector&lt;ADScalar&gt;     ADVector; 
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar;
+	typedef CppAD::vector&lt;ADScalar&gt;     ADVector;
 	CppAD::det_by_lu&lt;ADScalar&gt;          Det(size);
 
 	size_t i;               // temporary index
@@ -137,8 +137,8 @@ bool link_det_lu(
 	ADVector   A(n);        // AD domain space vector
 	ADVector   detA(m);     // AD range space vector
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f; // AD function object
-	
-	// vectors of reverse mode weights 
+
+	// vectors of reverse mode weights
 	CppAD::vector&lt;double&gt; w(1);
 	w[0] = 1.;
 
@@ -159,6 +159,9 @@ bool link_det_lu(
 		f.Dependent(A, detA);
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		// evaluate and return gradient using reverse mode
 		f.<a href="forward.xml" target="_top">Forward</a>(0, matrix);

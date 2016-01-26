@@ -21,7 +21,9 @@ var list_down3 = [
 var list_down2 = [
 'forsparsejac.xml',
 'revsparsejac.xml',
-'revsparsehes.xml'
+'dependency.cpp.xml',
+'revsparsehes.xml',
+'bool_sparsity.cpp.xml'
 ];
 var list_down1 = [
 'rev_sparse_jac.cpp.xml'

@@ -6,7 +6,7 @@
 <title>Choosing the CppAD Test Vector Template Class</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Choosing the CppAD Test Vector Template Class"/>
-<meta name="keywords" id="keywords" content=" choosing the cppad test vector template class purpose cppad_testvector boost eigen "/>
+<meta name="keywords" id="keywords" content=" choosing the cppad test vector template class purpose std boost eigen "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,7 +66,7 @@ A:active { color : purple }
 <option>cmake</option>
 <option>cmake_check</option>
 <option>pkgconfig</option>
-<option>InstallUnix</option>
+<option>auto_tools</option>
 </select>
 </td>
 <td>
@@ -86,7 +86,8 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Purpose</option>
-<option>cppad_testvector</option>
+<option>std</option>
+<option>cppad</option>
 <option>boost</option>
 <option>eigen</option>
 </select>
@@ -99,38 +100,57 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-The <a href="testvector.xml" target="_top"><span style='white-space: nowrap'>CPPAD_TESTVECTOR</span></a>
- 
-template class is used for many of the CppAD examples and tests.
-If you are going to use 
-<code><font color="blue">boost</font></code>, <code><font color="blue">cppad</font></code>, <code><font color="blue">eigen</font></code>, or <code><font color="blue">std</font></code> vectors
-in your CppAD code, you many want to test CppAD with the
-type of vectors you will be using.
+The value 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
+
+in the <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
+ must be one of the
+following:
+<code><font color="blue">boost</font></code>, <code><font color="blue">cppad</font></code>, <code><font color="blue">eigen</font></code>, or <code><font color="blue">std</font></code>.
+It specifies which type of vector is corresponds to the template class
+<a href="testvector.xml" target="_top"><span style='white-space: nowrap'>CPPAD_TESTVECTOR</span></a>
+
+which is used for many of the CppAD examples and tests.
 
 <br/>
 <br/>
-<b><big><a name="cppad_testvector" id="cppad_testvector">cppad_testvector</a></big></b>
+<b><big><a name="std" id="std">std</a></big></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
+ is 
+<code><i><font color="black"><span style='white-space: nowrap'>std</span></font></i></code>
+,
+the <code><font color="blue">std::vector</font></code> template class is used to define
+<code><font color="blue">CPPAD_TESTVECTOR</font></code>.
 
 <br/>
-The must be one of the following choices:
-<code><font color="blue">boost</font></code>, <code><font color="blue">cppad</font></code>, <code><font color="blue">eigen</font></code> or <code><font color="blue">std</font></code>.
-It specifies which type of vectors are used for the
-<code><font color="blue">CPPAD_TESTVECTOR</font></code> template class.
-The default value for <code><font color="blue">cppad_testvector</font></code> is <code><font color="blue">cppad</font></code>.
+<br/>
+<b><big><a name="cppad" id="cppad">cppad</a></big></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
+ is 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad</span></font></i></code>
+,
+the <a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>cppad_vector</span></a>
+ template class is used to define
+<code><font color="blue">CPPAD_TESTVECTOR</font></code>.
 
 <br/>
 <br/>
 <b><big><a name="boost" id="boost">boost</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
- is set to <code><font color="blue">boost</font></code>, the 
+ is 
+<code><i><font color="black"><span style='white-space: nowrap'>boost</span></font></i></code>
+,
 <a href="http://www.boost.org/doc/libs/1_52_0/libs/numeric/ublas/doc/vector.htm" target="_top"><span style='white-space: nowrap'>boost&#xA0;ublas&#xA0;vector</span></a>
 
-include files must be installed on your system.
-In addition, 
+template class is used to define
+<code><font color="blue">CPPAD_TESTVECTOR</font></code>.
+In this case, the
 <a href="http://www.cmake.org/cmake/help/cmake2.6docs.html#module:FindBoost" target="_top"><span style='white-space: nowrap'>cmake&#xA0;FindBoost</span></a>
 
 module must be able to automatically figure out where Boost is installed.
@@ -138,14 +158,17 @@ module must be able to automatically figure out where Boost is installed.
 <br/>
 <br/>
 <b><big><a name="eigen" id="eigen">eigen</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i></code>
- is set to <code><font color="blue">eigen</font></code>, 
+ is 
+<code><i><font color="black"><span style='white-space: nowrap'>eigen</span></font></i></code>
+,
+one of the eigen template classes is used to define
+<code><font color="blue">CPPAD_TESTVECTOR</font></code>.
+In this case,
 <a href="eigen_prefix.xml" target="_top"><span style='white-space: nowrap'>eigen_prefix</span></a>
- must be specified on the <code><font color="blue">cmake</font></code> command line. 
+ must be specified on the <code><font color="blue">cmake</font></code> command line.
 
 
 

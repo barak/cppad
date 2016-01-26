@@ -6,7 +6,7 @@
 <title>Check If A Memory Allocation is Efficient for Another Use</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Check If A Memory Allocation is Efficient for Another Use"/>
-<meta name="keywords" id="keywords" content=" check if a memory allocation is efficient for another use removed omp_alloc syntax purpose v_ptr num_bytes flag thread ndebug "/>
+<meta name="keywords" id="keywords" content=" check if a memory allocation is efficient for another use removed syntax purpose v_ptr num_bytes flag thread ndebug "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -113,8 +116,6 @@ A:active { color : purple }
 <center><b><big><big>Check If A Memory Allocation is Efficient for Another Use</big></big></b></center>
 <br/>
 <b><big><a name="Removed" id="Removed">Removed</a></big></b>
-
-
 <br/>
 This function has been removed because speed tests seem to indicate
 it is just as fast, or faster, to free and then reallocate the memory.
@@ -125,6 +126,9 @@ it is just as fast, or faster, to free and then reallocate the memory.
 
 <br/>
 
+<code><font color="blue"><span style='white-space: nowrap'>#&#xA0;include&#xA0;&lt;cppad/utility/omp_alloc.hpp&gt;<br/>
+</span></font></code>
+
 <code><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;omp_alloc::efficient(</span></font><i><font color="black"><span style='white-space: nowrap'>v_ptr</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_bytes</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 
 
@@ -132,7 +136,7 @@ it is just as fast, or faster, to free and then reallocate the memory.
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Check if memory that is currently in use is an efficient 
+Check if memory that is currently in use is an efficient
 allocation for a specified number of bytes.
 
 <br/>
@@ -160,7 +164,7 @@ This argument has prototype
 </span></font></code>
 It specifies the number of bytes of the memory allocated by 
 <code><i><font color="black"><span style='white-space: nowrap'>v_ptr</span></font></i></code>
- 
+
 that we want to use.
 
 <br/>
@@ -172,8 +176,8 @@ The return value has prototype
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>flag</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-It is true, 
-a call to <code><font color="blue">get_memory</font></code> with 
+It is true,
+a call to <code><font color="blue">get_memory</font></code> with
 <a href="omp_get_memory.xml#min_bytes" target="_top"><span style='white-space: nowrap'>min_bytes</span></a>
 
 equal to 
@@ -197,7 +201,7 @@ Either the <a href="omp_get_thread_num.xml" target="_top"><span style='white-spa
  must be the same as during
 the corresponding call to <a href="omp_get_memory.xml" target="_top"><span style='white-space: nowrap'>omp_get_memory</span></a>
 ,
-or the current execution mode must be sequential 
+or the current execution mode must be sequential
 (not <a href="omp_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
 ).
 
@@ -211,10 +215,10 @@ If <code><font color="blue">NDEBUG</font></code> is defined,
 Otherwise, a list of in use pointers is searched to make sure
 that 
 <code><i><font color="black"><span style='white-space: nowrap'>v_ptr</span></font></i></code>
- is in the list. 
+ is in the list.
 
 
-<hr/>Input File: cppad/omp_alloc.hpp
+<hr/>Input File: cppad/utility/omp_alloc.hpp
 
 </body>
 </html>

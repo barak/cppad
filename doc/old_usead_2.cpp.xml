@@ -6,7 +6,7 @@
 <title>Using AD to Compute Atomic Function Derivatives</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Using AD to Compute Atomic Function Derivatives"/>
-<meta name="keywords" id="keywords" content=" using ad to compute atomic function derivatives Ad inside user checkpoint deprecated purpose "/>
+<meta name="keywords" id="keywords" content=" using ad to compute atomic function derivatives inside user checkpoint deprecated 2013-05-27 purpose "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -88,7 +91,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Deprecated</option>
+<option>Deprecated 2013-05-27</option>
 <option>Purpose</option>
 </select>
 </td>
@@ -98,9 +101,9 @@ A:active { color : purple }
 
 <center><b><big><big>Using AD to Compute Atomic Function Derivatives</big></big></b></center>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
+<b><big><a name="Deprecated 2013-05-27" id="Deprecated 2013-05-27">Deprecated 2013-05-27</a></big></b>
 <br/>
-This example has been deprecated because it is easier to use the 
+This example has been deprecated because it is easier to use the
 <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
  class instead.
 
@@ -108,7 +111,7 @@ This example has been deprecated because it is easier to use the
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Consider the case where an inner function is used repeatedly in the 
+Consider the case where an inner function is used repeatedly in the
 definition of an outer function.
 In this case, it may reduce the number of variables
 <a href="seq_property.xml#size_var" target="_top"><span style='white-space: nowrap'>size_var</span></a>
@@ -119,7 +122,7 @@ and hence the required memory.
 <pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { // Begin empty namespace 
+namespace { // Begin empty namespace
 	using CppAD::AD;
 	using CppAD::ADFun;
 	using CppAD::vector;
@@ -129,8 +132,8 @@ namespace { // Begin empty namespace
 	class Fun {
 	public:
 		void Ode(
-			const <a href="ad.xml" target="_top">AD</a>&lt;double&gt;           &amp;t, 
-			const vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;z, 
+			const <a href="ad.xml" target="_top">AD</a>&lt;double&gt;           &amp;t,
+			const vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;z,
 			vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;       &amp;f)
 		{	assert( z.size() == 2 );
 			assert( f.size() == 2 );
@@ -146,7 +149,7 @@ namespace { // Begin empty namespace
 	{	size_t n = 3, m = 2;
 		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; x(n), zi(m), y(m), e(m);
 		// The value of x does not matter because the operation sequence
-		// does not depend on x. 
+		// does not depend on x.
 		x[0]  = 0.0;  // initial value z_0 (t) at t = ti
 		x[1]  = 0.0;  // initial value z_1 (t) at t = ti
 		x[2]  = 0.1;  // final time for this integration
@@ -161,7 +164,7 @@ namespace { // Begin empty namespace
 		r_ptr_        = new <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;(x, y);
 	}
 	void destroy_r(void)
-	{	delete r_ptr_; 
+	{	delete r_ptr_;
 		r_ptr_ = CPPAD_NULL;
 	}
 
@@ -181,7 +184,7 @@ namespace { // Begin empty namespace
 		assert( n == 3 );
 		assert( m == 2 );
 		assert( k == 0 || vx.size() == 0 );
-		bool ok = true;	
+		bool ok = true;
 		vector&lt;double&gt; xp(n), yp(m);
 		size_t i, j;
 
@@ -200,7 +203,8 @@ namespace { // Begin empty namespace
 				{	j = *itr;
 					assert( j &lt; n );
 					// y[i] depends on the value of x[j]
-					vy[i] |= vx[j];
+					// Visual Studio 2013 generates warning without bool below
+					vy[i] |= bool( vx[j] );
 				}
 			}
 		}
@@ -241,10 +245,10 @@ namespace { // Begin empty namespace
 	{	assert( id == 0 );
 		assert( n == 3 );
 		assert( m == 2 );
-		bool ok = true;	
+		bool ok = true;
 		vector&lt;double&gt; xp(n), w( (k+1) * m ), dw( (k+1) * n );
 
-		// make sure r_ has proper forward mode coefficients 
+		// make sure r_ has proper forward mode coefficients
 		size_t i, j, q;
 		for(q = 0; q &lt;= k; q++)
 		{	for(j = 0; j &lt; n; j++)
@@ -276,7 +280,7 @@ namespace { // Begin empty namespace
 	// ----------------------------------------------------------------------
 	// forward Jacobian sparsity routine called by CppAD
 	bool solve_ode_for_jac_sparse(
-		size_t                               id ,             
+		size_t                               id ,
 		size_t                                n ,
 		size_t                                m ,
 		size_t                                p ,
@@ -297,13 +301,13 @@ namespace { // Begin empty namespace
 		// no longer need the forward mode sparsity pattern
 		// (have to reconstruct them every time)
 		r_ptr_-&gt;size_forward_set(0);
-		
-		return ok; 
+
+		return ok;
 	}
 	// ----------------------------------------------------------------------
 	// reverse Jacobian sparsity routine called by CppAD
 	bool solve_ode_rev_jac_sparse(
-		size_t                               id ,             
+		size_t                               id ,
 		size_t                                n ,
 		size_t                                m ,
 		size_t                                p ,
@@ -331,12 +335,12 @@ namespace { // Begin empty namespace
 		{	for(itr = R[i].begin(); itr != R[i].end(); itr++)
 				r[*itr].insert(i);
 		}
-		return ok; 
+		return ok;
 	}
 	// ----------------------------------------------------------------------
 	// reverse Hessian sparsity routine called by CppAD
 	bool solve_ode_rev_hes_sparse(
-		size_t                               id ,             
+		size_t                               id ,
 		size_t                                n ,
 		size_t                                m ,
 		size_t                                p ,
@@ -395,14 +399,14 @@ namespace { // Begin empty namespace
 	// ---------------------------------------------------------------------
 	// Declare the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; routine solve_ode(id, ax, ay)
 	CPPAD_USER_ATOMIC(
-		solve_ode                 , 
+		solve_ode                 ,
 		CppAD::vector             ,
-		double                    , 
-		solve_ode_forward         , 
+		double                    ,
+		solve_ode_forward         ,
 		solve_ode_reverse         ,
 		solve_ode_for_jac_sparse  ,
 		solve_ode_rev_jac_sparse  ,
-		solve_ode_rev_hes_sparse  
+		solve_ode_rev_hes_sparse
 	)
 } // End empty namespace
 
@@ -430,7 +434,7 @@ bool old_usead_2(void)
 	ax[2]         = dt;
 	for(size_t i_step = 0; i_step &lt; M; i_step++)
 	{	size_t id = 0;               // not used
-		solve_ode(id, ax, ay); 
+		solve_ode(id, ax, ay);
 		ax[0] = ay[0];
 		ax[1] = ay[1];
 	}
@@ -440,7 +444,7 @@ bool old_usead_2(void)
 	// y_1(t) = u_1 + u_0 * t + t^2 / 2   = u_1 + u_0 * u_2 + u_2^2 / 2
 	// where t = u_2
 	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
-	f.Dependent(au, ay); 
+	f.Dependent(au, ay);
 
 	// --------------------------------------------------------------------
 	// Check forward mode results
@@ -508,13 +512,13 @@ bool old_usead_2(void)
 	// --------------------------------------------------------------------
 	// forward mode sparsity pattern for the Jacobian
 	// f_u = [   1, 0,   1 ]
-	//       [ u_2, 1, u_2 ] 
+	//       [ u_2, 1, u_2 ]
 	size_t i, j, p = n;
 	CppAD::vectorBool r(n * p), s(m * p);
 	// r = identity sparsity pattern
 	for(i = 0; i &lt; n; i++)
 		for(j = 0; j &lt; p; j++)
-			r[i*n +j] = (i == j); 
+			r[i*n +j] = (i == j);
 	s   = f.ForSparseJac(p, r);
 	ok &amp;= s[ 0 * p + 0] == true;
 	ok &amp;= s[ 0 * p + 1] == false;
@@ -530,7 +534,7 @@ bool old_usead_2(void)
 	// s = identity sparsity pattern
 	for(i = 0; i &lt; q; i++)
 		for(j = 0; j &lt; m; j++)
-			s[i*m +j] = (i == j); 
+			s[i*m +j] = (i == j);
 	r   = f.RevSparseJac(q, s);
 	ok &amp;= r[ 0 * n + 0] == true;
 	ok &amp;= r[ 0 * n + 1] == false;
@@ -559,12 +563,12 @@ bool old_usead_2(void)
 	ok &amp;= h[2 * n + 0] == true;
 	ok &amp;= h[2 * n + 1] == false;
 	ok &amp;= h[2 * n + 2] == true;
-	
+
 	// --------------------------------------------------------------------
 	destroy_r();
 
-	// Free all temporary work space associated with old_atomic objects. 
-	// (If there are future calls to user atomic functions, they will 
+	// Free all temporary work space associated with old_atomic objects.
+	// (If there are future calls to user atomic functions, they will
 	// create new temporary work space.)
 	CppAD::user_atomic&lt;double&gt;::clear();
 
@@ -575,7 +579,7 @@ bool old_usead_2(void)
 </font></code>
 
 
-<hr/>Input File: example/atomic/old_usead_2.cpp
+<hr/>Input File: test_more/old_usead_2.cpp
 
 </body>
 </html>

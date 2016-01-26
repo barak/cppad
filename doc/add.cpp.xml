@@ -6,7 +6,7 @@
 <title>AD Binary Addition: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Binary Addition: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad binary addition: example and test + Ad add plus "/>
+<meta name="keywords" id="keywords" content=" ad binary addition: example and test + add plus "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -90,7 +91,7 @@ bool Add(void)
 	size_t n  = 1;
 	double x0 = 0.5;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0; 
+	x[0]      = x0;
 
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
@@ -98,18 +99,18 @@ bool Add(void)
 	// some binary addition operations
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; a = x[0] + 1.; // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; + double
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; b = a    + 2;  // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; + int
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; c = 3.   + b;  // double     + <a href="ad.xml" target="_top">AD</a>&lt;double&gt; 
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; d = 4    + c;  // int        + <a href="ad.xml" target="_top">AD</a>&lt;double&gt; 
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; c = 3.   + b;  // double     + <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
+	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; d = 4    + c;  // int        + <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = d + x[0];          // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; + <a href="ad.xml" target="_top">AD</a>&lt;double&gt; 
+	y[0] = d + x[0];          // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; + <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
-	// check value 
+	// check value
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , 2. * x0 + 10,  1e-10 , 1e-10);
 
 	// forward computation of partials w.r.t. x[0]

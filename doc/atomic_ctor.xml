@@ -6,7 +6,7 @@
 <title>Atomic Function Constructor</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Atomic Function Constructor"/>
-<meta name="keywords" id="keywords" content=" atomic function constructor syntax atomic_user ctor_arg_list afun implementation atomic_base restrictions base name examples define use "/>
+<meta name="keywords" id="keywords" content=" atomic function constructor syntax atomic_user ctor_arg_list afun implementation atomic_base restrictions base name sparsity examples define use "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -96,6 +98,7 @@ A:active { color : purple }
 <option>---..Restrictions</option>
 <option>---..Base</option>
 <option>---..name</option>
+<option>---..sparsity</option>
 <option>Examples</option>
 <option>---..Define Constructor</option>
 <option>---..Use Constructor</option>
@@ -114,7 +117,7 @@ A:active { color : purple }
 <code><i><font color="black"><span style='white-space: nowrap'>atomic_user&#xA0;afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ctor_arg_list</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 
-<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 <br/>
 <b><big><a name="atomic_user" id="atomic_user">atomic_user</a></big></b>
@@ -137,10 +140,10 @@ The object
  must stay in scope for as long
 as the corresponding atomic function is used.
 This includes use by any <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun&lt;Base&gt;</span></a>
- that 
+ that
 has this 
 <code><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i></code>
- operation in its 
+ operation in its
 <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
 .
 
@@ -150,7 +153,7 @@ has this
 <br/>
 The user defined 
 <code><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i></code>
- class is a publicly derived class of 
+ class is a publicly derived class of
 
 <code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
 .
@@ -159,17 +162,17 @@ It should be declared as follows:
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;class&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;:&#xA0;public&#xA0;CppAD::atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;{<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;public:<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ctor_arg_list</span></font></i><font color="blue"><span style='white-space: nowrap'>)&#xA0;:&#xA0;atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ctor_arg_list</span></font></i><font color="blue"><span style='white-space: nowrap'>)&#xA0;:&#xA0;atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;};<br/>
 </span></font></code>
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>...</span></font></i></code>
-  
+
 denotes the rest of the implementation of the derived class.
 This includes completing the constructor and
-all the virtual functions that have their 
-<code><font color="blue">atomic_base</font></code> implementations replaced by 
+all the virtual functions that have their
+<code><font color="blue">atomic_base</font></code> implementations replaced by
 
 <code><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i></code>
  implementations.
@@ -202,13 +205,9 @@ The template parameter determines the
 <br/>
 <b><a name="atomic_base.name" id="atomic_base.name">name</a></b>
 <br/>
-This 
-<code><i><font color="black"><span style='white-space: nowrap'>atomic_base</span></font></i></code>
- constructor argument has either of the
-following prototypes
+This <code><font color="blue">atomic_base</font></code> constructor argument has the following prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;char*&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;std::string&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 It is the name for this atomic function and is used for error reporting.
@@ -220,6 +219,56 @@ The suggested value for
 <code><i><font color="black"><span style='white-space: nowrap'>atomic_user</span></font></i></code>
 ,
 i.e., the name of the corresponding atomic object or class.
+
+<br/>
+<br/>
+<b><a name="atomic_base.sparsity" id="atomic_base.sparsity">sparsity</a></b>
+<br/>
+This <code><font color="blue">atomic_base</font></code> constructor argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::option_enum&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+The current 
+<code><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i></code>
+ for an <code><font color="blue">atomic_base</font></code> object
+determines which type of sparsity patterns it uses
+and its value is one of the following:
+<table><tr><td align='left'  valign='top'>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i></code>
+   </td><td align='left'  valign='top'>
+ sparsity patterns </td></tr><tr><td align='left'  valign='top'>
+
+
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::pack_sparsity_enum</span></font></code>
+ <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
+
+	<a href="cppad_vector.xml#vectorBool" target="_top"><span style='white-space: nowrap'>vectorBool</span></a>
+
+</td></tr><tr><td align='left'  valign='top'>
+
+
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::bool_sparsity_enum</span></font></code>
+ <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
+
+	<a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>vector</span></a>
+<code><font color="blue">&lt;bool&gt;</font></code>
+</td></tr><tr><td align='left'  valign='top'>
+
+
+<code><font color="blue"><span style='white-space: nowrap'>atomic_base&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::set_sparsity_enum</span></font></code>
+ <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
+
+	<a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>vector</span></a>
+<code><font color="blue">&lt;std::set&lt;std::size_t&gt; &gt;</font></code>
+</td></tr>
+</table>
+There is a default value for 
+<code><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i></code>
+ if it is not
+included in the constructor (which may be either the bool or set option).
 
 <br/>
 <br/>

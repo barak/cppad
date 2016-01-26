@@ -6,7 +6,7 @@
 <title>Taylor's Ode Solver: An Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Taylor's Ode Solver: An Example and Test"/>
-<meta name="keywords" id="keywords" content=" taylor's ode solver: an example and test Ode Taylor purpose solution forward mode "/>
+<meta name="keywords" id="keywords" content=" taylor's ode solver: an example and test Taylor purpose solution forward mode "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -190,7 +190,7 @@ The ODE is defined by the function
 </mrow></math>
 
 ,
-which for this example is given by 
+which for this example is given by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <msup><mi mathvariant='italic'>Z</mi>
@@ -251,7 +251,7 @@ and the initial condition is
 <br/>
 <b><big><a name="ODE Solution" id="ODE Solution">ODE Solution</a></big></b>
 <br/>
-The solution for this example can be calculated by 
+The solution for this example can be calculated by
 starting with the first row and then using the solution
 for the first row to solve the second and so on.
 Doing this we obtain
@@ -512,7 +512,7 @@ namespace { // BEGIN empty namespace
 		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) y(n);
 		y[0] = 1;
 		for(size_t k = 1; k &lt; n; k++)
-			y[k] = Z[k-1]; 
+			y[k] = Z[k-1];
 		return y;
 	}
 
@@ -521,7 +521,7 @@ namespace { // BEGIN empty namespace
 // -------------------------------------------------------------------------
 // Example that uses Taylor's method to solve ordinary differential equaitons
 bool ode_taylor(void)
-{	// initialize the return value as true	
+{	// initialize the return value as true
 	bool ok = true;
 
 	// some temporary indices
@@ -538,7 +538,7 @@ bool ode_taylor(void)
 	// initialize the solution vector at time zero
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) z(n);
 	for(j = 0; j &lt; n; j++)
-		z[j] = 0.0; 
+		z[j] = 0.0;
 
 	size_t order   = n;   // order of the Taylor method
 	size_t n_step  = 4;   // number of time steps
@@ -554,7 +554,7 @@ bool ode_taylor(void)
 		for(k = 0; k &lt; order; k++)
 		{	// evaluate k-th order Taylor coefficient of H
 			hk = H.<a href="forward.xml" target="_top">Forward</a>(k, zk);
- 
+
 			for(j = 0; j &lt; n; j++)
 			{	// convert to (k+1)-Taylor coefficient for z
 				zk[j] = hk[j] / double(k + 1);
@@ -568,7 +568,7 @@ bool ode_taylor(void)
 		}
 	}
 
-	// check solution of the ODE, 
+	// check solution of the ODE,
 	// Taylor's method should have no truncation error for this case
 	double eps   = 100. * std::numeric_limits&lt;double&gt;::epsilon();
 	double check = 1.;

@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -35,6 +35,7 @@ var list_down1 = [
 var list_down0 = [
 'value.xml',
 'integer.xml',
+'ad_to_string.xml',
 'ad_input.xml',
 'ad_output.xml',
 'printfor.xml',

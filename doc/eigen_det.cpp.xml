@@ -116,7 +116,7 @@ bool eigen_det(void)
 	// set and declare independent variables and start tape recording
 	for(i = 0; i &lt; size; i++)
 	{	for(j = 0; j &lt; size; j++)
-		{	// lower triangular matrix 
+		{	// lower triangular matrix
 			a_x[i * size + j] = x[i * size + j] = 0.0;
 			if( j &lt;= i )
 				a_x[i * size + j] = x[i * size + j] = double(1 + i + j);
@@ -139,11 +139,11 @@ bool eigen_det(void)
 	a_y[0] = log( a_X.determinant() );
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
 
-	// check function value 
+	// check function value
 	double eps = 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-	CppAD::det_by_minor&lt;double&gt; det(size); 
+	CppAD::det_by_minor&lt;double&gt; det(size);
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Value(a_y[0]) , log(det(x)), eps, eps);
 
 	// compute the derivative of y w.r.t x using CppAD

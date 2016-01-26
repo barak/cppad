@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -108,7 +108,7 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 
 
 <code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 # include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
 
@@ -117,12 +117,13 @@ extern bool
 	global_onetape, global_atomic, global_optimize, global_boolsparsity;
 
 bool link_sparse_hessian(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
-	      CppAD::vector&lt;double&gt;&amp;     x        ,
-	      CppAD::vector&lt;double&gt;&amp;     hessian  )
+	CppAD::vector&lt;double&gt;&amp;           x        ,
+	CppAD::vector&lt;double&gt;&amp;           hessian  ,
+	size_t&amp;                          n_sweep  )
 {
 	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
 		return false;
@@ -131,12 +132,12 @@ bool link_sparse_hessian(
 	using CppAD::vector;
 	size_t order = 0;          // derivative order corresponding to function
 	size_t n     = size;       // argument space dimension
-	size_t m     = 1;          // range space dimension 
+	size_t m     = 1;          // range space dimension
 	vector&lt;double&gt; y(m);       // function value
 
 	// choose a value for x
 	CppAD::uniform_01(n, x);
-	
+
 	// ------------------------------------------------------
 
 	while(repeat--)

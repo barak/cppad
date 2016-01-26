@@ -16,7 +16,7 @@ var list_down1 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -43,7 +43,8 @@ var list_current0 = [
 '_reference.xml#T',
 '_reference.xml#U',
 '_reference.xml#V',
-'_reference.xml#W'
+'_reference.xml#W',
+'_reference.xml#Z'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

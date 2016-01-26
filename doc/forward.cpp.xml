@@ -6,7 +6,7 @@
 <title>Forward Mode: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Forward Mode: Example and Test"/>
-<meta name="keywords" id="keywords" content=" forward mode: example and test Forward "/>
+<meta name="keywords" id="keywords" content=" forward mode: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -62,7 +62,7 @@ A:active { color : purple }
 <option>forward_order</option>
 <option>forward_dir</option>
 <option>size_order</option>
-<option>CompareChange</option>
+<option>compare_change</option>
 <option>capacity_order</option>
 <option>number_skip</option>
 </select>
@@ -86,7 +86,7 @@ A:active { color : purple }
 # include &lt;cppad/cppad.hpp&gt;
 namespace { // --------------------------------------------------------
 // define the template function ForwardCases&lt;Vector&gt; in empty namespace
-template &lt;class Vector&gt; 
+template &lt;class Vector&gt;
 bool ForwardCases(void)
 {	bool ok = true;
 	using CppAD::AD;
@@ -96,7 +96,7 @@ bool ForwardCases(void)
 	// domain space vector
 	size_t n = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	ax[0] = 0.; 
+	ax[0] = 0.;
 	ax[1] = 1.;
 
 	// declare independent variables and starting recording
@@ -145,7 +145,7 @@ bool ForwardCases(void)
 
 	return ok;
 }
-} // End empty namespace 
+} // End empty namespace
 # include &lt;vector&gt;
 # include &lt;valarray&gt;
 bool Forward(void)

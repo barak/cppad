@@ -6,7 +6,7 @@
 <title>Nonlinear Programming Retaping: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Nonlinear Programming Retaping: Example and Test"/>
-<meta name="keywords" id="keywords" content=" retape ipopt_solve nonlinear programming retaping: example and test purpose "/>
+<meta name="keywords" id="keywords" content=" nonlinear programming retaping: example and test retape ipopt_solve purpose "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -74,8 +74,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 
 
 
@@ -113,13 +111,13 @@ namespace {
 		}
 	};
 }
-	
+
 bool retape(void)
 {	bool ok = true;
 	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) Dvector;
 
 	// number of independent variables (domain dimension for f and g)
-	size_t nx = 1;  
+	size_t nx = 1;
 	// number of constraints (range dimension for g)
 	size_t ng = 0;
 	// initial value, lower and upper limits, for the independent variables
@@ -133,22 +131,22 @@ bool retape(void)
 	// object that computes objective and constraints
 	FG_eval fg_eval;
 
-	// options 
+	// options
 	std::string options;
 	// retape operation sequence for each new x
 	options += &quot;Retape  true\n&quot;;
 	// turn off any printing
-	options += &quot;Integer print_level   0\n&quot;; 
+	options += &quot;Integer print_level   0\n&quot;;
 	options += &quot;String  sb          yes\n&quot;;
 	// maximum number of iterations
 	options += &quot;Integer max_iter      10\n&quot;;
 	// approximate accuracy in first order necessary conditions;
-	// see Mathematical Programming, Volume 106, Number 1, 
+	// see Mathematical Programming, Volume 106, Number 1,
 	// Pages 25-57, Equation (6)
 	options += &quot;Numeric tol           1e-9\n&quot;;
 	// derivative testing
 	options += &quot;String  derivative_test            second-order\n&quot;;
-	// maximum amount of random pertubation; e.g., 
+	// maximum amount of random pertubation; e.g.,
 	// when evaluation finite diff
 	options += &quot;Numeric point_perturbation_radius  0.\n&quot;;
 
@@ -160,8 +158,8 @@ bool retape(void)
 		options, xi, xl, xu, gl, gu, fg_eval, solution
 	);
 	//
- 	// Check some of the solution values
- 	//
+	// Check some of the solution values
+	//
 	ok &amp;= solution.status == CppAD::ipopt::solve_result&lt;Dvector&gt;::success;
 	double rel_tol    = 1e-6;  // relative tolerance
 	double abs_tol    = 1e-6;  // absolute tolerance

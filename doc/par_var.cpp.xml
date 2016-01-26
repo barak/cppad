@@ -6,7 +6,7 @@
 <title>AD Parameter and Variable Functions: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Parameter and Variable Functions: Example and Test"/>
-<meta name="keywords" id="keywords" content=" ad parameter and variable functions: example test Parameter Variable "/>
+<meta name="keywords" id="keywords" content=" ad parameter and variable functions: example test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -96,7 +96,7 @@ bool ParVar(void)
 	x[0]     = 0.;
 	ok &amp;= Parameter(x[0]);     // x[0] is a paraemter here
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
-	ok &amp;= Variable(x[0]);      // now x[0] is a variable 
+	ok &amp;= Variable(x[0]);      // now x[0] is a variable
 
 	// dependent variable vector
 	size_t m = 2;
@@ -104,7 +104,7 @@ bool ParVar(void)
 	y[0] = 2.;
 	ok  &amp;= Parameter(y[0]);    // y[0] does not depend on x[0]
 	y[1] = abs(x[0]);
-	ok  &amp;= Variable(y[1]);     // y[1] does depends on x[0] 
+	ok  &amp;= Variable(y[1]);     // y[1] does depends on x[0]
 
 	// VecAD objects
 	VecAD&lt;double&gt; z(2);
@@ -113,7 +113,7 @@ bool ParVar(void)
 	ok  &amp;= Parameter(z);      // z does not depend on x[0]
 	z[x[0]] = 2.;
 	ok  &amp;= Variable(z);       // z depends on x[0]
-	
+
 
 	// create f: x -&gt; y and stop tape recording
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);

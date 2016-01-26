@@ -6,7 +6,7 @@
 <title>Setup thread_alloc For Use in Multi-Threading Environment</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Setup thread_alloc For Use in Multi-Threading Environment"/>
-<meta name="keywords" id="keywords" content=" setup thread_alloc for use in multi-threading environment parallel num_threads in_parallel thread_num initialize syntax purpose speed restrictions example "/>
+<meta name="keywords" id="keywords" content=" setup thread_alloc for use in multi-threading environment parallel initialize syntax purpose speed num_threads in_parallel thread_num restrictions example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>thread_alloc</option>
 <option>ta_parallel_setup</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -170,7 +168,7 @@ and must be greater than zero.
 It specifies the number of threads that are sharing memory.
 The case 
 <code><i><font color="black"><span style='white-space: nowrap'>num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;1</span></font></code>
- is a special case that is 
+ is a special case that is
 used to terminate a multi-threading environment.
 
 <br/>
@@ -180,7 +178,7 @@ used to terminate a multi-threading environment.
 This function has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>in_parallel</span></font></i><font color="blue"><span style='white-space: nowrap'>(void)&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>in_parallel</span></font></i><font color="blue"><span style='white-space: nowrap'>(void)<br/>
 </span></font></code>
 It must return <code><font color="blue">true</font></code> if there is more than one thread
 currently executing.
@@ -201,10 +199,10 @@ the routine
 This function has prototype
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>thread_num</span></font></i><font color="blue"><span style='white-space: nowrap'>(void)&#xA0;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>thread_num</span></font></i><font color="blue"><span style='white-space: nowrap'>(void)<br/>
 </span></font></code>
 It must return a thread number that uniquely identifies the
-currently executing thread. 
+currently executing thread.
 Furthermore
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
@@ -230,7 +228,7 @@ work for that thread.
 <br/>
 <b><big><a name="Restrictions" id="Restrictions">Restrictions</a></big></b>
 <br/>
-The function <code><font color="blue">parallel_setup</font></code> must be called before 
+The function <code><font color="blue">parallel_setup</font></code> must be called before
 the program enters <a href="ta_in_parallel.xml" target="_top"><span style='white-space: nowrap'>parallel</span></a>
  execution mode.
 In addition, this function cannot be called while in parallel mode.
@@ -239,17 +237,17 @@ In addition, this function cannot be called while in parallel mode.
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
 <br/>
-The files 
+The files
 <a href="simple_ad_openmp.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_openmp.cpp</span></a>
-, 
+,
 <a href="simple_ad_bthread.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_bthread.cpp</span></a>
 , and
 <a href="simple_ad_pthread.cpp.xml" target="_top"><span style='white-space: nowrap'>simple_ad_pthread.cpp</span></a>
-, 
-contain examples and tests that use this function.   
+,
+contain examples and tests that use this function.
 
 
-<hr/>Input File: cppad/thread_alloc.hpp
+<hr/>Input File: cppad/utility/thread_alloc.hpp
 
 </body>
 </html>

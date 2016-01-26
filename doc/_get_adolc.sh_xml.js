@@ -17,7 +17,7 @@ var list_down3 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_down2 = [
 'adolc_prefix.xml',

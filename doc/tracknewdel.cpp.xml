@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -88,7 +91,7 @@ A:active { color : purple }
 <center><b><big><big>Tracking Use of New and Delete: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
-# include &lt;cppad/track_new_del.hpp&gt;
+# include &lt;cppad/utility/track_new_del.hpp&gt;
 
 bool track_new_del(void)
 {	bool ok = true;
@@ -110,13 +113,13 @@ bool track_new_del(void)
 	// extend the buffer to be lenght 10
 	newlen = 10;
 	ptr    = CPPAD_TRACK_EXTEND(newlen, ncopy, ptr);
-		
+
 	// copy data into the new part of the array
 	for(i = ncopy; i &lt; newlen; i++)
 		ptr[i] = double(i);
 
 	// check the values in the array
- 	for(i = 0; i &lt; newlen; i++)
+	for(i = 0; i &lt; newlen; i++)
 		ok &amp;= (ptr[i] == double(i));
 
 	// free the memory allocated since previous call to TrackCount

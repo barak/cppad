@@ -6,7 +6,7 @@
 <title>The AD atan2 Function: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The AD atan2 Function: Example and Test"/>
-<meta name="keywords" id="keywords" content=" the ad atan2 function: example and test Ad "/>
+<meta name="keywords" id="keywords" content=" the ad atan2 function: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="atan2.xml" target="_top">Prev</a>
-</td><td><a href="erf.xml" target="_top">Next</a>
+</td><td><a href="pow.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>binary_math</option>
 <option>atan2</option>
 <option>atan2.cpp</option>
 </select>
@@ -49,22 +49,20 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>MathOther-&gt;</option>
-<option>abs</option>
-<option>sign</option>
+<option>binary_math-&gt;</option>
 <option>atan2</option>
-<option>erf</option>
 <option>pow</option>
-<option>limits</option>
+<option>azmul</option>
 </select>
 </td>
 <td>
@@ -84,7 +82,7 @@ A:active { color : purple }
 
 # include &lt;cppad/cppad.hpp&gt;
 
-bool Atan2(void)
+bool atan2(void)
 {	bool ok = true;
 
 	using CppAD::AD;
@@ -103,15 +101,15 @@ bool Atan2(void)
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; sin_of_x0 = CppAD::sin(x[0]);
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; cos_of_x0 = CppAD::cos(x[0]);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = CppAD::atan2(sin_of_x0, cos_of_x0);
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
-	// check value 
+	// check value
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , x0,  1e-10 , 1e-10);
 
 	// forward computation of first partial w.r.t. x[0]

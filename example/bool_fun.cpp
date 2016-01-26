@@ -1,9 +1,9 @@
-/* $Id: bool_fun.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: bool_fun.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -19,9 +19,8 @@ $spell
 $$
 
 $section AD Boolean Functions: Example and Test$$
+$mindex bool$$
 
-$index example, AD bool$$
-$index test, AD bool$$
 
 $code
 $verbatim%example/bool_fun.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -35,7 +34,7 @@ $end
 # include <complex>
 
 
-// define abbreviation for double precision complex 
+// define abbreviation for double precision complex
 typedef std::complex<double> Complex;
 
 namespace {

@@ -190,7 +190,7 @@ Thus, we need to be careful to properly account for the fact that
 </msup>
 </mrow></math>
 
- 
+
 (and similarly 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>Y</mi>
@@ -219,7 +219,7 @@ Thus, we need to be careful to properly account for the fact that
 # include &lt;cppad/cppad.hpp&gt;
 namespace { // ----------------------------------------------------------
 // define the template function cases&lt;Vector&gt; in empty namespace
-template &lt;typename Vector&gt; 
+template &lt;typename Vector&gt;
 bool cases(void)
 {	bool ok    = true;
 	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
@@ -229,7 +229,7 @@ bool cases(void)
 	// domain space vector
 	size_t n = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.; 
+	X[0] = 0.;
 	X[1] = 1.;
 
 	// declare independent variables and start recording
@@ -243,18 +243,18 @@ bool cases(void)
 	// create f : X -&gt; Y and stop recording
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
 
-	// define x^0 and compute y^0 using user zero order forward 
+	// define x^0 and compute y^0 using user zero order forward
 	Vector x0(n), y0(m);
 	x0[0]    = 2.;
 	x0[1]    = 3.;
 	y0       = f.<a href="forward.xml" target="_top">Forward</a>(0, x0);
 
-	// y^0 = F(x^0) 
+	// y^0 = F(x^0)
 	double check;
 	check    =  x0[0] * x0[1];
 	ok      &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y0[0] , check, eps, eps);
 
-	// define x^1 and compute y^1 using first order forward mode 
+	// define x^1 and compute y^1 using first order forward mode
 	Vector x1(n), y1(m);
 	x1[0] = 4.;
 	x1[1] = 5.;
@@ -301,16 +301,16 @@ bool cases(void)
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1*p+1], check, eps, eps);
 
 	// check partial w.r.t x^2_0 of W(x)
-	check = 3. * x0[1]; 
+	check = 3. * x0[1];
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*p+2], check, eps, eps);
 
 	// check partial w.r.t x^2_1 of W(x)
-	check = 3. * x0[0]; 
+	check = 3. * x0[0];
 	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1*p+2], check, eps, eps);
 
 	return ok;
 }
-} // End empty namespace 
+} // End empty namespace
 # include &lt;vector&gt;
 # include &lt;valarray&gt;
 bool reverse_three(void)

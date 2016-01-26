@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3491 2014-12-21 13:15:12Z bradbell $
+# $Id: CMakeLists.txt 3608 2015-01-23 12:20:38Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the 
@@ -9,42 +9,44 @@
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-# Build the cppad pkg-config information files.
-# Inherit environment from ../CMakeLists.txt
+# Construct cppad.pc from cppad.pc.in; see
+# http://people.freedesktop.org/~dbn/pkg-config-guide.html
 #
-SET(cppad_cflags "-I${cppad_abs_includedir}")
-SET(cppad_libs "")
-SET(cppad_requires "")
+# Setting that are always included
+SET(cppad_pkgconfig_cflags "-I${cppad_abs_includedir}")
+SET(cppad_pkgconfig_libs "")
+SET(cppad_pkgconfig_requires "")
+#
+# Settings that are only included if cppad is configured with ipopt.
+# (Note that ipopt has a pkgconfig file.)
 IF( ipopt_prefix )
-	SET(cppad_libs "-L${cppad_abs_libdir} -lcppad_ipopt")
-	SET(cppad_requires "ipopt")
-	FOREACH(dir ${cmake_install_includedirs})
-		IF(IS_DIRECTORY ${ipopt_prefix}/${dir} )
-			SET(cppad_cflags "${cppad_cflags} -I${ipopt_prefix}/${dir}" )
-		ENDIF(IS_DIRECTORY ${ipopt_prefix}/${dir} )
-	ENDFOREACH(dir)
+	SET(cppad_pkgconfig_requires "ipopt")
+	SET(cppad_pkgconfig_libs "-L${cppad_abs_libdir} -lcppad_ipopt")
 ENDIF( ipopt_prefix )
 #
+# Settings that are only included if cppad is configured with colpack
+# (Note that colpack does not have a pkgconfig file.)
 IF( colpack_prefix )
-	# Cannot use requires because colpack does not have a pkgconfig file.
-	# SET(cppad_requires "colpack")
-	SET(cppad_libs "${cppad_libs} -lColPack")
+	SET(cppad_pkgconfig_libs "${cppad_pkgconfig_libs} -lColPack")
 	FOREACH(dir ${cmake_install_libdirs})
 		IF(IS_DIRECTORY ${colpack_prefix}/${dir} )
-			SET(cppad_cflags "${cppad_cflags} -L${colpack_prefix}/${dir}" )
+			SET(cppad_pkgconfig_libs 
+				"${cppad_pkgconfig_libs} -L${colpack_prefix}/${dir}"
+			)
 		ENDIF(IS_DIRECTORY ${colpack_prefix}/${dir} )
 	ENDFOREACH(dir)
 	FOREACH(dir ${cmake_install_includedirs})
-		SET(check_dir ${colpack_prefix}/${dir} )
-		IF(IS_DIRECTORY ${check_dir} )
-			SET(cppad_cflags "${cppad_cflags} -I${check_dir}" )
-		ENDIF(IS_DIRECTORY ${check_dir} )
+		IF(IS_DIRECTORY ${colpack_prefix}/${dir} )
+			SET(cppad_pkgconfig_cflags 
+				"${cppad_pkgconfig_cflags} -I${colpack_prefix}/${dir}"
+			)
+		ENDIF(IS_DIRECTORY ${colpack_prefix}/${dir} )
 	ENDFOREACH(dir)
 ENDIF( colpack_prefix )
 #
-MESSAGE(STATUS "cppad_cflags = ${cppad_cflags}")
-MESSAGE(STATUS "cppad_libs = ${cppad_libs}")
-MESSAGE(STATUS "cppad_requires = ${cppad_requires}")
+MESSAGE(STATUS "cppad_pkgconfig_cflags = ${cppad_pkgconfig_cflags}")
+MESSAGE(STATUS "cppad_pkgconfig_libs = ${cppad_pkgconfig_libs}")
+MESSAGE(STATUS "cppad_pkgconfig_requires = ${cppad_pkgconfig_requires}")
 #
 # Copy a file to another location and modify its contents.
 # configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])

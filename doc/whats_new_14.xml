@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="whats_new.xml" target="_top">Prev</a>
+<td><a href="whats_new_15.xml" target="_top">Prev</a>
 </td><td><a href="whats_new_13.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,17 +66,19 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
@@ -177,7 +179,7 @@ The example <code><font color="blue">not_complex_ad.cpp</font></code> was using 
 </span></font></code>
 and was failing to compile with the <code><font color="blue">clang</font></code> complier.
 This example has been removed because it is not consistent with the
-C++ standard; see 
+C++ standard; see
 <a href="faq.xml#Complex Types" target="_top"><span style='white-space: nowrap'>complex&#xA0;FAQ</span></a>
 .
 
@@ -192,9 +194,10 @@ that were not being used; e.g., sub-tests that were not being executed.
 </li><li>
 
 Fix <code><font color="blue">cmake</font></code> setting
-<a href="cmake.xml#cppad_implicit_ctor_from_any_type" target="_top"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></a>
+<code><font color="blue">cppad_implicit_ctor_from_any_type</font></code>
+Note that this cmake option has since been replaced by
+<a href="cmake.xml#cppad_deprecated" target="_top"><span style='white-space: nowrap'>cppad_deprecated</span></a>
 .
-Note that this option is deprecated and may eventually be removed.
 </li><li>
 
 The <code><font color="blue">clang++</font></code> compiler was optimizing out the calculations
@@ -211,10 +214,10 @@ This has been fixed.
 <br/>
 <b><big><a name="12-27" id="12-27">12-27</a></big></b>
 <br/>
-More work on the bug in 
+More work on the bug in
 <a href="condexp.xml#Optimize" target="_top"><span style='white-space: nowrap'>optimizing</span></a>
- 
-conditional expressions. 
+
+conditional expressions.
 
 <br/>
 <br/>
@@ -230,15 +233,15 @@ Hessian sparsity patterns <a href="atomic_hes_sparse.cpp.xml" target="_top"><spa
 <br/>
 More work on the bug in
 <a href="condexp.xml#Optimize" target="_top"><span style='white-space: nowrap'>optimizing</span></a>
- 
-conditional expressions. 
+
+conditional expressions.
 
 <br/>
 <br/>
 <b><big><a name="12-23" id="12-23">12-23</a></big></b>
 <br/>
 The c++11 standard includes the error function <a href="erf.xml" target="_top"><span style='white-space: nowrap'>erf</span></a>
- in 
+ in
 <code><font color="blue">cmath</font></code>.
 If the c++ compiler has the error function defined in <code><font color="blue">cmath</font></code>,
 the complier version of the error function is used and it corresponds to an
@@ -253,10 +256,10 @@ atomic operation.
 <br/>
 <b><big><a name="12-22" id="12-22">12-22</a></big></b>
 <br/>
-There was a bug related to 
+There was a bug related to
 <a href="condexp.xml#Optimize" target="_top"><span style='white-space: nowrap'>optimizing</span></a>
- 
-conditional expressions. 
+
+conditional expressions.
 This has been fixed.
 
 <br/>
@@ -265,7 +268,7 @@ This has been fixed.
 <br/>
 Fix some compiler warnings and <a href="speed.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
  program names
-when using the deprecated <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>auto-tools</span></a>
+when using the deprecated <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto-tools</span></a>
  install procedure.
 
 <br/>
@@ -301,17 +304,17 @@ a new version of the <code><font color="blue">omhelp</font></code> documentation
 <b><big><a name="11-27" id="11-27">11-27</a></big></b>
 
 <ol type="1"><li>
-Add alignment to the 
+Add alignment to the
 <a href="ta_get_memory.xml#Alignment" target="_top"><span style='white-space: nowrap'>get_memory</span></a>
  and
 <a href="ta_create_array.xml#Alignment" target="_top"><span style='white-space: nowrap'>create_array</span></a>
  specifications
-and 
+and
 <a href="thread_alloc.cpp.xml" target="_top"><span style='white-space: nowrap'>thread_alloc&#xA0;example</span></a>
 .
 </li><li>
 
-Advance the deprecated <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;install</span></a>
+Advance the deprecated <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;install</span></a>
  utilities to
 autoconf-2.69 and automake-1.13.4.
 </li></ol>
@@ -329,7 +332,7 @@ Using old instead of new operator indices.
 Not properly following dependence back through atomic operations.
 </li><li>
 
-Aborting during forward order zero, when skipping computation for a variable 
+Aborting during forward order zero, when skipping computation for a variable
 that was already completed (the skip is still useful for higher orders
 and for reverse mode).
 </li><li>
@@ -347,7 +350,7 @@ of argument operations; i.e., conditional skip and cumulative summation.
 <br/>
 <b><big><a name="09-27" id="09-27">09-27</a></big></b>
 <br/>
-Fix a bug that occurred when 
+Fix a bug that occurred when
 <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>f.optimize</span></a>
  was used with a function 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
@@ -361,7 +364,7 @@ and <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>condit
 <br/>
 <b><big><a name="09-25" id="09-25">09-25</a></big></b>
 <br/>
-Fix a bug that occurred when 
+Fix a bug that occurred when
 <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>f.optimize</span></a>
  was used with a function 
 <code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
@@ -373,7 +376,7 @@ that contained <a href="discrete.xml" target="_top"><span style='white-space: no
 <br/>
 <b><big><a name="09-21" id="09-21">09-21</a></big></b>
 <br/>
-Fix a typo in documentation for 
+Fix a typo in documentation for
 <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>any&#xA0;order&#xA0;reverse</span></a>
 .
 To be specific, 
@@ -396,7 +399,7 @@ To be specific,
 </msup>
 </mrow></math>
 
-. 
+.
 
 <br/>
 <br/>
@@ -423,16 +426,15 @@ Improve the <a href="speed.xml" target="_top"><span style='white-space: nowrap'>
 <b><big><a name="05-27" id="05-27">05-27</a></big></b>
 
 <ol type="1"><li>
-The <a href="colpack_prefix.xml#cppad_colpack.cpp" target="_top"><span style='white-space: nowrap'>cppad_colpack.cpp</span></a>
-
+The <code><font color="blue">cppad_colpack.cpp</font></code>
 file was not being copied to the specified directory.
 In addition, the specified directory was changed from an include
-directory to data directory
-(<code><font color="blue">cppad_colpack.cpp</font></code> is not an include file).
+directory to data directory because
+<code><font color="blue">cppad_colpack.cpp</font></code> is not an include file.
 </li><li>
 
 If <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
-  was specified, the CppAD 
+  was specified, the CppAD
 <a href="pkgconfig.xml" target="_top"><span style='white-space: nowrap'>pkgconfig</span></a>
  file was missing some information.
 This has been fixed.
@@ -445,7 +447,7 @@ This has been fixed.
 <br/>
 The <a href="speed.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
  test instructions were converted from using
-the old auto-tools <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;install</span></a>
+the old auto-tools <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>unix&#xA0;install</span></a>
  instructions
 to use the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
  install instructions.
@@ -475,10 +477,9 @@ and after this change:
 	cppad_sparse_jacobian_rate = [ 6389, 954.26, 314.04, 180.06, 56.95 ]
 </pre></font></code>
 
-Due to the success of this change, other
-<a href="wishlist.xml#Multiple Directions" target="_top"><span style='white-space: nowrap'>multiple&#xA0;direction</span></a>
- items
-were added to the wish list.
+Due to the success of this change,
+<code><font color="blue">multiple direction</font></code> items were added to the wish list
+(they were later removed).
 </li><li>
 
 Improve the  forward mode tracing of arguments to,
@@ -492,12 +493,12 @@ and results from, user defined <a href="atomic.xml" target="_top"><span style='w
 <b><big><a name="05-20" id="05-20">05-20</a></big></b>
 
 <ol type="1"><li>
-Move <code><font color="blue">speed/adolc/alloc_mat.hpp</font></code> to 
+Move <code><font color="blue">speed/adolc/alloc_mat.hpp</font></code> to
 <code><font color="blue">speed/adolc/adolc_alloc_mat.hpp</font></code> so it has the
 same name is its <code><font color="blue"># ifndef</font></code> command.
 </li><li>
 
-Fix <code><font color="blue"># ifndef</font></code> command in 
+Fix <code><font color="blue"># ifndef</font></code> command in
 <code><font color="blue">cppad/ipopt/solve_callback.hpp</font></code>.
 </li><li>
 
@@ -510,7 +511,7 @@ Add <code><font color="blue"># ifndef</font></code> command to <code><font color
 <br/>
 <b><big><a name="05-19" id="05-19">05-19</a></big></b>
 <br/>
-In the files 
+In the files
 <code><font color="blue">cppad/local/asin_op.hpp</font></code> and <code><font color="blue">cppad/local/acos_op.hpp</font></code>
 there were assignments of the form <code><font color="blue">uj = 0.</font></code> where <code><font color="blue">u_j</font></code>
 has type <a href="glossary.xml#Base Type" target="_top"><span style='white-space: nowrap'>Base</span></a>
@@ -523,9 +524,9 @@ have been converted to <code><font color="blue">uj = Base(0)</font></code>.
 <br/>
 <b><big><a name="05-16" id="05-16">05-16</a></big></b>
 <br/>
-There was a mistake in printing the arguments for 
+There was a mistake in printing the arguments for
 <code><font color="blue">CSumOp</font></code> and <code><font color="blue">CSkipOp</font></code> when using the undocumented
-<code><font color="blue">TRACE</font></code> option during forward mode (available in files of the form 
+<code><font color="blue">TRACE</font></code> option during forward mode (available in files of the form
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad/local/</span></font><i><font color="black"><span style='white-space: nowrap'>*</span></font></i><font color="blue"><span style='white-space: nowrap'>sweep.hpp/</span></font></code>
 ).
@@ -536,15 +537,15 @@ This has been fixed.
 <b><big><a name="05-14" id="05-14">05-14</a></big></b>
 
 <ol type="1"><li>
-There were some global variables in the file 
+There were some global variables in the file
 <code><font color="blue">cppad/local/op_code.hpp</font></code> that might have caused multiple definitions
-during link time for CppAD applications. 
+during link time for CppAD applications.
 These variables have been changed to be local so that this cannot happen.
 </li><li>
 
-There was a mistaken assert that the number of arguments for the 
+There was a mistaken assert that the number of arguments for the
 <code><font color="blue">BeginOp</font></code> was zero that caused an abort when using the undocumented
-<code><font color="blue">TRACE</font></code> option available in files of the form 
+<code><font color="blue">TRACE</font></code> option available in files of the form
 
 <code><font color="blue"><span style='white-space: nowrap'>cppad/local/</span></font><i><font color="black"><span style='white-space: nowrap'>*</span></font></i><font color="blue"><span style='white-space: nowrap'>sweep.hpp/</span></font></code>
 .
@@ -557,7 +558,7 @@ This has been fixed.
 <b><big><a name="03-18" id="03-18">03-18</a></big></b>
 
 <ol type="1"><li>
-The 
+The
 <a href="fundeprecated.xml#size_taylor" target="_top"><span style='white-space: nowrap'>size_taylor</span></a>
 
 and
@@ -573,7 +574,7 @@ The documentation for <a href="forward.xml" target="_top"><span style='white-spa
  and the examples
 <a href="forward.cpp.xml" target="_top"><span style='white-space: nowrap'>forward.cpp</span></a>
 , <a href="forward_order.cpp.xml" target="_top"><span style='white-space: nowrap'>forward_order.cpp</span></a>
-, have been improved. 
+, have been improved.
 To be more specific, <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward_order</span></a>
  now references the special
 cases <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
@@ -588,7 +589,7 @@ cases <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'
 <br/>
 <b><big><a name="03-17" id="03-17">03-17</a></big></b>
 <br/>
-The 
+The
 <a href="cppad_vector.xml#Assignment.Move Semantics" target="_top"><span style='white-space: nowrap'>move&#xA0;semantics</span></a>
 
 version of the <code><font color="blue">CppAD::vector</font></code> assignment statement
@@ -607,7 +608,7 @@ The documentation links
 have been changed to
 <a href="forward_zero.xml" target="_top"><span style='white-space: nowrap'>forward_zero</span></a>
 , <a href="forward_one.xml" target="_top"><span style='white-space: nowrap'>forward_one</span></a>
-, 
+,
 and <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward_order</span></a>
  respectively.
 This may affect links from other web pages to the CppAD documentation.
@@ -620,18 +621,18 @@ The names
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
- in the 
+ in the
 <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
 ,
 <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
 ,
 <a href="atomic_forward.xml" target="_top"><span style='white-space: nowrap'>atomic_forward</span></a>
-, and 
+, and
 <a href="atomic_reverse.xml" target="_top"><span style='white-space: nowrap'>atomic_reverse</span></a>
  functions
 were reverse so that 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&lt;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
-. 
+.
 This is only a notational change to make the arguments easier to remember.
 
 <br/>
@@ -642,7 +643,7 @@ This is only a notational change to make the arguments easier to remember.
 In the output for the speed
 <a href="speed_main.xml#test.correct" target="_top"><span style='white-space: nowrap'>correct</span></a>
  test,
-mention which tests are not available. 
+mention which tests are not available.
 Note that the set of available tests can depend on the
 <a href="speed_main.xml#option_list" target="_top"><span style='white-space: nowrap'>list&#xA0;of&#xA0;options</span></a>
 .
@@ -658,7 +659,7 @@ mention that it is equal to the number of colors determined by the
 
 The <a href="speed_cppad.xml" target="_top"><span style='white-space: nowrap'>speed_cppad</span></a>
  tests were simplified by removing the printing
-of auxillary information related to the 
+of auxillary information related to the
 <a href="speed_main.xml#option_list.optimize" target="_top"><span style='white-space: nowrap'>optimize</span></a>
  option.
 Future auxillary information will be passed back in a manner similar to
@@ -681,7 +682,7 @@ Change the prototype for
 <code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
- in the 
+ in the
 <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>link_sparse_jacobian</span></a>
  speed test to be <code><font color="blue">const</font></code>; i.e.,
 they are not changed.
@@ -710,8 +711,8 @@ The <a href="cppad_vector.xml#data" target="_top"><span style='white-space: nowr
 <b><big><a name="02-27" id="02-27">02-27</a></big></b>
 <br/>
 The CppAD developer documentation for the subdirectory
-<code><font color="blue">cppad/ipopt</font></code> was not being built by the command 
-<code><font color="blue">bin/run_doxygen.sh</font></code>. 
+<code><font color="blue">cppad/ipopt</font></code> was not being built by the command
+<code><font color="blue">bin/run_doxygen.sh</font></code>.
 This has been fixed.
 
 <br/>
@@ -719,7 +720,7 @@ This has been fixed.
 <b><big><a name="02-26" id="02-26">02-26</a></big></b>
 
 <ol type="1"><li>
-The 
+The
 <a href="speed_adolc.xml" target="_top"><span style='white-space: nowrap'>adolc</span></a>
  and
 <a href="speed_cppad.xml" target="_top"><span style='white-space: nowrap'>cppad</span></a>
@@ -750,11 +751,11 @@ The <a href="sparse_jacobian.xml#work.color_method" target="_top"><span style='w
 
 option was added to the sparse Jacobian calculations.
 This enables one to use <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>ColPack</span></a>
- 
+
 do color the rows or columns.
 The speed test <a href="speed_main.xml#Sparsity Options.colpack" target="_top"><span style='white-space: nowrap'>colpack</span></a>
- option 
-was also added (but not yet implemented for 
+ option
+was also added (but not yet implemented for
 <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
  speed tests).
 
@@ -780,7 +781,7 @@ where
 <b><big><a name="02-17" id="02-17">02-17</a></big></b>
 <br/>
 Fix ambiguous call to <a href="nan.xml#isnan" target="_top"><span style='white-space: nowrap'>isnan</span></a>
- 
+
 during MS Visual Studio 2012 compilation.
 
 <br/>
@@ -794,11 +795,11 @@ was added to the <a href="speed_main.xml" target="_top"><span style='white-space
  program.
 </li><li>
 
-The <code><font color="blue">retape</font></code> option what changed to 
+The <code><font color="blue">retape</font></code> option what changed to
 <a href="speed_main.xml#option_list.onetape" target="_top"><span style='white-space: nowrap'>onetape</span></a>
  so that the default
 is to retape (option not present).
-This was done because 
+This was done because
 <a href="fadbad_prefix.xml" target="_top"><span style='white-space: nowrap'>fadbad</span></a>
  and
 <a href="sacado_prefix.xml" target="_top"><span style='white-space: nowrap'>sacado</span></a>
@@ -811,7 +812,7 @@ The documentation, and example source code, for all the speed
 (made clearer).
 </li><li>
 
-Improve the success rate for 
+Improve the success rate for
 <a href="speed_test.cpp.xml" target="_top"><span style='white-space: nowrap'>speed_test.cpp</span></a>
  and <a href="time_test.cpp.xml" target="_top"><span style='white-space: nowrap'>time_test.cpp</span></a>
 .
@@ -838,7 +839,7 @@ and removed the need for the option
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_documentation=</span></font><i><font color="black"><span style='white-space: nowrap'>yes_or_no</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 which has been removed.
-	
+
 <br/>
 <br/>
 <b><big><a name="01-21" id="01-21">01-21</a></big></b>

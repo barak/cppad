@@ -9,40 +9,44 @@ var list_up0 = [
 'cppad.xml',
 'ad.xml',
 'advalued.xml',
-'std_math_ad.xml',
+'unary_standard_math.xml',
+'log10.xml',
 'log10.cpp.xml'
 ];
 var list_down3 = [
-'ad_ctor.xml',
-'ad_assign.xml',
-'convert.xml',
-'advalued.xml',
-'boolvalued.xml',
-'vecad.xml',
-'base_require.xml'
-];
-var list_down2 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
+var list_down2 = [
+'acos.xml',
+'asin.xml',
+'atan.xml',
+'cos.xml',
+'cosh.xml',
+'exp.xml',
+'log.xml',
+'log10.xml',
+'sin.xml',
+'sinh.xml',
+'sqrt.xml',
+'tan.xml',
+'tanh.xml',
+'abs.xml',
+'acosh.xml',
+'asinh.xml',
+'atanh.xml',
+'erf.xml',
+'expm1.xml',
+'log1p.xml',
+'sign.xml'
+];
 var list_down1 = [
-'acos.cpp.xml',
-'asin.cpp.xml',
-'atan.cpp.xml',
-'cos.cpp.xml',
-'cosh.cpp.xml',
-'exp.cpp.xml',
-'log.cpp.xml',
-'log10.cpp.xml',
-'sin.cpp.xml',
-'sinh.cpp.xml',
-'sqrt.cpp.xml',
-'tan.cpp.xml',
-'tanh.cpp.xml'
+'log10.cpp.xml'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

@@ -6,7 +6,7 @@
 <title>The AD Power Function</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The AD Power Function"/>
-<meta name="keywords" id="keywords" content=" pow Ad exponent function the ad power syntax see also purpose x y z operation sequence example "/>
+<meta name="keywords" id="keywords" content=" the ad power function pow exponent syntax see also purpose x y z operation sequence example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="erf.cpp.xml" target="_top">Prev</a>
+<td><a href="atan2.cpp.xml" target="_top">Prev</a>
 </td><td><a href="pow.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -40,7 +40,7 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>MathOther</option>
+<option>binary_math</option>
 <option>pow</option>
 </select>
 </td>
@@ -60,22 +60,20 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>MathOther-&gt;</option>
-<option>abs</option>
-<option>sign</option>
+<option>binary_math-&gt;</option>
 <option>atan2</option>
-<option>erf</option>
 <option>pow</option>
-<option>limits</option>
+<option>azmul</option>
 </select>
 </td>
 <td>
@@ -98,8 +96,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 
 
 
@@ -149,12 +145,12 @@ This will not work if
  is less than or equal zero.
 If the value of 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- is an integer, 
+ is an integer,
 the <a href="pow_int.xml" target="_top"><span style='white-space: nowrap'>pow_int</span></a>
- function is used to compute this value 
+ function is used to compute this value
 using only multiplication (and division if 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- is negative). 
+ is negative).
 (This will work even if 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  is less than or equal zero.)
@@ -227,7 +223,7 @@ AD of
 The file
 <a href="pow.cpp.xml" target="_top"><span style='white-space: nowrap'>pow.cpp</span></a>
 
-is an examples and tests of this function.   
+is an examples and tests of this function.
 It returns true if it succeeds and false otherwise.
 
 

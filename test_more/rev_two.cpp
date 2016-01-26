@@ -1,9 +1,9 @@
-/* $Id: rev_two.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: rev_two.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-06 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -19,13 +19,13 @@ bool RevTwo()
 
 
 	size_t n = 2;
-   	vector< AD<double> > X(n);
+	vector< AD<double> > X(n);
 	X[0] = 1.;
 	X[1] = 1.;
 	Independent(X);
 
 	size_t m = 1;
-   	vector< AD<double> > Y(m);
+	vector< AD<double> > Y(m);
 	Y[0] = X[0] * X[0] + X[0] * X[1] + 2. * X[1] * X[1];
 	CppAD::ADFun<double> F(X,Y);
 

@@ -6,7 +6,7 @@
 <title>Definition of a Simple Vector</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Definition of a Simple Vector"/>
-<meta name="keywords" id="keywords" content=" vector simple class template definition of a requirements elements specified type default constructor sizing size copy element and destructor assignment resize value value_type access [] using example exercise Ndebug "/>
+<meta name="keywords" id="keywords" content=" definition of a simple vector value_type [] Ndebug template class requirements elements specified type default constructor sizing copy element and destructor assignment size resize value access using example exercise "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>SimpleVector</option>
 </select>
 </td>
@@ -51,7 +51,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -60,7 +60,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -84,9 +84,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -120,10 +118,6 @@ A:active { color : purple }
 
 
 
-
-
-
-
 <center><b><big><big>Definition of a Simple Vector</big></big></b></center>
 <br/>
 <b><big><a name="Template Class Requirements" id="Template Class Requirements">Template Class Requirements</a></big></b>
@@ -140,13 +134,13 @@ The following is a list of some simple vector template classes:
  <b>Documentation</b>   </td></tr><tr><td align='left'  valign='top'>
 
 <code><font color="blue">std::vector</font></code>      </td><td align='left'  valign='top'>
- Section 16.3 of 
+ Section 16.3 of
 <a href="bib.xml#The C++ Programming Language" target="_top"><span style='white-space: nowrap'>The&#xA0;C++&#xA0;Programming&#xA0;Language</span></a>
 
 </td></tr><tr><td align='left'  valign='top'>
 
 <code><font color="blue">std::valarray</font></code>    </td><td align='left'  valign='top'>
- Section 22.4 of  
+ Section 22.4 of
 <a href="bib.xml#The C++ Programming Language" target="_top"><span style='white-space: nowrap'>The&#xA0;C++&#xA0;Programming&#xA0;Language</span></a>
 
 </td></tr><tr><td align='left'  valign='top'>
@@ -173,10 +167,8 @@ that a class is a simple vector class with a specified element type.
 <br/>
 <br/>
 <b><big><a name="Default Constructor" id="Default Constructor">Default Constructor</a></big></b>
-
-
 <br/>
-The syntax 
+The syntax
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>SimpleVector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
@@ -193,12 +185,10 @@ that can later contain elements of the specified type
 <br/>
 <br/>
 <b><big><a name="Sizing Constructor" id="Sizing Constructor">Sizing Constructor</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
- has type <code><font color="blue">size_t</font></code>, 
+ has type <code><font color="blue">size_t</font></code>,
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>SimpleVector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -213,8 +203,6 @@ each of the specified type.
 <br/>
 <br/>
 <b><big><a name="Copy Constructor" id="Copy Constructor">Copy Constructor</a></big></b>
-
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -252,8 +240,6 @@ and may be <code><font color="blue">const</font></code>.
 <br/>
 <br/>
 <b><big><a name="Element Constructor and Destructor" id="Element Constructor and Destructor">Element Constructor and Destructor</a></big></b>
-
-
 <br/>
 The default constructor for type 
 <code><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i></code>
@@ -267,13 +253,12 @@ from the vector (this includes when the vector is destroyed).
 <br/>
 <br/>
 <b><big><a name="Assignment" id="Assignment">Assignment</a></big></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  and 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- are 
+ are
 
 <code><i><font color="black"><span style='white-space: nowrap'>SimpleVector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  objects,
@@ -286,7 +271,7 @@ uses the
  assignment operator ( <code><font color="blue">=</font></code> )
 to set each element of 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
- equal to 
+ equal to
 the corresponding element of 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
 .
@@ -319,7 +304,6 @@ would not be valid.
 <br/>
 <br/>
 <b><big><a name="Size" id="Size">Size</a></big></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -343,7 +327,6 @@ The object
 <br/>
 <br/>
 <b><big><a name="Resize" id="Resize">Resize</a></big></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -375,7 +358,6 @@ any values previously stored in
 <br/>
 <br/>
 <b><big><a name="Value Type" id="Value Type">Value Type</a></big></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i></code>
@@ -397,7 +379,6 @@ is equal to
 <br/>
 <br/>
 <b><big><a name="Element Access" id="Element Access">Element Access</a></big></b>
-
 <br/>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
@@ -485,7 +466,6 @@ It returns true if it succeeds and false otherwise.
 <br/>
 <b><big><a name="Exercise" id="Exercise">Exercise</a></big></b>
 
-
 <ol type="1"><li>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i></code>
@@ -502,8 +482,7 @@ above where
  is each of the following cases:
 <code><font color="blue">std::vector</font></code>,
 <code><font color="blue">CppAD::vector</font></code>.
-
-Do this both where the compiler option 
+Do this both where the compiler option
 <code><font color="blue">-DNDEBUG</font></code> is and is not present on the compilation command line.
 </li><li>
 
@@ -525,7 +504,7 @@ above where
  is each of the following cases:
 <code><font color="blue">std::valarray</font></code>,
 <code><font color="blue">CppAD::vector</font></code>.
-Do this both where the compiler option 
+Do this both where the compiler option
 <code><font color="blue">-DNDEBUG</font></code> is and is not present on the compilation command line.
 </li></ol>
 

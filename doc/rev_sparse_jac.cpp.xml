@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="revsparsejac.xml" target="_top">Prev</a>
-</td><td><a href="revsparsehes.xml" target="_top">Next</a>
+</td><td><a href="dependency.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -58,7 +58,9 @@ A:active { color : purple }
 <option>Sparse-&gt;</option>
 <option>ForSparseJac</option>
 <option>RevSparseJac</option>
+<option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>bool_sparsity.cpp</option>
 </select>
 </td>
 <td>
@@ -78,16 +80,16 @@ A:active { color : purple }
 
 # include &lt;cppad/cppad.hpp&gt;
 namespace { // -------------------------------------------------------------
-// define the template function BoolCases&lt;Vector&gt; 
+// define the template function BoolCases&lt;Vector&gt;
 template &lt;typename Vector&gt;  // vector class, elements of type bool
 bool BoolCases(void)
 {	bool ok = true;
 	using CppAD::AD;
 
 	// domain space vector
-	size_t n = 2; 
+	size_t n = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	ax[0] = 0.; 
+	ax[0] = 0.;
 	ax[1] = 1.;
 
 	// declare independent variables and start recording
@@ -138,16 +140,16 @@ bool BoolCases(void)
 
 	return ok;
 }
-// define the template function SetCases&lt;Vector&gt; 
+// define the template function SetCases&lt;Vector&gt;
 template &lt;typename Vector&gt;  // vector class, elements of type std::set&lt;size_t&gt;
 bool SetCases(void)
 {	bool ok = true;
 	using CppAD::AD;
 
 	// domain space vector
-	size_t n = 2; 
+	size_t n = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	ax[0] = 0.; 
+	ax[0] = 0.;
 	ax[1] = 1.;
 
 	// declare independent variables and start recording
@@ -179,17 +181,17 @@ bool SetCases(void)
 	bool found;
 
 	// y[0] does     depend on x[0]
-	found = s[0].find(0) != s[0].end();  ok &amp;= (found == true);  
+	found = s[0].find(0) != s[0].end();  ok &amp;= (found == true);
 	// y[0] does not depend on x[1]
-	found = s[0].find(1) != s[0].end();  ok &amp;= (found == false); 
+	found = s[0].find(1) != s[0].end();  ok &amp;= (found == false);
 	// y[1] does     depend on x[0]
-	found = s[1].find(0) != s[1].end();  ok &amp;= (found == true);  
+	found = s[1].find(0) != s[1].end();  ok &amp;= (found == true);
 	// y[1] does     depend on x[1]
-	found = s[1].find(1) != s[1].end();  ok &amp;= (found == true);  
+	found = s[1].find(1) != s[1].end();  ok &amp;= (found == true);
 	// y[2] does not depend on x[0]
-	found = s[2].find(0) != s[2].end();  ok &amp;= (found == false); 
+	found = s[2].find(0) != s[2].end();  ok &amp;= (found == false);
 	// y[2] does     depend on x[1]
-	found = s[2].find(1) != s[2].end();  ok &amp;= (found == true);  
+	found = s[2].find(1) != s[2].end();  ok &amp;= (found == true);
 
 	// sparsity pattern for F'(x)^T
 	bool transpose = true;
@@ -197,17 +199,17 @@ bool SetCases(void)
 	st = f.RevSparseJac(m, r, transpose);
 
 	// y[0] does     depend on x[0]
-	found = st[0].find(0) != st[0].end();  ok &amp;= (found == true);  
+	found = st[0].find(0) != st[0].end();  ok &amp;= (found == true);
 	// y[0] does not depend on x[1]
-	found = st[1].find(0) != st[1].end();  ok &amp;= (found == false); 
+	found = st[1].find(0) != st[1].end();  ok &amp;= (found == false);
 	// y[1] does     depend on x[0]
-	found = st[0].find(1) != st[0].end();  ok &amp;= (found == true);  
+	found = st[0].find(1) != st[0].end();  ok &amp;= (found == true);
 	// y[1] does     depend on x[1]
-	found = st[1].find(1) != st[1].end();  ok &amp;= (found == true);  
+	found = st[1].find(1) != st[1].end();  ok &amp;= (found == true);
 	// y[2] does not depend on x[0]
-	found = st[0].find(2) != st[0].end();  ok &amp;= (found == false); 
+	found = st[0].find(2) != st[0].end();  ok &amp;= (found == false);
 	// y[2] does     depend on x[1]
-	found = st[1].find(2) != st[1].end();  ok &amp;= (found == true);  
+	found = st[1].find(2) != st[1].end();  ok &amp;= (found == true);
 
 	return ok;
 }
@@ -220,19 +222,19 @@ bool RevSparseJac(void)
 	// all of which are Simple Vectors with elements of type bool.
 	ok &amp;= BoolCases&lt; CppAD::vectorBool     &gt;();
 	ok &amp;= BoolCases&lt; CppAD::vector  &lt;bool&gt; &gt;();
-	ok &amp;= BoolCases&lt; std::vector    &lt;bool&gt; &gt;(); 
-	ok &amp;= BoolCases&lt; std::valarray  &lt;bool&gt; &gt;(); 
+	ok &amp;= BoolCases&lt; std::vector    &lt;bool&gt; &gt;();
+	ok &amp;= BoolCases&lt; std::valarray  &lt;bool&gt; &gt;();
 
 
-	// Run with Vector equal to two different cases both of which are 
+	// Run with Vector equal to two different cases both of which are
 	// Simple Vectors with elements of type std::set&lt;size_t&gt;
 	typedef std::set&lt;size_t&gt; set;
 	ok &amp;= SetCases&lt; CppAD::vector  &lt;set&gt; &gt;();
-	ok &amp;= SetCases&lt; std::vector    &lt;set&gt; &gt;(); 
+	ok &amp;= SetCases&lt; std::vector    &lt;set&gt; &gt;();
 
 	// Do not use valarray because its element access in the const case
 	// returns a copy instead of a reference
-	// ok &amp;= SetCases&lt; std::valarray  &lt;set&gt; &gt;(); 
+	// ok &amp;= SetCases&lt; std::valarray  &lt;set&gt; &gt;();
 
 	return ok;
 }

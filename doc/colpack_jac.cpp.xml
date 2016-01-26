@@ -1,0 +1,184 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Using ColPack: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Using ColPack: Example and Test"/>
+<meta name="keywords" id="keywords" content=" using colpack: example and test colpack jacobian sparse "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_colpack_jac.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="colpack_prefix.xml" target="_top">Prev</a>
+</td><td><a href="colpack_hes.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Install</option>
+<option>cmake</option>
+<option>colpack_prefix</option>
+<option>colpack_jac.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>Install-&gt;</option>
+<option>download</option>
+<option>cmake</option>
+<option>cmake_check</option>
+<option>pkgconfig</option>
+<option>auto_tools</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>cmake-&gt;</option>
+<option>adolc_prefix</option>
+<option>colpack_prefix</option>
+<option>eigen_prefix</option>
+<option>fadbad_prefix</option>
+<option>ipopt_prefix</option>
+<option>sacado_prefix</option>
+<option>cppad_testvector</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>colpack_prefix-&gt;</option>
+<option>colpack_jac.cpp</option>
+<option>colpack_hes.cpp</option>
+<option>get_colpack.sh</option>
+</select>
+</td>
+<td>colpack_jac.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Using ColPack: Example and Test</big></big></b></center>
+<code><font color="blue"><pre style='display:inline'> 
+
+# include &lt;cppad/cppad.hpp&gt;
+bool colpack_jac(void)
+{	bool ok = true;
+	using CppAD::AD;
+	using CppAD::NearEqual;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) a_vector;
+	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)     d_vector;
+	typedef CppAD::vector&lt;size_t&gt;        i_vector;
+	size_t i, j, k, ell;
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+
+	// domain space vector
+	size_t n = 4;
+	a_vector  a_x(n);
+	for(j = 0; j &lt; n; j++)
+		a_x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt; (0);
+
+	// declare independent variables and starting recording
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+
+	size_t m = 3;
+	a_vector  a_y(m);
+	a_y[0] = a_x[0] + a_x[1];
+	a_y[1] = a_x[2] + a_x[3];
+	a_y[2] = a_x[0] + a_x[1] + a_x[2] + a_x[3] * a_x[3] / 2.;
+
+	// create f: x -&gt; y and stop tape recording
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
+
+	// new value for the independent variable vector
+	d_vector x(n);
+	for(j = 0; j &lt; n; j++)
+		x[j] = double(j);
+
+	/*
+	      [ 1 1 0 0  ]
+	jac = [ 0 0 1 1  ]
+	      [ 1 1 1 x_3]
+	*/
+	d_vector check(m * n);
+	check[0] = 1.; check[1] = 1.; check[2]  = 0.; check[3]  = 0.;
+	check[4] = 0.; check[5] = 0.; check[6]  = 1.; check[7]  = 1.;
+	check[8] = 1.; check[9] = 1.; check[10] = 1.; check[11] = x[3];
+
+	// Normally one would use f.ForSparseJac or f.RevSparseJac to compute
+	// sparsity pattern, but for this example we extract it from check.
+	std::vector&lt; std::set&lt;size_t&gt; &gt;  p(m);
+
+	// using row and column indices to compute non-zero in rows 1 and 2
+	i_vector row, col;
+	for(i = 0; i &lt; m; i++)
+	{	for(j = 0; j &lt; n; j++)
+		{	ell = i * n + j;
+			if( check[ell] != 0. )
+			{	row.push_back(i);
+				col.push_back(j);
+				p[i].insert(j);
+			}
+		}
+	}
+	size_t K = row.size();
+	d_vector jac(K);
+
+	// empty work structure
+	CppAD::sparse_jacobian_work work;
+	ok &amp;= work.color_method == &quot;cppad&quot;;
+
+	// choose to use ColPack
+	work.color_method = &quot;colpack&quot;;
+
+	// forward mode
+	size_t n_sweep = f.SparseJacobianForward(x, p, row, col, jac, work);
+	for(k = 0; k &lt; K; k++)
+	{	ell = row[k] * n + col[k];
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
+	}
+	ok &amp;= n_sweep == 4;
+
+	// reverse mode
+	work.clear();
+	work.color_method = &quot;colpack&quot;;
+	n_sweep = f.SparseJacobianReverse(x, p, row, col, jac, work);
+	for(k = 0; k &lt; K; k++)
+	{	ell = row[k] * n + col[k];
+		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
+	}
+	ok &amp;= n_sweep == 2;
+
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/colpack_jac.cpp
+
+</body>
+</html>

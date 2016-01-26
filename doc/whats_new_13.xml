@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,17 +66,19 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
 <option>whats_new_12</option>
@@ -151,7 +153,7 @@ assist you in learning about changes between various versions of CppAD.
 <b><big><a name="12-29" id="12-29">12-29</a></big></b>
 
 <ol type="1"><li>
-The include file 
+The include file
 <a href="cppad_eigen.hpp.xml" target="_top"><span style='white-space: nowrap'>cppad_eigen.hpp</span></a>
  now automatically includes <code><font color="blue">cppad.hpp</font></code>.
 </li><li>
@@ -162,12 +164,13 @@ when <code><font color="blue">eigen</font></code> was used for the cppad <a href
 This has been fixed.
 </li><li>
 
-There was a problem with deprecated <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>InstallUnix</span></a>
+There was a problem with deprecated <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
 
 (created when optional implicit constructor from any type was added).
 This has been fixed by adding the
-<a href="installunix.xml#--with-implicit_ctor" target="_top"><span style='white-space: nowrap'>--with-implicit_ctor</span></a>
- option.
+<code><font color="blue">--with-implicit_ctor</font></code> option
+(later changed to <a href="auto_tools.xml#--with-deprecated" target="_top"><span style='white-space: nowrap'>--with-deprecated</span></a>
+).
 </li></ol>
 
 
@@ -179,13 +182,13 @@ The constructor from an arbitrary type to
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  was
 implicit, but there was no specification to this effect.
-The caused problems when using CppAD with 
+The caused problems when using CppAD with
 <a href="eigen_prefix.xml" target="_top"><span style='white-space: nowrap'>eigen&#xA0;3.2</span></a>
  (scheduled to be fixed in 3.3).
-The default for this constructor has been changed to be 
+The default for this constructor has been changed to be
 <a href="ad_ctor.xml#x.explicit" target="_top"><span style='white-space: nowrap'>explicit</span></a>
 .
-In addition, other 
+In addition, other
 <a href="ad_ctor.xml#x.implicit" target="_top"><span style='white-space: nowrap'>implicit</span></a>
  constructors
 are now listed in the documentation.
@@ -202,7 +205,7 @@ are now listed in the documentation.
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;)<br/>
 </span></font></code>
 A deprecated alternative is to make this constructor implicit using the
-<a href="cmake.xml#cppad_implicit_ctor_from_any_type" target="_top"><span style='white-space: nowrap'>cppad_implicit_ctor_from_any_type</span></a>
+<a href="cmake.xml#cppad_deprecated" target="_top"><span style='white-space: nowrap'>cppad_deprecated</span></a>
 
 option during the install procedure.
 
@@ -235,7 +238,7 @@ This has been fixed.
 <ol type="1"><li>
 Fix bug when using <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
  with an <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
- object containing 
+ object containing
 the <a href="sign.xml" target="_top"><span style='white-space: nowrap'>sign</span></a>
  function.
 </li><li>
@@ -256,7 +259,7 @@ It used to be that one had to define the <code><font color="blue">std::set</font
 part of an <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
  object that was <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimized</span></a>
 .
-Now the current 
+Now the current
 <a href="atomic_option.xml#atomic_sparsity" target="_top"><span style='white-space: nowrap'>atomic_sparsity</span></a>
  setting is used
 to determine if the <code><font color="blue">bool</font></code> or <code><font color="blue">std::set</font></code> version of
@@ -280,7 +283,7 @@ with <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>a
 <b><big><a name="10-29" id="10-29">10-29</a></big></b>
 <br/>
 The <a href="condexp.xml#Optimize" target="_top"><span style='white-space: nowrap'>optimization</span></a>
- 
+
 now handles nested conditional expressions.
 For example, give the code
 <code><font color='blue'><pre style='display:inline'> 
@@ -292,8 +295,8 @@ For example, give the code
 only two of the conditional expressions will be evaluated
 (one will be skipped depending on the result of <code><font color="blue">left_z == right_z</font></code>).
 For more details, see
-<a href="wishlist.xml#Conditional Expressions.Nesting" target="_top"><span style='white-space: nowrap'>nesting&#xA0;conditional&#xA0;expressions</span></a>
-
+<a href="wish_list.xml#Optimizing Nested Conditional Expressions" target="_top"><span style='white-space: nowrap'>nesting&#xA0;conditional&#xA0;expressions</span></a>
+.
 
 <br/>
 <br/>
@@ -303,16 +306,13 @@ For more details, see
 Fix a bug in the optimization of calls to <a href="atomic.xml" target="_top"><span style='white-space: nowrap'>atomic</span></a>
  functions.
 This bug existed before recent change to optimizing conditional expressions.
-This required adding the 
-<a href="revsparsejac.xml#nz_compare" target="_top"><span style='white-space: nowrap'>nz_compare</span></a>
- argument to the 
+This required adding the
+<a href="revsparsejac.xml#dependency" target="_top"><span style='white-space: nowrap'>dependency</span></a>
+ argument to the
 reverse Jacobian sparsity pattern calculation.
-For further details; see sparsity heading under conditional expressions in the
-<a href="wishlist.xml#Conditional Expressions.Sparsity" target="_top"><span style='white-space: nowrap'>whish&#xA0;list</span></a>
-.
 </li><li>
 
-Fix the deprecated autotools install (see <a href="installunix.xml" target="_top"><span style='white-space: nowrap'>InstallUnix</span></a>
+Fix the deprecated autotools install (see <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
 )
 which was broken by the changes on 10-22.
 To be specific, the
@@ -349,7 +349,7 @@ of the conditional expressions there is.
 <br/>
 <b><big><a name="10-16" id="10-16">10-16</a></big></b>
 <br/>
-Fix bug in <a href="wishlist.xml#Tracing" target="_top"><span style='white-space: nowrap'>Tracing</span></a>
+Fix bug in <a href="wish_list.xml#Tracing" target="_top"><span style='white-space: nowrap'>Tracing</span></a>
  <a href="atomic.xml" target="_top"><span style='white-space: nowrap'>atomic</span></a>
  functions.
 
@@ -369,7 +369,7 @@ The script <a href="get_adolc.sh.xml" target="_top"><span style='white-space: no
  was added
 (for downloading and installing
 <a href="https://projects.coin-or.org/ADOL-C" target="_top"><span style='white-space: nowrap'>ADOL-C</span></a>
-) in the 
+) in the
 <code><font color="blue">build</font></code> directory.
 Note that this local install of Adolc requires ColPack; see
 <a href="get_colpack.sh.xml" target="_top"><span style='white-space: nowrap'>get_colpack.sh</span></a>
@@ -381,7 +381,7 @@ with the same prefix was added.
 <br/>
 <b><big><a name="10-13" id="10-13">10-13</a></big></b>
 <br/>
-Make sure that all of the 
+Make sure that all of the
 <a href="cppad.xml#Preprocessor Symbols" target="_top"><span style='white-space: nowrap'>preprocessor&#xA0;symbols</span></a>
 ,
 that are not part of the CppAD API, are undefined when the
@@ -406,7 +406,7 @@ In addition document reuse for
 
 Fix following <code><font color="blue">g++</font></code> error on OSX system:
 <code><font color='blue'><pre style='display:inline'> 
-error: no match for 'operator|=' (operand types are 
+error: no match for 'operator|=' (operand types are
 'std::vector&lt;bool&gt;::reference {aka std::_Bit_reference}' and 'bool')
     Check[i * n + j] |= F2[i * n + k] &amp; r[ k * n + j];
                      ^
@@ -425,7 +425,7 @@ Add lines for <a href="atomic_base.xml" target="_top"><span style='white-space: 
 to both the definition and use of each operation.
 This required adding sub-headings in the example usages
 corresponding to the function documentation sections.
-For example; see 
+For example; see
 <a href="atomic_forward.xml#Examples" target="_top"><span style='white-space: nowrap'>atomic&#xA0;forward&#xA0;examples</span></a>
 .
 </li><li>
@@ -446,9 +446,9 @@ and remove its use from the
 Add links from the <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
  functions documentation
 to the corresponding examples.
-This required adding headings in the examples that 
-correspond to the function documentation sections. 
-For example; see 
+This required adding headings in the examples that
+correspond to the function documentation sections.
+For example; see
 <a href="atomic_forward.xml#Examples" target="_top"><span style='white-space: nowrap'>atomic&#xA0;forward&#xA0;examples</span></a>
 .
 
@@ -479,7 +479,7 @@ This corresponds to the change in the specifications for
 
 There was a bug during the
 <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>checking&#xA0;for&#xA0;nan</span></a>
- during 
+ during
 <a href="reverse.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
  mode.
 This has been fixed.
@@ -510,7 +510,7 @@ for <a href="forward.xml" target="_top"><span style='white-space: nowrap'>Forwar
  orders greater than zero.
 This was detected by the <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
  tests
-when <code><font color="blue">optimize</font></code> was used to make the 
+when <code><font color="blue">optimize</font></code> was used to make the
 checkpoint functions faster.
 The bug has been fixed and the checkpoint functions now use
 optimize (and hence should be faster).
@@ -529,14 +529,14 @@ The ability to turn on and off checking for <a href="nan.xml" target="_top"><spa
 
 Use this option to remove the need to handel <code><font color="blue">nan</font></code> as a special
 case in <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
- functions that 
+ functions that
 <a href="optimize.xml#Atomic Functions" target="_top"><span style='white-space: nowrap'>atomic&#xA0;functions</span></a>
  in within
 another function is optimized.
 </li><li>
 
 Check <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>reverse</span></a>
-  mode results when 
+  mode results when
 <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>check_for_nan</span></a>
  is true.
 (It used to be the case that only <a href="forward_order.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
@@ -565,7 +565,7 @@ with <a href="optimize.xml#Atomic Functions" target="_top"><span style='white-sp
 <br/>
 <b><big><a name="08-06" id="08-06">08-06</a></big></b>
 <br/>
-Fix a case where the test <code><font color="blue">test_more/limits.cpp</font></code> failed because
+Fix a case where the test <code><font color="blue">test_more/num_limits.cpp</font></code> failed because
 <code><font color='blue'><pre style='display:inline'> 
 	double inf   = std::numeric_limits&lt;double&gt;::infinity();
 	double check = std::complex&lt;double&gt;(inf) / std::complex&lt;float&gt;(1.)
@@ -590,10 +590,10 @@ Remove
 <code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i></code>
  return flag from
 <a href="checkpoint.xml#algo" target="_top"><span style='white-space: nowrap'>checkpoint&#xA0;algo</span></a>
- 
+
 and
-<a href="checkpoint.xml#afun" target="_top"><span style='white-space: nowrap'>checkpoint&#xA0;afun</span></a>
-. 
+<a href="checkpoint.xml#atom_fun" target="_top"><span style='white-space: nowrap'>checkpoint&#xA0;atom_fun</span></a>
+.
 
 <br/>
 <br/>
@@ -661,7 +661,7 @@ Fix bug in <a href="revsparsejac.xml" target="_top"><span style='white-space: no
 
 was not equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
- (range dimension) and sparsity pattern was a 
+ (range dimension) and sparsity pattern was a
 vector of <code><font color="blue">bool</font></code>.
 </li><li>
 
@@ -685,14 +685,14 @@ being run. This has been fixed.
 <b><big><a name="05-11" id="05-11">05-11</a></big></b>
 <br/>
 The <a href="old_atomic.xml#Example" target="_top"><span style='white-space: nowrap'>old_atomic&#xA0;examples</span></a>
- 
+
 names were all changed to begin with <code><font color="blue">user</font></code>.
 
 <br/>
 <br/>
 <b><big><a name="05-04" id="05-04">05-04</a></big></b>
 <br/>
-The option to compute 
+The option to compute
 <a href="forward_order.xml#xq.Multiple Orders" target="_top"><span style='white-space: nowrap'>multiple&#xA0;orders</span></a>
  was added.
 The <a href="old_usead_2.cpp.xml" target="_top"><span style='white-space: nowrap'>old_usead_2.cpp</span></a>
@@ -709,13 +709,13 @@ Multiple order forward mode is the first step in this direction.
 The scripts <a href="get_eigen.sh.xml" target="_top"><span style='white-space: nowrap'>get_eigen.sh</span></a>
  and <a href="get_sacado.sh.xml" target="_top"><span style='white-space: nowrap'>get_sacado.sh</span></a>
  were added.
-If you are using Unix, and you do not have 
+If you are using Unix, and you do not have
 <a href="http://eigen.tuxfamily.org" target="_top"><span style='white-space: nowrap'>Eigen</span></a>
  or
 <a href="http://trilinos.sandia.gov/packages/sacado" target="_top"><span style='white-space: nowrap'>Sacado</span></a>
- 
-installed on your system, you can use the corresponding script 
-to download and install a local copy for use when testing CppAD. 
+
+installed on your system, you can use the corresponding script
+to download and install a local copy for use when testing CppAD.
 </li><li>
 
 The code 
@@ -745,7 +745,7 @@ This has been fixed using a template partial specialization of
 	struct significant_decimals_default_impl
 </pre></font></code>
 
-because the original template requires definition of a implicit conversion 
+because the original template requires definition of a implicit conversion
 from the scalar type to an <code><font color="blue">int</font></code> and this is dangerous for AD types
 (note that <a href="integer.xml" target="_top"><span style='white-space: nowrap'>Integer</span></a>
  is used for explicit conversions).
@@ -757,18 +757,18 @@ from the scalar type to an <code><font color="blue">int</font></code> and this i
 
 <ol type="1"><li>
 The example <a href="old_usead_2.cpp.xml" target="_top"><span style='white-space: nowrap'>old_usead_2.cpp</span></a>
- was completed. 
+ was completed.
 This is a more realistic, but also more complicated, example of
 using AD to computed derivatives inside an atomic function.
 </li><li>
 
 The script <a href="get_fadbad.sh.xml" target="_top"><span style='white-space: nowrap'>get_fadbad.sh</span></a>
  has been added.
-If you are using Unix, and you do not have 
+If you are using Unix, and you do not have
 <a href="http://www.fadbad.com" target="_top"><span style='white-space: nowrap'>FADBAD</span></a>
 
-installed on your system, you can use this script 
-to download and install a local copy for use when testing CppAD. 
+installed on your system, you can use this script
+to download and install a local copy for use when testing CppAD.
 </li></ol>
 
 

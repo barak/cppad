@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -106,7 +106,7 @@ A:active { color : purple }
 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { 
+namespace {
 // Begin empty namespace ------------------------------------------------
 
 bool is_number( const std::string &amp;s )
@@ -125,7 +125,7 @@ bool is_variable( const std::string &amp;s )
 	return variable;
 }
 
-void StackMachine( 
+void StackMachine(
 	std::stack&lt; std::string &gt;          &amp;token_stack  ,
 	CppAD::vector&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;variable     )
 {	using std::string;
@@ -150,7 +150,7 @@ void StackMachine(
 		{	value_one = variable[ size_t(s[0]) - size_t('a') ];
 			value_stack.push( value_one );
 		}
-		else if( is_binary(s) ) 
+		else if( is_binary(s) )
 		{	assert( value_stack.size() &gt;= 2 );
 			value_one = value_stack.top();
 			value_stack.pop();
@@ -180,7 +180,7 @@ void StackMachine(
 			}
 		}
 		else if( s[0] == '=' )
-		{	assert( value_stack.size() &gt;= 1 ); 	
+		{	assert( value_stack.size() &gt;= 1 );
 			assert( token_stack.size() &gt;= 1 );
 			//
 			s = token_stack.top();
@@ -232,7 +232,7 @@ bool StackMachine(void)
 
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
-		
+
 	// x[0] corresponds to a in the stack machine
 	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; variable(26);
 	variable[0] = X[0];
@@ -246,8 +246,8 @@ bool StackMachine(void)
 	Y[0] = variable[1];   // b = a + 1
 	Y[1] = variable[2];   // c = (a + 1) * 2
 	Y[2] = variable[3];   // d = (a + 1) * 2 - 3
-	Y[3] = variable[4];   // e = ( (a + 1) * 2 - 3 ) / 4 
-	
+	Y[3] = variable[4];   // e = ( (a + 1) * 2 - 3 ) / 4
+
 	// create f : X -&gt; Y and stop tape recording
 	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
 

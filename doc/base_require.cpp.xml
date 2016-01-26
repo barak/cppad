@@ -64,6 +64,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -113,7 +115,7 @@ bool base_require(void)
 
 	// check function value f(x) = x^2
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(base_alloc) x(n), y(m);
-	base_alloc eps = 
+	base_alloc eps =
 		base_alloc(100.) * CppAD::numeric_limits&lt;base_alloc&gt;::epsilon();
 	x[0] = base_alloc(3.);
 	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);

@@ -1,9 +1,9 @@
-$Id: faq.omh 3526 2014-12-29 21:56:45Z bradbell $
+$Id: faq.omh 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -27,13 +27,10 @@ $spell
 	Lu
 $$
 
-$index FAQ$$
 $section Frequently Asked Questions and Answers$$
+$mindex FAQ operator reporting ErrorHandler avoid record taping mode CPPAD_TESTVECTOR standard math function storage$$
 
 $head Assignment and Independent$$
-$index assignment, operator$$
-$index operator, assignment$$
-$index independent$$
 Why does the code sequence
 $codei%
 	Independent(%u%);
@@ -51,7 +48,6 @@ Thus in the first case, $icode v$$ is a variable
 and in the second case it is a parameter.
 
 $head Bugs$$
-$index bugs, reporting$$
 What should I do if I suspect that there is a bug in CppAD ?
 $pre
 
@@ -63,29 +59,30 @@ some feature that perhaps you interpreting as a bug
 If this does not solve your problem, continue
 to the next step.
 $lnext
-The second step is to check the 
-$cref whats_new$$ messages from the date 
+The second step is to check the
+$cref whats_new$$ messages from the date
 of the release that you are using to the current date.
 If the bug has been mentioned and fixed,
 then $cref install$$ the current version of CppAD.
 If this does not solve your problem, continue
 to the next step.
 $lnext
-Send an e-mail message to the mailing list 
+Create a simple as possible demonstration of the bug;
+see the file $code bug/template.sh$$ for a template that you can
+edit for that purpose.
+The smaller the program, the better the bug report.
+$lnext
+Send an e-mail message to the mailing list
 $href%
 	http://list.coin-or.org/mailman/listinfo/cppad%
 	cppad@list.coin-or.org
 %$$
 with a description of the bug.
-Attaching a small source code sample program that 
-demonstrates the bug is always helpful.
-The smaller the program, the better the bug report.
+Attaching your program that demonstrates the bug.
 $lend
 
 $head CompareChange$$
-$index CompareChange$$
-$index NDEBUG$$
-If you attempt to use the 
+If you attempt to use the
 $cref CompareChange$$
 function when $code NDEBUG$$ is true,
 you will get an error message stating that
@@ -93,7 +90,6 @@ $code CompareChange$$ is not a member of the
 $cref ADFun$$ template class.
 
 $head Complex Types$$
-$index complex, faq$$
 Which of the following complex types is better:
 $codei%
 	AD< std::complex<%Base%> >
@@ -106,16 +102,13 @@ Thus one would prefer to use
 $codei%
 	std::complex< AD<%Base%> >
 %$$
-On the other hand, the C++ standard only specifies 
-$codei%std::complex<%Type%>%$$ where $icode Type$$ is 
+On the other hand, the C++ standard only specifies
+$codei%std::complex<%Type%>%$$ where $icode Type$$ is
 $code float$$, $code double$$, or $code lone double$$.
-The effect of instantiating the template complex for any other type 
-is unspecified. 
+The effect of instantiating the template complex for any other type
+is unspecified.
 
 $head Exceptions$$
-$index test, exception$$
-$index exception, test$$
-$index ErrorHandler$$
 Why, in all the examples, do you pass back a boolean variable instead
 of throwing an exception ?
 $pre
@@ -130,57 +123,30 @@ to signal exceptions.
 Specifications for redefining this action are provided.
 
 $head Independent Variables$$
-$index independent variable$$
-$index tape, avoid$$
-$index record, avoid$$
-$index speed, avoid taping$$
-Is it possible to evaluate the same tape recording with different values 
+Is it possible to evaluate the same tape recording with different values
 for the independent variables ?
 $pre
 
 $$
-Yes (see $cref forward_zero$$). 
-
-$head Math Functions$$
-$index math, functions$$
-$index function, math$$
-Are there plans to add more math functions to CppAD ?
-$pre
-
-$$
-Yes. The $cref std_math_ad$$ and $cref MathOther$$ section contains
-a list of the math functions included so far.
-Contact the mailing list 
-$href%
-	http://list.coin-or.org/mailman/listinfo/cppad%
-	cppad@list.coin-or.org
-%$$
-if you need a math function that is has not yet been included.
-
-
+Yes (see $cref forward_zero$$).
 
 $head Matrix Inverse$$
-$index inverse, matrix$$
-$index matrix, inverse$$
 Is it possible to differentiate (with respect to the matrix elements)
-the computation of the inverse of a matrix 
-where the computation of the inverse uses pivoting ? 
+the computation of the inverse of a matrix
+where the computation of the inverse uses pivoting ?
 $pre
 
 $$
 The example routine $cref LuSolve$$ can be used to do this
 because the inverse is a special case of the solution of linear equations.
-The examples 
+The examples
 $cref jac_lu_det.cpp$$ and $cref hes_lu_det.cpp$$
-use LuSolve to compute derivatives of the 
+use LuSolve to compute derivatives of the
 determinant with respect to the components of the matrix.
 
 $head Mode: Forward or Reverse$$
-$index forward$$
-$index reverse$$
-$index mode$$
-When evaluating derivatives, 
-one always has a choice between 
+When evaluating derivatives,
+one always has a choice between
 forward and reverse mode.
 How does one decide which mode to use ?
 $pre
@@ -188,32 +154,28 @@ $pre
 $$
 In general, the best mode depends on the number of domain and range
 components in the function that your are differentiating.
-Each call to $cref Forward$$ computes the derivative of all 
+Each call to $cref Forward$$ computes the derivative of all
 the range directions with respect to one domain direction.
-Each call to $cref Reverse$$ computes the derivative of one 
+Each call to $cref Reverse$$ computes the derivative of one
 range direction with respect to all the domain directions.
-The times required for (speed of) 
-calls $code Forward$$ and $code Reverse$$ are about equal.  
-The $cref/Parameter/seq_property/Parameter/$$ 
-function can be used to quickly determine that 
+The times required for (speed of)
+calls $code Forward$$ and $code Reverse$$ are about equal.
+The $cref/Parameter/seq_property/Parameter/$$
+function can be used to quickly determine that
 some range directions have derivative zero.
 
 
 
 $head Namespace$$
-$index namespace$$
 
 
 $subhead Test Vector Preprocessor Symbol$$
-$index CPPAD_TESTVECTOR$$
-$index preprocessor, symbols$$
-$index symbols, preprocessor$$
 Why do you use $code CPPAD_TESTVECTOR$$ instead of a namespace for
 the CppAD $cref testvector$$ class ?
 $pre
 
 $$
-The preprocessor symbol 
+The preprocessor symbol
 $small $cref/CPPAD_TESTVECTOR/testvector/$$ $$
 determines which
 $cref SimpleVector$$ template class is used for extensive testing.
@@ -224,14 +186,11 @@ by CppAD begin with either $code CPPAD$$
 (some old deprecated symbols begin with $code CppAD$$).
 
 $subhead Using$$
-$index standard, math function$$
-$index math, standard function$$
-$index using, namespace$$
 Why do I have trouble when the following command
 $codep
 	using namespace CppAD
 $$
-is at the global level 
+is at the global level
 (not within a function or some other limited scope).
 $pre
 
@@ -246,8 +205,6 @@ or some other limited scope,
 in order to shadow these improper global definitions.
 
 $head Speed$$
-$index speed$$
-$index NDEBUG$$
 How do I get the best speed performance out of CppAD ?
 
 $subhead NDEBUG$$
@@ -256,10 +213,10 @@ and with the preprocessor symbol $code NDEBUG$$ defined.
 (The $cref speed_cppad$$ tests do this.)
 Note that defining $code NDEBUG$$
 will turn off all of the error checking and reporting that
-is done using $cref ErrorHandler$$. 
+is done using $cref ErrorHandler$$.
 
 $subhead Optimize$$
-It is also possible that preforming a tape 
+It is also possible that preforming a tape
 $cref/optimization/optimize/$$ will improve the speed of evaluation
 more than the time required for the optimization.
 
@@ -269,10 +226,6 @@ by calling $code hold_memory$$ with
 $cref/value/ta_hold_memory/value/$$ equal to true.
 
 $head Tape Storage: Disk or Memory$$
-$index storage, tape$$
-$index tape, storage$$
-$index memory, tape$$
-$index disk, tape$$
 Does CppAD store the tape on disk or in memory ?
 $pre
 
@@ -281,7 +234,7 @@ CppAD uses memory to store a different tape for recording operations
 for each $codei%AD<%Base%>%$$ type that is used.
 If you have a very large number calculations that are recorded
 on a tape, the tape will keep growing to hold the necessary information.
-Eventually, virtual memory may be used to store the tape 
+Eventually, virtual memory may be used to store the tape
 and the calculations may slow down because of necessary disk access.
 
 

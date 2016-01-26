@@ -6,7 +6,7 @@
 <title>Speed Testing Sparse Hessian</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Speed Testing Sparse Hessian"/>
-<meta name="keywords" id="keywords" content=" link_sparse_hessian sparse speed test testing hessian prototype method size repeat x row col double "/>
+<meta name="keywords" id="keywords" content=" speed testing sparse hessian link_sparse_hessian test prototype method size repeat x row col n_sweep double "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -96,14 +96,11 @@ A:active { color : purple }
 <option>row</option>
 <option>col</option>
 <option>hessian</option>
+<option>n_sweep</option>
 <option>---..double</option>
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 
 
 
@@ -119,8 +116,9 @@ A:active { color : purple }
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>repeat</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,&#xA0;<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>hessian</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;CppAD::vector&lt;size_t&gt;&amp;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;,<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>hessian</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;,<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 );<br/>
 </span></font></code>
 <br/>
@@ -138,7 +136,7 @@ and a second column vector
 </mrow></math>
 
 ,
-the corresponding function 
+the corresponding function
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -152,10 +150,10 @@ the corresponding function
 </mstyle></mrow>
 </mrow></math>
 
- 
+
 is defined by <a href="sparse_hes_fun.xml" target="_top"><span style='white-space: nowrap'>sparse_hes_fun</span></a>
 .
-The non-zero entries in the Hessian of this function have 
+The non-zero entries in the Hessian of this function have
 one of the following forms:
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -393,7 +391,7 @@ Its size must be the same as
 </mrow></math>
 
 .
-It contains the column indices for the corresponding function 
+It contains the column indices for the corresponding function
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -412,63 +410,14 @@ All the elements of
 </mrow></math>
 
 .
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>There are no duplicate row and column entires; i.e., if 
-<code><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i></code>
-,
+There are no duplicated entries requested, to be specific,
+if 
+<code><i><font color="black"><span style='white-space: nowrap'>k1</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k2</span></font></i></code>
+ then
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;||&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>]<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k1</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k1</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;)&#xA0;!=&#xA0;(&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k2</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k2</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;)<br/>
 </span></font></code>
-Only the lower triangle of the Hessian is included in the indices; i.e.,
-
-<code><font color="blue"><span style='white-space: nowrap'>row</span></font><i><font color="black"><span style='white-space: nowrap'>[</span></font></i><font color="blue"><span style='white-space: nowrap'>k</span></font><i><font color="black"><span style='white-space: nowrap'>]&#xA0;&gt;=&#xA0;</span></font></i><font color="blue"><span style='white-space: nowrap'>col</span></font><i><font color="black"><span style='white-space: nowrap'>[</span></font></i><font color="blue"><span style='white-space: nowrap'>k</span></font><i><font color="black"><span style='white-space: nowrap'>]</span></font></i></code>
-.
-Furthermore, for all the non-zero entries in the lower triangle
-are included; i.e., if 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">&#x02265;</mo>
-<mi mathvariant='italic'>j</mi>
-</mrow></math>
-
- and
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mfrac><mrow><msup><mo stretchy="false">&#x02202;</mo>
-<mn>2</mn>
-</msup>
-<mi mathvariant='italic'>f</mi>
-</mrow>
-<mrow><mo stretchy="false">&#x02202;</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">]</mo>
-<mo stretchy="false">&#x02202;</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">[</mo>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">]</mo>
-</mrow>
-</mfrac>
-<mo stretchy="false">&#x02260;</mo>
-<mn>0</mn>
-</mrow></math>
-
-,
-there is an index 
-<code><i><font color="black"><span style='white-space: nowrap'>k</span></font></i></code>
- such that
-
-<code><i><font color="black"><span style='white-space: nowrap'>i</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
- and
-
-<code><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
-.
-
-<br/>
 <br/>
 <b><big><a name="hessian" id="hessian">hessian</a></big></b>
 <br/>
@@ -480,14 +429,9 @@ The argument
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CppAD::vector&lt;double&gt;&amp;&#xA0;&#xA0;hessian<br/>
 </span></font></code>
 and its size is 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>n</mi>
-<mo stretchy="false">&#x000D7;</mo>
-<mi mathvariant='italic'>n</mi>
-</mrow></math>
-
+<code><i><font color="black"><span style='white-space: nowrap'>K</span></font></i></code>
 .
-The input value of its elements does not matter. 
+The input value of its elements does not matter.
 The output value of its elements is the Hessian of the function 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -500,26 +444,13 @@ The output value of its elements is the Hessian of the function
 To be more specific, for
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">=</mo>
 <mn>0</mn>
 <mo stretchy="false">,</mo>
 <mo stretchy="false">&#x02026;</mo>
 <mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
-<mn>-1</mn>
-</mrow></math>
-
-,
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>n</mi>
+<mi mathvariant='italic'>K</mi>
 <mn>-1</mn>
 </mrow></math>
 
@@ -534,38 +465,60 @@ To be more specific, for
 <mrow><mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>row</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 <mo stretchy="false">&#x02202;</mo>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>j</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>col</mi>
+</mstyle></mrow>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
 <mo stretchy="false">]</mo>
 </mrow>
 </mfrac>
-<mo stretchy="false">(</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">)</mo>
 <mo stretchy="false">=</mo>
-<mi mathvariant='italic'>hessian</mi>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>hessian</mi>
+</mstyle></mrow>
 <mo stretchy="false">[</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">*</mo>
-<mi mathvariant='italic'>n</mi>
-<mo stretchy="false">+</mo>
-<mi mathvariant='italic'>j</mi>
+<mi mathvariant='italic'>k</mi>
 <mo stretchy="false">]</mo>
 </mrow></math>
 
 <br/>
-<b><a name="hessian.double" id="hessian.double">double</a></b>
+<b><big><a name="n_sweep" id="n_sweep">n_sweep</a></big></b>
+<br/>
+The input value of 
+<code><i><font color="black"><span style='white-space: nowrap'>n_sweep</span></font></i></code>
+ does not matter. On output,
+it is the value <a href="sparse_hessian.xml#n_sweep" target="_top"><span style='white-space: nowrap'>n_sweep</span></a>
+ corresponding
+to the evaluation of 
+<code><i><font color="black"><span style='white-space: nowrap'>hessian</span></font></i></code>
+.
+This is also the number of colors corresponding to the
+<a href="sparse_hessian.xml#work.color_method" target="_top"><span style='white-space: nowrap'>coloring&#xA0;method</span></a>
+,
+which can be set to <a href="speed_main.xml#Sparsity Options.colpack" target="_top"><span style='white-space: nowrap'>colpack</span></a>
+,
+and is otherwise <code><font color="blue">cppad</font></code>.
+
+
+<br/>
+<br/>
+<b><a name="n_sweep.double" id="n_sweep.double">double</a></b>
 <br/>
 In the case where 
 <code><i><font color="black"><span style='white-space: nowrap'>package</span></font></i></code>
  is <code><font color="blue">double</font></code>,
 only the first element of 
 <code><i><font color="black"><span style='white-space: nowrap'>hessian</span></font></i></code>
- is used and it is actually 
+ is used and it is actually
 the value of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>

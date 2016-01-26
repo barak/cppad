@@ -6,7 +6,7 @@
 <title>Forward Mode: Example and Test of Multiple Orders</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Forward Mode: Example and Test of Multiple Orders"/>
-<meta name="keywords" id="keywords" content=" forward mode: example and test of multiple orders order "/>
+<meta name="keywords" id="keywords" content=" forward mode: example and test of multiple orders "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -62,7 +62,7 @@ A:active { color : purple }
 <option>forward_order</option>
 <option>forward_dir</option>
 <option>size_order</option>
-<option>CompareChange</option>
+<option>compare_change</option>
 <option>capacity_order</option>
 <option>number_skip</option>
 </select>
@@ -93,7 +93,7 @@ bool forward_order(void)
 	// domain space vector
 	size_t n = 2;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	ax[0] = 0.; 
+	ax[0] = 0.;
 	ax[1] = 1.;
 
 	// declare independent variables and starting recording
@@ -117,10 +117,10 @@ bool forward_order(void)
 	xq[q1*0 + 1] = 1.;    xq[q1*1 + 1] = 0.; // x^1 (order one)
 	xq[q1*0 + 2] = 0.;    xq[q1*1 + 2] = 0.; // x^2 (order two)
 	// X(t) =   x^0 + x^1 * t + x^2 * t^2
-	//      = [ 3 + t, 4 ]   
+	//      = [ 3 + t, 4 ]
 	yq  = f.<a href="forward.xml" target="_top">Forward</a>(q, xq);
-	ok &amp;= yq.size() == m*q1;
-	// Y(t) = F[X(t)] 
+	ok &amp;= size_t( yq.size() ) == m*q1;
+	// Y(t) = F[X(t)]
 	//      = (3 + t) * (3 + t) * 4
 	//      = y^0 + y^1 * t + y^2 * t^2 + o(t^3)
 	//

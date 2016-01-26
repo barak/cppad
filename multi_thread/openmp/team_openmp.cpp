@@ -1,23 +1,20 @@
-// $Id: team_openmp.cpp 2506 2012-10-24 19:36:49Z bradbell $
+// $Id: team_openmp.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
-/* 
+/*
 $begin team_openmp.cpp$$
 $spell
 	openmp
 $$
 
-$index openmp, AD team$$
-$index AD, openmp team$$
-$index team, AD openmp$$
 
 $section OpenMP Implementation of a Team of AD Threads$$
 See $cref team_thread.hpp$$ for this routines specifications.
@@ -41,11 +38,11 @@ namespace {
 
 	// used to inform CppAD when we are in parallel execution mode
 	bool in_parallel(void)
-	{	return static_cast<bool> ( omp_in_parallel() ); }
+	{	return omp_in_parallel() != 0; }
 
 	// used to inform CppAD of the current thread number
 	size_t thread_num(void)
-	{	return static_cast<size_t>( omp_get_thread_num() ); } 
+	{	return static_cast<size_t>( omp_get_thread_num() ); }
 }
 
 bool team_create(size_t num_threads)
@@ -60,7 +57,7 @@ bool team_create(size_t num_threads)
 	// Set the number of OpenMP threads
 	omp_set_num_threads( int(num_threads) );
 
-	// setup for using CppAD::AD<double> in parallel 
+	// setup for using CppAD::AD<double> in parallel
 	thread_alloc::parallel_setup(num_threads, in_parallel, thread_num);
 	thread_alloc::hold_memory(true);
 	CppAD::parallel_ad<double>();
@@ -81,7 +78,7 @@ bool team_work(void worker(void))
 # pragma omp parallel for
 	for(thread_num = 0; thread_num < number_threads; thread_num++)
 		worker();
-// end omp parallel for	
+// end omp parallel for
 
 	return ok;
 }

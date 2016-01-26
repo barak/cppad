@@ -17,7 +17,7 @@ var list_down2 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -38,18 +38,21 @@ var list_down0 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_current0 = [
 'base_require.xml#Syntax',
-'base_require.xml#Warning',
 'base_require.xml#Purpose',
-'base_require.xml#Purpose.Standard Base Types',
+'base_require.xml#API Warning',
+'base_require.xml#Standard Base Types',
 'base_require.xml#Include Order',
 'base_require.xml#Numeric Type',
 'base_require.xml#Output Operator',
 'base_require.xml#Integer',
 'base_require.xml#Integer.Suggestion',
+'base_require.xml#Absolute Zero, azmul',
 'base_require.xml#Contents'
 ];
 function choose_across0(item)

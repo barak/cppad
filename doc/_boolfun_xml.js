@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -57,7 +57,7 @@ var list_current0 = [
 'boolfun.xml#Create Binary',
 'boolfun.xml#Operation Sequence',
 'boolfun.xml#Example',
-'boolfun.xml#Deprecated'
+'boolfun.xml#Deprecated 2007-07-31'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

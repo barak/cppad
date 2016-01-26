@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -111,9 +111,9 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;adolc/adolc.h&gt;
 # include &lt;adolc/adolc_sparse.h&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;cppad/thread_alloc.hpp&gt;
+# include &lt;cppad/utility/thread_alloc.hpp&gt;
 # include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
 
 // list of possible options
@@ -121,15 +121,16 @@ extern bool global_memory, global_onetape, global_atomic, global_optimize;
 extern bool global_colpack, global_boolsparsity;
 
 bool link_sparse_hessian(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
 	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
-	      CppAD::vector&lt;double&gt;&amp;     x_return ,
-	      CppAD::vector&lt;double&gt;&amp;     hessian  )
+	CppAD::vector&lt;double&gt;&amp;           x_return ,
+	CppAD::vector&lt;double&gt;&amp;           hessian  ,
+	size_t&amp;                          n_sweep )
 {
 	if( global_atomic || (! global_colpack) )
-		return false; 
+		return false;
 	if( global_memory || global_optimize || global_boolsparsity )
 		return false;
 	// -----------------------------------------------------
@@ -140,7 +141,7 @@ bool link_sparse_hessian(
 	typedef ADScalar*        ADVector;
 
 
-	size_t i, j;         // temporary indices
+	size_t i, j, k;         // temporary indices
 	size_t order = 0;    // derivative order corresponding to function
 	size_t m = 1;        // number of dependent variables
 	size_t n = size;     // number of independent variables
@@ -155,9 +156,9 @@ bool link_sparse_hessian(
 	ADVector a_x = thread_alloc::create_array&lt;ADScalar&gt;(n, capacity);
 	// AD range space vector
 	ADVector a_y = thread_alloc::create_array&lt;ADScalar&gt;(m, capacity);
-	// double argument value 
+	// double argument value
 	DblVector x = thread_alloc::create_array&lt;double&gt;(n, capacity);
-	// double function value 
+	// double function value
 	double f;
 
 	// options that control sparse_hess
@@ -171,26 +172,21 @@ bool link_sparse_hessian(
 	SizeVector cind   = CPPAD_NULL;   // column indices
 	DblVector  values = CPPAD_NULL;   // Hessian values
 
-	// initialize all entries as zero
-	for(i = 0; i &lt; m; i++)
-	{	for(j = 0; j &lt; n; j++)
-			hessian[ i * n + j ] = 0.;
-	}
 	// ----------------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
 	{	// choose a value for x
 		CppAD::uniform_01(n, x);
 
 		// declare independent variables
-		int keep = 0; // keep forward mode results 
+		int keep = 0; // keep forward mode results
 		trace_on(tag, keep);
 		for(j = 0; j &lt; n; j++)
 			a_x[j] &lt;&lt;= x[j];
 
-		// AD computation of f (x) 
+		// AD computation of f (x)
 		CppAD::sparse_hes_fun&lt;ADScalar&gt;(n, a_x, row, col, order, a_y);
 
-		// create function object f : x -&gt; y 
+		// create function object f : x -&gt; y
 		a_y[0] &gt;&gt;= f;
 		trace_off();
 
@@ -201,13 +197,20 @@ bool link_sparse_hessian(
 		rind   = CPPAD_NULL;
 		cind   = CPPAD_NULL;
 		values = CPPAD_NULL;
-		sparse_hess(tag, int(n), 
+		sparse_hess(tag, int(n),
 			same_pattern, x, &amp;nnz, &amp;rind, &amp;cind, &amp;values, options
 		);
-		int int_n = int(n);
-		for(int k = 0; k &lt; nnz; k++)
-		{	hessian[ rind[k] * int_n + cind[k] ] = values[k];
-			hessian[ cind[k] * int_n + rind[k] ] = values[k];
+		// only needed last time through loop
+		if( repeat == 0 )
+		{	size_t K = row.size();
+			for(int ell = 0; ell &lt; nnz; ell++)
+			{	i = size_t(rind[ell]);
+				j = size_t(cind[ell]);
+				for(k = 0; k &lt; K; k++)
+				{	if( (row[k]==i &amp;&amp; col[k]==j) || (row[k]==j &amp;&amp; col[k]==i) )
+						hessian[k] = values[ell];
+				}
+			}
 		}
 
 		// free raw memory allocated by sparse_hess
@@ -220,12 +223,12 @@ bool link_sparse_hessian(
 		CppAD::uniform_01(n, x);
 
 		// declare independent variables
-		int keep = 0; // keep forward mode results 
+		int keep = 0; // keep forward mode results
 		trace_on(tag, keep);
 		for(j = 0; j &lt; n; j++)
 			a_x[j] &lt;&lt;= x[j];
 
-		// AD computation of f (x) 
+		// AD computation of f (x)
 		CppAD::sparse_hes_fun&lt;ADScalar&gt;(n, a_x, row, col, order, a_y);
 
 		// create function object f : x -&gt; y
@@ -240,26 +243,32 @@ bool link_sparse_hessian(
 			CppAD::uniform_01(n, x);
 
 			// calculate the hessian at this x
-			sparse_hess(tag, int(n), 
+			sparse_hess(tag, int(n),
 				same_pattern, x, &amp;nnz, &amp;rind, &amp;cind, &amp;values, options
 			);
 			same_pattern = 1;
 		}
-		int int_n = int(n);
-		for(int k = 0; k &lt; nnz; k++)
-		{	hessian[ rind[k] * int_n + cind[k] ] = values[k];
-			hessian[ cind[k] * int_n + rind[k] ] = values[k];
+		size_t K = row.size();
+		for(int ell = 0; ell &lt; nnz; ell++)
+		{	i = size_t(rind[ell]);
+			j = size_t(cind[ell]);
+			for(k = 0; k &lt; K; k++)
+			{	if( (row[k]==i &amp;&amp; col[k]==j) || (row[k]==j &amp;&amp; col[k]==i) )
+					hessian[k] = values[ell];
+			}
 		}
-
 		// free raw memory allocated by sparse_hessian
 		free(rind);
 		free(cind);
 		free(values);
 	}
 	// --------------------------------------------------------------------
-	// return argument 
+	// return argument
 	for(j = 0; j &lt; n; j++)
 		x_return[j] = x[j];
+
+	// do not know how to return number of sweeps used
+	n_sweep = 0;
 
 	// tear down
 	thread_alloc::delete_array(a_x);

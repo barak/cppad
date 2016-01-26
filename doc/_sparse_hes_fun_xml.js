@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -62,7 +62,6 @@ var list_current0 = [
 'sparse_hes_fun.xml#p',
 'sparse_hes_fun.xml#fp',
 'sparse_hes_fun.xml#fp.Function',
-'sparse_hes_fun.xml#fp.Gradient',
 'sparse_hes_fun.xml#fp.Hessian',
 'sparse_hes_fun.xml#Example',
 'sparse_hes_fun.xml#Source Code'

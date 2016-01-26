@@ -18,7 +18,7 @@ var list_down3 = [
 'adfun.xml',
 'preprocessor.xml',
 'multi_thread.xml',
-'library.xml',
+'utility.xml',
 'ipopt_solve.xml',
 'example.xml',
 'speed.xml',
@@ -29,7 +29,7 @@ var list_down2 = [
 'cmake.xml',
 'cmake_check.xml',
 'pkgconfig.xml',
-'installunix.xml'
+'auto_tools.xml'
 ];
 var list_down1 = [
 'adolc_prefix.xml',
@@ -41,13 +41,14 @@ var list_down1 = [
 'cppad_testvector.xml'
 ];
 var list_down0 = [
-'colpack.cpp.xml',
+'colpack_jac.cpp.xml',
+'colpack_hes.cpp.xml',
 'get_colpack.sh.xml'
 ];
 var list_current0 = [
 'colpack_prefix.xml#Purpose',
 'colpack_prefix.xml#colpack_prefix',
-'colpack_prefix.xml#cppad_colpack.cpp',
+'colpack_prefix.xml#cppad_lib',
 'colpack_prefix.xml#Example',
 'colpack_prefix.xml#get_colpack'
 ];

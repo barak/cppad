@@ -19,6 +19,8 @@ var list_down3 = [
 'base_identical.xml',
 'base_ordered.xml',
 'base_std_math.xml',
+'base_limits.xml',
+'base_to_string.xml',
 'base_example.xml'
 ];
 var list_down2 = [
@@ -35,7 +37,8 @@ var list_down1 = [
 var list_current0 = [
 'mul_level_adolc.cpp.xml#Purpose',
 'mul_level_adolc.cpp.xml#Memory Management',
-'mul_level_adolc.cpp.xml#Configuration Requirement'
+'mul_level_adolc.cpp.xml#Configuration Requirement',
+'mul_level_adolc.cpp.xml#Source'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

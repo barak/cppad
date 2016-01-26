@@ -1,52 +1,51 @@
-# $Id: CMakeLists.txt 3116 2014-02-24 21:44:26Z bradbell $
+# $Id: CMakeLists.txt 3754 2015-11-26 22:23:05Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-# Build the example/ipopt_solve directory tests 
+# Build the example/ipopt_solve directory tests
 
-# Specifies build type for this directory. Possible values are 
+# Specifies build type for this directory. Possible values are
 # empty, Debug, Release, RelWithDebInfo and MinSizeRel
 SET(CMAKE_BUILD_TYPE DEBUG)
 
 # Local link directories to search, as determined by pkg-config for ipopt
 LINK_DIRECTORIES( ${ipopt_LIBRARY_DIRS} )
 
-# colpack_prefix
-IF ( colpack_prefix )
-	# Extra source files if we are including colpack
-	SET(colpack_sources ../../cppad/local/cppad_colpack.cpp)
-	# add colpack to list of libraries
-	SET(colpack_libs "ColPack")
-ELSE ( colpack_prefix )
-	SET(colpack_sources "")
-	SET(colpack_libs "")
-ENDIF ( colpack_prefix )
+# Copy a file to another location and modify its contents.
+# configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])
+CONFIGURE_FILE(
+	${CMAKE_CURRENT_SOURCE_DIR}/test_one.sh.in
+	${CMAKE_CURRENT_SOURCE_DIR}/test_one.sh
+)
 
 #
-ADD_EXECUTABLE(example_ipopt_solve EXCLUDE_FROM_ALL 
+ADD_EXECUTABLE(example_ipopt_solve EXCLUDE_FROM_ALL
 	solve.cpp
 	get_started.cpp
 	ode_inverse.cpp
 	retape.cpp
-	${colpack_sources}
 )
 
 # Extra compiler flags
 add_cppad_cxx_flags( example_ipopt_solve )
 
-# libraries to be linked into the specified target, 
+# libraries to be linked into the specified target,
 # as determined by pkg-config for ipopt
-TARGET_LINK_LIBRARIES(example_ipopt_solve ${ipopt_LIBRARIES} ${colpack_libs})
+TARGET_LINK_LIBRARIES(example_ipopt_solve
+	cppad_lib
+	${ipopt_LIBRARIES}
+	${colpack_libs}
+)
 
 # Add the check_example_ipopt_solve target
-ADD_CUSTOM_TARGET(check_example_ipopt_solve 
-	example_ipopt_solve 
-	DEPENDS example_ipopt_solve 
+ADD_CUSTOM_TARGET(check_example_ipopt_solve
+	example_ipopt_solve
+	DEPENDS example_ipopt_solve
 )

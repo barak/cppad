@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -107,7 +107,7 @@ See <a href="link_det_lu.xml" target="_top"><span style='white-space: nowrap'>li
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/det_by_lu.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
@@ -116,8 +116,8 @@ extern bool
 	global_onetape, global_atomic, global_optimize;
 
 bool link_det_lu(
-	size_t                           size     , 
-	size_t                           repeat   , 
+	size_t                           size     ,
+	size_t                           repeat   ,
 	CppAD::vector&lt;double&gt;           &amp;matrix   ,
 	CppAD::vector&lt;double&gt;           &amp;det      )
 {
@@ -127,7 +127,7 @@ bool link_det_lu(
 	// setup
 	CppAD::det_by_lu&lt;double&gt;  Det(size);
 	size_t n = size * size; // number of independent variables
-	
+
 	// ------------------------------------------------------
 
 	while(repeat--)

@@ -1,12 +1,12 @@
-/* $Id: log_op.hpp 3320 2014-09-11 23:06:21Z bradbell $ */
-# ifndef CPPAD_LOG_OP_INCLUDED
-# define CPPAD_LOG_OP_INCLUDED
+// $Id: log_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_LOG_OP_HPP
+# define CPPAD_LOG_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -35,9 +35,9 @@ inline void forward_log_op(
 	size_t q           ,
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
-{	
+{
 	size_t k;
 
 	// check assumptions
@@ -87,9 +87,9 @@ inline void forward_log_op_dir(
 	size_t r           ,
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
-{	
+{
 
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(LogOp) == 1 );
@@ -108,7 +108,7 @@ inline void forward_log_op_dir(
 		for(size_t k = 1; k < q; k++)
 			z[m+ell] -= Base(k) * z[(k-1)*r+1+ell] * x[(q-k-1)*r+1+ell];
 		z[m+ell] /= (Base(q) * x[0]);
-	}	
+	}
 }
 
 /*!
@@ -125,7 +125,7 @@ template <class Base>
 inline void forward_log_op_0(
 	size_t i_z         ,
 	size_t i_x         ,
-	size_t cap_order   , 
+	size_t cap_order   ,
 	Base*  taylor      )
 {
 
@@ -157,11 +157,11 @@ inline void reverse_log_op(
 	size_t      d            ,
 	size_t      i_z          ,
 	size_t      i_x          ,
-	size_t      cap_order    , 
+	size_t      cap_order    ,
 	const Base* taylor       ,
 	size_t      nc_partial   ,
 	Base*       partial      )
-{	size_t j, k;	
+{	size_t j, k;
 
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(LogOp) == 1 );
@@ -177,24 +177,26 @@ inline void reverse_log_op(
 	const Base* z  = taylor  + i_z * cap_order;
 	Base* pz       = partial + i_z * nc_partial;
 
+	Base inv_x0 = Base(1) / x[0];
+
 	j = d;
 	while(j)
 	{	// scale partial w.r.t z[j]
-		pz[j]   /= x[0];
+		pz[j]   = azmul(pz[j]   , inv_x0);
 
-		px[0]   -= pz[j] * z[j];
+		px[0]   -= azmul(pz[j], z[j]);
 		px[j]   += pz[j];
 
 		// further scale partial w.r.t. z[j]
 		pz[j]   /= Base(j);
 
 		for(k = 1; k < j; k++)
-		{	pz[k]   -= pz[j] * Base(k) * x[j-k];
-			px[j-k] -= pz[j] * Base(k) * z[k];
+		{	pz[k]   -= Base(k) * azmul(pz[j], x[j-k]);
+			px[j-k] -= Base(k) * azmul(pz[j], z[k]);
 		}
 		--j;
 	}
-	px[0] += pz[0] / x[0];
+	px[0] += azmul(pz[0], inv_x0);
 }
 
 } // END_CPPAD_NAMESPACE

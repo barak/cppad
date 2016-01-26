@@ -6,7 +6,7 @@
 <title>Index Sort: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Index Sort: Example and Test"/>
-<meta name="keywords" id="keywords" content=" index sort: example and test index_sort sort "/>
+<meta name="keywords" id="keywords" content=" index sort: example and test index_sort "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="index_sort.xml" target="_top">Prev</a>
-</td><td><a href="benderquad.xml" target="_top">Next</a>
+</td><td><a href="to_string.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>index_sort</option>
 <option>index_sort.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -103,8 +101,8 @@ A:active { color : purple }
 
 <center><b><big><big>Index Sort: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/index_sort.hpp&gt;
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/index_sort.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;valarray&gt;
 # include &lt;vector&gt;
 
@@ -137,27 +135,27 @@ namespace{
 		size_t first[]  =  { 4, 4, 3, 3, 2, 2, 1, 1};
 		size_t second[] = { 0, 1, 0, 1, 0, 1, 0, 1};
 		size_t size     = sizeof(first) / sizeof(first[0]);
-	
+
 		VectorKey keys(size);
 		for(i = 0; i &lt; size; i++)
 			keys[i] = Key(first[i], second[i]);
-	
+
 		VectorSize ind(size);
 		CppAD::index_sort(keys, ind);
-	
+
 		// check that all the indices are different
 		for(i = 0; i &lt; size; i++)
 		{	for(j = 0; j &lt; size; j++)
 				ok &amp;= (i == j) | (ind[i] != ind[j]);
 		}
-		
+
 		// check for increasing order
 		for(i = 0; i &lt; size-1; i++)
 		{	if( first[ ind[i] ] == first[ ind[i+1] ] )
 				ok &amp;= second[ ind[i] ] &lt;= second[ ind[i+1] ];
 			else	ok &amp;= first[ ind[i] ] &lt; first[ ind[i+1] ];
-		} 
-	
+		}
+
 		return ok;
 	}
 }

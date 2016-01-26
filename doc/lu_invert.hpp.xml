@@ -6,7 +6,7 @@
 <title>Source: LuInvert</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Source: LuInvert"/>
-<meta name="keywords" id="keywords" content=" source: luinvert Luinvert source "/>
+<meta name="keywords" id="keywords" content=" source: luinvert source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>LuDetAndSolve</option>
 <option>LuInvert</option>
 <option>lu_invert.hpp</option>
@@ -46,7 +46,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -70,9 +70,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -97,22 +95,22 @@ A:active { color : purple }
 
 
 <center><b><big><big>Source: LuInvert</big></big></b></center>
-<code><font color="blue"># ifndef CPPAD_LU_INVERT_INCLUDED 
+<code><font color="blue"># ifndef CPPAD_LU_INVERT_HPP
 <code><span style='white-space: nowrap'><br/>
-</span></code># define CPPAD_LU_INVERT_INCLUDED
+</span></code># define CPPAD_LU_INVERT_HPP
 
 <pre style='display:inline'> 
 # include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/check_simple_vector.hpp&gt;
-# include &lt;cppad/check_numeric_type.hpp&gt;
+# include &lt;cppad/utility/check_simple_vector.hpp&gt;
+# include &lt;cppad/utility/check_numeric_type.hpp&gt;
 
 namespace CppAD { // BEGIN CppAD namespace
 
 // LuInvert
 template &lt;typename SizeVector, typename FloatVector&gt;
 void LuInvert(
-	const SizeVector  &amp;ip, 
-	const SizeVector  &amp;jp, 
+	const SizeVector  &amp;ip,
+	const SizeVector  &amp;jp,
 	const FloatVector &amp;LU,
 	FloatVector       &amp;B )
 {	size_t k; // column index in X
@@ -129,7 +127,7 @@ void LuInvert(
 	CheckSimpleVector&lt;size_t, SizeVector&gt;();
 
 	Float etmp;
-	
+
 	size_t n = ip.size();
 	CPPAD_ASSERT_KNOWN(
 		size_t(jp.size()) == n,
@@ -168,7 +166,7 @@ void LuInvert(
 			etmp       = B[ ip[p] * m + k ];
 			x[ jp[p] ] = etmp;
 			for(i = 0; i &lt; p; i++ )
-				B[ ip[i] * m + k ] -= 
+				B[ ip[i] * m + k ] -=
 					etmp * LU[ ip[i] * n + jp[p] ];
 		}
 
@@ -178,7 +176,7 @@ void LuInvert(
 	}
 	return;
 }
-} // END CppAD namespace 
+} // END CppAD namespace
 </pre>
 
 

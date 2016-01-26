@@ -6,7 +6,7 @@
 <title>Enable use of AD&lt;Base&gt; where Base is float</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is float"/>
-<meta name="keywords" id="keywords" content=" float Base enable use of ad&lt;base&gt; where base is condexpop condexprel equalopseq identical integer ordered unary standard math sign pow limits "/>
+<meta name="keywords" id="keywords" content=" enable use of ad&lt;base&gt; where base is float condexpop condexprel equalopseq identical integer azmul ordered unary standard math sign pow numeric_limits to_string "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -64,6 +64,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -87,17 +89,16 @@ A:active { color : purple }
 <option>EqualOpSeq</option>
 <option>Identical</option>
 <option>Integer</option>
+<option>azmul</option>
 <option>Ordered</option>
 <option>Unary Standard Math</option>
 <option>sign</option>
 <option>pow</option>
-<option>limits</option>
+<option>numeric_limits</option>
+<option>to_string</option>
 </select>
 </td>
 </tr></table><br/>
-
-
-
 
 
 
@@ -113,11 +114,11 @@ The type <code><font color="blue">float</font></code> is a relatively simple typ
 Hence its <code><font color="blue">CondExpOp</font></code> function is defined by
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline float CondExpOp( 
+	inline float CondExpOp(
 		enum CompareOp     cop          ,
 		const float&amp;       left         ,
-		const float&amp;       right        , 
-		const float&amp;       exp_if_true  , 
+		const float&amp;       right        ,
+		const float&amp;       exp_if_true  ,
 		const float&amp;       exp_if_false )
 	{	return CondExpTemplate(cop, left, right, exp_if_true, exp_if_false);
 	}
@@ -192,6 +193,17 @@ namespace CppAD {
 
 <br/>
 <br/>
+<b><big><a name="azmul" id="azmul">azmul</a></big></b>
+
+<code><font color='blue'><pre style='display:inline'> 
+namespace CppAD {
+	CPPAD_AZMUL( float )
+}
+</pre></font></code>
+
+
+<br/>
+<br/>
 <b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
 <br/>
 The <code><font color="blue">float</font></code> type supports ordered comparisons
@@ -234,13 +246,18 @@ namespace CppAD {
 	CPPAD_STANDARD_MATH_UNARY(float, sqrt)
 	CPPAD_STANDARD_MATH_UNARY(float, tan)
 	CPPAD_STANDARD_MATH_UNARY(float, tanh)
-# if CPPAD_COMPILER_HAS_ERF
+# if CPPAD_USE_CPLUSPLUS_2011
 	CPPAD_STANDARD_MATH_UNARY(float, erf)
+	CPPAD_STANDARD_MATH_UNARY(float, asinh)
+	CPPAD_STANDARD_MATH_UNARY(float, acosh)
+	CPPAD_STANDARD_MATH_UNARY(float, atanh)
+	CPPAD_STANDARD_MATH_UNARY(float, expm1)
+	CPPAD_STANDARD_MATH_UNARY(float, log1p)
 # endif
 }
 </pre></font></code>
 
-The absolute value function is special because its <code><font color="blue">std</font></code> name is 
+The absolute value function is special because its <code><font color="blue">std</font></code> name is
 <code><font color="blue">fabs</font></code>
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
@@ -268,7 +285,7 @@ namespace CppAD {
 }
 </pre></font></code>
 
- 
+
 <br/>
 <br/>
 <b><big><a name="pow" id="pow">pow</a></big></b>
@@ -285,32 +302,31 @@ namespace CppAD {
 
 <br/>
 <br/>
-<b><big><a name="limits" id="limits">limits</a></big></b>
+<b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
 <br/>
-The following defines the numeric limits functions
-<code><font color="blue">epsilon</font></code>, <code><font color="blue">min</font></code>, and <code><font color="blue">max</font></code> for the type
-<code><font color="blue">float</font></code>:
+The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
+
+for the type <code><font color="blue">float</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	template &lt;&gt;
-	class numeric_limits&lt;float&gt; {
-	public:
-		// machine epsilon
-		static float epsilon(void)
-		{	return std::numeric_limits&lt;float&gt;::epsilon(); }
-		// minimum positive normalized value
-		static float min(void)
-		{	return std::numeric_limits&lt;float&gt;::min(); }
-		// maximum finite value
-		static float max(void)
-		{	return std::numeric_limits&lt;float&gt;::max(); }
-	};
-	// deprecated machine epsilon
-	template &lt;&gt; 
-	inline float epsilon&lt;float&gt;(void)
-	{	return numeric_limits&lt;float&gt;::epsilon(); }
+	CPPAD_NUMERIC_LIMITS(float, float)
 }
 </pre></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="to_string" id="to_string">to_string</a></big></b>
+<br/>
+There is no need to define <code><font color="blue">to_string</font></code> for <code><font color="blue">float</font></code>
+because it is defined by including <code><font color="blue">cppad/utility/to_string.hpp</font></code>;
+see <a href="to_string.xml" target="_top"><span style='white-space: nowrap'>to_string</span></a>
+.
+See <a href="base_complex.hpp.xml#to_string" target="_top"><span style='white-space: nowrap'>base_complex.hpp</span></a>
+ for an example where
+it is necessary to define <code><font color="blue">to_string</font></code> for a 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ type.
 
 
 <hr/>Input File: cppad/local/base_float.hpp

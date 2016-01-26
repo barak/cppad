@@ -15,10 +15,11 @@ var list_up0 = [
 ];
 var list_down3 = [
 'arithmetic.xml',
-'std_math_ad.xml',
-'mathother.xml',
+'unary_standard_math.xml',
+'binary_math.xml',
 'condexp.xml',
 'discrete.xml',
+'numeric_limits.xml',
 'atomic.xml'
 ];
 var list_down2 = [
@@ -38,6 +39,7 @@ var list_down1 = [
 'atomic_get_started.cpp.xml',
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
+'atomic_sparsity.cpp.xml',
 'atomic_tangent.cpp.xml',
 'atomic_hes_sparse.cpp.xml',
 'atomic_mat_mul.cpp.xml'

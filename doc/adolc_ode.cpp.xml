@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -111,7 +111,7 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 <code><font color='blue'><pre style='display:inline'> 
 # include &lt;adolc/adolc.h&gt;
 
-# include &lt;cppad/vector.hpp&gt;
+# include &lt;cppad/utility/vector.hpp&gt;
 # include &lt;cppad/speed/ode_evaluate.hpp&gt;
 # include &lt;cppad/speed/uniform_01.hpp&gt;
 
@@ -164,7 +164,7 @@ bool link_ode(
 
 	// -------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
-	{ 	// choose next x value
+	{	// choose next x value
 		uniform_01(n, x);
 
 		// declare independent variables
@@ -186,7 +186,7 @@ bool link_ode(
 		jacobian(tag, m, n, x_raw, jac_ptr);
 	}
 	else
-	{ 	// choose next x value
+	{	// choose next x value
 		uniform_01(n, x);
 
 		// declare independent variables

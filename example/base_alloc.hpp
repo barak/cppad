@@ -1,8 +1,8 @@
-/* $Id: base_alloc.hpp 3495 2014-12-24 01:16:15Z bradbell $ */
-# ifndef CPPAD_BASE_ALLOC_INCLUDED
-# define CPPAD_BASE_ALLOC_INCLUDED
+// $Id: base_alloc.hpp 3757 2015-11-30 12:03:07Z bradbell $
+# ifndef CPPAD_BASE_ALLOC_HPP
+# define CPPAD_BASE_ALLOC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -14,6 +14,11 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin base_alloc.hpp$$
 $spell
+	azmul
+	expm1
+	atanh
+	acosh
+	asinh
 	Rel
 	Lt Le Eq Ge Gt
 	Cond
@@ -45,9 +50,9 @@ $$
 $section Example AD<Base> Where Base Constructor Allocates Memory$$
 
 $head Purpose$$
-Demonstrate use of $codei%AD<%Base%>%$$ 
+Demonstrate use of $codei%AD<%Base%>%$$
 where memory is allocated for each element of the type $icode Base$$.
-In addition, this is a complete example where all the 
+In addition, this is a complete example where all the
 $cref/required Base/base_require/$$ type
 operations are defined (as apposed to other examples where
 some of the operations for the Base type are already defined).
@@ -57,12 +62,12 @@ This file uses some of the definitions in $cref base_require$$
 and $cref thread_alloc$$.
 $codep */
 # include <cppad/base_require.hpp>
-# include <cppad/thread_alloc.hpp>
+# include <cppad/utility/thread_alloc.hpp>
 /* $$
 
 $head Computed Assignment Macro$$
-This macro is used for the 
-$code base_alloc$$ computed assignment operators; to be specific, 
+This macro is used for the
+$code base_alloc$$ computed assignment operators; to be specific,
 used with $icode op $$ equal to
 $code +=$$,
 $code -=$$,
@@ -75,8 +80,8 @@ $codep */
 /* $$
 
 $head Binary Operator Macro$$
-This macro is used for the 
-$code base_alloc$$ binary operators (as member functions); to be specific, 
+This macro is used for the
+$code base_alloc$$ binary operators (as member functions); to be specific,
 used with $icode op $$ equal to
 $code +$$,
 $code -$$,
@@ -94,9 +99,9 @@ $codep */
 /* $$
 
 $head Boolean Operator Macro$$
-This macro can be used for the 
-$code base_alloc$$ binary operators that have a 
-$code bool$$ result; to be specific, 
+This macro can be used for the
+$code base_alloc$$ binary operators that have a
+$code bool$$ result; to be specific,
 used with $icode op $$ equal to
 $code ==$$,
 $code !=$$,
@@ -114,7 +119,7 @@ $codep */
 /* $$
 
 $head Class Definition$$
-The following example class 
+The following example class
 defines the necessary $cref base_member$$ functions.
 It is made more complicated by storing a pointer to a $code double$$
 instead of the $code double$$ value itself.
@@ -126,18 +131,18 @@ public:
 
 	base_alloc(void)
 	{	size_t cap;
-		void* v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		void* v  = CppAD::thread_alloc::get_memory(sizeof(double), cap);
 		ptrdbl_  = static_cast<double*>(v);
 	}
 	base_alloc(double dbl)
 	{	size_t cap;
-		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap);
 		ptrdbl_  = static_cast<double*>(v);
 		*ptrdbl_ = dbl;
 	}
 	base_alloc(const base_alloc& x)
 	{	size_t cap;
-		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap); 
+		void *v  = CppAD::thread_alloc::get_memory(sizeof(double), cap);
 		ptrdbl_  = static_cast<double*>(v);
 		*ptrdbl_ = *x.ptrdbl_;
 	}
@@ -164,7 +169,7 @@ public:
 	BASE_ALLOC_BINARY_OPERATOR(/)
 	BASE_ALLOC_BOOL_OPERATOR(==)
 	BASE_ALLOC_BOOL_OPERATOR(!=)
-	// The <= operator is not necessary for the base type requirements 
+	// The <= operator is not necessary for the base type requirements
 	// (needed so we can use NearEqual with base_alloc arguments).
 	BASE_ALLOC_BOOL_OPERATOR(<=)
 };
@@ -175,11 +180,11 @@ The type $code base_alloc$$ does not use $cref CondExp$$ operations.
 Hence its $code CondExpOp$$ function is defined by
 $codep */
 namespace CppAD {
-	inline base_alloc CondExpOp( 
+	inline base_alloc CondExpOp(
 		enum CompareOp     cop          ,
 		const base_alloc&       left         ,
-		const base_alloc&       right        , 
-		const base_alloc&       exp_if_true  , 
+		const base_alloc&       right        ,
+		const base_alloc&       exp_if_true  ,
 		const base_alloc&       exp_if_false )
 	{	// not used
 		assert(false);
@@ -244,6 +249,13 @@ namespace CppAD {
 }
 /* $$
 
+$head azmul$$
+$codep */
+namespace CppAD {
+	CPPAD_AZMUL( base_alloc )
+}
+/* $$
+
 $head Ordered$$
 The $code base_alloc$$ type supports ordered comparisons
 $codep */
@@ -271,10 +283,10 @@ $codep */
 	inline base_alloc fun (const base_alloc& x) \
 	{ return   std::fun(*x.ptrdbl_); }
 /* $$
-The following invocations of the macro above define the 
+The following invocations of the macro above define the
 $cref/unary standard math/base_std_math/Unary Standard Math/$$ functions
 (except for $code abs$$):
-$codep */ 
+$codep */
 namespace CppAD {
 	BASE_ALLOC_STD_MATH(acos)
 	BASE_ALLOC_STD_MATH(asin)
@@ -291,7 +303,7 @@ namespace CppAD {
 	BASE_ALLOC_STD_MATH(tanh)
 }
 /* $$
-The absolute value function is special because its $code std$$ name is 
+The absolute value function is special because its $code std$$ name is
 $code fabs$$
 $codep */
 namespace CppAD {
@@ -300,13 +312,21 @@ namespace CppAD {
 }
 /* $$
 
-$head erf$$
-The following defines the $code CppAD::erf$$ function that
-is required th use $code AD<Base_alloc>$$:
+$head erf, asinh, acosh, atanh, expm1, log1p$$
+The following defines the
+$cref/erf, asinh, acosh, atanh, expm1, log1p
+	/base_std_math
+	/erf, asinh, acosh, atanh, expm1, log1p
+/$$ functions
+required by $code AD<base_alloc>$$:
 $codep */
-# if CPPAD_COMPILER_HAS_ERF
-	inline base_alloc erf(const base_alloc& x)
-	{	return std::erf(*x.ptrdbl_); }
+# if CPPAD_USE_CPLUSPLUS_2011
+	BASE_ALLOC_STD_MATH(erf)
+	BASE_ALLOC_STD_MATH(asinh)
+	BASE_ALLOC_STD_MATH(acosh)
+	BASE_ALLOC_STD_MATH(atanh)
+	BASE_ALLOC_STD_MATH(expm1)
+	BASE_ALLOC_STD_MATH(log1p)
 # endif
 /* $$
 
@@ -324,7 +344,7 @@ namespace CppAD {
 	}
 }
 /* $$
- 
+
 $head pow $$
 The following defines a $code CppAD::pow$$ function that
 is required to use $code AD<base_alloc>$$:
@@ -335,26 +355,12 @@ namespace CppAD {
 }
 /* $$
 
-$head limits$$
+$head numeric_limits$$
+The following defines the CppAD $cref numeric_limits$$
+for the type $code base_alloc$$:
 $codep */
 namespace CppAD {
-	template <>
-	class numeric_limits<base_alloc> {
-	public:
-		// machine epsilon
-		static base_alloc epsilon(void)
-		{	return std::numeric_limits<base_alloc>::epsilon(); }
-		// minimum positive normalized value
-		static base_alloc min(void)
-		{	return std::numeric_limits<base_alloc>::min(); }
-		// maximum finite value
-		static base_alloc max(void)
-		{	return std::numeric_limits<base_alloc>::max(); }
-	};
-	// deprecated machine epsilon
-	template <> 
-	inline base_alloc epsilon<base_alloc>(void)
-	{	return numeric_limits<base_alloc>::epsilon(); }
+	CPPAD_NUMERIC_LIMITS(double, base_alloc)
 }
 /* $$
 

@@ -84,12 +84,12 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Break a large computation into pieces and only store values at the 
+Break a large computation into pieces and only store values at the
 interface of the pieces (this is much easier to do using <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
 ).
-In actual applications, there may be many functions, but 
+In actual applications, there may be many functions, but
 for this example there are only two.
-The functions 
+The functions
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>F</mi>
@@ -105,7 +105,7 @@ The functions
 </msup>
 </mrow></math>
 
- 
+
 and
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
@@ -122,7 +122,7 @@ and
 </msup>
 </mrow></math>
 
- 
+
 defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -291,7 +291,7 @@ is defined by
 </mtd></mtr></mtable>
 </mrow></math>
 
-Given the zero and first order Taylor coefficients 
+Given the zero and first order Taylor coefficients
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>x</mi>
@@ -504,7 +504,7 @@ Use forward mode on
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- to compute 
+ to compute
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>y</mi>
@@ -547,7 +547,7 @@ Use forward mode on
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- to compute 
+ to compute
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>z</mi>
@@ -568,7 +568,7 @@ Use forward mode on
 </msup>
 </mrow></math>
 
- 
+
 </li><li>
 
 Use reverse mode on 
@@ -579,7 +579,7 @@ Use reverse mode on
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- to compute the derivative of 
+ to compute the derivative of
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <msup><mi mathvariant='italic'>h</mi>
@@ -1019,7 +1019,7 @@ namespace {
 namespace {
 	bool reverse_any_case(bool free_all)
 	{	bool ok = true;
-     	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
 
 		using CppAD::AD;
 		using CppAD::NearEqual;
@@ -1050,7 +1050,7 @@ namespace {
 		y1 = f.<a href="forward.xml" target="_top">Forward</a>(1, x1);
 		if( free_all )
 			f = empty;
-		else	
+		else
 		{	// free all the Taylor coefficients stored in f
 			f.capacity_order(0);
 		}
@@ -1077,7 +1077,7 @@ namespace {
 		check    += x0[0] * x1[1] * (1. - x0[0] + x0[1]);
 		double h1 = z1[0] + z1[1];
 		ok       &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(h1, check, eps, eps);
-	
+
 		// compute the derivative with respect to y^0 and y^0 of h^1
 		size_t p = 2;
 		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(n*p), dw(n*p);
@@ -1089,7 +1089,7 @@ namespace {
 
 		// We are done using g, so we can free its memory.
 		g = empty;
-		// We need to use f next. 
+		// We need to use f next.
 		if( free_all )
 		{	// we must again record the operation sequence for F(x)
 			CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
@@ -1104,7 +1104,7 @@ namespace {
 		// compute the derivative with respect to x^0 and x^0 of
 		//	h^1 = z_0^1 + z_1^1
 		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dv(n*p);
-		dv   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, dw); 
+		dv   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, dw);
 
 		// check partial of h^1 w.r.t x^0_0
 		check  = x0[1] * (- x1[0] + x1[1]);
@@ -1114,7 +1114,7 @@ namespace {
 
 		// check partial of h^1 w.r.t x^0_1
 		check  = x0[0] * (- x1[0] + x1[1]);
-		check += x1[0] * (1. - x0[0] + x0[1]) + x1[0] * x0[1]; 
+		check += x1[0] * (1. - x0[0] + x0[1]) + x1[0] * x0[1];
 		check += x0[0] * x1[1];
 		ok    &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dv[1*p+0], check, eps, eps);
 

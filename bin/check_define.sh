@@ -1,10 +1,10 @@
 #! /bin/bash -e
-# $Id: check_define.sh 3308 2014-05-26 14:29:01Z bradbell $
+# $Id: check_define.sh 3757 2015-11-30 12:03:07Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
@@ -18,7 +18,9 @@ fi
 # -----------------------------------------------------------------------------
 echo "Difference between '# define' names and '# undef' names"
 echo '-----------------------------------------------------------------------'
-list=`bin/list_files.sh .hpp .hpp.in | sed -n -e '/^cppad\//p'`
+list=`bin/list_files.sh | sed -n \
+	-e '/^cppad\/.*\.hpp$/p' \
+	-e '/^cppad\/.*\.hpp\.in$/p'`
 #
 for cmd in define undef
 do
@@ -32,7 +34,7 @@ do
 	done
 	if [ "$cmd" == 'define' ]
 	then
-		sed -e '/_INCLUDED$/d' -i tmp.$$
+		sed -e '/_HPP$/d' -i tmp.$$
 	fi
 	sort -u tmp.$$ > $cmd.$$
 	rm tmp.$$

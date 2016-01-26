@@ -1,9 +1,9 @@
-/* $Id: sparse_jac_fun.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: sparse_jac_fun.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -15,11 +15,9 @@ $spell
 	jac
 $$
 
-$index sparse_jac_fun, example$$
-$index example, sparse_jac_fun$$
-$index test, sparse_jac_fun$$
 
 $section sparse_jac_fun: Example and test$$
+$mindex sparse_jac_fun$$
 
 $code
 $verbatim%speed/example/sparse_jac_fun.cpp%0%// BEGIN C++%// END C++%1%$$
@@ -38,13 +36,13 @@ bool sparse_jac_fun(void)
 
 	bool ok = true;
 
-	size_t i, j, k;
+	size_t j, k;
 	double eps = CppAD::numeric_limits<double>::epsilon();
 	size_t n   = 3;
 	size_t m   = 4;
 	size_t K   = 5;
 	CppAD::vector<size_t>       row(K), col(K);
-	CppAD::vector<double>       x(n),   yp(m * n);
+	CppAD::vector<double>       x(n),   yp(K);
 	CppAD::vector< AD<double> > a_x(n), a_y(m);
 
 	// choose x
@@ -73,11 +71,10 @@ bool sparse_jac_fun(void)
 	CppAD::vector<double>  jac(m * n);
 	jac = f.Jacobian(x);
 
-	for(i = 0; i < m; i++)
-	{	for(j = 0; j < n; j++)
-			ok &= NearEqual(jac[i * n + j], yp[i * n + j] , eps, eps);
+	for(k = 0; k < K; k++)
+	{	size_t index = row[k] * n + col[k];
+		ok &= NearEqual(jac[index], yp[k] , eps, eps);
 	}
- 
 	return ok;
 }
 // END C++

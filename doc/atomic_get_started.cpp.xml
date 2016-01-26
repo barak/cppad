@@ -6,7 +6,7 @@
 <title>Getting Started with Atomic Operations: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Getting Started with Atomic Operations: Example and Test"/>
-<meta name="keywords" id="keywords" content=" getting started with atomic operations: example and test get_started operation purpose start class definition constructor forward end use function recording "/>
+<meta name="keywords" id="keywords" content=" getting started with atomic operations: example and test purpose start class definition constructor forward end use function recording "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -49,10 +49,11 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -130,7 +132,8 @@ class atomic_get_started : public CppAD::atomic_base&lt;double&gt; {
 <code><font color='blue'><pre style='display:inline'> 
 	public:
 	// constructor (could use const char* for name)
-	atomic_get_started(const std::string&amp; name) : 
+	atomic_get_started(const std::string&amp; name) :
+	// this example does not use any sparsity patterns
 	CppAD::atomic_base&lt;double&gt;(name)
 	{ }
 	private:
@@ -222,11 +225,11 @@ bool get_started(void)
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
 
-	// call user function and store get_started(x) in au[0] 
+	// call user function and store get_started(x) in au[0]
 	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(m);
 	afun(ax, au);        // u = 1 / x
 
@@ -243,7 +246,7 @@ bool get_started(void)
 <b><a name="Use Atomic Function.forward" id="Use Atomic Function.forward">forward</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// check function value 
+	// check function value
 	double check = x0;
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
 

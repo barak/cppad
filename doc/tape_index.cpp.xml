@@ -60,10 +60,11 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
@@ -130,8 +131,8 @@ bool TapeIndex(void)
 
 	// vectors for arguments to the function object f
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);   // argument values
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) y(m);   // function values 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m);   // function weights 
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) y(m);   // function values
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m);   // function weights
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);  // derivative of weighted function
 
 	// check function value
@@ -146,7 +147,7 @@ bool TapeIndex(void)
 	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
 	ok  &amp;= y[0] == x[1] * Array(x[0]);
 
-	// evaluate derivaitve of y[0] 
+	// evaluate derivaitve of y[0]
 	w[0] = 1.;
 	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 	ok   &amp;= dw[0] == 0.;              // partial w.r.t array index

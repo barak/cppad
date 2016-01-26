@@ -1,10 +1,10 @@
-/* $Id$ */
-# ifndef CPPAD_ERF_OP_INCLUDED
-# define CPPAD_ERF_OP_INCLUDED
-# if CPPAD_COMPILER_HAS_ERF
+// $Id$
+# ifndef CPPAD_ERF_OP_HPP
+# define CPPAD_ERF_OP_HPP
+# if CPPAD_USE_CPLUSPLUS_2011
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -105,7 +105,7 @@ inline void forward_erf_op(
 	const Base*   parameter   ,
 	size_t        cap_order   ,
 	Base*         taylor      )
-{	
+{
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(ErfOp) == 3 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(ErfOp) == 5 );
@@ -351,7 +351,7 @@ inline void reverse_erf_op(
 	const Base*   taylor      ,
 	size_t        nc_partial  ,
 	Base*         partial     )
-{	
+{
 	// check assumptions
 	CPPAD_ASSERT_UNKNOWN( NumArg(ErfOp) == 3 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(ErfOp) == 5 );
@@ -359,6 +359,15 @@ inline void reverse_erf_op(
 
 	// array used to pass parameter values for sub-operations
 	addr_t addr[2];
+
+	// If pz is zero, make sure this operation has no effect
+	// (zero times infinity or nan would be non-zero).
+	Base* pz  = partial + i_z * nc_partial;
+	bool skip(true);
+	for(size_t i_d = 0; i_d <= d; i_d++)
+		skip &= IdenticalZero(pz[i_d]);
+	if( skip )
+		return;
 
 	// convert from final result to first result
 	i_z -= 4; // 4 = NumRes(ErfOp) - 1;
@@ -379,12 +388,12 @@ inline void reverse_erf_op(
 	while(j)
 	{	pz_4[j] /= Base(j);
 		for(size_t k = 1; k <= j; k++)
-		{	px[k]     += pz_4[j] * z_3[j-k] * Base(k);
-			pz_3[j-k] += pz_4[j] * x[k] * Base(k);
+		{	px[k]     += azmul(pz_4[j], z_3[j-k]) * Base(k);
+			pz_3[j-k] += azmul(pz_4[j], x[k]) * Base(k);
 		}
 		j--;
 	}
-	px[0] += pz_4[0] * z_3[0];
+	px[0] += azmul(pz_4[0], z_3[0]);
 
 	// z_3 = (2 / sqrt(pi)) * exp( - x * x )
 	addr[0] = arg[2];  // 2 / sqrt(pi)
@@ -416,5 +425,5 @@ inline void reverse_erf_op(
 
 
 } // END_CPPAD_NAMESPACE
-# endif // CPPAD_COMPILER_HAS_ERF
+# endif // CPPAD_USE_CPLUSPLUS_2011
 # endif // CPPAD_ERF_OP_INCLUDED

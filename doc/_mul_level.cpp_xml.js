@@ -37,10 +37,11 @@ var list_down2 = [
 ];
 var list_down1 = [
 'mul_level.cpp.xml',
-'change_const.cpp.xml'
+'change_param.cpp.xml'
 ];
 var list_current0 = [
-'mul_level.cpp.xml#Purpose'
+'mul_level.cpp.xml#Purpose',
+'mul_level.cpp.xml#Source'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

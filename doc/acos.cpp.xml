@@ -6,7 +6,7 @@
 <title>The AD acos Function: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The AD acos Function: Example and Test"/>
-<meta name="keywords" id="keywords" content=" the ad acos function: example and test Ad "/>
+<meta name="keywords" id="keywords" content=" the ad acos function: example and test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,8 +22,8 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="std_math_ad.xml" target="_top">Prev</a>
-</td><td><a href="asin.cpp.xml" target="_top">Next</a>
+<td><a href="acos.xml" target="_top">Prev</a>
+</td><td><a href="asin.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -40,64 +40,74 @@ A:active { color : purple }
 <option>CppAD</option>
 <option>AD</option>
 <option>ADValued</option>
-<option>std_math_ad</option>
-<option>Acos.cpp</option>
+<option>unary_standard_math</option>
+<option>acos</option>
+<option>acos.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>AD-&gt;</option>
-<option>ad_ctor</option>
-<option>ad_assign</option>
-<option>Convert</option>
-<option>ADValued</option>
-<option>BoolValued</option>
-<option>VecAD</option>
-<option>base_require</option>
-</select>
-</td>
-<td>
-<select onchange='choose_down2(this)'>
 <option>ADValued-&gt;</option>
 <option>Arithmetic</option>
-<option>std_math_ad</option>
-<option>MathOther</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
 <option>CondExp</option>
 <option>Discrete</option>
+<option>numeric_limits</option>
 <option>atomic</option>
 </select>
 </td>
 <td>
-<select onchange='choose_down1(this)'>
-<option>std_math_ad-&gt;</option>
-<option>Acos.cpp</option>
-<option>Asin.cpp</option>
-<option>atan.cpp</option>
-<option>cos.cpp</option>
-<option>cosh.cpp</option>
-<option>exp.cpp</option>
-<option>log.cpp</option>
-<option>log10.cpp</option>
-<option>sin.cpp</option>
-<option>sinh.cpp</option>
-<option>sqrt.cpp</option>
-<option>tan.cpp</option>
-<option>tanh.cpp</option>
+<select onchange='choose_down2(this)'>
+<option>unary_standard_math-&gt;</option>
+<option>acos</option>
+<option>asin</option>
+<option>atan</option>
+<option>cos</option>
+<option>cosh</option>
+<option>exp</option>
+<option>log</option>
+<option>log10</option>
+<option>sin</option>
+<option>sinh</option>
+<option>sqrt</option>
+<option>tan</option>
+<option>tanh</option>
+<option>abs</option>
+<option>acosh</option>
+<option>asinh</option>
+<option>atanh</option>
+<option>erf</option>
+<option>expm1</option>
+<option>log1p</option>
+<option>sign</option>
 </select>
 </td>
-<td>Acos.cpp</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>acos-&gt;</option>
+<option>acos.cpp</option>
+</select>
+</td>
+<td>acos.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
+
+
+
 <center><b><big><big>The AD acos Function: Example and Test</big></big></b></center>
 <code><font color="blue"><pre style='display:inline'> 
 
 # include &lt;cppad/cppad.hpp&gt;
 
-bool Acos(void)
+bool acos(void)
 {	bool ok = true;
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+
+	// 10 times machine epsilon
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
 
 	// domain space vector
 	size_t n  = 1;
@@ -111,37 +121,37 @@ bool Acos(void)
 	// a temporary value
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; cos_of_x0 = CppAD::cos(x[0]);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
 	y[0] = CppAD::acos(cos_of_x0);
 
 	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y); 
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
 
-	// check value 
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , x0,  1e-10 , 1e-10);
+	// check value
+	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , x0,  eps, eps);
 
 	// forward computation of first partial w.r.t. x[0]
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
 	dx[0] = 1.;
 	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 1., 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 1., eps, eps);
 
 	// reverse computation of derivative of y[0]
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
 	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
 	w[0]  = 1.;
 	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], 1., 1e-10, 1e-10);
+	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], 1., eps, eps);
 
 	// use a VecAD&lt;Base&gt;::reference object with acos
 	CppAD::VecAD&lt;double&gt; v(1);
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
 	v[zero] = cos_of_x0;
 	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; result = CppAD::acos(v[zero]);
-	ok     &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(result, x0, 1e-10, 1e-10);
+	ok     &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(result, x0, eps, eps);
 
 	return ok;
 }

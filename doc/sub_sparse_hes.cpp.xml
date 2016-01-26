@@ -1,0 +1,338 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Computing Sparse Hessian for a Subset of Variables</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Computing Sparse Hessian for a Subset of Variables"/>
+<meta name="keywords" id="keywords" content=" computing sparse hessian for a subset of variables purpose see also function example "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_sub_sparse_hes.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="sparse_hessian.cpp.xml" target="_top">Prev</a>
+</td><td><a href="sparse_sub_hes.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>Drivers</option>
+<option>sparse_hessian</option>
+<option>sub_sparse_hes.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>Independent</option>
+<option>FunConstruct</option>
+<option>Dependent</option>
+<option>abort_recording</option>
+<option>seq_property</option>
+<option>FunEval</option>
+<option>Drivers</option>
+<option>FunCheck</option>
+<option>optimize</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Drivers-&gt;</option>
+<option>Jacobian</option>
+<option>ForOne</option>
+<option>RevOne</option>
+<option>Hessian</option>
+<option>ForTwo</option>
+<option>RevTwo</option>
+<option>sparse_jacobian</option>
+<option>sparse_hessian</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>sparse_hessian-&gt;</option>
+<option>sparse_hessian.cpp</option>
+<option>sub_sparse_hes.cpp</option>
+<option>sparse_sub_hes.cpp</option>
+</select>
+</td>
+<td>sub_sparse_hes.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>See Also</option>
+<option>Function</option>
+<option>Subset</option>
+<option>Example</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+<center><b><big><big>Computing Sparse Hessian for a Subset of Variables</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This example uses
+<a href="mul_level.xml" target="_top"><span style='white-space: nowrap'>multiple&#xA0;levels&#xA0;of&#xA0;AD</span></a>
+
+to compute the Hessian for a subset of the variables
+without having to compute the sparsity pattern for the entire function.
+
+<br/>
+<br/>
+<b><big><a name="See Also" id="See Also">See Also</a></big></b>
+
+<br/>
+<a href="sparse_sub_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_sub_hes.cpp</span></a>
+, <a href="sparsity_sub.cpp.xml" target="_top"><span style='white-space: nowrap'>sparsity_sub.cpp</span></a>
+,
+
+<br/>
+<br/>
+<b><big><a name="Function" id="Function">Function</a></big></b>
+<br/>
+We consider the function
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">:</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mrow><mi mathvariant='italic'>nu</mi>
+</mrow>
+</msup>
+<mo stretchy="false">&#x000D7;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mrow><mi mathvariant='italic'>nv</mi>
+</mrow>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+</mrow></math>
+
+ defined by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>u</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>v</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><munderover><mo displaystyle='true' largeop='true'>&#x02211;</mo>
+<mrow><mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+</mrow>
+<mrow><mi mathvariant='italic'>nu</mi>
+<mn>-1</mn>
+</mrow>
+</munderover>
+<msubsup><mi mathvariant='italic'>u</mi>
+<mi mathvariant='italic'>j</mi>
+<mn>3</mn>
+</msubsup>
+</mrow><mo stretchy="true">)</mo></mrow>
+<mrow><mo stretchy="true">(</mo><mrow><munderover><mo displaystyle='true' largeop='true'>&#x02211;</mo>
+<mrow><mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+</mrow>
+<mrow><mi mathvariant='italic'>nv</mi>
+<mn>-1</mn>
+</mrow>
+</munderover>
+<msub><mi mathvariant='italic'>v</mi>
+<mi mathvariant='italic'>j</mi>
+</msub>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+<br/>
+<b><big><a name="Subset" id="Subset">Subset</a></big></b>
+<br/>
+Suppose that we are only interested computing the function
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>H</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>u</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>v</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>u</mi>
+</msub>
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>u</mi>
+</msub>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>u</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>v</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+where this Hessian is sparse.
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+The following code shows one way to compute this subset of the
+Hessian of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+</mrow></math>
+
+.
+<code><font color="blue">
+<pre style='display:inline'> 
+# include &lt;cppad/cppad.hpp&gt;
+
+namespace {
+	using CppAD::vector;
+	template &lt;class Scalar&gt;
+	Scalar f(const vector&lt;Scalar&gt;&amp; u,const vector&lt;Scalar&gt;&amp; v)
+	{	size_t i;
+		Scalar sum_v = Scalar(0);
+		for(i = 0; i &lt; v.size(); i++)
+			sum_v += v[i];
+		Scalar sum_cube_u = Scalar(0);
+		for(i = 0; i &lt; u.size(); i++)
+			sum_cube_u += u[i] * u[i] * u[i] / 6.0;
+		return sum_v * sum_cube_u;
+	}
+}
+
+bool sub_sparse_hes(void)
+{	bool ok = true;
+	using CppAD::AD;
+	typedef <a href="ad.xml" target="_top">AD</a>&lt;double&gt;   adouble;
+	typedef <a href="ad.xml" target="_top">AD</a>&lt;adouble&gt; a2double;
+	typedef vector&lt; std::set&lt;size_t&gt; &gt; pattern;
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+	size_t i, j;
+
+	// start recording with x = (u , v)
+	size_t nu = 10;
+	size_t nv = 5;
+	size_t n  = nu + nv;
+	vector&lt;adouble&gt; ax(n);
+	for(j = 0; j &lt; n; j++)
+		ax[j] = adouble(j + 2);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+
+	// extract u as independent variables
+	vector&lt;a2double&gt; a2u(nu);
+	for(j = 0; j &lt; nu; j++)
+		a2u[j] = a2double(j + 2);
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a2u);
+
+	// extract v as parameters
+	vector&lt;a2double&gt; a2v(nv);
+	for(j = 0; j &lt; nv; j++)
+		a2v[j] = ax[nu+j];
+
+	// record g(u)
+	vector&lt;a2double&gt; a2y(1);
+	a2y[0] = f(a2u, a2v);
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;adouble&gt; g;
+	g.Dependent(a2u, a2y);
+
+	// compue sparsity pattern for Hessian of g(u)
+	pattern r(nu), s(1);
+	for(j = 0; j &lt; nu; j++)
+		r[j].insert(j);
+	g.ForSparseJac(nu, r);
+	s[0].insert(0);
+	pattern p = g.RevSparseHes(nu, s);
+
+	// Row and column indices for non-zeros in lower triangle of Hessian
+	vector&lt;size_t&gt; row, col;
+	for(i = 0; i &lt; nu; i++)
+	{	std::set&lt;size_t&gt;::const_iterator itr;
+		for(itr = p[i].begin(); itr != p[i].end(); itr++)
+		{	j = *itr;
+			if( j &lt;= i )
+			{	row.push_back(i);
+				col.push_back(j);
+			}
+		}
+	}
+	size_t K = row.size();
+	CppAD::sparse_hessian_work work;
+	vector&lt;adouble&gt; au(nu), ahes(K), aw(1);
+	aw[0] = 1.0;
+	for(j = 0; j &lt; nu; j++)
+		au[j] = ax[j];
+	size_t n_sweep = g.SparseHessian(au, aw, p, row, col, ahes, work);
+
+	// The Hessian w.r.t u is diagonal
+	ok &amp;= n_sweep == 1;
+
+	// record H(u, v) = Hessian of f w.r.t u
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; H(ax, ahes);
+
+	// remove unecessary operations
+	H.optimize();
+
+	// Now evaluate the Hessian at a particular value for u, v
+	vector&lt;double&gt; u(nu), v(nv), x(n);
+	for(j = 0; j &lt; n; j++)
+		x[j] = double(j + 2);
+	vector&lt;double&gt; hes = H.<a href="forward.xml" target="_top">Forward</a>(0, x);
+
+	// Now check the Hessian
+	double sum_v = 0.0;
+	for(j = 0; j &lt; nv; j++)
+		sum_v += x[nu + j];
+	for(size_t k = 0; k &lt; K; k++)
+	{	i     = row[k];
+		j     = col[k];
+		ok   &amp;= i == j;
+		double check = sum_v * x[i];
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(hes[k], check, eps, eps);
+	}
+	return ok;
+}
+</pre>
+
+</font></code>
+
+
+<hr/>Input File: example/sub_sparse_hes.cpp
+
+</body>
+</html>

@@ -38,7 +38,7 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>utility</option>
 <option>Rosen34</option>
 <option>rosen_34.cpp</option>
 </select>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -61,7 +61,7 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>library-&gt;</option>
+<option>utility-&gt;</option>
 <option>ErrorHandler</option>
 <option>NearEqual</option>
 <option>speed_test</option>
@@ -85,9 +85,7 @@ A:active { color : purple }
 <option>CppAD_vector</option>
 <option>thread_alloc</option>
 <option>index_sort</option>
-<option>BenderQuad</option>
-<option>opt_val_hes</option>
-<option>LuRatio</option>
+<option>to_string</option>
 </select>
 </td>
 <td>
@@ -103,7 +101,7 @@ A:active { color : purple }
 
 
 <center><b><big><big>Rosen34: Example and Test</big></big></b></center>
-Define 
+Define
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>X</mi>
@@ -242,16 +240,16 @@ namespace {
 	class Fun {
 	public:
 		// constructor
-		Fun(bool use_x_) : use_x(use_x_) 
+		Fun(bool use_x_) : use_x(use_x_)
 		{ }
 
 		// compute f(t, x) both for double and <a href="ad.xml" target="_top">AD</a>&lt;double&gt;
 		template &lt;typename Scalar&gt;
 		void Ode(
-			const Scalar                    &amp;t, 
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) &amp;x, 
+			const Scalar                    &amp;t,
+			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) &amp;x,
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar)       &amp;f)
-		{	size_t n  = x.size();	
+		{	size_t n  = x.size();
 			Scalar ti(1);
 			f[0]   = Scalar(1);
 			size_t i;
@@ -267,12 +265,12 @@ namespace {
 
 		// compute partial of f(t, x) w.r.t. t using AD
 		void Ode_ind(
-			const double                    &amp;t, 
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x, 
+			const double                    &amp;t,
+			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x,
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       &amp;f_t)
 		{	using namespace CppAD;
 
-			size_t n  = x.size();	
+			size_t n  = x.size();
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) T(1);
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) F(n);
@@ -300,12 +298,12 @@ namespace {
 
 		// compute partial of f(t, x) w.r.t. x using AD
 		void Ode_dep(
-			const double                    &amp;t, 
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x, 
+			const double                    &amp;t,
+			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x,
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       &amp;f_x)
 		{	using namespace CppAD;
 
-			size_t n  = x.size();	
+			size_t n  = x.size();
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) T(1);
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
 			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) F(n);
@@ -352,20 +350,20 @@ bool Rosen34(void)
 	size_t  n = 4;      // number components in X(t) and order of method
 	size_t  M = 2;      // number of Rosen34 steps in [ti, tf]
 	double ti = 0.;     // initial time
-	double tf = 2.;     // final time 
+	double tf = 2.;     // final time
 
 	// xi = X(0)
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xi(n); 
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xi(n);
 	for(i = 0; i &lt;n; i++)
 		xi[i] = 0.;
 
 	size_t use_x;
 	for( use_x = 0; use_x &lt; 2; use_x++)
 	{	// function object depends on value of use_x
-		Fun F(use_x &gt; 0); 
+		Fun F(use_x &gt; 0);
 
 		// compute Rosen34 approximation for X(tf)
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xf(n), e(n); 
+		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xf(n), e(n);
 		xf = CppAD::Rosen34(F, M, ti, tf, xi, e);
 
 		double check = tf;

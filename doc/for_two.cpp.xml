@@ -90,7 +90,7 @@ A:active { color : purple }
 namespace { // -----------------------------------------------------
 // define the template function in empty namespace
 // bool ForTwoCases&lt;VectorBase, VectorSize_t&gt;(void)
-template &lt;class VectorBase, class VectorSize_t&gt; 
+template &lt;class VectorBase, class VectorSize_t&gt;
 bool ForTwoCases()
 {	bool ok = true;
 	using CppAD::AD;
@@ -126,7 +126,7 @@ bool ForTwoCases()
 	x[0] = 2.;
 	x[1] = 1.;
 
-	// set j and k to compute specific second partials of y 
+	// set j and k to compute specific second partials of y
 	size_t p = 2;
 	VectorSize_t j(p);
 	VectorSize_t k(p);
@@ -136,11 +136,11 @@ bool ForTwoCases()
 	// compute the second partials
 	VectorBase ddy(m * p);
 	ddy = f.ForTwo(x, j, k);
-	/* 
+	/*
 	partial of y w.r.t x[0] is
 	[ 2 * x[0] * exp(x[1]) ]
 	[ 2 * x[0] * sin(x[1]) ]
-	[ 2 * x[0] * cos(x[1]) ] 
+	[ 2 * x[0] * cos(x[1]) ]
 	*/
 	// second partial of y w.r.t x[0] and x[1]
 	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*exp(x[1]), ddy[0*p+0], 1e-10, 1e-10 );
@@ -154,7 +154,7 @@ bool ForTwoCases()
 
 	return ok;
 }
-} // End empty namespace 
+} // End empty namespace
 # include &lt;vector&gt;
 # include &lt;valarray&gt;
 bool ForTwo(void)

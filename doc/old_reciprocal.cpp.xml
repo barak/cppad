@@ -6,7 +6,7 @@
 <title>Old Atomic Operation Reciprocal: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Old Atomic Operation Reciprocal: Example and Test"/>
-<meta name="keywords" id="keywords" content=" old atomic operation reciprocal: example and test user reciprocal deprecated theory "/>
+<meta name="keywords" id="keywords" content=" old atomic operation reciprocal: example and test deprecated 2013-05-27 theory "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -51,11 +51,12 @@ A:active { color : purple }
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
-<option>Bugs</option>
-<option>WishList</option>
+<option>wish_list</option>
 <option>whats_new</option>
 <option>deprecated</option>
 <option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
 <option>License</option>
 </select>
 </td>
@@ -64,6 +65,7 @@ A:active { color : purple }
 <option>deprecated-&gt;</option>
 <option>include_deprecated</option>
 <option>FunDeprecated</option>
+<option>CompareChange</option>
 <option>omp_max_thread</option>
 <option>TrackNewDel</option>
 <option>omp_alloc</option>
@@ -72,6 +74,7 @@ A:active { color : purple }
 <option>test_vector</option>
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
+<option>zdouble</option>
 </select>
 </td>
 <td>
@@ -88,7 +91,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Deprecated</option>
+<option>Deprecated 2013-05-27</option>
 <option>Theory</option>
 </select>
 </td>
@@ -96,7 +99,7 @@ A:active { color : purple }
 
 <center><b><big><big>Old Atomic Operation Reciprocal: Example and Test</big></big></b></center>
 <br/>
-<b><big><a name="Deprecated" id="Deprecated">Deprecated</a></big></b>
+<b><big><a name="Deprecated 2013-05-27" id="Deprecated 2013-05-27">Deprecated 2013-05-27</a></big></b>
 <br/>
 This example has been deprecated;
 see <a href="atomic_reciprocal.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_reciprocal.cpp</span></a>
@@ -106,7 +109,7 @@ see <a href="atomic_reciprocal.cpp.xml" target="_top"><span style='white-space: 
 <br/>
 <b><big><a name="Theory" id="Theory">Theory</a></big></b>
 <br/>
-The example below defines the user atomic function 
+The example below defines the user atomic function
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -155,7 +158,7 @@ The example below defines the user atomic function
 <pre style='display:inline'> 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { // Begin empty namespace 
+namespace { // Begin empty namespace
 	using CppAD::vector;
 	// ----------------------------------------------------------------------
 	// a utility to compute the union of two sets.
@@ -190,7 +193,7 @@ namespace { // Begin empty namespace
 		assert( n == 1 );
 		assert( m == 1 );
 		assert( k == 0 || vx.size() == 0 );
-		bool ok = false;	
+		bool ok = false;
 		double f, fp, fpp;
 
 		// Must always define the case k = 0.
@@ -211,7 +214,7 @@ namespace { // Begin empty namespace
 			// y^1 = f'( x^0 ) x^1
 			f     = ty[0];
 			fp    = - f / tx[0];
-			ty[1] = fp * tx[1]; 
+			ty[1] = fp * tx[1];
 			ok    = true;
 			break;
 
@@ -245,7 +248,7 @@ namespace { // Begin empty namespace
 		assert( id == 0 );
 		assert( n == 1 );
 		assert( m == 1 );
-		bool ok = false;	
+		bool ok = false;
 
 		double f, fp, fpp, fppp;
 		switch(k)
@@ -282,7 +285,7 @@ namespace { // Begin empty namespace
 			fppp   = - 3.0 * fpp / tx[0];
 			px[2]  = py[2] * fp;
 			px[1]  = py[2] * fpp * tx[1];
-			px[0]  = py[2] * tx[1] * fppp * tx[1] / 2.0 + fpp * tx[2]; 
+			px[0]  = py[2] * tx[1] * fppp * tx[1] / 2.0 + fpp * tx[2];
 			// reverse: F^1 ( tx ) = y^1 = f'( x^0 ) x^1
 			px[1] += py[1] * fp;
 			px[0] += py[1] * fpp * tx[1];
@@ -297,7 +300,7 @@ namespace { // Begin empty namespace
 	// ----------------------------------------------------------------------
 	// forward Jacobian sparsity routine called by CppAD
 	bool reciprocal_for_jac_sparse(
-		size_t                               id ,             
+		size_t                               id ,
 		size_t                                n ,
 		size_t                                m ,
 		size_t                                p ,
@@ -311,12 +314,12 @@ namespace { // Begin empty namespace
 		// sparsity for S(x) = f'(x) * R is same as sparsity for R
 		s[0] = r[0];
 
-		return true; 
+		return true;
 	}
 	// ----------------------------------------------------------------------
 	// reverse Jacobian sparsity routine called by CppAD
 	bool reciprocal_rev_jac_sparse(
-		size_t                               id ,             
+		size_t                               id ,
 		size_t                                n ,
 		size_t                                m ,
 		size_t                                p ,
@@ -331,12 +334,12 @@ namespace { // Begin empty namespace
 		for(size_t q = 0; q &lt; p; q++)
 			r[q] = s[q];
 
-		return true; 
+		return true;
 	}
 	// ----------------------------------------------------------------------
 	// reverse Hessian sparsity routine called by CppAD
 	bool reciprocal_rev_hes_sparse(
-		size_t                               id ,             
+		size_t                               id ,
 		size_t                                n ,
 		size_t                                m ,
 		size_t                                p ,
@@ -352,14 +355,14 @@ namespace { // Begin empty namespace
 
 		// sparsity for T(x) = S(x) * f'(x) is same as sparsity for S
 		t[0] = s[0];
-	
-		// V(x) = [ f'(x)^T * g''(y) * f'(x) + g'(y) * f''(x) ] * R 
+
+		// V(x) = [ f'(x)^T * g''(y) * f'(x) + g'(y) * f''(x) ] * R
 		// U(x) = g''(y) * f'(x) * R
 		// S(x) = g'(y)
-		
+
 		// back propagate the sparsity for U because derivative of
 		// reciprocal may be non-zero
-		v[0] = u[0]; 
+		v[0] = u[0];
 
 		// convert forward Jacobian sparsity to Hessian sparsity
 		// because second derivative of reciprocal may be non-zero
@@ -372,14 +375,14 @@ namespace { // Begin empty namespace
 	// ---------------------------------------------------------------------
 	// Declare the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; routine reciprocal(id, ax, ay)
 	CPPAD_USER_ATOMIC(
-		reciprocal                 , 
+		reciprocal                 ,
 		CppAD::vector              ,
-		double                     , 
-		reciprocal_forward         , 
+		double                     ,
+		reciprocal_forward         ,
 		reciprocal_reverse         ,
 		reciprocal_for_jac_sparse  ,
 		reciprocal_rev_jac_sparse  ,
-		reciprocal_rev_hes_sparse  
+		reciprocal_rev_hes_sparse
 	)
 } // End empty namespace
 
@@ -401,16 +404,16 @@ bool old_reciprocal(void)
 	// declare independent variables and start tape recording
 	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// range space vector 
+	// range space vector
 	size_t m = 1;
 	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
 
-	// call user function and store reciprocal(x) in au[0] 
+	// call user function and store reciprocal(x) in au[0]
 	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(m);
 	size_t id = 0;           // not used
 	reciprocal(id, ax, au);	// u = 1 / x
 
-	// call user function and store reciprocal(u) in ay[0] 
+	// call user function and store reciprocal(u) in ay[0]
 	reciprocal(id, au, ay);	// y = 1 / u = x
 
 	// create f: x -&gt; y and stop tape recording
@@ -420,7 +423,7 @@ bool old_reciprocal(void)
 	// --------------------------------------------------------------------
 	// Check forward mode results
 	//
-	// check function value 
+	// check function value
 	double check = x0;
 	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
 
@@ -449,7 +452,7 @@ bool old_reciprocal(void)
 	// --------------------------------------------------------------------
 	// Check reverse mode results
 	//
-	// third order reverse mode 
+	// third order reverse mode
 	q     = 3;
 	vector&lt;double&gt; w(m), dw(n * q);
 	w[0]  = 1.;
@@ -466,7 +469,7 @@ bool old_reciprocal(void)
 	CppAD::vectorBool r1(n * p), s1(m * p);
 	r1[0] = true;          // compute sparsity pattern for x[0]
 	s1    = f.ForSparseJac(p, r1);
-	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]  
+	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]
 
 	// --------------------------------------------------------------------
 	// reverse mode sparstiy pattern
@@ -474,18 +477,18 @@ bool old_reciprocal(void)
 	CppAD::vectorBool s2(q * m), r2(q * n);
 	s2[0] = true;          // compute sparsity pattern for f[0]
 	r2    = f.RevSparseJac(q, s2);
-	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]  
+	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]
 
 	// --------------------------------------------------------------------
-	// Hessian sparsity (using previous ForSparseJac call) 
+	// Hessian sparsity (using previous ForSparseJac call)
 	CppAD::vectorBool s3(m), h(p * n);
 	s3[0] = true;        // compute sparsity pattern for f[0]
 	h     = f.RevSparseHes(p, s3);
 	ok  &amp;= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
 
 	// -----------------------------------------------------------------
-	// Free all temporary work space associated with old_atomic objects. 
-	// (If there are future calls to user atomic functions, they will 
+	// Free all temporary work space associated with old_atomic objects.
+	// (If there are future calls to user atomic functions, they will
 	// create new temporary work space.)
 	CppAD::user_atomic&lt;double&gt;::clear();
 
@@ -496,7 +499,7 @@ bool old_reciprocal(void)
 </font></code>
 
 
-<hr/>Input File: example/atomic/old_reciprocal.cpp
+<hr/>Input File: test_more/old_reciprocal.cpp
 
 </body>
 </html>

@@ -6,7 +6,7 @@
 <title>Including the ColPack Sparsity Calculations</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Including the ColPack Sparsity Calculations"/>
-<meta name="keywords" id="keywords" content=" including the colpack sparsity calculations purpose colpack_prefix prefix cppad_colpack.cpp example get_colpack get "/>
+<meta name="keywords" id="keywords" content=" including the colpack sparsity calculations prefix get purpose colpack_prefix cppad_lib example get_colpack "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="get_adolc.sh.xml" target="_top">Prev</a>
-</td><td><a href="colpack.cpp.xml" target="_top">Next</a>
+</td><td><a href="colpack_jac.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -52,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -66,7 +66,7 @@ A:active { color : purple }
 <option>cmake</option>
 <option>cmake_check</option>
 <option>pkgconfig</option>
-<option>InstallUnix</option>
+<option>auto_tools</option>
 </select>
 </td>
 <td>
@@ -84,7 +84,8 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down0(this)'>
 <option>colpack_prefix-&gt;</option>
-<option>colpack.cpp</option>
+<option>colpack_jac.cpp</option>
+<option>colpack_hes.cpp</option>
 <option>get_colpack.sh</option>
 </select>
 </td>
@@ -93,7 +94,7 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Purpose</option>
 <option>colpack_prefix</option>
-<option>cppad_colpack.cpp</option>
+<option>cppad_lib</option>
 <option>Example</option>
 <option>get_colpack</option>
 </select>
@@ -109,21 +110,19 @@ A:active { color : purple }
 <br/>
 If you specify a 
 <code><i><font color="black"><span style='white-space: nowrap'>colpack_prefix</span></font></i></code>
- on the 
+ on the
 <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
  line,
 the CppAD <a href="sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
  calculations use the
-<a href="http://http://cscapes.cs.purdue.edu/coloringpage/" target="_top"><span style='white-space: nowrap'>ColPack</span></a>
+<a href="http://cscapes.cs.purdue.edu/dox/ColPack/html" target="_top"><span style='white-space: nowrap'>ColPack</span></a>
  package.
 
 <br/>
 <br/>
 <b><big><a name="colpack_prefix" id="colpack_prefix">colpack_prefix</a></big></b>
-
-
 <br/>
-If ColPack is installed on your system, you can 
+If ColPack is installed on your system, you can
 specify a value for its install 
 <code><i><font color="black"><span style='white-space: nowrap'>colpack_prefix</span></font></i></code>
  on the
@@ -145,51 +144,33 @@ is a valid way to reference to the include file <code><font color="blue">ColPack
 
 <br/>
 <br/>
-<b><big><a name="cppad_colpack.cpp" id="cppad_colpack.cpp">cppad_colpack.cpp</a></big></b>
-
+<b><big><a name="cppad_lib" id="cppad_lib">cppad_lib</a></big></b>
 <br/>
 The ColPack header files has a
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;using&#xA0;namespace&#xA0;std<br/>
 </span></font></code>
-at the global level. 
+at the global level.
 For this reason, CppAD does not include these files.
-It is therefore necessary to compile and link the short file
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>/</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad/cppad_colpack.cpp<br/>
-</span></font></code>
-where 
-<code><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i></code>
- is the 
-<a href="cmake.xml#cmake_install_datadir" target="_top"><span style='white-space: nowrap'>cmake_install_datadir</span></a>
- and
-where 
-<code><i><font color="black"><span style='white-space: nowrap'>prefix</span></font></i></code>
- is such that <code><font color="blue">cppad.hpp</font></code> was installed in
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>prefix</span></font></i><font color="blue"><span style='white-space: nowrap'>/include/cppad/cppad.hpp<br/>
-</span></font></code>
-Hopefully, future versions of ColPack will not have this problem
-and it will no longer be necessary to do this.
+It is therefore necessary to link the object library <code><font color="blue">cppad_lib</font></code>
+when using ColPack.
 
 
 <br/>
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
 <br/>
-The file <a href="colpack.cpp.xml" target="_top"><span style='white-space: nowrap'>colpack.cpp</span></a>
- contains an example and test of using
-ColPack to compute the coloring for sparse Jacobians.
+The file <a href="colpack_jac.cpp.xml" target="_top"><span style='white-space: nowrap'>colpack_jac.cpp</span></a>
+ (<a href="colpack_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>colpack_hes.cpp</span></a>
+)
+contains an example and test of using ColPack to compute the coloring for
+sparse Jacobians (Hessians).
 It returns true, if it succeeds and false otherwise.
 
 <br/>
 <br/>
 <b><big><a name="get_colpack" id="get_colpack">get_colpack</a></big></b>
-
-
 <br/>
 If you are using Unix, you can download and install
 a copy of ColPack using <a href="get_colpack.sh.xml" target="_top"><span style='white-space: nowrap'>get_colpack.sh</span></a>

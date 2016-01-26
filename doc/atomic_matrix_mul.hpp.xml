@@ -68,6 +68,7 @@ A:active { color : purple }
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
+<option>atomic_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
 <option>atomic_hes_sparse.cpp</option>
 <option>atomic_mat_mul.cpp</option>
@@ -126,7 +127,7 @@ void my_union(
 	result.swap(temp);
 }
 //
-// matrix result = left * right 
+// matrix result = left * right
 class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 </pre></font></code>
 
@@ -156,9 +157,9 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 	nr_result_(nr_result) ,
 	n_middle_(n_middle)    ,
 	nc_result_(nc_result) ,
-	n_( nr_result * n_middle + n_middle * nc_result ) 
+	n_( nr_result * n_middle + n_middle * nc_result )
 # ifndef NDEBUG
-	, m_( n_middle * nc_result ) 
+	, m_( n_middle * nc_result )
 # endif
 	{ }
 	private:
@@ -174,7 +175,7 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 		size_t i  , // left matrix row index
 		size_t j  , // left matrix column index
 		size_t k  , // Taylor coeffocient order
-		size_t nk ) // number of Taylor coefficients in tx 
+		size_t nk ) // number of Taylor coefficients in tx
 	{	assert( i &lt; nr_result_ );
 		assert( j &lt; n_middle_ );
 		return (i * n_middle_ + j) * nk + k;
@@ -191,11 +192,11 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 		size_t i  , // right matrix row index
 		size_t j  , // right matrix column index
 		size_t k  , // Taylor coeffocient order
-		size_t nk ) // number of Taylor coefficients in tx 
+		size_t nk ) // number of Taylor coefficients in tx
 	{	assert( i &lt; n_middle_  );
 		assert( j &lt; nc_result_ );
 		size_t offset = nr_result_ * n_middle_;
-		return (offset + i * nc_result_ + j) * nk + k; 
+		return (offset + i * nc_result_ + j) * nk + k;
 	}
 </pre></font></code>
 
@@ -227,7 +228,7 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 		size_t                 k_left  , // order for left coefficients
 		size_t                 k_right , // order for right coefficients
 		const vector&lt;double&gt;&amp;  tx      , // domain space Taylor coefficients
-		      vector&lt;double&gt;&amp;  ty      ) // range space Taylor coefficients 
+		      vector&lt;double&gt;&amp;  ty      ) // range space Taylor coefficients
 	{	size_t nk       = tx.size() / n_;
 		assert( nk == ty.size() / m_ );
 		//
@@ -260,9 +261,9 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 		size_t                 k_left  , // order for left coefficients
 		size_t                 k_right , // order for right coefficients
 		const vector&lt;double&gt;&amp;  tx      , // domain space Taylor coefficients
-		const vector&lt;double&gt;&amp;  ty      , // range space Taylor coefficients 
+		const vector&lt;double&gt;&amp;  ty      , // range space Taylor coefficients
 		      vector&lt;double&gt;&amp;  px      , // partials w.r.t. tx
-		const vector&lt;double&gt;&amp;  py      ) // partials w.r.t. ty 
+		const vector&lt;double&gt;&amp;  py      ) // partials w.r.t. ty
 	{	size_t nk       = tx.size() / n_;
 		assert( nk == ty.size() / m_ );
 		assert( tx.size() == px.size() );
@@ -322,7 +323,7 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 						bool  nz_right = vx[i_right]|(tx[i_right] != 0.);
 						// if not multiplying by the constant zero
 						if( nz_left &amp; nz_right )
-								var |= vx[i_left] | vx[i_right];
+								var |= bool(vx[i_left]) | bool(vx[i_right]);
 					}
 					size_t i_result = result(i, j, k, nk);
 					vy[i_result] = var;
@@ -406,13 +407,14 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 		{	for(size_t j = 0; j &lt; nc_result_; j++)
 			{	size_t i_result = result(i, j, k, nk);
 				for(p = 0; p &lt; q; p++)
-					s[i_result * q + p] = false; 
+					s[i_result * q + p] = false;
 				for(size_t ell = 0; ell &lt; n_middle_; ell++)
 				{	size_t i_left  = left(i, ell, k, nk);
 					size_t i_right = right(ell, j, k, nk);
 					for(p = 0; p &lt; q; p++)
-					{	s[i_result * q + p] |= r[i_left * q + p ]; 
-						s[i_result * q + p] |= r[i_right * q + p ]; 
+					{	// cast avoids Microsoft warning (should not be needed)
+						s[i_result * q + p] |= bool( r[i_left * q + p ] );
+						s[i_result * q + p] |= bool( r[i_right * q + p ] );
 					}
 				}
 			}
@@ -476,8 +478,8 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 				{	size_t i_left  = left(i, ell, k, nk);
 					size_t i_right = right(ell, j, k, nk);
 					for(p = 0; p &lt; q; p++)
-					{	st[i_left * q + p] |= rt[i_result * q + p];
-						st[i_right* q + p] |= rt[i_result * q + p];
+					{	st[i_left * q + p] |= bool( rt[i_result * q + p] );
+						st[i_right* q + p] |= bool( rt[i_result * q + p] );
 					}
 				}
 			}
@@ -529,7 +531,7 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
 		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
 		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     v )
-	{	size_t n = vx.size();	
+	{	size_t n = vx.size();
 		assert( t.size() == n );
 		assert( r.size() == n );
 		assert( v.size() == n );
@@ -555,10 +557,10 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 					//
 					// Compute sparsity for T(x) = S(x) * f'(x).
 					// We need not use vx with f'(x) back propagation.
-					t[i_left]  |= s[i_result];
-					t[i_right] |= s[i_result];
+					t[i_left]  |= bool( s[i_result] );
+					t[i_right] |= bool( s[i_result] );
 
-					// V(x) = f'(x)^T * U(x) +  S(x) * f''(x) * R 
+					// V(x) = f'(x)^T * U(x) +  S(x) * f''(x) * R
 					// U(x) = g''(y) * f'(x) * R
 					// S(x) = g'(y)
 
@@ -613,26 +615,26 @@ class matrix_mul : public CppAD::atomic_base&lt;double&gt; {
 					//
 					// Compute sparsity for T(x) = S(x) * f'(x).
 					// We so not need to use vx with f'(x) propagation.
-					t[i_left]  |= s[i_result];
-					t[i_right] |= s[i_result];
+					t[i_left]  |= bool( s[i_result] );
+					t[i_right] |= bool( s[i_result] );
 
-					// V(x) = f'(x)^T * U(x) +  S(x) * f''(x) * R 
+					// V(x) = f'(x)^T * U(x) +  S(x) * f''(x) * R
 					// U(x) = g''(y) * f'(x) * R
 					// S(x) = g'(y)
 
 					// back propagate f'(x)^T * U(x)
 					// (no need to use vx with f'(x) propogation)
 					for(p = 0; p &lt; q; p++)
-					{	v[ i_left  * q + p] |= u[ i_result * q + p];
-						v[ i_right * q + p] |= u[ i_result * q + p];
+					{	v[ i_left  * q + p] |= bool( u[ i_result * q + p] );
+						v[ i_right * q + p] |= bool( u[ i_result * q + p] );
 					}
 
 					// back propagate S(x) * f''(x) * R
 					// (here is where we must check for cross terms)
 					if( s[i_result] &amp; vx[i_left] &amp; vx[i_right] )
 					{	for(p = 0; p &lt; q; p++)
-						{	v[i_left * q + p]  |= r[i_right * q + p];
-							v[i_right * q + p] |= r[i_left * q + p];
+						{	v[i_left * q + p]  |= bool( r[i_right * q + p] );
+							v[i_right * q + p] |= bool( r[i_left * q + p] );
 						}
 					}
 				}

@@ -6,7 +6,7 @@
 <title>Using Adolc with Multiple Levels of Taping: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Using Adolc with Multiple Levels of Taping: Example and Test"/>
-<meta name="keywords" id="keywords" content=" using adolc with multiple levels of taping: example and test Adolc level purpose memory management configuration requirement "/>
+<meta name="keywords" id="keywords" content=" using adolc with multiple levels of taping: example and test purpose memory management configuration requirement source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -53,6 +53,8 @@ A:active { color : purple }
 <option>base_identical</option>
 <option>base_ordered</option>
 <option>base_std_math</option>
+<option>base_limits</option>
+<option>base_to_string</option>
 <option>base_example</option>
 </select>
 </td>
@@ -80,6 +82,7 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>Memory Management</option>
 <option>Configuration Requirement</option>
+<option>Source</option>
 </select>
 </td>
 </tr></table><br/>
@@ -104,7 +107,7 @@ the compute values of the function
 </mstyle></mrow>
 </mrow></math>
 
- where 
+ where
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>f</mi>
@@ -251,10 +254,10 @@ The example <a href="mul_level.cpp.xml" target="_top"><span style='white-space: 
 <br/>
 <b><big><a name="Memory Management" id="Memory Management">Memory Management</a></big></b>
 <br/>
-Adolc uses raw memory arrays that depend on the number of 
+Adolc uses raw memory arrays that depend on the number of
 dependent and independent variables.
-The memory management utility <a href="omp_alloc.xml" target="_top"><span style='white-space: nowrap'>omp_alloc</span></a>
- 
+The memory management utility <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
+
 is used to manage this memory allocation.
 
 <br/>
@@ -262,27 +265,32 @@ is used to manage this memory allocation.
 <b><big><a name="Configuration Requirement" id="Configuration Requirement">Configuration Requirement</a></big></b>
 <br/>
 This example will be compiled and tested provided that
-the value <a href="ipopt_prefix.xml" target="_top"><span style='white-space: nowrap'>ipopt_prefix</span></a>
- is specified on the 
+the value <a href="adolc_prefix.xml" target="_top"><span style='white-space: nowrap'>adolc_prefix</span></a>
+ is specified on the
 <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
  command line.
 
+<br/>
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+
 <code><font color="blue">
+<br/>
 <pre style='display:inline'> 
 # include &lt;adolc/adouble.h&gt;
 # include &lt;adolc/taping.h&gt;
 # include &lt;adolc/interfaces.h&gt;
 
-// adouble definitions not in Adolc distribution and 
+// adouble definitions not in Adolc distribution and
 // required in order to use CppAD::<a href="ad.xml" target="_top">AD</a>&lt;adouble&gt;
 # include &lt;cppad/example/base_adolc.hpp&gt;
 
 # include &lt;cppad/cppad.hpp&gt;
 
-namespace { 
+namespace {
 	// f(x) = |x|^2 / 2 = .5 * ( x[0]^2 + ... + x[n-1]^2 )
 	template &lt;class Type&gt;
-	Type f(CPPAD_TESTVECTOR(Type) &amp;x)
+	Type f(const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Type)&amp; x)
 	{	Type sum;
 
 		sum  = 0.;
@@ -291,57 +299,60 @@ namespace {
 			sum += x[i] * x[i];
 
 		return .5 * sum;
-	} 
+	}
 }
 
-bool mul_level_adolc(void) 
+bool mul_level_adolc(void)
 {	bool ok = true;                // initialize test result
-	using CppAD::omp_alloc;        // The CppAD memory allocator
+	using CppAD::thread_alloc;        // The CppAD memory allocator
 
-	typedef adouble             ADdouble;  // for first level of taping
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;ADdouble&gt; ADDdouble; // for second level of taping
+	typedef adouble           a1type;  // for first level of taping
+	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;a1type&gt; a2type; // for second level of taping
 	size_t n = 5;                          // number independent variables
 	size_t j;
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       x(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADdouble)   a_x(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADDdouble) aa_x(n);
+	// 10 times machine epsilon
+	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1x(n);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2x(n);
 
 	// Values for the independent variables while taping the function f(x)
 	for(j = 0; j &lt; n; j++)
-		aa_x[j] = double(j);
+		a2x[j] = double(j);
 	// Declare the independent variable for taping f(x)
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(aa_x); 
+	CppAD::<a href="independent.xml" target="_top">Independent</a>(a2x);
 
 	// Use <a href="ad.xml" target="_top">AD</a>&lt;adouble&gt; to tape the evaluation of f(x)
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADDdouble) aa_f(1); 
-	aa_f[0] = f(aa_x); 
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2y(1);
+	a2y[0] = f(a2x);
 
-	// Declare a_F as the corresponding <a href="funconstruct.xml" target="_top">ADFun</a>&lt;adouble&gt; function f(x)
+	// Declare a1f as the corresponding <a href="funconstruct.xml" target="_top">ADFun</a>&lt;adouble&gt; function f(x)
 	// (make sure we do not run zero order forward during constructor)
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;ADdouble&gt; a_F;
-	a_F.Dependent(aa_x, aa_f);
+	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;a1type&gt; a1f;
+	a1f.Dependent(a2x, a2y);
 
 	// Value of the independent variables whitle taping f'(x) * v
-	int tag = 0; 
+	int tag = 0;
 	int keep = 1;
 	trace_on(tag, keep);
 	for(j = 0; j &lt; n; j++)
-		a_x[j] &lt;&lt;= double(j);
+		a1x[j] &lt;&lt;= double(j);
 
 	// set the argument value x for computing f'(x) * v
-	a_F.<a href="forward.xml" target="_top">Forward</a>(0, a_x);
+	a1f.<a href="forward.xml" target="_top">Forward</a>(0, a1x);
 
 	// compute f'(x) * v
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADdouble) a_v(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADdouble) a_df(1);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1v(n);
+	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1df(1);
 	for(j = 0; j &lt; n; j++)
-		a_v[j] = double(n - j);
-	a_df = a_F.<a href="forward.xml" target="_top">Forward</a>(1, a_v); 
+		a1v[j] = double(n - j);
+	a1df = a1f.<a href="forward.xml" target="_top">Forward</a>(1, a1v);
 
 	// declare Adolc function corresponding to f'(x) * v
-	double df; 
-	a_df[0] &gt;&gt;= df;
+	double df;
+	a1df[0] &gt;&gt;= df;
 	trace_off();
 
 	// compute the d/dx of f'(x) * v = f''(x) * v
@@ -349,21 +360,22 @@ bool mul_level_adolc(void)
 
 	// w = new double[capacity] where capacity &gt;= m
 	size_t capacity;
-	double* w  = omp_alloc::create_array&lt;double&gt;(m, capacity);
-	// w = new double[capacity] where capacity &gt;= n
-	double* dw = omp_alloc::create_array&lt;double&gt;(n, capacity);
+	double* w  = thread_alloc::create_array&lt;double&gt;(m, capacity);
+
+	// dw = new double[capacity] where capacity &gt;= n
+	double* dw = thread_alloc::create_array&lt;double&gt;(n, capacity);
 
 	w[0]  = 1.;
 	fos_reverse(tag, int(m), int(n), w, dw);
 
 	for(j = 0; j &lt; n; j++)
-	{	double vj = a_v[j].value();
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], vj, 1e-10, 1e-10);
+	{	double vj = a1v[j].value();
+		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], vj, eps, eps);
 	}
 
 	// make memory avaialble for other use by this thread
-	omp_alloc::delete_array(w);
-	omp_alloc::delete_array(dw);
+	thread_alloc::delete_array(w);
+	thread_alloc::delete_array(dw);
 	return ok;
 }
 </pre>

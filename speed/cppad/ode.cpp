@@ -1,9 +1,9 @@
-/* $Id: ode.cpp 3311 2014-05-28 16:21:08Z bradbell $ */
+// $Id: ode.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -29,12 +29,8 @@ $spell
 $$
 
 $section CppAD Speed: Gradient of Ode Solution$$
+$mindex link_ode speed$$
 
-$index link_ode, cppad$$
-$index cppad, link_ode$$
-$index speed, cppad$$
-$index cppad, speed$$
-$index ode, speed cppad$$
 
 $head Specifications$$
 See $cref link_ode$$.
@@ -79,7 +75,7 @@ bool link_ode(
 
 	// -------------------------------------------------------------
 	if( ! global_onetape ) while(repeat--)
-	{ 	// choose next x value
+	{	// choose next x value
 		uniform_01(n, x);
 		for(j = 0; j < n; j++)
 			X[j] = x[j];
@@ -95,11 +91,14 @@ bool link_ode(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
 
 		jacobian = f.Jacobian(x);
 	}
 	else
-	{ 	// an x value
+	{	// an x value
 		uniform_01(n, x);
 		for(j = 0; j < n; j++)
 			X[j] = x[j];
@@ -115,6 +114,10 @@ bool link_ode(
 
 		if( global_optimize )
 			f.optimize();
+
+		// skip comparison operators
+		f.compare_change_count(0);
+
 		while(repeat--)
 		{	// get next argument value
 			uniform_01(n, x);

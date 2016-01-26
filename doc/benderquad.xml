@@ -6,7 +6,7 @@
 <title>Computing Jacobian and Hessian of Bender's Reduced Objective</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Computing Jacobian and Hessian of Bender's Reduced Objective"/>
-<meta name="keywords" id="keywords" content=" Hessian Bender Jacobian Benderquad computing jacobian and hessian of bender's reduced objective syntax see also problem purpose x y fun fun.f fun.h fun.dy g gx gxx bavector advector example "/>
+<meta name="keywords" id="keywords" content=" computing jacobian and hessian of bender's reduced objective Benderquad syntax see also problem purpose x y fun fun.f fun.h fun.dy g gx gxx bavector advector example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="index_sort.cpp.xml" target="_top">Prev</a>
+<td><a href="numeric_ad.xml" target="_top">Prev</a>
 </td><td><a href="bender_quad.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -38,12 +38,13 @@ A:active { color : purple }
 <select onchange='choose_up0(this)'>
 <option>Up-&gt;</option>
 <option>CppAD</option>
-<option>library</option>
+<option>Appendix</option>
+<option>numeric_ad</option>
 <option>BenderQuad</option>
 </select>
 </td>
 <td>
-<select onchange='choose_down2(this)'>
+<select onchange='choose_down3(this)'>
 <option>CppAD-&gt;</option>
 <option>Install</option>
 <option>Introduction</option>
@@ -51,7 +52,7 @@ A:active { color : purple }
 <option>ADFun</option>
 <option>preprocessor</option>
 <option>multi_thread</option>
-<option>library</option>
+<option>utility</option>
 <option>ipopt_solve</option>
 <option>Example</option>
 <option>speed</option>
@@ -59,31 +60,24 @@ A:active { color : purple }
 </select>
 </td>
 <td>
+<select onchange='choose_down2(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>wish_list</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
+<option>License</option>
+</select>
+</td>
+<td>
 <select onchange='choose_down1(this)'>
-<option>library-&gt;</option>
-<option>ErrorHandler</option>
-<option>NearEqual</option>
-<option>speed_test</option>
-<option>SpeedTest</option>
-<option>time_test</option>
-<option>NumericType</option>
-<option>CheckNumericType</option>
-<option>SimpleVector</option>
-<option>CheckSimpleVector</option>
-<option>nan</option>
-<option>pow_int</option>
-<option>Poly</option>
-<option>LuDetAndSolve</option>
-<option>RombergOne</option>
-<option>RombergMul</option>
-<option>Runge45</option>
-<option>Rosen34</option>
-<option>OdeErrControl</option>
-<option>OdeGear</option>
-<option>OdeGearControl</option>
-<option>CppAD_vector</option>
-<option>thread_alloc</option>
-<option>index_sort</option>
+<option>numeric_ad-&gt;</option>
 <option>BenderQuad</option>
 <option>opt_val_hes</option>
 <option>LuRatio</option>
@@ -117,13 +111,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
-
-
-
 <center><b><big><big>Computing Jacobian and Hessian of Bender's Reduced Objective</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -133,7 +120,7 @@ A:active { color : purple }
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 #&#xA0;include&#xA0;&lt;cppad/cppad.hpp&gt;<br/>
 BenderQuad(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>y</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>fun</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>g</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>gx</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>gxx</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
-  
+
 
 <br/>
 <br/>
@@ -149,10 +136,10 @@ BenderQuad(</span></font><i><font color="black"><span style='white-space: nowrap
 <br/>
 The type <a href="benderquad.xml#ADvector" target="_top"><span style='white-space: nowrap'>ADvector</span></a>
  cannot be determined
-form the arguments above 
+form the arguments above
 (currently the type 
 <code><i><font color="black"><span style='white-space: nowrap'>ADvector</span></font></i></code>
- must be 
+ must be
 
 <code><font color="blue"><span style='white-space: nowrap'>CPPAD_TESTVECTOR(</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
 .)
@@ -227,7 +214,7 @@ In addition, we are given a set of equations
 </mrow></math>
 
 
-such that 
+such that
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>H</mi>
@@ -309,7 +296,7 @@ Furthermore, it is easy to calculate a Newton step for these equations; i.e.,
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-The purpose of this routine is to compute the 
+The purpose of this routine is to compute the
 value, Jacobian, and Hessian of the reduced objective function
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
@@ -372,7 +359,7 @@ The <code><font color="blue">BenderQuad</font></code> argument
 and its size must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 .
-It specifies the point at which we evaluating 
+It specifies the point at which we evaluating
 the reduced objective function and its derivatives.
 
 
@@ -398,7 +385,7 @@ It must be equal to
 <mo stretchy="false">)</mo>
 </mrow></math>
 
-; i.e., 
+; i.e.,
 it must solve the problem in 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>y</mi>
@@ -445,15 +432,15 @@ it must solve the problem in
 <br/>
 The <code><font color="blue">BenderQuad</font></code> object 
 <code><i><font color="black"><span style='white-space: nowrap'>fun</span></font></i></code>
- 
+
 must support the member functions listed below.
 The 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  arguments will be variables for
 a tape created by a call to <a href="independent.xml" target="_top"><span style='white-space: nowrap'>Independent</span></a>
  from <code><font color="blue">BenderQuad</font></code>
-(hence they can not be combined with variables corresponding to a 
-different tape). 
+(hence they can not be combined with variables corresponding to a
+different tape).
 
 <br/>
 <br/>
@@ -608,7 +595,7 @@ The
 and its size must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
 .
-Its value will be exactly equal to the <code><font color="blue">BenderQuad</font></code> argument 
+Its value will be exactly equal to the <code><font color="blue">BenderQuad</font></code> argument
 
 <code><i><font color="black"><span style='white-space: nowrap'>x</span></font></i></code>
  and values depending on it can be stored as private objects
@@ -632,7 +619,7 @@ The
 and its size must be equal to 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
 .
-Its value will be exactly equal to the <code><font color="blue">BenderQuad</font></code> argument 
+Its value will be exactly equal to the <code><font color="blue">BenderQuad</font></code> argument
 
 <code><i><font color="black"><span style='white-space: nowrap'>y</span></font></i></code>
  and values depending on it can be stored as private objects
@@ -733,7 +720,7 @@ of
 </mrow></math>
 
 ;
-i.e., 
+i.e.,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>y</mi>
@@ -756,7 +743,7 @@ i.e.,
 <mn>0</mn>
 </mrow></math>
 
-. 
+.
 
 <br/>
 <br/>
@@ -833,7 +820,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>gx</mi>
@@ -908,7 +895,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
-, 
+,
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mi mathvariant='italic'>gxx</mi>
@@ -941,12 +928,12 @@ for
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>BAvector</span></font></i></code>
- must be a 
+ must be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
- class. 
+ class.
 We use 
 <code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- to refer to the type of the elements of 
+ to refer to the type of the elements of
 
 <code><i><font color="black"><span style='white-space: nowrap'>BAvector</span></font></i></code>
 ; i.e.,
@@ -959,9 +946,9 @@ We use
 <br/>
 The type 
 <code><i><font color="black"><span style='white-space: nowrap'>ADvector</span></font></i></code>
- must be a 
+ must be a
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
- class with elements of type 
+ class with elements of type
 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
 ; i.e.,
@@ -985,7 +972,7 @@ must be the same type as
 The file
 <a href="bender_quad.cpp.xml" target="_top"><span style='white-space: nowrap'>bender_quad.cpp</span></a>
 
-contains an example and test of this operation.   
+contains an example and test of this operation.
 It returns true if it succeeds and false otherwise.
 
 
