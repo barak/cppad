@@ -1,9 +1,9 @@
-/* $Id: forward_order.cpp 3214 2014-03-18 20:50:38Z bradbell $ */
+// $Id: forward_order.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -88,7 +88,7 @@ bool forward_order(void)
 	size_t p = 2, p1 = p+1;
 	CPPAD_TESTVECTOR(double) x(n), x_p(n * p1), y_p(m * p1);
 	for(j = 0; j < n; j++)
-	{	x[j]            = double(j) / double(n);  
+	{	x[j]            = double(j) / double(n);
 		x_p[j * p1 + 0] = x[j]; // order 0
 		x_p[j * p1 + 1] = 1.;   // order 1
 		x_p[j * p1 + 2] = 0.;   // order 2

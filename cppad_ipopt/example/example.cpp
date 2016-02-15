@@ -1,9 +1,9 @@
-/* $Id: example.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: example.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -51,7 +51,7 @@ int main(void)
 	ok &= Run( ipopt_get_started,   "ipopt_get_started"  );
 	ok &= Run( ode_simple_check,    "ode_simple_check"   );
 	ok &= Run( ode_fast_check,      "ode_fast_check"     );
-	
+
 	// check for errors
 	using std::cout;
 	using std::endl;

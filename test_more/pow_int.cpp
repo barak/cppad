@@ -1,9 +1,9 @@
-/* $Id: pow_int.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: pow_int.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -52,7 +52,7 @@ bool PowInt(void)
 	ok &= NearEqual(Z[0] , exp( log(u) * 5.),              1e-10 , 1e-10);
 	ok &= NearEqual(Z[1] , exp( - log(u) * 5.),            1e-10 , 1e-10);
 
-	// forward computation of partials 
+	// forward computation of partials
 	v[0] = 1.;
 	w = f.Forward(1, v);
 	ok &= NearEqual(w[0] , 5. * exp( log(u) * 4.),         1e-10 , 1e-10);

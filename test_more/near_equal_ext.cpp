@@ -1,9 +1,9 @@
-/* $Id: near_equal_ext.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: near_equal_ext.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-06 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -22,16 +22,16 @@ bool NearEqualExt(void)
 	using CppAD::AD;
 	using CppAD::NearEqual;
 
-	// double 
+	// double
 	double x    = 1.00000;
 	double y    = 1.00001;
 	double a    =  .00005;
 	double r    =  .00005;
-	double zero = 0.; 
+	double zero = 0.;
 	double inf  = 1. / zero;
 	double nan  = 0. / zero;
 
-	// AD<double> 
+	// AD<double>
 	AD<double> X(x);
 	AD<double> Y(y);
 	AD<double> Inf(inf);

@@ -6,7 +6,7 @@
 <title>AD Vectors that Record Index Operations</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="AD Vectors that Record Index Operations"/>
-<meta name="keywords" id="keywords" content=" ad vectors that record index operations Vecad tape reference Vecad&lt;base&gt; syntax purpose alternatives vecad&lt;base&gt;::reference exceptions constructor v n size size_t indexing i b x r example speed and memory "/>
+<meta name="keywords" id="keywords" content=" ad vectors that record index operations Vecad tape reference Vecad&lt;base&gt; syntax purpose alternatives vecad&lt;base&gt;::reference exceptions constructor v n size size_t indexing i b x r example speed memory "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -586,16 +586,13 @@ The effect of this can be seen by executing the following steps:
 In the file <code><font color="blue">cppad/local/forward1sweep.h</font></code>,
 change the definition of <code><font color="blue">CPPAD_FORWARD1SWEEP_TRACE</font></code> to
 <code><font color='blue'><pre style='display:inline'> 
-	# define CPPAD_FORWARD1SWEEP_TRACE 1
+     # define CPPAD_FORWARD1SWEEP_TRACE 1
 </pre></font></code>
-
 </li><li>
-
 In the <code><font color="blue">Example</font></code> directory, execute the command
 <code><font color='blue'><pre style='display:inline'> 
-	./test_one.sh lu_vec_ad_ok.cpp lu_vec_ad.cpp -DNDEBUG &gt; lu_vec_ad_ok.log
+     ./test_one.sh lu_vec_ad_ok.cpp lu_vec_ad.cpp -DNDEBUG &gt; lu_vec_ad_ok.log
 </pre></font></code>
-
 This will write a trace of all the forward tape operations,
 for the test case <a href="lu_vec_ad_ok.cpp.xml" target="_top"><span style='white-space: nowrap'>lu_vec_ad_ok.cpp</span></a>
 ,
@@ -604,11 +601,10 @@ to the file <code><font color="blue">lu_vec_ad_ok.log</font></code>.
 
 In the <code><font color="blue">Example</font></code> directory execute the commands
 <code><font color='blue'><pre style='display:inline'> 
-	grep &quot;op=&quot;           lu_vec_ad_ok.log | wc -l
-	grep &quot;op=Ld[vp]&quot;     lu_vec_ad_ok.log | wc -l
-	grep &quot;op=St[vp][vp]&quot; lu_vec_ad_ok.log | wc -l
+     grep &quot;op=&quot;           lu_vec_ad_ok.log | wc -l
+     grep &quot;op=Ld[vp]&quot;     lu_vec_ad_ok.log | wc -l
+     grep &quot;op=St[vp][vp]&quot; lu_vec_ad_ok.log | wc -l
 </pre></font></code>
-
 The first command counts the number of operators in the tracing,
 the second counts the number of VecAD load operations,
 and the third counts the number of VecAD store operations.

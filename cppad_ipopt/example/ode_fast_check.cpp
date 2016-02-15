@@ -1,9 +1,9 @@
-/* $Id: ode_fast_check.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: ode_fast_check.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-10 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -32,6 +32,6 @@ bool ode_fast_check(void)
 		ipopt_ode_case<FG_fast>(retape, N, x);
 		ok &= ode_check(N, x);
 	}
- 
+
 	return ok;
 }

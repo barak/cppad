@@ -6,7 +6,7 @@
 <title>Determinant of a Minor</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Determinant of a Minor"/>
-<meta name="keywords" id="keywords" content=" determinant of a minor syntax purpose m n r c d source code "/>
+<meta name="keywords" id="keywords" content=" determinant minor syntax purpose m n r c d source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -672,64 +672,63 @@ and is equal to the determinant of the minor
 
 <code><font color='blue'><pre style='display:inline'> 
 double det_of_minor( 
-	const double*        a  , 
-	size_t               m  , 
-	size_t               n  , 
-	size_t*              r  , 
-	size_t*              c  )
-{	size_t R0, Cj, Cj1, j;
-	double detM, M0j, detS;
-	int s;
-	
-	R0 = r[m]; /* R(0) */
-	Cj = c[m]; /* C(j)    (case j = 0) */
-	Cj1 = m;   /* C(j-1)  (case j = 0) */
+     const double*        a  , 
+     size_t               m  , 
+     size_t               n  , 
+     size_t*              r  , 
+     size_t*              c  )
+{    size_t R0, Cj, Cj1, j;
+     double detM, M0j, detS;
+     int s;
+     
+     R0 = r[m]; /* R(0) */
+     Cj = c[m]; /* C(j)    (case j = 0) */
+     Cj1 = m;   /* C(j-1)  (case j = 0) */
 
-	/* check for 1 by 1 case */
-	if( n == 1 ) return a[ R0 * m + Cj ];
+     /* check for 1 by 1 case */
+     if( n == 1 ) return a[ R0 * m + Cj ];
 
-	/* initialize determinant of the minor M */
-	detM = 0.;
+     /* initialize determinant of the minor M */
+     detM = 0.;
 
-	/* initialize sign of factor for neat sub-minor */
-	s = 1;
+     /* initialize sign of factor for neat sub-minor */
+     s = 1;
 
-	/* remove row with index 0 in M from all the sub-minors of M */
-	r[m] = r[R0];
+     /* remove row with index 0 in M from all the sub-minors of M */
+     r[m] = r[R0];
 
-	/* for each column of M */
-	for(j = 0; j &lt; n; j++)
-	{	/* element with index (0,j) in the minor M */
-		M0j = a[ R0 * m + Cj ];
+     /* for each column of M */
+     for(j = 0; j &lt; n; j++)
+     {    /* element with index (0,j) in the minor M */
+          M0j = a[ R0 * m + Cj ];
 
-		/* remove column with index j in M to form next sub-minor S of M */
-		c[Cj1] = c[Cj];
+          /* remove column with index j in M to form next sub-minor S of M */
+          c[Cj1] = c[Cj];
 
-		/* compute determinant of the current sub-minor S */
-		detS = det_of_minor(a, m, n - 1, r, c);
+          /* compute determinant of the current sub-minor S */
+          detS = det_of_minor(a, m, n - 1, r, c);
 
-		/* restore column Cj to representation of M as a minor of A */
-		c[Cj1] = Cj;
+          /* restore column Cj to representation of M as a minor of A */
+          c[Cj1] = Cj;
 
-		/* include this sub-minor term in the summation */
-		if( s &gt; 0 )
-			detM = detM + M0j * detS;
-		else	detM = detM - M0j * detS;
+          /* include this sub-minor term in the summation */
+          if( s &gt; 0 )
+               detM = detM + M0j * detS;
+          else detM = detM - M0j * detS;
 
-		/* advance to neat column of M */
-		Cj1 = Cj;
-		Cj  = c[Cj];
-		s   = - s;		
-	}
+          /* advance to neat column of M */
+          Cj1 = Cj;
+          Cj  = c[Cj];
+          s   = - s;          
+     }
 
-	/* restore row zero to the minor representation for M */
-	r[m] = R0;
+     /* restore row zero to the minor representation for M */
+     r[m] = R0;
 
-	/* return the determinant of the minor M */
-	return detM;
+     /* return the determinant of the minor M */
+     return detM;
 }
 </pre></font></code>
-
 
 <hr/>Input File: compare_c/det_by_minor.c
 

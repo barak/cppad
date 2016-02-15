@@ -1,4 +1,4 @@
-dnl $Id: configure.ac 3772 2015-12-31 14:01:01Z bradbell $
+dnl $Id: configure.ac 3786 2016-02-08 13:14:26Z bradbell $
 dnl ---------------------------------------------------------------------------
 dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 dnl
@@ -12,7 +12,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20160000.0], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20160000.1], [cppad@list.coin-or.org])
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;

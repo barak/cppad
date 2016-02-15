@@ -6,7 +6,7 @@
 <title>Compute Determinant using Expansion by Minors</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Compute Determinant using Expansion by Minors"/>
-<meta name="keywords" id="keywords" content=" compute determinant using expansion by minors syntax purpose a m source code "/>
+<meta name="keywords" id="keywords" content=" compute determinant using expansion minors syntax purpose m source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -100,9 +100,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Compute Determinant using Expansion by Minors</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -285,28 +282,27 @@ and is the number of rows (and columns) in the square matrix
 
 <code><font color='blue'><pre style='display:inline'> 
 double det_by_minor(double* a, size_t m)
-{	size_t *r, *c, i;
-	double value;
+{    size_t *r, *c, i;
+     double value;
 
-	r = (size_t*) malloc( (m+1) * sizeof(size_t) );
-	c = (size_t*) malloc( (m+1) * sizeof(size_t) );
+     r = (size_t*) malloc( (m+1) * sizeof(size_t) );
+     c = (size_t*) malloc( (m+1) * sizeof(size_t) );
 
-	assert(m &lt;= 100);
-	for(i = 0; i &lt; m; i++)
-	{	r[i] = i+1;
-		c[i] = i+1;
-	}
-	r[m] = 0;
-	c[m] = 0;
+     assert(m &lt;= 100);
+     for(i = 0; i &lt; m; i++)
+     {    r[i] = i+1;
+          c[i] = i+1;
+     }
+     r[m] = 0;
+     c[m] = 0;
 
-	value = <a href="det_of_minor_c.xml" target="_top">det_of_minor</a>(a, m, m, r, c);
+     value = <a href="det_of_minor_c.xml" target="_top">det_of_minor</a>(a, m, m, r, c);
 
-	free(r);
-	free(c);
-	return value;
+     free(r);
+     free(c);
+     return value;
 }
 </pre></font></code>
- 
 
 <hr/>Input File: compare_c/det_by_minor.c
 

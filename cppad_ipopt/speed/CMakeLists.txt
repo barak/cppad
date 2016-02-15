@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3754 2015-11-26 22:23:05Z bradbell $
+# $Id: CMakeLists.txt 3785 2016-02-08 12:53:06Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
@@ -45,7 +45,7 @@ add_cppad_cxx_flags( cppad_ipopt_speed )
 TARGET_LINK_LIBRARIES(
 	cppad_ipopt_speed
 	cppad_ipopt
-	cppad_lib
+	${cppad_lib}
 	${ipopt_LIBRARIES}
 	${colpack_libs}
 )

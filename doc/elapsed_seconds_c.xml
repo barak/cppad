@@ -6,7 +6,7 @@
 <title>Returns Elapsed Number of Seconds</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Returns Elapsed Number of Seconds"/>
-<meta name="keywords" id="keywords" content=" returns elapsed number of seconds syntax purpose s source code "/>
+<meta name="keywords" id="keywords" content=" returns elapsed number seconds syntax purpose s source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -99,9 +99,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Returns Elapsed Number of Seconds</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -137,57 +134,56 @@ number of seconds since the first call to <code><font color="blue">elapsed_secon
 # include &lt;windows.h&gt;
 # include &lt;cassert&gt;
 double elapsed_seconds(void)
-{	static bool       first_  = true;
-	static SYSTEMTIME st_;
-	double hour, minute, second, milli, diff;
-	SYSTEMTIME st;
+{    static bool       first_  = true;
+     static SYSTEMTIME st_;
+     double hour, minute, second, milli, diff;
+     SYSTEMTIME st;
 
-	if( first_ )
-	{	GetSystemTime(&amp;st_);
-		first_ = false;
-		return 0.;
-	}
-	GetSystemTime(&amp;st);
+     if( first_ )
+     {    GetSystemTime(&amp;st_);
+          first_ = false;
+          return 0.;
+     }
+     GetSystemTime(&amp;st);
 
-	hour   = (double) st.wHour         - (double) st_.wHour;
-	minute = (double) st.wMinute       - (double) st_.wMinute;
-	second = (double) st.wSecond       - (double) st_.wSecond;
-	milli  = (double) st.wMilliseconds - (double) st_.wMilliseconds;
+     hour   = (double) st.wHour         - (double) st_.wHour;
+     minute = (double) st.wMinute       - (double) st_.wMinute;
+     second = (double) st.wSecond       - (double) st_.wSecond;
+     milli  = (double) st.wMilliseconds - (double) st_.wMilliseconds;
 
-	diff   = 1e-3*milli + second + 60.*minute + 3600.*hour;
-	if( diff &lt; 0. )
-		diff += 3600.*24.;
-	assert( 0 &lt;= diff &amp;&amp; diff &lt; 3600.*24. );
+     diff   = 1e-3*milli + second + 60.*minute + 3600.*hour;
+     if( diff &lt; 0. )
+          diff += 3600.*24.;
+     assert( 0 &lt;= diff &amp;&amp; diff &lt; 3600.*24. );
 
-	return diff;
+     return diff;
 }
 # else
 // ---------------------------------------------------------------------------
 // Unix version of timer
 # include &lt;sys/time.h&gt;
 double elapsed_seconds(void)
-{	double sec, usec, diff;
+{    double sec, usec, diff;
 
-	static bool first_ = true;
-	static struct timeval tv_first;		
-	struct timeval        tv;
-	if( first_ )
-	{	gettimeofday(&amp;tv_first, NULL);
-		first_ = false;
-		return 0.;
-	}
-	gettimeofday(&amp;tv, NULL);
-	assert( tv.tv_sec &gt;= tv_first.tv_sec );
+     static bool first_ = true;
+     static struct timeval tv_first;         
+     struct timeval        tv;
+     if( first_ )
+     {    gettimeofday(&amp;tv_first, NULL);
+          first_ = false;
+          return 0.;
+     }
+     gettimeofday(&amp;tv, NULL);
+     assert( tv.tv_sec &gt;= tv_first.tv_sec );
 
-	sec  = (double)(tv.tv_sec -  tv_first.tv_sec);
-	usec = (double)tv.tv_usec - (double)tv_first.tv_usec;
-	diff = sec + 1e-6*usec;
+     sec  = (double)(tv.tv_sec -  tv_first.tv_sec);
+     usec = (double)tv.tv_usec - (double)tv_first.tv_usec;
+     diff = sec + 1e-6*usec;
 
-	return diff;
+     return diff;
 }
 # endif
 </pre></font></code>
-
 
 <hr/>Input File: compare_c/det_by_minor.c
 

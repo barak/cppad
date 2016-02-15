@@ -6,7 +6,7 @@
 <title>Enable Use of Eigen Linear Algebra Package with CppAD</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable Use of Eigen Linear Algebra Package with CppAD"/>
-<meta name="keywords" id="keywords" content=" enable use of eigen linear algebra package with cppad syntax purpose example include files numtraits namespace "/>
+<meta name="keywords" id="keywords" content=" enable use eigen linear algebra package with cppad syntax purpose example include files numtraits namespace "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -159,8 +159,6 @@ in the Eigen matrix class definition so its vectors are
 # include &lt;Eigen/Core&gt;
 # include &lt;cppad/cppad.hpp&gt;
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="Eigen NumTraits" id="Eigen NumTraits">Eigen NumTraits</a></big></b>
 <br/>
@@ -170,54 +168,52 @@ with
  scalars:
 <code><font color='blue'><pre style='display:inline'> 
 namespace Eigen {
-	template &lt;class Base&gt; struct NumTraits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;
-	{	// type that corresponds to the real part of an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; value
-		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Real;
-		// type for <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; operations that result in non-integer values
-		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   NonInteger;
-		// type for nested value inside an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; expression tree
-		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Nested;
+     template &lt;class Base&gt; struct NumTraits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;
+     {    // type that corresponds to the real part of an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; value
+          typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Real;
+          // type for <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; operations that result in non-integer values
+          typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   NonInteger;
+          // type for nested value inside an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; expression tree
+          typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Nested;
 
-		enum {
-			// does not support complex Base types
-			IsComplex             = 0 ,
-			// does not support integer Base types
-			IsInteger             = 0 ,
-			// only support signed Base types
-			IsSigned              = 1 ,
-			// must initialize an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; object
-			RequireInitialization = 1 ,
-			// computational cost of the corresponding operations
-			ReadCost              = 1 ,
-			AddCost               = 2 ,
-			MulCost               = 2
-		};
+          enum {
+               // does not support complex Base types
+               IsComplex             = 0 ,
+               // does not support integer Base types
+               IsInteger             = 0 ,
+               // only support signed Base types
+               IsSigned              = 1 ,
+               // must initialize an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; object
+               RequireInitialization = 1 ,
+               // computational cost of the corresponding operations
+               ReadCost              = 1 ,
+               AddCost               = 2 ,
+               MulCost               = 2
+          };
 
-		// machine epsilon with type of real part of x
-		// (use assumption that Base is not complex)
-		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; epsilon(void)
-		{	return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon(); }
+          // machine epsilon with type of real part of x
+          // (use assumption that Base is not complex)
+          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; epsilon(void)
+          {    return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon(); }
 
-		// relaxed version of machine epsilon for comparison of different
-		// operations that should result in the same value
-		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; dummy_precision(void)
-		{	return 100. *
-				CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon();
-		}
+          // relaxed version of machine epsilon for comparison of different
+          // operations that should result in the same value
+          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; dummy_precision(void)
+          {    return 100. *
+                    CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon();
+          }
 
-		// minimum normalized positive value
-		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; lowest(void)
-		{	return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::min(); }
+          // minimum normalized positive value
+          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; lowest(void)
+          {    return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::min(); }
 
-		// maximum finite value
-		static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; highest(void)
-		{	return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::max(); }
+          // maximum finite value
+          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; highest(void)
+          {    return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::max(); }
 
-	};
+     };
 }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="CppAD Namespace" id="CppAD Namespace">CppAD Namespace</a></big></b>
 <br/>
@@ -227,41 +223,40 @@ with
  scalars:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-		// functions that return references
-		template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; conj(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-		{	return x; }
-		template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; real(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-		{	return x; }
+          // functions that return references
+          template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; conj(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+          {    return x; }
+          template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; real(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+          {    return x; }
 
-		// functions that return values (note abs is defined by cppad.hpp)
-		template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; imag(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-		{	return CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;(0.); }
-		template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; abs2(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-		{	return x * x; }
+          // functions that return values (note abs is defined by cppad.hpp)
+          template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; imag(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+          {    return CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;(0.); }
+          template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; abs2(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
+          {    return x * x; }
 }
 
 namespace Eigen {
-	namespace internal {
+     namespace internal {
 
-		template&lt;class Base&gt;
-		struct significant_decimals_default_impl&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;, false&gt;
-		{	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; Scalar;
+          template&lt;class Base&gt;
+          struct significant_decimals_default_impl&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;, false&gt;
+          {    typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; Scalar;
 
-			typedef typename NumTraits&lt;Scalar&gt;::Real RealScalar;
-			static inline int run()
-			{	Scalar neg_log_eps = - log(
-					NumTraits&lt;RealScalar&gt;::epsilon()
-				);
-				int ceil_neg_log_eps = Integer( neg_log_eps );
-				if( Scalar(ceil_neg_log_eps) &lt; neg_log_eps )
-					ceil_neg_log_eps++;
-				return ceil_neg_log_eps;
-			}
-		};
-	}
+               typedef typename NumTraits&lt;Scalar&gt;::Real RealScalar;
+               static inline int run()
+               {    Scalar neg_log_eps = - log(
+                         NumTraits&lt;RealScalar&gt;::epsilon()
+                    );
+                    int ceil_neg_log_eps = Integer( neg_log_eps );
+                    if( Scalar(ceil_neg_log_eps) &lt; neg_log_eps )
+                         ceil_neg_log_eps++;
+                    return ceil_neg_log_eps;
+               }
+          };
+     }
 }
 </pre></font></code>
-
 
 <hr/>Input File: cppad/example/cppad_eigen.hpp
 

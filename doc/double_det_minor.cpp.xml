@@ -6,7 +6,7 @@
 <title>Double Speed: Determinant by Minor Expansion</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Double Speed: Determinant by Minor Expansion"/>
-<meta name="keywords" id="keywords" content=" double speed: determinant by minor expansion link_det_minor speed specifications implementation "/>
+<meta name="keywords" id="keywords" content=" double speed: determinant minor expansion link_det_minor speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -111,33 +111,32 @@ See <a href="link_det_minor.xml" target="_top"><span style='white-space: nowrap'
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize;
+     global_onetape, global_atomic, global_optimize;
 
 bool link_det_minor(
-	size_t                     size     ,
-	size_t                     repeat   ,
-	CppAD::vector&lt;double&gt;     &amp;matrix   ,
-	CppAD::vector&lt;double&gt;     &amp;det      )
+     size_t                     size     ,
+     size_t                     repeat   ,
+     CppAD::vector&lt;double&gt;     &amp;matrix   ,
+     CppAD::vector&lt;double&gt;     &amp;det      )
 {
-	if(global_onetape||global_atomic||global_optimize)
-		return false;
-	// -----------------------------------------------------
-	// setup
-	CppAD::det_by_minor&lt;double&gt;   Det(size);
-	size_t n = size * size; // number of independent variables
+     if(global_onetape||global_atomic||global_optimize)
+          return false;
+     // -----------------------------------------------------
+     // setup
+     CppAD::det_by_minor&lt;double&gt;   Det(size);
+     size_t n = size * size; // number of independent variables
 
-	// ------------------------------------------------------
-	while(repeat--)
-	{	// get the next matrix
-		CppAD::uniform_01(n, matrix);
+     // ------------------------------------------------------
+     while(repeat--)
+     {    // get the next matrix
+          CppAD::uniform_01(n, matrix);
 
-		// computation of the determinant
-		det[0] = Det(matrix);
-	}
-	return true;
+          // computation of the determinant
+          det[0] = Det(matrix);
+     }
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/double/det_minor.cpp
 

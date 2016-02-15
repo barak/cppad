@@ -6,7 +6,7 @@
 <title>The CppAD Wish List</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The CppAD Wish List"/>
-<meta name="keywords" id="keywords" content=" the cppad wish list base requirements printfor optimization checkpoint machine epsilon in examples adolc optimizing nested conditional expressions forward mode recomputation iterator interface compilation speed operation sequence comparison changes and software guidelines tracing atan2 benderquad "/>
+<meta name="keywords" id="keywords" content=" the cppad wish list base requirements printfor optimization checkpoint machine epsilon examples adolc optimizing nested conditional expressions forward mode recomputation iterator interface compilation speed operation sequence comparison changes software guidelines tracing atan2 benderquad "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -156,11 +156,10 @@ CppAD commands.
 If one <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimizes</span></a>
  the code
 <code><font color='blue'><pre style='display:inline'> 
-	x = CondExpLt(left_x, right_x, true_x, false_x)
-	y = CondExpGt(left_y, right_y, true_y, false_y)
-	z = CondExpEq(left_z, right_z, x, y)
+     x = CondExpLt(left_x, right_x, true_x, false_x)
+     y = CondExpGt(left_y, right_y, true_y, false_y)
+     z = CondExpEq(left_z, right_z, x, y)
 </pre></font></code>
-
 only two of the expressions
 <code><font color="blue">true_x</font></code>, <code><font color="blue">false_x</font></code>, <code><font color="blue">true_y</font></code>, <code><font color="blue">false_y</font></code>
 will be evaluated
@@ -268,11 +267,10 @@ Use spaces rather than tabs.
 Currently, CppAD uses a tabs stops at column multiples of 5.
 Five columns were chosen to avoid high levels of indenting and to allow for
 <code><font color='blue'><pre style='display:inline'> 
-	if( expression )
-		statement
-	else	statement
+     if( expression )
+          statement
+     else statement
 </pre></font></code>
-
 with a tab after the else.
 Automatic conversion to actual spaces should be easy.
 
@@ -287,9 +285,8 @@ Add tracing the operation sequence to the user API and documentation.
 Tracing the operation sequence is currently done by changing the CppAD
 source code. Use the command
 <code><font color='blue'><pre style='display:inline'> 
-	grep '^# *define *CPPAD_.*_TRACE' cppad/local/*.hpp
+     grep '^# *define *CPPAD_.*_TRACE' cppad/local/*.hpp
 </pre></font></code>
-
 to find all the possible tracing flags.
 
 

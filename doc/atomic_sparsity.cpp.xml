@@ -6,7 +6,7 @@
 <title>Atomic Sparsity Patterns: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Atomic Sparsity Patterns: Example and Test"/>
-<meta name="keywords" id="keywords" content=" atomic sparsity patterns: example and test function pack_sparsity_enum start class definition constructor forward for_sparse_jac rev_sparse_jac rev_sparse_hes end use recording forsparse_jac "/>
+<meta name="keywords" id="keywords" content=" atomic sparsity patterns: example test function pack_sparsity_enum start class definition constructor forward for_sparse_jac rev_sparse_jac rev_sparse_hes end use recording forsparse_jac "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -106,9 +106,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Atomic Sparsity Patterns: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="function" id="function">function</a></big></b>
@@ -182,172 +179,160 @@ using CppAD::vectorBool;    // abbreviate as vectorBool
 //
 class atomic_sparsity : public CppAD::atomic_base&lt;double&gt; {
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="Constructor" id="Constructor">Constructor</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	public:
-	// constructor
-	atomic_sparsity(const std::string&amp; name) :
-	// this exampel only uses pack sparsity patterns
-	CppAD::atomic_base&lt;double&gt;(name, pack_sparsity_enum )
-	{ }
-	private:
+     public:
+     // constructor
+     atomic_sparsity(const std::string&amp; name) :
+     // this exampel only uses pack sparsity patterns
+     CppAD::atomic_base&lt;double&gt;(name, pack_sparsity_enum )
+     { }
+     private:
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="forward" id="forward">forward</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// forward
-	virtual bool forward(
-		size_t                    p ,
-		size_t                    q ,
-		const vector&lt;bool&gt;&amp;      vx ,
-		vector&lt;bool&gt;&amp;            vy ,
-		const vector&lt;double&gt;&amp;    tx ,
-		vector&lt;double&gt;&amp;          ty
-	)
-	{	size_t n = tx.size() / (q + 1);
-		size_t m = ty.size() / (q + 1);
-		assert( n == 3 );
-		assert( m == 2 );
+     // forward
+     virtual bool forward(
+          size_t                    p ,
+          size_t                    q ,
+          const vector&lt;bool&gt;&amp;      vx ,
+          vector&lt;bool&gt;&amp;            vy ,
+          const vector&lt;double&gt;&amp;    tx ,
+          vector&lt;double&gt;&amp;          ty
+     )
+     {    size_t n = tx.size() / (q + 1);
+          size_t m = ty.size() / (q + 1);
+          assert( n == 3 );
+          assert( m == 2 );
 
-		// only order zero
-		bool ok = q == 0;
-		if( ! ok )
-			return ok;
+          // only order zero
+          bool ok = q == 0;
+          if( ! ok )
+               return ok;
 
-		// check for defining variable information
-		if( vx.size() &gt; 0 )
-		{	ok   &amp;= vx.size() == n;
-			vy[0] = vx[2];
-			vy[1] = vx[0] || vx[1];
-		}
+          // check for defining variable information
+          if( vx.size() &gt; 0 )
+          {    ok   &amp;= vx.size() == n;
+               vy[0] = vx[2];
+               vy[1] = vx[0] || vx[1];
+          }
 
-		// Order zero forward mode.
-		// y[0] = x[2], y[1] = x[0] * x[1]
-		if( p &lt;= 0 )
-		{	ty[0] = tx[2];
-			ty[1] = tx[0] * tx[1];
-		}
-		return ok;
-	}
+          // Order zero forward mode.
+          // y[0] = x[2], y[1] = x[0] * x[1]
+          if( p &lt;= 0 )
+          {    ty[0] = tx[2];
+               ty[1] = tx[0] * tx[1];
+          }
+          return ok;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="for_sparse_jac" id="for_sparse_jac">for_sparse_jac</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// for_sparse_jac
-	virtual bool for_sparse_jac(
-		size_t                          p ,
-		const vectorBool&amp;               r ,
-		vectorBool&amp;                     s )
-	{	// This function needed if using f.ForSparseJac
-		size_t n = r.size() / p;
-		size_t m = s.size() / p;
-		assert( n == 3 );
-		assert( m == 2 );
+     // for_sparse_jac
+     virtual bool for_sparse_jac(
+          size_t                          p ,
+          const vectorBool&amp;               r ,
+          vectorBool&amp;                     s )
+     {    // This function needed if using f.ForSparseJac
+          size_t n = r.size() / p;
+          size_t m = s.size() / p;
+          assert( n == 3 );
+          assert( m == 2 );
 
-		// sparsity for S(x) = f'(x) * R  = [ 0,   0, 1 ] * R
-		//                                  [ x1, x0, 0 ]
-		for(size_t j = 0; j &lt; p; j++)
-		{	s[ 0 * p + j] = r[ 2 * p + j];
-			s[ 1 * p + j] = r[ 0 * p + j] || r[ 1 * p + j];
-		}
-		return true;
-	}
+          // sparsity for S(x) = f'(x) * R  = [ 0,   0, 1 ] * R
+          //                                  [ x1, x0, 0 ]
+          for(size_t j = 0; j &lt; p; j++)
+          {    s[ 0 * p + j] = r[ 2 * p + j];
+               s[ 1 * p + j] = r[ 0 * p + j] || r[ 1 * p + j];
+          }
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="rev_sparse_jac" id="rev_sparse_jac">rev_sparse_jac</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	virtual bool rev_sparse_jac(
-		size_t                                p  ,
-		const vectorBool&amp;                     rt ,
-		vectorBool&amp;                           st )
-	{	// This function needed if using RevSparseJac or optimize
-		size_t n = st.size() / p;
-		size_t m = rt.size() / p;
-		assert( n == 3 );
-		assert( m == 2 );
+     virtual bool rev_sparse_jac(
+          size_t                                p  ,
+          const vectorBool&amp;                     rt ,
+          vectorBool&amp;                           st )
+     {    // This function needed if using RevSparseJac or optimize
+          size_t n = st.size() / p;
+          size_t m = rt.size() / p;
+          assert( n == 3 );
+          assert( m == 2 );
 
-		//                                       [ 0, x1 ]
-		// sparsity for S(x)^T = f'(x)^T * R^T = [ 0, x0 ] * R^T
-		//                                       [ 1, 0  ]
-		for(size_t j = 0; j &lt; p; j++)
-		{	st[ 0 * p + j ] = rt[ 1 * m + j ];
-			st[ 1 * p + j ] = rt[ 1 * m + j ];
-			st[ 2 * p + j ] = rt[ 0 * m + j ];
-		}
-		return true;
-	}
+          //                                       [ 0, x1 ]
+          // sparsity for S(x)^T = f'(x)^T * R^T = [ 0, x0 ] * R^T
+          //                                       [ 1, 0  ]
+          for(size_t j = 0; j &lt; p; j++)
+          {    st[ 0 * p + j ] = rt[ 1 * m + j ];
+               st[ 1 * p + j ] = rt[ 1 * m + j ];
+               st[ 2 * p + j ] = rt[ 0 * m + j ];
+          }
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="rev_sparse_hes" id="rev_sparse_hes">rev_sparse_hes</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	virtual bool rev_sparse_hes(
-		const vector&lt;bool&gt;&amp;                   vx,
-		const vector&lt;bool&gt;&amp;                   s ,
-		      vector&lt;bool&gt;&amp;                   t ,
-		size_t                                p ,
-		const vectorBool&amp;                     r ,
-		const vectorBool&amp;                     u ,
-		vectorBool&amp;                           v )
-	{	// This function needed if using RevSparseHes
-		size_t m = s.size();
-		size_t n = t.size();
-		assert( r.size() == n * p );
-		assert( u.size() == m * p );
-		assert( v.size() == n * p );
-		assert( n == 3 );
-		assert( m == 2 );
+     virtual bool rev_sparse_hes(
+          const vector&lt;bool&gt;&amp;                   vx,
+          const vector&lt;bool&gt;&amp;                   s ,
+                vector&lt;bool&gt;&amp;                   t ,
+          size_t                                p ,
+          const vectorBool&amp;                     r ,
+          const vectorBool&amp;                     u ,
+          vectorBool&amp;                           v )
+     {    // This function needed if using RevSparseHes
+          size_t m = s.size();
+          size_t n = t.size();
+          assert( r.size() == n * p );
+          assert( u.size() == m * p );
+          assert( v.size() == n * p );
+          assert( n == 3 );
+          assert( m == 2 );
 
-		// sparsity for T(x) = S(x) * f'(x) = S(x) * [  0,  0,  1 ]
-		//                                           [ x1, x0,  0 ]
-		t[0] = s[1];
-		t[1] = s[1];
-		t[2] = s[0];
+          // sparsity for T(x) = S(x) * f'(x) = S(x) * [  0,  0,  1 ]
+          //                                           [ x1, x0,  0 ]
+          t[0] = s[1];
+          t[1] = s[1];
+          t[2] = s[0];
 
-		// V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
-		// U(x) = g''(y) * f'(x) * R
-		// S(x) = g'(y)
+          // V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
+          // U(x) = g''(y) * f'(x) * R
+          // S(x) = g'(y)
 
-		//                               [ 0, x1 ]
-		// sparsity for f'(x)^T * U(x) = [ 0, x0 ] * U(x)
-		//                               [ 1, 0  ]
-		size_t j;
-		for(j = 0; j &lt; p; j++)
-		{	v[ 0 * p + j ] = u[ 1 * m + j ];
-			v[ 1 * p + j ] = u[ 1 * m + j ];
-			v[ 2 * p + j ] = u[ 0 * m + j ];
-		}
+          //                               [ 0, x1 ]
+          // sparsity for f'(x)^T * U(x) = [ 0, x0 ] * U(x)
+          //                               [ 1, 0  ]
+          size_t j;
+          for(j = 0; j &lt; p; j++)
+          {    v[ 0 * p + j ] = u[ 1 * m + j ];
+               v[ 1 * p + j ] = u[ 1 * m + j ];
+               v[ 2 * p + j ] = u[ 0 * m + j ];
+          }
 
-		// include forward Jacobian sparsity in Hessian sparsity
-		//                                                [ 0, 1, 0 ]
-		// sum_i S_i (x) g'(y) * f_i''(x) * R = S_1 (x) * [ 1, 0, 0 ] * R
-		//                                                [ 0, 0, 0 ]
-		if( s[1] )
-		{	for(j = 0; j &lt; p; j++)
-			{	v[ 0 * p + j ] = bool(v[0 * p + j]) | bool(r[1 * p + j]);
-				v[ 1 * p + j ] = bool(v[1 * p + j]) | bool(r[0 * p + j]);
-			}
-		}
-		return true;
-	}
+          // include forward Jacobian sparsity in Hessian sparsity
+          //                                                [ 0, 1, 0 ]
+          // sum_i S_i (x) g'(y) * f_i''(x) * R = S_1 (x) * [ 1, 0, 0 ] * R
+          //                                                [ 0, 0, 0 ]
+          if( s[1] )
+          {    for(j = 0; j &lt; p; j++)
+               {    v[ 0 * p + j ] = bool(v[0 * p + j]) | bool(r[1 * p + j]);
+                    v[ 1 * p + j ] = bool(v[1 * p + j]) | bool(r[0 * p + j]);
+               }
+          }
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="End Class Definition" id="End Class Definition">End Class Definition</a></big></b>
 
@@ -356,113 +341,99 @@ class atomic_sparsity : public CppAD::atomic_base&lt;double&gt; {
 }  // End empty namespace
 
 </pre></font></code>
-
-<br/>
-<br/>
 <b><big><a name="Use Atomic Function" id="Use Atomic Function">Use Atomic Function</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
 bool sparsity(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+{    bool ok = true;
+     using CppAD::AD;
+     using CppAD::NearEqual;
+     double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.Constructor" id="Use Atomic Function.Constructor">Constructor</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// Create the atomic get_started object
-	atomic_sparsity afun(&quot;atomic_sparsity&quot;);
+     // Create the atomic get_started object
+     atomic_sparsity afun(&quot;atomic_sparsity&quot;);
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.Recording" id="Use Atomic Function.Recording">Recording</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	size_t n = 3;
-	size_t m = 2;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n), ay(m);
-	for(size_t j = 0; j &lt; n; j++)
-		ax[j] = double(j + 1);
+     size_t n = 3;
+     size_t m = 2;
+     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n), ay(m);
+     for(size_t j = 0; j &lt; n; j++)
+          ax[j] = double(j + 1);
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     // declare independent variables and start tape recording
+     CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// call user function
-	afun(ax, ay);
+     // call user function
+     afun(ax, ay);
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
-	f.Dependent (ax, ay);  // f(x) = x
+     // create f: x -&gt; y and stop tape recording
+     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
+     f.Dependent (ax, ay);  // f(x) = x
 
-	// check function value
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[0] , ax[2],  eps, eps);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[1] , ax[0] * ax[1],  eps, eps);
+     // check function value
+     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[0] , ax[2],  eps, eps);
+     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ay[1] , ax[0] * ax[1],  eps, eps);
 
 </pre></font></code>
-
-<br/>
-<br/>
 <b><a name="Use Atomic Function.forsparse_jac and rev_sparse_jac" id="Use Atomic Function.forsparse_jac and rev_sparse_jac">forsparse_jac and rev_sparse_jac</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	for(size_t dir = 0; dir &lt; 2; dir++)
-	{	size_t ell;
-		if( dir == 0 )
-			ell = n;
-		else
-			ell = m;
+     for(size_t dir = 0; dir &lt; 2; dir++)
+     {    size_t ell;
+          if( dir == 0 )
+               ell = n;
+          else
+               ell = m;
 
-		// identity martrix
-		vectorBool r(ell * ell);
-		for(size_t i = 0; i &lt; ell; i++)
-			for(size_t j = 0; j &lt; ell; j++)
-				r[i * ell + j] = (i == j);
+          // identity martrix
+          vectorBool r(ell * ell);
+          for(size_t i = 0; i &lt; ell; i++)
+               for(size_t j = 0; j &lt; ell; j++)
+                    r[i * ell + j] = (i == j);
 
-		vectorBool s;
-		if( dir == 0 )
-			s = f.ForSparseJac(n, r);
-		else
-			s = f.RevSparseJac(m, r);
+          vectorBool s;
+          if( dir == 0 )
+               s = f.ForSparseJac(n, r);
+          else
+               s = f.RevSparseJac(m, r);
 
-		// check Jacobian result
-		ok  &amp;= s.size() == m * n;
-		ok  &amp;= s[0 * n + 0] == false;
-		ok  &amp;= s[0 * n + 1] == false;
-		ok  &amp;= s[0 * n + 2] == true;
-		ok  &amp;= s[1 * n + 0] == true;
-		ok  &amp;= s[1 * n + 1] == true;
-		ok  &amp;= s[1 * n + 2] == false;
-	}
+          // check Jacobian result
+          ok  &amp;= s.size() == m * n;
+          ok  &amp;= s[0 * n + 0] == false;
+          ok  &amp;= s[0 * n + 1] == false;
+          ok  &amp;= s[0 * n + 2] == true;
+          ok  &amp;= s[1 * n + 0] == true;
+          ok  &amp;= s[1 * n + 1] == true;
+          ok  &amp;= s[1 * n + 2] == false;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.rev_sparse_hes" id="Use Atomic Function.rev_sparse_hes">rev_sparse_hes</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	vectorBool s(m), h(n * n);
-	s[0] = true;
-	s[1] = true;
-	h    = f.RevSparseHes(n, s);
-	for(size_t i = 0; i &lt; n; i++)
-	{	for(size_t j = 0; j &lt; n; j++)
-		{	bool check = false;
-			check     |= (i == 0) &amp;&amp; (j == 1);
-			check     |= (j == 0) &amp;&amp; (i == 1);
-			ok        &amp;= h[ i * n + j] == check;
-		}
-	}
-	//
-	return ok;
+     vectorBool s(m), h(n * n);
+     s[0] = true;
+     s[1] = true;
+     h    = f.RevSparseHes(n, s);
+     for(size_t i = 0; i &lt; n; i++)
+     {    for(size_t j = 0; j &lt; n; j++)
+          {    bool check = false;
+               check     |= (i == 0) &amp;&amp; (j == 1);
+               check     |= (j == 0) &amp;&amp; (i == 1);
+               ok        &amp;= h[ i * n + j] == check;
+          }
+     }
+     //
+     return ok;
 }
 </pre></font></code>
-
- 
 
 <hr/>Input File: example/atomic/sparsity.cpp
 

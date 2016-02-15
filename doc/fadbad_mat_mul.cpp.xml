@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Fadbad Speed: Matrix Multiplication</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -117,59 +114,58 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_mat_mul(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	CppAD::vector&lt;double&gt;&amp;           x        ,
-	CppAD::vector&lt;double&gt;&amp;           z        ,
-	CppAD::vector&lt;double&gt;&amp;           dz       )
+     size_t                           size     ,
+     size_t                           repeat   ,
+     CppAD::vector&lt;double&gt;&amp;           x        ,
+     CppAD::vector&lt;double&gt;&amp;           z        ,
+     CppAD::vector&lt;double&gt;&amp;           dz       )
 {
-	// speed test global option values
-	if( global_memory || global_onetape || global_atomic || global_optimize )
-		return false;
-	// The correctness check for this test is failing, so abort (for now).
-	return false;
+     // speed test global option values
+     if( global_memory || global_onetape || global_atomic || global_optimize )
+          return false;
+     // The correctness check for this test is failing, so abort (for now).
+     return false;
 
-	// -----------------------------------------------------
-	// setup
+     // -----------------------------------------------------
+     // setup
 
-	// object for computing determinant
-	typedef fadbad::B&lt;double&gt;       ADScalar;
-	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
+     // object for computing determinant
+     typedef fadbad::B&lt;double&gt;       ADScalar;
+     typedef CppAD::vector&lt;ADScalar&gt; ADVector;
 
-	size_t j;                // temporary index
-	size_t m = 1;            // number of dependent variables
-	size_t n = size * size;  // number of independent variables
-	ADVector   X(n);         // AD domain space vector
-	ADVector   Y(n);         // Store product matrix
-	ADVector   Z(m);         // AD range space vector
+     size_t j;                // temporary index
+     size_t m = 1;            // number of dependent variables
+     size_t n = size * size;  // number of independent variables
+     ADVector   X(n);         // AD domain space vector
+     ADVector   Y(n);         // Store product matrix
+     ADVector   Z(m);         // AD range space vector
 
-	// ------------------------------------------------------
-	while(repeat--)
-	{	// get the next matrix
-		CppAD::uniform_01(n, x);
+     // ------------------------------------------------------
+     while(repeat--)
+     {    // get the next matrix
+          CppAD::uniform_01(n, x);
 
-		// set independent variable values
-		for(j = 0; j &lt; n; j++)
-			X[j] = x[j];
+          // set independent variable values
+          for(j = 0; j &lt; n; j++)
+               X[j] = x[j];
 
-		// do the computation
-		mat_sum_sq(size, X, Y, Z);
+          // do the computation
+          mat_sum_sq(size, X, Y, Z);
 
-		// create function object f : X -&gt; Z
-		Z[0].diff(0, m);  // index 0 of m dependent variables
+          // create function object f : X -&gt; Z
+          Z[0].diff(0, m);  // index 0 of m dependent variables
 
-		// evaluate and return gradient using reverse mode
-		for(j = 0; j &lt; n; j++)
-			dz[j] = X[j].d(0); // partial Z[0] w.r.t X[j]
-	}
-	// return function value
-	z[0] = Z[0].x();
+          // evaluate and return gradient using reverse mode
+          for(j = 0; j &lt; n; j++)
+               dz[j] = X[j].d(0); // partial Z[0] w.r.t X[j]
+     }
+     // return function value
+     z[0] = Z[0].x();
 
-	// ---------------------------------------------------------
-	return true;
+     // ---------------------------------------------------------
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/fadbad/mat_mul.cpp
 

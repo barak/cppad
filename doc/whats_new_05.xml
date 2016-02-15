@@ -6,7 +6,7 @@
 <title>Changes and Additions to CppAD During 2005</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Changes and Additions to CppAD During 2005"/>
-<meta name="keywords" id="keywords" content=" changes and additions to cppad during 2005 12-24 12-23 12-22 12-20 12-19 12-16 12-15 12-14 12-11 12-08 12-07 12-06 12-05 12-03 12-02 12-01 11-23 11-22 11-20 11-19 11-15 11-12 11-09 11-07 11-06 11-01 10-20 10-18 10-14 10-12 10-06 09-29 09-27 09-24 09-20 09-14 09-09 09-07 08-30 08-24 08-20 08-19 08-15 08-14 08-13 08-07 07-21 07-19 07-15 07-11 07-08 07-05 07-04 07-03 07-02 07-01 06-25 06-24 06-18 06-14 06-13 06-06 05-19 05-18 05-16 05-12 05-06 05-01 04-21 04-20 04-19 03-26 03-23 03-22 03-09 03-04 03-01 02-24 01-08 "/>
+<meta name="keywords" id="keywords" content=" changes additions to cppad during 2005 12-24 12-23 12-22 12-20 12-19 12-16 12-15 12-14 12-11 12-08 12-07 12-06 12-05 12-03 12-02 12-01 11-23 11-22 11-20 11-19 11-15 11-12 11-09 11-07 11-06 11-01 10-20 10-18 10-14 10-12 10-06 09-29 09-27 09-24 09-20 09-14 09-09 09-07 08-30 08-24 08-20 08-19 08-15 08-14 08-13 08-07 07-21 07-19 07-15 07-11 07-08 07-05 07-04 07-03 07-02 07-01 06-25 06-24 06-18 06-14 06-13 06-06 05-19 05-18 05-16 05-12 05-06 05-01 04-21 04-20 04-19 03-26 03-23 03-22 03-09 03-04 03-01 02-24 01-08 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -251,17 +251,14 @@ The bug mentioned on <a href="whats_new_05.xml#12-01" target="_top"><span style=
  resurfaced
 and the corresponding routine was changed as follows:
 <code><font color='blue'><pre style='display:inline'> 
-	static ADTape&lt;Base&gt; *Tape(void)
-	{	// If we return &amp;tape, instead of creating and returning ptr,
-		// there seems to be a bug in g++ with -O2 option.
-		static ADTape&lt;Base&gt; tape;
-		static ADTape&lt;Base&gt; *ptr = &amp;tape;
-		return ptr;
-	}
+     static ADTape&lt;Base&gt; *Tape(void)
+     {    // If we return &amp;tape, instead of creating and returning ptr,
+          // there seems to be a bug in g++ with -O2 option.
+          static ADTape&lt;Base&gt; tape;
+          static ADTape&lt;Base&gt; *ptr = &amp;tape;
+          return ptr;
+     }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="12-16" id="12-16">12-16</a></big></b>
 <br/>
@@ -472,12 +469,11 @@ The speed test of <a href="lu_vec_ad.cpp.xml" target="_top"><span style='white-s
 It appears that there is some sort of bug in the gcc compiler with
 the -O2 option whereby the following member function
 <code><font color='blue'><pre style='display:inline'> 
-	static ADTape&lt;Base&gt; *Tape(void)
-	{	static ADTape&lt;Base&gt; tape;
-		return &amp;tape;
-	}
+     static ADTape&lt;Base&gt; *Tape(void)
+     {    static ADTape&lt;Base&gt; tape;
+          return &amp;tape;
+     }
 </pre></font></code>
-
 (in <code><font color="blue">cppad/local/AD.h</font></code>)
 would sometimes return a null value (during <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  operations).
@@ -1251,24 +1247,22 @@ inline the rest of putting operators in the tape.
 For example,
 here is part of the speed test output before this change:
 <code><font color='blue'><pre style='display:inline'> 
-	Tape of Expansion by Minors Determinant: Length = 350, Memory = 6792
-	size = 5 rate = 230
-	size = 4 rate = 1,055
-	size = 3 rate = 3,408
-	size = 2 rate = 7,571
-	size = 1 rate = 13,642
+     Tape of Expansion by Minors Determinant: Length = 350, Memory = 6792
+     size = 5 rate = 230
+     size = 4 rate = 1,055
+     size = 3 rate = 3,408
+     size = 2 rate = 7,571
+     size = 1 rate = 13,642
 </pre></font></code>
-
 and here is the same output after this change:
 <code><font color='blue'><pre style='display:inline'> 
-	Tape of Expansion by Minors Determinant: Length = 350, Memory = 6792
-	size = 5 rate = 448
-	size = 4 rate = 2,004
-	size = 3 rate = 5,761
-	size = 2 rate = 10,221
-	size = 1 rate = 14,734
+     Tape of Expansion by Minors Determinant: Length = 350, Memory = 6792
+     size = 5 rate = 448
+     size = 4 rate = 2,004
+     size = 3 rate = 5,761
+     size = 2 rate = 10,221
+     size = 1 rate = 14,734
 </pre></font></code>
-
 Note that your results will vary depending on operating system and machine.
 
 <br/>

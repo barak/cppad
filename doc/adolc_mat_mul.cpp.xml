@@ -93,9 +93,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Adolc Speed: Matrix Multiplication</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -119,120 +116,119 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_mat_mul(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	CppAD::vector&lt;double&gt;&amp;           x        ,
-	CppAD::vector&lt;double&gt;&amp;           z        ,
-	CppAD::vector&lt;double&gt;&amp;           dz       )
+     size_t                           size     ,
+     size_t                           repeat   ,
+     CppAD::vector&lt;double&gt;&amp;           x        ,
+     CppAD::vector&lt;double&gt;&amp;           z        ,
+     CppAD::vector&lt;double&gt;&amp;           dz       )
 {
-	// speed test global option values
-	if( global_memory || global_atomic || global_optimize )
-		return false;
-	// -----------------------------------------------------
-	// setup
-	typedef adouble    ADScalar;
-	typedef ADScalar*  ADVector;
+     // speed test global option values
+     if( global_memory || global_atomic || global_optimize )
+          return false;
+     // -----------------------------------------------------
+     // setup
+     typedef adouble    ADScalar;
+     typedef ADScalar*  ADVector;
 
-	int tag  = 0;         // tape identifier
-	int m    = 1;         // number of dependent variables
-	int n    = size*size; // number of independent variables
-	double f;             // function value
-	int j;                // temporary index
+     int tag  = 0;         // tape identifier
+     int m    = 1;         // number of dependent variables
+     int n    = size*size; // number of independent variables
+     double f;             // function value
+     int j;                // temporary index
 
-	// set up for thread_alloc memory allocator (fast and checks for leaks)
-	using CppAD::thread_alloc; // the allocator
-	size_t capacity;           // capacity of an allocation
+     // set up for thread_alloc memory allocator (fast and checks for leaks)
+     using CppAD::thread_alloc; // the allocator
+     size_t capacity;           // capacity of an allocation
 
-	// AD domain space vector
-	ADVector X = thread_alloc::create_array&lt;ADScalar&gt;(size_t(n), capacity);
+     // AD domain space vector
+     ADVector X = thread_alloc::create_array&lt;ADScalar&gt;(size_t(n), capacity);
 
-	// Product matrix
-	ADVector Y = thread_alloc::create_array&lt;ADScalar&gt;(size_t(n), capacity);
+     // Product matrix
+     ADVector Y = thread_alloc::create_array&lt;ADScalar&gt;(size_t(n), capacity);
 
-	// AD range space vector
-	ADVector Z = thread_alloc::create_array&lt;ADScalar&gt;(size_t(m), capacity);
+     // AD range space vector
+     ADVector Z = thread_alloc::create_array&lt;ADScalar&gt;(size_t(m), capacity);
 
-	// vector with matrix value
-	double* mat = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
+     // vector with matrix value
+     double* mat = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
 
-	// vector of reverse mode weights
-	double* u  = thread_alloc::create_array&lt;double&gt;(size_t(m), capacity);
-	u[0] = 1.;
+     // vector of reverse mode weights
+     double* u  = thread_alloc::create_array&lt;double&gt;(size_t(m), capacity);
+     u[0] = 1.;
 
-	// gradient
-	double* grad = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
+     // gradient
+     double* grad = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
 
-	// ----------------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
-	{	// choose a matrix
-		CppAD::uniform_01(n, mat);
+     // ----------------------------------------------------------------------
+     if( ! global_onetape ) while(repeat--)
+     {    // choose a matrix
+          CppAD::uniform_01(n, mat);
 
-		// declare independent variables
-		int keep = 1; // keep forward mode results
-		trace_on(tag, keep);
-		for(j = 0; j &lt; n; j++)
-			X[j] &lt;&lt;= mat[j];
+          // declare independent variables
+          int keep = 1; // keep forward mode results
+          trace_on(tag, keep);
+          for(j = 0; j &lt; n; j++)
+               X[j] &lt;&lt;= mat[j];
 
-		// do computations
-		CppAD::mat_sum_sq(size, X, Y, Z);
+          // do computations
+          CppAD::mat_sum_sq(size, X, Y, Z);
 
-		// create function object f : X -&gt; Z
-		Z[0] &gt;&gt;= f;
-		trace_off();
+          // create function object f : X -&gt; Z
+          Z[0] &gt;&gt;= f;
+          trace_off();
 
-		// evaluate and return gradient using reverse mode
-		fos_reverse(tag, m, n, u, grad);
-	}
-	else
-	{	// choose a matrix
-		CppAD::uniform_01(n, mat);
+          // evaluate and return gradient using reverse mode
+          fos_reverse(tag, m, n, u, grad);
+     }
+     else
+     {    // choose a matrix
+          CppAD::uniform_01(n, mat);
 
-		// declare independent variables
-		int keep = 0; // do not keep forward mode results
-		trace_on(tag, keep);
-		for(j = 0; j &lt; n; j++)
-			X[j] &lt;&lt;= mat[j];
+          // declare independent variables
+          int keep = 0; // do not keep forward mode results
+          trace_on(tag, keep);
+          for(j = 0; j &lt; n; j++)
+               X[j] &lt;&lt;= mat[j];
 
-		// do computations
-		CppAD::mat_sum_sq(size, X, Y, Z);
+          // do computations
+          CppAD::mat_sum_sq(size, X, Y, Z);
 
-		// create function object f : X -&gt; Z
-		Z[0] &gt;&gt;= f;
-		trace_off();
+          // create function object f : X -&gt; Z
+          Z[0] &gt;&gt;= f;
+          trace_off();
 
-		while(repeat--)
-		{	// choose a matrix
-			CppAD::uniform_01(n, mat);
+          while(repeat--)
+          {    // choose a matrix
+               CppAD::uniform_01(n, mat);
 
-			// evaluate the determinant at the new matrix value
-			keep = 1; // keep this forward mode result
-			zos_forward(tag, m, n, keep, mat, &amp;f);
+               // evaluate the determinant at the new matrix value
+               keep = 1; // keep this forward mode result
+               zos_forward(tag, m, n, keep, mat, &amp;f);
 
-			// evaluate and return gradient using reverse mode
-			fos_reverse(tag, m, n, u, grad);
-		}
-	}
-	// return function, matrix, and gradient
-	z[0] = f;
-	for(j = 0; j &lt; n; j++)
-	{	x[j]  = mat[j];
-		dz[j] = grad[j];
-	}
+               // evaluate and return gradient using reverse mode
+               fos_reverse(tag, m, n, u, grad);
+          }
+     }
+     // return function, matrix, and gradient
+     z[0] = f;
+     for(j = 0; j &lt; n; j++)
+     {    x[j]  = mat[j];
+          dz[j] = grad[j];
+     }
 
-	// tear down
-	thread_alloc::delete_array(X);
-	thread_alloc::delete_array(Y);
-	thread_alloc::delete_array(Z);
-	thread_alloc::delete_array(mat);
-	thread_alloc::delete_array(u);
-	thread_alloc::delete_array(grad);
+     // tear down
+     thread_alloc::delete_array(X);
+     thread_alloc::delete_array(Y);
+     thread_alloc::delete_array(Z);
+     thread_alloc::delete_array(mat);
+     thread_alloc::delete_array(u);
+     thread_alloc::delete_array(grad);
 
-	return true;
+     return true;
 }
 
 
 </pre></font></code>
-
 
 <hr/>Input File: speed/adolc/mat_mul.cpp
 

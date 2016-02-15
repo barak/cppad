@@ -6,7 +6,7 @@
 <title>CppAD Changes and Additions During 2012</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Changes and Additions During 2012"/>
-<meta name="keywords" id="keywords" content=" cppad changes and additions during 2012 introduction 12-30 12-29 12-28 12-27 12-26 12-23 12-22 12-20 12-19 12-17 12-15 12-14 12-13 11-28 11-21 11-20 11-17 11-16 11-14 11-09 11-06 11-04 10-31 10-30 10-25 10-24 10-12 10-04 10-03 10-02 09-24 09-11 08-05 07-30 07-08 07-07 07-05 07-04 07-03 07-02 07-01 06-17 06-16 06-15 06-12 06-10 06-09 06-08 06-07 06-05 06-04 06-03 06-02 06-01 05-31 05-30 05-29 05-27 05-24 04-19 04-18 04-17 04-10 04-06 04-05 04-01 03-27 03-26 03-23 03-21 03-17 03-11 03-03 03-02 02-11 02-10 02-09 01-30 01-27 01-24 01-23 01-20 01-19 01-16 01-15 01-12 01-07 01-02 "/>
+<meta name="keywords" id="keywords" content=" cppad changes additions during 2012 introduction 12-30 12-29 12-28 12-27 12-26 12-23 12-22 12-20 12-19 12-17 12-15 12-14 12-13 11-28 11-21 11-20 11-17 11-16 11-14 11-09 11-06 11-04 10-31 10-30 10-25 10-24 10-12 10-04 10-03 10-02 09-24 09-11 08-05 07-30 07-08 07-07 07-05 07-04 07-03 07-02 07-01 06-17 06-16 06-15 06-12 06-10 06-09 06-08 06-07 06-05 06-04 06-03 06-02 06-01 05-31 05-30 05-29 05-27 05-24 04-19 04-18 04-17 04-10 04-06 04-05 04-01 03-27 03-26 03-23 03-21 03-17 03-11 03-03 03-02 02-11 02-10 02-09 01-30 01-27 01-24 01-23 01-20 01-19 01-16 01-15 01-12 01-07 01-02 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -821,22 +821,16 @@ had the following <code><font color="blue">valgrind</font></code> symptom during
 <a href="optimize.cpp.xml" target="_top"><span style='white-space: nowrap'>optimize.cpp</span></a>
  example:
 <code><font color='blue'><pre style='display:inline'> 
-	==6344== Conditional jump or move depends on uninitialised value(s)
+     ==6344== Conditional jump or move depends on uninitialised value(s)
 </pre></font></code>
-
 </li><li>
-
 Fix mistake in <a href="old_tan.cpp.xml" target="_top"><span style='white-space: nowrap'>old_tan.cpp</span></a>
  where <code><font color="blue">w[2] = 0</font></code>
 was missing before the call
 <code><font color='blue'><pre style='display:inline'> 
-	     dw    = F.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
+          dw    = F.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 </pre></font></code>
-
 </li></ol>
-
-
-<br/>
 <br/>
 <b><big><a name="07-08" id="07-08">07-08</a></big></b>
 
@@ -903,9 +897,6 @@ Error detected by false result for
     y_taddr &gt; 0
 at line 262 in the file cppad/local/dependent.hpp
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="07-02" id="07-02">07-02</a></big></b>
 <br/>
@@ -1390,23 +1381,20 @@ directory.
 If you then edited the file <code><font color="blue">work/multi_thread/makefile</font></code>
 and changed
 <code><font color='blue'><pre style='display:inline'> 
-	# AM_CXXFLAGS     = -g $(CXX_FLAGS)
-	AM_CXXFLAGS = -DNDEBUG -O2 $(CXX_FLAGS)
+     # AM_CXXFLAGS     = -g $(CXX_FLAGS)
+     AM_CXXFLAGS = -DNDEBUG -O2 $(CXX_FLAGS)
 </pre></font></code>
-
 to
 <code><font color='blue'><pre style='display:inline'> 
-	AM_CXXFLAGS     = -g $(CXX_FLAGS)
-	# AM_CXXFLAGS = -DNDEBUG -O2 $(CXX_FLAGS)
+     AM_CXXFLAGS     = -g $(CXX_FLAGS)
+     # AM_CXXFLAGS = -DNDEBUG -O2 $(CXX_FLAGS)
 </pre></font></code>
-
 and then executed the commands
 <code><font color='blue'><pre style='display:inline'> 
-	make clean
-	make pthread_test
-	valgrind --tool=helgrind ./pthread_test simple_ad
+     make clean
+     make pthread_test
+     valgrind --tool=helgrind ./pthread_test simple_ad
 </pre></font></code>
-
 The following error message would result:
 
 <code><i><font color="black"><span style='white-space: nowrap'><br/>
@@ -1803,7 +1791,6 @@ A duplicated code block beginning with
 <code><font color='blue'><pre style='display:inline'> 
 if( fabs( fcur ) &lt;= epsilon_ )
 </pre></font></code>
-
 was removed from the routine <code><font color="blue">multi_newton_worker</font></code>, in the file
 <a href="multi_newton_work.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton_work.cpp</span></a>
 .
@@ -1861,7 +1848,6 @@ On one tests machine, the execution time for the 32 thread case for the test
 <code><font color='blue'><pre style='display:inline'> 
 ./openmp_test multi_newton 1 32 1000 4800 10 true
 </pre></font></code>
-
 improved from  0.0302 seconds to 0.0135 seconds.
 
 </li><li>

@@ -6,7 +6,7 @@
 <title>Repeat det_by_minor Routine A Specified Number of Times</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Repeat det_by_minor Routine A Specified Number of Times"/>
-<meta name="keywords" id="keywords" content=" repeat det_by_minor routine a specified number of times syntax size source code "/>
+<meta name="keywords" id="keywords" content=" repeat det_by_minor routine specified number times syntax size source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -99,9 +99,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Repeat det_by_minor Routine A Specified Number of Times</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -143,19 +140,18 @@ matrix we are computing the determinant of.
 
 <code><font color='blue'><pre style='display:inline'> 
 void repeat_det_by_minor(size_t repeat, size_t size)
-{	double *a;
-	a = (double*) malloc( (size * size) * sizeof(double) );
+{    double *a;
+     a = (double*) malloc( (size * size) * sizeof(double) );
 
-	while(repeat--)
-	{	<a href="uniform_01_c.xml" target="_top">uniform_01</a>(size * size, a);
-		<a href="det_by_minor_c.xml" target="_top">det_by_minor</a>(a, size);
-	}
-	
-	free(a);
-	return;
+     while(repeat--)
+     {    <a href="uniform_01_c.xml" target="_top">uniform_01</a>(size * size, a);
+          <a href="det_by_minor_c.xml" target="_top">det_by_minor</a>(a, size);
+     }
+     
+     free(a);
+     return;
 }
 </pre></font></code>
-
 
 <hr/>Input File: compare_c/det_by_minor.c
 

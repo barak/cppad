@@ -6,7 +6,7 @@
 <title>Base Type Requirements for Numeric Limits</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Base Type Requirements for Numeric Limits"/>
-<meta name="keywords" id="keywords" content=" base type requirements for numeric limits cppad::numeric_limits cppad_numeric_limits "/>
+<meta name="keywords" id="keywords" content=" base type requirements numeric limits cppad::numeric_limits cppad_numeric_limits "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -147,18 +147,17 @@ where the macro is defined by
 # define CPPAD_NUMERIC_LIMITS(Other, Base) \
 template &lt;&gt; class numeric_limits&lt;Base&gt;\
 {\
-	public:\
-	static Base min(void) \
-	{	return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::min() ); }\
-	static Base max(void) \
-	{	return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::max() ); }\
-	static Base epsilon(void) \
-	{	return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::epsilon() ); }\
-	static Base quiet_NaN(void) \
-	{	return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::quiet_NaN() ); }\
+     public:\
+     static Base min(void) \
+     {    return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::min() ); }\
+     static Base max(void) \
+     {    return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::max() ); }\
+     static Base epsilon(void) \
+     {    return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::epsilon() ); }\
+     static Base quiet_NaN(void) \
+     {    return static_cast&lt;Base&gt;( std::numeric_limits&lt;Other&gt;::quiet_NaN() ); }\
 };
 </pre></font></code>
-
 
 <hr/>Input File: cppad/local/base_limits.hpp
 
