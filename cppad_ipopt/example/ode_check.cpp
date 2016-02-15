@@ -1,9 +1,9 @@
-/* $Id: ode_check.cpp 3623 2015-01-29 11:42:49Z bradbell $ */
+// $Id: ode_check.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -48,7 +48,7 @@ bool ode_check(const SizeVector& N, const NumberVector& x)
 	{	y_0[j] = x[j];
 		y_1[j] = x[Ny + j];
 		y_2[j] = x[2 * Ny + j];
-	} 
+	}
 
 	// Check some of the optimal a value
 	Number rel_tol = max_step * max_step;
@@ -56,7 +56,7 @@ bool ode_check(const SizeVector& N, const NumberVector& x)
 	Number check_a[] = {a0, a1, a2}; // see the y_one function
 	for(j = 0; j < Na; j++)
 	{
-		ok &= CppAD::NearEqual( 
+		ok &= CppAD::NearEqual(
 			check_a[j], a[j], rel_tol, abs_tol
 		);
 	}

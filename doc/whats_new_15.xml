@@ -6,7 +6,7 @@
 <title>CppAD Changes and Additions During 2015</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Changes and Additions During 2015"/>
-<meta name="keywords" id="keywords" content=" cppad changes and additions during 2015 introduction 12-29 12-28 12-08 12-01 11-30 11-25 11-24 11-14 11-08 11-06 10-21 10-16 10-06 10-04 10-03 10-02 09-28 09-27 09-25 09-24 09-23 09-21 09-20 09-19 09-16 09-03 09-02 08-31 08-30 08-29 08-28 08-26 08-25 08-20 08-17 08-16 08-09 08-06 07-31 06-16 06-11 06-09 06-07 05-26 cond_exp_1 cond_exp_2 05-11 05-10 05-09 05-08 05-07 05-05 04-18 03-13 03-06 02-28 02-18 02-16 02-14 02-11 02-10 02-09 02-07 02-06 02-04 02-03 02-02 01-30 01-29 01-26 01-23 01-21 01-20 01-09 01-07 01-02 "/>
+<meta name="keywords" id="keywords" content=" cppad changes additions during 2015 introduction 12-29 12-28 12-08 12-01 11-30 11-25 11-24 11-14 11-08 11-06 10-21 10-16 10-06 10-04 10-03 10-02 09-28 09-27 09-25 09-24 09-23 09-21 09-20 09-19 09-16 09-03 09-02 08-31 08-30 08-29 08-28 08-26 08-25 08-20 08-17 08-16 08-09 08-06 07-31 06-16 06-11 06-09 06-07 05-26 cond_exp_1 cond_exp_2 05-11 05-10 05-09 05-08 05-07 05-05 04-18 03-13 03-06 02-28 02-18 02-16 02-14 02-11 02-10 02-09 02-07 02-06 02-04 02-03 02-02 01-30 01-29 01-26 01-23 01-21 01-20 01-09 01-07 01-02 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -275,16 +275,13 @@ The individual <a href="utility.xml" target="_top"><span style='white-space: now
 .
 For example,
 <code><font color='blue'><pre style='display:inline'> 
-	# include &lt;cppad/runge_45.hpp&gt;
+     # include &lt;cppad/runge_45.hpp&gt;
 </pre></font></code>
-
 You should us the utility include instead; i.e.,
 <code><font color='blue'><pre style='display:inline'> 
-	# include &lt;cppad/utility.hpp&gt;
+     # include &lt;cppad/utility.hpp&gt;
 </pre></font></code>
-
 </li><li>
-
 The <a href="numeric_ad.xml" target="_top"><span style='white-space: nowrap'>numeric_ad</span></a>
  routines where moved from the <code><font color="blue">library</font></code>
 the a separate documentation section.
@@ -312,9 +309,8 @@ change its specifications to refer to all deprecated features.
 <ol type="1"><li>
 CppAD now installs the object library
 <code><font color='blue'><pre style='display:inline'> 
-	-lcppad_lib
+     -lcppad_lib
 </pre></font></code>
-
 to be included when linking.
 Currently, it is only required when
 <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
@@ -325,9 +321,8 @@ Currently, it is only required when
 
 It is no longer necessary to compile and link the file
 <code><font color='blue'><pre style='display:inline'> 
-	cppad_colpack.cpp
+     cppad_colpack.cpp
 </pre></font></code>
-
 when <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
 
 is specified during the install process; see
@@ -1261,19 +1256,17 @@ through the <a href="condexp.xml" target="_top"><span style='white-space: nowrap
 case that is not used.
 For example, if
 <code><font color='blue'><pre style='display:inline'> 
-	<a href="independent.xml" target="_top">Independent</a>(ax);
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; aeps = 1e-10;
-	ay[0] = CondExpGt( ax[0], aeps, 1.0/ax[0], 1.0/aeps );
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <a href="independent.xml" target="_top">Independent</a>(ax);
+     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; aeps = 1e-10;
+     ay[0] = CondExpGt( ax[0], aeps, 1.0/ax[0], 1.0/aeps );
+     <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
 </pre></font></code>
-
 The corresponding reverse mode calculation,
 at <code><font color="blue">x[0] = 0.0</font></code>, would result in
 <code><font color='blue'><pre style='display:inline'> 
-	Error detected by false result for
-	! ( hasnan(value) &amp;&amp; check_for_nan_ )
+     Error detected by false result for
+     ! ( hasnan(value) &amp;&amp; check_for_nan_ )
 </pre></font></code>
-
 This has been fixed so that only the conditional expression case that is used
 affects the reverse mode results.
 The example <a href="cond_exp.cpp.xml" target="_top"><span style='white-space: nowrap'>cond_exp.cpp</span></a>
@@ -1322,12 +1315,9 @@ if <a href="faq.xml#Speed.NDEBUG" target="_top"><span style='white-space: nowrap
  is not defined, one could get
 an assert with the message:
 <code><font color='blue'><pre style='display:inline'> 
-	Error detected by false result for
-		var_index_ &gt;= NumRes(op_)
+     Error detected by false result for
+          var_index_ &gt;= NumRes(op_)
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="02-10" id="02-10">02-10</a></big></b>
 <br/>

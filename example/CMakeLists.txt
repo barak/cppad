@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3768 2015-12-28 18:58:35Z bradbell $
+# $Id: CMakeLists.txt 3785 2016-02-08 12:53:06Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
@@ -215,7 +215,7 @@ add_cppad_cxx_flags(example)
 
 # List of libraries to be linked into the specified target
 TARGET_LINK_LIBRARIES(example
-	cppad_lib
+	${cppad_lib}
 	${adolc_libs}
 	${colpack_libs}
 	${eigen_libs}

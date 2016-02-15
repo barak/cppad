@@ -6,7 +6,7 @@
 <title>Tan and Tanh as User Atomic Operations: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Tan and Tanh as User Atomic Operations: Example and Test"/>
-<meta name="keywords" id="keywords" content=" tan and tanh as user atomic operations: example test tangent operation theory sparsity start class definition constructor forward reverse for_sparse_jac rev_sparse_jac rev_sparse_hes end use function recording large x values "/>
+<meta name="keywords" id="keywords" content=" tan tanh user atomic operations: example test tangent operation theory sparsity start class definition constructor forward reverse for_sparse_jac rev_sparse_jac rev_sparse_hes end use function recording large x values "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -111,9 +111,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Tan and Tanh as User Atomic Operations: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Theory" id="Theory">Theory</a></big></b>
@@ -143,329 +140,315 @@ using CppAD::vector;
 //
 // a utility to compute the union of two sets.
 void my_union(
-	std::set&lt;size_t&gt;&amp;         result  ,
-	const std::set&lt;size_t&gt;&amp;   left    ,
-	const std::set&lt;size_t&gt;&amp;   right   )
-{	std::set&lt;size_t&gt; temp;
-	std::set_union(
-		left.begin()              ,
-		left.end()                ,
-		right.begin()             ,
-		right.end()               ,
-		std::inserter(temp, temp.begin())
-	);
-	result.swap(temp);
+     std::set&lt;size_t&gt;&amp;         result  ,
+     const std::set&lt;size_t&gt;&amp;   left    ,
+     const std::set&lt;size_t&gt;&amp;   right   )
+{    std::set&lt;size_t&gt; temp;
+     std::set_union(
+          left.begin()              ,
+          left.end()                ,
+          right.begin()             ,
+          right.end()               ,
+          std::inserter(temp, temp.begin())
+     );
+     result.swap(temp);
 }
 //
 class atomic_tangent : public CppAD::atomic_base&lt;float&gt; {
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="Constructor" id="Constructor">Constructor</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	private:
-	const bool hyperbolic_; // is this hyperbolic tangent
-	public:
-	// constructor
-	atomic_tangent(const char* name, bool hyperbolic)
-	: CppAD::atomic_base&lt;float&gt;(name),
-	hyperbolic_(hyperbolic)
-	{ }
-	private:
+     private:
+     const bool hyperbolic_; // is this hyperbolic tangent
+     public:
+     // constructor
+     atomic_tangent(const char* name, bool hyperbolic)
+     : CppAD::atomic_base&lt;float&gt;(name),
+     hyperbolic_(hyperbolic)
+     { }
+     private:
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="forward" id="forward">forward</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// forward mode routine called by CppAD
-	bool forward(
-		size_t                    p ,
-		size_t                    q ,
-		const vector&lt;bool&gt;&amp;      vx ,
-		      vector&lt;bool&gt;&amp;     vzy ,
-		const vector&lt;float&gt;&amp;     tx ,
-		      vector&lt;float&gt;&amp;    tzy
-	)
-	{	size_t q1 = q + 1;
-		size_t n  = tx.size()  / q1;
-		size_t m  = tzy.size() / q1;
-		assert( n == 1 );
-		assert( m == 2 );
-		assert( p &lt;= q );
-		size_t j, k;
+     // forward mode routine called by CppAD
+     bool forward(
+          size_t                    p ,
+          size_t                    q ,
+          const vector&lt;bool&gt;&amp;      vx ,
+                vector&lt;bool&gt;&amp;     vzy ,
+          const vector&lt;float&gt;&amp;     tx ,
+                vector&lt;float&gt;&amp;    tzy
+     )
+     {    size_t q1 = q + 1;
+          size_t n  = tx.size()  / q1;
+          size_t m  = tzy.size() / q1;
+          assert( n == 1 );
+          assert( m == 2 );
+          assert( p &lt;= q );
+          size_t j, k;
 
-		// check if this is during the call to old_tan(id, ax, ay)
-		if( vx.size() &gt; 0 )
-		{	// set variable flag for both y an z
-			vzy[0] = vx[0];
-			vzy[1] = vx[0];
-		}
+          // check if this is during the call to old_tan(id, ax, ay)
+          if( vx.size() &gt; 0 )
+          {    // set variable flag for both y an z
+               vzy[0] = vx[0];
+               vzy[1] = vx[0];
+          }
 
-		if( p == 0 )
-		{	// z^{(0)} = tan( x^{(0)} ) or tanh( x^{(0)} )
-			if( hyperbolic_ )
-				tzy[0] = tanh( tx[0] );
-			else	tzy[0] = tan( tx[0] );
+          if( p == 0 )
+          {    // z^{(0)} = tan( x^{(0)} ) or tanh( x^{(0)} )
+               if( hyperbolic_ )
+                    tzy[0] = tanh( tx[0] );
+               else tzy[0] = tan( tx[0] );
 
-			// y^{(0)} = z^{(0)} * z^{(0)}
-			tzy[q1 + 0] = tzy[0] * tzy[0];
+               // y^{(0)} = z^{(0)} * z^{(0)}
+               tzy[q1 + 0] = tzy[0] * tzy[0];
 
-			p++;
-		}
-		for(j = p; j &lt;= q; j++)
-		{	float j_inv = 1.f / float(j);
-			if( hyperbolic_ )
-				j_inv = - j_inv;
+               p++;
+          }
+          for(j = p; j &lt;= q; j++)
+          {    float j_inv = 1.f / float(j);
+               if( hyperbolic_ )
+                    j_inv = - j_inv;
 
-			// z^{(j)} = x^{(j)} +- sum_{k=1}^j k x^{(k)} y^{(j-k)} / j
-			tzy[j] = tx[j];
-			for(k = 1; k &lt;= j; k++)
-				tzy[j] += tx[k] * tzy[q1 + j-k] * k * j_inv;
+               // z^{(j)} = x^{(j)} +- sum_{k=1}^j k x^{(k)} y^{(j-k)} / j
+               tzy[j] = tx[j];
+               for(k = 1; k &lt;= j; k++)
+                    tzy[j] += tx[k] * tzy[q1 + j-k] * k * j_inv;
 
-			// y^{(j)} = sum_{k=0}^j z^{(k)} z^{(j-k)}
-			tzy[q1 + j] = 0.;
-			for(k = 0; k &lt;= j; k++)
-				tzy[q1 + j] += tzy[k] * tzy[j-k];
-		}
+               // y^{(j)} = sum_{k=0}^j z^{(k)} z^{(j-k)}
+               tzy[q1 + j] = 0.;
+               for(k = 0; k &lt;= j; k++)
+                    tzy[q1 + j] += tzy[k] * tzy[j-k];
+          }
 
-		// All orders are implemented and there are no possible errors
-		return true;
-	}
+          // All orders are implemented and there are no possible errors
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="reverse" id="reverse">reverse</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// reverse mode routine called by CppAD
-	virtual bool reverse(
-		size_t                    q ,
-		const vector&lt;float&gt;&amp;     tx ,
-		const vector&lt;float&gt;&amp;    tzy ,
-		      vector&lt;float&gt;&amp;     px ,
-		const vector&lt;float&gt;&amp;    pzy
-	)
-	{	size_t q1 = q + 1;
-		size_t n  = tx.size()  / q1;
-		size_t m  = tzy.size() / q1;
-		assert( px.size()  == n * q1 );
-		assert( pzy.size() == m * q1 );
-		assert( n == 1 );
-		assert( m == 2 );
+     // reverse mode routine called by CppAD
+     virtual bool reverse(
+          size_t                    q ,
+          const vector&lt;float&gt;&amp;     tx ,
+          const vector&lt;float&gt;&amp;    tzy ,
+                vector&lt;float&gt;&amp;     px ,
+          const vector&lt;float&gt;&amp;    pzy
+     )
+     {    size_t q1 = q + 1;
+          size_t n  = tx.size()  / q1;
+          size_t m  = tzy.size() / q1;
+          assert( px.size()  == n * q1 );
+          assert( pzy.size() == m * q1 );
+          assert( n == 1 );
+          assert( m == 2 );
 
-		size_t j, k;
+          size_t j, k;
 
-		// copy because partials w.r.t. y and z need to change
-		vector&lt;float&gt; qzy = pzy;
+          // copy because partials w.r.t. y and z need to change
+          vector&lt;float&gt; qzy = pzy;
 
-		// initialize accumultion of reverse mode partials
-		for(k = 0; k &lt; q1; k++)
-			px[k] = 0.;
+          // initialize accumultion of reverse mode partials
+          for(k = 0; k &lt; q1; k++)
+               px[k] = 0.;
 
-		// eliminate positive orders
-		for(j = q; j &gt; 0; j--)
-		{	float j_inv = 1.f / float(j);
-			if( hyperbolic_ )
-				j_inv = - j_inv;
+          // eliminate positive orders
+          for(j = q; j &gt; 0; j--)
+          {    float j_inv = 1.f / float(j);
+               if( hyperbolic_ )
+                    j_inv = - j_inv;
 
-			// H_{x^{(k)}} += delta(j-k) +- H_{z^{(j)} y^{(j-k)} * k / j
-			px[j] += qzy[j];
-			for(k = 1; k &lt;= j; k++)
-				px[k] += qzy[j] * tzy[q1 + j-k] * k * j_inv;
+               // H_{x^{(k)}} += delta(j-k) +- H_{z^{(j)} y^{(j-k)} * k / j
+               px[j] += qzy[j];
+               for(k = 1; k &lt;= j; k++)
+                    px[k] += qzy[j] * tzy[q1 + j-k] * k * j_inv;
 
-			// H_{y^{j-k)} += +- H_{z^{(j)} x^{(k)} * k / j
-			for(k = 1; k &lt;= j; k++)
-				qzy[q1 + j-k] += qzy[j] * tx[k] * k * j_inv;
+               // H_{y^{j-k)} += +- H_{z^{(j)} x^{(k)} * k / j
+               for(k = 1; k &lt;= j; k++)
+                    qzy[q1 + j-k] += qzy[j] * tx[k] * k * j_inv;
 
-			// H_{z^{(k)}} += H_{y^{(j-1)}} * z^{(j-k-1)} * 2.
-			for(k = 0; k &lt; j; k++)
-				qzy[k] += qzy[q1 + j-1] * tzy[j-k-1] * 2.f;
-		}
+               // H_{z^{(k)}} += H_{y^{(j-1)}} * z^{(j-k-1)} * 2.
+               for(k = 0; k &lt; j; k++)
+                    qzy[k] += qzy[q1 + j-1] * tzy[j-k-1] * 2.f;
+          }
 
-		// eliminate order zero
-		if( hyperbolic_ )
-			px[0] += qzy[0] * (1.f - tzy[q1 + 0]);
-		else
-			px[0] += qzy[0] * (1.f + tzy[q1 + 0]);
+          // eliminate order zero
+          if( hyperbolic_ )
+               px[0] += qzy[0] * (1.f - tzy[q1 + 0]);
+          else
+               px[0] += qzy[0] * (1.f + tzy[q1 + 0]);
 
-		return true;
-	}
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="for_sparse_jac" id="for_sparse_jac">for_sparse_jac</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// forward Jacobian sparsity routine called by CppAD
-	virtual bool for_sparse_jac(
-		size_t                                p ,
-		const vector&lt;bool&gt;&amp;                   r ,
-		      vector&lt;bool&gt;&amp;                   s )
-	{	size_t n = r.size() / p;
-		size_t m = s.size() / p;
-		assert( n == 1 );
-		assert( m == 2 );
+     // forward Jacobian sparsity routine called by CppAD
+     virtual bool for_sparse_jac(
+          size_t                                p ,
+          const vector&lt;bool&gt;&amp;                   r ,
+                vector&lt;bool&gt;&amp;                   s )
+     {    size_t n = r.size() / p;
+          size_t m = s.size() / p;
+          assert( n == 1 );
+          assert( m == 2 );
 
-		// sparsity for S(x) = f'(x) * R
-		for(size_t j = 0; j &lt; p; j++)
-		{	s[0 * p + j] = r[j];
-			s[1 * p + j] = r[j];
-		}
+          // sparsity for S(x) = f'(x) * R
+          for(size_t j = 0; j &lt; p; j++)
+          {    s[0 * p + j] = r[j];
+               s[1 * p + j] = r[j];
+          }
 
-		return true;
-	}
-	// forward Jacobian sparsity routine called by CppAD
-	virtual bool for_sparse_jac(
-		size_t                                p ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
-		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
-	{	size_t n = r.size();
-		size_t m = s.size();
-		assert( n == 1 );
-		assert( m == 2 );
+          return true;
+     }
+     // forward Jacobian sparsity routine called by CppAD
+     virtual bool for_sparse_jac(
+          size_t                                p ,
+          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+                vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
+     {    size_t n = r.size();
+          size_t m = s.size();
+          assert( n == 1 );
+          assert( m == 2 );
 
-		// sparsity for S(x) = f'(x) * R
-		s[0] = r[0];
-		s[1] = r[0];
+          // sparsity for S(x) = f'(x) * R
+          s[0] = r[0];
+          s[1] = r[0];
 
-		return true;
-	}
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="rev_sparse_jac" id="rev_sparse_jac">rev_sparse_jac</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// reverse Jacobian sparsity routine called by CppAD
-	virtual bool rev_sparse_jac(
-		size_t                                p ,
-		const vector&lt;bool&gt;&amp;                  rt ,
-		      vector&lt;bool&gt;&amp;                  st )
-	{	size_t n = st.size() / p;
-		size_t m = rt.size() / p;
-		assert( n == 1 );
-		assert( m == 2 );
+     // reverse Jacobian sparsity routine called by CppAD
+     virtual bool rev_sparse_jac(
+          size_t                                p ,
+          const vector&lt;bool&gt;&amp;                  rt ,
+                vector&lt;bool&gt;&amp;                  st )
+     {    size_t n = st.size() / p;
+          size_t m = rt.size() / p;
+          assert( n == 1 );
+          assert( m == 2 );
 
-		// sparsity for S(x)^T = f'(x)^T * R^T
-		for(size_t j = 0; j &lt; p; j++)
-			st[j] = rt[0 * p + j] | rt[1 * p + j];
+          // sparsity for S(x)^T = f'(x)^T * R^T
+          for(size_t j = 0; j &lt; p; j++)
+               st[j] = rt[0 * p + j] | rt[1 * p + j];
 
-		return true;
-	}
-	// reverse Jacobian sparsity routine called by CppAD
-	virtual bool rev_sparse_jac(
-		size_t                                p ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;    rt ,
-		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;    st )
-	{	size_t n = st.size();
-		size_t m = rt.size();
-		assert( n == 1 );
-		assert( m == 2 );
+          return true;
+     }
+     // reverse Jacobian sparsity routine called by CppAD
+     virtual bool rev_sparse_jac(
+          size_t                                p ,
+          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;    rt ,
+                vector&lt; std::set&lt;size_t&gt; &gt;&amp;    st )
+     {    size_t n = st.size();
+          size_t m = rt.size();
+          assert( n == 1 );
+          assert( m == 2 );
 
-		// sparsity for S(x)^T = f'(x)^T * R^T
-		my_union(st[0], rt[0], rt[1]);
-		return true;
-	}
+          // sparsity for S(x)^T = f'(x)^T * R^T
+          my_union(st[0], rt[0], rt[1]);
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="rev_sparse_hes" id="rev_sparse_hes">rev_sparse_hes</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// reverse Hessian sparsity routine called by CppAD
-	virtual bool rev_sparse_hes(
-		const vector&lt;bool&gt;&amp;                   vx,
-		const vector&lt;bool&gt;&amp;                   s ,
-		      vector&lt;bool&gt;&amp;                   t ,
-		size_t                                p ,
-		const vector&lt;bool&gt;&amp;                   r ,
-		const vector&lt;bool&gt;&amp;                   u ,
-		      vector&lt;bool&gt;&amp;                   v )
-	{
-		size_t m = s.size();
-		size_t n = t.size();
-		assert( r.size() == n * p );
-		assert( u.size() == m * p );
-		assert( v.size() == n * p );
-		assert( n == 1 );
-		assert( m == 2 );
+     // reverse Hessian sparsity routine called by CppAD
+     virtual bool rev_sparse_hes(
+          const vector&lt;bool&gt;&amp;                   vx,
+          const vector&lt;bool&gt;&amp;                   s ,
+                vector&lt;bool&gt;&amp;                   t ,
+          size_t                                p ,
+          const vector&lt;bool&gt;&amp;                   r ,
+          const vector&lt;bool&gt;&amp;                   u ,
+                vector&lt;bool&gt;&amp;                   v )
+     {
+          size_t m = s.size();
+          size_t n = t.size();
+          assert( r.size() == n * p );
+          assert( u.size() == m * p );
+          assert( v.size() == n * p );
+          assert( n == 1 );
+          assert( m == 2 );
 
-		// There are no cross term second derivatives for this case,
-		// so it is not necessary to vx.
+          // There are no cross term second derivatives for this case,
+          // so it is not necessary to vx.
 
-		// sparsity for T(x) = S(x) * f'(x)
-		t[0] =  s[0] | s[1];
+          // sparsity for T(x) = S(x) * f'(x)
+          t[0] =  s[0] | s[1];
 
-		// V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
-		// U(x) = g''(y) * f'(x) * R
-		// S(x) = g'(y)
+          // V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
+          // U(x) = g''(y) * f'(x) * R
+          // S(x) = g'(y)
 
-		// back propagate the sparsity for U, note both components
-		// of f'(x) may be non-zero;
-		size_t j;
-		for(j = 0; j &lt; p; j++)
-			v[j] = u[ 0 * p + j ] | u[ 1 * p + j ];
+          // back propagate the sparsity for U, note both components
+          // of f'(x) may be non-zero;
+          size_t j;
+          for(j = 0; j &lt; p; j++)
+               v[j] = u[ 0 * p + j ] | u[ 1 * p + j ];
 
-		// include forward Jacobian sparsity in Hessian sparsity
-		// (note sparsty for f''(x) * R same as for R)
-		if( s[0] | s[1] )
-		{	for(j = 0; j &lt; p; j++)
-			{	// Visual Studio 2013 generates warning without bool below
-				v[j] |= bool( r[j] );
-			}
-		}
+          // include forward Jacobian sparsity in Hessian sparsity
+          // (note sparsty for f''(x) * R same as for R)
+          if( s[0] | s[1] )
+          {    for(j = 0; j &lt; p; j++)
+               {    // Visual Studio 2013 generates warning without bool below
+                    v[j] |= bool( r[j] );
+               }
+          }
 
-		return true;
-	}
-	// reverse Hessian sparsity routine called by CppAD
-	virtual bool rev_sparse_hes(
-		const vector&lt;bool&gt;&amp;                   vx,
-		const vector&lt;bool&gt;&amp;                   s ,
-		      vector&lt;bool&gt;&amp;                   t ,
-		size_t                                p ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
-		      vector&lt; std::set&lt;size_t&gt; &gt;&amp;     v )
-	{	size_t m = s.size();
-		size_t n = t.size();
-		assert( r.size() == n );
-		assert( u.size() == m );
-		assert( v.size() == n );
-		assert( n == 1 );
-		assert( m == 2 );
+          return true;
+     }
+     // reverse Hessian sparsity routine called by CppAD
+     virtual bool rev_sparse_hes(
+          const vector&lt;bool&gt;&amp;                   vx,
+          const vector&lt;bool&gt;&amp;                   s ,
+                vector&lt;bool&gt;&amp;                   t ,
+          size_t                                p ,
+          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
+          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
+                vector&lt; std::set&lt;size_t&gt; &gt;&amp;     v )
+     {    size_t m = s.size();
+          size_t n = t.size();
+          assert( r.size() == n );
+          assert( u.size() == m );
+          assert( v.size() == n );
+          assert( n == 1 );
+          assert( m == 2 );
 
-		// There are no cross term second derivatives for this case,
-		// so it is not necessary to vx.
+          // There are no cross term second derivatives for this case,
+          // so it is not necessary to vx.
 
-		// sparsity for T(x) = S(x) * f'(x)
-		t[0] =  s[0] | s[1];
+          // sparsity for T(x) = S(x) * f'(x)
+          t[0] =  s[0] | s[1];
 
-		// V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
-		// U(x) = g''(y) * f'(x) * R
-		// S(x) = g'(y)
+          // V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
+          // U(x) = g''(y) * f'(x) * R
+          // S(x) = g'(y)
 
-		// back propagate the sparsity for U, note both components
-		// of f'(x) may be non-zero;
-		my_union(v[0], u[0], u[1]);
+          // back propagate the sparsity for U, note both components
+          // of f'(x) may be non-zero;
+          my_union(v[0], u[0], u[1]);
 
-		// include forward Jacobian sparsity in Hessian sparsity
-		// (note sparsty for f''(x) * R same as for R)
-		if( s[0] | s[1] )
-			my_union(v[0], v[0], r[0]);
+          // include forward Jacobian sparsity in Hessian sparsity
+          // (note sparsty for f''(x) * R same as for R)
+          if( s[0] | s[1] )
+               my_union(v[0], v[0], r[0]);
 
-		return true;
-	}
+          return true;
+     }
 </pre></font></code>
-
-<br/>
 <br/>
 <b><big><a name="End Class Definition" id="End Class Definition">End Class Definition</a></big></b>
 
@@ -474,211 +457,190 @@ class atomic_tangent : public CppAD::atomic_base&lt;float&gt; {
 }  // End empty namespace
 
 </pre></font></code>
-
-<br/>
-<br/>
 <b><big><a name="Use Atomic Function" id="Use Atomic Function">Use Atomic Function</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
 bool tangent(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	float eps = 10.f * CppAD::numeric_limits&lt;float&gt;::epsilon();
+{    bool ok = true;
+     using CppAD::AD;
+     using CppAD::NearEqual;
+     float eps = 10.f * CppAD::numeric_limits&lt;float&gt;::epsilon();
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.Constructor" id="Use Atomic Function.Constructor">Constructor</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// --------------------------------------------------------------------
-	// Creater a tan and tanh object
-	atomic_tangent my_tan(&quot;my_tan&quot;, false), my_tanh(&quot;my_tanh&quot;, true);
+     // --------------------------------------------------------------------
+     // Creater a tan and tanh object
+     atomic_tangent my_tan(&quot;my_tan&quot;, false), my_tanh(&quot;my_tanh&quot;, true);
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.Recording" id="Use Atomic Function.Recording">Recording</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// domain space vector
-	size_t n  = 1;
-	float  x0 = 0.5;
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; ax(n);
-	ax[0]     = x0;
+     // domain space vector
+     size_t n  = 1;
+     float  x0 = 0.5;
+     CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; ax(n);
+     ax[0]     = x0;
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     // declare independent variables and start tape recording
+     CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
 
-	// range space vector
-	size_t m = 3;
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; af(m);
+     // range space vector
+     size_t m = 3;
+     CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; af(m);
 
-	// temporary vector for computations
-	// (my_tan and my_tanh computes tan or tanh and its square)
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; az(2);
+     // temporary vector for computations
+     // (my_tan and my_tanh computes tan or tanh and its square)
+     CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; az(2);
 
-	// call atomic tan function and store tan(x) in f[0] (ignore tan(x)^2)
-	my_tan(ax, az);
-	af[0] = az[0];
+     // call atomic tan function and store tan(x) in f[0] (ignore tan(x)^2)
+     my_tan(ax, az);
+     af[0] = az[0];
 
-	// call atomic tanh function and store tanh(x) in f[1] (ignore tanh(x)^2)
-	my_tanh(ax, az);
-	af[1] = az[0];
+     // call atomic tanh function and store tanh(x) in f[1] (ignore tanh(x)^2)
+     my_tanh(ax, az);
+     af[1] = az[0];
 
-	// put a constant in f[2] = tanh(1.) (for sparsity pattern testing)
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; one(1);
-	one[0] = 1.;
-	my_tanh(one, az);
-	af[2] = az[0];
+     // put a constant in f[2] = tanh(1.) (for sparsity pattern testing)
+     CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;float&gt; &gt; one(1);
+     one[0] = 1.;
+     my_tanh(one, az);
+     af[2] = az[0];
 
-	// create f: x -&gt; f and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;float&gt; F;
-	F.Dependent(ax, af);
+     // create f: x -&gt; f and stop tape recording
+     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;float&gt; F;
+     F.Dependent(ax, af);
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.forward" id="Use Atomic Function.forward">forward</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// check function value
-	float tan = std::tan(x0);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(af[0] , tan,  eps, eps);
-	float tanh = std::tanh(x0);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(af[1] , tanh,  eps, eps);
+     // check function value
+     float tan = std::tan(x0);
+     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(af[0] , tan,  eps, eps);
+     float tanh = std::tanh(x0);
+     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(af[1] , tanh,  eps, eps);
 
-	// check zero order forward
-	CppAD::vector&lt;float&gt; x(n), f(m);
-	x[0] = x0;
-	f    = F.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(f[0] , tan,  eps, eps);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(f[1] , tanh,  eps, eps);
+     // check zero order forward
+     CppAD::vector&lt;float&gt; x(n), f(m);
+     x[0] = x0;
+     f    = F.<a href="forward.xml" target="_top">Forward</a>(0, x);
+     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(f[0] , tan,  eps, eps);
+     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(f[1] , tanh,  eps, eps);
 
-	// compute first partial of f w.r.t. x[0] using forward mode
-	CppAD::vector&lt;float&gt; dx(n), df(m);
-	dx[0] = 1.;
-	df    = F.<a href="forward.xml" target="_top">Forward</a>(1, dx);
+     // compute first partial of f w.r.t. x[0] using forward mode
+     CppAD::vector&lt;float&gt; dx(n), df(m);
+     dx[0] = 1.;
+     df    = F.<a href="forward.xml" target="_top">Forward</a>(1, dx);
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.reverse" id="Use Atomic Function.reverse">reverse</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// compute derivative of tan - tanh using reverse mode
-	CppAD::vector&lt;float&gt; w(m), dw(n);
-	w[0]  = 1.;
-	w[1]  = 1.;
-	w[2]  = 0.;
-	dw    = F.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
+     // compute derivative of tan - tanh using reverse mode
+     CppAD::vector&lt;float&gt; w(m), dw(n);
+     w[0]  = 1.;
+     w[1]  = 1.;
+     w[2]  = 0.;
+     dw    = F.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
 
-	// tan'(x)   = 1 + tan(x)  * tan(x)
-	// tanh'(x)  = 1 - tanh(x) * tanh(x)
-	float tanp  = 1.f + tan * tan;
-	float tanhp = 1.f - tanh * tanh;
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(df[0], tanp, eps, eps);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(df[1], tanhp, eps, eps);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], w[0]*tanp + w[1]*tanhp, eps, eps);
+     // tan'(x)   = 1 + tan(x)  * tan(x)
+     // tanh'(x)  = 1 - tanh(x) * tanh(x)
+     float tanp  = 1.f + tan * tan;
+     float tanhp = 1.f - tanh * tanh;
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(df[0], tanp, eps, eps);
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(df[1], tanhp, eps, eps);
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], w[0]*tanp + w[1]*tanhp, eps, eps);
 
-	// compute second partial of f w.r.t. x[0] using forward mode
-	CppAD::vector&lt;float&gt; ddx(n), ddf(m);
-	ddx[0] = 0.;
-	ddf    = F.<a href="forward.xml" target="_top">Forward</a>(2, ddx);
+     // compute second partial of f w.r.t. x[0] using forward mode
+     CppAD::vector&lt;float&gt; ddx(n), ddf(m);
+     ddx[0] = 0.;
+     ddf    = F.<a href="forward.xml" target="_top">Forward</a>(2, ddx);
 
-	// compute second derivative of tan - tanh using reverse mode
-	CppAD::vector&lt;float&gt; ddw(2);
-	ddw   = F.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
+     // compute second derivative of tan - tanh using reverse mode
+     CppAD::vector&lt;float&gt; ddw(2);
+     ddw   = F.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
 
-	// tan''(x)   = 2 *  tan(x) * tan'(x)
-	// tanh''(x)  = - 2 * tanh(x) * tanh'(x)
-	// Note that second order Taylor coefficient for u half the
-	// corresponding second derivative.
-	float two    = 2;
-	float tanpp  =   two * tan * tanp;
-	float tanhpp = - two * tanh * tanhp;
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(two * ddf[0], tanpp, eps, eps);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(two * ddf[1], tanhpp, eps, eps);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ddw[0], w[0]*tanp  + w[1]*tanhp , eps, eps);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ddw[1], w[0]*tanpp + w[1]*tanhpp, eps, eps);
+     // tan''(x)   = 2 *  tan(x) * tan'(x)
+     // tanh''(x)  = - 2 * tanh(x) * tanh'(x)
+     // Note that second order Taylor coefficient for u half the
+     // corresponding second derivative.
+     float two    = 2;
+     float tanpp  =   two * tan * tanp;
+     float tanhpp = - two * tanh * tanhp;
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(two * ddf[0], tanpp, eps, eps);
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(two * ddf[1], tanhpp, eps, eps);
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ddw[0], w[0]*tanp  + w[1]*tanhp , eps, eps);
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(ddw[1], w[0]*tanpp + w[1]*tanhpp, eps, eps);
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.for_sparse_jac" id="Use Atomic Function.for_sparse_jac">for_sparse_jac</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// Forward mode computation of sparsity pattern for F.
-	size_t p = n;
-	// user vectorBool because m and n are small
-	CppAD::vectorBool r1(p), s1(m * p);
-	r1[0] = true;            // propagate sparsity for x[0]
-	s1    = F.ForSparseJac(p, r1);
-	ok  &amp;= (s1[0] == true);  // f[0] depends on x[0]
-	ok  &amp;= (s1[1] == true);  // f[1] depends on x[0]
-	ok  &amp;= (s1[2] == false); // f[2] does not depend on x[0]
+     // Forward mode computation of sparsity pattern for F.
+     size_t p = n;
+     // user vectorBool because m and n are small
+     CppAD::vectorBool r1(p), s1(m * p);
+     r1[0] = true;            // propagate sparsity for x[0]
+     s1    = F.ForSparseJac(p, r1);
+     ok  &amp;= (s1[0] == true);  // f[0] depends on x[0]
+     ok  &amp;= (s1[1] == true);  // f[1] depends on x[0]
+     ok  &amp;= (s1[2] == false); // f[2] does not depend on x[0]
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.rev_sparse_jac" id="Use Atomic Function.rev_sparse_jac">rev_sparse_jac</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// Reverse mode computation of sparsity pattern for F.
-	size_t q = m;
-	CppAD::vectorBool s2(q * m), r2(q * n);
-	// Sparsity pattern for identity matrix
-	size_t i, j;
-	for(i = 0; i &lt; q; i++)
-	{	for(j = 0; j &lt; m; j++)
-			s2[i * q + j] = (i == j);
-	}
-	r2   = F.RevSparseJac(q, s2);
-	ok  &amp;= (r2[0] == true);  // f[0] depends on x[0]
-	ok  &amp;= (r2[1] == true);  // f[1] depends on x[0]
-	ok  &amp;= (r2[2] == false); // f[2] does not depend on x[0]
+     // Reverse mode computation of sparsity pattern for F.
+     size_t q = m;
+     CppAD::vectorBool s2(q * m), r2(q * n);
+     // Sparsity pattern for identity matrix
+     size_t i, j;
+     for(i = 0; i &lt; q; i++)
+     {    for(j = 0; j &lt; m; j++)
+               s2[i * q + j] = (i == j);
+     }
+     r2   = F.RevSparseJac(q, s2);
+     ok  &amp;= (r2[0] == true);  // f[0] depends on x[0]
+     ok  &amp;= (r2[1] == true);  // f[1] depends on x[0]
+     ok  &amp;= (r2[2] == false); // f[2] does not depend on x[0]
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.rev_sparse_hes" id="Use Atomic Function.rev_sparse_hes">rev_sparse_hes</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// Hessian sparsity for f[0]
-	CppAD::vectorBool s3(m), h(p * n);
-	s3[0] = true;
-	s3[1] = false;
-	s3[2] = false;
-	h    = F.RevSparseHes(p, s3);
-	ok  &amp;= (h[0] == true);  // Hessian is non-zero
+     // Hessian sparsity for f[0]
+     CppAD::vectorBool s3(m), h(p * n);
+     s3[0] = true;
+     s3[1] = false;
+     s3[2] = false;
+     h    = F.RevSparseHes(p, s3);
+     ok  &amp;= (h[0] == true);  // Hessian is non-zero
 
-	// Hessian sparsity for f[2]
-	s3[0] = false;
-	s3[2] = true;
-	h    = F.RevSparseHes(p, s3);
-	ok  &amp;= (h[0] == false);  // Hessian is zero
+     // Hessian sparsity for f[2]
+     s3[0] = false;
+     s3[2] = true;
+     h    = F.RevSparseHes(p, s3);
+     ok  &amp;= (h[0] == false);  // Hessian is zero
 </pre></font></code>
-
-<br/>
 <br/>
 <b><a name="Use Atomic Function.Large x Values" id="Use Atomic Function.Large x Values">Large x Values</a></b>
 
 <code><font color='blue'><pre style='display:inline'> 
-	// check tanh results for a large value of x
-	x[0]  = std::numeric_limits&lt;float&gt;::max() / two;
-	f     = F.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	tanh  = 1.;
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(f[1], tanh, eps, eps);
-	df    = F.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	tanhp = 0.;
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(df[1], tanhp, eps, eps);
+     // check tanh results for a large value of x
+     x[0]  = std::numeric_limits&lt;float&gt;::max() / two;
+     f     = F.<a href="forward.xml" target="_top">Forward</a>(0, x);
+     tanh  = 1.;
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(f[1], tanh, eps, eps);
+     df    = F.<a href="forward.xml" target="_top">Forward</a>(1, dx);
+     tanhp = 0.;
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(df[1], tanhp, eps, eps);
 
-	return ok;
+     return ok;
 }
 </pre></font></code>
-
- 
 
 <hr/>Input File: example/atomic/tangent.cpp
 

@@ -1,4 +1,4 @@
-# $Id: CMakeLists.txt 3772 2015-12-31 14:01:01Z bradbell $
+# $Id: CMakeLists.txt 3786 2016-02-08 13:14:26Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 #
@@ -17,7 +17,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # cppad_version is used by set_version.sh to get the version number.
-SET(cppad_version      "20160000.0" )
+SET(cppad_version      "20160000.1" )
 SET(cppad_url          "http://www.coin-or.org/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 
@@ -143,14 +143,16 @@ optional_package(ipopt_prefix "ipopt install prefix")
 # sacado_prefix
 optional_package(sacado_prefix "sacado install prefix")
 # -----------------------------------------------------------------------------
-# cppad_has_colpack, colpack_libs
+# cppad_has_colpack, colpack_libs, cppad_lib
 #
 IF( colpack_prefix )
 	SET(cppad_has_colpack 1)
 	SET( colpack_libs "ColPack" )
+	SET( cppad_lib "cppad_lib" )
 ELSE( colpack_prefix )
 	SET(cppad_has_colpack 0)
 	SET( colpack_libs "" )
+	SET( cppad_lib "" )
 ENDIF( colpack_prefix )
 # =============================================================================
 # automated system configuration
@@ -288,7 +290,9 @@ SET(check_depends "")
 #
 ADD_SUBDIRECTORY(cppad)
 ADD_SUBDIRECTORY(pkgconfig)
-ADD_SUBDIRECTORY(cppad_lib)
+IF( colpack_prefix )
+	ADD_SUBDIRECTORY(cppad_lib)
+ENDIF( colpack_prefix)
 #
 ADD_SUBDIRECTORY(compare_c)
 add_to_list(check_depends check_compare_c)

@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Double Speed: Sparse Hessian</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -114,43 +111,42 @@ See <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: no
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+     global_onetape, global_atomic, global_optimize, global_boolsparsity;
 
 bool link_sparse_hessian(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
-	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
-	CppAD::vector&lt;double&gt;&amp;           x        ,
-	CppAD::vector&lt;double&gt;&amp;           hessian  ,
-	size_t&amp;                          n_sweep  )
+     size_t                           size     ,
+     size_t                           repeat   ,
+     const CppAD::vector&lt;size_t&gt;&amp;     row      ,
+     const CppAD::vector&lt;size_t&gt;&amp;     col      ,
+     CppAD::vector&lt;double&gt;&amp;           x        ,
+     CppAD::vector&lt;double&gt;&amp;           hessian  ,
+     size_t&amp;                          n_sweep  )
 {
-	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
-		return false;
-	// -----------------------------------------------------
-	// setup
-	using CppAD::vector;
-	size_t order = 0;          // derivative order corresponding to function
-	size_t n     = size;       // argument space dimension
-	size_t m     = 1;          // range space dimension
-	vector&lt;double&gt; y(m);       // function value
+     if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
+          return false;
+     // -----------------------------------------------------
+     // setup
+     using CppAD::vector;
+     size_t order = 0;          // derivative order corresponding to function
+     size_t n     = size;       // argument space dimension
+     size_t m     = 1;          // range space dimension
+     vector&lt;double&gt; y(m);       // function value
 
-	// choose a value for x
-	CppAD::uniform_01(n, x);
+     // choose a value for x
+     CppAD::uniform_01(n, x);
 
-	// ------------------------------------------------------
+     // ------------------------------------------------------
 
-	while(repeat--)
-	{
-		// computation of the function
-		CppAD::sparse_hes_fun&lt;double&gt;(n, x, row, col, order, y);
-	}
-	hessian[0] = y[0];
+     while(repeat--)
+     {
+          // computation of the function
+          CppAD::sparse_hes_fun&lt;double&gt;(n, x, row, col, order, y);
+     }
+     hessian[0] = y[0];
 
-	return true;
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/double/sparse_hessian.cpp
 

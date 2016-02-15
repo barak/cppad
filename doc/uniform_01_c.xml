@@ -6,7 +6,7 @@
 <title>Simulate a [0,1] Uniform Random Variate</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Simulate a [0,1] Uniform Random Variate"/>
-<meta name="keywords" id="keywords" content=" simulate a [01] uniform random variate syntax purpose seed n source code "/>
+<meta name="keywords" id="keywords" content=" simulate [01] uniform random variate syntax purpose seed n source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -101,8 +101,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 <center><b><big><big>Simulate a [0,1] Uniform Random Variate</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -179,14 +177,13 @@ randomly sampled over the interval [0,1].
 
 <code><font color='blue'><pre style='display:inline'> 
 void random_seed(size_t seed)
-{	srand(seed); }
+{    srand(seed); }
 void uniform_01(unsigned n, double* a)
-{	static double factor = 1. / (double) RAND_MAX;
-	while(n--)
-		a[n] = rand() * factor;
+{    static double factor = 1. / (double) RAND_MAX;
+     while(n--)
+          a[n] = rand() * factor;
 }
 </pre></font></code>
-
 
 <hr/>Input File: compare_c/det_by_minor.c
 

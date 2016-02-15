@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Double Speed: Sparse Jacobian</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -114,43 +111,42 @@ See <a href="link_sparse_jacobian.xml" target="_top"><span style='white-space: n
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+     global_onetape, global_atomic, global_optimize, global_boolsparsity;
 
 bool link_sparse_jacobian(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	size_t                           m        ,
-	const CppAD::vector&lt;size_t&gt;&amp;     row      ,
-	const CppAD::vector&lt;size_t&gt;&amp;     col      ,
-	      CppAD::vector&lt;double&gt;&amp;     x        ,
-	      CppAD::vector&lt;double&gt;&amp;     jacobian ,
-	      size_t&amp;                    n_sweep  )
+     size_t                           size     ,
+     size_t                           repeat   ,
+     size_t                           m        ,
+     const CppAD::vector&lt;size_t&gt;&amp;     row      ,
+     const CppAD::vector&lt;size_t&gt;&amp;     col      ,
+           CppAD::vector&lt;double&gt;&amp;     x        ,
+           CppAD::vector&lt;double&gt;&amp;     jacobian ,
+           size_t&amp;                    n_sweep  )
 {
-	if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
-		return false;
-	// -----------------------------------------------------
-	// setup
-	using CppAD::vector;
-	size_t i;
-	size_t order = 0;          // order for computing function value
-	size_t n     = size;       // argument space dimension
-	vector&lt;double&gt; yp(m);      // function value yp = f(x)
+     if(global_onetape||global_atomic||global_optimize||global_boolsparsity)
+          return false;
+     // -----------------------------------------------------
+     // setup
+     using CppAD::vector;
+     size_t i;
+     size_t order = 0;          // order for computing function value
+     size_t n     = size;       // argument space dimension
+     vector&lt;double&gt; yp(m);      // function value yp = f(x)
 
-	// ------------------------------------------------------
-	while(repeat--)
-	{	// choose a value for x
-		CppAD::uniform_01(n, x);
+     // ------------------------------------------------------
+     while(repeat--)
+     {    // choose a value for x
+          CppAD::uniform_01(n, x);
 
-		// computation of the function
-		CppAD::sparse_jac_fun&lt;double&gt;(m, n, x, row, col, order, yp);
-	}
-	for(i = 0; i &lt; m; i++)
-		jacobian[i] = yp[i];
+          // computation of the function
+          CppAD::sparse_jac_fun&lt;double&gt;(m, n, x, row, col, order, yp);
+     }
+     for(i = 0; i &lt; m; i++)
+          jacobian[i] = yp[i];
 
-	return true;
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/double/sparse_jacobian.cpp
 

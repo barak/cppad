@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>CppAD Speed, Matrix Multiplication</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -115,132 +112,131 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+     global_onetape, global_atomic, global_optimize, global_boolsparsity;
 
 bool link_mat_mul(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	CppAD::vector&lt;double&gt;&amp;           x        ,
-	CppAD::vector&lt;double&gt;&amp;           z        ,
-	CppAD::vector&lt;double&gt;&amp;           dz
+     size_t                           size     ,
+     size_t                           repeat   ,
+     CppAD::vector&lt;double&gt;&amp;           x        ,
+     CppAD::vector&lt;double&gt;&amp;           z        ,
+     CppAD::vector&lt;double&gt;&amp;           dz
 )
 {
-	// -----------------------------------------------------
-	// setup
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar;
-	typedef CppAD::vector&lt;ADScalar&gt;     ADVector;
+     // -----------------------------------------------------
+     // setup
+     typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;           ADScalar;
+     typedef CppAD::vector&lt;ADScalar&gt;     ADVector;
 
-	size_t j;               // temporary index
-	size_t m = 1;           // number of dependent variables
-	size_t n = size * size; // number of independent variables
-	ADVector   X(n);        // AD domain space vector
-	ADVector   Y(n);        // Store product matrix
-	ADVector   Z(m);        // AD range space vector
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f; // AD function object
+     size_t j;               // temporary index
+     size_t m = 1;           // number of dependent variables
+     size_t n = size * size; // number of independent variables
+     ADVector   X(n);        // AD domain space vector
+     ADVector   Y(n);        // Store product matrix
+     ADVector   Z(m);        // AD range space vector
+     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f; // AD function object
 
-	// vectors of reverse mode weights
-	CppAD::vector&lt;double&gt; w(1);
-	w[0] = 1.;
+     // vectors of reverse mode weights
+     CppAD::vector&lt;double&gt; w(1);
+     w[0] = 1.;
 
-	// user atomic information
-	CppAD::vector&lt;ADScalar&gt; ax(2 * n), ay(n);
-	size_t nr_result = size;
-	size_t n_middle  = size;
-	size_t nc_result = size;
-	matrix_mul atom_mul(nr_result, n_middle, nc_result);
-	//
-	if( global_boolsparsity )
-		atom_mul.option( CppAD::atomic_base&lt;double&gt;::pack_sparsity_enum );
-	else
-		atom_mul.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
-	// ------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
-	{	// get the next matrix
-		CppAD::uniform_01(n, x);
-		for( j = 0; j &lt; n; j++)
-			X[j] = x[j];
+     // user atomic information
+     CppAD::vector&lt;ADScalar&gt; ax(2 * n), ay(n);
+     size_t nr_result = size;
+     size_t n_middle  = size;
+     size_t nc_result = size;
+     matrix_mul atom_mul(nr_result, n_middle, nc_result);
+     //
+     if( global_boolsparsity )
+          atom_mul.option( CppAD::atomic_base&lt;double&gt;::pack_sparsity_enum );
+     else
+          atom_mul.option( CppAD::atomic_base&lt;double&gt;::set_sparsity_enum );
+     // ------------------------------------------------------
+     if( ! global_onetape ) while(repeat--)
+     {    // get the next matrix
+          CppAD::uniform_01(n, x);
+          for( j = 0; j &lt; n; j++)
+               X[j] = x[j];
 
-		// declare independent variables
-		<a href="independent.xml" target="_top">Independent</a>(X);
+          // declare independent variables
+          <a href="independent.xml" target="_top">Independent</a>(X);
 
-		// do computations
-		if( ! global_atomic )
-			mat_sum_sq(size, X, Y, Z);
-		else
-		{	for(j = 0; j &lt; n; j++)
-			{	ax[j]   = X[j];
-				ax[j+n] = X[j];
-			}
-			// Y = X * X
-			atom_mul(ax, ay);
-			Z[0] = 0.;
-			for(j = 0; j &lt; n; j++)
-				Z[0] += ay[j];
-		}
-		// create function object f : X -&gt; Z
-		f.Dependent(X, Z);
+          // do computations
+          if( ! global_atomic )
+               mat_sum_sq(size, X, Y, Z);
+          else
+          {    for(j = 0; j &lt; n; j++)
+               {    ax[j]   = X[j];
+                    ax[j+n] = X[j];
+               }
+               // Y = X * X
+               atom_mul(ax, ay);
+               Z[0] = 0.;
+               for(j = 0; j &lt; n; j++)
+                    Z[0] += ay[j];
+          }
+          // create function object f : X -&gt; Z
+          f.Dependent(X, Z);
 
-		if( global_optimize )
-			f.optimize();
+          if( global_optimize )
+               f.optimize();
 
-		// skip comparison operators
-		f.compare_change_count(0);
+          // skip comparison operators
+          f.compare_change_count(0);
 
-		// evaluate and return gradient using reverse mode
-		z  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-		dz = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	}
-	else
-	{	// get a next matrix
-		CppAD::uniform_01(n, x);
-		for(j = 0; j &lt; n; j++)
-			X[j] = x[j];
+          // evaluate and return gradient using reverse mode
+          z  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+          dz = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
+     }
+     else
+     {    // get a next matrix
+          CppAD::uniform_01(n, x);
+          for(j = 0; j &lt; n; j++)
+               X[j] = x[j];
 
-		// declare independent variables
-		<a href="independent.xml" target="_top">Independent</a>(X);
+          // declare independent variables
+          <a href="independent.xml" target="_top">Independent</a>(X);
 
-		// do computations
-		if( ! global_atomic )
-			mat_sum_sq(size, X, Y, Z);
-		else
-		{	for(j = 0; j &lt; n; j++)
-			{	ax[j]   = X[j];
-				ax[j+n] = X[j];
-			}
-			// Y = X * X
-			atom_mul(ax, ay);
-			Z[0] = 0.;
-			for(j = 0; j &lt; n; j++)
-				Z[0] += ay[j];
-		}
+          // do computations
+          if( ! global_atomic )
+               mat_sum_sq(size, X, Y, Z);
+          else
+          {    for(j = 0; j &lt; n; j++)
+               {    ax[j]   = X[j];
+                    ax[j+n] = X[j];
+               }
+               // Y = X * X
+               atom_mul(ax, ay);
+               Z[0] = 0.;
+               for(j = 0; j &lt; n; j++)
+                    Z[0] += ay[j];
+          }
 
-		// create function object f : X -&gt; Z
-		f.Dependent(X, Z);
+          // create function object f : X -&gt; Z
+          f.Dependent(X, Z);
 
-		if( global_optimize )
-			f.optimize();
+          if( global_optimize )
+               f.optimize();
 
-		// skip comparison operators
-		f.compare_change_count(0);
+          // skip comparison operators
+          f.compare_change_count(0);
 
-		while(repeat--)
-		{	// get a next matrix
-			CppAD::uniform_01(n, x);
+          while(repeat--)
+          {    // get a next matrix
+               CppAD::uniform_01(n, x);
 
-			// evaluate and return gradient using reverse mode
-			z  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-			dz = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-		}
-	}
-	// --------------------------------------------------------------------
-	// Free temporary work space. (If there are future calls to
-	// mat_mul they would create new temporary work space.)
-	CppAD::user_atomic&lt;double&gt;::clear();
+               // evaluate and return gradient using reverse mode
+               z  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+               dz = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
+          }
+     }
+     // --------------------------------------------------------------------
+     // Free temporary work space. (If there are future calls to
+     // mat_mul they would create new temporary work space.)
+     CppAD::user_atomic&lt;double&gt;::clear();
 
-	return true;
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/cppad/mat_mul.cpp
 

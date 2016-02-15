@@ -1,9 +1,9 @@
-/* $Id: assign.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: assign.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -28,17 +28,17 @@ bool assign(void)
 
 	// declare independent variables and start tape recording
 	CppAD::Independent(x);
-	
-	// range space vector 
+
+	// range space vector
 	size_t m = 3;
 	CPPAD_TESTVECTOR(AD<double>) y(m);
 
 	// assign an AD<Base> object equal to an independent variable
 	// (choose the first independent variable to check a special case)
 	// use the value returned by the assignment (for another assignment)
-	y[0] = y[1] = x[0];  
+	y[0] = y[1] = x[0];
 
-	// assign an AD<Base> object equal to an expression 
+	// assign an AD<Base> object equal to an expression
 	y[1] = x[1] + 1.;
 	y[2] = x[2] + 2.;
 

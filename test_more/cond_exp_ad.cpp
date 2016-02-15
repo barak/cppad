@@ -1,9 +1,9 @@
-/* $Id: cond_exp_ad.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: cond_exp_ad.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -77,7 +77,7 @@ bool CondExpADOne(void)
 	// create fa: Xaa -> Yaa function object
 	ADFun< ADdouble > fa(Xaa, Yaa);
 
-	// function values 
+	// function values
 	CPPAD_TESTVECTOR( ADdouble ) Ya(m);
 	Ya  = fa.Forward(0, Xa);
 
@@ -227,7 +227,7 @@ bool CondExpADTwo(void)
 	// create fa: Xaa -> Yaa function object
 	ADFun< ADdouble > fa(Xaa, Yaa);
 
-	// function values 
+	// function values
 	CPPAD_TESTVECTOR( ADdouble ) Ya(m);
 	Ya  = fa.Forward(0, Xa);
 

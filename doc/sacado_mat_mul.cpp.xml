@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Sacado Speed: Matrix Multiplication</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -117,60 +114,59 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_mat_mul(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	CppAD::vector&lt;double&gt;&amp;           x        ,
-	CppAD::vector&lt;double&gt;&amp;           z        ,
-	CppAD::vector&lt;double&gt;&amp;           dz       )
+     size_t                           size     ,
+     size_t                           repeat   ,
+     CppAD::vector&lt;double&gt;&amp;           x        ,
+     CppAD::vector&lt;double&gt;&amp;           z        ,
+     CppAD::vector&lt;double&gt;&amp;           dz       )
 {
-	// speed test global option values
-	if( global_memory || global_onetape || global_atomic || global_optimize )
-		return false;
-	// -----------------------------------------------------
-	// setup
+     // speed test global option values
+     if( global_memory || global_onetape || global_atomic || global_optimize )
+          return false;
+     // -----------------------------------------------------
+     // setup
 
-	// object for computing determinant
-	typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar;
-	typedef CppAD::vector&lt;ADScalar&gt;       ADVector;
+     // object for computing determinant
+     typedef Sacado::Rad::ADvar&lt;double&gt;    ADScalar;
+     typedef CppAD::vector&lt;ADScalar&gt;       ADVector;
 
-	size_t j;                // temporary index
-	size_t m = 1;            // number of dependent variables
-	size_t n = size * size;  // number of independent variables
-	ADVector   X(n);         // AD domain space vector
-	ADVector   Y(n);         // Store product matrix
-	ADVector   Z(m);         // AD range space vector
-	ADScalar   f;
+     size_t j;                // temporary index
+     size_t m = 1;            // number of dependent variables
+     size_t n = size * size;  // number of independent variables
+     ADVector   X(n);         // AD domain space vector
+     ADVector   Y(n);         // Store product matrix
+     ADVector   Z(m);         // AD range space vector
+     ADScalar   f;
 
-	// ------------------------------------------------------
-	while(repeat--)
-	{	// get the next matrix
-		CppAD::uniform_01(n, x);
+     // ------------------------------------------------------
+     while(repeat--)
+     {    // get the next matrix
+          CppAD::uniform_01(n, x);
 
-		// set independent variable values
-		for(j = 0; j &lt; n; j++)
-			X[j] = x[j];
+          // set independent variable values
+          for(j = 0; j &lt; n; j++)
+               X[j] = x[j];
 
-		// do the computation
-		mat_sum_sq(size, X, Y, Z);
+          // do the computation
+          mat_sum_sq(size, X, Y, Z);
 
-		// create function object f : X -&gt; Z
-		f = Z[0];
+          // create function object f : X -&gt; Z
+          f = Z[0];
 
-		// reverse mode gradient of last ADvar computed value; i.e., f
-		ADScalar::Gradcomp();
+          // reverse mode gradient of last ADvar computed value; i.e., f
+          ADScalar::Gradcomp();
 
-		// return gradient
-		for(j = 0; j &lt; n; j++)
-			dz[j] = X[j].adj(); // partial f w.r.t X[j]
-	}
-	// return function value
-	z[0] = f.val();
+          // return gradient
+          for(j = 0; j &lt; n; j++)
+               dz[j] = X[j].adj(); // partial f w.r.t X[j]
+     }
+     // return function value
+     z[0] = f.val();
 
-	// ---------------------------------------------------------
-	return true;
+     // ---------------------------------------------------------
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/sacado/mat_mul.cpp
 

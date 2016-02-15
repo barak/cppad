@@ -6,7 +6,7 @@
 <title>Fadbad Speed: Gradient of Determinant by Minor Expansion</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Fadbad Speed: Gradient of Determinant by Minor Expansion"/>
-<meta name="keywords" id="keywords" content=" fadbad speed: gradient of determinant by minor expansion link_det_minor speed specifications implementation "/>
+<meta name="keywords" id="keywords" content=" fadbad speed: gradient determinant minor expansion link_det_minor speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -114,54 +114,53 @@ See <a href="link_det_minor.xml" target="_top"><span style='white-space: nowrap'
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_det_minor(
-	size_t                     size     ,
-	size_t                     repeat   ,
-	CppAD::vector&lt;double&gt;     &amp;matrix   ,
-	CppAD::vector&lt;double&gt;     &amp;gradient )
+     size_t                     size     ,
+     size_t                     repeat   ,
+     CppAD::vector&lt;double&gt;     &amp;matrix   ,
+     CppAD::vector&lt;double&gt;     &amp;gradient )
 {
-	// speed test global option values
-	if( global_atomic )
-		return false;
-	if( global_memory || global_onetape || global_optimize )
-		return false;
-	// -----------------------------------------------------
-	// setup
+     // speed test global option values
+     if( global_atomic )
+          return false;
+     if( global_memory || global_onetape || global_optimize )
+          return false;
+     // -----------------------------------------------------
+     // setup
 
-	// object for computing determinant
-	typedef fadbad::B&lt;double&gt;       ADScalar;
-	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
-	CppAD::det_by_minor&lt;ADScalar&gt;   Det(size);
+     // object for computing determinant
+     typedef fadbad::B&lt;double&gt;       ADScalar;
+     typedef CppAD::vector&lt;ADScalar&gt; ADVector;
+     CppAD::det_by_minor&lt;ADScalar&gt;   Det(size);
 
-	size_t i;                // temporary index
-	size_t m = 1;            // number of dependent variables
-	size_t n = size * size;  // number of independent variables
-	ADScalar   detA;         // AD value of the determinant
-	ADVector   A(n);         // AD version of matrix
+     size_t i;                // temporary index
+     size_t m = 1;            // number of dependent variables
+     size_t n = size * size;  // number of independent variables
+     ADScalar   detA;         // AD value of the determinant
+     ADVector   A(n);         // AD version of matrix
 
-	// ------------------------------------------------------
-	while(repeat--)
-       {	// get the next matrix
-		CppAD::uniform_01(n, matrix);
+     // ------------------------------------------------------
+     while(repeat--)
+       {  // get the next matrix
+          CppAD::uniform_01(n, matrix);
 
-		// set independent variable values
-		for(i = 0; i &lt; n; i++)
-			A[i] = matrix[i];
+          // set independent variable values
+          for(i = 0; i &lt; n; i++)
+               A[i] = matrix[i];
 
-		// compute the determinant
-		detA = Det(A);
+          // compute the determinant
+          detA = Det(A);
 
-		// create function object f : A -&gt; detA
-		detA.diff(0, m);  // index 0 of m dependent variables
+          // create function object f : A -&gt; detA
+          detA.diff(0, m);  // index 0 of m dependent variables
 
-		// evaluate and return gradient using reverse mode
-		for(i =0; i &lt; n; i++)
-			gradient[i] = A[i].d(0); // partial detA w.r.t A[i]
-	}
-	// ---------------------------------------------------------
-	return true;
+          // evaluate and return gradient using reverse mode
+          for(i =0; i &lt; n; i++)
+               gradient[i] = A[i].d(0); // partial detA w.r.t A[i]
+     }
+     // ---------------------------------------------------------
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/fadbad/det_minor.cpp
 

@@ -6,7 +6,7 @@
 <title>Enable use of AD&lt;Base&gt; where Base is float</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Enable use of AD&lt;Base&gt; where Base is float"/>
-<meta name="keywords" id="keywords" content=" enable use of ad&lt;base&gt; where base is float condexpop condexprel equalopseq identical integer azmul ordered unary standard math sign pow numeric_limits to_string "/>
+<meta name="keywords" id="keywords" content=" enable use ad&lt;base&gt; where base is float condexpop condexprel equalopseq identical integer azmul ordered unary standard math sign pow numeric_limits to_string "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -114,19 +114,16 @@ The type <code><font color="blue">float</font></code> is a relatively simple typ
 Hence its <code><font color="blue">CondExpOp</font></code> function is defined by
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline float CondExpOp(
-		enum CompareOp     cop          ,
-		const float&amp;       left         ,
-		const float&amp;       right        ,
-		const float&amp;       exp_if_true  ,
-		const float&amp;       exp_if_false )
-	{	return CondExpTemplate(cop, left, right, exp_if_true, exp_if_false);
-	}
+     inline float CondExpOp(
+          enum CompareOp     cop          ,
+          const float&amp;       left         ,
+          const float&amp;       right        ,
+          const float&amp;       exp_if_true  ,
+          const float&amp;       exp_if_false )
+     {    return CondExpTemplate(cop, left, right, exp_if_true, exp_if_false);
+     }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="CondExpRel" id="CondExpRel">CondExpRel</a></big></b>
 <br/>
@@ -134,10 +131,9 @@ The <a href="base_cond_exp.xml#CondExpRel" target="_top"><span style='white-spac
  macro invocation
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	CPPAD_COND_EXP_REL(float)
+     CPPAD_COND_EXP_REL(float)
 }
 </pre></font></code>
-
 uses <code><font color="blue">CondExpOp</font></code> above to
 define 
 <code><font color="blue"><span style='white-space: nowrap'>CondExp</span></font><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
@@ -154,76 +150,61 @@ and
 The type <code><font color="blue">float</font></code> is simple (in this respect) and so we define
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline bool EqualOpSeq(const float&amp; x, const float&amp; y)
-	{	return x == y; }
+     inline bool EqualOpSeq(const float&amp; x, const float&amp; y)
+     {    return x == y; }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="Identical" id="Identical">Identical</a></big></b>
 <br/>
 The type <code><font color="blue">float</font></code> is simple (in this respect) and so we define
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline bool IdenticalPar(const float&amp; x)
-	{	return true; }
-	inline bool IdenticalZero(const float&amp; x)
-	{	return (x == 0.f); }
-	inline bool IdenticalOne(const float&amp; x)
-	{	return (x == 1.f); }
-	inline bool IdenticalEqualPar(const float&amp; x, const float&amp; y)
-	{	return (x == y); }
+     inline bool IdenticalPar(const float&amp; x)
+     {    return true; }
+     inline bool IdenticalZero(const float&amp; x)
+     {    return (x == 0.f); }
+     inline bool IdenticalOne(const float&amp; x)
+     {    return (x == 1.f); }
+     inline bool IdenticalEqualPar(const float&amp; x, const float&amp; y)
+     {    return (x == y); }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="Integer" id="Integer">Integer</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline int Integer(const float&amp; x)
-	{	return static_cast&lt;int&gt;(x); }
+     inline int Integer(const float&amp; x)
+     {    return static_cast&lt;int&gt;(x); }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="azmul" id="azmul">azmul</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	CPPAD_AZMUL( float )
+     CPPAD_AZMUL( float )
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
 <br/>
 The <code><font color="blue">float</font></code> type supports ordered comparisons
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline bool GreaterThanZero(const float&amp; x)
-	{	return x &gt; 0.f; }
-	inline bool GreaterThanOrZero(const float&amp; x)
-	{	return x &gt;= 0.f; }
-	inline bool LessThanZero(const float&amp; x)
-	{	return x &lt; 0.f; }
-	inline bool LessThanOrZero(const float&amp; x)
-	{	return x &lt;= 0.f; }
-	inline bool abs_geq(const float&amp; x, const float&amp; y)
-	{	return std::fabs(x) &gt;= std::fabs(y); }
+     inline bool GreaterThanZero(const float&amp; x)
+     {    return x &gt; 0.f; }
+     inline bool GreaterThanOrZero(const float&amp; x)
+     {    return x &gt;= 0.f; }
+     inline bool LessThanZero(const float&amp; x)
+     {    return x &lt; 0.f; }
+     inline bool LessThanOrZero(const float&amp; x)
+     {    return x &lt;= 0.f; }
+     inline bool abs_geq(const float&amp; x, const float&amp; y)
+     {    return std::fabs(x) &gt;= std::fabs(y); }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="Unary Standard Math" id="Unary Standard Math">Unary Standard Math</a></big></b>
 <br/>
@@ -232,42 +213,38 @@ required to use <code><font color="blue">AD&lt;float&gt;</font></code>:
 (in the CppAD namespace)
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	CPPAD_STANDARD_MATH_UNARY(float, acos)
-	CPPAD_STANDARD_MATH_UNARY(float, asin)
-	CPPAD_STANDARD_MATH_UNARY(float, atan)
-	CPPAD_STANDARD_MATH_UNARY(float, cos)
-	CPPAD_STANDARD_MATH_UNARY(float, cosh)
-	CPPAD_STANDARD_MATH_UNARY(float, exp)
-	CPPAD_STANDARD_MATH_UNARY(float, fabs)
-	CPPAD_STANDARD_MATH_UNARY(float, log)
-	CPPAD_STANDARD_MATH_UNARY(float, log10)
-	CPPAD_STANDARD_MATH_UNARY(float, sin)
-	CPPAD_STANDARD_MATH_UNARY(float, sinh)
-	CPPAD_STANDARD_MATH_UNARY(float, sqrt)
-	CPPAD_STANDARD_MATH_UNARY(float, tan)
-	CPPAD_STANDARD_MATH_UNARY(float, tanh)
+     CPPAD_STANDARD_MATH_UNARY(float, acos)
+     CPPAD_STANDARD_MATH_UNARY(float, asin)
+     CPPAD_STANDARD_MATH_UNARY(float, atan)
+     CPPAD_STANDARD_MATH_UNARY(float, cos)
+     CPPAD_STANDARD_MATH_UNARY(float, cosh)
+     CPPAD_STANDARD_MATH_UNARY(float, exp)
+     CPPAD_STANDARD_MATH_UNARY(float, fabs)
+     CPPAD_STANDARD_MATH_UNARY(float, log)
+     CPPAD_STANDARD_MATH_UNARY(float, log10)
+     CPPAD_STANDARD_MATH_UNARY(float, sin)
+     CPPAD_STANDARD_MATH_UNARY(float, sinh)
+     CPPAD_STANDARD_MATH_UNARY(float, sqrt)
+     CPPAD_STANDARD_MATH_UNARY(float, tan)
+     CPPAD_STANDARD_MATH_UNARY(float, tanh)
 # if CPPAD_USE_CPLUSPLUS_2011
-	CPPAD_STANDARD_MATH_UNARY(float, erf)
-	CPPAD_STANDARD_MATH_UNARY(float, asinh)
-	CPPAD_STANDARD_MATH_UNARY(float, acosh)
-	CPPAD_STANDARD_MATH_UNARY(float, atanh)
-	CPPAD_STANDARD_MATH_UNARY(float, expm1)
-	CPPAD_STANDARD_MATH_UNARY(float, log1p)
+     CPPAD_STANDARD_MATH_UNARY(float, erf)
+     CPPAD_STANDARD_MATH_UNARY(float, asinh)
+     CPPAD_STANDARD_MATH_UNARY(float, acosh)
+     CPPAD_STANDARD_MATH_UNARY(float, atanh)
+     CPPAD_STANDARD_MATH_UNARY(float, expm1)
+     CPPAD_STANDARD_MATH_UNARY(float, log1p)
 # endif
 }
 </pre></font></code>
-
 The absolute value function is special because its <code><font color="blue">std</font></code> name is
 <code><font color="blue">fabs</font></code>
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline float abs(const float&amp; x)
-	{	return std::fabs(x); }
+     inline float abs(const float&amp; x)
+     {    return std::fabs(x); }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="sign" id="sign">sign</a></big></b>
 <br/>
@@ -275,18 +252,15 @@ The following defines the <code><font color="blue">CppAD::sign</font></code> fun
 is required to use <code><font color="blue">AD&lt;float&gt;</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline float sign(const float&amp; x)
-	{	if( x &gt; 0.f )
-			return 1.f;
-		if( x == 0.f )
-			return 0.f;
-		return -1.f;
-	}
+     inline float sign(const float&amp; x)
+     {    if( x &gt; 0.f )
+               return 1.f;
+          if( x == 0.f )
+               return 0.f;
+          return -1.f;
+     }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="pow" id="pow">pow</a></big></b>
 <br/>
@@ -294,13 +268,10 @@ The following defines a <code><font color="blue">CppAD::pow</font></code> functi
 is required to use <code><font color="blue">AD&lt;float&gt;</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	inline float pow(const float&amp; x, const float&amp; y)
-	{ return std::pow(x, y); }
+     inline float pow(const float&amp; x, const float&amp; y)
+     { return std::pow(x, y); }
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
 <br/>
@@ -309,12 +280,9 @@ The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span
 for the type <code><font color="blue">float</font></code>:
 <code><font color='blue'><pre style='display:inline'> 
 namespace CppAD {
-	CPPAD_NUMERIC_LIMITS(float, float)
+     CPPAD_NUMERIC_LIMITS(float, float)
 }
 </pre></font></code>
-
-
-<br/>
 <br/>
 <b><big><a name="to_string" id="to_string">to_string</a></big></b>
 <br/>

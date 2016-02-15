@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Fadbad Speed: Ode</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -119,61 +116,60 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 namespace fadbad {
-	// define fabs for use by ode_evaluate
-	fadbad::F&lt;double&gt; fabs(const fadbad::F&lt;double&gt;&amp; x)
-	{	return std::max(-x, x); }
+     // define fabs for use by ode_evaluate
+     fadbad::F&lt;double&gt; fabs(const fadbad::F&lt;double&gt;&amp; x)
+     {    return std::max(-x, x); }
 }
 
 bool link_ode(
-	size_t                     size       ,
-	size_t                     repeat     ,
-	CppAD::vector&lt;double&gt;      &amp;x         ,
-	CppAD::vector&lt;double&gt;      &amp;jacobian
+     size_t                     size       ,
+     size_t                     repeat     ,
+     CppAD::vector&lt;double&gt;      &amp;x         ,
+     CppAD::vector&lt;double&gt;      &amp;jacobian
 )
 {
-	// speed test global option values
-	if( global_atomic )
-		return false;
-	if( global_memory || global_onetape || global_optimize )
-		return false;
-	// -------------------------------------------------------------
-	// setup
-	assert( x.size() == size );
-	assert( jacobian.size() == size * size );
+     // speed test global option values
+     if( global_atomic )
+          return false;
+     if( global_memory || global_onetape || global_optimize )
+          return false;
+     // -------------------------------------------------------------
+     // setup
+     assert( x.size() == size );
+     assert( jacobian.size() == size * size );
 
-	typedef fadbad::F&lt;double&gt;       ADScalar;
-	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
+     typedef fadbad::F&lt;double&gt;       ADScalar;
+     typedef CppAD::vector&lt;ADScalar&gt; ADVector;
 
-	size_t i, j;
-	size_t p = 0;          // use ode to calculate function values
-	size_t n = size;       // number of independent variables
-	size_t m = n;          // number of dependent variables
-	ADVector X(n), Y(m);   // independent and dependent variables
+     size_t i, j;
+     size_t p = 0;          // use ode to calculate function values
+     size_t n = size;       // number of independent variables
+     size_t m = n;          // number of dependent variables
+     ADVector X(n), Y(m);   // independent and dependent variables
 
-	// -------------------------------------------------------------
-	while(repeat--)
-	{	// choose next x value
-		CppAD::uniform_01(n, x);
-		for(j = 0; j &lt; n; j++)
-		{	// set value of x[j]
-			X[j] = x[j];
-			// set up for X as the independent variable vector
-			X[j].diff(j, n);
-		}
+     // -------------------------------------------------------------
+     while(repeat--)
+     {    // choose next x value
+          CppAD::uniform_01(n, x);
+          for(j = 0; j &lt; n; j++)
+          {    // set value of x[j]
+               X[j] = x[j];
+               // set up for X as the independent variable vector
+               X[j].diff(j, n);
+          }
 
-		// evaluate function
-		CppAD::ode_evaluate(X, p, Y);
+          // evaluate function
+          CppAD::ode_evaluate(X, p, Y);
 
-		// return values with Y as the dependent variable vector
-		for(i = 0; i &lt; m; i++)
-		{	for(j = 0; j &lt; n; j++)
-				jacobian[ i * n + j ] = Y[i].d(j);
-		}
-	}
-	return true;
+          // return values with Y as the dependent variable vector
+          for(i = 0; i &lt; m; i++)
+          {    for(j = 0; j &lt; n; j++)
+                    jacobian[ i * n + j ] = Y[i].d(j);
+          }
+     }
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/fadbad/ode.cpp
 

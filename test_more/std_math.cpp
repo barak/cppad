@@ -1,9 +1,9 @@
-/* $Id: std_math.cpp 3060 2013-12-27 20:38:57Z bradbell $ */
+// $Id: std_math.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -20,7 +20,7 @@ typedef CppAD::AD<double>      ADdouble;
 typedef CppAD::AD< ADdouble > ADDdouble;
 
 bool std_math(void)
-{	using CppAD::NearEqual;	
+{	using CppAD::NearEqual;
 	bool ok = true;
 	ADDdouble half(.5);
 	ADDdouble one(1.);

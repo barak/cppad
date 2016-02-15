@@ -1,9 +1,9 @@
-/* $Id: jacobian.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: jacobian.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-12 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -44,7 +44,7 @@ Vector eval_jac_g(const Vector&  x)
 }
 
 
-} // End empty namespace 
+} // End empty namespace
 
 bool jacobian(void)
 {	bool ok = true;
@@ -73,7 +73,7 @@ bool jacobian(void)
 	for(k = 0; k < m *n; k++)
 		ok &= CppAD::NearEqual(jac_g[k], check[k], 1e-10, 1e-10);
 
-	// one argument sparse jacobian 
+	// one argument sparse jacobian
 	jac_g = fun_g.SparseJacobian(x);
 	for(k = 0; k < m *n; k++)
 		ok &= CppAD::NearEqual(jac_g[k], check[k], 1e-10, 1e-10);

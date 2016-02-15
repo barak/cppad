@@ -6,7 +6,7 @@
 <title>CppAD Speed: Gradient of Ode Solution</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Speed: Gradient of Ode Solution"/>
-<meta name="keywords" id="keywords" content=" cppad speed: gradient of ode solution link_ode speed specifications implementation "/>
+<meta name="keywords" id="keywords" content=" cppad speed: gradient ode solution link_ode speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>CppAD Speed: Gradient of Ode Solution</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -115,91 +112,90 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize;
+     global_onetape, global_atomic, global_optimize;
 
 bool link_ode(
-	size_t                     size       ,
-	size_t                     repeat     ,
-	CppAD::vector&lt;double&gt;      &amp;x         ,
-	CppAD::vector&lt;double&gt;      &amp;jacobian
+     size_t                     size       ,
+     size_t                     repeat     ,
+     CppAD::vector&lt;double&gt;      &amp;x         ,
+     CppAD::vector&lt;double&gt;      &amp;jacobian
 )
 {
-	// speed test global option values
-	if( global_atomic )
-		return false;
+     // speed test global option values
+     if( global_atomic )
+          return false;
 
-	// --------------------------------------------------------------------
-	// setup
-	assert( x.size() == size );
-	assert( jacobian.size() == size * size );
+     // --------------------------------------------------------------------
+     // setup
+     assert( x.size() == size );
+     assert( jacobian.size() == size * size );
 
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;       ADScalar;
-	typedef CppAD::vector&lt;ADScalar&gt; ADVector;
+     typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;       ADScalar;
+     typedef CppAD::vector&lt;ADScalar&gt; ADVector;
 
-	size_t j;
-	size_t p = 0;              // use ode to calculate function values
-	size_t n = size;           // number of independent variables
-	size_t m = n;              // number of dependent variables
-	ADVector  X(n), Y(m);      // independent and dependent variables
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;  f;   // AD function
+     size_t j;
+     size_t p = 0;              // use ode to calculate function values
+     size_t n = size;           // number of independent variables
+     size_t m = n;              // number of dependent variables
+     ADVector  X(n), Y(m);      // independent and dependent variables
+     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;  f;   // AD function
 
-	// -------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
-	{	// choose next x value
-		uniform_01(n, x);
-		for(j = 0; j &lt; n; j++)
-			X[j] = x[j];
+     // -------------------------------------------------------------
+     if( ! global_onetape ) while(repeat--)
+     {    // choose next x value
+          uniform_01(n, x);
+          for(j = 0; j &lt; n; j++)
+               X[j] = x[j];
 
-		// declare the independent variable vector
-		<a href="independent.xml" target="_top">Independent</a>(X);
+          // declare the independent variable vector
+          <a href="independent.xml" target="_top">Independent</a>(X);
 
-		// evaluate function
-		CppAD::ode_evaluate(X, p, Y);
+          // evaluate function
+          CppAD::ode_evaluate(X, p, Y);
 
-		// create function object f : X -&gt; Y
-		f.Dependent(X, Y);
+          // create function object f : X -&gt; Y
+          f.Dependent(X, Y);
 
-		if( global_optimize )
-			f.optimize();
+          if( global_optimize )
+               f.optimize();
 
-		// skip comparison operators
-		f.compare_change_count(0);
+          // skip comparison operators
+          f.compare_change_count(0);
 
-		jacobian = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
-	}
-	else
-	{	// an x value
-		uniform_01(n, x);
-		for(j = 0; j &lt; n; j++)
-			X[j] = x[j];
+          jacobian = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+     }
+     else
+     {    // an x value
+          uniform_01(n, x);
+          for(j = 0; j &lt; n; j++)
+               X[j] = x[j];
 
-		// declare the independent variable vector
-		<a href="independent.xml" target="_top">Independent</a>(X);
+          // declare the independent variable vector
+          <a href="independent.xml" target="_top">Independent</a>(X);
 
-		// evaluate function
-		CppAD::ode_evaluate(X, p, Y);
+          // evaluate function
+          CppAD::ode_evaluate(X, p, Y);
 
-		// create function object f : X -&gt; Y
-		f.Dependent(X, Y);
+          // create function object f : X -&gt; Y
+          f.Dependent(X, Y);
 
-		if( global_optimize )
-			f.optimize();
+          if( global_optimize )
+               f.optimize();
 
-		// skip comparison operators
-		f.compare_change_count(0);
+          // skip comparison operators
+          f.compare_change_count(0);
 
-		while(repeat--)
-		{	// get next argument value
-			uniform_01(n, x);
+          while(repeat--)
+          {    // get next argument value
+               uniform_01(n, x);
 
-			// evaluate jacobian
-			jacobian = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
-		}
-	}
-	return true;
+               // evaluate jacobian
+               jacobian = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+          }
+     }
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/cppad/ode.cpp
 

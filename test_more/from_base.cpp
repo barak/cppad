@@ -1,9 +1,9 @@
-/* $Id: from_base.cpp 2506 2012-10-24 19:36:49Z bradbell $ */
+// $Id: from_base.cpp 3785 2016-02-08 12:53:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-06 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
-the terms of the 
+the terms of the
                     GNU General Public License Version 3.
 
 A copy of this license is included in the COPYING file of this distribution.
@@ -21,13 +21,13 @@ bool FromBase(void)
 
 	using namespace CppAD;
 
-	// construct directly form Base where Base = double 
-	AD<double> x(1.); 
+	// construct directly form Base where Base = double
+	AD<double> x(1.);
 	AD<double> y = 2.;
 
-	// construct from a type that can be converted to Base 
+	// construct from a type that can be converted to Base
 	// where Base = AD<double>
-	AD< AD<double> > X(1.); 
+	AD< AD<double> > X(1.);
 	AD< AD<double> > Y(2);
 
 	// check that resulting objects are parameters

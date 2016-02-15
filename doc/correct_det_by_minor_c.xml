@@ -6,7 +6,7 @@
 <title>Correctness Test of det_by_minor Routine</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Correctness Test of det_by_minor Routine"/>
-<meta name="keywords" id="keywords" content=" correctness test of det_by_minor routine syntax flag source code "/>
+<meta name="keywords" id="keywords" content=" correctness test det_by_minor routine syntax flag source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -98,9 +98,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Correctness Test of det_by_minor Routine</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -130,26 +127,25 @@ It value is <code><font color="blue">1</font></code> if the test passes and <cod
 
 <code><font color='blue'><pre style='display:inline'> 
 bool correct_det_by_minor(void)
-{	double a[9], det, check;
+{    double a[9], det, check;
 
-	<a href="uniform_01_c.xml" target="_top">random_seed</a>(123);
-	<a href="uniform_01_c.xml" target="_top">uniform_01</a>(9, a);
+     <a href="uniform_01_c.xml" target="_top">random_seed</a>(123);
+     <a href="uniform_01_c.xml" target="_top">uniform_01</a>(9, a);
 
-	/* compute determinant using expansion by minors */
-	det = det_by_minor(a, 3);
-	
-	/* use expansion by minors to hand code the determinant  */
-	check = 0.;
-	check += a[0] * ( a[4] * a[8] - a[5] * a[7] );
-	check -= a[1] * ( a[3] * a[8] - a[5] * a[6] );
-	check += a[2] * ( a[3] * a[7] - a[4] * a[6] );
+     /* compute determinant using expansion by minors */
+     det = det_by_minor(a, 3);
+     
+     /* use expansion by minors to hand code the determinant  */
+     check = 0.;
+     check += a[0] * ( a[4] * a[8] - a[5] * a[7] );
+     check -= a[1] * ( a[3] * a[8] - a[5] * a[6] );
+     check += a[2] * ( a[3] * a[7] - a[4] * a[6] );
 
-	if( fabs(det / check - 1.0) &lt; 1e-10 )
-		return true;
-	return false;
+     if( fabs(det / check - 1.0) &lt; 1e-10 )
+          return true;
+     return false;
 }
 </pre></font></code>
-
 
 <hr/>Input File: compare_c/det_by_minor.c
 

@@ -6,7 +6,7 @@
 <title>Main Program For Comparing C and C++ Speed</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Main Program For Comparing C and C++ Speed"/>
-<meta name="keywords" id="keywords" content=" main program for comparing c and c++ speed source code "/>
+<meta name="keywords" id="keywords" content=" main program comparing c c++ speed source code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -96,39 +96,36 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 <center><b><big><big>Main Program For Comparing C and C++ Speed</big></big></b></center>
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
 <code><font color='blue'><pre style='display:inline'> 
 int main(void)
-{	bool flag;
-	size_t i;
+{    bool flag;
+     size_t i;
 
-	<a href="uniform_01_c.xml" target="_top">random_seed</a>(123);
+     <a href="uniform_01_c.xml" target="_top">random_seed</a>(123);
 
-	printf(&quot;correct_det_by_minor: &quot;);
-	flag = <a href="correct_det_by_minor_c.xml" target="_top">correct_det_by_minor</a>();
-	if( flag )
-		printf(&quot;OK\n&quot;);
-	else	printf(&quot;Error\n&quot;);
+     printf(&quot;correct_det_by_minor: &quot;);
+     flag = <a href="correct_det_by_minor_c.xml" target="_top">correct_det_by_minor</a>();
+     if( flag )
+          printf(&quot;OK\n&quot;);
+     else printf(&quot;Error\n&quot;);
 
-	for(i = 0; i &lt; 5; i++)
-	{	double time_min = 1.0;
-		size_t size     = 2 + i * 2;
-		int   i_size    = (int) size;
-		printf(&quot;time_det_minor for %d x %d matrix = &quot;, i_size, i_size);
-		printf(&quot;%g\n&quot;, time_det_by_minor(size, time_min) );
-	}
+     for(i = 0; i &lt; 5; i++)
+     {    double time_min = 1.0;
+          size_t size     = 2 + i * 2;
+          int   i_size    = (int) size;
+          printf(&quot;time_det_minor for %d x %d matrix = &quot;, i_size, i_size);
+          printf(&quot;%g\n&quot;, time_det_by_minor(size, time_min) );
+     }
 
-	if( flag )
-		return 0;
-	return 1;
+     if( flag )
+          return 0;
+     return 1;
 }
 </pre></font></code>
-
 
 <hr/>Input File: compare_c/det_by_minor.c
 

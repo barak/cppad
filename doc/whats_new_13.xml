@@ -6,7 +6,7 @@
 <title>CppAD Changes and Additions During 2013</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Changes and Additions During 2013"/>
-<meta name="keywords" id="keywords" content=" cppad changes and additions during 2013 introduction 12-29 12-27 12-26 12-24 11-27 11-13 11-12 10-29 10-23 10-22 10-16 10-15 10-14 10-13 10-12 09-20 09-19 09-18 09-07 08-12 08-11 08-06 07-26 05-28 05-21 05-17 05-15 05-14 05-12 05-11 05-04 04-28 04-27 04-26 "/>
+<meta name="keywords" id="keywords" content=" cppad changes additions during 2013 introduction 12-29 12-27 12-26 12-24 11-27 11-13 11-12 10-29 10-23 10-22 10-16 10-15 10-14 10-13 10-12 09-20 09-19 09-18 09-07 08-12 08-11 08-06 07-26 05-28 05-21 05-17 05-15 05-14 05-12 05-11 05-04 04-28 04-27 04-26 "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -287,11 +287,10 @@ The <a href="condexp.xml#Optimize" target="_top"><span style='white-space: nowra
 now handles nested conditional expressions.
 For example, give the code
 <code><font color='blue'><pre style='display:inline'> 
-	x = CondExpLt(left_x, right_x, true_x, false_x)
-	y = CondExpGt(left_y, right_y, true_y, false_y)
-	z = CondExpEq(left_z, right_z, x, y)
+     x = CondExpLt(left_x, right_x, true_x, false_x)
+     y = CondExpGt(left_y, right_y, true_y, false_y)
+     z = CondExpEq(left_z, right_z, x, y)
 </pre></font></code>
-
 only two of the conditional expressions will be evaluated
 (one will be skipped depending on the result of <code><font color="blue">left_z == right_z</font></code>).
 For more details, see
@@ -411,11 +410,7 @@ error: no match for 'operator|=' (operand types are
     Check[i * n + j] |= F2[i * n + k] &amp; r[ k * n + j];
                      ^
 </pre></font></code>
-
 </li></ol>
-
-
-<br/>
 <br/>
 <b><big><a name="09-20" id="09-20">09-20</a></big></b>
 
@@ -567,10 +562,9 @@ with <a href="optimize.xml#Atomic Functions" target="_top"><span style='white-sp
 <br/>
 Fix a case where the test <code><font color="blue">test_more/num_limits.cpp</font></code> failed because
 <code><font color='blue'><pre style='display:inline'> 
-	double inf   = std::numeric_limits&lt;double&gt;::infinity();
-	double check = std::complex&lt;double&gt;(inf) / std::complex&lt;float&gt;(1.)
+     double inf   = std::numeric_limits&lt;double&gt;::infinity();
+     double check = std::complex&lt;double&gt;(inf) / std::complex&lt;float&gt;(1.)
 </pre></font></code>
-
 can result in the imaginary part of <code><font color="blue">check</font></code> being <code><font color="blue">- nan</font></code>.
 
 <br/>
@@ -741,10 +735,9 @@ and <a href="cppad_eigen.hpp.xml" target="_top"><span style='white-space: nowrap
  matrix of <code><font color="blue">AD</font></code> elements.
 This has been fixed using a template partial specialization of
 <code><font color='blue'><pre style='display:inline'> 
-	template&lt;typename Scalar, bool IsInteger&gt;
-	struct significant_decimals_default_impl
+     template&lt;typename Scalar, bool IsInteger&gt;
+     struct significant_decimals_default_impl
 </pre></font></code>
-
 because the original template requires definition of a implicit conversion
 from the scalar type to an <code><font color="blue">int</font></code> and this is dangerous for AD types
 (note that <a href="integer.xml" target="_top"><span style='white-space: nowrap'>Integer</span></a>

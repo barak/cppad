@@ -6,7 +6,7 @@
 <title>exp_eps: CppAD Forward and Reverse Sweeps</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="exp_eps: CppAD Forward and Reverse Sweeps"/>
-<meta name="keywords" id="keywords" content=" exp_eps: cppad forward and reverse sweeps purpose exercises "/>
+<meta name="keywords" id="keywords" content=" exp_eps: cppad forward reverse sweeps purpose exercises "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -90,9 +90,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>exp_eps: CppAD Forward and Reverse Sweeps</big></big></b></center>
 .
 
@@ -122,7 +119,7 @@ at the point
 </mrow></math>
 
 ,
-of the function 
+of the function
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;exp_eps(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>epsilon</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -157,7 +154,7 @@ at the point
 </mrow></math>
 
 ,
-of the function 
+of the function
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;exp_eps(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>epsilon</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
@@ -185,7 +182,7 @@ at the point
 </mrow></math>
 
 ,
-of the function corresponding to the operation sequence 
+of the function corresponding to the operation sequence
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
@@ -214,78 +211,77 @@ form the point where the operation sequence corresponding to
 </li></ol>
 
 <code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;  // http://www.coin-or.org/CppAD/ 
+# include &lt;cppad/cppad.hpp&gt;  // http://www.coin-or.org/CppAD/
 # include &quot;exp_eps.hpp&quot;      // our example exponential function approximation
 bool exp_eps_cppad(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::vector;    // can use any simple vector template class
-	using CppAD::NearEqual; // checks if values are nearly equal
+{    bool ok = true;
+     using CppAD::AD;
+     using CppAD::vector;    // can use any simple vector template class
+     using CppAD::NearEqual; // checks if values are nearly equal
 
-	// domain space vector
-	size_t n = 2; // dimension of the domain space
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; U(n);
-	U[0] = .5;    // value of x for this operation sequence
-	U[1] = .2;    // value of e for this operation sequence
+     // domain space vector
+     size_t n = 2; // dimension of the domain space
+     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; U(n);
+     U[0] = .5;    // value of x for this operation sequence
+     U[1] = .2;    // value of e for this operation sequence
 
-	// declare independent variables and start recording operation sequence
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(U);
+     // declare independent variables and start recording operation sequence
+     CppAD::<a href="independent.xml" target="_top">Independent</a>(U);
 
-	// evaluate our exponential approximation
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x       = U[0];
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; epsilon = U[1];
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; apx = exp_eps(x, epsilon);  
+     // evaluate our exponential approximation
+     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; x       = U[0];
+     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; epsilon = U[1];
+     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; apx = exp_eps(x, epsilon);
 
-	// range space vector
-	size_t m = 1;  // dimension of the range space
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; Y(m);
-	Y[0] = apx;    // variable that represents only range space component
+     // range space vector
+     size_t m = 1;  // dimension of the range space
+     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; Y(m);
+     Y[0] = apx;    // variable that represents only range space component
 
-	// Create f: U -&gt; Y corresponding to this operation sequence
-	// and stop recording. This also executes a zero order forward 
-	// mode sweep using values in U for x and e.
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(U, Y);
+     // Create f: U -&gt; Y corresponding to this operation sequence
+     // and stop recording. This also executes a zero order forward
+     // mode sweep using values in U for x and e.
+     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(U, Y);
 
-	// first order forward mode sweep that computes partial w.r.t x
-	vector&lt;double&gt; du(n);      // differential in domain space
-	vector&lt;double&gt; dy(m);      // differential in range space
-	du[0] = 1.;                // x direction in domain space
-	du[1] = 0.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, du);  // partial w.r.t. x
-	double check = 1.5;
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check, 1e-10, 1e-10);
+     // first order forward mode sweep that computes partial w.r.t x
+     vector&lt;double&gt; du(n);      // differential in domain space
+     vector&lt;double&gt; dy(m);      // differential in range space
+     du[0] = 1.;                // x direction in domain space
+     du[1] = 0.;
+     dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, du);  // partial w.r.t. x
+     double check = 1.5;
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check, 1e-10, 1e-10);
 
-	// first order reverse mode sweep that computes the derivative
-	vector&lt;double&gt;  w(m);     // weights for components of the range
-	vector&lt;double&gt; dw(n);     // derivative of the weighted function
-	w[0] = 1.;                // there is only one weight 
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);   // derivative of w[0] * exp_eps(x, epsilon)
-	check = 1.5;              // partial w.r.t. x
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check, 1e-10, 1e-10);
-	check = 0.;               // partial w.r.t. epsilon
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], check, 1e-10, 1e-10);
+     // first order reverse mode sweep that computes the derivative
+     vector&lt;double&gt;  w(m);     // weights for components of the range
+     vector&lt;double&gt; dw(n);     // derivative of the weighted function
+     w[0] = 1.;                // there is only one weight
+     dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);   // derivative of w[0] * exp_eps(x, epsilon)
+     check = 1.5;              // partial w.r.t. x
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check, 1e-10, 1e-10);
+     check = 0.;               // partial w.r.t. epsilon
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], check, 1e-10, 1e-10);
 
-	// second order forward sweep that computes
-	// second partial of exp_eps(x, epsilon) w.r.t. x
-	vector&lt;double&gt; x2(n);     // second order Taylor coefficients
-	vector&lt;double&gt; y2(m);
-	x2[0] = 0.;               // evaluate partial w.r.t x
-	x2[1] = 0.;
-	y2    = f.<a href="forward.xml" target="_top">Forward</a>(2, x2);
-	check = 0.5 * 1.;         // Taylor coef is 1/2 second derivative
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[0], check, 1e-10, 1e-10);
+     // second order forward sweep that computes
+     // second partial of exp_eps(x, epsilon) w.r.t. x
+     vector&lt;double&gt; x2(n);     // second order Taylor coefficients
+     vector&lt;double&gt; y2(m);
+     x2[0] = 0.;               // evaluate partial w.r.t x
+     x2[1] = 0.;
+     y2    = f.<a href="forward.xml" target="_top">Forward</a>(2, x2);
+     check = 0.5 * 1.;         // Taylor coef is 1/2 second derivative
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[0], check, 1e-10, 1e-10);
 
-	// second order reverse sweep that computes
-	// derivative of partial of exp_eps(x, epsilon) w.r.t. x
-	dw.resize(2 * n);         // space for first and second derivative
-	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
-	check = 1.;               // result should be second derivative
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*2+1], check, 1e-10, 1e-10);
+     // second order reverse sweep that computes
+     // derivative of partial of exp_eps(x, epsilon) w.r.t. x
+     dw.resize(2 * n);         // space for first and second derivative
+     dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
+     check = 1.;               // result should be second derivative
+     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*2+1], check, 1e-10, 1e-10);
 
-	return ok;
+     return ok;
 }
 </pre></font></code>
-
 
 <hr/>Input File: introduction/exp_apx/exp_eps_cppad.cpp
 

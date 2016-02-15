@@ -6,7 +6,7 @@
 <title>Fadbad Speed: Second Derivative of a Polynomial</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Fadbad Speed: Second Derivative of a Polynomial"/>
-<meta name="keywords" id="keywords" content=" fadbad speed: second derivative of a polynomial link_poly speed specifications implementation "/>
+<meta name="keywords" id="keywords" content=" fadbad speed: second derivative polynomial link_poly speed specifications implementation "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Fadbad Speed: Second Derivative of a Polynomial</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -117,57 +114,56 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 extern bool global_memory, global_onetape, global_atomic, global_optimize;
 
 bool link_poly(
-	size_t                     size     ,
-	size_t                     repeat   ,
-	CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
-	CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-	CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
+     size_t                     size     ,
+     size_t                     repeat   ,
+     CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
+     CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
+     CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
 {
-	if( global_atomic )
-		return false;
-	if( global_memory || global_onetape || global_optimize )
-		return false;
-	// -----------------------------------------------------
-	// setup
-	size_t i;             // temporary index
-	fadbad::T&lt;double&gt;  Z; // domain space AD value
-	fadbad::T&lt;double&gt;  P; // range space AD value
+     if( global_atomic )
+          return false;
+     if( global_memory || global_onetape || global_optimize )
+          return false;
+     // -----------------------------------------------------
+     // setup
+     size_t i;             // temporary index
+     fadbad::T&lt;double&gt;  Z; // domain space AD value
+     fadbad::T&lt;double&gt;  P; // range space AD value
 
-	// choose the polynomial coefficients
-	CppAD::uniform_01(size, a);
+     // choose the polynomial coefficients
+     CppAD::uniform_01(size, a);
 
-	// AD copy of the polynomial coefficients
-	CppAD::vector&lt; fadbad::T&lt;double&gt; &gt; A(size);
-	for(i = 0; i &lt; size; i++)
-		A[i] = a[i];
+     // AD copy of the polynomial coefficients
+     CppAD::vector&lt; fadbad::T&lt;double&gt; &gt; A(size);
+     for(i = 0; i &lt; size; i++)
+          A[i] = a[i];
 
-	// ------------------------------------------------------
-	while(repeat--)
-	{	// get the next argument value
-		CppAD::uniform_01(1, z);
+     // ------------------------------------------------------
+     while(repeat--)
+     {    // get the next argument value
+          CppAD::uniform_01(1, z);
 
-		// independent variable value
-		Z    = z[0]; // argument value
-		Z[1] = 1;    // argument first order Taylor coefficient
+          // independent variable value
+          Z    = z[0]; // argument value
+          Z[1] = 1;    // argument first order Taylor coefficient
 
-		// AD computation of the dependent variable
-		P = CppAD::Poly(0, A, Z);
+          // AD computation of the dependent variable
+          P = CppAD::Poly(0, A, Z);
 
-		// Taylor-expand P to degree one
-		P.eval(2);
+          // Taylor-expand P to degree one
+          P.eval(2);
 
-		// second derivative is twice second order Taylor coefficient
-		ddp[0] = 2. * P[2];
+          // second derivative is twice second order Taylor coefficient
+          ddp[0] = 2. * P[2];
 
-		// Free DAG corresponding to P does not seem to improve speed.
-		// Probably because it gets freed the next time P is assigned.
-		// P.reset();
-	}
-	// ------------------------------------------------------
-	return true;
+          // Free DAG corresponding to P does not seem to improve speed.
+          // Probably because it gets freed the next time P is assigned.
+          // P.reset();
+     }
+     // ------------------------------------------------------
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/fadbad/poly.cpp
 

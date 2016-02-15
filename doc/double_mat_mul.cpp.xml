@@ -92,9 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>CppAD Speed: Matrix Multiplication (Double Version)</big></big></b></center>
 <br/>
 <b><big><a name="Specifications" id="Specifications">Specifications</a></big></b>
@@ -113,34 +110,33 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 
 // Note that CppAD uses global_memory at the main program level
 extern bool
-	global_onetape, global_atomic, global_optimize;
+     global_onetape, global_atomic, global_optimize;
 
 bool link_mat_mul(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	CppAD::vector&lt;double&gt;&amp;           x        ,
-	CppAD::vector&lt;double&gt;&amp;           z        ,
-	CppAD::vector&lt;double&gt;&amp;           dz
+     size_t                           size     ,
+     size_t                           repeat   ,
+     CppAD::vector&lt;double&gt;&amp;           x        ,
+     CppAD::vector&lt;double&gt;&amp;           z        ,
+     CppAD::vector&lt;double&gt;&amp;           dz
 )
 {
-	if(global_onetape||global_atomic||global_optimize)
-		return false;
-	// -----------------------------------------------------
-	size_t n = size * size; // number of independent variables
-	CppAD::vector&lt;double&gt; y(n);
+     if(global_onetape||global_atomic||global_optimize)
+          return false;
+     // -----------------------------------------------------
+     size_t n = size * size; // number of independent variables
+     CppAD::vector&lt;double&gt; y(n);
 
-	while(repeat--)
-	{	// get the next matrix
-		CppAD::uniform_01(n, x);
+     while(repeat--)
+     {    // get the next matrix
+          CppAD::uniform_01(n, x);
 
-		// do computation
-		mat_sum_sq(size, x, y, z);
+          // do computation
+          mat_sum_sq(size, x, y, z);
 
-	}
-	return true;
+     }
+     return true;
 }
 </pre></font></code>
-
 
 <hr/>Input File: speed/double/mat_mul.cpp
 
