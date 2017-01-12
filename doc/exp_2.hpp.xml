@@ -88,21 +88,16 @@ A:active { color : purple }
 
 
 <center><b><big><big>exp_2: Implementation</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-template &lt;class Type&gt;
-Type exp_2(const Type &amp;x)
-{       Type v1  = x;                // v1 = x
-        Type v2  = Type(1) + v1;     // v2 = 1 + x
-        Type v3  = v1 * v1;          // v3 = x^2
-        Type v4  = v3 / Type(2);     // v4 = x^2 / 2
-        Type v5  = v2 + v4;          // v5 = 1 + x + x^2 / 2
-        return v5;                   // exp_2(x) = 1 + x + x^2 / 2
-}
-</pre>
-
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Type</span><span style="color: #990000">&gt;</span>
+<span style="color: #008080">Type</span> <span style="font-weight: bold"><span style="color: #000000">exp_2</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Type</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>       <span style="color: #008080">Type</span> v1  <span style="color: #990000">=</span> x<span style="color: #990000">;</span>                <span style="font-style: italic"><span style="color: #9A1900">// v1 = x</span></span>
+        <span style="color: #008080">Type</span> v2  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Type</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">+</span> v1<span style="color: #990000">;</span>     <span style="font-style: italic"><span style="color: #9A1900">// v2 = 1 + x</span></span>
+        <span style="color: #008080">Type</span> v3  <span style="color: #990000">=</span> v1 <span style="color: #990000">*</span> v1<span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// v3 = x^2</span></span>
+        <span style="color: #008080">Type</span> v4  <span style="color: #990000">=</span> v3 <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #000000">Type</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>     <span style="font-style: italic"><span style="color: #9A1900">// v4 = x^2 / 2</span></span>
+        <span style="color: #008080">Type</span> v5  <span style="color: #990000">=</span> v2 <span style="color: #990000">+</span> v4<span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// v5 = 1 + x + x^2 / 2</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> v5<span style="color: #990000">;</span>                   <span style="font-style: italic"><span style="color: #9A1900">// exp_2(x) = 1 + x + x^2 / 2</span></span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: introduction/exp_apx/exp_2.omh
 
 </body>

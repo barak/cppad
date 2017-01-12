@@ -90,9 +90,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>A Simple Boost Threading AD: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -105,222 +102,217 @@ boost multi-threading environment.
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;boost/thread.hpp&gt;
-# define NUMBER_THREADS  4
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;boost/thread.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> NUMBER_THREADS  <span style="color: #993399">4</span>
 
-namespace {
-	// structure with problem specific information
-	typedef struct {
-		// function argument (worker input)
-		double          x;
-		// This structure would also have return information in it,
-		// but this example only returns the ok flag
-	} problem_specific;
-	// =====================================================================
-	// General purpose code you can copy to your application
-	// =====================================================================
-	using CppAD::thread_alloc;
-	// ------------------------------------------------------------------
-	// thread specific point to the thread number (initialize as null)
-	void cleanup(size_t*)
-	{	return; }
-	boost::thread_specific_ptr&lt;size_t&gt; thread_num_ptr_(cleanup);
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// structure with problem specific information</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// function argument (worker input)</span></span>
+          <span style="color: #009900">double</span>          x<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// This structure would also have return information in it,</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// but this example only returns the ok flag</span></span>
+     <span style="color: #FF0000">}</span> problem_specific<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// =====================================================================</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// General purpose code you can copy to your application</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// =====================================================================</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// thread specific point to the thread number (initialize as null)</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cleanup</span></span><span style="color: #990000">(</span>size_t<span style="color: #990000">*)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     boost<span style="color: #990000">::</span><span style="color: #008080">thread_specific_ptr&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">thread_num_ptr_</span></span><span style="color: #990000">(</span>cleanup<span style="color: #990000">);</span>
 
-	// Are we in sequential mode; i.e., other threads are waiting for
-	// master thread to set up next job ?
-	bool sequential_execution_ = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// Are we in sequential mode; i.e., other threads are waiting for</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// master thread to set up next job ?</span></span>
+     <span style="color: #009900">bool</span> sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// used to inform CppAD when we are in parallel execution mode
-	bool in_parallel(void)
-	{	return ! sequential_execution_; }
+     <span style="font-style: italic"><span style="color: #9A1900">// used to inform CppAD when we are in parallel execution mode</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">in_parallel</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">!</span> sequential_execution_<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
 
-	// used to inform CppAD of current thread number thread_number()
-	size_t thread_number(void)
-	{	// return thread_all_[thread_num].thread_num
-		return *thread_num_ptr_.get();
-	}
-	// ---------------------------------------------------------------------
-	// structure with information for one thread
-	typedef struct {
-		// number for this thread (thread specific points here)
-		size_t            thread_num;
-		// pointer to this boost thread
-		boost::thread*    bthread;
-		// false if an error occurs, true otherwise
-		bool              ok;
-		// pointer to problem specific information
-		problem_specific* info;
-	} thread_one_t;
-	// vector with information for all threads
-	thread_one_t thread_all_[NUMBER_THREADS];
-	// --------------------------------------------------------------------
-	// function that initializes the thread and then calls actual worker
-	bool worker(size_t thread_num, problem_specific* info);
-	void run_one_worker(size_t thread_num)
-	{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// used to inform CppAD of current thread number thread_number()</span></span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">thread_number</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// return thread_all_[thread_num].thread_num</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">*</span>thread_num_ptr_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">get</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ---------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// structure with information for one thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// number for this thread (thread specific points here)</span></span>
+          <span style="color: #008080">size_t</span>            thread_num<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// pointer to this boost thread</span></span>
+          boost<span style="color: #990000">::</span>thread<span style="color: #990000">*</span>    bthread<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// false if an error occurs, true otherwise</span></span>
+          <span style="color: #009900">bool</span>              ok<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// pointer to problem specific information</span></span>
+          problem_specific<span style="color: #990000">*</span> info<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span> thread_one_t<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// vector with information for all threads</span></span>
+     <span style="color: #008080">thread_one_t</span> thread_all_<span style="color: #990000">[</span>NUMBER_THREADS<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that initializes the thread and then calls actual worker</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">worker</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> thread_num<span style="color: #990000">,</span> problem_specific<span style="color: #990000">*</span> info<span style="color: #990000">);</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">run_one_worker</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> thread_num<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// The master thread should call worker directly
-		ok &amp;= thread_num != 0;
+          <span style="font-style: italic"><span style="color: #9A1900">// The master thread should call worker directly</span></span>
+          ok <span style="color: #990000">&amp;=</span> thread_num <span style="color: #990000">!=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-		// This is not the master thread, so thread specific infromation
-		// has not yet been set. We use it to inform other routines
-		// of this threads number.
-		// We must do this before calling thread_alloc::thread_num().
-		thread_num_ptr_.reset(&amp; thread_all_[thread_num].thread_num);
+          <span style="font-style: italic"><span style="color: #9A1900">// This is not the master thread, so thread specific infromation</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// has not yet been set. We use it to inform other routines</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// of this threads number.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// We must do this before calling thread_alloc::thread_num().</span></span>
+          thread_num_ptr_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">reset</span></span><span style="color: #990000">(&amp;</span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>thread_num<span style="color: #990000">);</span>
 
-		// Check the value of thread_alloc::thread_num().
-		ok = thread_num == thread_alloc::thread_num();
+          <span style="font-style: italic"><span style="color: #9A1900">// Check the value of thread_alloc::thread_num().</span></span>
+          ok <span style="color: #990000">=</span> thread_num <span style="color: #990000">==</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
 
-		// Now do the work
-		ok &amp;= worker(thread_num, thread_all_[thread_num].info);
+          <span style="font-style: italic"><span style="color: #9A1900">// Now do the work</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">worker</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">,</span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>info<span style="color: #990000">);</span>
 
-		// pass back ok information for this thread
-		thread_all_[thread_num].ok = ok;
+          <span style="font-style: italic"><span style="color: #9A1900">// pass back ok information for this thread</span></span>
+          thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok <span style="color: #990000">=</span> ok<span style="color: #990000">;</span>
 
-		// no return value
-		return;
-	}
-	// ----------------------------------------------------------------------
-	// function that calls all the workers
-	bool run_all_workers(size_t num_threads, problem_specific* info_all[])
-	{	bool ok = true;
+          <span style="font-style: italic"><span style="color: #9A1900">// no return value</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that calls all the workers</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">run_all_workers</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> num_threads<span style="color: #990000">,</span> problem_specific<span style="color: #990000">*</span> info_all<span style="color: #990000">[])</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// initialize thread_all_ (execpt for pthread_id)
-		size_t thread_num;
-		for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-		{	// pointed to by thread specific info for this thread
-			thread_all_[thread_num].thread_num = thread_num;
-			// initialize as false to make sure worker gets called by other
-			// threads. Note that thread_all_[0].ok does not get used
-			thread_all_[thread_num].ok         = false;
-			// problem specific information
-			thread_all_[thread_num].info       = info_all[thread_num];
-		}
+          <span style="font-style: italic"><span style="color: #9A1900">// initialize thread_all_ (execpt for pthread_id)</span></span>
+          <span style="color: #008080">size_t</span> thread_num<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// pointed to by thread specific info for this thread</span></span>
+               thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>thread_num <span style="color: #990000">=</span> thread_num<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// initialize as false to make sure worker gets called by other</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// threads. Note that thread_all_[0].ok does not get used</span></span>
+               thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok         <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// problem specific information</span></span>
+               thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>info       <span style="color: #990000">=</span> info_all<span style="color: #990000">[</span>thread_num<span style="color: #990000">];</span>
+          <span style="color: #FF0000">}</span>
 
-		// master bthread number
-		thread_num_ptr_.reset(&amp; thread_all_[0].thread_num);
+          <span style="font-style: italic"><span style="color: #9A1900">// master bthread number</span></span>
+          thread_num_ptr_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">reset</span></span><span style="color: #990000">(&amp;</span> thread_all_<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>thread_num<span style="color: #990000">);</span>
 
-		// Now thread_number() has necessary information for this thread
-		// (number zero), and while still in sequential mode,
-		// call setup for using CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; in parallel mode.
-		thread_alloc::parallel_setup(
-			num_threads, in_parallel, thread_number
-		);
-		thread_alloc::hold_memory(true);
-		CppAD::parallel_ad&lt;double&gt;();
+          <span style="font-style: italic"><span style="color: #9A1900">// Now thread_number() has necessary information for this thread</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (number zero), and while still in sequential mode,</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// call setup for using CppAD::AD&lt;double&gt; in parallel mode.</span></span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">parallel_setup</span></span><span style="color: #990000">(</span>
+               num_threads<span style="color: #990000">,</span> in_parallel<span style="color: #990000">,</span> thread_number
+          <span style="color: #990000">);</span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hold_memory</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span>parallel_ad<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
 
-		// inform CppAD that we now may be in parallel execution mode
-		sequential_execution_ = false;
+          <span style="font-style: italic"><span style="color: #9A1900">// inform CppAD that we now may be in parallel execution mode</span></span>
+          sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
 
-		// This master thread is already running, we need to create
-		// num_threads - 1 more threads
-		thread_all_[0].bthread = CPPAD_NULL;
-		for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
-		{	// Create the thread with thread number equal to thread_num
-			thread_all_[thread_num].bthread =
-				new boost::thread(run_one_worker, thread_num);
-		}
+          <span style="font-style: italic"><span style="color: #9A1900">// This master thread is already running, we need to create</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// num_threads - 1 more threads</span></span>
+          thread_all_<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>bthread <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Create the thread with thread number equal to thread_num</span></span>
+               thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>bthread <span style="color: #990000">=</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> boost<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread</span></span><span style="color: #990000">(</span>run_one_worker<span style="color: #990000">,</span> thread_num<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
 
-		// now call worker for the master thread
-		thread_num = thread_alloc::thread_num();
-		ok &amp;= thread_num == 0;
-		ok &amp;= worker(thread_num, thread_all_[thread_num].info);
+          <span style="font-style: italic"><span style="color: #9A1900">// now call worker for the master thread</span></span>
+          thread_num <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
+          ok <span style="color: #990000">&amp;=</span> thread_num <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">worker</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">,</span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>info<span style="color: #990000">);</span>
 
-		// now wait for the other threads to finish
-		for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
-		{	thread_all_[thread_num].bthread-&gt;join();
-			delete thread_all_[thread_num].bthread;
-			thread_all_[thread_num].bthread = CPPAD_NULL;
-		}
+          <span style="font-style: italic"><span style="color: #9A1900">// now wait for the other threads to finish</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>bthread<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">join</span></span><span style="color: #990000">();</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>bthread<span style="color: #990000">;</span>
+               thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>bthread <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
 
-		// Inform CppAD that we now are definately back to sequential mode
-		sequential_execution_ = true;
+          <span style="font-style: italic"><span style="color: #9A1900">// Inform CppAD that we now are definately back to sequential mode</span></span>
+          sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// now inform CppAD that there is only one thread
-		thread_alloc::parallel_setup(1, CPPAD_NULL, CPPAD_NULL);
-		thread_alloc::hold_memory(false);
-		CppAD::parallel_ad&lt;double&gt;();
+          <span style="font-style: italic"><span style="color: #9A1900">// now inform CppAD that there is only one thread</span></span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">parallel_setup</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> CPPAD_NULL<span style="color: #990000">,</span> CPPAD_NULL<span style="color: #990000">);</span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hold_memory</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span>parallel_ad<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
 
-		// check to ok flag returned by during calls to work by other threads
-		for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
-			ok &amp;= thread_all_[thread_num].ok;
+          <span style="font-style: italic"><span style="color: #9A1900">// check to ok flag returned by during calls to work by other threads</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+               ok <span style="color: #990000">&amp;=</span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok<span style="color: #990000">;</span>
 
-		return ok;
-	}
-	// =====================================================================
-	// End of General purpose code
-	// =====================================================================
-	// function that does the work for one thread
-	bool worker(size_t thread_num, problem_specific* info)
-	{	bool ok = true;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// =====================================================================</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// End of General purpose code</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// =====================================================================</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that does the work for one thread</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">worker</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> thread_num<span style="color: #990000">,</span> problem_specific<span style="color: #990000">*</span> info<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// CppAD::vector uses the CppAD fast multi-threading allocator
-		CppAD::vector&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(1), ay(1);
-		ax[0] = info-&gt;x;
-		<a href="independent.xml" target="_top">Independent</a>(ax);
-		ay[0] = sqrt( ax[0] * ax[0] );
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+          <span style="font-style: italic"><span style="color: #9A1900">// CppAD::vector uses the CppAD fast multi-threading allocator</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; CppAD::AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> info<span style="color: #990000">-&gt;</span>x<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
+          ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sqrt</span></span><span style="color: #990000">(</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-		// Check function value corresponds to the identity
-		double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-		ok        &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(ay[0], ax[0], eps, eps);
+          <span style="font-style: italic"><span style="color: #9A1900">// Check function value corresponds to the identity</span></span>
+          <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          ok        <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-		// Check derivative value corresponds to the identity.
-		CppAD::vector&lt;double&gt; d_x(1), d_y(1);
-		d_x[0] = 1.;
-		d_y    = f.<a href="forward.xml" target="_top">Forward</a>(1, d_x);
-		ok    &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(d_x[0], 1., eps, eps);
+          <span style="font-style: italic"><span style="color: #9A1900">// Check derivative value corresponds to the identity.</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">d_x</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">d_y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          d_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          d_y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> d_x<span style="color: #990000">);</span>
+          ok    <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-		return ok;
-	}
-}
-bool simple_ad(void)
-{	bool ok = true;
-	size_t num_threads = NUMBER_THREADS;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">simple_ad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> num_threads <span style="color: #990000">=</span> NUMBER_THREADS<span style="color: #990000">;</span>
 
-	// Check that no memory is in use or avialable at start
-	// (using thread_alloc in sequential mode)
-	size_t thread_num;
-	for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-	{	ok &amp;= thread_alloc::inuse(thread_num) == 0;
-		ok &amp;= thread_alloc::available(thread_num) == 0;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Check that no memory is in use or avialable at start</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (using thread_alloc in sequential mode)</span></span>
+     <span style="color: #008080">size_t</span> thread_num<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// initialize info_all
-	problem_specific *info, *info_all[NUMBER_THREADS];
-	for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-	{	// problem specific information
-		size_t min_bytes(sizeof(info)), cap_bytes;
-		void*  v_ptr = thread_alloc::get_memory(min_bytes, cap_bytes);
-		info         = static_cast&lt;problem_specific*&gt;(v_ptr);
-		info-&gt;x      = double(thread_num) + 1.;
-		info_all[thread_num] = info;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// initialize info_all</span></span>
+     <span style="color: #008080">problem_specific</span> <span style="color: #990000">*</span>info<span style="color: #990000">,</span> <span style="color: #990000">*</span>info_all<span style="color: #990000">[</span>NUMBER_THREADS<span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// problem specific information</span></span>
+          <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">min_bytes</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>info<span style="color: #990000">)),</span> cap_bytes<span style="color: #990000">;</span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span>  v_ptr <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_memory</span></span><span style="color: #990000">(</span>min_bytes<span style="color: #990000">,</span> cap_bytes<span style="color: #990000">);</span>
+          info         <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span>problem_specific<span style="color: #990000">*&gt;(</span>v_ptr<span style="color: #990000">);</span>
+          info<span style="color: #990000">-&gt;</span>x      <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>thread_num<span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          info_all<span style="color: #990000">[</span>thread_num<span style="color: #990000">]</span> <span style="color: #990000">=</span> info<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	ok &amp;= run_all_workers(num_threads, info_all);
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">run_all_workers</span></span><span style="color: #990000">(</span>num_threads<span style="color: #990000">,</span> info_all<span style="color: #990000">);</span>
 
-	// go down so that free memory for other threads before memory for master
-	thread_num = num_threads;
-	while(thread_num--)
-	{	// delete problem specific information
-		void* v_ptr = static_cast&lt;void*&gt;( info_all[thread_num] );
-		thread_alloc::return_memory( v_ptr );
-		// check that there is no longer any memory inuse by this thread
-		ok &amp;= thread_alloc::inuse(thread_num) == 0;
-		// return all memory being held for future use by this thread
-		thread_alloc::free_available(thread_num);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// go down so that free memory for other threads before memory for master</span></span>
+     thread_num <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// delete problem specific information</span></span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> v_ptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;(</span> info_all<span style="color: #990000">[</span>thread_num<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">return_memory</span></span><span style="color: #990000">(</span> v_ptr <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check that there is no longer any memory inuse by this thread</span></span>
+          ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// return all memory being held for future use by this thread</span></span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/bthread/simple_ad_bthread.cpp
 
 </body>

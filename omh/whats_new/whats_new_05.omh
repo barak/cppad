@@ -1,6 +1,6 @@
-$Id: whats_new_05.omh 3768 2015-12-28 18:58:35Z bradbell $
+$Id: whats_new_05.omh 3845 2016-11-19 01:50:47Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -109,11 +109,11 @@ memory.
 The bug mentioned on $cref/12-01/whats_new_05/12-01/$$ resurfaced
 and the corresponding routine was changed as follows:
 $codep
-	static ADTape<Base> *Tape(void)
+	static local::ADTape<Base> *Tape(void)
 	{	// If we return &tape, instead of creating and returning ptr,
 		// there seems to be a bug in g++ with -O2 option.
-		static ADTape<Base> tape;
-		static ADTape<Base> *ptr = &tape;
+		static local::ADTape<Base> tape;
+		static local::ADTape<Base> *ptr = &tape;
 		return ptr;
 	}
 $$
@@ -266,8 +266,8 @@ The speed test of $cref lu_vec_ad.cpp$$ has been reinstated.
 It appears that there is some sort of bug in the gcc compiler with
 the -O2 option whereby the following member function
 $codep
-	static ADTape<Base> *Tape(void)
-	{	static ADTape<Base> tape;
+	static local::ADTape<Base> *Tape(void)
+	{	static local::ADTape<Base> tape;
 		return &tape;
 	}
 $$
@@ -389,7 +389,7 @@ $cref for_one.cpp$$,
 $code Fun.cpp$$
 ($code Fun.cpp$$ has since been replaced by $cref independent.cpp$$,
 $code Reverse.cpp$$ has since been replaced by
-$cref reverse_one.cpp$$ and $code reverse_any.cpp$$).
+$cref reverse_one.cpp$$ and $code reverse_checkpoint.cpp$$).
 
 $head 11-01$$
 Add forward mode $cref/Jacobian sparsity/ForSparseJac/$$ calculation.

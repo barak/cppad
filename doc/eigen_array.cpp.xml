@@ -85,63 +85,58 @@ A:active { color : purple }
 <td>Headings</td>
 </tr></table><br/>
 <center><b><big><big>Using Eigen Arrays: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/example/cppad_eigen.hpp&gt;
-# include &lt;cppad/speed/det_by_minor.hpp&gt;
-# include &lt;Eigen/Dense&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/example/cppad_eigen.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/det_by_minor.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;Eigen/Dense&gt;</span>
 
-bool eigen_array(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	using Eigen::Matrix;
-	using Eigen::Dynamic;
-	//
-	typedef Matrix&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; , Dynamic, 1 &gt; a_vector;
-	//
-	// some temporary indices
-	size_t i, j;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">eigen_array</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> Eigen<span style="color: #990000">::</span>Matrix<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> Eigen<span style="color: #990000">::</span>Dynamic<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">Matrix&lt; AD&lt;double&gt; , Dynamic, 1 &gt;</span> a_vector<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// some temporary indices</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
 
-	// domain and range space vectors
-	size_t n  = 10, m = n;
-	a_vector a_x(n), a_y(m);
+     <span style="font-style: italic"><span style="color: #9A1900">// domain and range space vectors</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">,</span> m <span style="color: #990000">=</span> n<span style="color: #990000">;</span>
+     <span style="color: #008080">a_vector</span> <span style="font-weight: bold"><span style="color: #000000">a_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">a_y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
 
-	// set and declare independent variables and start tape recording
-	for(j = 0; j &lt; n; j++)
-		a_x[j] = double(1 + j);
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+     <span style="font-style: italic"><span style="color: #9A1900">// set and declare independent variables and start tape recording</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a_x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span><span style="color: #993399">1</span> <span style="color: #990000">+</span> j<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
 
-	// evaluate a component wise function
-	a_y = a_x.array() + sin(a_x.array());
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate a component wise function</span></span>
+     a_y <span style="color: #990000">=</span> a_x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">array</span></span><span style="color: #990000">()</span> <span style="color: #990000">+</span> a_x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">array</span></span><span style="color: #990000">().</span><span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">();</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">,</span> a_y<span style="color: #990000">);</span>
 
-	// compute the derivative of y w.r.t x using CppAD
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
-	for(j = 0; j &lt; n; j++)
-		x[j] = double(j) + 1.0 / double(j+1);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) jac = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the derivative of y w.r.t x using CppAD</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">1.0</span> <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> jac <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// check Jacobian
-	double eps = 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-	for(i = 0; i &lt; m; i++)
-	{	for(j = 0; j &lt; n; j++)
-		{	double check = 1.0 + cos(x[i]);
-			if( i != j )
-				check = 0.0;
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(jac[i * n + j], check, eps, eps);
-		}
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// check Jacobian</span></span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">1.0</span> <span style="color: #990000">+</span> <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span>i<span style="color: #990000">]);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">!=</span> j <span style="color: #990000">)</span>
+                    check <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/eigen_array.cpp
 
 </body>

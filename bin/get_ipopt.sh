@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: get_ipopt.sh 3730 2015-09-23 15:56:53Z bradbell $
+# $Id: get_ipopt.sh 3838 2016-10-10 04:24:30Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -121,7 +121,8 @@ export PKG_CONFIG_PATH="$prefix/$libdir/pkgconfig"
 echo_eval ./configure \
 	--enable-debug \
 	--prefix="$prefix" \
-	--libdir="$prefix/$libdir"
+	--libdir="$prefix/$libdir" \
+	coin_skip_warn_cxxflags='yes'
 echo_eval make install
 # -----------------------------------------------------------------------------
 echo_eval touch $cppad_dir/$installed_flag

@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3785 2016-02-08 12:53:06Z bradbell $
+# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -10,8 +10,7 @@
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
 # Build the speed/adolc directory tests
-# Inherit environment from ../CMakeList.txt
-# CMAKE_BUILD_TYPE determined by parent directory
+# Inherit build type from ../CMakeList.txt
 
 # assert adolc_prefix is defined
 IF ( NOT adolc_prefix )
@@ -60,3 +59,8 @@ ADD_CUSTOM_TARGET(
 	DEPENDS
 	speed_adolc speed_src
 )
+MESSAGE(STATUS "make check_speed_adolc: available")
+
+# Change check depends in parent environment
+add_to_list(check_speed_depends check_speed_adolc)
+SET(check_speed_depends "${check_speed_depends}" PARENT_SCOPE)

@@ -1,6 +1,6 @@
-// $Id: harmonic_time.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: harmonic_time.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -95,7 +95,7 @@ is equal to $latex 10^6$$ times $icode mega_sum$$.
 
 $head Source$$
 $code
-$verbatim%multi_thread/harmonic_time.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%multi_thread/harmonic_time.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

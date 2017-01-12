@@ -1,6 +1,6 @@
-// $Id: reciprocal.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: reciprocal.cpp 3821 2016-06-30 02:53:40Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -31,41 +31,28 @@ This example only uses set sparsity patterns.
 $nospell
 
 $head Start Class Definition$$
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
 namespace {           // isolate items below to this file
 using CppAD::vector;  // abbreviate as vector
 //
 // a utility to compute the union of two sets.
-void my_union(
-	std::set<size_t>&         result  ,
-	const std::set<size_t>&   left    ,
-	const std::set<size_t>&   right   )
-{	std::set<size_t> temp;
-	std::set_union(
-		left.begin()              ,
-		left.end()                ,
-		right.begin()             ,
-		right.end()               ,
-		std::inserter(temp, temp.begin())
-	);
-	result.swap(temp);
-}
+using CppAD::set_union;
 //
 class atomic_reciprocal : public CppAD::atomic_base<double> {
-/* $$
+/* %$$
 $head Constructor $$
-$codep */
-	public:
+$srccode%cpp% */
+public:
 	// constructor (could use const char* for name)
 	atomic_reciprocal(const std::string& name) :
 	// this exmaple only uses set sparsity patterns
 	CppAD::atomic_base<double>(name, atomic_base<double>::set_sparsity_enum)
 	{ }
-	private:
-/* $$
+private:
+/* %$$
 $head forward$$
-$codep */
+$srccode%cpp% */
 	// forward mode routine called by CppAD
 	virtual bool forward(
 		size_t                    p ,
@@ -75,8 +62,11 @@ $codep */
 		const vector<double>&    tx ,
 		      vector<double>&    ty
 	)
-	{	size_t n = tx.size() / (q + 1);
+	{
+# ifndef NDEBUG
+		size_t n = tx.size() / (q + 1);
 		size_t m = ty.size() / (q + 1);
+# endif
 		assert( n == 1 );
 		assert( m == 1 );
 		assert( p <= q );
@@ -121,9 +111,9 @@ $codep */
 		assert( ! ok );
 		return ok;
 	}
-/* $$
+/* %$$
 $head reverse$$
-$codep */
+$srccode%cpp% */
 	// reverse mode routine called by CppAD
 	virtual bool reverse(
 		size_t                    q ,
@@ -132,8 +122,11 @@ $codep */
 		      vector<double>&    px ,
 		const vector<double>&    py
 	)
-	{	size_t n = tx.size() / (q + 1);
+	{
+# ifndef NDEBUG
+		size_t n = tx.size() / (q + 1);
 		size_t m = ty.size() / (q + 1);
+# endif
 		assert( px.size() == n * (q + 1) );
 		assert( py.size() == m * (q + 1) );
 		assert( n == 1 );
@@ -188,17 +181,21 @@ $codep */
 		}
 		return ok;
 	}
-/* $$
+/* %$$
 $head for_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// forward Jacobian set sparsity routine called by CppAD
 	virtual bool for_sparse_jac(
 		size_t                                p ,
 		const vector< std::set<size_t> >&     r ,
-		      vector< std::set<size_t> >&     s )
+		      vector< std::set<size_t> >&     s ,
+		const vector<double>&                 x )
 	{	// This function needed if using f.ForSparseJac
+# ifndef NDEBUG
 		size_t n = r.size();
 		size_t m = s.size();
+# endif
+		assert( n == x.size() );
 		assert( n == 1 );
 		assert( m == 1 );
 
@@ -207,17 +204,21 @@ $codep */
 
 		return true;
 	}
-/* $$
+/* %$$
 $head rev_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// reverse Jacobian set sparsity routine called by CppAD
 	virtual bool rev_sparse_jac(
 		size_t                                p  ,
 		const vector< std::set<size_t> >&     rt ,
-		      vector< std::set<size_t> >&     st )
+		      vector< std::set<size_t> >&     st ,
+		const vector<double>&                 x  )
 	{	// This function needed if using RevSparseJac or optimize
+# ifndef NDEBUG
 		size_t n = st.size();
 		size_t m = rt.size();
+# endif
+		assert( n == x.size() );
 		assert( n == 1 );
 		assert( m == 1 );
 
@@ -226,9 +227,9 @@ $codep */
 
 		return true;
 	}
-/* $$
+/* %$$
 $head rev_sparse_hes$$
-$codep */
+$srccode%cpp% */
 	// reverse Hessian set sparsity routine called by CppAD
 	virtual bool rev_sparse_hes(
 		const vector<bool>&                   vx,
@@ -237,10 +238,14 @@ $codep */
 		size_t                                p ,
 		const vector< std::set<size_t> >&     r ,
 		const vector< std::set<size_t> >&     u ,
-		      vector< std::set<size_t> >&     v )
+		      vector< std::set<size_t> >&     v ,
+		const vector<double>&                 x )
 	{	// This function needed if using RevSparseHes
+# ifndef NDEBUG
 		size_t n = vx.size();
 		size_t m = s.size();
+# endif
+		assert( x.size() == n );
 		assert( t.size() == n );
 		assert( r.size() == n );
 		assert( u.size() == m );
@@ -264,33 +269,33 @@ $codep */
 		// include forward Jacobian sparsity in Hessian sparsity
 		// (note sparsty for f''(x) * R same as for R)
 		if( s[0] )
-			my_union(v[0], v[0], r[0] );
+			v[0] = set_union(v[0], r[0] );
 
 		return true;
 	}
-/* $$
+/* %$$
 $head End Class Definition$$
-$codep */
+$srccode%cpp% */
 }; // End of atomic_reciprocal class
 }  // End empty namespace
 
-/* $$
+/* %$$
 $head Use Atomic Function$$
-$codep */
+$srccode%cpp% */
 bool reciprocal(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
 	double eps = 10. * CppAD::numeric_limits<double>::epsilon();
-/* $$
+/* %$$
 $subhead Constructor$$
-$codep */
+$srccode%cpp% */
 	// --------------------------------------------------------------------
 	// Create the atomic reciprocal object
 	atomic_reciprocal afun("atomic_reciprocal");
-/* $$
+/* %$$
 $subhead Recording$$
-$codep */
+$srccode%cpp% */
 	// Create the function f(x)
 	//
 	// domain space vector
@@ -316,9 +321,9 @@ $codep */
 	// create f: x -> y and stop tape recording
 	CppAD::ADFun<double> f;
 	f.Dependent (ax, ay);  // f(x) = x
-/* $$
+/* %$$
 $subhead forward$$
-$codep */
+$srccode%cpp% */
 	// check function value
 	double check = x0;
 	ok &= NearEqual( Value(ay[0]) , check,  eps, eps);
@@ -344,9 +349,9 @@ $codep */
 	y_q    = f.Forward(q, x_q);
 	check  = 0.;
 	ok &= NearEqual(y_q[0] , check,  eps, eps);
-/* $$
+/* %$$
 $subhead reverse$$
-$codep */
+$srccode%cpp% */
 	// third order reverse mode
 	q     = 3;
 	vector<double> w(m), dw(n * q);
@@ -357,9 +362,9 @@ $codep */
 	check = 0.;
 	ok &= NearEqual(dw[1] , check,  eps, eps);
 	ok &= NearEqual(dw[2] , check,  eps, eps);
-/* $$
+/* %$$
 $subhead for_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// forward mode sparstiy pattern
 	size_t p = n;
 	CppAD::vectorBool r1(n * p), s1(m * p);
@@ -367,9 +372,9 @@ $codep */
 	//
 	s1    = f.ForSparseJac(p, r1);
 	ok  &= s1[0] == true;  // f[0] depends on x[0]
-/* $$
+/* %$$
 $subhead rev_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// reverse mode sparstiy pattern
 	q = m;
 	CppAD::vectorBool s2(q * m), r2(q * n);
@@ -377,9 +382,9 @@ $codep */
 	//
 	r2    = f.RevSparseJac(q, s2);
 	ok  &= r2[0] == true;  // f[0] depends on x[0]
-/* $$
+/* %$$
 $subhead rev_sparse_hes$$
-$codep */
+$srccode%cpp% */
 	// Hessian sparsity (using previous ForSparseJac call)
 	CppAD::vectorBool s3(m), h(p * n);
 	s3[0] = true;        // compute sparsity pattern for f[0]
@@ -389,7 +394,7 @@ $codep */
 	//
 	return ok;
 }
-/* $$
+/* %$$
 $$ $comment end nospell$$
 $end
 */

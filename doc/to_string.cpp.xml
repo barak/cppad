@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="to_string.xml" target="_top">Prev</a>
-</td><td><a href="ipopt_solve.xml" target="_top">Next</a>
+</td><td><a href="set_union.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -100,96 +101,91 @@ A:active { color : purple }
 
 
 <center><b><big><big>to_string: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-style: italic"><span style="color: #9A1900">// Examples with fundamental types</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/to_string.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Integer</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">Integer</span> <span style="font-weight: bold"><span style="color: #000000">string2int</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>string<span style="color: #990000">&amp;</span> s<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">Integer</span> result <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> index   <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #FF0000">'-'</span> <span style="color: #990000">)</span>
+               <span style="color: #990000">++</span>index<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span> index <span style="color: #990000">&lt;</span> s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span>
+               result <span style="color: #990000">=</span> <span style="color: #993399">10</span> <span style="color: #990000">*</span> result <span style="color: #990000">+</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span> s<span style="color: #990000">[</span>index<span style="color: #990000">++]</span> <span style="color: #990000">-</span> <span style="color: #FF0000">'0'</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #FF0000">'-'</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">-</span> result<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> result<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Integer</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">integer</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">Integer</span> max    <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Integer<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">();</span>
+          std<span style="color: #990000">::</span><span style="color: #008080">string</span> s  <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">to_string</span></span><span style="color: #990000">(</span>max<span style="color: #990000">);</span>
+          <span style="color: #008080">Integer</span> check  <span style="color: #990000">=</span> string2int<span style="color: #990000">&lt;</span>Integer<span style="color: #990000">&gt;(</span>s<span style="color: #990000">);</span>
+          ok            <span style="color: #990000">&amp;=</span> max <span style="color: #990000">==</span> check<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">Integer</span> min       <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Integer<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">min</span></span><span style="color: #990000">();</span>
+          s              <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">to_string</span></span><span style="color: #990000">(</span>min<span style="color: #990000">);</span>
+          check          <span style="color: #990000">=</span> string2int<span style="color: #990000">&lt;</span>Integer<span style="color: #990000">&gt;(</span>s<span style="color: #990000">);</span>
+          ok            <span style="color: #990000">&amp;=</span> min <span style="color: #990000">==</span> check<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Float</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">floating</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>  ok  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> eps <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Float</span> pi  <span style="color: #990000">=</span> <span style="color: #993399">4.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          std<span style="color: #990000">::</span><span style="color: #008080">string</span> s <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">to_string</span></span><span style="color: #990000">(</span> pi <span style="color: #990000">);</span>
+          <span style="color: #008080">Float</span> check    <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atof</span></span><span style="color: #990000">(</span> s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">c_str</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          ok           <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> check <span style="color: #990000">-</span> pi <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-// Examples with fundamental types
-# include &lt;cppad/utility/to_string.hpp&gt;
-namespace {
-	template &lt;class Integer&gt;
-	Integer string2int(const std::string&amp; s)
-	{	Integer result = 0;
-		size_t index   = 0;
-		if( s[0] == '-' )
-			++index;
-		while( index &lt; s.size() )
-			result = 10 * result + Integer( s[index++] - '0');
-		if( s[0] == '-' )
-			return - result;
-		return result;
-	}
-	template &lt;class Integer&gt;
-	bool integer(void)
-	{	bool ok = true;
-		//
-		Integer max    = std::numeric_limits&lt;Integer&gt;::max();
-		std::string s  = CppAD::to_string(max);
-		Integer check  = string2int&lt;Integer&gt;(s);
-		ok            &amp;= max == check;
-		//
-		Integer min       = std::numeric_limits&lt;Integer&gt;::min();
-		s              = CppAD::to_string(min);
-		check          = string2int&lt;Integer&gt;(s);
-		ok            &amp;= min == check;
-		//
-		return ok;
-	}
-	template &lt;class Float&gt;
-	bool floating(void)
-	{	bool  ok  = true;
-		Float eps = std::numeric_limits&lt;Float&gt;::epsilon();
-		Float pi  = 4.0 * std::atan(1.);
-		//
-		std::string s = CppAD::to_string( pi );
-		Float check    = std::atof( s.c_str() );
-		ok           &amp;= std::fabs( check - pi ) &lt;= 2.0 * eps;
-		//
-		return ok;
-	}
-}
+<span style="font-style: italic"><span style="color: #9A1900">// Examples with AD types</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_floating</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>  ok  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Base</span> eps <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Base</span> pi  <span style="color: #990000">=</span> <span style="color: #993399">4.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          std<span style="color: #990000">::</span><span style="color: #008080">string</span> s <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">to_string</span></span><span style="color: #990000">(</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;(</span> pi <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+          <span style="color: #008080">Base</span> check    <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atof</span></span><span style="color: #990000">(</span> s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">c_str</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          ok           <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> check <span style="color: #990000">-</span> pi <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-// Examples with AD types
-# include &lt;cppad/cppad.hpp&gt;
-namespace {
-	template &lt;class Base&gt;
-	bool ad_floating(void)
-	{	bool  ok  = true;
-		Base eps = std::numeric_limits&lt;Base&gt;::epsilon();
-		Base pi  = 4.0 * std::atan(1.);
-		//
-		std::string s = CppAD::to_string( CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;( pi ) );
-		Base check    = std::atof( s.c_str() );
-		ok           &amp;= std::fabs( check - pi ) &lt;= 2.0 * eps;
-		//
-		return ok;
-	}
-}
+<span style="font-style: italic"><span style="color: #9A1900">// Test driver</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">to_string</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-// Test driver
-bool to_string(void)
-{	bool ok = true;
-
-	ok &amp;= integer&lt;unsigned short&gt;();
-	ok &amp;= integer&lt;signed int&gt;();
-	ok &amp;= integer&lt;unsigned long&gt;();
-# if CPPAD_USE_CPLUSPLUS_2011
-	ok &amp;= integer&lt;signed long long&gt;();
-# endif
-	//
-	ok &amp;= floating&lt;float&gt;();
-	ok &amp;= floating&lt;double&gt;();
-	ok &amp;= floating&lt;long double&gt;();
-	//
-	ok &amp;= ad_floating&lt;float&gt;();
-	ok &amp;= ad_floating&lt;double&gt;();
-	//
-	return ok;
-}
-
-</pre>
-
+     ok <span style="color: #990000">&amp;=</span> integer<span style="color: #990000">&lt;</span><span style="color: #009900">unsigned</span> <span style="color: #009900">short</span><span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> integer<span style="color: #990000">&lt;</span><span style="color: #009900">signed</span> <span style="color: #009900">int</span><span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> integer<span style="color: #990000">&lt;</span><span style="color: #009900">unsigned</span> <span style="color: #009900">long</span><span style="color: #990000">&gt;();</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_USE_CPLUSPLUS_2011
+     ok <span style="color: #990000">&amp;=</span> integer<span style="color: #990000">&lt;</span><span style="color: #009900">signed</span> <span style="color: #009900">long</span> <span style="color: #009900">long</span><span style="color: #990000">&gt;();</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     ok <span style="color: #990000">&amp;=</span> floating<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> floating<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> floating<span style="color: #990000">&lt;</span><span style="color: #009900">long</span> <span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     ok <span style="color: #990000">&amp;=</span> ad_floating<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> ad_floating<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/to_string.cpp
 
 </body>

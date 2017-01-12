@@ -1,19 +1,22 @@
-# $Id: CMakeLists.txt 3632 2015-02-03 13:57:08Z bradbell $
+# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
+# the terms of the
 #                     GNU General Public License Version 3.
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-# Build the multi_thread/* directory tests 
-# Inherit environment from ../CMakeList.txt
+
+# Specifies build type for this directory and all its subdirecgtories
+# (subdirectories do not specify build type).
+# Possible values are , Debug, Release, RelWithDebInfo and MinSizeRel
+SET(CMAKE_BUILD_TYPE DEBUG)
 
 # initialize list as empty
-SET(check_depends "")
+SET(check_multi_thread_depends "")
 
 # Define the operation
 # CHECK_LIBRARY_EXISTS (LIBRARY FUNCTION LOCATION VARIABLE)
@@ -29,7 +32,6 @@ FIND_PACKAGE(OpenMP)
 IF ( OPENMP_FOUND )
 	# OpenMP_CXX_FLAGS - flags to add to the CXX compiler for OpenMP support
 	ADD_SUBDIRECTORY(openmp)
-	add_to_list(check_depends check_multi_thread_openmp)
 ENDIF ( OPENMP_FOUND )
 
 # If pthreads found, set pthread_lib and pthread_lib_path and process subdir
@@ -41,14 +43,13 @@ MESSAGE(STATUS "pthread library path = ${pthread_lib_path}")
 IF ( pthread_lib_path )
 	CHECK_LIBRARY_EXISTS(
 		pthread pthread_barrier_wait ${pthread_lib_path} pthread_ok
-	)   
+	)
 	IF ( pthread_ok )
 		ADD_SUBDIRECTORY(pthread)
-		add_to_list(check_depends check_multi_thread_pthread)
 	ENDIF ( pthread_ok )
 ENDIF ( pthread_lib_path )
 
-# IF we find a boost multi-threadding library, define the corresponding 
+# IF we find a boost multi-threadding library, define the corresponding
 # bthread_lib, bthread_lib_path, and process the bthread subdirectory.
 IF ( Boost_FOUND )
 	SET(bthread_lib NOTFOUND)
@@ -65,7 +66,7 @@ IF ( Boost_FOUND )
 					# CHECK_CXX_SOURCE_RUNS(source variable)
 					SET(source "
 # include <boost/thread.hpp>
-int main(void) 
+int main(void)
 {	boost::barrier wait(1);
 	return 0;
 }"					)
@@ -82,8 +83,7 @@ int main(void)
 	#
 	IF( bthread_lib )
 		ADD_SUBDIRECTORY(bthread)
-		add_to_list(check_depends check_multi_thread_bthread)
-		MESSAGE(STATUS 
+		MESSAGE(STATUS
 		"boost multi-threading library = ${bthread_lib_path}/${bthread_lib}"
 		)
 	ELSE( bthread_lib )
@@ -91,5 +91,12 @@ int main(void)
 	ENDIF( bthread_lib )
 ENDIF ( Boost_FOUND )
 
-# check_multi_thread
-ADD_CUSTOM_TARGET(check_multi_thread DEPENDS ${check_depends})
+IF( NOT( "${check_multi_threads_depends}" STREQUAL "" ) )
+	# check_multi_thread
+	ADD_CUSTOM_TARGET(check_multi_thread DEPENDS ${check_multi_thread_depends})
+	MESSAGE(STATUS "make check_multi_thread: available")
+
+	# Change check depends in parent environment
+	add_to_list(check_depends check_multi_thread)
+	SET(check_depends "${check_depends}" PARENT_SCOPE)
+ENDIF( NOT( "${check_multi_threads_depends}" STREQUAL "" ) )

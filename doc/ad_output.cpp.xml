@@ -77,61 +77,53 @@ A:active { color : purple }
 <td>ad_output.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>AD Output Operator: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;sstream&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// std::ostringstream</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;string&gt;</span>   <span style="font-style: italic"><span style="color: #9A1900">// std::string</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iomanip&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// std::setprecision, setw, setfill, right</span></span>
 
-# include &lt;sstream&gt;  // std::ostringstream
-# include &lt;string&gt;   // std::string
-# include &lt;iomanip&gt;  // std::setprecision, setw, setfill, right
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">S</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">set_ostream</span></span><span style="color: #990000">(</span><span style="color: #008080">S</span> <span style="color: #990000">&amp;</span>os<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     os
+          <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">setprecision</span></span><span style="color: #990000">(</span><span style="color: #993399">4</span><span style="color: #990000">)</span> <span style="font-style: italic"><span style="color: #9A1900">// 4 digits of precision</span></span>
+          <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">setw</span></span><span style="color: #990000">(</span><span style="color: #993399">6</span><span style="color: #990000">)</span>         <span style="font-style: italic"><span style="color: #9A1900">// 6 characters per field</span></span>
+          <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">setfill</span></span><span style="color: #990000">(</span><span style="color: #FF0000">' '</span><span style="color: #990000">)</span>    <span style="font-style: italic"><span style="color: #9A1900">// fill with spaces</span></span>
+          <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>right<span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// adjust value to the right</span></span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-namespace {
-	template &lt;class S&gt;
-	void set_ostream(S &amp;os)
-	{	os
-		&lt;&lt; std::setprecision(4) // 4 digits of precision
-		&lt;&lt; std::setw(6)         // 6 characters per field
-		&lt;&lt; std::setfill(' ')    // fill with spaces
-		&lt;&lt; std::right;          // adjust value to the right
-	}
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_output</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool ad_output(void)
-{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// This output stream is an ostringstream for testing purposes.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// You can use &lt;&lt; with other types of streams; i.e., std::cout.</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">ostringstream</span> stream<span style="color: #990000">;</span>
 
-	// This output stream is an ostringstream for testing purposes.
-	// You can use &lt;&lt; with other types of streams; i.e., std::cout.
-	std::ostringstream stream;
+     <span style="font-style: italic"><span style="color: #9A1900">// ouput an AD&lt;double&gt; object</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span>  pi <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span> <span style="font-style: italic"><span style="color: #9A1900">// 3.1415926536</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">set_ostream</span></span><span style="color: #990000">(</span>stream<span style="color: #990000">);</span>
+     stream <span style="color: #990000">&lt;&lt;</span> pi<span style="color: #990000">;</span>
 
-	// ouput an <a href="ad.xml" target="_top">AD</a>&lt;double&gt; object
-	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;  pi = 4. * atan(1.); // 3.1415926536
-	set_ostream(stream);
-	stream &lt;&lt; pi;
+     <span style="font-style: italic"><span style="color: #9A1900">// ouput a VecAD&lt;double&gt;::reference object</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     v<span style="color: #990000">[</span>zero<span style="color: #990000">]</span>   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>                  <span style="font-style: italic"><span style="color: #9A1900">// 2.7182818285</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">set_ostream</span></span><span style="color: #990000">(</span>stream<span style="color: #990000">);</span>
+     stream <span style="color: #990000">&lt;&lt;</span> v<span style="color: #990000">[</span>zero<span style="color: #990000">];</span>
 
-	// ouput a VecAD&lt;double&gt;::reference object
-	CppAD::VecAD&lt;double&gt; v(1);
-	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
-	v[zero]   = exp(1.);                  // 2.7182818285
-	set_ostream(stream);
-	stream &lt;&lt; v[zero];
+     <span style="font-style: italic"><span style="color: #9A1900">// convert output from stream to string</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">string</span> str <span style="color: #990000">=</span> stream<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">str</span></span><span style="color: #990000">();</span>
 
-	// convert output from stream to string
-	std::string str = stream.str();
+     <span style="font-style: italic"><span style="color: #9A1900">// check the output</span></span>
+     ok      <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>str <span style="color: #990000">==</span> <span style="color: #FF0000">" 3.142 2.718"</span><span style="color: #990000">);</span>
 
-	// check the output
-	ok      &amp;= (str == &quot; 3.142 2.718&quot;);
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/ad_output.cpp
 
 </body>

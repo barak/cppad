@@ -1,6 +1,6 @@
-// $Id: opt_val_hes.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: opt_val_hes.cpp 3814 2016-04-18 14:26:10Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -61,7 +61,7 @@ Y(x) & = & \frac{
 \] $$
 
 $code
-$verbatim%example/opt_val_hes.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/opt_val_hes.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -162,7 +162,10 @@ bool opt_val_hes(void)
 
 	// evaluate the Jacobian and Hessian
 	BaseVector jac(n), hes(n * n);
-	int signdet = CppAD::opt_val_hes(x, y, fun, jac, hes);
+# ifndef NDEBUG
+	int signdet =
+# endif
+	CppAD::opt_val_hes(x, y, fun, jac, hes);
 
 	// we know that F_yy is positive definate for this case
 	assert( signdet == 1 );

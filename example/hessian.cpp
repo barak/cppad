@@ -1,6 +1,6 @@
-// $Id: hessian.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: hessian.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -22,7 +22,7 @@ $mindex Hessian$$
 
 
 $code
-$verbatim%example/hessian.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/hessian.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -37,6 +37,7 @@ bool HessianCases()
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 	using CppAD::exp;
 	using CppAD::sin;
 	using CppAD::cos;
@@ -79,10 +80,10 @@ bool HessianCases()
 	F_1^{(2)} = [        2 * sin(x[1]) ,      2 * x[0] * cos(x[1]) ]
 	            [ 2 * x[0] * cos(x[1]) , - x[0] * x[0] * sin(x[1]) ]
 	*/
-	ok &=  NearEqual(          2.*sin(x[1]), hes[0*n+0], 1e-10, 1e-10 );
-	ok &=  NearEqual(     2.*x[0]*cos(x[1]), hes[0*n+1], 1e-10, 1e-10 );
-	ok &=  NearEqual(     2.*x[0]*cos(x[1]), hes[1*n+0], 1e-10, 1e-10 );
-	ok &=  NearEqual( - x[0]*x[0]*sin(x[1]), hes[1*n+1], 1e-10, 1e-10 );
+	ok &=  NearEqual(          2.*sin(x[1]), hes[0*n+0], eps99, eps99);
+	ok &=  NearEqual(     2.*x[0]*cos(x[1]), hes[0*n+1], eps99, eps99);
+	ok &=  NearEqual(     2.*x[0]*cos(x[1]), hes[1*n+0], eps99, eps99);
+	ok &=  NearEqual( - x[0]*x[0]*sin(x[1]), hes[1*n+1], eps99, eps99);
 
 	return ok;
 }

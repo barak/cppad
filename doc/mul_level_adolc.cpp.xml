@@ -55,6 +55,7 @@ A:active { color : purple }
 <option>base_std_math</option>
 <option>base_limits</option>
 <option>base_to_string</option>
+<option>base_hash</option>
 <option>base_example</option>
 </select>
 </td>
@@ -86,6 +87,9 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
+
+
+
 <center><b><big><big>Using Adolc with Multiple Levels of Taping: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -272,114 +276,109 @@ the value <a href="adolc_prefix.xml" target="_top"><span style='white-space: now
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;adolc/adouble.h&gt;
-# include &lt;adolc/taping.h&gt;
-# include &lt;adolc/interfaces.h&gt;
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;adolc/adouble.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;adolc/taping.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;adolc/interfaces.h&gt;</span>
 
-// adouble definitions not in Adolc distribution and
-// required in order to use CppAD::<a href="ad.xml" target="_top">AD</a>&lt;adouble&gt;
-# include &lt;cppad/example/base_adolc.hpp&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// adouble definitions not in Adolc distribution and</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// required in order to use CppAD::AD&lt;adouble&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/example/base_adolc.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-namespace {
-	// f(x) = |x|^2 / 2 = .5 * ( x[0]^2 + ... + x[n-1]^2 )
-	template &lt;class Type&gt;
-	Type f(const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Type)&amp; x)
-	{	Type sum;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// f(x) = |x|^2 / 2 = .5 * ( x[0]^2 + ... + x[n-1]^2 )</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Type</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">Type</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Type<span style="color: #990000">)&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">Type</span> sum<span style="color: #990000">;</span>
 
-		sum  = 0.;
-		size_t i = size_t(x.size());
-		for(i = 0; i &lt; size_t(x.size()); i++)
-			sum += x[i] * x[i];
+          sum  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">());</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">());</span> i<span style="color: #990000">++)</span>
+               sum <span style="color: #990000">+=</span> x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-		return .5 * sum;
-	}
-}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">.</span><span style="color: #993399">5</span> <span style="color: #990000">*</span> sum<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-bool mul_level_adolc(void)
-{	bool ok = true;                // initialize test result
-	using CppAD::thread_alloc;        // The CppAD memory allocator
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mul_level_adolc</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>                <span style="font-style: italic"><span style="color: #9A1900">// initialize test result</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>        <span style="font-style: italic"><span style="color: #9A1900">// The CppAD memory allocator</span></span>
 
-	typedef adouble           a1type;  // for first level of taping
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;a1type&gt; a2type; // for second level of taping
-	size_t n = 5;                          // number independent variables
-	size_t j;
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">adouble</span>           a1type<span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// for first level of taping</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;a1type&gt;</span> a2type<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// for second level of taping</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>                          <span style="font-style: italic"><span style="color: #9A1900">// number independent variables</span></span>
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
 
-	// 10 times machine epsilon
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+     <span style="font-style: italic"><span style="color: #9A1900">// 10 times machine epsilon</span></span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1x(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2x(n);
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a1type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a1x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a2type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a2x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// Values for the independent variables while taping the function f(x)
-	for(j = 0; j &lt; n; j++)
-		a2x[j] = double(j);
-	// Declare the independent variable for taping f(x)
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a2x);
+     <span style="font-style: italic"><span style="color: #9A1900">// Values for the independent variables while taping the function f(x)</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a2x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Declare the independent variable for taping f(x)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">);</span>
 
-	// Use <a href="ad.xml" target="_top">AD</a>&lt;adouble&gt; to tape the evaluation of f(x)
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2y(1);
-	a2y[0] = f(a2x);
+     <span style="font-style: italic"><span style="color: #9A1900">// Use AD&lt;adouble&gt; to tape the evaluation of f(x)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a2type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a2y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     a2y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">);</span>
 
-	// Declare a1f as the corresponding <a href="funconstruct.xml" target="_top">ADFun</a>&lt;adouble&gt; function f(x)
-	// (make sure we do not run zero order forward during constructor)
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;a1type&gt; a1f;
-	a1f.Dependent(a2x, a2y);
+     <span style="font-style: italic"><span style="color: #9A1900">// Declare a1f as the corresponding ADFun&lt;adouble&gt; function f(x)</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (make sure we do not run zero order forward during constructor)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;a1type&gt;</span> a1f<span style="color: #990000">;</span>
+     a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">,</span> a2y<span style="color: #990000">);</span>
 
-	// Value of the independent variables whitle taping f'(x) * v
-	int tag = 0;
-	int keep = 1;
-	trace_on(tag, keep);
-	for(j = 0; j &lt; n; j++)
-		a1x[j] &lt;&lt;= double(j);
+     <span style="font-style: italic"><span style="color: #9A1900">// Value of the independent variables whitle taping f'(x) * v</span></span>
+     <span style="color: #009900">int</span> tag <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">int</span> keep <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">trace_on</span></span><span style="color: #990000">(</span>tag<span style="color: #990000">,</span> keep<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a1x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">&lt;&lt;=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
 
-	// set the argument value x for computing f'(x) * v
-	a1f.<a href="forward.xml" target="_top">Forward</a>(0, a1x);
+     <span style="font-style: italic"><span style="color: #9A1900">// set the argument value x for computing f'(x) * v</span></span>
+     a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> a1x<span style="color: #990000">);</span>
 
-	// compute f'(x) * v
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1v(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1df(1);
-	for(j = 0; j &lt; n; j++)
-		a1v[j] = double(n - j);
-	a1df = a1f.<a href="forward.xml" target="_top">Forward</a>(1, a1v);
+     <span style="font-style: italic"><span style="color: #9A1900">// compute f'(x) * v</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a1type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a1v</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a1type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a1df</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a1v<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>n <span style="color: #990000">-</span> j<span style="color: #990000">);</span>
+     a1df <span style="color: #990000">=</span> a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> a1v<span style="color: #990000">);</span>
 
-	// declare Adolc function corresponding to f'(x) * v
-	double df;
-	a1df[0] &gt;&gt;= df;
-	trace_off();
+     <span style="font-style: italic"><span style="color: #9A1900">// declare Adolc function corresponding to f'(x) * v</span></span>
+     <span style="color: #009900">double</span> df<span style="color: #990000">;</span>
+     a1df<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">&gt;&gt;=</span> df<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">trace_off</span></span><span style="color: #990000">();</span>
 
-	// compute the d/dx of f'(x) * v = f''(x) * v
-	size_t m      = 1;                     // # dependent in f'(x) * v
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the d/dx of f'(x) * v = f''(x) * v</span></span>
+     <span style="color: #008080">size_t</span> m      <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>                     <span style="font-style: italic"><span style="color: #9A1900">// # dependent in f'(x) * v</span></span>
 
-	// w = new double[capacity] where capacity &gt;= m
-	size_t capacity;
-	double* w  = thread_alloc::create_array&lt;double&gt;(m, capacity);
+     <span style="font-style: italic"><span style="color: #9A1900">// w = new double[capacity] where capacity &gt;= m</span></span>
+     <span style="color: #008080">size_t</span> capacity<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span><span style="color: #990000">*</span> w  <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span>create_array<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>m<span style="color: #990000">,</span> capacity<span style="color: #990000">);</span>
 
-	// dw = new double[capacity] where capacity &gt;= n
-	double* dw = thread_alloc::create_array&lt;double&gt;(n, capacity);
+     <span style="font-style: italic"><span style="color: #9A1900">// dw = new double[capacity] where capacity &gt;= n</span></span>
+     <span style="color: #009900">double</span><span style="color: #990000">*</span> dw <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span>create_array<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>n<span style="color: #990000">,</span> capacity<span style="color: #990000">);</span>
 
-	w[0]  = 1.;
-	fos_reverse(tag, int(m), int(n), w, dw);
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">fos_reverse</span></span><span style="color: #990000">(</span>tag<span style="color: #990000">,</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> w<span style="color: #990000">,</span> dw<span style="color: #990000">);</span>
 
-	for(j = 0; j &lt; n; j++)
-	{	double vj = a1v[j].value();
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], vj, eps, eps);
-	}
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> vj <span style="color: #990000">=</span> a1v<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">value</span></span><span style="color: #990000">();</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span>j<span style="color: #990000">],</span> vj<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// make memory avaialble for other use by this thread
-	thread_alloc::delete_array(w);
-	thread_alloc::delete_array(dw);
-	return ok;
-}
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// make memory avaialble for other use by this thread</span></span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">delete_array</span></span><span style="color: #990000">(</span>w<span style="color: #990000">);</span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">delete_array</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/mul_level_adolc.cpp
 
 </body>

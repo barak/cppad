@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: doxyfile.sh 3768 2015-12-28 18:58:35Z bradbell $
+# $Id: doxyfile.sh 3845 2016-11-19 01:50:47Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -47,7 +47,9 @@ INHERIT_DOCS            = NO
 INLINE_INHERITED_MEMB   = YES
 INPUT                   = \
 	./cppad \
+	./cppad/core \
 	./cppad/local \
+	./cppad/local/optimize \
 	./cppad/ipopt \
 	./cppad_ipopt/src \
 	./cppad_lib \

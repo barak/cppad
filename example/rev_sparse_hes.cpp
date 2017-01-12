@@ -1,6 +1,6 @@
-// $Id: rev_sparse_hes.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: rev_sparse_hes.cpp 3793 2016-02-29 18:18:32Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -25,7 +25,7 @@ $mindex RevSparseHes sparsity$$
 
 
 $code
-$verbatim%example/rev_sparse_hes.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/rev_sparse_hes.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -55,22 +55,22 @@ bool BoolCases(void)
 
 	// domain space vector
 	size_t n = 3;
-	CPPAD_TESTVECTOR(AD<double>) X(n);
-	X[0] = 0.;
-	X[1] = 1.;
-	X[2] = 2.;
+	CPPAD_TESTVECTOR(AD<double>) ax(n);
+	ax[0] = 0.;
+	ax[1] = 1.;
+	ax[2] = 2.;
 
 	// declare independent variables and start recording
-	CppAD::Independent(X);
+	CppAD::Independent(ax);
 
 	// range space vector
 	size_t m = 2;
-	CPPAD_TESTVECTOR(AD<double>) Y(m);
-	Y[0] = sin( X[2] );
-	Y[1] = X[0] * X[1];
+	CPPAD_TESTVECTOR(AD<double>) ay(m);
+	ay[0] = sin( ax[2] );
+	ay[1] = ax[0] * ax[1];
 
-	// create f: X -> Y and stop tape recording
-	CppAD::ADFun<double> f(X, Y);
+	// create f: x -> y and stop tape recording
+	CppAD::ADFun<double> f(ax, ay);
 
 	// sparsity pattern for the identity matrix
 	Vector r(n * n);
@@ -126,22 +126,22 @@ bool SetCases(void)
 
 	// domain space vector
 	size_t n = 3;
-	CPPAD_TESTVECTOR(AD<double>) X(n);
-	X[0] = 0.;
-	X[1] = 1.;
-	X[2] = 2.;
+	CPPAD_TESTVECTOR(AD<double>) ax(n);
+	ax[0] = 0.;
+	ax[1] = 1.;
+	ax[2] = 2.;
 
 	// declare independent variables and start recording
-	CppAD::Independent(X);
+	CppAD::Independent(ax);
 
 	// range space vector
 	size_t m = 2;
-	CPPAD_TESTVECTOR(AD<double>) Y(m);
-	Y[0] = sin( X[2] );
-	Y[1] = X[0] * X[1];
+	CPPAD_TESTVECTOR(AD<double>) ay(m);
+	ay[0] = sin( ax[2] );
+	ay[1] = ax[0] * ax[1];
 
-	// create f: X -> Y and stop tape recording
-	CppAD::ADFun<double> f(X, Y);
+	// create f: x -> y and stop tape recording
+	CppAD::ADFun<double> f(ax, ay);
 
 	// sparsity pattern for the identity matrix
 	Vector r(n);
@@ -203,7 +203,7 @@ bool SetCases(void)
 
 # include <vector>
 # include <valarray>
-bool RevSparseHes(void)
+bool rev_sparse_hes(void)
 {	bool ok = true;
 	// Run with Vector equal to four different cases
 	// all of which are Simple Vectors with elements of type bool.

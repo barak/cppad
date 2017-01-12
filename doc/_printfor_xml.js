@@ -54,6 +54,7 @@ var list_current0 = [
 'printfor.xml#before',
 'printfor.xml#var',
 'printfor.xml#after',
+'printfor.xml#Redirecting Output',
 'printfor.xml#Discussion',
 'printfor.xml#Alternative',
 'printfor.xml#Example'

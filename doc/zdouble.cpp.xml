@@ -90,106 +90,101 @@ A:active { color : purple }
 
 
 <center><b><big><big>zdouble: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-namespace {
-	template &lt;class Base&gt; bool test(bool is_double)
-	{	bool ok = true;
-		Base eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">test</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span> is_double<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Base</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   a1type;
-		typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;a1type&gt; a2type;
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   a1type<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;a1type&gt;</span> a2type<span style="color: #990000">;</span>
 
-		// value during taping
-		size_t n = 2;
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Base) x(n);
-		x[0] = 0.0;
-		x[1] = 0.0;
+          <span style="font-style: italic"><span style="color: #9A1900">// value during taping</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Base<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
 
-		// declare independent variable
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2x(n);
-		for (size_t j = 0; j &lt; n; j++)
-			a2x[j] = a2type( a1type(x[j]) );
-		<a href="independent.xml" target="_top">Independent</a>(a2x);
+          <span style="font-style: italic"><span style="color: #9A1900">// declare independent variable</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a2type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a2x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span> <span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               a2x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a2type</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">a1type</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span>j<span style="color: #990000">])</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">);</span>
 
-		// zero and one as a2type values
-		a2type a2zero = a2type(0.0);
-		a2type a2one  = a2type(1.0);
+          <span style="font-style: italic"><span style="color: #9A1900">// zero and one as a2type values</span></span>
+          <span style="color: #008080">a2type</span> a2zero <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a2type</span></span><span style="color: #990000">(</span><span style="color: #993399">0.0</span><span style="color: #990000">);</span>
+          <span style="color: #008080">a2type</span> a2one  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a2type</span></span><span style="color: #990000">(</span><span style="color: #993399">1.0</span><span style="color: #990000">);</span>
 
-		// h(x) = x[0] / x[1] if x[1] &gt; x[0] else 1.0
-		a2type h_x = CondExpGt(a2x[1], a2x[0], a2x[0] / a2x[1], a2one);
+          <span style="font-style: italic"><span style="color: #9A1900">// h(x) = x[0] / x[1] if x[1] &gt; x[0] else 1.0</span></span>
+          <span style="color: #008080">a2type</span> h_x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> a2x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> a2x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> a2x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> a2one<span style="color: #990000">);</span>
 
-		// f(x) = h(x) if x[0] &gt; 0.0 else 0.0
-		//      = x[0] / x[1] if x[1] &gt; x[0]  and x[0] &gt; 0.0
-		//      = 1.0         if x[0] &gt;= x[1] and x[0] &gt; 0.0
-		//      = 0.0         if x[0] &lt;= 0.0
-		a2type f_x = CondExpGt(a2x[0], a2zero, h_x, a2one);
+          <span style="font-style: italic"><span style="color: #9A1900">// f(x) = h(x) if x[0] &gt; 0.0 else 0.0</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">//      = x[0] / x[1] if x[1] &gt; x[0]  and x[0] &gt; 0.0</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">//      = 1.0         if x[0] &gt;= x[1] and x[0] &gt; 0.0</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">//      = 0.0         if x[0] &lt;= 0.0</span></span>
+          <span style="color: #008080">a2type</span> f_x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> a2zero<span style="color: #990000">,</span> h_x<span style="color: #990000">,</span> a2one<span style="color: #990000">);</span>
 
-		// define the function f(x)
-		size_t m = 1;
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a2type) a2y(m);
-		a2y[0] = f_x;
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;a1type&gt; af1;
-		af1.Dependent(a2x, a2y);
+          <span style="font-style: italic"><span style="color: #9A1900">// define the function f(x)</span></span>
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a2type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a2y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          a2y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> f_x<span style="color: #990000">;</span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;a1type&gt;</span> af1<span style="color: #990000">;</span>
+          af1<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">,</span> a2y<span style="color: #990000">);</span>
 
-		// Define function g(x) = gradient of f(x)
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(a1type) a1x(n), a1z(n), a1w(m);
-		for (size_t j = 0; j &lt; n; j++)
-			a1x[j] = a1type(x[j]);
-		a1w[0] = a1type(1.0);
-		<a href="independent.xml" target="_top">Independent</a>(a1x);
-		af1.<a href="forward.xml" target="_top">Forward</a>(0, a1x);
-		a1z = af1.<a href="reverse.xml" target="_top">Reverse</a>(1, a1w);
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;Base&gt; g;
-		g.Dependent(a1x, a1z);
+          <span style="font-style: italic"><span style="color: #9A1900">// Define function g(x) = gradient of f(x)</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a1type<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a1x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">a1z</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">a1w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span> <span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               a1x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a1type</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+          a1w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a1type</span></span><span style="color: #990000">(</span><span style="color: #993399">1.0</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a1x<span style="color: #990000">);</span>
+          af1<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> a1x<span style="color: #990000">);</span>
+          a1z <span style="color: #990000">=</span> af1<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> a1w<span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;Base&gt;</span> g<span style="color: #990000">;</span>
+          g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a1x<span style="color: #990000">,</span> a1z<span style="color: #990000">);</span>
 
-		// check result for a case where f(x) = 0.0;
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Base) z(2);
-		x[0] = 0.0;
-		x[1] = 0.0;
-		z    = g.<a href="forward.xml" target="_top">Forward</a>(0, x);
-		ok &amp;= z[0] == 0.0;
-		ok &amp;= z[1] == 0.0;
+          <span style="font-style: italic"><span style="color: #9A1900">// check result for a case where f(x) = 0.0;</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Base<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          z    <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
 
-		// check result for a case where f(x) = 1.0;
-		x[0] = 1.0;
-		x[1] = 0.5;
-		z    = g.<a href="forward.xml" target="_top">Forward</a>(0, x);
-		ok &amp;= z[0] == 0.0;
-		ok &amp;= z[1] == 0.0;
+          <span style="font-style: italic"><span style="color: #9A1900">// check result for a case where f(x) = 1.0;</span></span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.5</span><span style="color: #990000">;</span>
+          z    <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
 
-		// check result for a case where f(x) = x[0] / x[1];
-		x[0] = 1.0;
-		x[1] = 2.0;
-		z    = g.<a href="forward.xml" target="_top">Forward</a>(0, x);
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(z[0], 1.0/x[1], eps, eps);
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(z[1], - x[0]/(x[1]*x[1]), eps, eps);
+          <span style="font-style: italic"><span style="color: #9A1900">// check result for a case where f(x) = x[0] / x[1];</span></span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+          z    <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1.0</span><span style="color: #990000">/</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]/(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-		return ok;
-	}
-}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-bool zdouble(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	using CppAD::zdouble;
-	//
-	bool is_double = false;
-	ok &amp;= test&lt;zdouble&gt;(is_double);
-	//
-	is_double = true;
-	ok &amp;= test&lt;double&gt;(is_double);
-	//
-	return ok;
-}
-
-</pre>
-
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">zdouble</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>zdouble<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="color: #009900">bool</span> is_double <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> test<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;(</span>is_double<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     is_double <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> test<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>is_double<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: test_more/zdouble.cpp
 
 </body>

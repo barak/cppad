@@ -78,6 +78,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_16</option>
 <option>whats_new_15</option>
 <option>whats_new_14</option>
 <option>whats_new_13</option>
@@ -251,11 +252,11 @@ The bug mentioned on <a href="whats_new_05.xml#12-01" target="_top"><span style=
  resurfaced
 and the corresponding routine was changed as follows:
 <code><font color='blue'><pre style='display:inline'> 
-     static ADTape&lt;Base&gt; *Tape(void)
+     static local::ADTape&lt;Base&gt; *Tape(void)
      {    // If we return &amp;tape, instead of creating and returning ptr,
           // there seems to be a bug in g++ with -O2 option.
-          static ADTape&lt;Base&gt; tape;
-          static ADTape&lt;Base&gt; *ptr = &amp;tape;
+          static local::ADTape&lt;Base&gt; tape;
+          static local::ADTape&lt;Base&gt; *ptr = &amp;tape;
           return ptr;
      }
 </pre></font></code>
@@ -469,8 +470,8 @@ The speed test of <a href="lu_vec_ad.cpp.xml" target="_top"><span style='white-s
 It appears that there is some sort of bug in the gcc compiler with
 the -O2 option whereby the following member function
 <code><font color='blue'><pre style='display:inline'> 
-     static ADTape&lt;Base&gt; *Tape(void)
-     {    static ADTape&lt;Base&gt; tape;
+     static local::ADTape&lt;Base&gt; *Tape(void)
+     {    static local::ADTape&lt;Base&gt; tape;
           return &amp;tape;
      }
 </pre></font></code>
@@ -656,7 +657,7 @@ format for the following cases:
 ,
 <code><font color="blue">Reverse.cpp</font></code> has since been replaced by
 <a href="reverse_one.cpp.xml" target="_top"><span style='white-space: nowrap'>reverse_one.cpp</span></a>
- and <code><font color="blue">reverse_any.cpp</font></code>).
+ and <code><font color="blue">reverse_checkpoint.cpp</font></code>).
 
 <br/>
 <br/>

@@ -97,9 +97,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Using AD to Compute Atomic Function Derivatives</big></big></b></center>
 <br/>
 <b><big><a name="Deprecated 2013-05-27" id="Deprecated 2013-05-27">Deprecated 2013-05-27</a></big></b>
@@ -133,332 +130,327 @@ see <a href="old_usead_2.cpp.xml" target="_top"><span style='white-space: nowrap
  for a more complete example.
 
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-namespace { // Begin empty namespace
-	using CppAD::AD;
-	using CppAD::ADFun;
-	using CppAD::vector;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>ADFun<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-	// ----------------------------------------------------------------------
-	// function that computes reciprocal
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* r_ptr_;
-	void create_r(void)
-	{	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(1), ay(1);
-		ax[0]  = 1;
-		CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
-		ay[0]  = 1.0 / ax[0];
-		r_ptr_ = new <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;(ax, ay);
-	}
-	void destroy_r(void)
-	{	delete r_ptr_;
-		r_ptr_ = CPPAD_NULL;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that computes reciprocal</span></span>
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> r_ptr_<span style="color: #990000">;</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">create_r</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
+          ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1.0</span> <span style="color: #990000">/</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          r_ptr_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">destroy_r</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> r_ptr_<span style="color: #990000">;</span>
+          r_ptr_ <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// ----------------------------------------------------------------------
-	// forward mode routine called by CppAD
-	bool reciprocal_forward(
-		size_t                   id ,
-		size_t                    k ,
-		size_t                    n ,
-		size_t                    m ,
-		const vector&lt;bool&gt;&amp;      vx ,
-		vector&lt;bool&gt;&amp;            vy ,
-		const vector&lt;double&gt;&amp;    tx ,
-		vector&lt;double&gt;&amp;          ty
-	)
-	{	assert( id == 0 );
-		assert( n == 1 );
-		assert( m == 1 );
-		assert( k == 0 || vx.size() == 0 );
-		bool ok = true;
-		vector&lt;double&gt; x_q(1), y_q(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// forward mode routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reciprocal_forward</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                   id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    k <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    m <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>      vx <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>            vy <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    tx <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>          ty
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> id <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> k <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x_q</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y_q</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-		// check for special case
-		if( vx.size() &gt; 0 )
-			vy[0] = vx[0];
+          <span style="font-style: italic"><span style="color: #9A1900">// check for special case</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               vy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> vx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-		// make sure r_ has proper lower order Taylor coefficients stored
-		// then compute ty[k]
-		for(size_t q = 0; q &lt;= k; q++)
-		{	x_q[0] = tx[q];
-			y_q    = r_ptr_-&gt;Forward(q, x_q);
-			if( q == k )
-				ty[k] = y_q[0];
-			assert( q == k || ty[q] == y_q[0] );
-		}
-		return ok;
-	}
-	// ----------------------------------------------------------------------
-	// reverse mode routine called by CppAD
-	bool reciprocal_reverse(
-		size_t                   id ,
-		size_t                    k ,
-		size_t                    n ,
-		size_t                    m ,
-		const vector&lt;double&gt;&amp;    tx ,
-		const vector&lt;double&gt;&amp;    ty ,
-		vector&lt;double&gt;&amp;          px ,
-		const vector&lt;double&gt;&amp;    py
-	)
-	{	assert( id == 0 );
-		assert( n == 1 );
-		assert( m == 1 );
-		bool ok = true;
-		vector&lt;double&gt; x_q(1), w(k+1), dw(k+1);
+          <span style="font-style: italic"><span style="color: #9A1900">// make sure r_ has proper lower order Taylor coefficients stored</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// then compute ty[k]</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;=</span> k<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> tx<span style="color: #990000">[</span>q<span style="color: #990000">];</span>
+               y_q    <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> q <span style="color: #990000">==</span> k <span style="color: #990000">)</span>
+                    ty<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">=</span> y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> q <span style="color: #990000">==</span> k <span style="color: #990000">||</span> ty<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">==</span> y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse mode routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reciprocal_reverse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                   id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    k <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    m <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    tx <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    ty <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>          px <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    py
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> id <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x_q</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>k<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>k<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-		// make sure r_ has proper forward mode coefficients
-		size_t q;
-		for(q = 0; q &lt;= k; q++)
-		{	x_q[0] = tx[q];
-# ifdef NDEBUG
-			r_ptr_-&gt;Forward(q, x_q);
-# else
-			vector&lt;double&gt; y_q(1);
-			y_q    = r_ptr_-&gt;Forward(q, x_q);
-			assert( ty[q] == y_q[0] );
-# endif
-		}
-		for(q = 0; q &lt;=k; q++)
-			w[q] = py[q];
-		dw = r_ptr_-&gt;Reverse(k+1, w);
-		for(q = 0; q &lt;=k; q++)
-			px[q] = dw[q];
+          <span style="font-style: italic"><span style="color: #9A1900">// make sure r_ has proper forward mode coefficients</span></span>
+          <span style="color: #008080">size_t</span> q<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;=</span> k<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> tx<span style="color: #990000">[</span>q<span style="color: #990000">];</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> NDEBUG
+               r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+               <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">y_q</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+               y_q    <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> ty<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">==</span> y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;=</span>k<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               w<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">=</span> py<span style="color: #990000">[</span>q<span style="color: #990000">];</span>
+          dw <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span>k<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;=</span>k<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               px<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">=</span> dw<span style="color: #990000">[</span>q<span style="color: #990000">];</span>
 
-		return ok;
-	}
-	// ----------------------------------------------------------------------
-	// forward Jacobian sparsity routine called by CppAD
-	bool reciprocal_for_jac_sparse(
-		size_t                               id ,
-		size_t                                n ,
-		size_t                                m ,
-		size_t                                p ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
-		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           s )
-	{	assert( id == 0 );
-		assert( n == 1 );
-		assert( m == 1 );
-		bool ok = true;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// forward Jacobian sparsity routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reciprocal_for_jac_sparse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                               id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                m <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     r <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>           s <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> id <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		vector&lt; std::set&lt;size_t&gt; &gt; R(1), S(1);
-		R[0] = r[0];
-		S = r_ptr_-&gt;ForSparseJac(p, R);
-		s[0] = S[0];
+          <span style="color: #008080">vector&lt; std::set&lt;size_t&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">R</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">S</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          R<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> r<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          S <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> R<span style="color: #990000">);</span>
+          s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> S<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-		return ok;
-	}
-	// ----------------------------------------------------------------------
-	// reverse Jacobian sparsity routine called by CppAD
-	bool reciprocal_rev_jac_sparse(
-		size_t                               id ,
-		size_t                                n ,
-		size_t                                m ,
-		size_t                                p ,
-		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           r ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
-	{
-		assert( id == 0 );
-		assert( n == 1 );
-		assert( m == 1 );
-		bool ok = true;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse Jacobian sparsity routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reciprocal_rev_jac_sparse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                               id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                m <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>           r <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     s <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> id <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		vector&lt; std::set&lt;size_t&gt; &gt; R(p), S(p);
-		size_t q;
-		for(q = 0; q &lt; p; q++)
-			S[q] = s[q];
-		R = r_ptr_-&gt;RevSparseJac(p, S);
-		for(q = 0; q &lt; p; q++)
-			r[q] = R[q];
+          <span style="color: #008080">vector&lt; std::set&lt;size_t&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">R</span></span><span style="color: #990000">(</span>p<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">S</span></span><span style="color: #990000">(</span>p<span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> q<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               S<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">=</span> s<span style="color: #990000">[</span>q<span style="color: #990000">];</span>
+          R <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> S<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               r<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">=</span> R<span style="color: #990000">[</span>q<span style="color: #990000">];</span>
 
-		return ok;
-	}
-	// ----------------------------------------------------------------------
-	// reverse Hessian sparsity routine called by CppAD
-	bool reciprocal_rev_hes_sparse(
-		size_t                               id ,
-		size_t                                n ,
-		size_t                                m ,
-		size_t                                p ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
-		const vector&lt;bool&gt;&amp;                   s ,
-		vector&lt;bool&gt;&amp;                         t ,
-		const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
-		vector&lt; std::set&lt;size_t&gt; &gt;&amp;           v )
-	{	// Can just return false if not use RevSparseHes.
-		assert( id == 0 );
-		assert( n == 1 );
-		assert( m == 1 );
-		bool ok = true;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse Hessian sparsity routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reciprocal_rev_hes_sparse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                               id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                m <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     r <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   s <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                         t <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     u <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>           v <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Can just return false if not use RevSparseHes.</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> id <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// compute sparsity pattern for T(x) = S(x) * f'(x)
-		vector&lt;bool&gt; T(1), S(1);
-		S[0]   = s[0];
-		T      = r_ptr_-&gt;RevSparseJac(1, S);
-		t[0]   = T[0];
+          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for T(x) = S(x) * f'(x)</span></span>
+          <span style="color: #008080">vector&lt;bool&gt;</span> <span style="font-weight: bold"><span style="color: #000000">T</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">S</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          S<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          T      <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> S<span style="color: #990000">);</span>
+          t<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> T<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-		// compute sparsity pattern for A(x) = U(x)^T * f'(x)
-		vector&lt;bool&gt; Ut(p), A(p);
-		size_t q;
-		for(q = 0; q &lt; p; q++)
-			Ut[q] = false;
-		std::set&lt;size_t&gt;::iterator itr;
-		for(itr = u[0].begin(); itr != u[0].end(); itr++)
-			Ut[*itr] = true;
-		A = r_ptr_-&gt; RevSparseJac(p, Ut);
+          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for A(x) = U(x)^T * f'(x)</span></span>
+          <span style="color: #008080">vector&lt;bool&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Ut</span></span><span style="color: #990000">(</span>p<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>p<span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> q<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               Ut<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;::</span><span style="color: #008080">iterator</span> itr<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>itr <span style="color: #990000">=</span> u<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">begin</span></span><span style="color: #990000">();</span> itr <span style="color: #990000">!=</span> u<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span> itr<span style="color: #990000">++)</span>
+               Ut<span style="color: #990000">[*</span>itr<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          A <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span> <span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> Ut<span style="color: #990000">);</span>
 
-		// compute sparsity pattern for H(x) = R^T * (S * F)''(x)
-		vector&lt;bool&gt; H(p), R(n);
-		for(q = 0; q &lt; p; q++)
-			R[q] = false;
-		for(itr = r[0].begin(); itr != r[0].end(); itr++)
-			R[*itr] = true;
-		r_ptr_-&gt;ForSparseJac(p, R);
-		H = r_ptr_-&gt;RevSparseHes(p, S);
+          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for H(x) = R^T * (S * F)''(x)</span></span>
+          <span style="color: #008080">vector&lt;bool&gt;</span> <span style="font-weight: bold"><span style="color: #000000">H</span></span><span style="color: #990000">(</span>p<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">R</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               R<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>itr <span style="color: #990000">=</span> r<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">begin</span></span><span style="color: #990000">();</span> itr <span style="color: #990000">!=</span> r<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span> itr<span style="color: #990000">++)</span>
+               R<span style="color: #990000">[*</span>itr<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> R<span style="color: #990000">);</span>
+          H <span style="color: #990000">=</span> r_ptr_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> S<span style="color: #990000">);</span>
 
-		// compute sparsity pattern for V(x) = A(x)^T + H(x)^T
-		v[0].clear();
-		for(q = 0; q &lt; p; q++)
-			if( A[q] | H[q] )
-				v[0].insert(q);
+          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for V(x) = A(x)^T + H(x)^T</span></span>
+          v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>q <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> q <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> q<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> A<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">|</span> H<span style="color: #990000">[</span>q<span style="color: #990000">]</span> <span style="color: #990000">)</span>
+                    v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>q<span style="color: #990000">);</span>
 
-		return ok;
-	}
-	// ---------------------------------------------------------------------
-	// Declare the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; routine reciprocal(id, ax, ay)
-	CPPAD_USER_ATOMIC(
-		reciprocal                 ,
-		CppAD::vector              ,
-		double                     ,
-		reciprocal_forward         ,
-		reciprocal_reverse         ,
-		reciprocal_for_jac_sparse  ,
-		reciprocal_rev_jac_sparse  ,
-		reciprocal_rev_hes_sparse
-	)
-} // End empty namespace
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ---------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Declare the AD&lt;double&gt; routine reciprocal(id, ax, ay)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_ATOMIC</span></span><span style="color: #990000">(</span>
+          reciprocal                 <span style="color: #990000">,</span>
+          CppAD<span style="color: #990000">::</span>vector              <span style="color: #990000">,</span>
+          <span style="color: #009900">double</span>                     <span style="color: #990000">,</span>
+          reciprocal_forward         <span style="color: #990000">,</span>
+          reciprocal_reverse         <span style="color: #990000">,</span>
+          reciprocal_for_jac_sparse  <span style="color: #990000">,</span>
+          reciprocal_rev_jac_sparse  <span style="color: #990000">,</span>
+          reciprocal_rev_hes_sparse
+     <span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
 
-bool old_usead_1(void)
-{	bool ok = true;
-	using CppAD::NearEqual;
-	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">old_usead_1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	// --------------------------------------------------------------------
-	// Create the <a href="funconstruct.xml" target="_top">ADFun</a>&lt;doulbe&gt; r_
-	create_r();
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Create the ADFun&lt;doulbe&gt; r_</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">create_r</span></span><span style="color: #990000">();</span>
 
-	// --------------------------------------------------------------------
-	// Create the function f(x)
-	//
-	// domain space vector
-	size_t n  = 1;
-	double  x0 = 0.5;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n);
-	ax[0]     = x0;
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Create the function f(x)</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span>  x0 <span style="color: #990000">=</span> <span style="color: #993399">0.5</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 1;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
 
-	// call user function and store reciprocal(x) in au[0]
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; au(m);
-	size_t id = 0;           // not used
-	reciprocal(id, ax, au);	// u = 1 / x
+     <span style="font-style: italic"><span style="color: #9A1900">// call user function and store reciprocal(x) in au[0]</span></span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">au</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> id <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// not used</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">reciprocal</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> ax<span style="color: #990000">,</span> au<span style="color: #990000">);</span>     <span style="font-style: italic"><span style="color: #9A1900">// u = 1 / x</span></span>
 
-	// call user function and store reciprocal(u) in ay[0]
-	reciprocal(id, au, ay);	// y = 1 / u = x
+     <span style="font-style: italic"><span style="color: #9A1900">// call user function and store reciprocal(u) in ay[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">reciprocal</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> au<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>     <span style="font-style: italic"><span style="color: #9A1900">// y = 1 / u = x</span></span>
 
-	// create f: x -&gt; y and stop tape recording
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
-	f.Dependent(ax, ay);  // f(x) = x
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     <span style="color: #008080">ADFun&lt;double&gt;</span> f<span style="color: #990000">;</span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// f(x) = x</span></span>
 
-	// --------------------------------------------------------------------
-	// Check function value results
-	//
-	// check function value
-	double check = x0;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Check function value results</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check function value</span></span>
+     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check zero order forward mode
-	size_t q;
-	vector&lt;double&gt; x_q(n), y_q(m);
-	q      = 0;
-	x_q[0] = x0;
-	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check zero order forward mode</span></span>
+     <span style="color: #008080">size_t</span> q<span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x_q</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y_q</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     q      <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+     y_q    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check first order forward mode
-	q      = 1;
-	x_q[0] = 1;
-	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-	check  = 1.;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check first order forward mode</span></span>
+     q      <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     y_q    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+     check  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check second order forward mode
-	q      = 2;
-	x_q[0] = 0;
-	y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-	check  = 0.;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check second order forward mode</span></span>
+     q      <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     y_q    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+     check  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// --------------------------------------------------------------------
-	// Check reverse mode results
-	//
-	// third order reverse mode
-	q     = 3;
-	vector&lt;double&gt; w(m), dw(n * q);
-	w[0]  = 1.;
-	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(q, w);
-	check = 1.;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  eps, eps);
-	check = 0.;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1] , check,  eps, eps);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[2] , check,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Check reverse mode results</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// third order reverse mode</span></span>
+     q     <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> q<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// --------------------------------------------------------------------
-	// forward mode sparstiy pattern
-	size_t p = n;
-	CppAD::vectorBool r1(n * p), s1(m * p);
-	r1[0] = true;          // compute sparsity pattern for x[0]
-	s1    = f.ForSparseJac(p, r1);
-	ok  &amp;= s1[0] == true;  // f[0] depends on x[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// forward mode sparstiy pattern</span></span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> n<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">r1</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> p<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s1</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> p<span style="color: #990000">);</span>
+     r1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for x[0]</span></span>
+     s1    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> r1<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> s1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f[0] depends on x[0]</span></span>
 
-	// --------------------------------------------------------------------
-	// reverse mode sparstiy pattern
-	q = m;
-	CppAD::vectorBool s2(q * m), r2(q * n);
-	s2[0] = true;          // compute sparsity pattern for f[0]
-	r2    = f.RevSparseJac(q, s2);
-	ok  &amp;= r2[0] == true;  // f[0] depends on x[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse mode sparstiy pattern</span></span>
+     q <span style="color: #990000">=</span> m<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">s2</span></span><span style="color: #990000">(</span>q <span style="color: #990000">*</span> m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">r2</span></span><span style="color: #990000">(</span>q <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     s2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for f[0]</span></span>
+     r2    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> s2<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> r2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f[0] depends on x[0]</span></span>
 
-	// --------------------------------------------------------------------
-	// Hessian sparsity (using previous ForSparseJac call)
-	CppAD::vectorBool s3(m), h(p * n);
-	s3[0] = true;        // compute sparsity pattern for f[0]
-	h     = f.RevSparseJac(p, s3);
-	ok  &amp;= h[0] == true; // second partial of f[0] w.r.t. x[0] may be non-zero
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Hessian sparsity (using previous ForSparseJac call)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">s3</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span>p <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     s3<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>        <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for f[0]</span></span>
+     h     <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> s3<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// second partial of f[0] w.r.t. x[0] may be non-zero</span></span>
 
-	// -----------------------------------------------------------------
-	// Free all memory associated with the object r_ptr
-	destroy_r();
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Free all memory associated with the object r_ptr</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">destroy_r</span></span><span style="color: #990000">();</span>
 
-	// -----------------------------------------------------------------
-	// Free all temporary work space associated with old_atomic objects.
-	// (If there are future calls to user atomic functions, they will
-	// create new temporary work space.)
-	CppAD::user_atomic&lt;double&gt;::clear();
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Free all temporary work space associated with old_atomic objects.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (If there are future calls to user atomic functions, they will</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// create new temporary work space.)</span></span>
+     CppAD<span style="color: #990000">::</span>user_atomic<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: test_more/old_usead_1.cpp
 
 </body>

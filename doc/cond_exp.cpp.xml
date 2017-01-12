@@ -6,7 +6,7 @@
 <title>Conditional Expressions: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Conditional Expressions: Example and Test"/>
-<meta name="keywords" id="keywords" content=" conditional expressions: example test Condexp description "/>
+<meta name="keywords" id="keywords" content=" conditional expressions: example test see also description "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -78,14 +78,21 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
+<option>See Also</option>
 <option>Description</option>
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Conditional Expressions: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="See Also" id="See Also">See Also</a></big></b>
+
+<br/>
+<a href="optimize_conditional_skip.cpp.xml" target="_top"><span style='white-space: nowrap'>optimize_conditional_skip.cpp</span></a>
+
+
+
+<br/>
 <br/>
 <b><big><a name="Description" id="Description">Description</a></big></b>
 <br/>
@@ -170,98 +177,93 @@ we need to handle the case
 in a special way to avoid multiplying zero by infinity.
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;limits&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CondExp</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool CondExp(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>isnan<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>log<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>abs<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps  <span style="color: #990000">=</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	using CppAD::isnan;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	using CppAD::log;
-	using CppAD::abs;
-	double eps  = 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          ax<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 5;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	size_t j;
-	for(j = 0; j &lt; n; j++)
-		ax[j] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="color: #008080">AD&lt;double&gt;</span> asum  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> azero <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// if x_j &gt; 0, add x_j * log( x_j ) to the sum</span></span>
+          asum <span style="color: #990000">+=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">[</span>j<span style="color: #990000">],</span> azero<span style="color: #990000">,</span> ax<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">[</span>j<span style="color: #990000">]),</span> azero<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; asum  = 0.;
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; azero = 0.;
-	for(j = 0; j &lt; n; j++)
-	{	// if x_j &gt; 0, add x_j * log( x_j ) to the sum
-		asum += CppAD::CondExpGt(ax[j], azero, ax[j] * log(ax[j]), azero);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> asum<span style="color: #990000">;</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
-	ay[0] = asum;
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; ay and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-	// create f: x -&gt; ay and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <span style="font-style: italic"><span style="color: #9A1900">// vectors for arguments to the function object f</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// argument values</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// function values</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// function weights</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// derivative of weighted function</span></span>
 
-	// vectors for arguments to the function object f
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);   // argument values
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) y(m);   // function values
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m);   // function weights
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);  // derivative of weighted function
+     <span style="font-style: italic"><span style="color: #9A1900">// a case where x[j] &gt; 0 for all j</span></span>
+     <span style="color: #009900">double</span> check  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     x<span style="color: #990000">[</span>j<span style="color: #990000">]</span>   <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+          check <span style="color: #990000">+=</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// a case where x[j] &gt; 0 for all j
-	double check  = 0.;
-	for(j = 0; j &lt; n; j++)
-	{	x[j]   = double(j + 1);
-		check += x[j] * log( x[j] );
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// function value</span></span>
+     y  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// function value
-	y  = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// compute derivative of y[0]</span></span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span>j<span style="color: #990000">],</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span>j<span style="color: #990000">])</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// compute derivative of y[0]
-	w[0] = 1.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	for(j = 0; j &lt; n; j++)
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], log(x[j]) + 1., eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// a case where x[3] is equal to zero</span></span>
+     check <span style="color: #990000">-=</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// a case where x[3] is equal to zero
-	check -= x[3] * log( x[3] );
-	x[3]   = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// function value</span></span>
+     y   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// function value
-	y   = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check derivative of y[0]</span></span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">check_for_nan</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span>j<span style="color: #990000">],</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span>j<span style="color: #990000">])</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Note that in case where dw has type AD&lt;double&gt; and is a variable</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// this dw[j] can be nan (zero times nan is not zero).</span></span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span>j<span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
 
-	// check derivative of y[0]
-	f.check_for_nan(false);
-	w[0] = 1.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	for(j = 0; j &lt; n; j++)
-	{	if( x[j] &gt; 0 )
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], log(x[j]) + 1., eps, eps);
-		else
-		{	// Note that in case where dw has type <a href="ad.xml" target="_top">AD</a>&lt;double&gt; and is a variable
-			// this dw[j] can be nan (zero times nan is not zero).
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[j], 0.0, eps, eps);
-		}
-	}
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/cond_exp.cpp
 
 </body>

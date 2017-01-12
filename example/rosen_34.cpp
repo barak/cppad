@@ -1,6 +1,6 @@
-// $Id: rosen_34.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: rosen_34.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -37,7 +37,7 @@ X_i '(t)   & = & (i+1) t^i = (i+1) X_{i-1} (t) & {\rm if \;} i > 0
 The example tests Rosen34 using the relations above:
 
 $code
-$verbatim%example/rosen_34.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/rosen_34.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -157,6 +157,9 @@ bool Rosen34(void)
 {	bool ok = true;     // initial return value
 	size_t i;           // temporary indices
 
+	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
+
 	size_t  n = 4;      // number components in X(t) and order of method
 	size_t  M = 2;      // number of Rosen34 steps in [ti, tf]
 	double ti = 0.;     // initial time
@@ -182,7 +185,7 @@ bool Rosen34(void)
 			ok    &= (e[i] >= 0.);
 			// 4th order method is exact for i < 4
 			if( i < 4 ) ok &=
-				CppAD::NearEqual(xf[i], check, 1e-10, 1e-10);
+				NearEqual(xf[i], check, eps99, eps99);
 			// 3rd order method is exact for i < 3
 			if( i < 3 )
 				ok &= (e[i] <= 1e-10);

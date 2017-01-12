@@ -81,44 +81,39 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Output Operator: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;sstream&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// std::istringstream</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;string&gt;</span>   <span style="font-style: italic"><span style="color: #9A1900">// std::string</span></span>
 
-# include &lt;sstream&gt;  // std::istringstream
-# include &lt;string&gt;   // std::string
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_input</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool ad_input(void)
-{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// create the input string stream is.</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">string</span> <span style="font-weight: bold"><span style="color: #000000">str</span></span> <span style="color: #990000">(</span><span style="color: #FF0000">"123 456"</span><span style="color: #990000">);</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">istringstream</span> <span style="font-weight: bold"><span style="color: #000000">is</span></span><span style="color: #990000">(</span>str<span style="color: #990000">);</span>
 
-	// create the input string stream is.
-	std::string str (&quot;123 456&quot;);
-	std::istringstream is(str);
+     <span style="font-style: italic"><span style="color: #9A1900">// start and AD&lt;double&gt; recording</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span> z <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>
 
-	// start and <a href="ad.xml" target="_top">AD</a>&lt;double&gt; recording
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) x(1), y(1);
-	x[0] = 1.0;
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
-	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; z = x[0];
-	ok &amp;= Variable(z);
+     <span style="font-style: italic"><span style="color: #9A1900">// read first number into z and second into y[0]</span></span>
+     is <span style="color: #990000">&gt;&gt;</span> z <span style="color: #990000">&gt;&gt;</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>z <span style="color: #990000">==</span> <span style="color: #993399">123</span><span style="color: #990000">.);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">456</span><span style="color: #990000">.);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// terminate recording starting by call to Independent</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// read first number into z and second into y[0]
-	is &gt;&gt; z &gt;&gt; y[0];
-	ok   &amp;= Parameter(z);
-	ok   &amp;= (z == 123.);
-	ok   &amp;= Parameter(y[0]);
-	ok   &amp;= (y[0] == 456.);
-	//
-	// terminate recording starting by call to Independent
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/ad_input.cpp
 
 </body>

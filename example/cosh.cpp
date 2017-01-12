@@ -1,6 +1,6 @@
-// $Id: cosh.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: cosh.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -19,7 +19,7 @@ $section The AD cosh Function: Example and Test$$
 
 
 $code
-$verbatim%example/cosh.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/cosh.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -34,6 +34,7 @@ bool Cosh(void)
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n  = 1;
@@ -54,7 +55,7 @@ bool Cosh(void)
 
 	// check value
 	double check = std::cosh(x0);
-	ok &= NearEqual(y[0] , check,  1e-10 , 1e-10);
+	ok &= NearEqual(y[0] , check, eps99, eps99);
 
 	// forward computation of first partial w.r.t. x[0]
 	CPPAD_TESTVECTOR(double) dx(n);
@@ -62,14 +63,14 @@ bool Cosh(void)
 	dx[0] = 1.;
 	dy    = f.Forward(1, dx);
 	check = std::sinh(x0);
-	ok   &= NearEqual(dy[0], check, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], check, eps99, eps99);
 
 	// reverse computation of derivative of y[0]
 	CPPAD_TESTVECTOR(double)  w(m);
 	CPPAD_TESTVECTOR(double) dw(n);
 	w[0]  = 1.;
 	dw    = f.Reverse(1, w);
-	ok   &= NearEqual(dw[0], check, 1e-10, 1e-10);
+	ok   &= NearEqual(dw[0], check, eps99, eps99);
 
 	// use a VecAD<Base>::reference object with cosh
 	CppAD::VecAD<double> v(1);
@@ -77,7 +78,7 @@ bool Cosh(void)
 	v[zero]           = x0;
 	AD<double> result = CppAD::cosh(v[zero]);
 	check = std::cosh(x0);
-	ok   &= NearEqual(result, check, 1e-10, 1e-10);
+	ok   &= NearEqual(result, check, eps99, eps99);
 
 	return ok;
 }

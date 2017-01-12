@@ -1,0 +1,958 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Checkpointing an Extended ODE Solver: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Checkpointing an Extended ODE Solver: Example and Test"/>
+<meta name="keywords" id="keywords" content=" checkpointing extended ode solver: example test mul_level checkpoint see also discussion problem solver solution "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_checkpoint_extended_ode.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="checkpoint_ode.cpp.xml" target="_top">Prev</a>
+</td><td><a href="atomic_base.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>checkpoint</option>
+<option>checkpoint_extended_ode.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>numeric_limits</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>checkpoint-&gt;</option>
+<option>checkpoint.cpp</option>
+<option>atomic_mul_level.cpp</option>
+<option>checkpoint_ode.cpp</option>
+<option>checkpoint_extended_ode.cpp</option>
+</select>
+</td>
+<td>checkpoint_extended_ode.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>See Also</option>
+<option>Discussion</option>
+<option>Problem</option>
+<option>ODE Solver</option>
+<option>ODE</option>
+<option>Solution</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Checkpointing an Extended ODE Solver: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="See Also" id="See Also">See Also</a></big></b>
+
+<br/>
+<a href="checkpoint_ode.cpp.xml" target="_top"><span style='white-space: nowrap'>checkpoint_ode.cpp</span></a>
+,
+<a href="atomic_mul_level.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_mul_level.cpp</span></a>
+.
+
+
+<br/>
+<br/>
+<b><big><a name="Discussion" id="Discussion">Discussion</a></big></b>
+<br/>
+Suppose that we wish to extend an ODE to include derivatives with respect
+to some parameter in the ODE. In addition, suppose we wish to
+differentiate a function that depends on these derivatives.
+Applying checkpointing to at the second level of AD would not work;
+see <a href="atomic_mul_level.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_mul_level.cpp</span></a>
+
+In this example we show how one can do this by
+checkpointing an extended ODE solver.
+
+<br/>
+<br/>
+<b><big><a name="Problem" id="Problem">Problem</a></big></b>
+<br/>
+We consider the initial value problem with parameter 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+ defined by,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>z</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>t</mi>
+</msub>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">]</mo>
+</mrow></math>
+
+Note that if 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>t</mi>
+</mrow></math>
+
+ needs to be in the equation, one can define
+the first component of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ to be equal to 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>t</mi>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><big><a name="ODE Solver" id="ODE Solver">ODE Solver</a></big></b>
+<br/>
+For this example, we consider the Fourth order Runge-Kutta ODE solver.
+Given an approximation solution at time 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+</mrow></math>
+
+ denoted by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+, and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>t</mi>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">-</mo>
+<msub><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+</mrow></math>
+
+,
+it defines the approximation solution 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+
+at time 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>t</mi>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msub>
+</mrow></math>
+
+ by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<msub><mi mathvariant='italic'>h</mi>
+<mn>1</mn>
+</msub>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">]</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msub><mi mathvariant='italic'>h</mi>
+<mn>2</mn>
+</msub>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mspace width='.3em'/>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">/</mo>
+<mn>2</mn>
+<mo stretchy="false">]</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msub><mi mathvariant='italic'>h</mi>
+<mn>3</mn>
+</msub>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mspace width='.3em'/>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>2</mn>
+</msub>
+<mo stretchy="false">/</mo>
+<mn>2</mn>
+<mo stretchy="false">]</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msub><mi mathvariant='italic'>h</mi>
+<mn>4</mn>
+</msub>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mspace width='.3em'/>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>3</mn>
+</msub>
+<mo stretchy="false">]</mo>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mtd><mtd columnalign="center" >
+<mo stretchy="false">=</mo>
+</mtd><mtd columnalign="left" >
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<mi mathvariant='italic'>t</mi>
+<mspace width='.3em'/>
+<mo stretchy="false">(</mo>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<mn>2</mn>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>2</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<mn>2</mn>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>3</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>h</mi>
+<mn>4</mn>
+</msub>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">/</mo>
+<mn>6</mn>
+</mtd></mtr></mtable>
+</mrow></math>
+
+If 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>z</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+, then
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mover accent='false'><mrow><mi mathvariant='italic'>z</mi>
+</mrow>
+<mo stretchy='false'>&#x002DC;</mo></mover>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>z</mi>
+<mrow><mi mathvariant='italic'>k</mi>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>O</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='normal'>&#x00394;</mi>
+<msup><mi mathvariant='italic'>t</mi>
+<mn>5</mn>
+</msup>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+, then
+Other ODE solvers can use a similar method to the one used below.
+
+<br/>
+<br/>
+<b><big><a name="ODE" id="ODE">ODE</a></big></b>
+<br/>
+For this example the ODE is defined by
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+</mrow></math>
+
+ and
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>h</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">]</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<msub><mi mathvariant='italic'>z</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x022EE;</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mrow><mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow>
+</msub>
+<msub><mi mathvariant='italic'>z</mi>
+<mrow><mi mathvariant='italic'>n</mi>
+<mn>-2</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>t</mi>
+</msub>
+<msub><mi mathvariant='italic'>z</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>t</mi>
+</msub>
+<msub><mi mathvariant='italic'>z</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x022EE;</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mo stretchy="false">&#x02202;</mo>
+<mi mathvariant='italic'>t</mi>
+</msub>
+<msub><mi mathvariant='italic'>z</mi>
+<mrow><mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow>
+</msub>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+<br/>
+<b><big><a name="Solution" id="Solution">Solution</a></big></b>
+<br/>
+The solution of the ODE for this example,
+which is used to check the results,
+can be calculated by
+starting with the first row and then using the solution
+for the first row to solve the second and so on.
+Doing this we obtain
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>z</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>t</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mi mathvariant='italic'>t</mi>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<msup><mi mathvariant='italic'>t</mi>
+<mn>2</mn>
+</msup>
+<mo stretchy="false">/</mo>
+<mn>2</mn>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mo stretchy="false">&#x022EE;</mo>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mrow><mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow>
+</msub>
+<msub><mi mathvariant='italic'>x</mi>
+<mrow><mi mathvariant='italic'>n</mi>
+<mn>-2</mn>
+</mrow>
+</msub>
+<mo stretchy="false">&#x02026;</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<msup><mi mathvariant='italic'>t</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">/</mo>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">!</mo>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">AD&lt;double&gt;</span>                     a1double<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">AD&lt;a1double&gt;</span>                   a2double<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>   <span style="color: #009900">double</span> <span style="color: #990000">)</span>   a0vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> a1double <span style="color: #990000">)</span>   a1vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> a2double <span style="color: #990000">)</span>   a2vector<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// set once by main and kept that way</span></span>
+     <span style="color: #009900">double</span> delta_t_ <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">quiet_NaN</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> n_       <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// The function h( x , y)</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">FloatVector</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span> y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="color: #008080">FloatVector</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          result<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               result<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> y<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> result<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// The 4-th Order Runge-Kutta Step</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">FloatVector</span> <span style="font-weight: bold"><span style="color: #000000">Runge4</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span> z0
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z0<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">::</span><span style="color: #008080">value_type</span> Float<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">Float</span>  dt <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Float</span></span><span style="color: #990000">(</span>delta_t_<span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> m  <span style="color: #990000">=</span> z0<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">FloatVector</span> <span style="font-weight: bold"><span style="color: #000000">h1</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h2</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h3</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h4</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          h1 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span> x<span style="color: #990000">,</span> z0 <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               h2<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> dt <span style="color: #990000">*</span> h1<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+          h2 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span> x<span style="color: #990000">,</span> h2 <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               h3<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> dt <span style="color: #990000">*</span> h2<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+          h3 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span> x<span style="color: #990000">,</span> h3 <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               h4<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> dt <span style="color: #990000">*</span> h3<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          h4 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span> x<span style="color: #990000">,</span> h4 <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="color: #008080">Float</span> dz <span style="color: #990000">=</span> dt <span style="color: #990000">*</span> <span style="color: #990000">(</span> h1<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2.0</span><span style="color: #990000">*</span>h2<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2.0</span><span style="color: #990000">*</span>h3<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> h4<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="color: #993399">6.0</span><span style="color: #990000">;</span>
+               result<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> dz<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> result<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// Derivative of 4-th Order Runge-Kutta Step w.r.t x</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">Runge4_x</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> a1vector<span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> a1vector<span style="color: #990000">&amp;</span> z0<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z0<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               ax<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">az0</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               az0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z0<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
+          <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">az</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          az <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Runge4</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> az0<span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;a1double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> az<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">a1vector</span> result <span style="color: #990000">=</span>  f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> result<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// Derivative of 4-th Order Runge-Kutta Step w.r.t z0</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">Runge4_z0</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> a1vector<span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> a1vector<span style="color: #990000">&amp;</span> z0<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>  <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z0<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               ax<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">az0</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               az0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z0<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>az0<span style="color: #990000">);</span>
+          <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">az</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+          az <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Runge4</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> az0<span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;a1double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>az0<span style="color: #990000">,</span> az<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">a1vector</span> result <span style="color: #990000">=</span>  f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>z0<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> result<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// pack an extended ode vector</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">pack</span></span><span style="color: #990000">(</span>
+          FloatVector<span style="color: #990000">&amp;</span>         extended_ode <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span>   x            <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span>   z            <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span>   z_x          <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> extended_ode<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">*</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>            <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_                <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>            <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_                <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z_x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>          <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">*</span> n_           <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">size_t</span> offset <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               extended_ode<span style="color: #990000">[</span>offset <span style="color: #990000">+</span> i<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          offset <span style="color: #990000">+=</span> n_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               extended_ode<span style="color: #990000">[</span>offset <span style="color: #990000">+</span> i<span style="color: #990000">]</span> <span style="color: #990000">=</span> z<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          offset <span style="color: #990000">+=</span> n_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// partial of z_i (t , x ) w.r.t x_j</span></span>
+                    extended_ode<span style="color: #990000">[</span>offset <span style="color: #990000">+</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> z_x<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j<span style="color: #990000">];</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// unpack an extended ode vector</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">unpack</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span>         extended_ode <span style="color: #990000">,</span>
+          FloatVector<span style="color: #990000">&amp;</span>               x            <span style="color: #990000">,</span>
+          FloatVector<span style="color: #990000">&amp;</span>               z            <span style="color: #990000">,</span>
+          FloatVector<span style="color: #990000">&amp;</span>               z_x          <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> extended_ode<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">*</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>            <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_                <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>            <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_                <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> z_x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>          <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">*</span> n_           <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">size_t</span> offset <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> extended_ode<span style="color: #990000">[</span>offset <span style="color: #990000">+</span> i<span style="color: #990000">];</span>
+          offset <span style="color: #990000">+=</span> n_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               z<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> extended_ode<span style="color: #990000">[</span>offset <span style="color: #990000">+</span> i<span style="color: #990000">];</span>
+          offset <span style="color: #990000">+=</span> n_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// partial of z_i (t , x ) w.r.t x_j</span></span>
+                    z_x<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> extended_ode<span style="color: #990000">[</span>offset <span style="color: #990000">+</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j<span style="color: #990000">];</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// Algorithm that advances the partial of z(t, x) w.r.t x</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">ext_ode_algo</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> a1vector<span style="color: #990000">&amp;</span> ext_ode_in<span style="color: #990000">,</span> a1vector<span style="color: #990000">&amp;</span> ext_ode_out<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> ext_ode_in<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>  <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">*</span> n_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> ext_ode_out<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">*</span> n_ <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// initial extended ode information</span></span>
+          <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">z0</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">z0_x</span></span><span style="color: #990000">(</span>n_ <span style="color: #990000">*</span> n_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">unpack</span></span><span style="color: #990000">(</span>ext_ode_in<span style="color: #990000">,</span> x<span style="color: #990000">,</span> z0<span style="color: #990000">,</span> z0_x<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// advance z(t, x)</span></span>
+          <span style="color: #008080">a1vector</span> z1 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Runge4</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> z0<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// partial of z1 w.r.t. x</span></span>
+          <span style="color: #008080">a1vector</span> z1_x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Runge4_x</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> z0<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// partial of z1 w.r.t. z0</span></span>
+          <span style="color: #008080">a1vector</span> z1_z0 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Runge4_z0</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> z0<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// total derivative of z1 w.r.t x</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="color: #008080">a1double</span> sum <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+                         sum <span style="color: #990000">+=</span> z1_z0 <span style="color: #990000">[</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> k <span style="color: #990000">]</span> <span style="color: #990000">*</span> z0_x <span style="color: #990000">[</span> k <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j <span style="color: #990000">];</span>
+                    z1_x<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">+=</span> sum<span style="color: #990000">;</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// final extended ode information</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">pack</span></span><span style="color: #990000">(</span>ext_ode_out<span style="color: #990000">,</span> x<span style="color: #990000">,</span> z1<span style="color: #990000">,</span> z1_x<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">extended_ode</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of terms in the differential equation</span></span>
+     n_ <span style="color: #990000">=</span> <span style="color: #993399">6</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// step size for the differentiail equation</span></span>
+     <span style="color: #008080">size_t</span> n_step <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> T      <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     delta_t_ <span style="color: #990000">=</span> T <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>n_step<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// set parameter value and initial value of the extended ode</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">az0</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">az0_x</span></span><span style="color: #990000">(</span>n_ <span style="color: #990000">*</span> n_<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ax<span style="color: #990000">[</span>i<span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a1double</span></span><span style="color: #990000">(</span>i <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+          az0<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a1double</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               az0_x<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// pack into extended ode information input vector</span></span>
+     <span style="color: #008080">size_t</span> n_ext <span style="color: #990000">=</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">+</span> n_ <span style="color: #990000">*</span> n_<span style="color: #990000">;</span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">aext_ode_in</span></span><span style="color: #990000">(</span>n_ext<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">pack</span></span><span style="color: #990000">(</span>aext_ode_in<span style="color: #990000">,</span> ax<span style="color: #990000">,</span> az0<span style="color: #990000">,</span> az0_x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// create checkpoint version of the algorithm</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">aext_ode_out</span></span><span style="color: #990000">(</span>n_ext<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">checkpoint&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">ext_ode_check</span></span><span style="color: #990000">(</span>
+          <span style="color: #FF0000">"ext_ode"</span><span style="color: #990000">,</span> ext_ode_algo<span style="color: #990000">,</span> aext_ode_in<span style="color: #990000">,</span> aext_ode_out
+     <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// set the independent variables for recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span> ax <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// repack to get dependence on ax</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">pack</span></span><span style="color: #990000">(</span>aext_ode_in<span style="color: #990000">,</span> ax<span style="color: #990000">,</span> az0<span style="color: #990000">,</span> az0_x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Now run the checkpoint algorithm n_step times</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> n_step<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">ext_ode_check</span></span><span style="color: #990000">(</span>aext_ode_in<span style="color: #990000">,</span> aext_ode_out<span style="color: #990000">);</span>
+          aext_ode_in <span style="color: #990000">=</span> aext_ode_out<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Unpack the results (must use ax1 so do not overwrite ax)</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">ax1</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">az1</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">az1_x</span></span><span style="color: #990000">(</span>n_ <span style="color: #990000">*</span> n_<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">unpack</span></span><span style="color: #990000">(</span>aext_ode_out<span style="color: #990000">,</span> ax1<span style="color: #990000">,</span> az1<span style="color: #990000">,</span> az1_x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// We could record a complicated funciton of x and z_x(T, x) in f,</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// but make this example simpler we record x -&gt; z_x(T, x).</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> az1_x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check function values</span></span>
+     <span style="color: #008080">a0vector</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">z1</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">z1_x</span></span><span style="color: #990000">(</span>n_ <span style="color: #990000">*</span> n_<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+     z1_x <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// use z(t, x) for checking solution</span></span>
+     z1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> T<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          z1<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> T <span style="color: #990000">*</span> z1<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// expected accuracy for each component of of z(t, x)</span></span>
+     <span style="color: #008080">a0vector</span> <span style="font-weight: bold"><span style="color: #000000">acc</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">4</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Runge-Kutta methos is exact for this case</span></span>
+               acc<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     acc<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> <span style="color: #993399">5</span><span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+                         acc<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*=</span> x<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">*</span> delta_t_<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check z1(T, x)</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// check partial of z1_i w.r.t x_j</span></span>
+               <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">&lt;=</span> i <span style="color: #990000">)</span>
+                    check <span style="color: #990000">=</span> z1<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">/</span> x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z1_x<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span> acc<span style="color: #990000">[</span>i<span style="color: #990000">],</span> acc<span style="color: #990000">[</span>i<span style="color: #990000">]);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Now use f to compute a derivative. For this 'simple' example it is</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// the derivative with respect to x of the</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// parital with respect to x[n-1] of z_{n-1} (t , x)</span></span>
+     <span style="color: #008080">a0vector</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>n_ <span style="color: #990000">*</span> n_<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     w<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">==</span> n_ <span style="color: #990000">-</span> <span style="color: #993399">1</span> <span style="color: #990000">&amp;&amp;</span> j <span style="color: #990000">==</span> n_ <span style="color: #990000">-</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+                    w<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n_ <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     dw <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">&lt;</span> n_ <span style="color: #990000">-</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+               check <span style="color: #990000">=</span> z1<span style="color: #990000">[</span>n_ <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span> x<span style="color: #990000">[</span>n_ <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span> acc<span style="color: #990000">[</span>n_<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">],</span> acc<span style="color: #990000">[</span>n_<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
+</font></code>
+<hr/>Input File: example/atomic/extended_ode.cpp
+
+</body>
+</html>

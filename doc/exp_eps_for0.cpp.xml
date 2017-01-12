@@ -80,40 +80,38 @@ A:active { color : purple }
 
 
 <center><b><big><big>exp_eps: Verify Zero Order Forward Sweep</big></big></b></center>
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cmath&gt;                // for fabs function
-bool exp_eps_for0(double *v0)    // double v0[8]
-{    bool  ok = true;
-     double x = .5;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>                <span style="font-style: italic"><span style="color: #9A1900">// for fabs function</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> <span style="color: #990000">*</span>v0<span style="color: #990000">)</span>    <span style="font-style: italic"><span style="color: #9A1900">// double v0[8]</span></span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>  ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x <span style="color: #990000">=</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">;</span>
 
-     v0[1] = x;                                  // abs_x = x;
-     ok  &amp;= std::fabs( v0[1] - 0.5) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">;</span>                                  <span style="font-style: italic"><span style="color: #9A1900">// abs_x = x;</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.5</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     v0[2] = 1. * v0[1];                         // temp = term * abs_x;
-     ok  &amp;= std::fabs( v0[2] - 0.5) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>                         <span style="font-style: italic"><span style="color: #9A1900">// temp = term * abs_x;</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.5</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     v0[3] = v0[2] / 1.;                         // term = temp / Type(k);
-     ok  &amp;= std::fabs( v0[3] - 0.5) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> v0<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>                         <span style="font-style: italic"><span style="color: #9A1900">// term = temp / Type(k);</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.5</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     v0[4] = 1. + v0[3];                         // sum = sum + term;
-     ok  &amp;= std::fabs( v0[4] - 1.5) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>                         <span style="font-style: italic"><span style="color: #9A1900">// sum = sum + term;</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1.5</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     v0[5] = v0[3] * v0[1];                      // temp = term * abs_x;
-     ok  &amp;= std::fabs( v0[5] - 0.25) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>                      <span style="font-style: italic"><span style="color: #9A1900">// temp = term * abs_x;</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.25</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     v0[6] = v0[5] / 2.;                         // term = temp / Type(k);
-     ok  &amp;= std::fabs( v0[6] - 0.125) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> v0<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>                         <span style="font-style: italic"><span style="color: #9A1900">// term = temp / Type(k);</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.125</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     v0[7] = v0[4] + v0[6];                      // sum = sum + term;
-     ok  &amp;= std::fabs( v0[7] - 1.625) &lt; 1e-10;
+     v0<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> v0<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> v0<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">];</span>                      <span style="font-style: italic"><span style="color: #9A1900">// sum = sum + term;</span></span>
+     ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> v0<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1.625</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
 
-     return ok;
-}
-bool exp_eps_for0(void)
-{    double v0[8];
-     return exp_eps_for0(v0);
-}
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> v0<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span>v0<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: introduction/exp_apx/exp_eps_for0.cpp
 

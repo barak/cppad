@@ -1,6 +1,6 @@
-// $Id: multi_newton_work.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: multi_newton_work.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -142,7 +142,7 @@ $codei%
 
 $head Source$$
 $code
-$verbatim%multi_thread/multi_newton_work.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%multi_thread/multi_newton_work.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 
@@ -415,7 +415,7 @@ bool multi_newton_combine(CppAD::vector<double>& xout)
 		}
 	}
 	// now we are done with the work_all_ vector so free its memory
-	// (becasue it is a static variable)
+	// (because it is a static variable)
 	work_all_.clear();
 
 	return ok;

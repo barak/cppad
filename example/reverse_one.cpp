@@ -1,6 +1,6 @@
-// $Id: reverse_one.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: reverse_one.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -20,7 +20,7 @@ $section First Order Reverse Mode: Example and Test$$
 
 
 $code
-$verbatim%example/reverse_one.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/reverse_one.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -34,6 +34,7 @@ bool reverse_one_cases(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n = 2;
@@ -57,8 +58,8 @@ bool reverse_one_cases(void)
 	CPPAD_TESTVECTOR(double) w(m), dw(n);
 	w[0] = 1.;
 	dw   = f.Reverse(1, w);
-	ok  &= NearEqual(dw[0] , 2.*X[0]*X[1], 1e-10, 1e-10);
-	ok  &= NearEqual(dw[1] ,    X[0]*X[0], 1e-10, 1e-10);
+	ok  &= NearEqual(dw[0] , 2.*X[0]*X[1], eps99, eps99);
+	ok  &= NearEqual(dw[1] ,    X[0]*X[0], eps99, eps99);
 
 	// use zero order forward mode to evaluate y at x = (3, 4)
 	// and use the template parameter Vector for the vector type
@@ -66,14 +67,14 @@ bool reverse_one_cases(void)
 	x[0]    = 3.;
 	x[1]    = 4.;
 	y       = f.Forward(0, x);
-	ok     &= NearEqual(y[0] , x[0]*x[0]*x[1], 1e-10, 1e-10);
+	ok     &= NearEqual(y[0] , x[0]*x[0]*x[1], eps99, eps99);
 
 	// use first order reverse mode to evaluate derivative of y[0]
 	// and using the values in x for the independent variables.
 	w[0] = 1.;
 	dw   = f.Reverse(1, w);
-	ok  &= NearEqual(dw[0] , 2.*x[0]*x[1], 1e-10, 1e-10);
-	ok  &= NearEqual(dw[1] ,    x[0]*x[0], 1e-10, 1e-10);
+	ok  &= NearEqual(dw[0] , 2.*x[0]*x[1], eps99, eps99);
+	ok  &= NearEqual(dw[1] ,    x[0]*x[0], eps99, eps99);
 
 	return ok;
 }

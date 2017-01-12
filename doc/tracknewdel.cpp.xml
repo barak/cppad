@@ -89,53 +89,48 @@ A:active { color : purple }
 
 
 <center><b><big><big>Tracking Use of New and Delete: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/track_new_del.hpp&gt;</span>
 
-# include &lt;cppad/utility/track_new_del.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">track_new_del</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool track_new_del(void)
-{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// initial count</span></span>
+     <span style="color: #008080">size_t</span> count <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TRACK_COUNT</span></span><span style="color: #990000">();</span>
 
-	// initial count
-	size_t count = CPPAD_TRACK_COUNT();
+     <span style="font-style: italic"><span style="color: #9A1900">// allocate an array of lenght 5</span></span>
+     <span style="color: #009900">double</span> <span style="color: #990000">*</span>ptr <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>  newlen <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     ptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TRACK_NEW_VEC</span></span><span style="color: #990000">(</span>newlen<span style="color: #990000">,</span> ptr<span style="color: #990000">);</span>
 
-	// allocate an array of lenght 5
-	double *ptr = CPPAD_NULL;
-	size_t  newlen = 5;
-	ptr = CPPAD_TRACK_NEW_VEC(newlen, ptr);
+     <span style="font-style: italic"><span style="color: #9A1900">// copy data into the array</span></span>
+     <span style="color: #008080">size_t</span> ncopy <span style="color: #990000">=</span> newlen<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> ncopy<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ptr<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
 
-	// copy data into the array
-	size_t ncopy = newlen;
-	size_t i;
-	for(i = 0; i &lt; ncopy; i++)
-		ptr[i] = double(i);
+     <span style="font-style: italic"><span style="color: #9A1900">// extend the buffer to be lenght 10</span></span>
+     newlen <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+     ptr    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TRACK_EXTEND</span></span><span style="color: #990000">(</span>newlen<span style="color: #990000">,</span> ncopy<span style="color: #990000">,</span> ptr<span style="color: #990000">);</span>
 
-	// extend the buffer to be lenght 10
-	newlen = 10;
-	ptr    = CPPAD_TRACK_EXTEND(newlen, ncopy, ptr);
+     <span style="font-style: italic"><span style="color: #9A1900">// copy data into the new part of the array</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> ncopy<span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> newlen<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ptr<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
 
-	// copy data into the new part of the array
-	for(i = ncopy; i &lt; newlen; i++)
-		ptr[i] = double(i);
+     <span style="font-style: italic"><span style="color: #9A1900">// check the values in the array</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> newlen<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>ptr<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">));</span>
 
-	// check the values in the array
-	for(i = 0; i &lt; newlen; i++)
-		ok &amp;= (ptr[i] == double(i));
+     <span style="font-style: italic"><span style="color: #9A1900">// free the memory allocated since previous call to TrackCount</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TRACK_DEL_VEC</span></span><span style="color: #990000">(</span>ptr<span style="color: #990000">);</span>
 
-	// free the memory allocated since previous call to TrackCount
-	CPPAD_TRACK_DEL_VEC(ptr);
+     <span style="font-style: italic"><span style="color: #9A1900">// check for memory leak</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>count <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TRACK_COUNT</span></span><span style="color: #990000">());</span>
 
-	// check for memory leak
-	ok &amp;= (count == CPPAD_TRACK_COUNT());
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: test_more/track_new_del.cpp
 
 </body>

@@ -1,9 +1,9 @@
-// $Id: abs_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_ABS_OP_HPP
-# define CPPAD_ABS_OP_HPP
+// $Id: abs_op.hpp 3853 2016-12-14 14:40:11Z bradbell $
+# ifndef CPPAD_LOCAL_ABS_OP_HPP
+# define CPPAD_LOCAL_ABS_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -14,7 +14,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file abs_op.hpp
 Forward and reverse mode calculations for z = abs(x).
@@ -152,10 +152,10 @@ inline void reverse_abs_op(
 	// Taylor coefficients and partials corresponding to result
 	Base* pz       = partial +    i_z * nc_partial;
 
-	// do not need azmul becasue sign is either +1, -1, or zero
+	// do not need azmul because sign is either +1, -1, or zero
 	for(j = 0; j <= d; j++)
 		px[j] += sign(x[0]) * pz[j];
 }
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif

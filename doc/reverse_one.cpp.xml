@@ -74,75 +74,71 @@ A:active { color : purple }
 
 
 <center><b><big><big>First Order Reverse Mode: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-namespace { // ----------------------------------------------------------
-// define the template function reverse_one_cases&lt;Vector&gt; in empty namespace
-template &lt;typename Vector&gt;
-bool reverse_one_cases(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function reverse_one_cases&lt;Vector&gt; in empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_one_cases</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.;
-	X[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and start recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
-	Y[0] = X[0] * X[0] * X[1];
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-	// create f : X -&gt; Y and stop recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f : X -&gt; Y and stop recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// use first order reverse mode to evaluate derivative of y[0]
-	// and use the values in X for the independent variables.
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m), dw(n);
-	w[0] = 1.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , 2.*X[0]*X[1], 1e-10, 1e-10);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1] ,    X[0]*X[0], 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// use first order reverse mode to evaluate derivative of y[0]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// and use the values in X for the independent variables.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>    X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// use zero order forward mode to evaluate y at x = (3, 4)
-	// and use the template parameter Vector for the vector type
-	Vector x(n), y(m);
-	x[0]    = 3.;
-	x[1]    = 4.;
-	y       = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok     &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , x[0]*x[0]*x[1], 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// use zero order forward mode to evaluate y at x = (3, 4)</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// and use the template parameter Vector for the vector type</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
+     y       <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// use first order reverse mode to evaluate derivative of y[0]
-	// and using the values in x for the independent variables.
-	w[0] = 1.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , 2.*x[0]*x[1], 1e-10, 1e-10);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1] ,    x[0]*x[0], 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// use first order reverse mode to evaluate derivative of y[0]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// and using the values in x for the independent variables.</span></span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>    x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	return ok;
-}
-} // End empty namespace
-# include &lt;vector&gt;
-# include &lt;valarray&gt;
-bool reverse_one(void)
-{	bool ok = true;
-	// Run with Vector equal to three different cases
-	// all of which are Simple Vectors with elements of type double.
-	ok &amp;= reverse_one_cases&lt; CppAD::vector  &lt;double&gt; &gt;();
-	ok &amp;= reverse_one_cases&lt; std::vector    &lt;double&gt; &gt;();
-	ok &amp;= reverse_one_cases&lt; std::valarray  &lt;double&gt; &gt;();
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_one</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Run with Vector equal to three different cases</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// all of which are Simple Vectors with elements of type double.</span></span>
+     ok <span style="color: #990000">&amp;=</span> reverse_one_cases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> reverse_one_cases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector    <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> reverse_one_cases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/reverse_one.cpp
 
 </body>

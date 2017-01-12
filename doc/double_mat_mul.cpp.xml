@@ -103,40 +103,38 @@ See <a href="link_mat_mul.xml" target="_top"><span style='white-space: nowrap'>l
 <br/>
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/speed/mat_sum_sq.hpp&gt;
-# include &lt;cppad/speed/uniform_01.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/mat_sum_sq.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/uniform_01.hpp&gt;</span>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-     global_onetape, global_atomic, global_optimize;
+<span style="font-style: italic"><span style="color: #9A1900">// Note that CppAD uses global_option["memory"] at the main program level</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;map&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> std<span style="color: #990000">::</span><span style="color: #008080">map&lt;std::string, bool&gt;</span> global_option<span style="color: #990000">;</span>
 
-bool link_mat_mul(
-     size_t                           size     ,
-     size_t                           repeat   ,
-     CppAD::vector&lt;double&gt;&amp;           x        ,
-     CppAD::vector&lt;double&gt;&amp;           z        ,
-     CppAD::vector&lt;double&gt;&amp;           dz
-)
-{
-     if(global_onetape||global_atomic||global_optimize)
-          return false;
-     // -----------------------------------------------------
-     size_t n = size * size; // number of independent variables
-     CppAD::vector&lt;double&gt; y(n);
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">link_mat_mul</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>                           size     <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>                           repeat   <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>           x        <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>           z        <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>           dz
+<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span>global_option<span style="color: #990000">[</span><span style="color: #FF0000">"onetape"</span><span style="color: #990000">]||</span>global_option<span style="color: #990000">[</span><span style="color: #FF0000">"atomic"</span><span style="color: #990000">]||</span>global_option<span style="color: #990000">[</span><span style="color: #FF0000">"optimize"</span><span style="color: #990000">])</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> size <span style="color: #990000">*</span> size<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// number of independent variables</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-     while(repeat--)
-     {    // get the next matrix
-          CppAD::uniform_01(n, x);
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// get the next matrix</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
 
-          // do computation
-          mat_sum_sq(size, x, y, z);
+          <span style="font-style: italic"><span style="color: #9A1900">// do computation</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">mat_sum_sq</span></span><span style="color: #990000">(</span>size<span style="color: #990000">,</span> x<span style="color: #990000">,</span> y<span style="color: #990000">,</span> z<span style="color: #990000">);</span>
 
-     }
-     return true;
-}
-</pre></font></code>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: speed/double/mat_mul.cpp
 

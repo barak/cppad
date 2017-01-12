@@ -1,6 +1,6 @@
-// $Id: test_more.cpp 3768 2015-12-28 18:58:35Z bradbell $
+// $Id: test_more.cpp 3811 2016-03-27 13:00:39Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -49,16 +49,19 @@ extern bool dbl_epsilon(void);
 extern bool Div(void);
 extern bool DivEq(void);
 extern bool DivZeroOne(void);
+extern bool eigen_mat_inv(void);
 extern bool erf(void);
 extern bool Exp(void);
 extern bool expm1(void);
 extern bool ForHess(void);
+extern bool for_sparse_hes(void);
 extern bool for_sparse_jac(void);
 extern bool Forward(void);
 extern bool forward_dir(void);
 extern bool forward_order(void);
 extern bool FromBase(void);
 extern bool FunCheck(void);
+extern bool hes_sparsity(void);
 extern bool ipopt_solve(void);
 extern bool jacobian(void);
 extern bool log(void);
@@ -88,7 +91,6 @@ extern bool Pow(void);
 extern bool PowInt(void);
 extern bool print_for(void);
 extern bool reverse(void);
-extern bool rev_sparse_hes(void);
 extern bool rev_sparse_jac(void);
 extern bool RevTwo(void);
 extern bool RombergOne(void);
@@ -115,6 +117,9 @@ extern bool VecAD(void);
 extern bool VecADPar(void);
 extern bool VecUnary(void);
 extern bool zdouble(void);
+
+// tests in local subdirectory
+extern bool vector_set(void);
 
 namespace {
 	// function that runs one test
@@ -181,12 +186,14 @@ int main(void)
 	ok &= Run( Exp,             "Exp"            );
 	ok &= Run( expm1,           "expm1"          );
 	ok &= Run( ForHess,         "ForHess"        );
+	ok &= Run( for_sparse_hes,  "for_sparse_hes" );
 	ok &= Run( for_sparse_jac,  "for_sparse_jac" );
 	ok &= Run( Forward,         "Forward"        );
 	ok &= Run( forward_dir,     "forward_dir"    );
 	ok &= Run( forward_order,   "forward_order"  );
 	ok &= Run( FromBase,        "FromBase"       );
 	ok &= Run( FunCheck,        "FunCheck"       );
+	ok &= Run( hes_sparsity,    "hes_sparsity"   );
 	ok &= Run( jacobian,        "jacobian"       );
 	ok &= Run( log,             "log"            );
 	ok &= Run( log10,           "log10"          );
@@ -215,7 +222,6 @@ int main(void)
 	ok &= Run( PowInt,          "PowInt"         );
 	ok &= Run( print_for,       "print_for"      );
 	ok &= Run( reverse,         "reverse"        );
-	ok &= Run( rev_sparse_hes,  "rev_sparse_hes" );
 	ok &= Run( rev_sparse_jac,  "rev_sparse_jac" );
 	ok &= Run( RevTwo,          "RevTwo"         );
 	ok &= Run( RombergOne,      "RombergOne"     );
@@ -251,11 +257,15 @@ int main(void)
 	ok &= Run( alloc_openmp,    "alloc_openmp"   );
 # endif
 # ifdef CPPAD_EIGEN_TEST
-	ok &= Run( cppad_eigen, "cppad_eigen" );
+	ok &= Run( cppad_eigen,     "cppad_eigen"    );
+	ok &= Run( eigen_mat_inv,   "eigen_mat_inv"  );
 # endif
 # if ! CPPAD_EIGENVECTOR
 	ok &= Run( test_vector, "test_vector" );
 # endif
+
+	// local sub-directory
+	ok &= Run( test_vector,      "test_vector"   );
 
 	// check for errors
 	using std::cout;

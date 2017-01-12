@@ -1,6 +1,6 @@
 // $Id$
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -24,7 +24,7 @@ $latex f : \B{R}^n \rightarrow \B{R}^m$$ where
 $latex n = 1$$, $latex m = 1$$, and $latex f(x) = 1 / x$$.
 
 $code
-$verbatim%test_more/old_reciprocal.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%test_more/old_reciprocal.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -36,20 +36,7 @@ namespace { // Begin empty namespace
 	using CppAD::vector;
 	// ----------------------------------------------------------------------
 	// a utility to compute the union of two sets.
-	void my_union(
-		std::set<size_t>&         result  ,
-		const std::set<size_t>&   left    ,
-		const std::set<size_t>&   right   )
-	{	std::set<size_t> temp;
-		std::set_union(
-			left.begin()              ,
-			left.end()                ,
-			right.begin()             ,
-			right.end()               ,
-			std::inserter(temp, temp.begin())
-		);
-		result.swap(temp);
-	}
+	using CppAD::set_union;
 
 	// ----------------------------------------------------------------------
 	// forward mode routine called by CppAD
@@ -241,7 +228,7 @@ namespace { // Begin empty namespace
 		// convert forward Jacobian sparsity to Hessian sparsity
 		// because second derivative of reciprocal may be non-zero
 		if( s[0] )
-			my_union(v[0], v[0], r[0] );
+			v[0] = set_union(v[0], r[0] );
 
 
 		return true;

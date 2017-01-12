@@ -1,6 +1,6 @@
-// $Id: deprecated.omh 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: deprecated.omh 3845 2016-11-19 01:50:47Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -13,6 +13,8 @@ $begin deprecated$$
 $spell
 	CppAD
 	Bool
+	jac
+	hes
 $$
 
 $section CppAD Deprecated API Features$$
@@ -21,15 +23,15 @@ $childtable%
 	omh/deprecated/include_deprecated.omh%
 	omh/deprecated/fun_deprecated.omh%
 	omh/deprecated/compare_change.omh%
-	cppad/local/omp_max_thread.hpp%
+	cppad/core/omp_max_thread.hpp%
 	cppad/utility/track_new_del.hpp%
 	omh/deprecated/omp_alloc.omh%
 	cppad/utility/memory_leak.hpp%
-	cppad/local/epsilon.hpp%
-	cppad/local/test_vector.hpp%
+	cppad/core/epsilon.hpp%
+	cppad/core/test_vector.hpp%
 	cppad_ipopt/src/cppad_ipopt_nlp.hpp%
-	cppad/local/old_atomic.hpp%
-	cppad/local/zdouble.hpp
+	cppad/core/old_atomic.hpp%
+	cppad/core/zdouble.hpp
 %$$
 
 $table
@@ -43,6 +45,13 @@ $cref auto_tools$$   $cnext $title auto_tools$$
 $rnext
 $cref/nan(zero)/nan/nan(zero)/$$ $cnext $codei%nan(%zero%)%$$
 $tend
+
+$head Atomic Functions$$
+The following are links to deprecated $cref atomic_base$$ interfaces:
+$cref/for_sparse_jac/atomic_for_sparse_jac/Deprecated 2016-06-27/$$,
+$cref/rev_sparse_jac/atomic_rev_sparse_jac/Deprecated 2016-06-27/$$,
+$cref/for_sparse_hes/atomic_for_sparse_hes/Deprecated 2016-06-27/$$,
+$cref/rev_sparse_hes/atomic_rev_sparse_hes/Deprecated 2016-06-27/$$.
 
 
 $end

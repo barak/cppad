@@ -99,92 +99,90 @@ To build this program and run its correctness test see <a href="cmake_check.xml"
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-namespace {
-     using std::cout;
-     using std::endl;
-     using CppAD::AD;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cout<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-     // use of PrintFor to check for invalid function arguments
-     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; check_log(const <a href="ad.xml" target="_top">AD</a>&lt;double&gt;&amp; y)
-     {    // check during recording
-          if( y &lt;= 0. )
-               cout &lt;&lt; &quot;check_log: y = &quot; &lt;&lt; y &lt;&lt; &quot; is &lt;= 0&quot; &lt;&lt; endl;
+     <span style="font-style: italic"><span style="color: #9A1900">// use of PrintFor to check for invalid function arguments</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">check_log</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// check during recording</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> y <span style="color: #990000">&lt;=</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span>
+               cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"check_log: y = "</span> <span style="color: #990000">&lt;&lt;</span> y <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" is &lt;= 0"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-          // check during zero order forward calculation
-          PrintFor(y, &quot;check_log: y == &quot;, y , &quot; which is &lt;= 0\n&quot;);
+          <span style="font-style: italic"><span style="color: #9A1900">// check during zero order forward calculation</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">PrintFor</span></span><span style="color: #990000">(</span>y<span style="color: #990000">,</span> <span style="color: #FF0000">"check_log: y == "</span><span style="color: #990000">,</span> y <span style="color: #990000">,</span> <span style="color: #FF0000">" which is &lt;= 0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">);</span>
 
-          return log(y);
-     }
-}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span>y<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-void print_for(void)
-{    using CppAD::PrintFor;
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">print_for</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>PrintFor<span style="color: #990000">;</span>
 
-     // independent variable vector
-     size_t n = 1;
-     <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-     ax[0] = 1.;
-     <a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// independent variable vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-     // print a VecAD&lt;double&gt;::reference object that is a parameter
-     CppAD::VecAD&lt;double&gt; av(1);
-     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; Zero(0);
-     av[Zero] = 0.;
-     PrintFor(&quot;v[0] = &quot;, av[Zero]);
+     <span style="font-style: italic"><span style="color: #9A1900">// print a VecAD&lt;double&gt;::reference object that is a parameter</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">av</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     av<span style="color: #990000">[</span>Zero<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">PrintFor</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"v[0] = "</span><span style="color: #990000">,</span> av<span style="color: #990000">[</span>Zero<span style="color: #990000">]);</span>
 
-     // Print a newline to separate this from previous output,
-     // then print an <a href="ad.xml" target="_top">AD</a>&lt;double&gt; object that is a variable.
-     PrintFor(&quot;\nv[0] + x[0] = &quot;, av[0] + ax[0]);
+     <span style="font-style: italic"><span style="color: #9A1900">// Print a newline to separate this from previous output,</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// then print an AD&lt;double&gt; object that is a variable.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">PrintFor</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">v[0] + x[0] = "</span><span style="color: #990000">,</span> av<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
 
-     // A conditional print that will not generate output when x[0] = 2.
-     PrintFor(ax[0], &quot;\n  2. + x[0] = &quot;,   2. + ax[0], &quot;\n&quot;);
+     <span style="font-style: italic"><span style="color: #9A1900">// A conditional print that will not generate output when x[0] = 2.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">PrintFor</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">  2. + x[0] = "</span><span style="color: #990000">,</span>   <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">);</span>
 
-     // A conditional print that will generate output when x[0] = 2.
-     PrintFor(ax[0] - 2., &quot;\n  3. + x[0] = &quot;,   3. + ax[0], &quot;\n&quot;);
+     <span style="font-style: italic"><span style="color: #9A1900">// A conditional print that will generate output when x[0] = 2.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">PrintFor</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">  3. + x[0] = "</span><span style="color: #990000">,</span>   <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">);</span>
 
-     // A log evaluations that will result in an error message when x[0] = 2.
-     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; var     = 2. - ax[0];
-     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; log_var = check_log(var);
+     <span style="font-style: italic"><span style="color: #9A1900">// A log evaluations that will result in an error message when x[0] = 2.</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> var     <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">-</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> log_var <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">check_log</span></span><span style="color: #990000">(</span>var<span style="color: #990000">);</span>
 
-     // dependent variable vector
-     size_t m = 2;
-     <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
-     ay[0] = av[Zero] + ax[0];
+     <span style="font-style: italic"><span style="color: #9A1900">// dependent variable vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> av<span style="color: #990000">[</span>Zero<span style="color: #990000">]</span> <span style="color: #990000">+</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-     // define f: x -&gt; y and stop tape recording
-     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <span style="font-style: italic"><span style="color: #9A1900">// define f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-     // zero order forward with x[0] = 2
-     <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n);
-     x[0] = 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// zero order forward with x[0] = 2</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-     cout &lt;&lt; &quot;v[0] = 0&quot; &lt;&lt; endl;
-     cout &lt;&lt; &quot;v[0] + x[0] = 2&quot; &lt;&lt; endl;
-     cout &lt;&lt; &quot;  3. + x[0] = 5&quot; &lt;&lt; endl;
-     cout &lt;&lt; &quot;check_log: y == 0 which is &lt;= 0&quot; &lt;&lt; endl;
-     // ./makefile.am expects &quot;Test passes&quot; at beginning of next output line
-     cout &lt;&lt; &quot;Test passes if four lines above repeat below:&quot; &lt;&lt; endl;
-     f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"v[0] = 0"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"v[0] + x[0] = 2"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"  3. + x[0] = 5"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"check_log: y == 0 which is &lt;= 0"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ./makefile.am expects "Test passes" at beginning of next output line</span></span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Test passes if four lines above repeat below:"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
 
-     return;
-}
-int main(void)
-{    bool ok = true;
-     print_for();
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">print_for</span></span><span style="color: #990000">();</span>
 
-     size_t thread;
-     for(thread = 0; thread &lt; 2; thread++)
-     {    ok &amp;= CppAD::omp_alloc::inuse(thread) == 0;
-          ok &amp;= CppAD::omp_alloc::available(thread) == 0;
-     }
-     if( ! ok )
-          return 1;
-     return 0;
-}
-</pre></font></code>
+     <span style="color: #008080">size_t</span> thread<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread <span style="color: #990000">&lt;</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> thread<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Output" id="Output">Output</a></big></b>
 <br/>

@@ -79,52 +79,47 @@ A:active { color : purple }
 
 
 <center><b><big><big>EqualOpSeq: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-bool EqualOpSeq(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::EqualOpSeq;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>EqualOpSeq<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n  = 1;
-	double x0 = 1.;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x0 <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; a = 1. + x[0];  // this variable is 1 + x0
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; b = 2. * x[0];  // this variable is 2 * x0
+     <span style="color: #008080">AD&lt;double&gt;</span> a <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// this variable is 1 + x0</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> b <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// this variable is 2 * x0</span></span>
 
-	// both a and b are variables
-	ok &amp;= (a == b);            // 1 + 1     == 2 * 1
-	ok &amp;= ! EqualOpSeq(a, b);  // 1 + x[0]  != 2 * x[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// both a and b are variables</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>a <span style="color: #990000">==</span> b<span style="color: #990000">);</span>            <span style="font-style: italic"><span style="color: #9A1900">// 1 + 1     == 2 * 1</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> b<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// 1 + x[0]  != 2 * x[0]</span></span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = a;
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">;</span>
 
-	// both y[0] and a are variables
-	EqualOpSeq(y[0], a);       // 2 * x[0] == 2 * x[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// both y[0] and a are variables</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> a<span style="color: #990000">);</span>       <span style="font-style: italic"><span style="color: #9A1900">// 2 * x[0] == 2 * x[0]</span></span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// both a and b are parameters (after the creation of f above)
-	ok &amp;= EqualOpSeq(a, b);    // 1 + 1 == 2 * 1
+     <span style="font-style: italic"><span style="color: #9A1900">// both a and b are parameters (after the creation of f above)</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> b<span style="color: #990000">);</span>    <span style="font-style: italic"><span style="color: #9A1900">// 1 + 1 == 2 * 1</span></span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/equal_op_seq.cpp
 
 </body>

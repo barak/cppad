@@ -88,27 +88,23 @@ A:active { color : purple }
 <code><span style='white-space: nowrap'><br/>
 </span></code># define CPPAD_DET_33_HPP
 
-<pre style='display:inline'> 
-# include &lt;cppad/utility/near_equal.hpp&gt;
-namespace CppAD {
-template &lt;class Vector&gt;
-	bool det_33(const Vector &amp;x, const Vector &amp;d)
-	{	bool ok = true;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/near_equal.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">det_33</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>d<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// use expansion by minors to compute the determinant by hand
-		double check = 0.;
-		check += x[0] * ( x[4] * x[8] - x[5] * x[7] );
-		check -= x[1] * ( x[3] * x[8] - x[5] * x[6] );
-		check += x[2] * ( x[3] * x[7] - x[4] * x[6] );
+          <span style="font-style: italic"><span style="color: #9A1900">// use expansion by minors to compute the determinant by hand</span></span>
+          <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          check <span style="color: #990000">+=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> x<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          check <span style="color: #990000">-=</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          check <span style="color: #990000">+=</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(check, d[0], 1e-10, 1e-10);
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>check<span style="color: #990000">,</span> d<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
 
-		return ok;
-	}
-}
-</pre>
-
-
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 # endif
 </font></code>
 

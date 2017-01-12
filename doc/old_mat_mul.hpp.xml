@@ -95,10 +95,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Define Matrix Multiply as a User Atomic Operation</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -122,365 +118,342 @@ It returns true if it succeeds and false otherwise.
 <br/>
 <b><big><a name="Begin Source" id="Begin Source">Begin Source</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;      // Include CppAD definitions
-namespace {                      // Begin empty namespace
-     using CppAD::vector;        // Let vector denote CppAD::vector
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>      <span style="font-style: italic"><span style="color: #9A1900">// Include CppAD definitions</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>                      <span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>        <span style="font-style: italic"><span style="color: #9A1900">// Let vector denote CppAD::vector</span></span>
+</tt></pre>
 <br/>
 <b><big><a name="Extra Call Information" id="Extra Call Information">Extra Call Information</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // Information we will attach to each mat_mul call
-     struct call_info {
-          size_t nr_result;
-          size_t n_middle;
-          size_t nc_result;
-          vector&lt;bool&gt;  vx;
-     };
-     vector&lt;call_info&gt; info_; // vector of call information
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// Information we will attach to each mat_mul call</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">call_info</span> <span style="color: #FF0000">{</span>
+          <span style="color: #008080">size_t</span> nr_result<span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> n_middle<span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> nc_result<span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt;bool&gt;</span>  vx<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;call_info&gt;</span> info_<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// vector of call information</span></span>
 
-     // number of orders for this operation (k + 1)
-     size_t n_order_ = 0;
-     // number of rows in the result matrix
-     size_t nr_result_ = 0;
-     // number of columns in left matrix and number of rows in right matrix
-     size_t n_middle_ = 0;
-     // number of columns in the result matrix
-     size_t nc_result_ = 0;
-     // which components of x are variables
-     vector&lt;bool&gt;* vx_ = CPPAD_NULL;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of orders for this operation (k + 1)</span></span>
+     <span style="color: #008080">size_t</span> n_order_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of rows in the result matrix</span></span>
+     <span style="color: #008080">size_t</span> nr_result_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of columns in left matrix and number of rows in right matrix</span></span>
+     <span style="color: #008080">size_t</span> n_middle_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of columns in the result matrix</span></span>
+     <span style="color: #008080">size_t</span> nc_result_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// which components of x are variables</span></span>
+     vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;*</span> vx_ <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
 
-     // get the information corresponding to this call
-     void get_info(size_t id, size_t k, size_t n, size_t m)
-     {    n_order_   = k + 1;
-          nr_result_ = info_[id].nr_result;
-          n_middle_  = info_[id].n_middle;
-          nc_result_ = info_[id].nc_result;
-          vx_        = &amp;(info_[id].vx);
+     <span style="font-style: italic"><span style="color: #9A1900">// get the information corresponding to this call</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">get_info</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> id<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> k<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> m<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     n_order_   <span style="color: #990000">=</span> k <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          nr_result_ <span style="color: #990000">=</span> info_<span style="color: #990000">[</span>id<span style="color: #990000">].</span>nr_result<span style="color: #990000">;</span>
+          n_middle_  <span style="color: #990000">=</span> info_<span style="color: #990000">[</span>id<span style="color: #990000">].</span>n_middle<span style="color: #990000">;</span>
+          nc_result_ <span style="color: #990000">=</span> info_<span style="color: #990000">[</span>id<span style="color: #990000">].</span>nc_result<span style="color: #990000">;</span>
+          vx_        <span style="color: #990000">=</span> <span style="color: #990000">&amp;(</span>info_<span style="color: #990000">[</span>id<span style="color: #990000">].</span>vx<span style="color: #990000">);</span>
 
-          assert(n == nr_result_ * n_middle_ + n_middle_ * nc_result_);
-          assert(m ==  nr_result_ * nc_result_);
-     }
-
-</pre></font></code>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span>n <span style="color: #990000">==</span> nr_result_ <span style="color: #990000">*</span> n_middle_ <span style="color: #990000">+</span> n_middle_ <span style="color: #990000">*</span> nc_result_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span>m <span style="color: #990000">==</span>  nr_result_ <span style="color: #990000">*</span> nc_result_<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+</tt></pre>
 <b><big><a name="Matrix Indexing" id="Matrix Indexing">Matrix Indexing</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // Convert left matrix index pair and order to a single argument index
-     size_t left(size_t i, size_t j, size_t ell)
-     {    assert( i &lt; nr_result_ );
-          assert( j &lt; n_middle_ );
-          return (i * n_middle_ + j) * n_order_ + ell;
-     }
-     // Convert right matrix index pair and order to a single argument index
-     size_t right(size_t i, size_t j, size_t ell)
-     {    assert( i &lt; n_middle_ );
-          assert( j &lt; nc_result_ );
-          size_t offset = nr_result_ * n_middle_;
-          return (offset + i * nc_result_ + j) * n_order_ + ell;
-     }
-     // Convert result matrix index pair and order to a single result index
-     size_t result(size_t i, size_t j, size_t ell)
-     {    assert( i &lt; nr_result_ );
-          assert( j &lt; nc_result_ );
-          return (i * nc_result_ + j) * n_order_ + ell;
-     }
-</pre></font></code>
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// Convert left matrix index pair and order to a single argument index</span></span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> j<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> ell<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> nr_result_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> j <span style="color: #990000">&lt;</span> n_middle_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>i <span style="color: #990000">*</span> n_middle_ <span style="color: #990000">+</span> j<span style="color: #990000">)</span> <span style="color: #990000">*</span> n_order_ <span style="color: #990000">+</span> ell<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Convert right matrix index pair and order to a single argument index</span></span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> j<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> ell<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> n_middle_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> j <span style="color: #990000">&lt;</span> nc_result_ <span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> offset <span style="color: #990000">=</span> nr_result_ <span style="color: #990000">*</span> n_middle_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>offset <span style="color: #990000">+</span> i <span style="color: #990000">*</span> nc_result_ <span style="color: #990000">+</span> j<span style="color: #990000">)</span> <span style="color: #990000">*</span> n_order_ <span style="color: #990000">+</span> ell<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Convert result matrix index pair and order to a single result index</span></span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> j<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> ell<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> nr_result_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> j <span style="color: #990000">&lt;</span> nc_result_ <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>i <span style="color: #990000">*</span> nc_result_ <span style="color: #990000">+</span> j<span style="color: #990000">)</span> <span style="color: #990000">*</span> n_order_ <span style="color: #990000">+</span> ell<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="One Matrix Multiply" id="One Matrix Multiply">One Matrix Multiply</a></big></b>
 <br/>
 Forward mode matrix multiply left times right and sum into result:
-<code><font color='blue'><pre style='display:inline'> 
-     void multiply_and_sum(
-          size_t                order_left ,
-          size_t                order_right,
-          const vector&lt;double&gt;&amp;         tx ,
-          vector&lt;double&gt;&amp;               ty )
-     {    size_t i, j;
-          size_t order_result = order_left + order_right;
-          for(i = 0; i &lt; nr_result_; i++)
-          {    for(j = 0; j &lt; nc_result_; j++)
-               {    double sum = 0.;
-                    size_t middle, im_left, mj_right, ij_result;
-                    for(middle = 0; middle &lt; n_middle_; middle++)
-                    {    im_left  = left(i, middle, order_left);
-                         mj_right = right(middle, j, order_right);
-                         sum     += tx[im_left] * tx[mj_right];
-                    }
-                    ij_result = result(i, j, order_result);
-                    ty[ ij_result ] += sum;
-               }
-          }
-          return;
-     }
-</pre></font></code>
+<pre><tt>     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">multiply_and_sum</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                order_left <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                order_right<span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>         tx <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>               ty <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> order_result <span style="color: #990000">=</span> order_left <span style="color: #990000">+</span> order_right<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+                    <span style="color: #008080">size_t</span> middle<span style="color: #990000">,</span> im_left<span style="color: #990000">,</span> mj_right<span style="color: #990000">,</span> ij_result<span style="color: #990000">;</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>middle <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> middle <span style="color: #990000">&lt;</span> n_middle_<span style="color: #990000">;</span> middle<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     im_left  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> order_left<span style="color: #990000">);</span>
+                         mj_right <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span>middle<span style="color: #990000">,</span> j<span style="color: #990000">,</span> order_right<span style="color: #990000">);</span>
+                         sum     <span style="color: #990000">+=</span> tx<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">*</span> tx<span style="color: #990000">[</span>mj_right<span style="color: #990000">];</span>
+                    <span style="color: #FF0000">}</span>
+                    ij_result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> order_result<span style="color: #990000">);</span>
+                    ty<span style="color: #990000">[</span> ij_result <span style="color: #990000">]</span> <span style="color: #990000">+=</span> sum<span style="color: #990000">;</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Reverse Partials One Order" id="Reverse Partials One Order">Reverse Partials One Order</a></big></b>
 <br/>
 Compute reverse mode partials for one order and sum into px:
-<code><font color='blue'><pre style='display:inline'> 
-     void reverse_multiply(
-          size_t                order_left ,
-          size_t                order_right,
-          const vector&lt;double&gt;&amp;         tx ,
-          const vector&lt;double&gt;&amp;         ty ,
-          vector&lt;double&gt;&amp;               px ,
-          const vector&lt;double&gt;&amp;         py )
-     {    size_t i, j;
-          size_t order_result = order_left + order_right;
-          for(i = 0; i &lt; nr_result_; i++)
-          {    for(j = 0; j &lt; nc_result_; j++)
-               {    size_t middle, im_left, mj_right, ij_result;
-                    for(middle = 0; middle &lt; n_middle_; middle++)
-                    {    ij_result = result(i, j, order_result);
-                         im_left   = left(i, middle, order_left);
-                         mj_right  = right(middle, j, order_right);
-                         // sum       += tx[im_left]  * tx[mj_right];
-                         px[im_left]  += tx[mj_right] * py[ij_result];
-                         px[mj_right] += tx[im_left]  * py[ij_result];
-                    }
-               }
-          }
-          return;
-     }
-</pre></font></code>
+<pre><tt>     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">reverse_multiply</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                order_left <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                order_right<span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>         tx <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>         ty <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>               px <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>         py <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> order_result <span style="color: #990000">=</span> order_left <span style="color: #990000">+</span> order_right<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> middle<span style="color: #990000">,</span> im_left<span style="color: #990000">,</span> mj_right<span style="color: #990000">,</span> ij_result<span style="color: #990000">;</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>middle <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> middle <span style="color: #990000">&lt;</span> n_middle_<span style="color: #990000">;</span> middle<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     ij_result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> order_result<span style="color: #990000">);</span>
+                         im_left   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> order_left<span style="color: #990000">);</span>
+                         mj_right  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span>middle<span style="color: #990000">,</span> j<span style="color: #990000">,</span> order_right<span style="color: #990000">);</span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// sum       += tx[im_left]  * tx[mj_right];</span></span>
+                         px<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span>  <span style="color: #990000">+=</span> tx<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">*</span> py<span style="color: #990000">[</span>ij_result<span style="color: #990000">];</span>
+                         px<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">+=</span> tx<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span>  <span style="color: #990000">*</span> py<span style="color: #990000">[</span>ij_result<span style="color: #990000">];</span>
+                    <span style="color: #FF0000">}</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Set Union" id="Set Union">Set Union</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     void my_union(
-          std::set&lt;size_t&gt;&amp;         result  ,
-          const std::set&lt;size_t&gt;&amp;   left    ,
-          const std::set&lt;size_t&gt;&amp;   right   )
-     {    std::set&lt;size_t&gt; temp;
-          std::set_union(
-               left.begin()              ,
-               left.end()                ,
-               right.begin()             ,
-               right.end()               ,
-               std::inserter(temp, temp.begin())
-          );
-          result.swap(temp);
-     }
-</pre></font></code>
+<pre style='display:inline'><tt>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>set_union<span style="color: #990000">;</span>
+</tt></pre>
 <br/>
 <b><big><a name="CppAD User Atomic Callback Functions" id="CppAD User Atomic Callback Functions">CppAD User Atomic Callback Functions</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // ----------------------------------------------------------------------
-     // forward mode routine called by CppAD
-     bool mat_mul_forward(
-          size_t                   id ,
-          size_t                    k ,
-          size_t                    n ,
-          size_t                    m ,
-          const vector&lt;bool&gt;&amp;      vx ,
-          vector&lt;bool&gt;&amp;            vy ,
-          const vector&lt;double&gt;&amp;    tx ,
-          vector&lt;double&gt;&amp;          ty
-     )
-     {    size_t i, j, ell;
-          get_info(id, k, n, m);
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// forward mode routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_mul_forward</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                   id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    k <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    m <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>      vx <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>            vy <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    tx <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>          ty
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> ell<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">get_info</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> k<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">);</span>
 
-          // check if this is during the call to mat_mul(id, ax, ay)
-          if( vx.size() &gt; 0 )
-          {    assert( k == 0 &amp;&amp; vx.size() &gt; 0 );
+          <span style="font-style: italic"><span style="color: #9A1900">// check if this is during the call to mat_mul(id, ax, ay)</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> k <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">&amp;&amp;</span> vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
 
-               // store the vx information in info_
-               assert( vx_-&gt;size() == 0 );
-               info_[id].vx.resize(n);
-               for(j = 0; j &lt; n; j++)
-                    info_[id].vx[j] = vx[j];
-               assert( vx_-&gt;size() == n );
+               <span style="font-style: italic"><span style="color: #9A1900">// store the vx information in info_</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> vx_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+               info_<span style="color: #990000">[</span>id<span style="color: #990000">].</span>vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    info_<span style="color: #990000">[</span>id<span style="color: #990000">].</span>vx<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> vx<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> vx_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">);</span>
 
-               // now compute vy
-               for(i = 0; i &lt; nr_result_; i++)
-               {    for(j = 0; j &lt; nc_result_; j++)
-                    {    // compute vy[ result(i, j, 0) ]
-                         bool   var = false;
-                         bool   nz_left, nz_right;
-                         size_t middle, im_left, mj_right, ij_result;
-                         for(middle = 0; middle &lt; n_middle_; middle++)
-                         {    im_left  = left(i, middle, k);
-                              mj_right = right(middle, j, k);
-                              nz_left  = vx[im_left]  | (tx[im_left] != 0.);
-                              nz_right = vx[mj_right] | (tx[mj_right]!= 0.);
-                              // if not multiplying by the constant zero
-                              if( nz_left &amp; nz_right )
-                                   var |= (vx[im_left] | vx[mj_right]);
-                         }
-                         ij_result     = result(i, j, k);
-                         vy[ij_result] = var;
-                    }
-               }
-          }
+               <span style="font-style: italic"><span style="color: #9A1900">// now compute vy</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// compute vy[ result(i, j, 0) ]</span></span>
+                         <span style="color: #009900">bool</span>   var <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+                         <span style="color: #009900">bool</span>   nz_left<span style="color: #990000">,</span> nz_right<span style="color: #990000">;</span>
+                         <span style="color: #008080">size_t</span> middle<span style="color: #990000">,</span> im_left<span style="color: #990000">,</span> mj_right<span style="color: #990000">,</span> ij_result<span style="color: #990000">;</span>
+                         <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>middle <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> middle <span style="color: #990000">&lt;</span> n_middle_<span style="color: #990000">;</span> middle<span style="color: #990000">++)</span>
+                         <span style="color: #FF0000">{</span>     im_left  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                              mj_right <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span>middle<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                              nz_left  <span style="color: #990000">=</span> vx<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span>  <span style="color: #990000">|</span> <span style="color: #990000">(</span>tx<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">!=</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+                              nz_right <span style="color: #990000">=</span> vx<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">|</span> <span style="color: #990000">(</span>tx<span style="color: #990000">[</span>mj_right<span style="color: #990000">]!=</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+                              <span style="font-style: italic"><span style="color: #9A1900">// if not multiplying by the constant zero</span></span>
+                              <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> nz_left <span style="color: #990000">&amp;</span> nz_right <span style="color: #990000">)</span>
+                                   var <span style="color: #990000">|=</span> <span style="color: #990000">(</span>vx<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">|</span> vx<span style="color: #990000">[</span>mj_right<span style="color: #990000">]);</span>
+                         <span style="color: #FF0000">}</span>
+                         ij_result     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                         vy<span style="color: #990000">[</span>ij_result<span style="color: #990000">]</span> <span style="color: #990000">=</span> var<span style="color: #990000">;</span>
+                    <span style="color: #FF0000">}</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
 
-          // initialize result as zero
-          for(i = 0; i &lt; nr_result_; i++)
-          {    for(j = 0; j &lt; nc_result_; j++)
-                    ty[ result(i, j, k) ] = 0.;
-          }
-          // sum the product of proper orders
-          for(ell = 0; ell &lt;=k; ell++)
-               multiply_and_sum(ell, k-ell, tx, ty);
+          <span style="font-style: italic"><span style="color: #9A1900">// initialize result as zero</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    ty<span style="color: #990000">[</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">)</span> <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// sum the product of proper orders</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>ell <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> ell <span style="color: #990000">&lt;=</span>k<span style="color: #990000">;</span> ell<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #000000">multiply_and_sum</span></span><span style="color: #990000">(</span>ell<span style="color: #990000">,</span> k<span style="color: #990000">-</span>ell<span style="color: #990000">,</span> tx<span style="color: #990000">,</span> ty<span style="color: #990000">);</span>
 
-          // All orders are implemented and there are no possible error
-          // conditions, so always return true.
-          return true;
-     }
-     // ----------------------------------------------------------------------
-     // reverse mode routine called by CppAD
-     bool mat_mul_reverse(
-          size_t                   id ,
-          size_t                    k ,
-          size_t                    n ,
-          size_t                    m ,
-          const vector&lt;double&gt;&amp;    tx ,
-          const vector&lt;double&gt;&amp;    ty ,
-          vector&lt;double&gt;&amp;          px ,
-          const vector&lt;double&gt;&amp;    py
-     )
-     {    get_info(id, k, n, m);
+          <span style="font-style: italic"><span style="color: #9A1900">// All orders are implemented and there are no possible error</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// conditions, so always return true.</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse mode routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_mul_reverse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                   id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    k <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    m <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    tx <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    ty <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>          px <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    py
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">get_info</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> k<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">);</span>
 
-          size_t ell = n * n_order_;
-          while(ell--)
-               px[ell] = 0.;
+          <span style="color: #008080">size_t</span> ell <span style="color: #990000">=</span> n <span style="color: #990000">*</span> n_order_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>ell<span style="color: #990000">--)</span>
+               px<span style="color: #990000">[</span>ell<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-          size_t order = n_order_;
-          while(order--)
-          {    // reverse sum the products for specified order
-               for(ell = 0; ell &lt;=order; ell++)
-                    reverse_multiply(ell, order-ell, tx, ty, px, py);
-          }
+          <span style="color: #008080">size_t</span> order <span style="color: #990000">=</span> n_order_<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>order<span style="color: #990000">--)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// reverse sum the products for specified order</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>ell <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> ell <span style="color: #990000">&lt;=</span>order<span style="color: #990000">;</span> ell<span style="color: #990000">++)</span>
+                    <span style="font-weight: bold"><span style="color: #000000">reverse_multiply</span></span><span style="color: #990000">(</span>ell<span style="color: #990000">,</span> order<span style="color: #990000">-</span>ell<span style="color: #990000">,</span> tx<span style="color: #990000">,</span> ty<span style="color: #990000">,</span> px<span style="color: #990000">,</span> py<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
 
-          // All orders are implemented and there are no possible error
-          // conditions, so always return true.
-          return true;
-     }
+          <span style="font-style: italic"><span style="color: #9A1900">// All orders are implemented and there are no possible error</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// conditions, so always return true.</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-     // ----------------------------------------------------------------------
-     // forward Jacobian sparsity routine called by CppAD
-     bool mat_mul_for_jac_sparse(
-          size_t                               id ,
-          size_t                                n ,
-          size_t                                m ,
-          size_t                                p ,
-          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
-          vector&lt; std::set&lt;size_t&gt; &gt;&amp;           s )
-     {    size_t i, j, k, im_left, middle, mj_right, ij_result;
-          k = 0;
-          get_info(id, k, n, m);
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// forward Jacobian sparsity routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_mul_for_jac_sparse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                               id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                m <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     r <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>           s <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">,</span> im_left<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> mj_right<span style="color: #990000">,</span> ij_result<span style="color: #990000">;</span>
+          k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">get_info</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> k<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">);</span>
 
-          for(i = 0; i &lt; nr_result_; i++)
-          {    for(j = 0; j &lt; nc_result_; j++)
-               {    ij_result = result(i, j, k);
-                    s[ij_result].clear();
-                    for(middle = 0; middle &lt; n_middle_; middle++)
-                    {    im_left   = left(i, middle, k);
-                         mj_right  = right(middle, j, k);
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     ij_result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                    s<span style="color: #990000">[</span>ij_result<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>middle <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> middle <span style="color: #990000">&lt;</span> n_middle_<span style="color: #990000">;</span> middle<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     im_left   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                         mj_right  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span>middle<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
 
-                         // s[ij_result] = union( s[ij_result], r[im_left] )
-                         my_union(s[ij_result], s[ij_result], r[im_left]);
+                         <span style="font-style: italic"><span style="color: #9A1900">// s[ij_result] = union( s[ij_result], r[im_left] )</span></span>
+                         s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>s<span style="color: #990000">[</span>ij_result<span style="color: #990000">],</span> r<span style="color: #990000">[</span>im_left<span style="color: #990000">]);</span>
 
-                         // s[ij_result] = union( s[ij_result], r[mj_right] )
-                         my_union(s[ij_result], s[ij_result], r[mj_right]);
-                    }
-               }
-          }
-          return true;
-     }
-     // ----------------------------------------------------------------------
-     // reverse Jacobian sparsity routine called by CppAD
-     bool mat_mul_rev_jac_sparse(
-          size_t                               id ,
-          size_t                                n ,
-          size_t                                m ,
-          size_t                                p ,
-          vector&lt; std::set&lt;size_t&gt; &gt;&amp;           r ,
-          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     s )
-     {    size_t i, j, k, im_left, middle, mj_right, ij_result;
-          k = 0;
-          get_info(id, k, n, m);
+                         <span style="font-style: italic"><span style="color: #9A1900">// s[ij_result] = union( s[ij_result], r[mj_right] )</span></span>
+                         s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>s<span style="color: #990000">[</span>ij_result<span style="color: #990000">],</span> r<span style="color: #990000">[</span>mj_right<span style="color: #990000">]);</span>
+                    <span style="color: #FF0000">}</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse Jacobian sparsity routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_mul_rev_jac_sparse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                               id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                m <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>           r <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     s <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">,</span> im_left<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> mj_right<span style="color: #990000">,</span> ij_result<span style="color: #990000">;</span>
+          k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">get_info</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> k<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">);</span>
 
-          for(j = 0; j &lt; n; j++)
-               r[j].clear();
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               r<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
 
-          for(i = 0; i &lt; nr_result_; i++)
-          {    for(j = 0; j &lt; nc_result_; j++)
-               {    ij_result = result(i, j, k);
-                    for(middle = 0; middle &lt; n_middle_; middle++)
-                    {    im_left   = left(i, middle, k);
-                         mj_right  = right(middle, j, k);
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     ij_result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>middle <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> middle <span style="color: #990000">&lt;</span> n_middle_<span style="color: #990000">;</span> middle<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     im_left   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                         mj_right  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span>middle<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
 
-                         // r[im_left] = union( r[im_left], s[ij_result] )
-                         my_union(r[im_left], r[im_left], s[ij_result]);
+                         <span style="font-style: italic"><span style="color: #9A1900">// r[im_left] = union( r[im_left], s[ij_result] )</span></span>
+                         r<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>r<span style="color: #990000">[</span>im_left<span style="color: #990000">],</span> s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]);</span>
 
-                         // r[mj_right] = union( r[mj_right], s[ij_result] )
-                         my_union(r[mj_right], r[mj_right], s[ij_result]);
-                    }
-               }
-          }
-          return true;
-     }
-     // ----------------------------------------------------------------------
-     // reverse Hessian sparsity routine called by CppAD
-     bool mat_mul_rev_hes_sparse(
-          size_t                               id ,
-          size_t                                n ,
-          size_t                                m ,
-          size_t                                p ,
-          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     r ,
-          const vector&lt;bool&gt;&amp;                   s ,
-          vector&lt;bool&gt;&amp;                         t ,
-          const vector&lt; std::set&lt;size_t&gt; &gt;&amp;     u ,
-          vector&lt; std::set&lt;size_t&gt; &gt;&amp;           v )
-     {    size_t i, j, k, im_left, middle, mj_right, ij_result;
-          k = 0;
-          get_info(id, k, n, m);
+                         <span style="font-style: italic"><span style="color: #9A1900">// r[mj_right] = union( r[mj_right], s[ij_result] )</span></span>
+                         r<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>r<span style="color: #990000">[</span>mj_right<span style="color: #990000">],</span> s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]);</span>
+                    <span style="color: #FF0000">}</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse Hessian sparsity routine called by CppAD</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_mul_rev_hes_sparse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                               id <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                n <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                m <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     r <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   s <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                         t <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>     u <span style="color: #990000">,</span>
+          vector<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span>           v <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">,</span> im_left<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> mj_right<span style="color: #990000">,</span> ij_result<span style="color: #990000">;</span>
+          k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">get_info</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> k<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">);</span>
 
-          for(j = 0; j &lt; n; j++)
-          {    t[j] = false;
-               v[j].clear();
-          }
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     t<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+               v<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+          <span style="color: #FF0000">}</span>
 
-          assert( vx_-&gt;size() == n );
-          for(i = 0; i &lt; nr_result_; i++)
-          {    for(j = 0; j &lt; nc_result_; j++)
-               {    ij_result = result(i, j, k);
-                    for(middle = 0; middle &lt; n_middle_; middle++)
-                    {    im_left   = left(i, middle, k);
-                         mj_right  = right(middle, j, k);
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> vx_<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nr_result_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nc_result_<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     ij_result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>middle <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> middle <span style="color: #990000">&lt;</span> n_middle_<span style="color: #990000">;</span> middle<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     im_left   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">left</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> middle<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+                         mj_right  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">right</span></span><span style="color: #990000">(</span>middle<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
 
-                         // back propagate Jacobian sparsity
-                         t[im_left]   = (t[im_left] | s[ij_result]);
-                         t[mj_right]  = (t[mj_right] | s[ij_result]);
-                         // Visual Studio C++ 2008 warns unsafe mix of int and
-                         // bool if we use the following code directly above:
-                         // t[im_left]  |= s[ij_result];
-                         // t[mj_right] |= s[ij_result];
+                         <span style="font-style: italic"><span style="color: #9A1900">// back propagate Jacobian sparsity</span></span>
+                         t<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span>   <span style="color: #990000">=</span> <span style="color: #990000">(</span>t<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">|</span> s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]);</span>
+                         t<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #990000">(</span>t<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">|</span> s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]);</span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// Visual Studio C++ 2008 warns unsafe mix of int and</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// bool if we use the following code directly above:</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// t[im_left]  |= s[ij_result];</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// t[mj_right] |= s[ij_result];</span></span>
 
-                         // back propagate Hessian sparsity
-                         // v[im_left]  = union( v[im_left],  u[ij_result] )
-                         // v[mj_right] = union( v[mj_right], u[ij_result] )
-                         my_union(v[im_left],  v[im_left],  u[ij_result] );
-                         my_union(v[mj_right], v[mj_right], u[ij_result] );
+                         <span style="font-style: italic"><span style="color: #9A1900">// back propagate Hessian sparsity</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// v[im_left]  = union( v[im_left],  u[ij_result] )</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// v[mj_right] = union( v[mj_right], u[ij_result] )</span></span>
+                         v<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>v<span style="color: #990000">[</span>im_left<span style="color: #990000">],</span>  u<span style="color: #990000">[</span>ij_result<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+                         v<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>v<span style="color: #990000">[</span>mj_right<span style="color: #990000">],</span> u<span style="color: #990000">[</span>ij_result<span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-                         // Check for case where the (i,j) result element
-                         // is in reverse Jacobian and both left and right
-                         // operands in multiplication are variables
-                         if(s[ij_result] &amp; (*vx_)[im_left] &amp; (*vx_)[mj_right])
-                         {    // v[im_left] = union( v[im_left], r[mj_right] )
-                              my_union(v[im_left], v[im_left], r[mj_right] );
-                              // v[mj_right] = union( v[mj_right], r[im_left] )
-                              my_union(v[mj_right], v[mj_right], r[im_left] );
-                         }
-                    }
-               }
-          }
-          return true;
-     }
-</pre></font></code>
+                         <span style="font-style: italic"><span style="color: #9A1900">// Check for case where the (i,j) result element</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// is in reverse Jacobian and both left and right</span></span>
+                         <span style="font-style: italic"><span style="color: #9A1900">// operands in multiplication are variables</span></span>
+                         <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span>s<span style="color: #990000">[</span>ij_result<span style="color: #990000">]</span> <span style="color: #990000">&amp;</span> <span style="color: #990000">(*</span>vx_<span style="color: #990000">)[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">&amp;</span> <span style="color: #990000">(*</span>vx_<span style="color: #990000">)[</span>mj_right<span style="color: #990000">])</span>
+                         <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// v[im_left] = union( v[im_left], r[mj_right] )</span></span>
+                              v<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>v<span style="color: #990000">[</span>im_left<span style="color: #990000">],</span> r<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+                              <span style="font-style: italic"><span style="color: #9A1900">// v[mj_right] = union( v[mj_right], r[im_left] )</span></span>
+                              v<span style="color: #990000">[</span>mj_right<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span>v<span style="color: #990000">[</span>mj_right<span style="color: #990000">],</span> r<span style="color: #990000">[</span>im_left<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+                         <span style="color: #FF0000">}</span>
+                    <span style="color: #FF0000">}</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Declare mat_mul Function" id="Declare mat_mul Function">Declare mat_mul Function</a></big></b>
 <br/>
@@ -491,19 +464,17 @@ and end empty namespace
 (we could use any <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vector&#xA0;template&#xA0;class</span></a>
 
 instead of <code><font color="blue">CppAD::vector</font></code>):
-<code><font color='blue'><pre style='display:inline'> 
-     CPPAD_USER_ATOMIC(
-          mat_mul                 ,
-          CppAD::vector           ,
-          double                  ,
-          mat_mul_forward         ,
-          mat_mul_reverse         ,
-          mat_mul_for_jac_sparse  ,
-          mat_mul_rev_jac_sparse  ,
+<pre><tt>     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_ATOMIC</span></span><span style="color: #990000">(</span>
+          mat_mul                 <span style="color: #990000">,</span>
+          CppAD<span style="color: #990000">::</span>vector           <span style="color: #990000">,</span>
+          <span style="color: #009900">double</span>                  <span style="color: #990000">,</span>
+          mat_mul_forward         <span style="color: #990000">,</span>
+          mat_mul_reverse         <span style="color: #990000">,</span>
+          mat_mul_for_jac_sparse  <span style="color: #990000">,</span>
+          mat_mul_rev_jac_sparse  <span style="color: #990000">,</span>
           mat_mul_rev_hes_sparse
-     )
-} // End empty namespace
-</pre></font></code>
+     <span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span></tt></pre>
 
 <hr/>Input File: test_more/old_mat_mul.hpp
 

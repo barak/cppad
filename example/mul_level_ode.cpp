@@ -1,6 +1,6 @@
-/* $Id: mul_level_ode.cpp 3738 2015-10-05 13:16:50Z bradbell $ */
+// $Id: mul_level_ode.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -143,7 +143,7 @@ which in turn gives the value for $latex  y^{(k+1)} y ( t , x)$$.
 
 $head Source$$
 $code
-$verbatim%example/mul_level_ode.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/mul_level_ode.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -297,7 +297,7 @@ bool mul_level_ode(void)
 
 	// evaluate the Jacobian of h at a
 	CPPAD_TESTVECTOR(double) jac ( f.Jacobian(x) );
-	// There appears to be a bug in g++ version 4.4.2 becasue it generates
+	// There appears to be a bug in g++ version 4.4.2 because it generates
 	// a warning for the equivalent form
 	// CPPAD_TESTVECTOR(double) jac = f.Jacobian(x);
 

@@ -119,7 +119,7 @@ It does not necessary work for time intervals that are greater than a day.
 <br/>
 <b><big><a name="s" id="s">s</a></big></b>
 <br/>
-is a <code><font color="blue">double</font></code> equal to the 
+is a <code><font color="blue">double</font></code> equal to the
 number of seconds since the first call to <code><font color="blue">elapsed_seconds</font></code>.
 
 
@@ -127,63 +127,61 @@ number of seconds since the first call to <code><font color="blue">elapsed_secon
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-# if _MSC_VER
-// ---------------------------------------------------------------------------
-// Microsoft version of timer
-# include &lt;windows.h&gt;
-# include &lt;cassert&gt;
-double elapsed_seconds(void)
-{    static bool       first_  = true;
-     static SYSTEMTIME st_;
-     double hour, minute, second, milli, diff;
-     SYSTEMTIME st;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># if</span></span> _MSC_VER
+<span style="font-style: italic"><span style="color: #9A1900">// ---------------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// Microsoft version of timer</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;windows.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
+<span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">bool</span>       first_  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #008080">SYSTEMTIME</span> st_<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> hour<span style="color: #990000">,</span> minute<span style="color: #990000">,</span> second<span style="color: #990000">,</span> milli<span style="color: #990000">,</span> diff<span style="color: #990000">;</span>
+     <span style="color: #008080">SYSTEMTIME</span> st<span style="color: #990000">;</span>
 
-     if( first_ )
-     {    GetSystemTime(&amp;st_);
-          first_ = false;
-          return 0.;
-     }
-     GetSystemTime(&amp;st);
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> first_ <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">GetSystemTime</span></span><span style="color: #990000">(&amp;</span>st_<span style="color: #990000">);</span>
+          first_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #000000">GetSystemTime</span></span><span style="color: #990000">(&amp;</span>st<span style="color: #990000">);</span>
 
-     hour   = (double) st.wHour         - (double) st_.wHour;
-     minute = (double) st.wMinute       - (double) st_.wMinute;
-     second = (double) st.wSecond       - (double) st_.wSecond;
-     milli  = (double) st.wMilliseconds - (double) st_.wMilliseconds;
+     hour   <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st<span style="color: #990000">.</span>wHour         <span style="color: #990000">-</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st_<span style="color: #990000">.</span>wHour<span style="color: #990000">;</span>
+     minute <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st<span style="color: #990000">.</span>wMinute       <span style="color: #990000">-</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st_<span style="color: #990000">.</span>wMinute<span style="color: #990000">;</span>
+     second <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st<span style="color: #990000">.</span>wSecond       <span style="color: #990000">-</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st_<span style="color: #990000">.</span>wSecond<span style="color: #990000">;</span>
+     milli  <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st<span style="color: #990000">.</span>wMilliseconds <span style="color: #990000">-</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> st_<span style="color: #990000">.</span>wMilliseconds<span style="color: #990000">;</span>
 
-     diff   = 1e-3*milli + second + 60.*minute + 3600.*hour;
-     if( diff &lt; 0. )
-          diff += 3600.*24.;
-     assert( 0 &lt;= diff &amp;&amp; diff &lt; 3600.*24. );
+     diff   <span style="color: #990000">=</span> <span style="color: #993399">1e-3</span><span style="color: #990000">*</span>milli <span style="color: #990000">+</span> second <span style="color: #990000">+</span> <span style="color: #993399">60</span><span style="color: #990000">.*</span>minute <span style="color: #990000">+</span> <span style="color: #993399">3600</span><span style="color: #990000">.*</span>hour<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> diff <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span>
+          diff <span style="color: #990000">+=</span> <span style="color: #993399">3600</span><span style="color: #990000">.*</span><span style="color: #993399">24</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="color: #993399">0</span> <span style="color: #990000">&lt;=</span> diff <span style="color: #990000">&amp;&amp;</span> diff <span style="color: #990000">&lt;</span> <span style="color: #993399">3600</span><span style="color: #990000">.*</span><span style="color: #993399">24</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>
 
-     return diff;
-}
-# else
-// ---------------------------------------------------------------------------
-// Unix version of timer
-# include &lt;sys/time.h&gt;
-double elapsed_seconds(void)
-{    double sec, usec, diff;
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> diff<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// ---------------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// Unix version of timer</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;sys/time.h&gt;</span>
+<span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> sec<span style="color: #990000">,</span> usec<span style="color: #990000">,</span> diff<span style="color: #990000">;</span>
 
-     static bool first_ = true;
-     static struct timeval tv_first;         
-     struct timeval        tv;
-     if( first_ )
-     {    gettimeofday(&amp;tv_first, NULL);
-          first_ = false;
-          return 0.;
-     }
-     gettimeofday(&amp;tv, NULL);
-     assert( tv.tv_sec &gt;= tv_first.tv_sec );
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">bool</span> first_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">timeval</span> tv_first<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">timeval</span>        tv<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> first_ <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">gettimeofday</span></span><span style="color: #990000">(&amp;</span>tv_first<span style="color: #990000">,</span> NULL<span style="color: #990000">);</span>
+          first_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #000000">gettimeofday</span></span><span style="color: #990000">(&amp;</span>tv<span style="color: #990000">,</span> NULL<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> tv<span style="color: #990000">.</span>tv_sec <span style="color: #990000">&gt;=</span> tv_first<span style="color: #990000">.</span>tv_sec <span style="color: #990000">);</span>
 
-     sec  = (double)(tv.tv_sec -  tv_first.tv_sec);
-     usec = (double)tv.tv_usec - (double)tv_first.tv_usec;
-     diff = sec + 1e-6*usec;
+     sec  <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)(</span>tv<span style="color: #990000">.</span>tv_sec <span style="color: #990000">-</span>  tv_first<span style="color: #990000">.</span>tv_sec<span style="color: #990000">);</span>
+     usec <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>tv<span style="color: #990000">.</span>tv_usec <span style="color: #990000">-</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>tv_first<span style="color: #990000">.</span>tv_usec<span style="color: #990000">;</span>
+     diff <span style="color: #990000">=</span> sec <span style="color: #990000">+</span> <span style="color: #993399">1e-6</span><span style="color: #990000">*</span>usec<span style="color: #990000">;</span>
 
-     return diff;
-}
-# endif
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> diff<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 
 <hr/>Input File: compare_c/det_by_minor.c
 

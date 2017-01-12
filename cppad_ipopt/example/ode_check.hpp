@@ -1,8 +1,8 @@
-// $Id: ode_check.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_ODE_CHECK_HPP
-# define CPPAD_ODE_CHECK_HPP
+// $Id: ode_check.hpp 3804 2016-03-20 15:08:46Z bradbell $
+# ifndef CPPAD_CPPAD_IPOPT_EXAMPLE_ODE_CHECK_HPP
+# define CPPAD_CPPAD_IPOPT_EXAMPLE_ODE_CHECK_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the

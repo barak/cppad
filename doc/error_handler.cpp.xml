@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -102,64 +103,59 @@ A:active { color : purple }
 
 
 <center><b><big><big>Replacing The CppAD Error Handler: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/error_handler.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstring&gt;</span>
 
-# include &lt;cppad/utility/error_handler.hpp&gt;
-# include &lt;cstring&gt;
-
-namespace {
-	void myhandler(
-		bool known       ,
-		int  line        ,
-		const char *file ,
-		const char *exp  ,
-		const char *msg  )
-	{	// error handler must not return, so throw an exception
-		throw line;
-	}
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">myhandler</span></span><span style="color: #990000">(</span>
+          <span style="color: #009900">bool</span> known       <span style="color: #990000">,</span>
+          <span style="color: #009900">int</span>  line        <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>file <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>exp  <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>msg  <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// error handler must not return, so throw an exception</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">throw</span></span> line<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
 
-bool ErrorHandler(void)
-{	using CppAD::ErrorHandler;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ErrorHandler</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>ErrorHandler<span style="color: #990000">;</span>
 
-	int lineMinusFive = 0;
+     <span style="color: #009900">int</span> lineMinusFive <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// replace the default CppAD error handler
-	ErrorHandler info(myhandler);
+     <span style="font-style: italic"><span style="color: #9A1900">// replace the default CppAD error handler</span></span>
+     <span style="color: #008080">ErrorHandler</span> <span style="font-weight: bold"><span style="color: #000000">info</span></span><span style="color: #990000">(</span>myhandler<span style="color: #990000">);</span>
 
-	// set ok to false unless catch block is executed
-	bool ok = false;
+     <span style="font-style: italic"><span style="color: #9A1900">// set ok to false unless catch block is executed</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
 
-	// use try / catch because handler throws an exception
-	try {
-		// set the static variable Line to next source code line
-		lineMinusFive = __LINE__;
+     <span style="font-style: italic"><span style="color: #9A1900">// use try / catch because handler throws an exception</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">try</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// set the static variable Line to next source code line</span></span>
+          lineMinusFive <span style="color: #990000">=</span> __LINE__<span style="color: #990000">;</span>
 
-		// can call myhandler anywhere that ErrorHandler is defined
-		ErrorHandler::Call(
-			true     , // reason for the error is known
-			__LINE__ , // current source code line number
-			__FILE__ , // current source code file name
-			&quot;1 &gt; 0&quot;  , // an intentional error condition
-			&quot;Testing ErrorHandler&quot;     // reason for error
-		);
-	}
-	catch ( int line )
-	{	// check value of the line number that was passed to handler
-		ok = (line == lineMinusFive + 5);
-	}
+          <span style="font-style: italic"><span style="color: #9A1900">// can call myhandler anywhere that ErrorHandler is defined</span></span>
+          ErrorHandler<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Call</span></span><span style="color: #990000">(</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>     <span style="color: #990000">,</span> <span style="font-style: italic"><span style="color: #9A1900">// reason for the error is known</span></span>
+               __LINE__ <span style="color: #990000">,</span> <span style="font-style: italic"><span style="color: #9A1900">// current source code line number</span></span>
+               __FILE__ <span style="color: #990000">,</span> <span style="font-style: italic"><span style="color: #9A1900">// current source code file name</span></span>
+               <span style="color: #FF0000">"1 &gt; 0"</span>  <span style="color: #990000">,</span> <span style="font-style: italic"><span style="color: #9A1900">// an intentional error condition</span></span>
+               <span style="color: #FF0000">"Testing ErrorHandler"</span>     <span style="font-style: italic"><span style="color: #9A1900">// reason for error</span></span>
+          <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">catch</span></span> <span style="color: #990000">(</span> <span style="color: #009900">int</span> line <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// check value of the line number that was passed to handler</span></span>
+          ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>line <span style="color: #990000">==</span> lineMinusFive <span style="color: #990000">+</span> <span style="color: #993399">5</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// info drops out of scope and the default CppAD error handler
-	// is restored when this routine returns.
-	return ok;
-}
-
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// info drops out of scope and the default CppAD error handler</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// is restored when this routine returns.</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/error_handler.cpp
 
 </body>

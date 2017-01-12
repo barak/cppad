@@ -1,9 +1,9 @@
-// $Id: ad_tape.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_AD_TAPE_HPP
-# define CPPAD_AD_TAPE_HPP
+// $Id: ad_tape.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_AD_TAPE_HPP
+# define CPPAD_LOCAL_AD_TAPE_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -12,9 +12,9 @@ the terms of the
 A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
-# include <cppad/local/define.hpp>
+# include <cppad/core/define.hpp>
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL__NAMESPACE
 
 /*!
 Class used to hold tape that records AD<Base> operations.
@@ -104,7 +104,7 @@ private:
 	/// Set by Independent and effectively const
 	size_t         size_independent_;
 	/// This is where the information is recorded.
-	recorder<Base>              Rec_;
+	local::recorder<Base>              Rec_;
 	// ----------------------------------------------------------------------
 	// private functions
 	//
@@ -215,6 +215,6 @@ size_t ADTape<Base>::AddVec(size_t length, const pod_vector<Base>& data)
 	return start;
 }
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 
 # endif

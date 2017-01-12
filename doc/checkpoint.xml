@@ -6,7 +6,7 @@
 <title>Checkpointing Functions</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Checkpointing Functions"/>
-<meta name="keywords" id="keywords" content=" checkpointing functions syntax purpose reduce memory faster recording method constructor base advector name ax ay sparsity size_var option algo atom_fun clear restriction example "/>
+<meta name="keywords" id="keywords" content=" checkpointing functions syntax see also purpose reduce memory faster recording repeating forward restriction multiple level ad method constructor base advector name ax ay sparsity optimize size_var option algo atom_fun clear example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -79,15 +79,22 @@ A:active { color : purple }
 <select onchange='choose_down0(this)'>
 <option>checkpoint-&gt;</option>
 <option>checkpoint.cpp</option>
+<option>atomic_mul_level.cpp</option>
+<option>checkpoint_ode.cpp</option>
+<option>checkpoint_extended_ode.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Syntax</option>
+<option>See Also</option>
 <option>Purpose</option>
 <option>---..Reduce Memory</option>
 <option>---..Faster Recording</option>
+<option>---..Repeating Forward</option>
+<option>---..Restriction</option>
+<option>---..Multiple Level AD</option>
 <option>Method</option>
 <option>constructor</option>
 <option>Base</option>
@@ -96,6 +103,7 @@ A:active { color : purple }
 <option>ax</option>
 <option>ay</option>
 <option>sparsity</option>
+<option>optimize</option>
 <option>size_var</option>
 <option>option</option>
 <option>algo</option>
@@ -112,12 +120,22 @@ A:active { color : purple }
 
 <br/>
 
-<code><font color="blue"><span style='white-space: nowrap'>checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+<code><font color="blue"><span style='white-space: nowrap'>checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>(<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>sparsity</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>optimize</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+)<br/>
 </span></font><i><font color="black"><span style='white-space: nowrap'>sv</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_var()<br/>
 </span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>.option(</span></font><i><font color="black"><span style='white-space: nowrap'>option_value</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 checkpoint&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::clear()</span></font></code>
+
+
+<br/>
+<br/>
+<b><big><a name="See Also" id="See Also">See Also</a></big></b>
+
+<br/>
+<a href="reverse_checkpoint.cpp.xml" target="_top"><span style='white-space: nowrap'>reverse_checkpoint.cpp</span></a>
 
 
 <br/>
@@ -155,22 +173,6 @@ checkpointing functions of the form
 </mrow></math>
 
 .
-The <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
-
-representing 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>f</mi>
-<mo stretchy="false">(</mo>
-<mi mathvariant='italic'>x</mi>
-<mo stretchy="false">)</mo>
-</mrow></math>
-
- cannot depend on the value of 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>x</mi>
-</mrow></math>
-
-.
 
 <br/>
 <br/>
@@ -191,6 +193,74 @@ may depend on its independent variables.
 
 <br/>
 <br/>
+<b><a name="Purpose.Repeating Forward" id="Purpose.Repeating Forward">Repeating Forward</a></b>
+<br/>
+Normally, CppAD store <a href="forward.xml" target="_top"><span style='white-space: nowrap'>forward</span></a>
+ mode results until they freed
+using <a href="capacity_order.xml" target="_top"><span style='white-space: nowrap'>capacity_order</span></a>
+ or the corresponding <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ object is
+deleted. This is not true for checkpoint functions because a checkpoint
+function may be used repeatedly with different arguments in the same tape.
+Thus, forward mode results are recomputed each time a checkpoint function
+is used during a forward or reverse mode sweep.
+
+<br/>
+<br/>
+<b><a name="Purpose.Restriction" id="Purpose.Restriction">Restriction</a></b>
+<br/>
+The <a href="glossary.xml#Operation.Sequence" target="_top"><span style='white-space: nowrap'>operation&#xA0;sequence</span></a>
+
+representing 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+</mrow></math>
+
+ cannot depend on the value of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+.
+The approach in the <a href="reverse_checkpoint.cpp.xml" target="_top"><span style='white-space: nowrap'>reverse_checkpoint.cpp</span></a>
+ example case be applied
+when the operation sequence depends on 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><a name="Purpose.Multiple Level AD" id="Purpose.Multiple Level AD">Multiple Level AD</a></b>
+<br/>
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ is an AD type, it is possible to record 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+
+operations.
+Note that 
+<code><i><font color="black"><span style='white-space: nowrap'>atom_fun</span></font></i></code>
+ will treat 
+<code><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i></code>
+ as an atomic
+operation while recording 
+<code><font color="blue"><span style='white-space: nowrap'>AD</span></font><i><font color="black"><span style='white-space: nowrap'>&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Base</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;</span></font></i></code>
+ operations, but not while
+recording 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ operations.
+See the <a href="atomic_mul_level.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_mul_level.cpp</span></a>
+ example.
+
+
+<br/>
+<br/>
 <b><big><a name="Method" id="Method">Method</a></big></b>
 <br/>
 The <code><font color="blue">checkpoint</font></code> class is derived from <code><font color="blue">atomic_base</font></code>
@@ -198,7 +268,7 @@ and makes this easy.
 It implements all the <code><font color="blue">atomic_base</font></code>
 <a href="atomic_base.xml#Virtual Functions" target="_top"><span style='white-space: nowrap'>virtual&#xA0;functions</span></a>
 
-and hence its source code <code><font color="blue">cppad/local/checkpoint.hpp</font></code>
+and hence its source code <code><font color="blue">cppad/core/checkpoint.hpp</font></code>
 provides an example implementation of <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
 .
 The difference is that <code><font color="blue">checkpoint.hpp</font></code> uses AD
@@ -366,6 +436,27 @@ in the <code><font color="blue">atomic_base</font></code> constructor and must b
 .
 This argument is optional and its default value is unspecified.
 
+<br/>
+<br/>
+<b><big><a name="optimize" id="optimize">optimize</a></big></b>
+<br/>
+This argument has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bool&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>optimize</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It specifies if the recording corresponding to the atomic function
+should be <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimized</span></a>
+.
+One expects to use a checkpoint function many times, so it should
+be worth the time to optimize its operation sequence.
+For debugging purposes, it may be useful to use the
+original operation sequence (before optimization)
+because it corresponds more closely to 
+<code><i><font color="black"><span style='white-space: nowrap'>algo</span></font></i></code>
+.
+This argument is optional and its default value is true.
+
 
 <br/>
 <br/>
@@ -493,7 +584,7 @@ of these operations.
 It returns true if it succeeds and false if it fails.
 
 
-<hr/>Input File: cppad/local/checkpoint.hpp
+<hr/>Input File: cppad/core/checkpoint.hpp
 
 </body>
 </html>

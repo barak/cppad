@@ -1,6 +1,6 @@
-// $Id: ode_inverse.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: ode_inverse.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -173,7 +173,7 @@ $head Source$$
 The following source code
 implements the ODE inversion method proposed above:
 $code
-$verbatim%example/ipopt_solve/ode_inverse.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/ipopt_solve/ode_inverse.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

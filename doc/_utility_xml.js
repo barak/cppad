@@ -46,7 +46,8 @@ var list_down0 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'to_string.xml'
+'to_string.xml',
+'set_union.xml'
 ];
 var list_current0 = [
 'utility.xml#Testing',
@@ -57,7 +58,8 @@ var list_current0 = [
 'utility.xml#Miscellaneous.Simple Vector Template Class',
 'utility.xml#Miscellaneous.Multi-Threading Memory Allocation',
 'utility.xml#Miscellaneous.Sorting Indices',
-'utility.xml#Miscellaneous.to_string'
+'utility.xml#Miscellaneous.to_string',
+'utility.xml#Miscellaneous.set_union'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

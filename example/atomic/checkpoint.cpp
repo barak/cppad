@@ -1,6 +1,6 @@
-/* $Id: checkpoint.cpp 3721 2015-09-04 03:15:40Z bradbell $ */
+// $Id: checkpoint.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -37,14 +37,14 @@ $latex \[
 	\end{array} \right)
 	\; , \;
 	G(x) = \left( \begin{array}{c}
-		\cdot x_0 \cdot x_0 \cdot x_0
+		x_0 \cdot x_0 \cdot x_0
 		\\
-		\cdot x_1 \cdot x_1 \cdot x_1
+		x_1 \cdot x_1 \cdot x_1
 	\end{array} \right)
 \] $$
 
 $code
-$verbatim%example/atomic/checkpoint.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/atomic/checkpoint.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 
@@ -77,7 +77,8 @@ namespace {
 		}
 		return;
 	}
-	bool test_case(option_enum f_sparsity, option_enum g_sparsity)
+	bool test_case(
+		option_enum f_sparsity, option_enum g_sparsity, bool optimize )
 	{	bool ok = true;
 		using CppAD::checkpoint;
 		using CppAD::ADFun;
@@ -108,7 +109,7 @@ namespace {
 		// checkpointing should use fewer operations
 		ok &= check_yes.size_var() < check_not.size_var();
 
-		// this does not really save space becasue f and g are only used once
+		// this does not really save space because f and g are only used once
 		ok &= check_not.size_var() <=
 			check_yes.size_var() + atom_f.size_var() + atom_g.size_var();
 
@@ -182,10 +183,10 @@ bool checkpoint(void)
 	option_enum set_sparsity  = CppAD::atomic_base<double>::set_sparsity_enum;
 
 	// test some different cases
-	ok &= test_case(pack_sparsity, pack_sparsity);
-	ok &= test_case(pack_sparsity, bool_sparsity);
-	ok &= test_case(bool_sparsity, set_sparsity);
-	ok &= test_case(set_sparsity,  set_sparsity);
+	ok &= test_case(pack_sparsity, pack_sparsity, true);
+	ok &= test_case(pack_sparsity, bool_sparsity, false);
+	ok &= test_case(bool_sparsity, set_sparsity,  true);
+	ok &= test_case(set_sparsity,  set_sparsity,  false);
 
 	return ok;
 }

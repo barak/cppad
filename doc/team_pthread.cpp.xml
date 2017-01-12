@@ -82,10 +82,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Pthread Implementation of a Team of AD Threads</big></big></b></center>
 See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team_thread.hpp</span></a>
  for this routines specifications.
@@ -101,315 +97,310 @@ the corresponding routine.
 To be specific, destructors for the vectors are not called
 and a memory leaks result.
 Set the following preprocessor symbol to 1 to demonstrate this bug:
-<code><font color='blue'><pre style='display:inline'> 
-# define DEMONSTRATE_BUG_IN_CYGWIN 0
-</pre></font></code>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;pthread.h&gt;
-# include &lt;cppad/cppad.hpp&gt;
-# include &quot;../team_thread.hpp&quot;
-# define MAX_NUMBER_THREADS 48
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> DEMONSTRATE_BUG_IN_CYGWIN <span style="color: #993399">0</span>
+</tt></pre>
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;pthread.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"../team_thread.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> MAX_NUMBER_THREADS <span style="color: #993399">48</span>
 
-// It seems that when a barrier is passed, its counter is automatically reset
-// to its original value and it can be used again, but where is this
-// stated in the pthreads speicifcations ?
-namespace {
-	using CppAD::thread_alloc;
+<span style="font-style: italic"><span style="color: #9A1900">// It seems that when a barrier is passed, its counter is automatically reset</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// to its original value and it can be used again, but where is this</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// stated in the pthreads speicifcations ?</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
 
-	// number of threads in the team
-	size_t num_threads_ = 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of threads in the team</span></span>
+     <span style="color: #008080">size_t</span> num_threads_ <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// key for accessing thread specific information
-	pthread_key_t thread_specific_key_;
+     <span style="font-style: italic"><span style="color: #9A1900">// key for accessing thread specific information</span></span>
+     <span style="color: #008080">pthread_key_t</span> thread_specific_key_<span style="color: #990000">;</span>
 
-	// no need to destroy thread specific information
-	void thread_specific_destructor(void* thread_num_vptr)
-	{	return; }
+     <span style="font-style: italic"><span style="color: #9A1900">// no need to destroy thread specific information</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">thread_specific_destructor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">*</span> thread_num_vptr<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
 
-	// type of the job currently being done by each thread
-	enum thread_job_t { init_enum, work_enum, join_enum } thread_job_;
+     <span style="font-style: italic"><span style="color: #9A1900">// type of the job currently being done by each thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">enum</span></span> thread_job_t <span style="color: #FF0000">{</span> init_enum<span style="color: #990000">,</span> work_enum<span style="color: #990000">,</span> join_enum <span style="color: #FF0000">}</span> thread_job_<span style="color: #990000">;</span>
 
-	// barrier used to wait for other threads to finish work
-	pthread_barrier_t wait_for_work_;
+     <span style="font-style: italic"><span style="color: #9A1900">// barrier used to wait for other threads to finish work</span></span>
+     <span style="color: #008080">pthread_barrier_t</span> wait_for_work_<span style="color: #990000">;</span>
 
-	// barrier used to wait for master thread to set next job
-	pthread_barrier_t wait_for_job_;
+     <span style="font-style: italic"><span style="color: #9A1900">// barrier used to wait for master thread to set next job</span></span>
+     <span style="color: #008080">pthread_barrier_t</span> wait_for_job_<span style="color: #990000">;</span>
 
-	// Are we in sequential mode; i.e., other threads are waiting for
-	// master thread to set up next job ?
-	bool sequential_execution_ = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// Are we in sequential mode; i.e., other threads are waiting for</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// master thread to set up next job ?</span></span>
+     <span style="color: #009900">bool</span> sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// structure with information for one thread
-	typedef struct {
-		// cppad unique identifier for thread that uses this struct
-		size_t          thread_num;
-		// pthread unique identifier for thread that uses this struct
-		pthread_t       pthread_id;
-		// true if no error for this thread, false otherwise.
-		bool            ok;
-	} thread_one_t;
+     <span style="font-style: italic"><span style="color: #9A1900">// structure with information for one thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// cppad unique identifier for thread that uses this struct</span></span>
+          <span style="color: #008080">size_t</span>          thread_num<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// pthread unique identifier for thread that uses this struct</span></span>
+          <span style="color: #008080">pthread_t</span>       pthread_id<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// true if no error for this thread, false otherwise.</span></span>
+          <span style="color: #009900">bool</span>            ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span> thread_one_t<span style="color: #990000">;</span>
 
-	// vector with information for all threads
-	thread_one_t thread_all_[MAX_NUMBER_THREADS];
+     <span style="font-style: italic"><span style="color: #9A1900">// vector with information for all threads</span></span>
+     <span style="color: #008080">thread_one_t</span> thread_all_<span style="color: #990000">[</span>MAX_NUMBER_THREADS<span style="color: #990000">];</span>
 
-	// pointer to function that does the work for one thread
-	void (* worker_)(void) = CPPAD_NULL;
+     <span style="font-style: italic"><span style="color: #9A1900">// pointer to function that does the work for one thread</span></span>
+     <span style="color: #009900">void</span> <span style="color: #990000">(*</span> worker_<span style="color: #990000">)(</span><span style="color: #009900">void</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
 
-	// ---------------------------------------------------------------------
-	// in_parallel()
-	bool in_parallel(void)
-	{	return ! sequential_execution_; }
+     <span style="font-style: italic"><span style="color: #9A1900">// ---------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// in_parallel()</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">in_parallel</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">!</span> sequential_execution_<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
 
-	// ---------------------------------------------------------------------
-	// thread_number()
-	size_t thread_number(void)
-	{	// get thread specific information
-		void*   thread_num_vptr = pthread_getspecific(thread_specific_key_);
-		size_t* thread_num_ptr  = static_cast&lt;size_t*&gt;(thread_num_vptr);
-		size_t  thread_num      = *thread_num_ptr;
-		if( thread_num &gt;= num_threads_ )
-		{	std::cerr &lt;&lt; &quot;thread_number: program error&quot; &lt;&lt; std::endl;
-			exit(1);
-		}
-		return thread_num;
-	}
-	// --------------------------------------------------------------------
-	// function that gets called by pthread_create
-	void* thread_work(void* thread_num_vptr)
-	{	int rc;
-		bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// ---------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// thread_number()</span></span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">thread_number</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// get thread specific information</span></span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span>   thread_num_vptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_getspecific</span></span><span style="color: #990000">(</span>thread_specific_key_<span style="color: #990000">);</span>
+          size_t<span style="color: #990000">*</span> thread_num_ptr  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span>size_t<span style="color: #990000">*&gt;(</span>thread_num_vptr<span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span>  thread_num      <span style="color: #990000">=</span> <span style="color: #990000">*</span>thread_num_ptr<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread_num <span style="color: #990000">&gt;=</span> num_threads_ <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"thread_number: program error"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> thread_num<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that gets called by pthread_create</span></span>
+     <span style="color: #009900">void</span><span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">thread_work</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">*</span> thread_num_vptr<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">int</span> rc<span style="color: #990000">;</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-		// Set thread specific data where other routines can access it
-		rc = pthread_setspecific(thread_specific_key_, thread_num_vptr);
-		ok &amp;= rc == 0;
+          <span style="font-style: italic"><span style="color: #9A1900">// Set thread specific data where other routines can access it</span></span>
+          rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_setspecific</span></span><span style="color: #990000">(</span>thread_specific_key_<span style="color: #990000">,</span> thread_num_vptr<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-		// thread_num to problem specific information for this thread
-		size_t thread_num = *static_cast&lt;size_t*&gt;(thread_num_vptr);
+          <span style="font-style: italic"><span style="color: #9A1900">// thread_num to problem specific information for this thread</span></span>
+          <span style="color: #008080">size_t</span> thread_num <span style="color: #990000">=</span> <span style="color: #990000">*</span><span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span>size_t<span style="color: #990000">*&gt;(</span>thread_num_vptr<span style="color: #990000">);</span>
 
-		// master thread does not use this routine
-		ok &amp;= thread_num &gt; 0;
+          <span style="font-style: italic"><span style="color: #9A1900">// master thread does not use this routine</span></span>
+          ok <span style="color: #990000">&amp;=</span> thread_num <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-		while( true )
-		{
-			// Use wait_for_job_ to give master time in sequential mode
-			// (so it can change global infromation like thread_job_)
-			rc = pthread_barrier_wait(&amp;wait_for_job_);
-			ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// Use wait_for_job_ to give master time in sequential mode</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// (so it can change global infromation like thread_job_)</span></span>
+               rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_wait</span></span><span style="color: #990000">(&amp;</span>wait_for_job_<span style="color: #990000">);</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> rc <span style="color: #990000">==</span> PTHREAD_BARRIER_SERIAL_THREAD<span style="color: #990000">);</span>
 
-			// case where we are terminating this thread (no more work)
-			if( thread_job_ == join_enum )
-				break;
+               <span style="font-style: italic"><span style="color: #9A1900">// case where we are terminating this thread (no more work)</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread_job_ <span style="color: #990000">==</span> join_enum <span style="color: #990000">)</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-			// only other case once wait_for_job_ barrier is passed (so far)
-			ok &amp;= thread_job_ == work_enum;
-			worker_();
+               <span style="font-style: italic"><span style="color: #9A1900">// only other case once wait_for_job_ barrier is passed (so far)</span></span>
+               ok <span style="color: #990000">&amp;=</span> thread_job_ <span style="color: #990000">==</span> work_enum<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">worker_</span></span><span style="color: #990000">();</span>
 
-			// Use wait_for_work_ to inform master that our work is done and
-			// that this thread will not use global information until
-			// passing its barrier wait_for_job_ above.
-			rc = pthread_barrier_wait(&amp;wait_for_work_);
-			ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
-		}
-		thread_all_[thread_num].ok = ok;
-# if DEMONSTRATE_BUG_IN_CYGWIN
-		// Terminate this thread
-		void* no_status = CPPAD_NULL;
-		pthread_exit(no_status);
-# endif
-		return CPPAD_NULL;
-	}
-}
+               <span style="font-style: italic"><span style="color: #9A1900">// Use wait_for_work_ to inform master that our work is done and</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// that this thread will not use global information until</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// passing its barrier wait_for_job_ above.</span></span>
+               rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_wait</span></span><span style="color: #990000">(&amp;</span>wait_for_work_<span style="color: #990000">);</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> rc <span style="color: #990000">==</span> PTHREAD_BARRIER_SERIAL_THREAD<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok <span style="color: #990000">=</span> ok<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> DEMONSTRATE_BUG_IN_CYGWIN
+          <span style="font-style: italic"><span style="color: #9A1900">// Terminate this thread</span></span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> no_status <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">pthread_exit</span></span><span style="color: #990000">(</span>no_status<span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CPPAD_NULL<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-bool team_create(size_t num_threads)
-{	bool ok = true;;
-	int rc;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">team_create</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> num_threads<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;;</span>
+     <span style="color: #009900">int</span> rc<span style="color: #990000">;</span>
 
-	if( num_threads &gt; MAX_NUMBER_THREADS )
-	{	std::cerr &lt;&lt; &quot;team_create: num_threads greater than &quot;;
-		std::cerr &lt;&lt; MAX_NUMBER_THREADS &lt;&lt; std::endl;
-		exit(1);
-	}
-	// check that we currently do not have multiple threads running
-	ok  = num_threads_ == 1;
-	ok &amp;= sequential_execution_;
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> MAX_NUMBER_THREADS <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"team_create: num_threads greater than "</span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> MAX_NUMBER_THREADS <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check that we currently do not have multiple threads running</span></span>
+     ok  <span style="color: #990000">=</span> num_threads_ <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> sequential_execution_<span style="color: #990000">;</span>
 
-	size_t thread_num;
-	for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-	{	// Each thread gets a pointer to its version of this thread_num
-		// so it knows which section of thread_all_ it is working with
-		thread_all_[thread_num].thread_num = thread_num;
+     <span style="color: #008080">size_t</span> thread_num<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Each thread gets a pointer to its version of this thread_num</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// so it knows which section of thread_all_ it is working with</span></span>
+          thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>thread_num <span style="color: #990000">=</span> thread_num<span style="color: #990000">;</span>
 
-		// initialize
-		thread_all_[thread_num].ok         = true;
-	}
-	// Finish setup of thread_all_ for this thread
-	thread_all_[0].pthread_id = pthread_self();
+          <span style="font-style: italic"><span style="color: #9A1900">// initialize</span></span>
+          thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok         <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Finish setup of thread_all_ for this thread</span></span>
+     thread_all_<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>pthread_id <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_self</span></span><span style="color: #990000">();</span>
 
-	// create a key for thread specific information
-	rc = pthread_key_create(&amp;thread_specific_key_,thread_specific_destructor);
-	ok &amp;= (rc == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// create a key for thread specific information</span></span>
+     rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_key_create</span></span><span style="color: #990000">(&amp;</span>thread_specific_key_<span style="color: #990000">,</span>thread_specific_destructor<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// set thread specific information for this (master thread)
-	void* thread_num_vptr = static_cast&lt;void*&gt;(&amp;(thread_all_[0].thread_num));
-	rc = pthread_setspecific(thread_specific_key_, thread_num_vptr);
-	ok &amp;= (rc == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// set thread specific information for this (master thread)</span></span>
+     <span style="color: #009900">void</span><span style="color: #990000">*</span> thread_num_vptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;(&amp;(</span>thread_all_<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>thread_num<span style="color: #990000">));</span>
+     rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_setspecific</span></span><span style="color: #990000">(</span>thread_specific_key_<span style="color: #990000">,</span> thread_num_vptr<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// Now that thread_number() has necessary information for this thread
-	// (number zero), and while still in sequential mode,
-	// call setup for using CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; in parallel mode.
-	thread_alloc::parallel_setup(num_threads, in_parallel, thread_number);
-	thread_alloc::hold_memory(true);
-	CppAD::parallel_ad&lt;double&gt;();
+     <span style="font-style: italic"><span style="color: #9A1900">// Now that thread_number() has necessary information for this thread</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (number zero), and while still in sequential mode,</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// call setup for using CppAD::AD&lt;double&gt; in parallel mode.</span></span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">parallel_setup</span></span><span style="color: #990000">(</span>num_threads<span style="color: #990000">,</span> in_parallel<span style="color: #990000">,</span> thread_number<span style="color: #990000">);</span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hold_memory</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span>parallel_ad<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
 
-	// Now change num_threads_ to its final value. Waiting till now allows
-	// calls to thread_number during parallel_setup to check thread_num == 0.
-	num_threads_ = num_threads;
+     <span style="font-style: italic"><span style="color: #9A1900">// Now change num_threads_ to its final value. Waiting till now allows</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// calls to thread_number during parallel_setup to check thread_num == 0.</span></span>
+     num_threads_ <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
 
-	// initialize two barriers, one for work done, one for new job ready
-	pthread_barrierattr_t* no_barrierattr = CPPAD_NULL;
-	rc = pthread_barrier_init(
-		&amp;wait_for_work_, no_barrierattr, num_threads
-	);
-	ok &amp;= (rc == 0);
-	rc  = pthread_barrier_init(
-		&amp;wait_for_job_, no_barrierattr, num_threads
-	);
-	ok &amp;= (rc == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// initialize two barriers, one for work done, one for new job ready</span></span>
+     pthread_barrierattr_t<span style="color: #990000">*</span> no_barrierattr <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+     rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_init</span></span><span style="color: #990000">(</span>
+          <span style="color: #990000">&amp;</span>wait_for_work_<span style="color: #990000">,</span> no_barrierattr<span style="color: #990000">,</span> num_threads
+     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     rc  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_init</span></span><span style="color: #990000">(</span>
+          <span style="color: #990000">&amp;</span>wait_for_job_<span style="color: #990000">,</span> no_barrierattr<span style="color: #990000">,</span> num_threads
+     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// structure used to create the threads
-	pthread_t       pthread_id;
-	// default for pthread_attr_setdetachstate is PTHREAD_CREATE_JOINABLE
-	pthread_attr_t* no_attr= CPPAD_NULL;
+     <span style="font-style: italic"><span style="color: #9A1900">// structure used to create the threads</span></span>
+     <span style="color: #008080">pthread_t</span>       pthread_id<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// default for pthread_attr_setdetachstate is PTHREAD_CREATE_JOINABLE</span></span>
+     pthread_attr_t<span style="color: #990000">*</span> no_attr<span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
 
-	// initial job for the threads
-	thread_job_           = init_enum;
-	if( num_threads &gt; 1 )
-		sequential_execution_ = false;
+     <span style="font-style: italic"><span style="color: #9A1900">// initial job for the threads</span></span>
+     thread_job_           <span style="color: #990000">=</span> init_enum<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+          sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
 
-	// This master thread is already running, we need to create
-	// num_threads - 1 more threads
-	for(thread_num = 1; thread_num &lt; num_threads; thread_num++)
-	{
-		// Create the thread with thread number equal to thread_num
-		thread_num_vptr = static_cast&lt;void*&gt; (
-			&amp;(thread_all_[thread_num].thread_num)
-		);
-		rc = pthread_create(
-				&amp;pthread_id ,
-				no_attr     ,
-				thread_work ,
-				thread_num_vptr
-		);
-		thread_all_[thread_num].pthread_id = pthread_id;
-		ok &amp;= (rc == 0);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// This master thread is already running, we need to create</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// num_threads - 1 more threads</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Create the thread with thread number equal to thread_num</span></span>
+          thread_num_vptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;</span> <span style="color: #990000">(</span>
+               <span style="color: #990000">&amp;(</span>thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>thread_num<span style="color: #990000">)</span>
+          <span style="color: #990000">);</span>
+          rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_create</span></span><span style="color: #990000">(</span>
+                    <span style="color: #990000">&amp;</span>pthread_id <span style="color: #990000">,</span>
+                    no_attr     <span style="color: #990000">,</span>
+                    thread_work <span style="color: #990000">,</span>
+                    thread_num_vptr
+          <span style="color: #990000">);</span>
+          thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>pthread_id <span style="color: #990000">=</span> pthread_id<span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// Current state is other threads are at wait_for_job_.
-	// This master thread (thread zero) has not completed wait_for_job_
-	sequential_execution_ = true;
-	return ok;
-}
+     <span style="font-style: italic"><span style="color: #9A1900">// Current state is other threads are at wait_for_job_.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// This master thread (thread zero) has not completed wait_for_job_</span></span>
+     sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-bool team_work(void worker(void))
-{	int rc;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">team_work</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">worker</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">))</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">int</span> rc<span style="color: #990000">;</span>
 
-	// Current state is other threads are at wait_for_job_.
-	// This master thread (thread zero) has not completed wait_for_job_
-	bool ok = sequential_execution_;
-	ok     &amp;= thread_number() == 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// Current state is other threads are at wait_for_job_.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// This master thread (thread zero) has not completed wait_for_job_</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> sequential_execution_<span style="color: #990000">;</span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">thread_number</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// set global version of this work routine
-	worker_ = worker;
+     <span style="font-style: italic"><span style="color: #9A1900">// set global version of this work routine</span></span>
+     worker_ <span style="color: #990000">=</span> worker<span style="color: #990000">;</span>
 
 
-	// set the new job that other threads are waiting for
-	thread_job_ = work_enum;
+     <span style="font-style: italic"><span style="color: #9A1900">// set the new job that other threads are waiting for</span></span>
+     thread_job_ <span style="color: #990000">=</span> work_enum<span style="color: #990000">;</span>
 
-	// enter parallel execution soon as master thread completes wait_for_job_
-	if( num_threads_ &gt; 1 )
-		sequential_execution_ = false;
+     <span style="font-style: italic"><span style="color: #9A1900">// enter parallel execution soon as master thread completes wait_for_job_</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads_ <span style="color: #990000">&gt;</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+          sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
 
-	// wait until all threads have completed wait_for_job_
-	rc  = pthread_barrier_wait(&amp;wait_for_job_);
-	ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
+     <span style="font-style: italic"><span style="color: #9A1900">// wait until all threads have completed wait_for_job_</span></span>
+     rc  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_wait</span></span><span style="color: #990000">(&amp;</span>wait_for_job_<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> rc <span style="color: #990000">==</span> PTHREAD_BARRIER_SERIAL_THREAD<span style="color: #990000">);</span>
 
-	// Now do the work in this thread and then wait
-	// until all threads have completed wait_for_work_
-	worker();
-	rc = pthread_barrier_wait(&amp;wait_for_work_);
-	ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
+     <span style="font-style: italic"><span style="color: #9A1900">// Now do the work in this thread and then wait</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// until all threads have completed wait_for_work_</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">worker</span></span><span style="color: #990000">();</span>
+     rc <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_wait</span></span><span style="color: #990000">(&amp;</span>wait_for_work_<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> rc <span style="color: #990000">==</span> PTHREAD_BARRIER_SERIAL_THREAD<span style="color: #990000">);</span>
 
-	// Current state is other threads are at wait_for_job_.
-	// This master thread (thread zero) has not completed wait_for_job_
-	sequential_execution_ = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// Current state is other threads are at wait_for_job_.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// This master thread (thread zero) has not completed wait_for_job_</span></span>
+     sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	size_t thread_num;
-	for(thread_num = 0; thread_num &lt; num_threads_; thread_num++)
-		ok &amp;= thread_all_[thread_num].ok;
-	return ok;
-}
+     <span style="color: #008080">size_t</span> thread_num<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads_<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-bool team_destroy(void)
-{	int rc;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">team_destroy</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">int</span> rc<span style="color: #990000">;</span>
 
-	// Current state is other threads are at wait_for_job_.
-	// This master thread (thread zero) has not completed wait_for_job_
-	bool ok = sequential_execution_;
-	ok     &amp;= thread_number() == 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// Current state is other threads are at wait_for_job_.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// This master thread (thread zero) has not completed wait_for_job_</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> sequential_execution_<span style="color: #990000">;</span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">thread_number</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// set the new job that other threads are waiting for
-	thread_job_ = join_enum;
+     <span style="font-style: italic"><span style="color: #9A1900">// set the new job that other threads are waiting for</span></span>
+     thread_job_ <span style="color: #990000">=</span> join_enum<span style="color: #990000">;</span>
 
-	// Enter parallel exectuion soon as master thread completes wait_for_job_
-	if( num_threads_ &gt; 1 )
-			sequential_execution_ = false;
-	rc  = pthread_barrier_wait(&amp;wait_for_job_);
-	ok &amp;= (rc == 0 || rc == PTHREAD_BARRIER_SERIAL_THREAD);
+     <span style="font-style: italic"><span style="color: #9A1900">// Enter parallel exectuion soon as master thread completes wait_for_job_</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads_ <span style="color: #990000">&gt;</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+               sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     rc  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_wait</span></span><span style="color: #990000">(&amp;</span>wait_for_job_<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> rc <span style="color: #990000">==</span> PTHREAD_BARRIER_SERIAL_THREAD<span style="color: #990000">);</span>
 
-	// now wait for the other threads to exit
-	size_t thread_num;
-	for(thread_num = 1; thread_num &lt; num_threads_; thread_num++)
-	{	void* no_status = CPPAD_NULL;
-		rc      = pthread_join(
-			thread_all_[thread_num].pthread_id, &amp;no_status
-		);
-		ok &amp;= (rc == 0);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// now wait for the other threads to exit</span></span>
+     <span style="color: #008080">size_t</span> thread_num<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads_<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">void</span><span style="color: #990000">*</span> no_status <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+          rc      <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_join</span></span><span style="color: #990000">(</span>
+               thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>pthread_id<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>no_status
+          <span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// now we are down to just the master thread (thread zero)
-	sequential_execution_ = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// now we are down to just the master thread (thread zero)</span></span>
+     sequential_execution_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// destroy the key for thread specific data
-	pthread_key_delete(thread_specific_key_);
+     <span style="font-style: italic"><span style="color: #9A1900">// destroy the key for thread specific data</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">pthread_key_delete</span></span><span style="color: #990000">(</span>thread_specific_key_<span style="color: #990000">);</span>
 
-	// destroy wait_for_work_
-	rc  = pthread_barrier_destroy(&amp;wait_for_work_);
-	ok &amp;= (rc == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// destroy wait_for_work_</span></span>
+     rc  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_destroy</span></span><span style="color: #990000">(&amp;</span>wait_for_work_<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// destroy wait_for_job_
-	rc  = pthread_barrier_destroy(&amp;wait_for_job_);
-	ok &amp;= (rc == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// destroy wait_for_job_</span></span>
+     rc  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">pthread_barrier_destroy</span></span><span style="color: #990000">(&amp;</span>wait_for_job_<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>rc <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// check ok before changing num_threads_
-	for(thread_num = 0; thread_num &lt; num_threads_; thread_num++)
-		ok &amp;= thread_all_[thread_num].ok;
+     <span style="font-style: italic"><span style="color: #9A1900">// check ok before changing num_threads_</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads_<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> thread_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">].</span>ok<span style="color: #990000">;</span>
 
-	// now inform CppAD that there is only one thread
-	num_threads_ = 1;
-	thread_alloc::parallel_setup(num_threads_, CPPAD_NULL, CPPAD_NULL);
-	thread_alloc::hold_memory(false);
-	CppAD::parallel_ad&lt;double&gt;();
+     <span style="font-style: italic"><span style="color: #9A1900">// now inform CppAD that there is only one thread</span></span>
+     num_threads_ <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">parallel_setup</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> CPPAD_NULL<span style="color: #990000">,</span> CPPAD_NULL<span style="color: #990000">);</span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hold_memory</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span>parallel_ad<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
 
-	return ok;
-}
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-const char* team_name(void)
-{	return &quot;pthread&quot;; }
-</pre>
-
+<span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">team_name</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #FF0000">"pthread"</span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/pthread/team_pthread.cpp
 
 </body>

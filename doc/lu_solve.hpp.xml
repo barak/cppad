@@ -71,6 +71,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -91,121 +92,114 @@ A:active { color : purple }
 <td>lu_solve.hpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Source: LuSolve</big></big></b></center>
 <code><font color="blue"># ifndef CPPAD_LU_SOLVE_HPP
 <code><span style='white-space: nowrap'><br/>
 </span></code># define CPPAD_LU_SOLVE_HPP
 
-<pre style='display:inline'> 
-# include &lt;complex&gt;
-# include &lt;vector&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
 
-// link exp for float and double cases
-# include &lt;cppad/base_require.hpp&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// link exp for float and double cases</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/base_require.hpp&gt;</span>
 
-# include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/utility/check_simple_vector.hpp&gt;
-# include &lt;cppad/utility/check_numeric_type.hpp&gt;
-# include &lt;cppad/utility/lu_factor.hpp&gt;
-# include &lt;cppad/utility/lu_invert.hpp&gt;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/core/cppad_assert.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/check_simple_vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/check_numeric_type.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/lu_factor.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/lu_invert.hpp&gt;</span>
 
-namespace CppAD { // BEGIN CppAD namespace
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// BEGIN CppAD namespace</span></span>
 
-// LeqZero
-template &lt;typename Float&gt;
-inline bool LeqZero(const Float &amp;x)
-{	return x &lt;= Float(0); }
-inline bool LeqZero( const std::complex&lt;double&gt; &amp;x )
-{	return x == std::complex&lt;double&gt;(0); }
-inline bool LeqZero( const std::complex&lt;float&gt; &amp;x )
-{	return x == std::complex&lt;float&gt;(0); }
+<span style="font-style: italic"><span style="color: #9A1900">// LeqZero</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Float</span><span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LeqZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Float</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">&lt;=</span> <span style="font-weight: bold"><span style="color: #000000">Float</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LeqZero</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">==</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="color: #993399">0</span><span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LeqZero</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;float&gt;</span> <span style="color: #990000">&amp;</span>x <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">==</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;(</span><span style="color: #993399">0</span><span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
 
-// LuSolve
-template &lt;typename Float, typename FloatVector&gt;
-int LuSolve(
-	size_t             n      ,
-	size_t             m      ,
-	const FloatVector &amp;A      ,
-	const FloatVector &amp;B      ,
-	FloatVector       &amp;X      ,
-	Float        &amp;logdet      )
-{
-	// check numeric type specifications
-	CheckNumericType&lt;Float&gt;();
+<span style="font-style: italic"><span style="color: #9A1900">// LuSolve</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Float</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">LuSolve</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>             n      <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>             m      <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">FloatVector</span> <span style="color: #990000">&amp;</span>A      <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">FloatVector</span> <span style="color: #990000">&amp;</span>B      <span style="color: #990000">,</span>
+     <span style="color: #008080">FloatVector</span>       <span style="color: #990000">&amp;</span>X      <span style="color: #990000">,</span>
+     <span style="color: #008080">Float</span>        <span style="color: #990000">&amp;</span>logdet      <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check numeric type specifications</span></span>
+     CheckNumericType<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;();</span>
 
-	// check simple vector class specifications
-	CheckSimpleVector&lt;Float, FloatVector&gt;();
+     <span style="font-style: italic"><span style="color: #9A1900">// check simple vector class specifications</span></span>
+     CheckSimpleVector<span style="color: #990000">&lt;</span>Float<span style="color: #990000">,</span> FloatVector<span style="color: #990000">&gt;();</span>
 
-	size_t        p;       // index of pivot element (diagonal of L)
-	int     signdet;       // sign of the determinant
-	Float     pivot;       // pivot element
+     <span style="color: #008080">size_t</span>        p<span style="color: #990000">;</span>       <span style="font-style: italic"><span style="color: #9A1900">// index of pivot element (diagonal of L)</span></span>
+     <span style="color: #009900">int</span>     signdet<span style="color: #990000">;</span>       <span style="font-style: italic"><span style="color: #9A1900">// sign of the determinant</span></span>
+     <span style="color: #008080">Float</span>     pivot<span style="color: #990000">;</span>       <span style="font-style: italic"><span style="color: #9A1900">// pivot element</span></span>
 
-	// the value zero
-	const Float zero(0);
+     <span style="font-style: italic"><span style="color: #9A1900">// the value zero</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Float</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// pivot row and column order in the matrix
-	std::vector&lt;size_t&gt; ip(n);
-	std::vector&lt;size_t&gt; jp(n);
+     <span style="font-style: italic"><span style="color: #9A1900">// pivot row and column order in the matrix</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">ip</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">jp</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// -------------------------------------------------------
-	CPPAD_ASSERT_KNOWN(
-		size_t(A.size()) == n * n,
-		&quot;Error in LuSolve: A must have size equal to n * n&quot;
-	);
-	CPPAD_ASSERT_KNOWN(
-		size_t(B.size()) == n * m,
-		&quot;Error in LuSolve: B must have size equal to n * m&quot;
-	);
-	CPPAD_ASSERT_KNOWN(
-		size_t(X.size()) == n * m,
-		&quot;Error in LuSolve: X must have size equal to n * m&quot;
-	);
-	// -------------------------------------------------------
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>A<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> n<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"Error in LuSolve: A must have size equal to n * n"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>B<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> m<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"Error in LuSolve: B must have size equal to n * m"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> m<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"Error in LuSolve: X must have size equal to n * m"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------</span></span>
 
-	// copy A so that it does not change
-	FloatVector Lu(A);
+     <span style="font-style: italic"><span style="color: #9A1900">// copy A so that it does not change</span></span>
+     <span style="color: #008080">FloatVector</span> <span style="font-weight: bold"><span style="color: #000000">Lu</span></span><span style="color: #990000">(</span>A<span style="color: #990000">);</span>
 
-	// copy B so that it does not change
-	X = B;
+     <span style="font-style: italic"><span style="color: #9A1900">// copy B so that it does not change</span></span>
+     X <span style="color: #990000">=</span> B<span style="color: #990000">;</span>
 
-	// Lu factor the matrix A
-	signdet = LuFactor(ip, jp, Lu);
+     <span style="font-style: italic"><span style="color: #9A1900">// Lu factor the matrix A</span></span>
+     signdet <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">LuFactor</span></span><span style="color: #990000">(</span>ip<span style="color: #990000">,</span> jp<span style="color: #990000">,</span> Lu<span style="color: #990000">);</span>
 
-	// compute the log of the determinant
-	logdet  = Float(0);
-	for(p = 0; p &lt; n; p++)
-	{	// pivot using the max absolute element
-		pivot   = Lu[ ip[p] * n + jp[p] ];
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the log of the determinant</span></span>
+     logdet  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Float</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>p <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> p <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> p<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// pivot using the max absolute element</span></span>
+          pivot   <span style="color: #990000">=</span> Lu<span style="color: #990000">[</span> ip<span style="color: #990000">[</span>p<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> jp<span style="color: #990000">[</span>p<span style="color: #990000">]</span> <span style="color: #990000">];</span>
 
-		// check for determinant equal to zero
-		if( pivot == zero )
-		{	// abort the mission
-			logdet = Float(0);
-			return   0;
-		}
+          <span style="font-style: italic"><span style="color: #9A1900">// check for determinant equal to zero</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> pivot <span style="color: #990000">==</span> zero <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// abort the mission</span></span>
+               logdet <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Float</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span>   <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
 
-		// update the determinant
-		if( LeqZero ( pivot ) )
-		{	logdet += log( - pivot );
-			signdet = - signdet;
-		}
-		else	logdet += log( pivot );
+          <span style="font-style: italic"><span style="color: #9A1900">// update the determinant</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">LeqZero</span></span> <span style="color: #990000">(</span> pivot <span style="color: #990000">)</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     logdet <span style="color: #990000">+=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> <span style="color: #990000">-</span> pivot <span style="color: #990000">);</span>
+               signdet <span style="color: #990000">=</span> <span style="color: #990000">-</span> signdet<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     logdet <span style="color: #990000">+=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> pivot <span style="color: #990000">);</span>
 
-	}
+     <span style="color: #FF0000">}</span>
 
-	// solve the linear equations
-	LuInvert(ip, jp, Lu, X);
+     <span style="font-style: italic"><span style="color: #9A1900">// solve the linear equations</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">LuInvert</span></span><span style="color: #990000">(</span>ip<span style="color: #990000">,</span> jp<span style="color: #990000">,</span> Lu<span style="color: #990000">,</span> X<span style="color: #990000">);</span>
 
-	// return the sign factor for the determinant
-	return signdet;
-}
-} // END CppAD namespace
-</pre>
-
-
+     <span style="font-style: italic"><span style="color: #9A1900">// return the sign factor for the determinant</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> signdet<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// END CppAD namespace</span></span></tt></pre>
 # endif
 </font></code>
 

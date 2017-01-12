@@ -1,6 +1,6 @@
-// $Id: for_one.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: for_one.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -20,7 +20,7 @@ $$
 $section First Order Partial Driver: Example and Test$$
 
 $code
-$verbatim%example/for_one.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/for_one.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -34,6 +34,7 @@ bool ForOneCases()
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 	using CppAD::exp;
 	using CppAD::sin;
 	using CppAD::cos;
@@ -65,15 +66,15 @@ bool ForOneCases()
 	// compute partial of y w.r.t x[0]
 	Vector dy(m);
 	dy  = f.ForOne(x, 0);
-	ok &= NearEqual( dy[0], exp(x[1]), 1e-10, 1e-10 ); // for y[0]
-	ok &= NearEqual( dy[1], sin(x[1]), 1e-10, 1e-10 ); // for y[1]
-	ok &= NearEqual( dy[2], cos(x[1]), 1e-10, 1e-10 ); // for y[2]
+	ok &= NearEqual( dy[0], exp(x[1]), eps99, eps99); // for y[0]
+	ok &= NearEqual( dy[1], sin(x[1]), eps99, eps99); // for y[1]
+	ok &= NearEqual( dy[2], cos(x[1]), eps99, eps99); // for y[2]
 
 	// compute partial of F w.r.t x[1]
 	dy  = f.ForOne(x, 1);
-	ok &= NearEqual( dy[0],  x[0]*exp(x[1]), 1e-10, 1e-10 );
-	ok &= NearEqual( dy[1],  x[0]*cos(x[1]), 1e-10, 1e-10 );
-	ok &= NearEqual( dy[2], -x[0]*sin(x[1]), 1e-10, 1e-10 );
+	ok &= NearEqual( dy[0],  x[0]*exp(x[1]), eps99, eps99);
+	ok &= NearEqual( dy[1],  x[0]*cos(x[1]), eps99, eps99);
+	ok &= NearEqual( dy[2], -x[0]*sin(x[1]), eps99, eps99);
 
 	return ok;
 }

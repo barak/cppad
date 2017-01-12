@@ -1,9 +1,9 @@
-// $Id: pod_vector.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_POD_VECTOR_HPP
-# define CPPAD_POD_VECTOR_HPP
+// $Id: pod_vector.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_POD_VECTOR_HPP
+# define CPPAD_LOCAL_POD_VECTOR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -18,10 +18,10 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # endif
 # include <algorithm>
 # include <cppad/utility/thread_alloc.hpp>
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/cppad_assert.hpp>
 # include <cppad/local/op_code.hpp>
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file pod_vector.hpp
 File used to define pod_vector class
@@ -289,5 +289,5 @@ public:
 	}
 };
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif

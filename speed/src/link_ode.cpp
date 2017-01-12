@@ -1,6 +1,6 @@
-// $Id: link_ode.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: link_ode.cpp 3855 2016-12-19 00:30:54Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -139,7 +139,10 @@ bool correct_ode(bool is_package_double)
 	return ok;
 }
 void speed_ode(size_t n, size_t repeat)
-{
+{	// free statically allocated memory
+	if( n == 0 && repeat == 0 )
+		return;
+	//
 	CppAD::vector<double> x(n);
 	CppAD::vector<double> jacobian(n * n);
 	link_ode(n, repeat, x, jacobian);

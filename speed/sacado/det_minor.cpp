@@ -1,6 +1,6 @@
-// $Id: det_minor.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: det_minor.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -35,14 +35,15 @@ See $cref link_det_minor$$.
 
 $head Implementation$$
 
-$codep */
+$srccode%cpp% */
 # include <Sacado.hpp>
 # include <cppad/speed/det_by_minor.hpp>
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/utility/vector.hpp>
 
 // list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_det_minor(
 	size_t                     size     ,
@@ -51,9 +52,9 @@ bool link_det_minor(
 	CppAD::vector<double>     &gradient )
 {
 	// speed test global option values
-	if( global_atomic )
+	if( global_option["atomic"] )
 		return false;
-	if( global_memory || global_onetape || global_optimize )
+	if( global_option["memory"] || global_option["onetape"] || global_option["optimize"] )
 		return false;
 	// -----------------------------------------------------
 	// setup
@@ -90,6 +91,6 @@ bool link_det_minor(
 	// ---------------------------------------------------------
 	return true;
 }
-/* $$
+/* %$$
 $end
 */

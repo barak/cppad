@@ -1,6 +1,6 @@
-/* $Id: pow.cpp 3735 2015-10-01 13:43:46Z bradbell $ */
+// $Id: pow.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -18,7 +18,7 @@ $$
 $section The AD Power Function: Example and Test$$
 
 $code
-$verbatim%example/pow.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/pow.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

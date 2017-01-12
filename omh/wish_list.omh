@@ -1,6 +1,6 @@
-$Id: wish_list.omh 3768 2015-12-28 18:58:35Z bradbell $
+$Id: wish_list.omh 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -13,36 +13,96 @@ $begin wish_list$$
 $spell
 	op
 	Recomputation
-	jacobian
-	nz
-	RevSparseJac
 	optimizer
-	Rel
-	Gt
-	Eq
-	CondExpLt
-	Checkpointing
+	checkpointing
 	grep
 	recomputed
-	afun
 	iterator
 	std
-	cos
 	Adolc
 	xml
 	hpp
 	CppAD
 	Atan
 	cppad
-	mul
-	div
-	instantiate
-	instantiation
-	Bool
-	runge
+	tapeless
+	Retape
 $$
 
 $section The CppAD Wish List$$
+
+$comment ----------------------------------------------------------------- $$
+$head Optimization$$
+
+$subhead Taping$$
+Perhaps some of the optimization done while taping forward mode
+should be delayed to the $code optimization$$ step.
+
+$subhead Special Operators$$
+Add special operators that can be implemented more efficiently, e.g.,
+$codei%
+	square(%x%) = %x% * %x%
+%$$
+and have the optimizer recognize when they should be used.
+(They could also be in the user API, but it would not be expected
+that the user would use them.)
+
+$comment ------------------------------------------------------------------ $$
+$head checkpoint$$
+
+$subhead Retape$$
+Perhaps there should be a version of the
+$cref checkpoint$$ class that uses a tapeless AD package to compute
+the derivative values.
+This would allow for algorithms where the operations sequence
+depends on the independent variable values.
+There is a question as to how sparsity patterns would be determined
+in this case.
+Perhaps they would be passed into the constructor.
+If it was known to be constant,
+the user could compute the pattern using CppAD.
+Otherwise, the user could input
+a conservative estimate of the pattern that would be correct.
+
+$subhead Testing$$
+There should be some examples and tests for both speed and memory use
+that demonstrate that checkpointing is useful.
+
+$comment -------------------------------------------------------------------$$
+
+$head Sparsity Patterns$$
+It may be that each set has a large overhead in a large and very sparse
+$cref/vector of sets/glossary/Sparsity Pattern/Vector of Sets/$$
+representation of a sparsity pattern.
+The user API for this representation uses
+$codei%
+	%vector%< std::set<size_t> >
+%$$
+Perhaps CppAD's API should have a sparse matrix class with the following fields
+$codei%
+	%vector%<size_t> %row%;
+	%vector%<size_t> %col%;
+	%vector%<%Type%> %val%;
+%$$
+where the vectors are arbitrary $cref/simple vectors/SimpleVector/$$.
+If the $icode val$$ vector has size zero,
+this would just be a sparsity pattern
+(and $icode row$$ and $icode col$$ vectors would have the same size).
+Otherwise, it would be a sparse matrix with elements of type $icode Type$$
+and $icode val$$ would have the
+same size as $icode row$$ and $icode col$$.
+
+
+$head check_finite$$
+Sometimes one only gets infinite value during zero order forward
+and nan when computing corresponding derivatives.
+Change $cref check_for_nan$$ to $code check_finite$$
+(not infinite or nan) so that error detection happens during zero
+order forward instead of later.
+
+$head Compilation Speed$$
+Create a library corresponding to $code AD<double>$$ so that
+one does not need to re-compile all the header files every time.
 
 $head Base Requirements$$
 Change the $cref/Base requirements/base_require/$$ to use template
@@ -53,41 +113,9 @@ defined by the base class.
 An example of this type of template specialization can be found in
 the implementation of $cref to_string$$.
 
-$head PrintFor Optimization$$
-Do not remove $cref PrintFor$$ operations during $cref optimize$$ because
-they are very useful when debugging expected calculations on the tape.
-If not this, we at least need to disable optimization of $cref checkpoint$$
-functions.
-
-$head checkpoint$$
-There should be some examples and tests for both speed and memory use
-that demonstrate that checkpointing is useful.
-
-$head Machine Epsilon in Examples$$
-Use a multiple of $code std::numeric_limits<double>::epsilon()$$ instead
-$code 1e-10$$ for a small number in correctness checks; e.g.,
-see $cref sqrt.cpp$$.
-
 $head Adolc$$
 Create a documentation page that shows how to convert Adolc commands to
 CppAD commands.
-
-$head Optimizing Nested Conditional Expressions$$
-If one $cref/optimizes/optimize/$$ the code
-$codep
-	x = CondExpLt(left_x, right_x, true_x, false_x)
-	y = CondExpGt(left_y, right_y, true_y, false_y)
-	z = CondExpEq(left_z, right_z, x, y)
-$$
-only two of the expressions
-$code true_x$$, $code false_x$$, $code true_y$$, $code false_y$$
-will be evaluated
-(two will be skipped depending on the result of $code left_z == right_z$$).
-Not all of the expressions corresponding to
-$code left_x$$, $code right_x$$, $code left_y$$, $code right_y$$ need to be
-evaluate, but they are.
-The optimizer could be improved to skip two more expressions
-(depending on the result of $code left_z == right_z$$).
 
 $head Forward Mode Recomputation$$
 If the results of $cref forward_order$$ have already been computed and are still
@@ -106,11 +134,6 @@ repeatedly calculated
 (because an iterator for the result container would be passed in).
 $lend
 
-$head Compilation Speed$$
-One could build a CppAD library for use with the type $code AD<double>$$.
-This would speed up compilation for the most common usage where
-the $icode Base$$ type is $code double$$.
-
 
 $head Operation Sequence$$
 It is possible to detect if the
@@ -120,15 +143,6 @@ does not depend on any of the
 $cref/independent variable/glossary/Tape/Independent Variable/$$ values.
 This could be returned as an extra
 $cref seq_property$$.
-
-$head Comparison Changes and Optimization$$
-The comparison operators used to not be taped when
-$cref/NDEBUG/Faq/Speed/NDEBUG/$$ was defined.
-They are now taped so that the $cref compare_change$$ interface
-works even for compiler optimize code.
-This caused a significant slow down in the
-$cref cppad_det_lu.cpp$$ speed test (with no options specified).
-Perhaps there should be an option to skip the comparison taping.
 
 $head Software Guidelines$$
 The following is a list of some software guidelines taken from
@@ -172,7 +186,6 @@ to find all the possible tracing flags.
 $head atan2$$
 The $cref/atan2/Atan2/$$ function could be made faster by adding
 a special operator for it.
-
 
 $head BenderQuad$$
 See the $cref/problem/BenderQuad/Problem/$$ with the

@@ -1,6 +1,6 @@
-// $Id: get_started.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: get_started.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -79,7 +79,7 @@ $lend
 
 
 $head Program$$
-$codep */
+$srccode%cpp% */
 #include <iostream>      // standard input/output
 #include <vector>        // standard vector
 #include <cppad/cppad.hpp> // the CppAD package http://www.coin-or.org/CppAD/
@@ -144,7 +144,7 @@ int main(void)
 
       return error_code;
 }
-/* $$
+/* %$$
 $head Output$$
 Executing the program above will generate the following output:
 $codep

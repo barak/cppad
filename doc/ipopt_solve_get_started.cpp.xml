@@ -197,118 +197,113 @@ This example will be compiled and tested provided that
  command line.
 
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/ipopt/solve.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/ipopt/solve.hpp&gt;</span>
 
-namespace {
-	using CppAD::AD;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-	class FG_eval {
-	public:
-		typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ) ADvector;
-		void operator()(ADvector&amp; fg, const ADvector&amp; x)
-		{	assert( fg.size() == 3 );
-			assert( x.size()  == 4 );
+     <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">FG_eval</span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">)</span> ADvector<span style="color: #990000">;</span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span><span style="color: #990000">()(</span>ADvector<span style="color: #990000">&amp;</span> fg<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> ADvector<span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> fg<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span> <span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span>  <span style="color: #990000">==</span> <span style="color: #993399">4</span> <span style="color: #990000">);</span>
 
-			// Fortran style indexing
-			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x1 = x[0];
-			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x2 = x[1];
-			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x3 = x[2];
-			<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x4 = x[3];
-			// f(x)
-			fg[0] = x1 * x4 * (x1 + x2 + x3) + x3;
-			// g_1 (x)
-			fg[1] = x1 * x2 * x3 * x4;
-			// g_2 (x)
-			fg[2] = x1 * x1 + x2 * x2 + x3 * x3 + x4 * x4;
-			//
-			return;
-		}
-	};
-}
+               <span style="font-style: italic"><span style="color: #9A1900">// Fortran style indexing</span></span>
+               <span style="color: #008080">AD&lt;double&gt;</span> x1 <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+               <span style="color: #008080">AD&lt;double&gt;</span> x2 <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+               <span style="color: #008080">AD&lt;double&gt;</span> x3 <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+               <span style="color: #008080">AD&lt;double&gt;</span> x4 <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// f(x)</span></span>
+               fg<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1 <span style="color: #990000">*</span> x4 <span style="color: #990000">*</span> <span style="color: #990000">(</span>x1 <span style="color: #990000">+</span> x2 <span style="color: #990000">+</span> x3<span style="color: #990000">)</span> <span style="color: #990000">+</span> x3<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// g_1 (x)</span></span>
+               fg<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1 <span style="color: #990000">*</span> x2 <span style="color: #990000">*</span> x3 <span style="color: #990000">*</span> x4<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// g_2 (x)</span></span>
+               fg<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1 <span style="color: #990000">*</span> x1 <span style="color: #990000">+</span> x2 <span style="color: #990000">*</span> x2 <span style="color: #990000">+</span> x3 <span style="color: #990000">*</span> x3 <span style="color: #990000">+</span> x4 <span style="color: #990000">*</span> x4<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-bool get_started(void)
-{	bool ok = true;
-	size_t i;
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( double ) Dvector;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">get_started</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> <span style="color: #009900">double</span> <span style="color: #990000">)</span> Dvector<span style="color: #990000">;</span>
 
-	// number of independent variables (domain dimension for f and g)
-	size_t nx = 4;
-	// number of constraints (range dimension for g)
-	size_t ng = 2;
-	// initial value of the independent variables
-	Dvector xi(nx);
-	xi[0] = 1.0;
-	xi[1] = 5.0;
-	xi[2] = 5.0;
-	xi[3] = 1.0;
-	// lower and upper limits for x
-	Dvector xl(nx), xu(nx);
-	for(i = 0; i &lt; nx; i++)
-	{	xl[i] = 1.0;
-		xu[i] = 5.0;
-	}
-	// lower and upper limits for g
-	Dvector gl(ng), gu(ng);
-	gl[0] = 25.0;     gu[0] = 1.0e19;
-	gl[1] = 40.0;     gu[1] = 40.0;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of independent variables (domain dimension for f and g)</span></span>
+     <span style="color: #008080">size_t</span> nx <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of constraints (range dimension for g)</span></span>
+     <span style="color: #008080">size_t</span> ng <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// initial value of the independent variables</span></span>
+     <span style="color: #008080">Dvector</span> <span style="font-weight: bold"><span style="color: #000000">xi</span></span><span style="color: #990000">(</span>nx<span style="color: #990000">);</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">5.0</span><span style="color: #990000">;</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">5.0</span><span style="color: #990000">;</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// lower and upper limits for x</span></span>
+     <span style="color: #008080">Dvector</span> <span style="font-weight: bold"><span style="color: #000000">xl</span></span><span style="color: #990000">(</span>nx<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">xu</span></span><span style="color: #990000">(</span>nx<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nx<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     xl<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+          xu<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">5.0</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// lower and upper limits for g</span></span>
+     <span style="color: #008080">Dvector</span> <span style="font-weight: bold"><span style="color: #000000">gl</span></span><span style="color: #990000">(</span>ng<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">gu</span></span><span style="color: #990000">(</span>ng<span style="color: #990000">);</span>
+     gl<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">25.0</span><span style="color: #990000">;</span>     gu<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0e19</span><span style="color: #990000">;</span>
+     gl<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">40.0</span><span style="color: #990000">;</span>     gu<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">40.0</span><span style="color: #990000">;</span>
 
-	// object that computes objective and constraints
-	FG_eval fg_eval;
+     <span style="font-style: italic"><span style="color: #9A1900">// object that computes objective and constraints</span></span>
+     <span style="color: #008080">FG_eval</span> fg_eval<span style="color: #990000">;</span>
 
-	// options
-	std::string options;
-	// turn off any printing
-	options += &quot;Integer print_level  0\n&quot;;
-	options += &quot;String  sb           yes\n&quot;;
-	// maximum number of iterations
-	options += &quot;Integer max_iter     10\n&quot;;
-	// approximate accuracy in first order necessary conditions;
-	// see Mathematical Programming, Volume 106, Number 1,
-	// Pages 25-57, Equation (6)
-	options += &quot;Numeric tol          1e-6\n&quot;;
-	// derivative testing
-	options += &quot;String  derivative_test            second-order\n&quot;;
-	// maximum amount of random pertubation; e.g.,
-	// when evaluation finite diff
-	options += &quot;Numeric point_perturbation_radius  0.\n&quot;;
+     <span style="font-style: italic"><span style="color: #9A1900">// options</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">string</span> options<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// turn off any printing</span></span>
+     options <span style="color: #990000">+=</span> <span style="color: #FF0000">"Integer print_level  0</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+     options <span style="color: #990000">+=</span> <span style="color: #FF0000">"String  sb           yes</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// maximum number of iterations</span></span>
+     options <span style="color: #990000">+=</span> <span style="color: #FF0000">"Integer max_iter     10</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// approximate accuracy in first order necessary conditions;</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// see Mathematical Programming, Volume 106, Number 1,</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Pages 25-57, Equation (6)</span></span>
+     options <span style="color: #990000">+=</span> <span style="color: #FF0000">"Numeric tol          1e-6</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// derivative testing</span></span>
+     options <span style="color: #990000">+=</span> <span style="color: #FF0000">"String  derivative_test            second-order</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// maximum amount of random pertubation; e.g.,</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// when evaluation finite diff</span></span>
+     options <span style="color: #990000">+=</span> <span style="color: #FF0000">"Numeric point_perturbation_radius  0.</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
 
-	// place to return solution
-	CppAD::ipopt::solve_result&lt;Dvector&gt; solution;
+     <span style="font-style: italic"><span style="color: #9A1900">// place to return solution</span></span>
+     CppAD<span style="color: #990000">::</span>ipopt<span style="color: #990000">::</span><span style="color: #008080">solve_result&lt;Dvector&gt;</span> solution<span style="color: #990000">;</span>
 
-	// solve the problem
-	CppAD::ipopt::solve&lt;Dvector, FG_eval&gt;(
-		options, xi, xl, xu, gl, gu, fg_eval, solution
-	);
-	//
-	// Check some of the solution values
-	//
-	ok &amp;= solution.status == CppAD::ipopt::solve_result&lt;Dvector&gt;::success;
-	//
-	double check_x[]  = { 1.000000, 4.743000, 3.82115, 1.379408 };
-	double check_zl[] = { 1.087871, 0.,       0.,      0.       };
-	double check_zu[] = { 0.,       0.,       0.,      0.       };
-	double rel_tol    = 1e-6;  // relative tolerance
-	double abs_tol    = 1e-6;  // absolute tolerance
-	for(i = 0; i &lt; nx; i++)
-	{	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(
-			check_x[i],  solution.x[i],   rel_tol, abs_tol
-		);
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(
-			check_zl[i], solution.zl[i], rel_tol, abs_tol
-		);
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(
-			check_zu[i], solution.zu[i], rel_tol, abs_tol
-		);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// solve the problem</span></span>
+     CppAD<span style="color: #990000">::</span>ipopt<span style="color: #990000">::</span>solve<span style="color: #990000">&lt;</span>Dvector<span style="color: #990000">,</span> FG_eval<span style="color: #990000">&gt;(</span>
+          options<span style="color: #990000">,</span> xi<span style="color: #990000">,</span> xl<span style="color: #990000">,</span> xu<span style="color: #990000">,</span> gl<span style="color: #990000">,</span> gu<span style="color: #990000">,</span> fg_eval<span style="color: #990000">,</span> solution
+     <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Check some of the solution values</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     ok <span style="color: #990000">&amp;=</span> solution<span style="color: #990000">.</span>status <span style="color: #990000">==</span> CppAD<span style="color: #990000">::</span>ipopt<span style="color: #990000">::</span>solve_result<span style="color: #990000">&lt;</span>Dvector<span style="color: #990000">&gt;::</span>success<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="color: #009900">double</span> check_x<span style="color: #990000">[]</span>  <span style="color: #990000">=</span> <span style="color: #FF0000">{</span> <span style="color: #993399">1.000000</span><span style="color: #990000">,</span> <span style="color: #993399">4.743000</span><span style="color: #990000">,</span> <span style="color: #993399">3.82115</span><span style="color: #990000">,</span> <span style="color: #993399">1.379408</span> <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> check_zl<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span> <span style="color: #993399">1.087871</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span>       <span style="color: #993399">0</span><span style="color: #990000">.,</span>      <span style="color: #993399">0</span><span style="color: #990000">.</span>       <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> check_zu<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span>       <span style="color: #993399">0</span><span style="color: #990000">.,</span>       <span style="color: #993399">0</span><span style="color: #990000">.,</span>      <span style="color: #993399">0</span><span style="color: #990000">.</span>       <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> rel_tol    <span style="color: #990000">=</span> <span style="color: #993399">1e-6</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// relative tolerance</span></span>
+     <span style="color: #009900">double</span> abs_tol    <span style="color: #990000">=</span> <span style="color: #993399">1e-6</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// absolute tolerance</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nx<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>
+               check_x<span style="color: #990000">[</span>i<span style="color: #990000">],</span>  solution<span style="color: #990000">.</span>x<span style="color: #990000">[</span>i<span style="color: #990000">],</span>   rel_tol<span style="color: #990000">,</span> abs_tol
+          <span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>
+               check_zl<span style="color: #990000">[</span>i<span style="color: #990000">],</span> solution<span style="color: #990000">.</span>zl<span style="color: #990000">[</span>i<span style="color: #990000">],</span> rel_tol<span style="color: #990000">,</span> abs_tol
+          <span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>
+               check_zu<span style="color: #990000">[</span>i<span style="color: #990000">],</span> solution<span style="color: #990000">.</span>zu<span style="color: #990000">[</span>i<span style="color: #990000">],</span> rel_tol<span style="color: #990000">,</span> abs_tol
+          <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/ipopt_solve/get_started.cpp
 
 </body>

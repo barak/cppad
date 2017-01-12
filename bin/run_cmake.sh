@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: run_cmake.sh 3769 2015-12-29 16:13:16Z bradbell $
+# $Id: run_cmake.sh 3839 2016-10-14 18:10:09Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -25,12 +25,13 @@ echo_eval() {
 verbose='no'
 standard='c++11'
 debug_speed='no'
+release_example='no'
 deprecated='no'
 profile_speed='no'
 clang='no'
 no_colpack='no'
+no_eigen='no'
 no_ipopt='no'
-no_sparse_list='no'
 no_documentation='no'
 testvector='boost'
 while [ "$1" != "" ]
@@ -43,12 +44,13 @@ usage: bin/run_cmake.sh: \\
 	[--verbose] \\
 	[--c++98] \\
 	[--debug_speed] \\
+	[--release_example] \\
 	[--deprecated] \\
 	[--profile_speed] \\
 	[--clang ] \\
 	[--no_colpack] \\
+	[--no_eigen] \\
 	[--no_ipopt] \\
-	[--no_sparse_list] \\
 	[--no_documentation] \\
 	[--<package>_vector]
 The --help option just prints this message and exits.
@@ -66,6 +68,9 @@ EOF
 	then
 		debug_speed='yes'
 		profile_speed='no'
+	elif [ "$1" == '--release_example' ]
+	then
+		release_example='yes'
 	elif [ "$1" == '--deprecated' ]
 	then
 		deprecated='yes'
@@ -79,12 +84,12 @@ EOF
 	elif [ "$1" == '--no_colpack' ]
 	then
 		no_colpack='yes'
+	elif [ "$1" == '--no_eigen' ]
+	then
+		no_eigen='yes'
 	elif [ "$1" == '--no_ipopt' ]
 	then
 		no_ipopt='yes'
-	elif [ "$1" == '--no_sparse_list' ]
-	then
-		no_sparse_list='yes'
 	elif [ "$1" == '--no_documentation' ]
 	then
 		no_documentation='yes'
@@ -107,12 +112,19 @@ done
 if [ "$debug_speed" == 'yes' ]
 then
 	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE DEBUG)|' \
-	    -e 's|^# SET(CMAKE_CXX_FLAGS_DEBUG|SET(CMAKE_CXX_FLAGS_DEBUG|' \
 		-i  speed/CMakeLists.txt
 else
 	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE RELEASE)|' \
-	    -e 's|^SET(CMAKE_CXX_FLAGS_DEBUG|# SET(CMAKE_CXX_FLAGS_DEBUG|' \
 		-i speed/CMakeLists.txt
+fi
+# ---------------------------------------------------------------------------
+if [ "$release_example" == 'yes' ]
+then
+	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE RELEASE)|' \
+		-i  example/CMakeLists.txt
+else
+	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE DEBUG)|' \
+		-i example/CMakeLists.txt
 fi
 # ---------------------------------------------------------------------------
 if [ ! -e build ]
@@ -123,6 +135,10 @@ echo_eval cd build
 if [ -e CMakeCache.txt ]
 then
 	echo_eval rm CMakeCache.txt
+fi
+if [ -e CMakeFiles ]
+then
+	echo_eval rm -r CMakeFiles
 fi
 # ---------------------------------------------------------------------------
 # clean all variables in cmake cache
@@ -165,10 +181,14 @@ then
 fi
 #
 # {package}_prefix
-package_list='fadbad adolc eigen sacado'
+package_list='fadbad adolc sacado'
 if [ "$no_colpack" == 'no' ]
 then
 	package_list="$package_list colpack"
+fi
+if [ "$no_eigen" == 'no' ]
+then
+	package_list="$package_list eigen"
 fi
 if [ "$no_ipopt" == 'no' ]
 then
@@ -182,14 +202,6 @@ do
 		cmake_args="$cmake_args  -D ${package}_prefix=$dir"
 	fi
 done
-#
-# sparse_list
-if [ "$no_sparse_list" == 'yes' ]
-then
-	cmake_args="$cmake_args -D cppad_sparse_list=NO"
-else
-	cmake_args="$cmake_args -D cppad_sparse_list=YES"
-fi
 #
 # cppad_cxx_flags
 cppad_cxx_flags="-Wall -pedantic-errors -std=$standard"

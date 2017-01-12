@@ -91,466 +91,458 @@ A:active { color : purple }
 <td>ad_in_c.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Example and Test Linking CppAD to Languages Other than C++</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cstdio&gt;
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;list&gt;
-
-namespace { // Begin empty namespace *****************************************
-
-/*
-void debug_print(const char *label, double d)
-{	using std::printf;
-
-	unsigned char *byte = reinterpret_cast&lt;unsigned char *&gt;(&amp;d);
-	size_t n_byte = sizeof(d);
-	printf(&quot;%s&quot;, label);
-	for(size_t i = 0; i &lt; n_byte; i++)
-		printf(&quot;%x&quot;, byte[i]);
-	printf(&quot;\n&quot;);
-}
-*/
-
-// type in C corresponding to an <a href="ad.xml" target="_top">AD</a>&lt;double&gt; object
-typedef struct { void*  p_void; } cad;
-
-// type in C corresponding to a an <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;
-typedef struct { void* p_void; } cad_fun;
-
-// type in C corresponding to a C AD binary operator
-typedef enum { op_add, op_sub, op_mul, op_div } cad_binary_op;
-
-// type in C corresponding to a C AD unary operator
-typedef enum {
-	op_abs, op_acos, op_asin, op_atan, op_cos, op_cosh,
-	op_exp, op_log,  op_sin,  op_sinh, op_sqrt
-} cad_unary_op;
-
-// --------------------------------------------------------------------------
-// helper code not intended for use by C code  ------------------------------
-using CppAD::AD;
-using CppAD::ADFun;
-using CppAD::vector;
-using CppAD::NearEqual;
-
-void cad2vector(size_t n, cad* p_cad, vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;&amp; v)
-{	assert( n == v.size() );
-	for(size_t j = 0; j &lt; n; j++)
-	{	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;* p_ad =
-			reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_cad[j].p_void);
-		v[j] = *p_ad;
-	}
-}
-
-void vector2cad(size_t n, vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;&amp; v, cad* p_cad)
-{	assert( n == v.size() );
-	for(size_t j = 0; j &lt; n; j++)
-	{	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;* p_ad =
-			reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_cad[j].p_void);
-		*p_ad = v[j];
-	}
-}
-
-void double2vector(size_t n, double* p_dbl, vector&lt;double&gt;&amp; v)
-{	assert( n == v.size() );
-	for(size_t j = 0; j &lt; n; j++)
-		v[j] = p_dbl[j];
-}
-
-void vector2double(size_t n, vector&lt;double&gt;&amp; v, double *p_dbl)
-{	assert( n == v.size() );
-	for(size_t j = 0; j &lt; n; j++)
-		p_dbl[j] = v[j];
-}
-
-std::list&lt;void*&gt; allocated;
-# ifdef NDEBUG
-inline void push_allocated(void *p)
-{ }
-inline void pop_allocated(void *p)
-{ }
-# else
-inline void push_allocated(void *p)
-{	assert( p != 0 );
-	allocated.push_front(p);
-}
-inline void pop_allocated(void *p)
-{	std::list&lt;void*&gt;::iterator i;
-	for(i = allocated.begin(); i != allocated.end(); ++i)
-	{	if( *i == p )
-		{	allocated.erase(i);
-			return;
-		}
-	}
-	assert( 0 );
-}
-
-# endif
-// --------------------------------------------------------------------------
-// Here is the code that links C to CppAD. You will have to add more
-// functions and operators to make a complete language link.
-//
-extern &quot;C&quot;
-bool cad_near_equal(double x, double y)
-{	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
-	return <a href="nearequal.xml" target="_top">NearEqual</a>(x, y, eps, 0.);
-}
-
-// create a C++ AD object
-// value is the value that the C++ AD object will have
-// p_cad-&gt;p_void: on input is 0, on output points to C++ AD object
-extern &quot;C&quot;
-void cad_new_ad(cad *p_cad, double value)
-{	// make sure pointer is not currently allocated
-	assert( p_cad-&gt;p_void == 0 );
-
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;* p_ad   = new <a href="ad.xml" target="_top">AD</a>&lt;double&gt;(value);
-	p_cad-&gt;p_void      = reinterpret_cast&lt;void*&gt;(p_ad);
-
-	// put in list of allocate pointers
-	push_allocated( p_cad-&gt;p_void );
-}
-
-// delete a C++ AD object
-// p_cad-&gt;value: not used
-// p_cad-&gt;p_void: on input points to C++ AD object, on output is 0
-extern &quot;C&quot;
-void cad_del_ad(cad* p_cad)
-{	// make sure that p_cad has been allocated
-	pop_allocated( p_cad-&gt;p_void );
-
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;* p_ad   = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt;( p_cad-&gt;p_void );
-	delete p_ad;
-
-	// special value for pointers that are not allocated
-	p_cad-&gt;p_void = 0;
-}
-
-// extract the value from a C++ AD object
-// extern &quot;C&quot;
-double cad_value(cad* p_cad)
-{	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;* p_ad = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_cad-&gt;p_void);
-	return Value( Var2Par(*p_ad) );
-}
-
-// preform a C AD unary operation
-extern &quot;C&quot;
-void cad_unary(cad_unary_op op, cad* p_operand, cad* p_result)
-{	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; *operand, *result;
-	result  = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_result-&gt;p_void);
-	operand = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_operand-&gt;p_void);
-	switch(op)
-	{
-		case op_abs:
-		*result = abs( *operand );
-		break;
-
-		case op_acos:
-		*result = acos( *operand );
-		break;
-
-		case op_asin:
-		*result = asin( *operand );
-		break;
-
-		case op_atan:
-		*result = atan( *operand );
-		break;
-
-		case op_cos:
-		*result = cos( *operand );
-		break;
-
-		case op_cosh:
-		*result = cosh( *operand );
-		break;
-
-		case op_exp:
-		*result = exp( *operand );
-		break;
-
-		case op_log:
-		*result = log( *operand );
-		break;
-
-		case op_sin:
-		*result = sin( *operand );
-		break;
-
-		case op_sinh:
-		*result = sinh( *operand );
-		break;
-
-		case op_sqrt:
-		*result = sqrt( *operand );
-		break;
-
-		default:
-		// not a unary operator
-		assert(0);
-		break;
-
-	}
-	return;
-}
-
-// perform a C AD binary operation
-extern &quot;C&quot;
-void cad_binary(cad_binary_op op, cad* p_left, cad* p_right, cad* p_result)
-{	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; *result, *left, *right;
-	result = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_result-&gt;p_void);
-	left   = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_left-&gt;p_void);
-	right  = reinterpret_cast&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt;* &gt; (p_right-&gt;p_void);
-	assert( result != 0 );
-	assert( left != 0 );
-	assert( right != 0 );
-
-	switch(op)
-	{	case op_add:
-		*result         = *left + (*right);
-		break;
-
-		case op_sub:
-		*result         = *left - (*right);
-		break;
-
-		case op_mul:
-		*result         = *left * (*right);
-		break;
-
-		case op_div:
-		*result         = *left / (*right);
-		break;
-
-		default:
-		// not a binary operator
-		assert(0);
-	}
-	return;
-}
-
-// declare the independent variables in C++
-extern &quot;C&quot;
-void cad_independent(size_t n, cad* px_cad)
-{	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; x(n);
-	cad2vector(n, px_cad, x);
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
-	vector2cad(n, x, px_cad);
-}
-
-// create an ADFun object in C++
-extern &quot;C&quot;
-cad_fun cad_new_fun(size_t n, size_t m, cad* px_cad, cad* py_cad)
-{	cad_fun fun;
-
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* p_adfun = new <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; x(n);
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; y(m);
-	cad2vector(n, px_cad, x);
-	cad2vector(m, py_cad, y);
-	p_adfun-&gt;Dependent(x, y);
-
-	fun.p_void = reinterpret_cast&lt;void*&gt;( p_adfun );
-
-	// put in list of allocate pointers
-	push_allocated( fun.p_void );
-
-	return fun;
-}
-
-// delete an AD function object in C
-extern &quot;C&quot;
-void cad_del_fun(cad_fun *fun)
-{	// make sure this pointer has been allocated
-	pop_allocated( fun-&gt;p_void );
-
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* p_adfun
-		= reinterpret_cast&lt; <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* &gt; (fun-&gt;p_void);
-	delete p_adfun;
-
-	// special value for pointers that are not allocated
-	fun-&gt;p_void = 0;
-}
-
-// evaluate the Jacobian corresponding to a function object
-extern &quot;C&quot;
-void cad_jacobian(cad_fun fun,
-	size_t n, size_t m, double* px, double* pjac )
-{	assert( fun.p_void != 0 );
-
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* p_adfun =
-		reinterpret_cast&lt; <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* &gt;(fun.p_void);
-	vector&lt;double&gt; x(n), jac(n * m);
-
-	double2vector(n, px, x);
-	jac = p_adfun-&gt;Jacobian(x);
-	vector2double(n * m, jac, pjac);
-}
-
-// forward mode
-extern &quot;C&quot;
-void cad_forward(cad_fun fun,
-	size_t order, size_t n, size_t m, double* px, double* py )
-{	assert( fun.p_void != 0 );
-
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* p_adfun =
-		reinterpret_cast&lt; <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;* &gt;(fun.p_void);
-	vector&lt;double&gt; x(n), y(m);
-
-	double2vector(n, px, x);
-	y = p_adfun-&gt;Forward(order, x);
-	vector2double(m, y, py);
-}
-
-// check that allocated list has been completely freed
-extern &quot;C&quot;
-bool cad_allocated_empty(void)
-{	return allocated.empty();
-}
-
-} // End empty namespace ****************************************************
-
-# include &lt;math.h&gt; // used to check results in c code below
-
-# define N 2       // number of independent variables in example
-# define M 5       // number of dependent variables in example
-
-// -------------------------------------------------------------------------
-// Here is the C code that uses the CppAD link above
-bool ad_in_c(void)
-{	// This routine is intentionally coded as if it were written in C
-	// as an example of how you can link C, and other languages to CppAD
-	bool ok = true;
-
-	// x vector of AD objects in C
-	double value;
-	size_t j, n = N;
-	cad X[N];
-	for(j = 0; j &lt; n; j++)
-	{	value       = (double) (j+1) / (double) n;
-		X[j].p_void = 0;
-		cad_new_ad(X + j, value);
-	}
-
-	// y vector of AD objects in C
-	size_t i, m = M;
-	cad Y[M];
-	for(i = 0; i &lt; m; i++)
-	{	value       = 0.; // required, but not used
-		Y[i].p_void = 0;
-		cad_new_ad(Y + i, value);
-	}
-
-	// declare X as the independent variable vector
-	cad_independent(n, X);
-
-	// y[0] = x[0] + x[1]
-	cad_binary(op_add, X+0, X+1, Y+0);
-	ok &amp;= cad_near_equal( cad_value(Y+0), cad_value(X+0)+cad_value(X+1) );
-
-	// y[1] = x[0] - x[1]
-	cad_binary(op_sub, X+0, X+1, Y+1);
-	ok &amp;= cad_near_equal( cad_value(Y+1), cad_value(X+0)-cad_value(X+1) );
-
-	// y[2] = x[0] * x[1]
-	cad_binary(op_mul, X+0, X+1, Y+2);
-	ok &amp;= cad_near_equal( cad_value(Y+2), cad_value(X+0)*cad_value(X+1) );
-
-	// y[3] = x[0] * x[1]
-	cad_binary(op_div, X+0, X+1, Y+3);
-	ok &amp;= cad_near_equal( cad_value(Y+3), cad_value(X+0)/cad_value(X+1) );
-
-	// y[4] = sin(x[0]) + asin(sin(x[0]))
-	cad sin_x0 = { 0 };       // initialize p_void as zero
-	cad_new_ad( &amp;sin_x0, 0.);
-	cad_unary(op_sin, X+0, &amp;sin_x0);
-	ok &amp;= cad_near_equal(cad_value(&amp;sin_x0), sin(cad_value(X+0)) );
-
-	cad asin_sin_x0 = { 0 };  // initialize p_void as zero
-	cad_new_ad( &amp;asin_sin_x0, 0.);
-	cad_unary(op_asin, &amp;sin_x0, &amp;asin_sin_x0);
-	ok &amp;= cad_near_equal(
-		cad_value(&amp;asin_sin_x0),
-		asin( cad_value(&amp;sin_x0) )
-	);
-
-	cad_binary(op_add, &amp;sin_x0, &amp;asin_sin_x0, Y+4);
-	ok &amp;= cad_near_equal(
-		cad_value(Y+4),
-		cad_value(&amp;sin_x0) + cad_value(&amp;asin_sin_x0)
-	);
-
-	// declare y as the dependent variable vector and stop recording
-	// and store function object in f
-	cad_fun f = cad_new_fun(n, m, X, Y);
-
-	// now use the function object
-	double x[N], jac[N * M];
-	x[0] = 1.;
-	x[1] = .5;
-
-	// compute the Jacobian
-	cad_jacobian(f, n, m, x, jac);
-
-	// check the Jacobian values
-	size_t k = 0;
-	// partial y[0] w.r.t. x[0]
-	ok &amp;= cad_near_equal(jac[k++], 1.);
-	// partial y[0] w.r.t. x[1]
-	ok &amp;= cad_near_equal(jac[k++], 1.);
-	// partial y[1] w.r.t. x[0]
-	ok &amp;= cad_near_equal(jac[k++], 1.);
-	// partial y[1] w.r.t. x[1]
-	ok &amp;= cad_near_equal(jac[k++], -1.);
-	// partial y[2] w.r.t. x[0]
-	ok &amp;= cad_near_equal(jac[k++], x[1]);
-	// partial y[2] w.r.t. x[1]
-	ok &amp;= cad_near_equal(jac[k++], x[0]);
-	// partial y[3] w.r.t. x[0]
-	ok &amp;= cad_near_equal(jac[k++], 1./x[1]);
-	// partial y[3] w.r.t. x[1]
-	ok &amp;= cad_near_equal(jac[k++], -x[0]/(x[1]*x[1]));
-	// partial y[4] w.r.t x[0]
-	ok &amp;= cad_near_equal(jac[k++],  cos(x[0]) + 1.);
-	// partial y[4] w.r.t x[1]
-	ok &amp;= cad_near_equal(jac[k++],  0.);
-
-	// evaluate the function f at a different x
-	size_t order = 0;
-	double y[M];
-	x[0] = .5;
-	x[1] = 1.;
-	cad_forward(f, order, n, m, x, y);
-
-	// check the function values
-	ok &amp;= cad_near_equal(y[0] , x[0] + x[1] );
-	ok &amp;= cad_near_equal(y[1] , x[0] - x[1] );
-	ok &amp;= cad_near_equal(y[2] , x[0] * x[1] );
-	ok &amp;= cad_near_equal(y[3] , x[0] / x[1] );
-	ok &amp;= cad_near_equal(y[4] , sin(x[0]) + asin(sin(x[0])) );
-
-	// delete All C++ copies of the AD objects
-	cad_del_fun( &amp;f );
-	cad_del_ad( &amp;sin_x0 );
-	cad_del_ad( &amp;asin_sin_x0 );
-	for(j = 0; j &lt; n; j++)
-		cad_del_ad(X + j);
-	for(i = 0; i &lt; m; i++)
-		cad_del_ad(Y + i);
-
-	ok     &amp;= cad_allocated_empty();
-	return ok;
-}
-
-</pre>
-
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstdio&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;list&gt;</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace *****************************************</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">void debug_print(const char *label, double d)</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">{     using std::printf;</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">     unsigned char *byte = reinterpret_cast&lt;unsigned char *&gt;(&amp;d);</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     size_t n_byte = sizeof(d);</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     printf("%s", label);</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     for(size_t i = 0; i &lt; n_byte; i++)</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">          printf("%x", byte[i]);</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     printf("\n");</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">*/</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// type in C corresponding to an AD&lt;double&gt; object</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span> <span style="color: #009900">void</span><span style="color: #990000">*</span>  p_void<span style="color: #990000">;</span> <span style="color: #FF0000">}</span> cad<span style="color: #990000">;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// type in C corresponding to a an ADFun&lt;double&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span> <span style="color: #009900">void</span><span style="color: #990000">*</span> p_void<span style="color: #990000">;</span> <span style="color: #FF0000">}</span> cad_fun<span style="color: #990000">;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// type in C corresponding to a C AD binary operator</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">enum</span></span> <span style="color: #FF0000">{</span> op_add<span style="color: #990000">,</span> op_sub<span style="color: #990000">,</span> op_mul<span style="color: #990000">,</span> op_div <span style="color: #FF0000">}</span> cad_binary_op<span style="color: #990000">;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// type in C corresponding to a C AD unary operator</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">enum</span></span> <span style="color: #FF0000">{</span>
+     op_abs<span style="color: #990000">,</span> op_acos<span style="color: #990000">,</span> op_asin<span style="color: #990000">,</span> op_atan<span style="color: #990000">,</span> op_cos<span style="color: #990000">,</span> op_cosh<span style="color: #990000">,</span>
+     op_exp<span style="color: #990000">,</span> op_log<span style="color: #990000">,</span>  op_sin<span style="color: #990000">,</span>  op_sinh<span style="color: #990000">,</span> op_sqrt
+<span style="color: #FF0000">}</span> cad_unary_op<span style="color: #990000">;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// helper code not intended for use by C code  ------------------------------</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>ADFun<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad2vector</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_cad<span style="color: #990000">,</span> vector<span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span> v<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_ad <span style="color: #990000">=</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_cad<span style="color: #990000">[</span>j<span style="color: #990000">].</span>p_void<span style="color: #990000">);</span>
+          v<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">*</span>p_ad<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">vector2cad</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> vector<span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;&amp;</span> v<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_cad<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_ad <span style="color: #990000">=</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_cad<span style="color: #990000">[</span>j<span style="color: #990000">].</span>p_void<span style="color: #990000">);</span>
+          <span style="color: #990000">*</span>p_ad <span style="color: #990000">=</span> v<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">double2vector</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> p_dbl<span style="color: #990000">,</span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> v<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          v<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> p_dbl<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">vector2double</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> v<span style="color: #990000">,</span> <span style="color: #009900">double</span> <span style="color: #990000">*</span>p_dbl<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          p_dbl<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> v<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+<span style="color: #FF0000">}</span>
+
+std<span style="color: #990000">::</span><span style="color: #008080">list&lt;void*&gt;</span> allocated<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> NDEBUG
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">push_allocated</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span> <span style="color: #990000">*</span>p<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">pop_allocated</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span> <span style="color: #990000">*</span>p<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">push_allocated</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span> <span style="color: #990000">*</span>p<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> p <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+     allocated<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_front</span></span><span style="color: #990000">(</span>p<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">pop_allocated</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span> <span style="color: #990000">*</span>p<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>list<span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;::</span><span style="color: #008080">iterator</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> allocated<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">begin</span></span><span style="color: #990000">();</span> i <span style="color: #990000">!=</span> allocated<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span> <span style="color: #990000">++</span>i<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>i <span style="color: #990000">==</span> p <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     allocated<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">erase</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// Here is the code that links C to CppAD. You will have to add more</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// functions and operators to make a complete language link.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> x<span style="color: #990000">,</span> <span style="color: #009900">double</span> y<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// create a C++ AD object</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// value is the value that the C++ AD object will have</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// p_cad-&gt;p_void: on input is 0, on output points to C++ AD object</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_new_ad</span></span><span style="color: #990000">(</span><span style="color: #008080">cad</span> <span style="color: #990000">*</span>p_cad<span style="color: #990000">,</span> <span style="color: #009900">double</span> value<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// make sure pointer is not currently allocated</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> p_cad<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+
+     AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_ad   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>value<span style="color: #990000">);</span>
+     p_cad<span style="color: #990000">-&gt;</span>p_void      <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;(</span>p_ad<span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// put in list of allocate pointers</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">push_allocated</span></span><span style="color: #990000">(</span> p_cad<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// delete a C++ AD object</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// p_cad-&gt;value: not used</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// p_cad-&gt;p_void: on input points to C++ AD object, on output is 0</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_del_ad</span></span><span style="color: #990000">(</span>cad<span style="color: #990000">*</span> p_cad<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// make sure that p_cad has been allocated</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">pop_allocated</span></span><span style="color: #990000">(</span> p_cad<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">);</span>
+
+     AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_ad   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;(</span> p_cad<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> p_ad<span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// special value for pointers that are not allocated</span></span>
+     p_cad<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// extract the value from a C++ AD object</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// extern "C"</span></span>
+<span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>cad<span style="color: #990000">*</span> p_cad<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_ad <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_cad<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(*</span>p_ad<span style="color: #990000">)</span> <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// preform a C AD unary operation</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_unary</span></span><span style="color: #990000">(</span><span style="color: #008080">cad_unary_op</span> op<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_operand<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_result<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">AD&lt;double&gt;</span> <span style="color: #990000">*</span>operand<span style="color: #990000">,</span> <span style="color: #990000">*</span>result<span style="color: #990000">;</span>
+     result  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_result<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     operand <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_operand<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">switch</span></span><span style="color: #990000">(</span>op<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_abs<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_acos<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">acos</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_asin<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">asin</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_atan<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_cos<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_cosh<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">cosh</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_exp<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_log<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_sin<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_sinh<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sinh</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_sqrt<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sqrt</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>operand <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+<span style="font-weight: bold"><span style="color: #008080">          default:</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// not a unary operator</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// perform a C AD binary operation</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_binary</span></span><span style="color: #990000">(</span><span style="color: #008080">cad_binary_op</span> op<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_left<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_right<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> p_result<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">AD&lt;double&gt;</span> <span style="color: #990000">*</span>result<span style="color: #990000">,</span> <span style="color: #990000">*</span>left<span style="color: #990000">,</span> <span style="color: #990000">*</span>right<span style="color: #990000">;</span>
+     result <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_result<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     left   <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_left<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     right  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>p_right<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> result <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> left <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> right <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+
+     <span style="font-weight: bold"><span style="color: #0000FF">switch</span></span><span style="color: #990000">(</span>op<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_add<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result         <span style="color: #990000">=</span> <span style="color: #990000">*</span>left <span style="color: #990000">+</span> <span style="color: #990000">(*</span>right<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_sub<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result         <span style="color: #990000">=</span> <span style="color: #990000">*</span>left <span style="color: #990000">-</span> <span style="color: #990000">(*</span>right<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_mul<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result         <span style="color: #990000">=</span> <span style="color: #990000">*</span>left <span style="color: #990000">*</span> <span style="color: #990000">(*</span>right<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+          <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> op_div<span style="color: #990000">:</span>
+          <span style="color: #990000">*</span>result         <span style="color: #990000">=</span> <span style="color: #990000">*</span>left <span style="color: #990000">/</span> <span style="color: #990000">(*</span>right<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+
+<span style="font-weight: bold"><span style="color: #008080">          default:</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// not a binary operator</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// declare the independent variables in C++</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_independent</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> px_cad<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad2vector</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> px_cad<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">vector2cad</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> x<span style="color: #990000">,</span> px_cad<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// create an ADFun object in C++</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #008080">cad_fun</span> <span style="font-weight: bold"><span style="color: #000000">cad_new_fun</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> m<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> px_cad<span style="color: #990000">,</span> cad<span style="color: #990000">*</span> py_cad<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">cad_fun</span> fun<span style="color: #990000">;</span>
+
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_adfun <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad2vector</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> px_cad<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad2vector</span></span><span style="color: #990000">(</span>m<span style="color: #990000">,</span> py_cad<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
+     p_adfun<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
+
+     fun<span style="color: #990000">.</span>p_void <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;(</span> p_adfun <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// put in list of allocate pointers</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">push_allocated</span></span><span style="color: #990000">(</span> fun<span style="color: #990000">.</span>p_void <span style="color: #990000">);</span>
+
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> fun<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// delete an AD function object in C</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_del_fun</span></span><span style="color: #990000">(</span><span style="color: #008080">cad_fun</span> <span style="color: #990000">*</span>fun<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// make sure this pointer has been allocated</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">pop_allocated</span></span><span style="color: #990000">(</span> fun<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">);</span>
+
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_adfun
+          <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;</span> <span style="color: #990000">(</span>fun<span style="color: #990000">-&gt;</span>p_void<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> p_adfun<span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// special value for pointers that are not allocated</span></span>
+     fun<span style="color: #990000">-&gt;</span>p_void <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// evaluate the Jacobian corresponding to a function object</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_jacobian</span></span><span style="color: #990000">(</span><span style="color: #008080">cad_fun</span> fun<span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> m<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> px<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> pjac <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> fun<span style="color: #990000">.</span>p_void <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_adfun <span style="color: #990000">=</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;(</span>fun<span style="color: #990000">.</span>p_void<span style="color: #990000">);</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">jac</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> m<span style="color: #990000">);</span>
+
+     <span style="font-weight: bold"><span style="color: #000000">double2vector</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> px<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     jac <span style="color: #990000">=</span> p_adfun<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">vector2double</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> m<span style="color: #990000">,</span> jac<span style="color: #990000">,</span> pjac<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// forward mode</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">cad_forward</span></span><span style="color: #990000">(</span><span style="color: #008080">cad_fun</span> fun<span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span> order<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> m<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> px<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> py <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> fun<span style="color: #990000">.</span>p_void <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> p_adfun <span style="color: #990000">=</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span> ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> <span style="color: #990000">&gt;(</span>fun<span style="color: #990000">.</span>p_void<span style="color: #990000">);</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+
+     <span style="font-weight: bold"><span style="color: #000000">double2vector</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> px<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     y <span style="color: #990000">=</span> p_adfun<span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>order<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">vector2double</span></span><span style="color: #990000">(</span>m<span style="color: #990000">,</span> y<span style="color: #990000">,</span> py<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// check that allocated list has been completely freed</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">cad_allocated_empty</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> allocated<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">empty</span></span><span style="color: #990000">();</span>
+<span style="color: #FF0000">}</span>
+
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace ****************************************************</span></span>
+
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;math.h&gt;</span> <span style="font-style: italic"><span style="color: #9A1900">// used to check results in c code below</span></span>
+
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> N <span style="color: #993399">2</span>       <span style="font-style: italic"><span style="color: #9A1900">// number of independent variables in example</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> M <span style="color: #993399">5</span>       <span style="font-style: italic"><span style="color: #9A1900">// number of dependent variables in example</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// Here is the C code that uses the CppAD link above</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_in_c</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// This routine is intentionally coded as if it were written in C</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// as an example of how you can link C, and other languages to CppAD</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// x vector of AD objects in C</span></span>
+     <span style="color: #009900">double</span> value<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">,</span> n <span style="color: #990000">=</span> N<span style="color: #990000">;</span>
+     <span style="color: #008080">cad</span> X<span style="color: #990000">[</span>N<span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     value       <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="color: #990000">(</span>j<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> n<span style="color: #990000">;</span>
+          X<span style="color: #990000">[</span>j<span style="color: #990000">].</span>p_void <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_new_ad</span></span><span style="color: #990000">(</span>X <span style="color: #990000">+</span> j<span style="color: #990000">,</span> value<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// y vector of AD objects in C</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> m <span style="color: #990000">=</span> M<span style="color: #990000">;</span>
+     <span style="color: #008080">cad</span> Y<span style="color: #990000">[</span>M<span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     value       <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> <span style="font-style: italic"><span style="color: #9A1900">// required, but not used</span></span>
+          Y<span style="color: #990000">[</span>i<span style="color: #990000">].</span>p_void <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_new_ad</span></span><span style="color: #990000">(</span>Y <span style="color: #990000">+</span> i<span style="color: #990000">,</span> value<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// declare X as the independent variable vector</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_independent</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> X<span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// y[0] = x[0] + x[1]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_binary</span></span><span style="color: #990000">(</span>op_add<span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> Y<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">)+</span><span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// y[1] = x[0] - x[1]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_binary</span></span><span style="color: #990000">(</span>op_sub<span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> Y<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">)-</span><span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// y[2] = x[0] * x[1]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_binary</span></span><span style="color: #990000">(</span>op_mul<span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> Y<span style="color: #990000">+</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">+</span><span style="color: #993399">2</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">)*</span><span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// y[3] = x[0] * x[1]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_binary</span></span><span style="color: #990000">(</span>op_div<span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> Y<span style="color: #990000">+</span><span style="color: #993399">3</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">+</span><span style="color: #993399">3</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">)/</span><span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// y[4] = sin(x[0]) + asin(sin(x[0]))</span></span>
+     <span style="color: #008080">cad</span> sin_x0 <span style="color: #990000">=</span> <span style="color: #FF0000">{</span> <span style="color: #993399">0</span> <span style="color: #FF0000">}</span><span style="color: #990000">;</span>       <span style="font-style: italic"><span style="color: #9A1900">// initialize p_void as zero</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_new_ad</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>sin_x0<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_unary</span></span><span style="color: #990000">(</span>op_sin<span style="color: #990000">,</span> X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>sin_x0<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(&amp;</span>sin_x0<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">))</span> <span style="color: #990000">);</span>
+
+     <span style="color: #008080">cad</span> asin_sin_x0 <span style="color: #990000">=</span> <span style="color: #FF0000">{</span> <span style="color: #993399">0</span> <span style="color: #FF0000">}</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// initialize p_void as zero</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_new_ad</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>asin_sin_x0<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_unary</span></span><span style="color: #990000">(</span>op_asin<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>sin_x0<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>asin_sin_x0<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(&amp;</span>asin_sin_x0<span style="color: #990000">),</span>
+          <span style="font-weight: bold"><span style="color: #000000">asin</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(&amp;</span>sin_x0<span style="color: #990000">)</span> <span style="color: #990000">)</span>
+     <span style="color: #990000">);</span>
+
+     <span style="font-weight: bold"><span style="color: #000000">cad_binary</span></span><span style="color: #990000">(</span>op_add<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>sin_x0<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>asin_sin_x0<span style="color: #990000">,</span> Y<span style="color: #990000">+</span><span style="color: #993399">4</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">+</span><span style="color: #993399">4</span><span style="color: #990000">),</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(&amp;</span>sin_x0<span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="font-weight: bold"><span style="color: #000000">cad_value</span></span><span style="color: #990000">(&amp;</span>asin_sin_x0<span style="color: #990000">)</span>
+     <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// declare y as the dependent variable vector and stop recording</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// and store function object in f</span></span>
+     <span style="color: #008080">cad_fun</span> f <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">cad_new_fun</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> m<span style="color: #990000">,</span> X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// now use the function object</span></span>
+     <span style="color: #009900">double</span> x<span style="color: #990000">[</span>N<span style="color: #990000">],</span> jac<span style="color: #990000">[</span>N <span style="color: #990000">*</span> M<span style="color: #990000">];</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the Jacobian</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_jacobian</span></span><span style="color: #990000">(</span>f<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">,</span> x<span style="color: #990000">,</span> jac<span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// check the Jacobian values</span></span>
+     <span style="color: #008080">size_t</span> k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[0] w.r.t. x[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> <span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[0] w.r.t. x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> <span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[1] w.r.t. x[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> <span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[1] w.r.t. x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> <span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[2] w.r.t. x[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[2] w.r.t. x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[3] w.r.t. x[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> <span style="color: #993399">1</span><span style="color: #990000">./</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[3] w.r.t. x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span> <span style="color: #990000">-</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]/(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]));</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[4] w.r.t x[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span>  <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial y[4] w.r.t x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>jac<span style="color: #990000">[</span>k<span style="color: #990000">++],</span>  <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the function f at a different x</span></span>
+     <span style="color: #008080">size_t</span> order <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> y<span style="color: #990000">[</span>M<span style="color: #990000">];</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_forward</span></span><span style="color: #990000">(</span>f<span style="color: #990000">,</span> order<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">,</span> x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// check the function values</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_near_equal</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">+</span> <span style="font-weight: bold"><span style="color: #000000">asin</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]))</span> <span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// delete All C++ copies of the AD objects</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_del_fun</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>f <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_del_ad</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>sin_x0 <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">cad_del_ad</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>asin_sin_x0 <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_del_ad</span></span><span style="color: #990000">(</span>X <span style="color: #990000">+</span> j<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="font-weight: bold"><span style="color: #000000">cad_del_ad</span></span><span style="color: #990000">(</span>Y <span style="color: #990000">+</span> i<span style="color: #990000">);</span>
+
+     ok     <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">cad_allocated_empty</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/ad_in_c.cpp
 
 </body>

@@ -88,23 +88,19 @@ A:active { color : purple }
 <code><span style='white-space: nowrap'><br/>
 </span></code># define CPPAD_UNIFORM_01_HPP
 
-<pre style='display:inline'> 
-# include &lt;cstdlib&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstdlib&gt;</span>
 
-namespace CppAD {
-	inline void uniform_01(size_t seed)
-	{	std::srand( (unsigned int) seed); }
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> seed<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">srand</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #009900">unsigned</span> <span style="color: #009900">int</span><span style="color: #990000">)</span> seed<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
 
-	template &lt;class Vector&gt;
-	void uniform_01(size_t n, Vector &amp;x)
-	{	static double factor = 1. / double(RAND_MAX);
-		while(n--)
-			x[n] = std::rand() * factor;
-	}
-}
-</pre>
-
-
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">double</span> factor <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>RAND_MAX<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>n<span style="color: #990000">--)</span>
+               x<span style="color: #990000">[</span>n<span style="color: #990000">]</span> <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">rand</span></span><span style="color: #990000">()</span> <span style="color: #990000">*</span> factor<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 # endif
 </font></code>
 

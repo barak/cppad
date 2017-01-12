@@ -91,170 +91,162 @@ A:active { color : purple }
 <td>interface2c.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Interfacing to C: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;  // CppAD utilities
-# include &lt;cassert&gt;        // assert macro
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// CppAD utilities</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>        <span style="font-style: italic"><span style="color: #9A1900">// assert macro</span></span>
 
-namespace { // Begin empty namespace
-/*
-Compute the value of a sum of Gaussians defined by a and evaluated at x
-	y = sum_{i=1}^n a[3*i] exp( (x - a[3*i+1])^2 / a[3*i+2])^2 )
-where the floating point type is a template parameter
-*/
-template &lt;class Float&gt;
-Float sumGauss(const Float &amp;x, const CppAD::vector&lt;Float&gt; &amp;a)
-{
-	// number of components in a
-	size_t na = a.size();
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">Compute the value of a sum of Gaussians defined by a and evaluated at x</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     y = sum_{i=1}^n a[3*i] exp( (x - a[3*i+1])^2 / a[3*i+2])^2 )</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">where the floating point type is a template parameter</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">*/</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Float</span><span style="color: #990000">&gt;</span>
+<span style="color: #008080">Float</span> <span style="font-weight: bold"><span style="color: #000000">sumGauss</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Float</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;Float&gt;</span> <span style="color: #990000">&amp;</span>a<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of components in a</span></span>
+     <span style="color: #008080">size_t</span> na <span style="color: #990000">=</span> a<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
 
-	// number of Gaussians
-	size_t n = na / 3;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of Gaussians</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> na <span style="color: #990000">/</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
 
-	// check the restricitons on na
-	assert( na == n * 3 );
+     <span style="font-style: italic"><span style="color: #9A1900">// check the restricitons on na</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> na <span style="color: #990000">==</span> n <span style="color: #990000">*</span> <span style="color: #993399">3</span> <span style="color: #990000">);</span>
 
-	// declare temporaries used inside of loop
-	Float ex, arg;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare temporaries used inside of loop</span></span>
+     <span style="color: #008080">Float</span> ex<span style="color: #990000">,</span> arg<span style="color: #990000">;</span>
 
-	// initialize sum
-	Float y = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// initialize sum</span></span>
+     <span style="color: #008080">Float</span> y <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// loop with respect to Gaussians
-	size_t i;
-	for(i = 0; i &lt; n; i++)
-	{
-		arg =   (x - a[3*i+1]) / a[3*i+2];
-		ex  =   exp(-arg * arg);
-		y  +=   a[3*i] * ex;
-	}
-	return y;
-}
-/*
-Create a C function interface that computes both
-	y = sum_{i=1}^n a[3*i] exp( (x - a[3*i+1])^2 / a[3*i+2])^2 )
-and its derivative with respect to the parameter vector a.
-*/
-extern &quot;C&quot;
-void sumGauss(float x, float a[], float *y, float dyda[], size_t na)
-{	// Note that any simple vector could replace CppAD::vector;
-	// for example, std::vector, std::valarray
+     <span style="font-style: italic"><span style="color: #9A1900">// loop with respect to Gaussians</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>
+          arg <span style="color: #990000">=</span>   <span style="color: #990000">(</span>x <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">*</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">*</span>i<span style="color: #990000">+</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+          ex  <span style="color: #990000">=</span>   <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(-</span>arg <span style="color: #990000">*</span> arg<span style="color: #990000">);</span>
+          y  <span style="color: #990000">+=</span>   a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">*</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> ex<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> y<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">Create a C function interface that computes both</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     y = sum_{i=1}^n a[3*i] exp( (x - a[3*i+1])^2 / a[3*i+2])^2 )</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">and its derivative with respect to the parameter vector a.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">*/</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #FF0000">"C"</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">sumGauss</span></span><span style="color: #990000">(</span><span style="color: #009900">float</span> x<span style="color: #990000">,</span> <span style="color: #009900">float</span> a<span style="color: #990000">[],</span> <span style="color: #009900">float</span> <span style="color: #990000">*</span>y<span style="color: #990000">,</span> <span style="color: #009900">float</span> dyda<span style="color: #990000">[],</span> <span style="color: #008080">size_t</span> na<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Note that any simple vector could replace CppAD::vector;</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// for example, std::vector, std::valarray</span></span>
 
-	// check the restrictions on na
-	assert( na % 3 == 0 );  // mod(na, 3) = 0
+     <span style="font-style: italic"><span style="color: #9A1900">// check the restrictions on na</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> na <span style="color: #990000">%</span> <span style="color: #993399">3</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// mod(na, 3) = 0</span></span>
 
-	// use the shorthand ADfloat for the type CppAD::<a href="ad.xml" target="_top">AD</a>&lt;float&gt;
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;float&gt; ADfloat;
+     <span style="font-style: italic"><span style="color: #9A1900">// use the shorthand ADfloat for the type CppAD::AD&lt;float&gt;</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;float&gt;</span> ADfloat<span style="color: #990000">;</span>
 
-	// vector for indpendent variables
-	CppAD::vector&lt;ADfloat&gt; A(na);      // used with template function above
-	CppAD::vector&lt;float&gt;   acopy(na);  // used for derivative calculations
+     <span style="font-style: italic"><span style="color: #9A1900">// vector for indpendent variables</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;ADfloat&gt;</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>na<span style="color: #990000">);</span>      <span style="font-style: italic"><span style="color: #9A1900">// used with template function above</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;float&gt;</span>   <span style="font-weight: bold"><span style="color: #000000">acopy</span></span><span style="color: #990000">(</span>na<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// used for derivative calculations</span></span>
 
-	// vector for the dependent variables (there is only one)
-	CppAD::vector&lt;ADfloat&gt; Y(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// vector for the dependent variables (there is only one)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;ADfloat&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// copy the independent variables from C vector to CppAD vectors
-	size_t i;
-	for(i = 0; i &lt; na; i++)
-		A[i] = acopy[i] = a[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// copy the independent variables from C vector to CppAD vectors</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> na<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> acopy<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-	// declare that A is the independent variable vector
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(A);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare that A is the independent variable vector</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>A<span style="color: #990000">);</span>
 
-	// value of x as an ADfloat object
-	ADfloat X = x;
+     <span style="font-style: italic"><span style="color: #9A1900">// value of x as an ADfloat object</span></span>
+     <span style="color: #008080">ADfloat</span> X <span style="color: #990000">=</span> x<span style="color: #990000">;</span>
 
-	// Evaluate template version of sumGauss with ADfloat as the template
-	// parameter. Set the independent variable to the resulting value
-	Y[0] = sumGauss(X, A);
+     <span style="font-style: italic"><span style="color: #9A1900">// Evaluate template version of sumGauss with ADfloat as the template</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// parameter. Set the independent variable to the resulting value</span></span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sumGauss</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> A<span style="color: #990000">);</span>
 
-	// create the AD function object F : A -&gt; Y
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;float&gt; F(A, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create the AD function object F : A -&gt; Y</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;float&gt;</span> <span style="font-weight: bold"><span style="color: #000000">F</span></span><span style="color: #990000">(</span>A<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// use Value to convert Y[0] to float and return y = F(a)
-	*y = CppAD::Value(Y[0]);
+     <span style="font-style: italic"><span style="color: #9A1900">// use Value to convert Y[0] to float and return y = F(a)</span></span>
+     <span style="color: #990000">*</span>y <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
 
-	// evaluate the derivative F'(a)
-	CppAD::vector&lt;float&gt; J(na);
-	J = F.<a href="jacobian.xml" target="_top">Jacobian</a>(acopy);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the derivative F'(a)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;float&gt;</span> <span style="font-weight: bold"><span style="color: #000000">J</span></span><span style="color: #990000">(</span>na<span style="color: #990000">);</span>
+     J <span style="color: #990000">=</span> F<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>acopy<span style="color: #990000">);</span>
 
-	// return the value of dyda = F'(a) as a C vector
-	for(i = 0; i &lt; na; i++)
-		dyda[i] = J[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// return the value of dyda = F'(a) as a C vector</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> na<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          dyda<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> J<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-	return;
-}
-/*
-Link CppAD::NearEqual so do not have to use namespace notation in Interface2C
-*/
-bool <a href="nearequal.xml" target="_top">NearEqual</a>(float x, float y, float r, float a)
-{	return CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(x, y, r, a);
-}
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">Link CppAD::NearEqual so do not have to use namespace notation in Interface2C</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">*/</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span><span style="color: #009900">float</span> x<span style="color: #990000">,</span> <span style="color: #009900">float</span> y<span style="color: #990000">,</span> <span style="color: #009900">float</span> r<span style="color: #990000">,</span> <span style="color: #009900">float</span> a<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">,</span> r<span style="color: #990000">,</span> a<span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
 
-} // End empty namespace
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
 
-bool Interface2C(void)
-{	// This routine is intentionally coded as if it were a C routine
-	// except for the fact that it uses the predefined type bool.
-	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Interface2C</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// This routine is intentionally coded as if it were a C routine</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// except for the fact that it uses the predefined type bool.</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// declare variables
-	float x, a[6], y, dyda[6], tmp[6];
-	size_t na, i;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare variables</span></span>
+     <span style="color: #009900">float</span> x<span style="color: #990000">,</span> a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">],</span> y<span style="color: #990000">,</span> dyda<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">],</span> tmp<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">];</span>
+     <span style="color: #008080">size_t</span> na<span style="color: #990000">,</span> i<span style="color: #990000">;</span>
 
-	// number of parameters (3 for each Gaussian)
-	na = 6;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of parameters (3 for each Gaussian)</span></span>
+     na <span style="color: #990000">=</span> <span style="color: #993399">6</span><span style="color: #990000">;</span>
 
-	// number of Gaussians: n  = na / 3;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of Gaussians: n  = na / 3;</span></span>
 
-	// value of x
-	x = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// value of x</span></span>
+     x <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// value of the parameter vector a
-	for(i = 0; i &lt; na; i++)
-		a[i] = (float) (i+1);
+     <span style="font-style: italic"><span style="color: #9A1900">// value of the parameter vector a</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> na<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">float</span><span style="color: #990000">)</span> <span style="color: #990000">(</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// evaulate function and derivative
-	sumGauss(x, a, &amp;y, dyda, na);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaulate function and derivative</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">sumGauss</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> a<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>y<span style="color: #990000">,</span> dyda<span style="color: #990000">,</span> na<span style="color: #990000">);</span>
 
-	// compare dyda to central difference approximation for deriative
-	for(i = 0; i &lt; na; i++)
-	{	// local variables
-		float small, ai, yp, ym, dy_da;
+     <span style="font-style: italic"><span style="color: #9A1900">// compare dyda to central difference approximation for deriative</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> na<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// local variables</span></span>
+          <span style="color: #009900">float</span> small<span style="color: #990000">,</span> ai<span style="color: #990000">,</span> yp<span style="color: #990000">,</span> ym<span style="color: #990000">,</span> dy_da<span style="color: #990000">;</span>
 
-		// We assume that the type float has at least 7 digits of
-		// precision, so we choose small to be about pow(10., -7./2.).
-		small  = (float) 3e-4;
+          <span style="font-style: italic"><span style="color: #9A1900">// We assume that the type float has at least 7 digits of</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// precision, so we choose small to be about pow(10., -7./2.).</span></span>
+          small  <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">float</span><span style="color: #990000">)</span> <span style="color: #993399">3e-4</span><span style="color: #990000">;</span>
 
-		// value of this component of a
-		ai    = a[i];
+          <span style="font-style: italic"><span style="color: #9A1900">// value of this component of a</span></span>
+          ai    <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-		// evaluate F( a + small * ei )
-		a[i]  = ai + small;
-		sumGauss(x, a, &amp;yp, tmp, na);
+          <span style="font-style: italic"><span style="color: #9A1900">// evaluate F( a + small * ei )</span></span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span>  <span style="color: #990000">=</span> ai <span style="color: #990000">+</span> small<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">sumGauss</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> a<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>yp<span style="color: #990000">,</span> tmp<span style="color: #990000">,</span> na<span style="color: #990000">);</span>
 
-		// evaluate F( a - small * ei )
-		a[i]  = ai - small;
-		sumGauss(x, a, &amp;ym, tmp, na);
+          <span style="font-style: italic"><span style="color: #9A1900">// evaluate F( a - small * ei )</span></span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span>  <span style="color: #990000">=</span> ai <span style="color: #990000">-</span> small<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">sumGauss</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> a<span style="color: #990000">,</span> <span style="color: #990000">&amp;</span>ym<span style="color: #990000">,</span> tmp<span style="color: #990000">,</span> na<span style="color: #990000">);</span>
 
-		// evaluate central difference approximates for partial
-		dy_da = (yp - ym) / (2 * small);
+          <span style="font-style: italic"><span style="color: #9A1900">// evaluate central difference approximates for partial</span></span>
+          dy_da <span style="color: #990000">=</span> <span style="color: #990000">(</span>yp <span style="color: #990000">-</span> ym<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> small<span style="color: #990000">);</span>
 
-		// restore this component of a
-		a[i]  = ai;
+          <span style="font-style: italic"><span style="color: #9A1900">// restore this component of a</span></span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span>  <span style="color: #990000">=</span> ai<span style="color: #990000">;</span>
 
-		ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dyda[i], dy_da, small, small);
-	}
-	return ok;
-}
-</pre>
-
+          ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dyda<span style="color: #990000">[</span>i<span style="color: #990000">],</span> dy_da<span style="color: #990000">,</span> small<span style="color: #990000">,</span> small<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/interface2c.cpp
 
 </body>

@@ -1,6 +1,6 @@
-// $Id: atomic.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: atomic.cpp 3830 2016-09-18 11:16:05Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -21,12 +21,23 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 
 // external complied tests
 extern bool checkpoint(void);
+extern bool eigen_cholesky(void);
+extern bool eigen_mat_inv(void);
+extern bool eigen_mat_mul(void);
+extern bool extended_ode(void);
+extern bool for_sparse_hes(void);
+extern bool for_sparse_jac(void);
+extern bool forward(void);
 extern bool get_started(void);
-extern bool hes_sparse(void);
 extern bool mat_mul(void);
+extern bool mul_level(void);
 extern bool norm_sq(void);
+extern bool ode(void);
 extern bool reciprocal(void);
-extern bool sparsity(void);
+extern bool rev_sparse_hes(void);
+extern bool rev_sparse_jac(void);
+extern bool reverse(void);
+extern bool set_sparsity(void);
 extern bool tangent(void);
 
 namespace {
@@ -56,14 +67,26 @@ int main(void)
 
 	// external compiled tests
 	ok &= Run( checkpoint,          "checkpoint"     );
+	ok &= Run( extended_ode,        "extended_ode"   );
+	ok &= Run( for_sparse_hes,      "for_sparse_hes" );
+	ok &= Run( for_sparse_jac,      "for_sparse_jac" );
+	ok &= Run( forward,             "forward"        );
 	ok &= Run( get_started,         "get_started"    );
-	ok &= Run( hes_sparse,          "hes_sparse"     );
 	ok &= Run( mat_mul,             "mat_mul"        );
+	ok &= Run( mul_level,           "mul_level"      );
 	ok &= Run( norm_sq,             "norm_sq"        );
+	ok &= Run( ode,                 "ode"            );
 	ok &= Run( reciprocal,          "reciprocal"     );
-	ok &= Run( sparsity,            "sparsity"       );
+	ok &= Run( rev_sparse_hes,      "rev_sparse_hes" );
+	ok &= Run( rev_sparse_jac,      "rev_sparse_jac" );
+	ok &= Run( reverse,             "reverse"        );
+	ok &= Run( set_sparsity,        "set_sparsity"   );
 	ok &= Run( tangent,             "tangent"        );
-
+# ifdef CPPAD_HAS_EIGEN
+	ok &= Run( eigen_cholesky,      "eigen_cholesky" );
+	ok &= Run( eigen_mat_inv,       "eigen_mat_inv"  );
+	ok &= Run( eigen_mat_mul,       "eigen_mat_mul"  );
+# endif
 	// check for errors
 	using std::cout;
 	using std::endl;

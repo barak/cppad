@@ -85,78 +85,74 @@ A:active { color : purple }
 
 
 <center><b><big><big>First Order Derivative Driver: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-namespace { // -------------------------------------------------------
-// define the template function RevOneCases&lt;Vector&gt; in empty namespace
-template &lt;typename Vector&gt;
-bool RevOneCases()
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	using CppAD::exp;
-	using CppAD::sin;
-	using CppAD::cos;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function RevOneCases&lt;Vector&gt; in empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RevOneCases</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>exp<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>sin<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>cos<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)  X(n);
-	X[0] = 1.;
-	X[1] = 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span>  <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and starting recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and starting recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)  Y(m);
-	Y[0] = X[0] * exp( X[1] );
-	Y[1] = X[0] * sin( X[1] );
-	Y[2] = X[0] * cos( X[1] );
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span>  <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-	// create f: X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: X -&gt; Y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// new value for the independent variable vector
-	Vector x(n);
-	x[0] = 2.;
-	x[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// new value for the independent variable vector</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// compute and check derivative of y[0]
-	Vector dw(n);
-	dw  = f.RevOne(x, 0);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0],      exp(x[1]), 1e-10, 1e-10 ); // w.r.t x[0]
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], x[0]*exp(x[1]), 1e-10, 1e-10 ); // w.r.t x[1]
+     <span style="font-style: italic"><span style="color: #9A1900">// compute and check derivative of y[0]</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     dw  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevOne</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span>      <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// w.r.t x[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span><span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// w.r.t x[1]</span></span>
 
-	// compute and check derivative of y[1]
-	dw  = f.RevOne(x, 1);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0],      sin(x[1]), 1e-10, 1e-10 );
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], x[0]*cos(x[1]), 1e-10, 1e-10 );
+     <span style="font-style: italic"><span style="color: #9A1900">// compute and check derivative of y[1]</span></span>
+     dw  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevOne</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span>      <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span><span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// compute and check derivative of y[2]
-	dw  = f.RevOne(x, 2);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0],        cos(x[1]), 1e-10, 1e-10 );
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1], - x[0]*sin(x[1]), 1e-10, 1e-10 );
+     <span style="font-style: italic"><span style="color: #9A1900">// compute and check derivative of y[2]</span></span>
+     dw  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevOne</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span>        <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span><span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	return ok;
-}
-} // End empty namespace
-# include &lt;vector&gt;
-# include &lt;valarray&gt;
-bool RevOne(void)
-{	bool ok = true;
-	// Run with Vector equal to three different cases
-	// all of which are Simple Vectors with elements of type double.
-	ok &amp;= RevOneCases&lt; CppAD::vector  &lt;double&gt; &gt;();
-	ok &amp;= RevOneCases&lt; std::vector    &lt;double&gt; &gt;();
-	ok &amp;= RevOneCases&lt; std::valarray  &lt;double&gt; &gt;();
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RevOne</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Run with Vector equal to three different cases</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// all of which are Simple Vectors with elements of type double.</span></span>
+     ok <span style="color: #990000">&amp;=</span> RevOneCases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> RevOneCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector    <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> RevOneCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/rev_one.cpp
 
 </body>

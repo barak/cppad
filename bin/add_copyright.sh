@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: add_copyright.sh 3768 2015-12-28 18:58:35Z bradbell $
+# $Id: add_copyright.sh 3858 2016-12-26 16:17:59Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -36,11 +36,29 @@ fi
 #
 echo "write copyright message to bin/add_copyright.$$"
 case $ext in
-	cpp | hpp | omh)
+	hpp)
+	upper_name=`echo $file_name | tr [a-z./] [A-Z__]`
+	cat << EOF  > bin/add_copyright.$$
+// \$Id\$
+# ifndef CPPAD_$upper_name
+# define CPPAD_$upper_name
+/* --------------------------------------------------------------------------
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+
+CppAD is distributed under multiple licenses. This distribution is under
+the terms of the
+                    GNU General Public License Version 3.
+
+A copy of this license is included in the COPYING file of this distribution.
+Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+-------------------------------------------------------------------------- */
+EOF
+	;;
+	cpp | omh | i)
 	cat << EOF  > bin/add_copyright.$$
 // \$Id\$
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -56,7 +74,7 @@ EOF
 	cat << EOF  > bin/add_copyright.$$
 # \$Id\$
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -73,7 +91,7 @@ EOF
 #! /bin/bash -e
 # \$Id\$
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -112,6 +130,12 @@ echo "mv $file_name ~/trash"
 #
 echo "mv bin/add_copyright.$$ $file_name"
       mv bin/add_copyright.$$ $file_name
+#
+# add endif at end of *.hpp files
+if [ "$ext" == 'hpp' ]
+then
+	echo "# endif" >> $file_name
+fi
 # ----------------------------------------------------------------------------
 echo "$0: OK"
 exit 0

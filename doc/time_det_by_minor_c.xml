@@ -166,25 +166,23 @@ and is the number of wall clock seconds that it took for
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-double time_det_by_minor(size_t size, double time_min)
-{    size_t repeat;
-     double s0, s1, time;
-     repeat = 0;
-     s0     = <a href="elapsed_seconds_c.xml" target="_top">elapsed_seconds</a>();
-     s1     = s0;
-     while( s1 - s0 &lt; time_min )
-     {    if( repeat == 0 )
-               repeat = 1;
-          else repeat = 2 * repeat;
-          s0     = <a href="elapsed_seconds_c.xml" target="_top">elapsed_seconds</a>();
-          <a href="elapsed_seconds_c.xml" target="_top">repeat_det_by_minor</a>(repeat, size);
-          s1     = <a href="elapsed_seconds_c.xml" target="_top">elapsed_seconds</a>();
-     }
-     time = (s1 - s0) / (double) repeat;
-     return time;
-}
-</pre></font></code>
+<pre><tt><span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">time_det_by_minor</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> size<span style="color: #990000">,</span> <span style="color: #009900">double</span> time_min<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> repeat<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> s0<span style="color: #990000">,</span> s1<span style="color: #990000">,</span> time<span style="color: #990000">;</span>
+     repeat <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     s0     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
+     s1     <span style="color: #990000">=</span> s0<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span> s1 <span style="color: #990000">-</span> s0 <span style="color: #990000">&lt;</span> time_min <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> repeat <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               repeat <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     repeat <span style="color: #990000">=</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> repeat<span style="color: #990000">;</span>
+          s0     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #000000">repeat_det_by_minor</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">,</span> size<span style="color: #990000">);</span>
+          s1     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
+     time <span style="color: #990000">=</span> <span style="color: #990000">(</span>s1 <span style="color: #990000">-</span> s0<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> repeat<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> time<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: compare_c/det_by_minor.c
 

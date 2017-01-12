@@ -80,65 +80,60 @@ A:active { color : purple }
 
 
 <center><b><big><big>Number of Variables That Can be Skipped: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-bool number_skip(void)
-{	bool ok = true;
-	using CppAD::AD;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">number_skip</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-	// independent variable vector
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(2);
-	ax[0] = 0.;
-	ax[1] = 1.;
-	<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// independent variable vector</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-	// Use a conditional expression
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// Use a conditional expression</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// variable that gets optimized out
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; az = ax[0] * ax[0];
+     <span style="font-style: italic"><span style="color: #9A1900">// variable that gets optimized out</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> az <span style="color: #990000">=</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
 
-	// conditional expression
-	ay[0] = CondExpLt(ax[0], ax[1], ax[0] + ax[1], ax[0] - ax[1]);
+     <span style="font-style: italic"><span style="color: #9A1900">// conditional expression</span></span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpLt</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
 
-	// create function object F : x -&gt; ay
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
-	f.Dependent(ax, ay);
+     <span style="font-style: italic"><span style="color: #9A1900">// create function object F : x -&gt; ay</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> f<span style="color: #990000">;</span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-	// use zero order to evaluate F[ (3, 4) ]
-	CppAD::vector&lt;double&gt;  x( f.Domain() );
-	CppAD::vector&lt;double&gt;  y( f.Range() );
-	x[0]    = 3.;
-	x[1]    = 4.;
-	y   = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= (y[0] == x[0] + x[1]);
+     <span style="font-style: italic"><span style="color: #9A1900">// use zero order to evaluate F[ (3, 4) ]</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>  <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Domain</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>  <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
+     y   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
 
-	// before call to optimize
-	ok &amp;= f.number_skip() == 0;
-	size_t n_var = f.size_var();
+     <span style="font-style: italic"><span style="color: #9A1900">// before call to optimize</span></span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">number_skip</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n_var <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_var</span></span><span style="color: #990000">();</span>
 
-	// now optimize the operation sequence
-	f.optimize();
+     <span style="font-style: italic"><span style="color: #9A1900">// now optimize the operation sequence</span></span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">optimize</span></span><span style="color: #990000">();</span>
 
-	// after optimize, check forward mode result
-	x[0]    = 4.;
-	x[1]    = 3.;
-	y   = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= (y[0] == x[0] - x[1]);
+     <span style="font-style: italic"><span style="color: #9A1900">// after optimize, check forward mode result</span></span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     y   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
 
-	// after optimize, check amount of optimization
-	ok &amp;= f.size_var() == n_var - 1;
-	ok &amp;= f.number_skip() == 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// after optimize, check amount of optimization</span></span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_var</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n_var <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">number_skip</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/number_skip.cpp
 
 </body>

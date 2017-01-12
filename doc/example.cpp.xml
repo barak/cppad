@@ -84,9 +84,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>CppAD Examples and Tests</big></big></b></center>
 <br/>
 <b><big><a name="Running Tests" id="Running Tests">Running Tests</a></big></b>
@@ -95,367 +92,364 @@ To build this program and run its correctness tests see <a href="cmake_check.xml
 .
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-style: italic"><span style="color: #9A1900">// system include files used for I/O</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>
 
-// system include files used for I/O
-# include &lt;iostream&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// C style asserts</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
 
-// C style asserts
-# include &lt;cassert&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// standard string</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;string&gt;</span>
 
-// standard string
-# include &lt;string&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// memory utility</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/thread_alloc.hpp&gt;</span>
 
-// memory utility
-# include &lt;cppad/utility/thread_alloc.hpp&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// prototype external compiled tests (this line expected by bin/new_test.sh)</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">abort_recording</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">acosh</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">acos</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_assign</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_ctor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">AddEq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Add</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_fun</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_in_c</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_input</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_output</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">asinh</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">asin</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">atan2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">atanh</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">base_require</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">BenderQuad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">BoolFun</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">bool_sparsity</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">capacity_order</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">change_param</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_for_nan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CheckNumericType</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CheckSimpleVector</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">colpack_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">colpack_jac</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">compare_change</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Compare</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">complex_poly</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CondExp</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">conj_grad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Cosh</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Cos</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CppAD_vector</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">dependency</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">DivEq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Div</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">eigen_array</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">eigen_det</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Erf</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ErrorHandler</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">expm1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForOne</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">for_sparse_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForTwo</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">forward_dir</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">forward_order</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">fun_assign</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">FunCheck</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">HesLagrangian</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">HesLuDet</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">HesMinorDet</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Hessian</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">HesTimesDir</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">index_sort</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Interface2C</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">interp_onetape</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">interp_retape</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">JacLuDet</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">JacMinorDet</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">log10</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">log1p</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuFactor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuInvert</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuRatio</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuSolve</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuVecADOk</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">MulEq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mul_level_adolc_ode</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mul_level_adolc</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mul_level_ode</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mul_level</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Mul</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">nan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">NearEqualExt</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Near_Equal</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">number_skip</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">NumericType</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">num_limits</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeErrControl</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeErrMaxabs</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeGearControl</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeGear</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeStiff</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ode_taylor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">opt_val_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ParVar</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">pow_int</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">print_for</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_any</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_one</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_three</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_two</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RevOne</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">rev_sparse_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RevTwo</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RombergMul</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">RombergOne</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Rosen34</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">runge_45_1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">runge_45_2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">seq_property</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">set_union</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sign</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">SimpleVector</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Sinh</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Sin</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparse_hessian</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparse_jacobian</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparse_sub_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparsity_sub</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Sqrt</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">StackMachine</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">SubEq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sub_sparse_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Sub</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Tanh</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Tan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">TapeIndex</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">thread_alloc</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">to_string</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">UnaryMinus</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">UnaryPlus</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">vec_ad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">vectorBool</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
 
-// prototype external compiled tests (this line expected by bin/new_test.sh)
-extern bool abort_recording(void);
-extern bool ad_assign(void);
-extern bool ad_ctor(void);
-extern bool abs(void);
-extern bool acos(void);
-extern bool acosh(void);
-extern bool Add(void);
-extern bool AddEq(void);
-extern bool ad_fun(void);
-extern bool ad_in_c(void);
-extern bool ad_input(void);
-extern bool ad_output(void);
-extern bool asin(void);
-extern bool asinh(void);
-extern bool atan(void);
-extern bool atanh(void);
-extern bool atan2(void);
-extern bool azmul(void);
-extern bool base_require(void);
-extern bool BenderQuad(void);
-extern bool BoolFun(void);
-extern bool bool_sparsity(void);
-extern bool capacity_order(void);
-extern bool change_param(void);
-extern bool check_for_nan(void);
-extern bool CheckNumericType(void);
-extern bool CheckSimpleVector(void);
-extern bool colpack_hes(void);
-extern bool colpack_jac(void);
-extern bool Compare(void);
-extern bool compare_change(void);
-extern bool complex_poly(void);
-extern bool CondExp(void);
-extern bool conj_grad(void);
-extern bool Cos(void);
-extern bool Cosh(void);
-extern bool CppAD_vector(void);
-extern bool dependency(void);
-extern bool Div(void);
-extern bool DivEq(void);
-extern bool eigen_array(void);
-extern bool eigen_det(void);
-extern bool EqualOpSeq(void);
-extern bool Erf(void);
-extern bool ErrorHandler(void);
-extern bool exp(void);
-extern bool expm1(void);
-extern bool ForOne(void);
-extern bool ForTwo(void);
-extern bool ForSparseJac(void);
-extern bool Forward(void);
-extern bool forward_dir(void);
-extern bool forward_order(void);
-extern bool fun_assign(void);
-extern bool FunCheck(void);
-extern bool HesLagrangian(void);
-extern bool HesLuDet(void);
-extern bool HesMinorDet(void);
-extern bool Hessian(void);
-extern bool HesTimesDir(void);
-extern bool <a href="independent.xml" target="_top">Independent</a>(void);
-extern bool index_sort(void);
-extern bool Integer(void);
-extern bool Interface2C(void);
-extern bool interp_onetape(void);
-extern bool interp_retape(void);
-extern bool JacLuDet(void);
-extern bool JacMinorDet(void);
-extern bool Jacobian(void);
-extern bool log(void);
-extern bool log10(void);
-extern bool log1p(void);
-extern bool LuFactor(void);
-extern bool LuInvert(void);
-extern bool LuRatio(void);
-extern bool LuSolve(void);
-extern bool LuVecADOk(void);
-extern bool Mul(void);
-extern bool MulEq(void);
-extern bool mul_level(void);
-extern bool mul_level_adolc(void);
-extern bool mul_level_ode(void);
-extern bool mul_level_adolc_ode(void);
-extern bool nan(void);
-extern bool Near_Equal(void);
-extern bool NearEqualExt(void);
-extern bool number_skip(void);
-extern bool NumericType(void);
-extern bool num_limits(void);
-extern bool OdeErrControl(void);
-extern bool OdeErrMaxabs(void);
-extern bool OdeGear(void);
-extern bool OdeGearControl(void);
-extern bool OdeStiff(void);
-extern bool ode_taylor(void);
-extern bool opt_val_hes(void);
-extern bool optimize(void);
-extern bool ParVar(void);
-extern bool Poly(void);
-extern bool pow(void);
-extern bool pow_int(void);
-extern bool print_for(void);
-extern bool reverse_any(void);
-extern bool reverse_one(void);
-extern bool reverse_three(void);
-extern bool reverse_two(void);
-extern bool RevOne(void);
-extern bool RevSparseHes(void);
-extern bool RevSparseJac(void);
-extern bool RevTwo(void);
-extern bool RombergMul(void);
-extern bool RombergOne(void);
-extern bool Rosen34(void);
-extern bool runge_45_1(void);
-extern bool runge_45_2(void);
-extern bool seq_property(void);
-extern bool sign(void);
-extern bool SimpleVector(void);
-extern bool Sin(void);
-extern bool Sinh(void);
-extern bool sparse_hessian(void);
-extern bool sparse_jacobian(void);
-extern bool sparse_sub_hes(void);
-extern bool sparsity_sub(void);
-extern bool Sqrt(void);
-extern bool StackMachine(void);
-extern bool Sub(void);
-extern bool SubEq(void);
-extern bool sub_sparse_hes(void);
-extern bool Tan(void);
-extern bool Tanh(void);
-extern bool TapeIndex(void);
-extern bool thread_alloc(void);
-extern bool to_string(void);
-extern bool UnaryMinus(void);
-extern bool UnaryPlus(void);
-extern bool Value(void);
-extern bool Var2Par(void);
-extern bool vec_ad(void);
-extern bool vectorBool(void);
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that runs one test</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #008080">size_t</span> Run_ok_count    <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #008080">size_t</span> Run_error_count <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">TestOk</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">),</span> std<span style="color: #990000">::</span><span style="color: #008080">string</span> name<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok      <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span><span style="color: #008080">streamsize</span> width <span style="color: #990000">=</span>  <span style="color: #993399">20</span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cout<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">width</span></span><span style="color: #990000">(</span> width <span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cout<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setf</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>ios_base<span style="color: #990000">::</span>left <span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> name<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          ok <span style="color: #990000">&amp;=</span> name<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>width<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">TestOk</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               Run_ok_count<span style="color: #990000">++;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Error"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               Run_error_count<span style="color: #990000">++;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-namespace {
-	// function that runs one test
-	static size_t Run_ok_count    = 0;
-	static size_t Run_error_count = 0;
-	bool Run(bool TestOk(void), std::string name)
-	{	bool ok      = true;
-		std::streamsize width =  20;
-		std::cout.width( width );
-		std::cout.setf( std::ios_base::left );
-		std::cout &lt;&lt; name;
-		//
-		ok &amp;= name.size() &lt; size_t(width);
-		ok &amp;= TestOk();
-		if( ok )
-		{	std::cout &lt;&lt; &quot;OK&quot; &lt;&lt; std::endl;
-			Run_ok_count++;
-		}
-		else
-		{	std::cout &lt;&lt; &quot;Error&quot; &lt;&lt; std::endl;
-			Run_error_count++;
-		}
-		return ok;
-	}
-}
+<span style="font-style: italic"><span style="color: #9A1900">// main program that runs all the tests</span></span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-// main program that runs all the tests
-int main(void)
-{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// This line is used by test_one.sh</span></span>
 
-	// This line is used by test_one.sh
+     <span style="font-style: italic"><span style="color: #9A1900">// run external compiled tests (this line expected by bin/new_test.sh)</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> abort_recording<span style="color: #990000">,</span>   <span style="color: #FF0000">"abort_recording"</span>  <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> abs<span style="color: #990000">,</span>               <span style="color: #FF0000">"abs"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> acos<span style="color: #990000">,</span>              <span style="color: #FF0000">"acos"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> acosh<span style="color: #990000">,</span>             <span style="color: #FF0000">"acosh"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ad_assign<span style="color: #990000">,</span>         <span style="color: #FF0000">"ad_assign"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ad_ctor<span style="color: #990000">,</span>           <span style="color: #FF0000">"ad_ctor"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Add<span style="color: #990000">,</span>               <span style="color: #FF0000">"Add"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> AddEq<span style="color: #990000">,</span>             <span style="color: #FF0000">"AddEq"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ad_fun<span style="color: #990000">,</span>            <span style="color: #FF0000">"ad_fun"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ad_in_c<span style="color: #990000">,</span>           <span style="color: #FF0000">"ad_in_c"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ad_input<span style="color: #990000">,</span>          <span style="color: #FF0000">"ad_input"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ad_output<span style="color: #990000">,</span>         <span style="color: #FF0000">"ad_output"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> asin<span style="color: #990000">,</span>              <span style="color: #FF0000">"asin"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> asinh<span style="color: #990000">,</span>             <span style="color: #FF0000">"asinh"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> atan2<span style="color: #990000">,</span>             <span style="color: #FF0000">"atan2"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> atan<span style="color: #990000">,</span>              <span style="color: #FF0000">"atan"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> atanh<span style="color: #990000">,</span>             <span style="color: #FF0000">"atanh"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> azmul<span style="color: #990000">,</span>             <span style="color: #FF0000">"azmul"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> BenderQuad<span style="color: #990000">,</span>        <span style="color: #FF0000">"BenderQuad"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> BoolFun<span style="color: #990000">,</span>           <span style="color: #FF0000">"BoolFun"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> bool_sparsity<span style="color: #990000">,</span>     <span style="color: #FF0000">"bool_sparsity"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> capacity_order<span style="color: #990000">,</span>    <span style="color: #FF0000">"capacity_order"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> change_param<span style="color: #990000">,</span>      <span style="color: #FF0000">"change_param"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> check_for_nan<span style="color: #990000">,</span>     <span style="color: #FF0000">"check_for_nan"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> CheckNumericType<span style="color: #990000">,</span>  <span style="color: #FF0000">"CheckNumericType"</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> CheckSimpleVector<span style="color: #990000">,</span> <span style="color: #FF0000">"CheckSimpleVector"</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> compare_change<span style="color: #990000">,</span>    <span style="color: #FF0000">"compare_change"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Compare<span style="color: #990000">,</span>           <span style="color: #FF0000">"Compare"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> complex_poly<span style="color: #990000">,</span>      <span style="color: #FF0000">"complex_poly"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> CondExp<span style="color: #990000">,</span>           <span style="color: #FF0000">"CondExp"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> conj_grad<span style="color: #990000">,</span>         <span style="color: #FF0000">"conj_grad"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Cos<span style="color: #990000">,</span>               <span style="color: #FF0000">"Cos"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Cosh<span style="color: #990000">,</span>              <span style="color: #FF0000">"Cosh"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> CppAD_vector<span style="color: #990000">,</span>      <span style="color: #FF0000">"CppAD_vector"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> dependency<span style="color: #990000">,</span>        <span style="color: #FF0000">"dependency"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Div<span style="color: #990000">,</span>               <span style="color: #FF0000">"Div"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> DivEq<span style="color: #990000">,</span>             <span style="color: #FF0000">"DivEq"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> EqualOpSeq<span style="color: #990000">,</span>        <span style="color: #FF0000">"EqualOpSeq"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Erf<span style="color: #990000">,</span>               <span style="color: #FF0000">"Erf"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ErrorHandler<span style="color: #990000">,</span>      <span style="color: #FF0000">"ErrorHandler"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp<span style="color: #990000">,</span>               <span style="color: #FF0000">"exp"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> expm1<span style="color: #990000">,</span>             <span style="color: #FF0000">"expm1"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ForOne<span style="color: #990000">,</span>            <span style="color: #FF0000">"ForOne"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> for_sparse_hes<span style="color: #990000">,</span>    <span style="color: #FF0000">"for_sparse_hes"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ForSparseJac<span style="color: #990000">,</span>      <span style="color: #FF0000">"ForSparseJac"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ForTwo<span style="color: #990000">,</span>            <span style="color: #FF0000">"ForTwo"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> forward_dir<span style="color: #990000">,</span>       <span style="color: #FF0000">"forward_dir"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Forward<span style="color: #990000">,</span>           <span style="color: #FF0000">"Forward"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> forward_order<span style="color: #990000">,</span>     <span style="color: #FF0000">"forward_order"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> fun_assign<span style="color: #990000">,</span>        <span style="color: #FF0000">"fun_assign"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> FunCheck<span style="color: #990000">,</span>          <span style="color: #FF0000">"FunCheck"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> HesLagrangian<span style="color: #990000">,</span>     <span style="color: #FF0000">"HesLagrangian"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> HesLuDet<span style="color: #990000">,</span>          <span style="color: #FF0000">"HesLuDet"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> HesMinorDet<span style="color: #990000">,</span>       <span style="color: #FF0000">"HesMinorDet"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Hessian<span style="color: #990000">,</span>           <span style="color: #FF0000">"Hessian"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> HesTimesDir<span style="color: #990000">,</span>       <span style="color: #FF0000">"HesTimesDir"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Independent<span style="color: #990000">,</span>       <span style="color: #FF0000">"Independent"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> index_sort<span style="color: #990000">,</span>        <span style="color: #FF0000">"index_sort"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Integer<span style="color: #990000">,</span>           <span style="color: #FF0000">"Integer"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Interface2C<span style="color: #990000">,</span>       <span style="color: #FF0000">"Interface2C"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> interp_onetape<span style="color: #990000">,</span>    <span style="color: #FF0000">"interp_onetape"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> interp_retape<span style="color: #990000">,</span>     <span style="color: #FF0000">"interp_retape"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> JacLuDet<span style="color: #990000">,</span>          <span style="color: #FF0000">"JacLuDet"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> JacMinorDet<span style="color: #990000">,</span>       <span style="color: #FF0000">"JacMinorDet"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Jacobian<span style="color: #990000">,</span>          <span style="color: #FF0000">"Jacobian"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> log10<span style="color: #990000">,</span>             <span style="color: #FF0000">"log10"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> log1p<span style="color: #990000">,</span>             <span style="color: #FF0000">"log1p"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> log<span style="color: #990000">,</span>               <span style="color: #FF0000">"log"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> LuFactor<span style="color: #990000">,</span>          <span style="color: #FF0000">"LuFactor"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> LuInvert<span style="color: #990000">,</span>          <span style="color: #FF0000">"LuInvert"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> LuRatio<span style="color: #990000">,</span>           <span style="color: #FF0000">"LuRatio"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> LuSolve<span style="color: #990000">,</span>           <span style="color: #FF0000">"LuSolve"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> LuVecADOk<span style="color: #990000">,</span>         <span style="color: #FF0000">"LuVecADOk"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> MulEq<span style="color: #990000">,</span>             <span style="color: #FF0000">"MulEq"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> mul_level<span style="color: #990000">,</span>         <span style="color: #FF0000">"mul_level"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> mul_level_ode<span style="color: #990000">,</span>     <span style="color: #FF0000">"mul_level_ode"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Mul<span style="color: #990000">,</span>               <span style="color: #FF0000">"Mul"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> nan<span style="color: #990000">,</span>               <span style="color: #FF0000">"nan"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> NearEqualExt<span style="color: #990000">,</span>      <span style="color: #FF0000">"NearEqualExt"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Near_Equal<span style="color: #990000">,</span>        <span style="color: #FF0000">"Near_Equal"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> number_skip<span style="color: #990000">,</span>       <span style="color: #FF0000">"number_skip"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> NumericType<span style="color: #990000">,</span>       <span style="color: #FF0000">"NumericType"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> num_limits<span style="color: #990000">,</span>        <span style="color: #FF0000">"num_limits"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> OdeErrControl<span style="color: #990000">,</span>     <span style="color: #FF0000">"OdeErrControl"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> OdeErrMaxabs<span style="color: #990000">,</span>      <span style="color: #FF0000">"OdeErrMaxabs"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> OdeGearControl<span style="color: #990000">,</span>    <span style="color: #FF0000">"OdeGearControl"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> OdeGear<span style="color: #990000">,</span>           <span style="color: #FF0000">"OdeGear"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> OdeStiff<span style="color: #990000">,</span>          <span style="color: #FF0000">"OdeStiff"</span>         <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ode_taylor<span style="color: #990000">,</span>        <span style="color: #FF0000">"ode_taylor"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> opt_val_hes<span style="color: #990000">,</span>       <span style="color: #FF0000">"opt_val_hes"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> ParVar<span style="color: #990000">,</span>            <span style="color: #FF0000">"ParVar"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Poly<span style="color: #990000">,</span>              <span style="color: #FF0000">"Poly"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> pow_int<span style="color: #990000">,</span>           <span style="color: #FF0000">"pow_int"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> pow<span style="color: #990000">,</span>               <span style="color: #FF0000">"pow"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> reverse_any<span style="color: #990000">,</span>       <span style="color: #FF0000">"reverse_any"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> reverse_one<span style="color: #990000">,</span>       <span style="color: #FF0000">"reverse_one"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> reverse_three<span style="color: #990000">,</span>     <span style="color: #FF0000">"reverse_three"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> reverse_two<span style="color: #990000">,</span>       <span style="color: #FF0000">"reverse_two"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> RevOne<span style="color: #990000">,</span>            <span style="color: #FF0000">"RevOne"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> rev_sparse_hes<span style="color: #990000">,</span>    <span style="color: #FF0000">"rev_sparse_hes"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> RevSparseJac<span style="color: #990000">,</span>      <span style="color: #FF0000">"RevSparseJac"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> RevTwo<span style="color: #990000">,</span>            <span style="color: #FF0000">"RevTwo"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> RombergMul<span style="color: #990000">,</span>        <span style="color: #FF0000">"RombergMul"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> RombergOne<span style="color: #990000">,</span>        <span style="color: #FF0000">"RombergOne"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Rosen34<span style="color: #990000">,</span>           <span style="color: #FF0000">"Rosen34"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> runge_45_1<span style="color: #990000">,</span>        <span style="color: #FF0000">"runge_45_1"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> runge_45_2<span style="color: #990000">,</span>        <span style="color: #FF0000">"runge_45_2"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> seq_property<span style="color: #990000">,</span>      <span style="color: #FF0000">"seq_property"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> set_union<span style="color: #990000">,</span>         <span style="color: #FF0000">"set_union"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> sign<span style="color: #990000">,</span>              <span style="color: #FF0000">"sign"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> SimpleVector<span style="color: #990000">,</span>      <span style="color: #FF0000">"SimpleVector"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Sinh<span style="color: #990000">,</span>              <span style="color: #FF0000">"Sinh"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Sin<span style="color: #990000">,</span>               <span style="color: #FF0000">"Sin"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> sparse_hessian<span style="color: #990000">,</span>    <span style="color: #FF0000">"sparse_hessian"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> sparse_jacobian<span style="color: #990000">,</span>   <span style="color: #FF0000">"sparse_jacobian"</span>  <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> sparse_sub_hes<span style="color: #990000">,</span>    <span style="color: #FF0000">"sparse_sub_hes"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> sparsity_sub<span style="color: #990000">,</span>      <span style="color: #FF0000">"sparsity_sub"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Sqrt<span style="color: #990000">,</span>              <span style="color: #FF0000">"Sqrt"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> StackMachine<span style="color: #990000">,</span>      <span style="color: #FF0000">"StackMachine"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> SubEq<span style="color: #990000">,</span>             <span style="color: #FF0000">"SubEq"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> sub_sparse_hes<span style="color: #990000">,</span>    <span style="color: #FF0000">"sub_sparse_hes"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Sub<span style="color: #990000">,</span>               <span style="color: #FF0000">"Sub"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Tanh<span style="color: #990000">,</span>              <span style="color: #FF0000">"Tanh"</span>             <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Tan<span style="color: #990000">,</span>               <span style="color: #FF0000">"Tan"</span>              <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> TapeIndex<span style="color: #990000">,</span>         <span style="color: #FF0000">"TapeIndex"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> thread_alloc<span style="color: #990000">,</span>      <span style="color: #FF0000">"thread_alloc"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> to_string<span style="color: #990000">,</span>         <span style="color: #FF0000">"to_string"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> UnaryMinus<span style="color: #990000">,</span>        <span style="color: #FF0000">"UnaryMinus"</span>       <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> UnaryPlus<span style="color: #990000">,</span>         <span style="color: #FF0000">"UnaryPlus"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Value<span style="color: #990000">,</span>             <span style="color: #FF0000">"Value"</span>            <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> Var2Par<span style="color: #990000">,</span>           <span style="color: #FF0000">"Var2Par"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> vec_ad<span style="color: #990000">,</span>            <span style="color: #FF0000">"vec_ad"</span>           <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> vectorBool<span style="color: #990000">,</span>        <span style="color: #FF0000">"vectorBool"</span>       <span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> CPPAD_HAS_ADOLC
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> mul_level_adolc<span style="color: #990000">,</span>      <span style="color: #FF0000">"mul_level_adolc"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> mul_level_adolc_ode<span style="color: #990000">,</span>  <span style="color: #FF0000">"mul_level_adolc_ode"</span> <span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> CPPAD_COLPACK_EXAMPLES
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> colpack_hes<span style="color: #990000">,</span>       <span style="color: #FF0000">"colpack_hes"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> colpack_jac<span style="color: #990000">,</span>       <span style="color: #FF0000">"colpack_jac"</span>      <span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> CPPAD_HAS_EIGEN
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> eigen_array<span style="color: #990000">,</span>       <span style="color: #FF0000">"eigen_array"</span>      <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> eigen_det<span style="color: #990000">,</span>         <span style="color: #FF0000">"eigen_det"</span>        <span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
 
-	// run external compiled tests (this line expected by bin/new_test.sh)
-	ok &amp;= Run( abort_recording,   &quot;abort_recording&quot;  );
-	ok &amp;= Run( ad_assign,         &quot;ad_assign&quot;        );
-	ok &amp;= Run( ad_ctor,           &quot;ad_ctor&quot;          );
-	ok &amp;= Run( abs,               &quot;abs&quot;              );
-	ok &amp;= Run( acos,              &quot;acos&quot;             );
-	ok &amp;= Run( acosh,             &quot;acosh&quot;            );
-	ok &amp;= Run( Add,               &quot;Add&quot;              );
-	ok &amp;= Run( AddEq,             &quot;AddEq&quot;            );
-	ok &amp;= Run( ad_fun,            &quot;ad_fun&quot;           );
-	ok &amp;= Run( ad_in_c,           &quot;ad_in_c&quot;          );
-	ok &amp;= Run( ad_input,          &quot;ad_input&quot;         );
-	ok &amp;= Run( ad_output,         &quot;ad_output&quot;        );
-	ok &amp;= Run( asin,              &quot;asin&quot;             );
-	ok &amp;= Run( asinh,             &quot;asinh&quot;            );
-	ok &amp;= Run( atan,              &quot;atan&quot;             );
-	ok &amp;= Run( atanh,             &quot;atanh&quot;            );
-	ok &amp;= Run( atan2,             &quot;atan2&quot;            );
-	ok &amp;= Run( azmul,             &quot;azmul&quot;            );
-	ok &amp;= Run( BenderQuad,        &quot;BenderQuad&quot;       );
-	ok &amp;= Run( BoolFun,           &quot;BoolFun&quot;          );
-	ok &amp;= Run( bool_sparsity,     &quot;bool_sparsity&quot;    );
-	ok &amp;= Run( capacity_order,    &quot;capacity_order&quot;   );
-	ok &amp;= Run( change_param,      &quot;change_param&quot;     );
-	ok &amp;= Run( check_for_nan,     &quot;check_for_nan&quot;    );
-	ok &amp;= Run( CheckNumericType,  &quot;CheckNumericType&quot; );
-	ok &amp;= Run( CheckSimpleVector, &quot;CheckSimpleVector&quot;);
-	ok &amp;= Run( Compare,           &quot;Compare&quot;          );
-	ok &amp;= Run( compare_change,    &quot;compare_change&quot;   );
-	ok &amp;= Run( complex_poly,      &quot;complex_poly&quot;     );
-	ok &amp;= Run( CondExp,           &quot;CondExp&quot;          );
-	ok &amp;= Run( conj_grad,         &quot;conj_grad&quot;        );
-	ok &amp;= Run( Cos,               &quot;Cos&quot;              );
-	ok &amp;= Run( Cosh,              &quot;Cosh&quot;             );
-	ok &amp;= Run( CppAD_vector,      &quot;CppAD_vector&quot;     );
-	ok &amp;= Run( dependency,        &quot;dependency&quot;       );
-	ok &amp;= Run( Div,               &quot;Div&quot;              );
-	ok &amp;= Run( DivEq,             &quot;DivEq&quot;            );
-	ok &amp;= Run( EqualOpSeq,        &quot;EqualOpSeq&quot;       );
-	ok &amp;= Run( Erf,               &quot;Erf&quot;              );
-	ok &amp;= Run( ErrorHandler,      &quot;ErrorHandler&quot;     );
-	ok &amp;= Run( exp,               &quot;exp&quot;              );
-	ok &amp;= Run( expm1,             &quot;expm1&quot;            );
-	ok &amp;= Run( ForOne,            &quot;ForOne&quot;           );
-	ok &amp;= Run( ForTwo,            &quot;ForTwo&quot;           );
-	ok &amp;= Run( Forward,           &quot;Forward&quot;          );
-	ok &amp;= Run( forward_dir,       &quot;forward_dir&quot;      );
-	ok &amp;= Run( forward_order,     &quot;forward_order&quot;    );
-	ok &amp;= Run( ForSparseJac,      &quot;ForSparseJac&quot;     );
-	ok &amp;= Run( fun_assign,        &quot;fun_assign&quot;       );
-	ok &amp;= Run( FunCheck,          &quot;FunCheck&quot;         );
-	ok &amp;= Run( HesLagrangian,     &quot;HesLagrangian&quot;    );
-	ok &amp;= Run( HesLuDet,          &quot;HesLuDet&quot;         );
-	ok &amp;= Run( HesMinorDet,       &quot;HesMinorDet&quot;      );
-	ok &amp;= Run( Hessian,           &quot;Hessian&quot;          );
-	ok &amp;= Run( HesTimesDir,       &quot;HesTimesDir&quot;      );
-	ok &amp;= Run( Independent,       &quot;Independent&quot;      );
-	ok &amp;= Run( index_sort,        &quot;index_sort&quot;       );
-	ok &amp;= Run( Integer,           &quot;Integer&quot;          );
-	ok &amp;= Run( Interface2C,       &quot;Interface2C&quot;      );
-	ok &amp;= Run( interp_onetape,    &quot;interp_onetape&quot;   );
-	ok &amp;= Run( interp_retape,     &quot;interp_retape&quot;    );
-	ok &amp;= Run( JacLuDet,          &quot;JacLuDet&quot;         );
-	ok &amp;= Run( JacMinorDet,       &quot;JacMinorDet&quot;      );
-	ok &amp;= Run( Jacobian,          &quot;Jacobian&quot;         );
-	ok &amp;= Run( log,               &quot;log&quot;              );
-	ok &amp;= Run( log10,             &quot;log10&quot;            );
-	ok &amp;= Run( log1p,             &quot;log1p&quot;            );
-	ok &amp;= Run( LuFactor,          &quot;LuFactor&quot;         );
-	ok &amp;= Run( LuInvert,          &quot;LuInvert&quot;         );
-	ok &amp;= Run( LuRatio,           &quot;LuRatio&quot;          );
-	ok &amp;= Run( LuSolve,           &quot;LuSolve&quot;          );
-	ok &amp;= Run( LuVecADOk,         &quot;LuVecADOk&quot;        );
-	ok &amp;= Run( Mul,               &quot;Mul&quot;              );
-	ok &amp;= Run( MulEq,             &quot;MulEq&quot;            );
-	ok &amp;= Run( mul_level,         &quot;mul_level&quot;        );
-	ok &amp;= Run( mul_level_ode,     &quot;mul_level_ode&quot;    );
-	ok &amp;= Run( nan,               &quot;nan&quot;              );
-	ok &amp;= Run( Near_Equal,        &quot;Near_Equal&quot;       );
-	ok &amp;= Run( NearEqualExt,      &quot;NearEqualExt&quot;     );
-	ok &amp;= Run( number_skip,       &quot;number_skip&quot;      );
-	ok &amp;= Run( NumericType,       &quot;NumericType&quot;      );
-	ok &amp;= Run( num_limits,        &quot;num_limits&quot;       );
-	ok &amp;= Run( OdeErrControl,     &quot;OdeErrControl&quot;    );
-	ok &amp;= Run( OdeErrMaxabs,      &quot;OdeErrMaxabs&quot;     );
-	ok &amp;= Run( OdeGear,           &quot;OdeGear&quot;          );
-	ok &amp;= Run( OdeGearControl,    &quot;OdeGearControl&quot;   );
-	ok &amp;= Run( OdeStiff,          &quot;OdeStiff&quot;         );
-	ok &amp;= Run( ode_taylor,        &quot;ode_taylor&quot;       );
-	ok &amp;= Run( opt_val_hes,       &quot;opt_val_hes&quot;      );
-	ok &amp;= Run( optimize,          &quot;optimize&quot;         );
-	ok &amp;= Run( ParVar,            &quot;ParVar&quot;           );
-	ok &amp;= Run( Poly,              &quot;Poly&quot;             );
-	ok &amp;= Run( pow,               &quot;pow&quot;              );
-	ok &amp;= Run( pow_int,           &quot;pow_int&quot;          );
-	ok &amp;= Run( reverse_any,       &quot;reverse_any&quot;      );
-	ok &amp;= Run( reverse_one,       &quot;reverse_one&quot;      );
-	ok &amp;= Run( reverse_three,     &quot;reverse_three&quot;    );
-	ok &amp;= Run( reverse_two,       &quot;reverse_two&quot;      );
-	ok &amp;= Run( RevOne,            &quot;RevOne&quot;           );
-	ok &amp;= Run( RevSparseHes,      &quot;RevSparseHes&quot;     );
-	ok &amp;= Run( RevSparseJac,      &quot;RevSparseJac&quot;     );
-	ok &amp;= Run( RevTwo,            &quot;RevTwo&quot;           );
-	ok &amp;= Run( RombergMul,        &quot;RombergMul&quot;       );
-	ok &amp;= Run( RombergOne,        &quot;RombergOne&quot;       );
-	ok &amp;= Run( Rosen34,           &quot;Rosen34&quot;          );
-	ok &amp;= Run( runge_45_1,        &quot;runge_45_1&quot;       );
-	ok &amp;= Run( runge_45_2,        &quot;runge_45_2&quot;       );
-	ok &amp;= Run( seq_property,      &quot;seq_property&quot;     );
-	ok &amp;= Run( sign,              &quot;sign&quot;             );
-	ok &amp;= Run( SimpleVector,      &quot;SimpleVector&quot;     );
-	ok &amp;= Run( Sin,               &quot;Sin&quot;              );
-	ok &amp;= Run( Sinh,              &quot;Sinh&quot;             );
-	ok &amp;= Run( sparse_hessian,    &quot;sparse_hessian&quot;   );
-	ok &amp;= Run( sparse_jacobian,   &quot;sparse_jacobian&quot;  );
-	ok &amp;= Run( sparse_sub_hes,    &quot;sparse_sub_hes&quot;   );
-	ok &amp;= Run( sparsity_sub,      &quot;sparsity_sub&quot;     );
-	ok &amp;= Run( Sqrt,              &quot;Sqrt&quot;             );
-	ok &amp;= Run( StackMachine,      &quot;StackMachine&quot;     );
-	ok &amp;= Run( Sub,               &quot;Sub&quot;              );
-	ok &amp;= Run( SubEq,             &quot;SubEq&quot;            );
-	ok &amp;= Run( sub_sparse_hes,    &quot;sub_sparse_hes&quot;   );
-	ok &amp;= Run( Tan,               &quot;Tan&quot;              );
-	ok &amp;= Run( Tanh,              &quot;Tanh&quot;             );
-	ok &amp;= Run( TapeIndex,         &quot;TapeIndex&quot;        );
-	ok &amp;= Run( thread_alloc,      &quot;thread_alloc&quot;     );
-	ok &amp;= Run( to_string,         &quot;to_string&quot;        );
-	ok &amp;= Run( UnaryMinus,        &quot;UnaryMinus&quot;       );
-	ok &amp;= Run( UnaryPlus,         &quot;UnaryPlus&quot;        );
-	ok &amp;= Run( Value,             &quot;Value&quot;            );
-	ok &amp;= Run( Var2Par,           &quot;Var2Par&quot;          );
-	ok &amp;= Run( vec_ad,            &quot;vec_ad&quot;           );
-	ok &amp;= Run( vectorBool,        &quot;vectorBool&quot;       );
-# ifdef CPPAD_ADOLC_EXAMPLES
-	ok &amp;= Run( mul_level_adolc,      &quot;mul_level_adolc&quot;     );
-	ok &amp;= Run( mul_level_adolc_ode,  &quot;mul_level_adolc_ode&quot; );
-# endif
-# ifdef CPPAD_COLPACK_EXAMPLES
-	ok &amp;= Run( colpack_hes,       &quot;colpack_hes&quot;      );
-	ok &amp;= Run( colpack_jac,       &quot;colpack_jac&quot;      );
-# endif
-# ifdef CPPAD_EIGEN_EXAMPLES
-	ok &amp;= Run( eigen_array,       &quot;eigen_array&quot;      );
-	ok &amp;= Run( eigen_det,         &quot;eigen_det&quot;        );
-# endif
+     <span style="font-style: italic"><span style="color: #9A1900">// check for errors</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cout<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">||</span> <span style="color: #990000">(</span>Run_error_count <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     Run_ok_count<span style="color: #990000">++;</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK:    "</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"No memory leak detected"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          Run_error_count<span style="color: #990000">++;</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Error: "</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"memory leak detected"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Run base_require after memory leak check because base_alloc.hpp uses</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// thread_alloc to allocate memory for static copies of nan.</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> base_require<span style="color: #990000">,</span>      <span style="color: #FF0000">"base_require"</span>     <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// convert int(size_t) to avoid warning on _MSC_VER systems</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"All "</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>Run_ok_count<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" tests passed."</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>Run_error_count<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" tests failed."</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	// check for errors
-	using std::cout;
-	using std::endl;
-	assert( ok || (Run_error_count &gt; 0) );
-	if( CppAD::thread_alloc::free_all() )
-	{	Run_ok_count++;
-		cout &lt;&lt; &quot;OK:    &quot; &lt;&lt; &quot;No memory leak detected&quot; &lt;&lt; endl;
-	}
-	else
-	{	ok = false;
-		Run_error_count++;
-		cout &lt;&lt; &quot;Error: &quot; &lt;&lt; &quot;memory leak detected&quot; &lt;&lt; endl;
-	}
-	// Run base_require after memory leak check because base_alloc.hpp uses
-	// thread_alloc to allocate memory for static copies of nan.
-	ok &amp;= Run( base_require,      &quot;base_require&quot;     );
-	// convert int(size_t) to avoid warning on _MSC_VER systems
-	if( ok )
-		cout &lt;&lt; &quot;All &quot; &lt;&lt; int(Run_ok_count) &lt;&lt; &quot; tests passed.&quot; &lt;&lt; endl;
-	else	cout &lt;&lt; int(Run_error_count) &lt;&lt; &quot; tests failed.&quot; &lt;&lt; endl;
-
-	return static_cast&lt;int&gt;( ! ok );
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/example.cpp
 
 </body>

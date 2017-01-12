@@ -1,6 +1,6 @@
-// $Id: tangent.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: tangent.cpp 3821 2016-06-30 02:53:40Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -31,43 +31,30 @@ This atomic operation can use both set and bool sparsity patterns.
 $nospell
 
 $head Start Class Definition$$
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
 namespace { // Begin empty namespace
 using CppAD::vector;
 //
 // a utility to compute the union of two sets.
-void my_union(
-	std::set<size_t>&         result  ,
-	const std::set<size_t>&   left    ,
-	const std::set<size_t>&   right   )
-{	std::set<size_t> temp;
-	std::set_union(
-		left.begin()              ,
-		left.end()                ,
-		right.begin()             ,
-		right.end()               ,
-		std::inserter(temp, temp.begin())
-	);
-	result.swap(temp);
-}
+using CppAD::set_union;
 //
 class atomic_tangent : public CppAD::atomic_base<float> {
-/* $$
+/* %$$
 $head Constructor $$
-$codep */
-	private:
+$srccode%cpp% */
+private:
 	const bool hyperbolic_; // is this hyperbolic tangent
-	public:
+public:
 	// constructor
 	atomic_tangent(const char* name, bool hyperbolic)
 	: CppAD::atomic_base<float>(name),
 	hyperbolic_(hyperbolic)
 	{ }
-	private:
-/* $$
+private:
+/* %$$
 $head forward$$
-$codep */
+$srccode%cpp% */
 	// forward mode routine called by CppAD
 	bool forward(
 		size_t                    p ,
@@ -78,8 +65,10 @@ $codep */
 		      vector<float>&    tzy
 	)
 	{	size_t q1 = q + 1;
+# ifndef NDEBUG
 		size_t n  = tx.size()  / q1;
 		size_t m  = tzy.size() / q1;
+# endif
 		assert( n == 1 );
 		assert( m == 2 );
 		assert( p <= q );
@@ -122,9 +111,9 @@ $codep */
 		// All orders are implemented and there are no possible errors
 		return true;
 	}
-/* $$
+/* %$$
 $head reverse$$
-$codep */
+$srccode%cpp% */
 	// reverse mode routine called by CppAD
 	virtual bool reverse(
 		size_t                    q ,
@@ -134,8 +123,10 @@ $codep */
 		const vector<float>&    pzy
 	)
 	{	size_t q1 = q + 1;
+# ifndef NDEBUG
 		size_t n  = tx.size()  / q1;
 		size_t m  = tzy.size() / q1;
+# endif
 		assert( px.size()  == n * q1 );
 		assert( pzy.size() == m * q1 );
 		assert( n == 1 );
@@ -178,16 +169,21 @@ $codep */
 
 		return true;
 	}
-/* $$
+/* %$$
 $head for_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// forward Jacobian sparsity routine called by CppAD
 	virtual bool for_sparse_jac(
 		size_t                                p ,
 		const vector<bool>&                   r ,
-		      vector<bool>&                   s )
-	{	size_t n = r.size() / p;
+		      vector<bool>&                   s ,
+		const vector<float>&                  x )
+	{
+# ifndef NDEBUG
+		size_t n = r.size() / p;
 		size_t m = s.size() / p;
+# endif
+		assert( n == x.size() );
 		assert( n == 1 );
 		assert( m == 2 );
 
@@ -203,9 +199,14 @@ $codep */
 	virtual bool for_sparse_jac(
 		size_t                                p ,
 		const vector< std::set<size_t> >&     r ,
-		      vector< std::set<size_t> >&     s )
-	{	size_t n = r.size();
+		      vector< std::set<size_t> >&     s ,
+		const vector<float>&                  x )
+	{
+# ifndef NDEBUG
+		size_t n = r.size();
 		size_t m = s.size();
+# endif
+		assert( n == x.size() );
 		assert( n == 1 );
 		assert( m == 2 );
 
@@ -215,18 +216,23 @@ $codep */
 
 		return true;
 	}
-/* $$
+/* %$$
 $head rev_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// reverse Jacobian sparsity routine called by CppAD
 	virtual bool rev_sparse_jac(
 		size_t                                p ,
 		const vector<bool>&                  rt ,
-		      vector<bool>&                  st )
-	{	size_t n = st.size() / p;
+		      vector<bool>&                  st ,
+		const vector<float>&                  x )
+	{
+# ifndef NDEBUG
+		size_t n = st.size() / p;
 		size_t m = rt.size() / p;
+# endif
 		assert( n == 1 );
 		assert( m == 2 );
+		assert( n == x.size() );
 
 		// sparsity for S(x)^T = f'(x)^T * R^T
 		for(size_t j = 0; j < p; j++)
@@ -238,19 +244,24 @@ $codep */
 	virtual bool rev_sparse_jac(
 		size_t                                p ,
 		const vector< std::set<size_t> >&    rt ,
-		      vector< std::set<size_t> >&    st )
-	{	size_t n = st.size();
+		      vector< std::set<size_t> >&    st ,
+		const vector<float>&                  x )
+	{
+# ifndef NDEBUG
+		size_t n = st.size();
 		size_t m = rt.size();
+# endif
 		assert( n == 1 );
 		assert( m == 2 );
+		assert( n == x.size() );
 
 		// sparsity for S(x)^T = f'(x)^T * R^T
-		my_union(st[0], rt[0], rt[1]);
+		st[0] = set_union(rt[0], rt[1]);
 		return true;
 	}
-/* $$
+/* %$$
 $head rev_sparse_hes$$
-$codep */
+$srccode%cpp% */
 	// reverse Hessian sparsity routine called by CppAD
 	virtual bool rev_sparse_hes(
 		const vector<bool>&                   vx,
@@ -259,10 +270,14 @@ $codep */
 		size_t                                p ,
 		const vector<bool>&                   r ,
 		const vector<bool>&                   u ,
-		      vector<bool>&                   v )
+		      vector<bool>&                   v ,
+		const vector<float>&                  x )
 	{
+# ifndef NDEBUG
 		size_t m = s.size();
 		size_t n = t.size();
+# endif
+		assert( x.size() == n );
 		assert( r.size() == n * p );
 		assert( u.size() == m * p );
 		assert( v.size() == n * p );
@@ -304,9 +319,14 @@ $codep */
 		size_t                                p ,
 		const vector< std::set<size_t> >&     r ,
 		const vector< std::set<size_t> >&     u ,
-		      vector< std::set<size_t> >&     v )
-	{	size_t m = s.size();
+		      vector< std::set<size_t> >&     v ,
+		const vector<float>&                  x )
+	{
+# ifndef NDEBUG
+		size_t m = s.size();
 		size_t n = t.size();
+# endif
+		assert( x.size() == n );
 		assert( r.size() == n );
 		assert( u.size() == m );
 		assert( v.size() == n );
@@ -325,38 +345,38 @@ $codep */
 
 		// back propagate the sparsity for U, note both components
 		// of f'(x) may be non-zero;
-		my_union(v[0], u[0], u[1]);
+		v[0] = set_union(u[0], u[1]);
 
 		// include forward Jacobian sparsity in Hessian sparsity
 		// (note sparsty for f''(x) * R same as for R)
 		if( s[0] | s[1] )
-			my_union(v[0], v[0], r[0]);
+			v[0] = set_union(v[0], r[0]);
 
 		return true;
 	}
-/* $$
+/* %$$
 $head End Class Definition$$
-$codep */
+$srccode%cpp% */
 }; // End of atomic_tangent class
 }  // End empty namespace
 
-/* $$
+/* %$$
 $head Use Atomic Function$$
-$codep */
+$srccode%cpp% */
 bool tangent(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
 	float eps = 10.f * CppAD::numeric_limits<float>::epsilon();
-/* $$
+/* %$$
 $subhead Constructor$$
-$codep */
+$srccode%cpp% */
 	// --------------------------------------------------------------------
 	// Creater a tan and tanh object
 	atomic_tangent my_tan("my_tan", false), my_tanh("my_tanh", true);
-/* $$
+/* %$$
 $subhead Recording$$
-$codep */
+$srccode%cpp% */
 	// domain space vector
 	size_t n  = 1;
 	float  x0 = 0.5;
@@ -391,9 +411,9 @@ $codep */
 	// create f: x -> f and stop tape recording
 	CppAD::ADFun<float> F;
 	F.Dependent(ax, af);
-/* $$
+/* %$$
 $subhead forward$$
-$codep */
+$srccode%cpp% */
 	// check function value
 	float tan = std::tan(x0);
 	ok &= NearEqual(af[0] , tan,  eps, eps);
@@ -411,9 +431,9 @@ $codep */
 	CppAD::vector<float> dx(n), df(m);
 	dx[0] = 1.;
 	df    = F.Forward(1, dx);
-/* $$
+/* %$$
 $subhead reverse$$
-$codep */
+$srccode%cpp% */
 	// compute derivative of tan - tanh using reverse mode
 	CppAD::vector<float> w(m), dw(n);
 	w[0]  = 1.;
@@ -449,9 +469,9 @@ $codep */
 	ok   &= NearEqual(two * ddf[1], tanhpp, eps, eps);
 	ok   &= NearEqual(ddw[0], w[0]*tanp  + w[1]*tanhp , eps, eps);
 	ok   &= NearEqual(ddw[1], w[0]*tanpp + w[1]*tanhpp, eps, eps);
-/* $$
+/* %$$
 $subhead for_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// Forward mode computation of sparsity pattern for F.
 	size_t p = n;
 	// user vectorBool because m and n are small
@@ -461,9 +481,9 @@ $codep */
 	ok  &= (s1[0] == true);  // f[0] depends on x[0]
 	ok  &= (s1[1] == true);  // f[1] depends on x[0]
 	ok  &= (s1[2] == false); // f[2] does not depend on x[0]
-/* $$
+/* %$$
 $subhead rev_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// Reverse mode computation of sparsity pattern for F.
 	size_t q = m;
 	CppAD::vectorBool s2(q * m), r2(q * n);
@@ -477,9 +497,9 @@ $codep */
 	ok  &= (r2[0] == true);  // f[0] depends on x[0]
 	ok  &= (r2[1] == true);  // f[1] depends on x[0]
 	ok  &= (r2[2] == false); // f[2] does not depend on x[0]
-/* $$
+/* %$$
 $subhead rev_sparse_hes$$
-$codep */
+$srccode%cpp% */
 	// Hessian sparsity for f[0]
 	CppAD::vectorBool s3(m), h(p * n);
 	s3[0] = true;
@@ -493,9 +513,9 @@ $codep */
 	s3[2] = true;
 	h    = F.RevSparseHes(p, s3);
 	ok  &= (h[0] == false);  // Hessian is zero
-/* $$
+/* %$$
 $subhead Large x Values$$
-$codep */
+$srccode%cpp% */
 	// check tanh results for a large value of x
 	x[0]  = std::numeric_limits<float>::max() / two;
 	f     = F.Forward(0, x);
@@ -507,7 +527,7 @@ $codep */
 
 	return ok;
 }
-/* $$
+/* %$$
 $$ $comment end nospell$$
 $end
 */

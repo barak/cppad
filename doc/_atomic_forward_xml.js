@@ -34,15 +34,21 @@ var list_down1 = [
 'atomic_reverse.xml',
 'atomic_for_sparse_jac.xml',
 'atomic_rev_sparse_jac.xml',
+'atomic_for_sparse_hes.xml',
 'atomic_rev_sparse_hes.xml',
 'atomic_base_clear.xml',
 'atomic_get_started.cpp.xml',
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
-'atomic_sparsity.cpp.xml',
+'atomic_set_sparsity.cpp.xml',
 'atomic_tangent.cpp.xml',
-'atomic_hes_sparse.cpp.xml',
+'atomic_eigen_mat_mul.cpp.xml',
+'atomic_eigen_mat_inv.cpp.xml',
+'atomic_eigen_cholesky.cpp.xml',
 'atomic_mat_mul.cpp.xml'
+];
+var list_down0 = [
+'atomic_forward.cpp.xml'
 ];
 var list_current0 = [
 'atomic_forward.xml#Syntax',
@@ -56,9 +62,7 @@ var list_current0 = [
 'atomic_forward.xml#ty',
 'atomic_forward.xml#ok',
 'atomic_forward.xml#Discussion',
-'atomic_forward.xml#Examples',
-'atomic_forward.xml#Examples.Define forward',
-'atomic_forward.xml#Examples.Use forward'
+'atomic_forward.xml#Examples'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

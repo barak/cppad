@@ -1,6 +1,6 @@
 // $Id$
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -28,7 +28,7 @@ to implement the tangent ($icode%id% == 0%$$) and hyperbolic tangent
 ($icode%id% == 1%$$) functions as user atomic operations.
 
 $code
-$verbatim%test_more/old_tan.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%test_more/old_tan.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -40,20 +40,7 @@ namespace { // Begin empty namespace
 	using CppAD::vector;
 
 	// a utility to compute the union of two sets.
-	void my_union(
-		std::set<size_t>&         result  ,
-		const std::set<size_t>&   left    ,
-		const std::set<size_t>&   right   )
-	{	std::set<size_t> temp;
-		std::set_union(
-			left.begin()              ,
-			left.end()                ,
-			right.begin()             ,
-			right.end()               ,
-			std::inserter(temp, temp.begin())
-		);
-		result.swap(temp);
-	}
+	using CppAD::set_union;
 
 	// ----------------------------------------------------------------------
 	// forward mode routine called by CppAD
@@ -215,7 +202,7 @@ namespace { // Begin empty namespace
 
 		// note that, if the users code only uses z, and not y,
 		// we could just set r[0] = s[0]
-		my_union(r[0], s[0], s[1]);
+		r[0] = set_union(s[0], s[1]);
 		return true;
 	}
 	// ----------------------------------------------------------------------
@@ -245,12 +232,12 @@ namespace { // Begin empty namespace
 		t[0] =  s[0] | s[1];
 
 		// back propagate Hessian sparsity, ...
-		my_union(v[0], u[0], u[1]);
+		v[0] = set_union(u[0], u[1]);
 
 		// convert forward Jacobian sparsity to Hessian sparsity
 		// because tan and tanh are nonlinear
 		if( t[0] )
-			my_union(v[0], v[0], r[0]);
+			v[0] = set_union(v[0], r[0]);
 
 		return true;
 	}

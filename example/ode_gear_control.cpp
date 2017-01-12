@@ -1,6 +1,6 @@
-// $Id: ode_gear_control.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: ode_gear_control.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -38,7 +38,7 @@ $latex \[
 The example tests OdeGearControl using the relations above:
 
 $code
-$verbatim%example/ode_gear_control.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/ode_gear_control.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -112,6 +112,7 @@ namespace {
 
 bool OdeGearControl(void)
 {	bool ok = true;     // initial return value
+	using CppAD::NearEqual;
 
 	CPPAD_TESTVECTOR(double) w(2);
 	w[0] = 10.;
@@ -145,12 +146,12 @@ bool OdeGearControl(void)
 		ti, tf, xi, smin, smax, sini, eabs, erel, ef, maxabs, nstep);
 
 	double x0 = exp(-w[0]*tf);
-	ok &= CppAD::NearEqual(x0, xf[0], 1e-4, 1e-4);
-	ok &= CppAD::NearEqual(0., ef[0], 1e-4, 1e-4);
+	ok &= NearEqual(x0, xf[0], 1e-4, 1e-4);
+	ok &= NearEqual(0., ef[0], 1e-4, 1e-4);
 
 	double x1 = w[0] * (exp(-w[0]*tf) - exp(-w[1]*tf))/(w[1] - w[0]);
-	ok &= CppAD::NearEqual(x1, xf[1], 1e-4, 1e-4);
-	ok &= CppAD::NearEqual(0., ef[1], 1e-4, 1e-4);
+	ok &= NearEqual(x1, xf[1], 1e-4, 1e-4);
+	ok &= NearEqual(0., ef[1], 1e-4, 1e-4);
 
 	return ok;
 }

@@ -34,15 +34,21 @@ var list_down1 = [
 'atomic_reverse.xml',
 'atomic_for_sparse_jac.xml',
 'atomic_rev_sparse_jac.xml',
+'atomic_for_sparse_hes.xml',
 'atomic_rev_sparse_hes.xml',
 'atomic_base_clear.xml',
 'atomic_get_started.cpp.xml',
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
-'atomic_sparsity.cpp.xml',
+'atomic_set_sparsity.cpp.xml',
 'atomic_tangent.cpp.xml',
-'atomic_hes_sparse.cpp.xml',
+'atomic_eigen_mat_mul.cpp.xml',
+'atomic_eigen_mat_inv.cpp.xml',
+'atomic_eigen_cholesky.cpp.xml',
 'atomic_mat_mul.cpp.xml'
+];
+var list_down0 = [
+'atomic_reverse.cpp.xml'
 ];
 var list_current0 = [
 'atomic_reverse.xml#Syntax',
@@ -51,13 +57,12 @@ var list_current0 = [
 'atomic_reverse.xml#q',
 'atomic_reverse.xml#tx',
 'atomic_reverse.xml#ty',
-'atomic_reverse.xml#F, G, H',
+'atomic_reverse.xml#F',
+'atomic_reverse.xml#G, H',
 'atomic_reverse.xml#py',
 'atomic_reverse.xml#py.px',
 'atomic_reverse.xml#ok',
-'atomic_reverse.xml#Examples',
-'atomic_reverse.xml#Examples.Define reverse',
-'atomic_reverse.xml#Examples.Use reverse'
+'atomic_reverse.xml#Examples'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

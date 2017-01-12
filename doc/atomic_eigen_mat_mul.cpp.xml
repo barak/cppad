@@ -1,0 +1,374 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Atomic Eigen Matrix Multiply: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Atomic Eigen Matrix Multiply: Example and Test"/>
+<meta name="keywords" id="keywords" content=" atomic eigen matrix multiply: example test description class definition use function constructor "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_atomic_eigen_mat_mul.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="atomic_tangent.cpp.xml" target="_top">Prev</a>
+</td><td><a href="atomic_eigen_mat_mul.hpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>AD</option>
+<option>ADValued</option>
+<option>atomic</option>
+<option>atomic_base</option>
+<option>atomic_eigen_mat_mul.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADValued-&gt;</option>
+<option>Arithmetic</option>
+<option>unary_standard_math</option>
+<option>binary_math</option>
+<option>CondExp</option>
+<option>Discrete</option>
+<option>numeric_limits</option>
+<option>atomic</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>atomic-&gt;</option>
+<option>checkpoint</option>
+<option>atomic_base</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>atomic_base-&gt;</option>
+<option>atomic_ctor</option>
+<option>atomic_option</option>
+<option>atomic_afun</option>
+<option>atomic_forward</option>
+<option>atomic_reverse</option>
+<option>atomic_for_sparse_jac</option>
+<option>atomic_rev_sparse_jac</option>
+<option>atomic_for_sparse_hes</option>
+<option>atomic_rev_sparse_hes</option>
+<option>atomic_base_clear</option>
+<option>atomic_get_started.cpp</option>
+<option>atomic_norm_sq.cpp</option>
+<option>atomic_reciprocal.cpp</option>
+<option>atomic_set_sparsity.cpp</option>
+<option>atomic_tangent.cpp</option>
+<option>atomic_eigen_mat_mul.cpp</option>
+<option>atomic_eigen_mat_inv.cpp</option>
+<option>atomic_eigen_cholesky.cpp</option>
+<option>atomic_mat_mul.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>atomic_eigen_mat_mul.cpp-&gt;</option>
+<option>atomic_eigen_mat_mul.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Description</option>
+<option>Class Definition</option>
+<option>Use Atomic Function</option>
+<option>---..Constructor</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Atomic Eigen Matrix Multiply: Example and Test</big></big></b></center>
+<br/>
+<b><big><a name="Description" id="Description">Description</a></big></b>
+<br/>
+The <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ function object 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ for this example is
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>f</mi>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">)</mo>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<mn>0</mn>
+</mtd><mtd columnalign="center" >
+<mn>0</mn>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<mn>1</mn>
+</mtd><mtd columnalign="center" >
+<mn>2</mn>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+</mtd><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">(</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="center" >
+<mn>0</mn>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<mn>2</mn>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+</mtd></mtr><mtr><mtd columnalign="center" >
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>0</mn>
+</msub>
+<mo stretchy="false">+</mo>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<msub><mi mathvariant='italic'>x</mi>
+<mn>1</mn>
+</msub>
+<mo stretchy="false">)</mo>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true">)</mo></mrow>
+</mrow></math>
+
+<br/>
+<b><big><a name="Class Definition" id="Class Definition">Class Definition</a></big></b>
+<br/>
+This example uses the file <a href="atomic_eigen_mat_mul.hpp.xml" target="_top"><span style='white-space: nowrap'>atomic_eigen_mat_mul.hpp</span></a>
+
+which defines matrix multiply as a <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
+ operation.
+
+
+
+<br/>
+<br/>
+<b><big><a name="Use Atomic Function" id="Use Atomic Function">Use Atomic Function</a></big></b>
+
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/example/eigen_mat_mul.hpp&gt;</span>
+
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">eigen_mat_mul</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #009900">double</span>                                            scalar<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;scalar&gt;</span>                                 ad_scalar<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">atomic_eigen_mat_mul</span><span style="color: #990000">&lt;</span>scalar<span style="color: #990000">&gt;::</span><span style="color: #008080">ad_matrix</span>  ad_matrix<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="color: #009900">bool</span> ok    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">scalar</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>scalar<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span></tt></pre>
+<br/>
+<b><a name="Use Atomic Function.Constructor" id="Use Atomic Function.Constructor">Constructor</a></b>
+
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// object that multiplies arbitrary matrices</span></span>
+     <span style="color: #008080">atomic_eigen_mat_mul&lt;scalar&gt;</span> mat_mul<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variable vector x</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ad_scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">ad_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          ad_x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_scalar</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ad_x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//        [ 0     0    ]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// left = [ 1     2    ]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//        [ x[0]  x[1] ]</span></span>
+     <span style="color: #008080">size_t</span> nr_left  <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n_middle   <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">ad_matrix</span> <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span>nr_left<span style="color: #990000">,</span> n_middle<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_scalar</span></span><span style="color: #990000">(</span><span style="color: #993399">0.0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_scalar</span></span><span style="color: #990000">(</span><span style="color: #993399">0.0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_scalar</span></span><span style="color: #990000">(</span><span style="color: #993399">1.0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_scalar</span></span><span style="color: #990000">(</span><span style="color: #993399">2.0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> ad_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_left</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> ad_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// right = [ x[0] , x[1] ]^T</span></span>
+     <span style="color: #008080">size_t</span> nc_right <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">ad_matrix</span> <span style="font-weight: bold"><span style="color: #000000">ad_right</span></span><span style="color: #990000">(</span>n_middle<span style="color: #990000">,</span> nc_right<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_right</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> ad_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #000000">ad_right</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">=</span> ad_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// use atomic operation to multiply left * right</span></span>
+     <span style="color: #008080">ad_matrix</span> ad_result <span style="color: #990000">=</span> mat_mul<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">op</span></span><span style="color: #990000">(</span>ad_left<span style="color: #990000">,</span> ad_right<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check that first component of result is a parameter</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// and the other components are varaibles.</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">ad_result</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>  <span style="font-weight: bold"><span style="color: #000000">ad_result</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>  <span style="font-weight: bold"><span style="color: #000000">ad_result</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// declare the dependent variable vector y</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ad_scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">ad_y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ad_y<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_result</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;scalar&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ad_x<span style="color: #990000">,</span> ad_y<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check zero order forward mode</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">scalar</span></span><span style="color: #990000">(</span>i <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     y   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span>                       eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span>         eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check first order forward mode</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y1</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     y1    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> x1<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span>        eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">1.0</span><span style="color: #990000">,</span>        eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     y1    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> x1<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span>        eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span><span style="color: #990000">,</span>        eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check second order forward mode</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y2</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     y2    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> x2<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">1.0</span><span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// 1/2 * f_1''(x)</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check first order reverse mode</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">d1w</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     d1w   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d1w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1.0</span><span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d1w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span><span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     d1w   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d1w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d1w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check second order reverse mode</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>scalar<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">d2w</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     d2w   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial f_2 w.r.t. x_0</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d2w<span style="color: #990000">[</span><span style="color: #993399">0</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial f_2 w.r.t  x_1</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d2w<span style="color: #990000">[</span><span style="color: #993399">1</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial f_2 w.r.t x_1, x_0</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d2w<span style="color: #990000">[</span><span style="color: #993399">0</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">0.0</span><span style="color: #990000">,</span>        eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial f_2 w.r.t x_1, x_1</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>d2w<span style="color: #990000">[</span><span style="color: #993399">1</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">2.0</span><span style="color: #990000">,</span>        eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check forward Jacobian sparsity</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">set&lt;size_t&gt;</span> check_set<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          r<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     s      <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     ok    <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     ok    <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     ok    <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check reverse Jacobian sparsity</span></span>
+     r<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          r<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+     s  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>m<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     ok    <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     ok    <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     ok    <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check forward Hessian sparsity for f_2 (x)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">r2</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s2</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          r2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     s2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     s2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     h <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseHes</span></span><span style="color: #990000">(</span>r2<span style="color: #990000">,</span> s2<span style="color: #990000">);</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check reverse Hessian sparsity for f_2 (x)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">s3</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     s3<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     s3<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     h <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> s3<span style="color: #990000">);</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     check_set<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> check_set<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
+
+<hr/>Input File: example/atomic/eigen_mat_mul.cpp
+
+</body>
+</html>

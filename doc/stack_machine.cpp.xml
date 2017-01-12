@@ -91,204 +91,197 @@ A:active { color : purple }
 <td>stack_machine.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Example Differentiating a Stack Machine Interpreter</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstring&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstdlib&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cctype&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;stack&gt;</span>
 
-# include &lt;cstring&gt;
-# include &lt;cstddef&gt;
-# include &lt;cstdlib&gt;
-# include &lt;cctype&gt;
-# include &lt;cassert&gt;
-# include &lt;stack&gt;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+<span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace ------------------------------------------------</span></span>
 
-namespace {
-// Begin empty namespace ------------------------------------------------
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">is_number</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">string</span> <span style="color: #990000">&amp;</span>s <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">char</span> ch <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="color: #009900">bool</span> number <span style="color: #990000">=</span> <span style="color: #990000">(</span>std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strchr</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"0123456789."</span><span style="color: #990000">,</span> ch<span style="color: #990000">)</span> <span style="color: #990000">!=</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> number<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">is_binary</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">string</span> <span style="color: #990000">&amp;</span>s <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">char</span> ch <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="color: #009900">bool</span> binary <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">strchr</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"+-*/."</span><span style="color: #990000">,</span> ch<span style="color: #990000">)</span> <span style="color: #990000">!=</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> binary<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">is_variable</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">string</span> <span style="color: #990000">&amp;</span>s <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">char</span> ch <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="color: #009900">bool</span> variable <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #FF0000">'a'</span> <span style="color: #990000">&lt;=</span> ch<span style="color: #990000">)</span> <span style="color: #990000">&amp;</span> <span style="color: #990000">(</span>ch <span style="color: #990000">&lt;=</span> <span style="color: #FF0000">'z'</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> variable<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-bool is_number( const std::string &amp;s )
-{	char ch = s[0];
-	bool number = (std::strchr(&quot;0123456789.&quot;, ch) != 0);
-	return number;
-}
-bool is_binary( const std::string &amp;s )
-{	char ch = s[0];
-	bool binary = (strchr(&quot;+-*/.&quot;, ch) != 0);
-	return binary;
-}
-bool is_variable( const std::string &amp;s )
-{	char ch = s[0];
-	bool variable = ('a' &lt;= ch) &amp; (ch &lt;= 'z');
-	return variable;
-}
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">StackMachine</span></span><span style="color: #990000">(</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">stack&lt; std::string &gt;</span>          <span style="color: #990000">&amp;</span>token_stack  <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; CppAD::AD&lt;double&gt; &gt;</span> <span style="color: #990000">&amp;</span>variable     <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>string<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>stack<span style="color: #990000">;</span>
 
-void StackMachine(
-	std::stack&lt; std::string &gt;          &amp;token_stack  ,
-	CppAD::vector&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;variable     )
-{	using std::string;
-	using std::stack;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-	using CppAD::AD;
+     <span style="color: #008080">stack&lt; AD&lt;double&gt; &gt;</span> value_stack<span style="color: #990000">;</span>
+     <span style="color: #008080">string</span>              token<span style="color: #990000">;</span>
+     <span style="color: #008080">AD&lt;double&gt;</span>          value_one<span style="color: #990000">;</span>
+     <span style="color: #008080">AD&lt;double&gt;</span>          value_two<span style="color: #990000">;</span>
 
-	stack&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; value_stack;
-	string              token;
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;          value_one;
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt;          value_two;
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">empty</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">string</span> s <span style="color: #990000">=</span> token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">top</span></span><span style="color: #990000">();</span>
+          token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">pop</span></span><span style="color: #990000">();</span>
 
-	while( ! token_stack.empty() )
-	{	string s = token_stack.top();
-		token_stack.pop();
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">is_number</span></span><span style="color: #990000">(</span>s<span style="color: #990000">)</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     value_one <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atof</span></span><span style="color: #990000">(</span> s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">c_str</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+               value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span> value_one <span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">is_variable</span></span><span style="color: #990000">(</span>s<span style="color: #990000">)</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     value_one <span style="color: #990000">=</span> variable<span style="color: #990000">[</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'a'</span><span style="color: #990000">)</span> <span style="color: #990000">];</span>
+               value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span> value_one <span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">is_binary</span></span><span style="color: #990000">(</span>s<span style="color: #990000">)</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;=</span> <span style="color: #993399">2</span> <span style="color: #990000">);</span>
+               value_one <span style="color: #990000">=</span> value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">top</span></span><span style="color: #990000">();</span>
+               value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">pop</span></span><span style="color: #990000">();</span>
+               value_two <span style="color: #990000">=</span> value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">top</span></span><span style="color: #990000">();</span>
+               value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">pop</span></span><span style="color: #990000">();</span>
 
-		if( is_number(s) )
-		{	value_one = std::atof( s.c_str() );
-			value_stack.push( value_one );
-		}
-		else if( is_variable(s) )
-		{	value_one = variable[ size_t(s[0]) - size_t('a') ];
-			value_stack.push( value_one );
-		}
-		else if( is_binary(s) )
-		{	assert( value_stack.size() &gt;= 2 );
-			value_one = value_stack.top();
-			value_stack.pop();
-			value_two = value_stack.top();
-			value_stack.pop();
+               <span style="font-weight: bold"><span style="color: #0000FF">switch</span></span><span style="color: #990000">(</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+               <span style="color: #FF0000">{</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #FF0000">'+'</span><span style="color: #990000">:</span>
+                    value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span>value_one <span style="color: #990000">+</span> value_two<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-			switch( s[0] )
-			{
-				case '+':
-				value_stack.push(value_one + value_two);
-				break;
+                    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #FF0000">'-'</span><span style="color: #990000">:</span>
+                    value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span>value_one <span style="color: #990000">-</span> value_two<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-				case '-':
-				value_stack.push(value_one - value_two);
-				break;
+                    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #FF0000">'*'</span><span style="color: #990000">:</span>
+                    value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span>value_one <span style="color: #990000">*</span> value_two<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-				case '*':
-				value_stack.push(value_one * value_two);
-				break;
+                    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #FF0000">'/'</span><span style="color: #990000">:</span>
+                    value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span>value_one <span style="color: #990000">/</span> value_two<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-				case '/':
-				value_stack.push(value_one / value_two);
-				break;
+<span style="font-weight: bold"><span style="color: #008080">                    default:</span></span>
+                    <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #FF0000">'='</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;=</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;=</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+               <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+               s <span style="color: #990000">=</span> token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">top</span></span><span style="color: #990000">();</span>
+               token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">pop</span></span><span style="color: #990000">();</span>
+               <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">is_variable</span></span><span style="color: #990000">(</span> s <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+               value_one <span style="color: #990000">=</span> value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">top</span></span><span style="color: #990000">();</span>
+               value_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">pop</span></span><span style="color: #990000">();</span>
+               <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+               variable<span style="color: #990000">[</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'a'</span><span style="color: #990000">)</span> <span style="color: #990000">]</span> <span style="color: #990000">=</span> value_one<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-				default:
-				assert(0);
-			}
-		}
-		else if( s[0] == '=' )
-		{	assert( value_stack.size() &gt;= 1 );
-			assert( token_stack.size() &gt;= 1 );
-			//
-			s = token_stack.top();
-			token_stack.pop();
-			//
-			assert( is_variable( s ) );
-			value_one = value_stack.top();
-			value_stack.pop();
-			//
-			variable[ size_t(s[0]) - size_t('a') ] = value_one;
-		}
-		else assert(0);
-	}
-	return;
-}
+<span style="font-style: italic"><span style="color: #9A1900">// End empty namespace -------------------------------------------------------</span></span>
+<span style="color: #FF0000">}</span>
 
-// End empty namespace -------------------------------------------------------
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">StackMachine</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool StackMachine(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>string<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>stack<span style="color: #990000">;</span>
 
-	using std::string;
-	using std::stack;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	using CppAD::vector;
+     <span style="font-style: italic"><span style="color: #9A1900">// The users program in that stack machine language</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>program<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #FF0000">"1.0"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"a"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"+"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"="</span><span style="color: #990000">,</span> <span style="color: #FF0000">"b"</span><span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// b = a + 1</span></span>
+          <span style="color: #FF0000">"2.0"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"b"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"*"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"="</span><span style="color: #990000">,</span> <span style="color: #FF0000">"c"</span><span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// c = b * 2</span></span>
+          <span style="color: #FF0000">"3.0"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"c"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"-"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"="</span><span style="color: #990000">,</span> <span style="color: #FF0000">"d"</span><span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// d = c - 3</span></span>
+          <span style="color: #FF0000">"4.0"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"d"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"/"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"="</span><span style="color: #990000">,</span> <span style="color: #FF0000">"e"</span>   <span style="font-style: italic"><span style="color: #9A1900">// e = d / 4</span></span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n_program <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span> program <span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span> program<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-	// The users program in that stack machine language
-	const char *program[] = {
-		&quot;1.0&quot;, &quot;a&quot;, &quot;+&quot;, &quot;=&quot;, &quot;b&quot;,  // b = a + 1
-		&quot;2.0&quot;, &quot;b&quot;, &quot;*&quot;, &quot;=&quot;, &quot;c&quot;,  // c = b * 2
-		&quot;3.0&quot;, &quot;c&quot;, &quot;-&quot;, &quot;=&quot;, &quot;d&quot;,  // d = c - 3
-		&quot;4.0&quot;, &quot;d&quot;, &quot;/&quot;, &quot;=&quot;, &quot;e&quot;   // e = d / 4
-	};
-	size_t n_program = sizeof( program ) / sizeof( program[0] );
+     <span style="font-style: italic"><span style="color: #9A1900">// put the program in the token stack</span></span>
+     <span style="color: #008080">stack&lt; string &gt;</span> token_stack<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> n_program<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>i<span style="color: #990000">--)</span>
+          token_stack<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push</span></span><span style="color: #990000">(</span> program<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-	// put the program in the token stack
-	stack&lt; string &gt; token_stack;
-	size_t i = n_program;
-	while(i--)
-		token_stack.push( program[i] );
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 1;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; X(n);
-	X[0] = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// x[0] corresponds to a in the stack machine</span></span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">variable</span></span><span style="color: #990000">(</span><span style="color: #993399">26</span><span style="color: #990000">);</span>
+     variable<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-	// x[0] corresponds to a in the stack machine
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; variable(26);
-	variable[0] = X[0];
+     <span style="font-style: italic"><span style="color: #9A1900">// calculate the resutls of the program</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">StackMachine</span></span><span style="color: #990000">(</span> token_stack <span style="color: #990000">,</span> variable<span style="color: #990000">);</span>
 
-	// calculate the resutls of the program
-	StackMachine( token_stack , variable);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> variable<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>   <span style="font-style: italic"><span style="color: #9A1900">// b = a + 1</span></span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> variable<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>   <span style="font-style: italic"><span style="color: #9A1900">// c = (a + 1) * 2</span></span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> variable<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>   <span style="font-style: italic"><span style="color: #9A1900">// d = (a + 1) * 2 - 3</span></span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> variable<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">];</span>   <span style="font-style: italic"><span style="color: #9A1900">// e = ( (a + 1) * 2 - 3 ) / 4</span></span>
 
-	// range space vector
-	size_t m = 4;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; Y(m);
-	Y[0] = variable[1];   // b = a + 1
-	Y[1] = variable[2];   // c = (a + 1) * 2
-	Y[2] = variable[3];   // d = (a + 1) * 2 - 3
-	Y[3] = variable[4];   // e = ( (a + 1) * 2 - 3 ) / 4
+     <span style="font-style: italic"><span style="color: #9A1900">// create f : X -&gt; Y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// create f : X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// use forward mode to evaluate function at different argument value</span></span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
 
-	// use forward mode to evaluate function at different argument value
-	size_t p = 0;
-	vector&lt;double&gt; x(n);
-	vector&lt;double&gt; y(m);
-	x[0] = 1.;
-	y    = f.<a href="forward.xml" target="_top">Forward</a>(p, x);
+     <span style="font-style: italic"><span style="color: #9A1900">// check function values</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">-</span> <span style="color: #993399">3</span><span style="color: #990000">.);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">-</span> <span style="color: #993399">3</span><span style="color: #990000">.)</span> <span style="color: #990000">/</span> <span style="color: #993399">4</span><span style="color: #990000">.);</span>
 
-	// check function values
-	ok &amp;= (y[0] == x[0] + 1.);
-	ok &amp;= (y[1] == (x[0] + 1.) * 2.);
-	ok &amp;= (y[2] == (x[0] + 1.) * 2. - 3.);
-	ok &amp;= (y[3] == ( (x[0] + 1.) * 2. - 3.) / 4.);
+     <span style="font-style: italic"><span style="color: #9A1900">// Use forward mode (because x is shorter than y) to calculate Jacobian</span></span>
+     p <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">],</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// Use forward mode (because x is shorter than y) to calculate Jacobian
-	p = 1;
-	vector&lt;double&gt; dx(n);
-	vector&lt;double&gt; dy(m);
-	dx[0] = 1.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(p, dx);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 1., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], 2., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[2], 2., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[3], .5, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// Use Jacobian routine (which automatically decides which mode to use)</span></span>
+     dy <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">],</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// Use Jacobian routine (which automatically decides which mode to use)
-	dy = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 1., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], 2., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[2], 2., 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[3], .5, 1e-10, 1e-10);
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/stack_machine.cpp
 
 </body>

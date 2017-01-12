@@ -46,6 +46,7 @@ var list_down0 = [
 var list_current0 = [
 'forward_dir.xml#Syntax',
 'forward_dir.xml#Purpose',
+'forward_dir.xml#Reverse Mode',
 'forward_dir.xml#Notation',
 'forward_dir.xml#Notation.n',
 'forward_dir.xml#Notation.m',

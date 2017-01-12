@@ -1,6 +1,6 @@
-// $Id: poly.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: poly.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -30,13 +30,13 @@ See $cref link_poly$$.
 
 $head Implementation$$
 
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
 # include <cppad/speed/uniform_01.hpp>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize;
+// Note that CppAD uses global_option["memory"] at the main program level
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_poly(
 	size_t                     size     ,
@@ -45,7 +45,7 @@ bool link_poly(
 	CppAD::vector<double>     &z        ,  // polynomial argument value
 	CppAD::vector<double>     &p        )  // second derivative w.r.t z
 {
-	if(global_onetape||global_atomic||global_optimize)
+	if(global_option["onetape"]||global_option["atomic"]||global_option["optimize"])
 		return false;
 	// -----------------------------------------------------
 	// setup
@@ -60,6 +60,6 @@ bool link_poly(
 	}
 	return true;
 }
-/* $$
+/* %$$
 $end
 */

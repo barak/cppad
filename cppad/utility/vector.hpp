@@ -1,9 +1,9 @@
-// $Id: vector.hpp 3766 2015-12-08 23:12:56Z bradbell $
-# ifndef CPPAD_VECTOR_HPP
-# define CPPAD_VECTOR_HPP
+// $Id: vector.hpp 3853 2016-12-14 14:40:11Z bradbell $
+# ifndef CPPAD_UTILITY_VECTOR_HPP
+# define CPPAD_UTILITY_VECTOR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -101,7 +101,7 @@ but rather pointers are transferred.
 
 $head Element Access$$
 If $icode x$$ is a $codei%CppAD::vector<%Scalar%>%$$ object
-and $code i$$ has type $code size_t$$,
+and $icode i$$ has type $code size_t$$,
 $codei%
 	%x%[%i%]
 %$$
@@ -179,7 +179,7 @@ new memory is allocated and the data in $icode x$$ is lost
 $head clear$$
 All memory allocated for the vector is freed
 and both its size and capacity are set to zero.
-The can be useful when using very large vectors
+This can be useful when using very large vectors
 and when checking for memory leaks (and there are global vectors)
 see the $cref/memory/CppAD_vector/Memory and Parallel Mode/$$ discussion.
 
@@ -321,7 +321,7 @@ $end
 # include <cstddef>
 # include <iostream>
 # include <limits>
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/check_simple_vector.hpp>
 # include <cppad/utility/thread_alloc.hpp>
 
@@ -403,16 +403,16 @@ public:
 	)
 	{	length_ = n;
 
-		// check if we can use current memory
-		if( capacity_ >= length_ )
-			return;
+		// check if we must allocate new memory
+		if( capacity_ < length_ )
+		{
+			// check if there is old memory to be freed
+			if( capacity_ > 0 )
+				delete_data(data_);
 
-		// check if there is old memory to be freed
-		if( capacity_ > 0 )
-			delete_data(data_);
-
-		// get new memory and set capacity
-		data_ = thread_alloc::create_array<Type>(length_, capacity_);
+			// get new memory and set capacity
+			data_ = thread_alloc::create_array<Type>(length_, capacity_);
+		}
 	}
 
 	/// free memory and set number of elements to zero
@@ -527,7 +527,7 @@ public:
 	}
 
 	/*! add vector to the back of this vector
-	(we could not use push_back becasue MS V++ 7.1 did not resolve
+	(we could not use push_back because MS V++ 7.1 did not resolve
 	to non-template member function when scalar is used.)
 	*/
 	template <class Vector>

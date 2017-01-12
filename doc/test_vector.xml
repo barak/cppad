@@ -140,28 +140,24 @@ The default definition for this template class is
 The include path for boost is not defined in the Windows project files.
 If we are using Microsofts compiler, the following code overrides the setting
 of <code><font color="blue">CPPAD_BOOSTVECTOR</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-// The next 7 lines are C++ source code.
-# ifdef _MSC_VER
-# if CPPAD_BOOSTVECTOR
-# undef  CPPAD_BOOSTVECTOR
-# define CPPAD_BOOSTVECTOR 0
-# undef  CPPAD_CPPADVECTOR
-# define CPPAD_CPPADVECTOR 1
-# endif
-# endif
-</pre></font></code>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// The next 7 lines are C++ source code.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> _MSC_VER
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_BOOSTVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># undef</span></span>  CPPAD_BOOSTVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> CPPAD_BOOSTVECTOR <span style="color: #993399">0</span>
+<span style="font-weight: bold"><span style="color: #000080"># undef</span></span>  CPPAD_CPPADVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> CPPAD_CPPADVECTOR <span style="color: #993399">1</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 <br/>
 <b><big><a name="CppAD::vector" id="CppAD::vector">CppAD::vector</a></big></b>
 <br/>
 By default <code><font color="blue">CPPAD_CPPADVECTOR</font></code> is true
 and <code><font color="blue">CPPAD_TEST_VECTOR</font></code> is defined by the following source code
-<code><font color='blue'><pre style='display:inline'> 
-// The next 3 line are C++ source code.
-# if CPPAD_CPPADVECTOR
-# define CPPAD_TEST_VECTOR CppAD::vector
-# endif
-</pre></font></code>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// The next 3 line are C++ source code.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_CPPADVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="color: #008080">CPPAD_TEST_VECTOR</span> CppAD<span style="color: #990000">::</span>vector
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 If you specify <code><font color="blue">--with-eigenvector</font></code> on the
 <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command line,
@@ -170,12 +166,10 @@ This vector type cannot be supported by <code><font color="blue">CPPAD_TEST_VECT
 (use <a href="testvector.xml" target="_top"><span style='white-space: nowrap'>CPPAD_TESTVECTOR</span></a>
  for this support)
 so <code><font color="blue">CppAD::vector</font></code> is used in this case
-<code><font color='blue'><pre style='display:inline'> 
-// The next 3 line are C++ source code.
-# if CPPAD_EIGENVECTOR
-# define CPPAD_TEST_VECTOR CppAD::vector
-# endif
-</pre></font></code>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// The next 3 line are C++ source code.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_EIGENVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="color: #008080">CPPAD_TEST_VECTOR</span> CppAD<span style="color: #990000">::</span>vector
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 <br/>
 <b><big><a name="std::vector" id="std::vector">std::vector</a></big></b>
 <br/>
@@ -185,13 +179,11 @@ If you specify <code><font color="blue">--with-stdvector</font></code> on the
 command line during CppAD installation,
 <code><font color="blue">CPPAD_STDVECTOR</font></code> is true
 and <code><font color="blue">CPPAD_TEST_VECTOR</font></code> is defined by the following source code
-<code><font color='blue'><pre style='display:inline'> 
-// The next 4 lines are C++ source code.
-# if CPPAD_STDVECTOR
-# include &lt;vector&gt;
-# define CPPAD_TEST_VECTOR std::vector
-# endif
-</pre></font></code>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// The next 4 lines are C++ source code.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_STDVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="color: #008080">CPPAD_TEST_VECTOR</span> std<span style="color: #990000">::</span>vector
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 In this case CppAD will use <code><font color="blue">std::vector</font></code> for its examples and tests.
 Use of <code><font color="blue">CppAD::vector</font></code>, <code><font color="blue">std::vector</font></code>,
 and <code><font color="blue">std::valarray</font></code> with CppAD is always tested to some degree.
@@ -208,13 +200,11 @@ If you specify a value for
 command line during CppAD installation,
 <code><font color="blue">CPPAD_BOOSTVECTOR</font></code> is true
 and <code><font color="blue">CPPAD_TEST_VECTOR</font></code> is defined by the following source code
-<code><font color='blue'><pre style='display:inline'> 
-// The next 4 lines are C++ source code.
-# if CPPAD_BOOSTVECTOR
-# include &lt;boost/numeric/ublas/vector.hpp&gt;
-# define CPPAD_TEST_VECTOR boost::numeric::ublas::vector
-# endif
-</pre></font></code>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// The next 4 lines are C++ source code.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_BOOSTVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;boost/numeric/ublas/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="color: #008080">CPPAD_TEST_VECTOR</span> boost<span style="color: #990000">::</span>numeric<span style="color: #990000">::</span>ublas<span style="color: #990000">::</span>vector
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 In this case CppAD will use Ublas vectors for its examples and tests.
 Use of <code><font color="blue">CppAD::vector</font></code>, <code><font color="blue">std::vector</font></code>,
 and <code><font color="blue">std::valarray</font></code> with CppAD is always tested to some degree.
@@ -229,11 +219,11 @@ Ublas vector testing.
 <br/>
 The preprocessor symbol <code><font color="blue">CppADvector</font></code> is defined to
 have the same value as <code><font color="blue">CPPAD_TEST_VECTOR</font></code> but its use is deprecated:
-<code><font color='blue'><pre style='display:inline'> 
-# define CppADvector CPPAD_TEST_VECTOR
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="color: #008080">CppADvector</span> CPPAD_TEST_VECTOR
+</tt></pre>
 
-<hr/>Input File: cppad/local/test_vector.hpp
+<hr/>Input File: cppad/core/test_vector.hpp
 
 </body>
 </html>

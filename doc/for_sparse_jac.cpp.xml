@@ -60,6 +60,7 @@ A:active { color : purple }
 <option>RevSparseJac</option>
 <option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>ForSparseHes</option>
 <option>bool_sparsity.cpp</option>
 </select>
 </td>
@@ -76,197 +77,192 @@ A:active { color : purple }
 
 
 <center><b><big><big>Forward Mode Jacobian Sparsity: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;set&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;set&gt;
-# include &lt;cppad/cppad.hpp&gt;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function BoolCases&lt;Vector&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// vector class, elements of type bool</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">BoolCases</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-namespace { // -------------------------------------------------------------
-// define the template function BoolCases&lt;Vector&gt;
-template &lt;typename Vector&gt;  // vector class, elements of type bool
-bool BoolCases(void)
-{	bool ok = true;
-	using CppAD::AD;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.;
-	X[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// declare independent variables and start recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-	// range space vector
-	size_t m = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
-	Y[0] = X[0];
-	Y[1] = X[0] * X[1];
-	Y[2] = X[1];
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: X -&gt; Y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// create f: X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for the identity matrix</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               r<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>i <span style="color: #990000">==</span> j<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// sparsity pattern for the identity matrix
-	Vector r(n * n);
-	size_t i, j;
-	for(i = 0; i &lt; n; i++)
-	{	for(j = 0; j &lt; n; j++)
-			r[ i * n + j ] = (i == j);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for F'(x)</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     s <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
 
-	// sparsity pattern for F'(x)
-	Vector s(m * n);
-	s = f.ForSparseJac(n, r);
+     <span style="font-style: italic"><span style="color: #9A1900">// check values</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span> <span style="color: #993399">0</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">0</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does     depend on X[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span> <span style="color: #993399">0</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does not depend on X[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span> <span style="color: #993399">1</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">0</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span> <span style="color: #993399">1</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">0</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does not depend on X[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does     depend on X[1]</span></span>
 
-	// check values
-	ok &amp;= (s[ 0 * n + 0 ] == true);  // Y[0] does     depend on X[0]
-	ok &amp;= (s[ 0 * n + 1 ] == false); // Y[0] does not depend on X[1]
-	ok &amp;= (s[ 1 * n + 0 ] == true);  // Y[1] does     depend on X[0]
-	ok &amp;= (s[ 1 * n + 1 ] == true);  // Y[1] does     depend on X[1]
-	ok &amp;= (s[ 2 * n + 0 ] == false); // Y[2] does not depend on X[0]
-	ok &amp;= (s[ 2 * n + 1 ] == true);  // Y[2] does     depend on X[1]
+     <span style="font-style: italic"><span style="color: #9A1900">// check that values are stored</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_set</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// check that values are stored
-	ok &amp;= (f.size_forward_bool() &gt; 0);
-	ok &amp;= (f.size_forward_set() == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for F'(x)^T, note R is the identity, so R^T = R</span></span>
+     <span style="color: #009900">bool</span> transpose <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">st</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> m<span style="color: #990000">);</span>
+     st <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">,</span> transpose<span style="color: #990000">);</span>
 
-	// sparsity pattern for F'(x)^T, note R is the identity, so R^T = R
-	bool transpose = true;
-	Vector st(n * m);
-	st = f.ForSparseJac(n, r, transpose);
+     <span style="font-style: italic"><span style="color: #9A1900">// check values</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>st<span style="color: #990000">[</span> <span style="color: #993399">0</span> <span style="color: #990000">*</span> m <span style="color: #990000">+</span> <span style="color: #993399">0</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does     depend on X[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>st<span style="color: #990000">[</span> <span style="color: #993399">1</span> <span style="color: #990000">*</span> m <span style="color: #990000">+</span> <span style="color: #993399">0</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does not depend on X[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>st<span style="color: #990000">[</span> <span style="color: #993399">0</span> <span style="color: #990000">*</span> m <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>st<span style="color: #990000">[</span> <span style="color: #993399">1</span> <span style="color: #990000">*</span> m <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>st<span style="color: #990000">[</span> <span style="color: #993399">0</span> <span style="color: #990000">*</span> m <span style="color: #990000">+</span> <span style="color: #993399">2</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does not depend on X[0]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>st<span style="color: #990000">[</span> <span style="color: #993399">1</span> <span style="color: #990000">*</span> m <span style="color: #990000">+</span> <span style="color: #993399">2</span> <span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does     depend on X[1]</span></span>
 
-	// check values
-	ok &amp;= (st[ 0 * m + 0 ] == true);  // Y[0] does     depend on X[0]
-	ok &amp;= (st[ 1 * m + 0 ] == false); // Y[0] does not depend on X[1]
-	ok &amp;= (st[ 0 * m + 1 ] == true);  // Y[1] does     depend on X[0]
-	ok &amp;= (st[ 1 * m + 1 ] == true);  // Y[1] does     depend on X[1]
-	ok &amp;= (st[ 0 * m + 2 ] == false); // Y[2] does not depend on X[0]
-	ok &amp;= (st[ 1 * m + 2 ] == true);  // Y[2] does     depend on X[1]
+     <span style="font-style: italic"><span style="color: #9A1900">// check that values are stored</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_set</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// check that values are stored
-	ok &amp;= (f.size_forward_bool() &gt; 0);
-	ok &amp;= (f.size_forward_set() == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// free values from forward calculation</span></span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// free values from forward calculation
-	f.size_forward_bool(0);
-	ok &amp;= (f.size_forward_bool() == 0);
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function SetCases&lt;Vector&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// vector class, elements of type std::set&lt;size_t&gt;</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">SetCases</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-	return ok;
-}
-// define the template function SetCases&lt;Vector&gt;
-template &lt;typename Vector&gt;  // vector class, elements of type std::set&lt;size_t&gt;
-bool SetCases(void)
-{	bool ok = true;
-	using CppAD::AD;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.;
-	X[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// declare independent variables and start recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-	// range space vector
-	size_t m = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
-	Y[0] = X[0];
-	Y[1] = X[0] * X[1];
-	Y[2] = X[1];
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: X -&gt; Y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// create f: X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for the identity matrix</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> r<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">empty</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          r<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// sparsity pattern for the identity matrix
-	Vector r(n);
-	size_t i;
-	for(i = 0; i &lt; n; i++)
-	{	assert( r[i].empty() );
-		r[i].insert(i);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for F'(x)</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     s <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
 
-	// sparsity pattern for F'(x)
-	Vector s(m);
-	s = f.ForSparseJac(n, r);
+     <span style="font-style: italic"><span style="color: #9A1900">// an interator to a standard set</span></span>
+     std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;::</span><span style="color: #008080">iterator</span> itr<span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> found<span style="color: #990000">;</span>
 
-	// an interator to a standard set
-	std::set&lt;size_t&gt;::iterator itr;
-	bool found;
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does     depend on X[0]</span></span>
+     found <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does not depend on X[1]</span></span>
+     found <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[0]</span></span>
+     found <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[1]</span></span>
+     found <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does not depend on X[0]</span></span>
+     found <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does     depend on X[1]</span></span>
+     found <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
 
-	// Y[0] does     depend on X[0]
-	found = s[0].find(0) != s[0].end();  ok &amp;= ( found == true );
-	// Y[0] does not depend on X[1]
-	found = s[0].find(1) != s[0].end();  ok &amp;= ( found == false );
-	// Y[1] does     depend on X[0]
-	found = s[1].find(0) != s[1].end();  ok &amp;= ( found == true );
-	// Y[1] does     depend on X[1]
-	found = s[1].find(1) != s[1].end();  ok &amp;= ( found == true );
-	// Y[2] does not depend on X[0]
-	found = s[2].find(0) != s[2].end();  ok &amp;= ( found == false );
-	// Y[2] does     depend on X[1]
-	found = s[2].find(1) != s[2].end();  ok &amp;= ( found == true );
-
-	// check that values are stored
-	ok &amp;= (f.size_forward_set() &gt; 0);
-	ok &amp;= (f.size_forward_bool() == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that values are stored</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_set</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
 
-	// sparsity pattern for F'(x)^T
-	bool transpose = true;
-	Vector st(n);
-	st = f.ForSparseJac(n, r, transpose);
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for F'(x)^T</span></span>
+     <span style="color: #009900">bool</span> transpose <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">st</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     st <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">,</span> transpose<span style="color: #990000">);</span>
 
-	// Y[0] does     depend on X[0]
-	found = st[0].find(0) != st[0].end();  ok &amp;= ( found == true );
-	// Y[0] does not depend on X[1]
-	found = st[1].find(0) != st[1].end();  ok &amp;= ( found == false );
-	// Y[1] does     depend on X[0]
-	found = st[0].find(1) != st[0].end();  ok &amp;= ( found == true );
-	// Y[1] does     depend on X[1]
-	found = st[1].find(1) != st[1].end();  ok &amp;= ( found == true );
-	// Y[2] does not depend on X[0]
-	found = st[0].find(2) != st[0].end();  ok &amp;= ( found == false );
-	// Y[2] does     depend on X[1]
-	found = st[1].find(2) != st[1].end();  ok &amp;= ( found == true );
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does     depend on X[0]</span></span>
+     found <span style="color: #990000">=</span> st<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> st<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[0] does not depend on X[1]</span></span>
+     found <span style="color: #990000">=</span> st<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> st<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[0]</span></span>
+     found <span style="color: #990000">=</span> st<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> st<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[1] does     depend on X[1]</span></span>
+     found <span style="color: #990000">=</span> st<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> st<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does not depend on X[0]</span></span>
+     found <span style="color: #990000">=</span> st<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> st<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y[2] does     depend on X[1]</span></span>
+     found <span style="color: #990000">=</span> st<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> st<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>  ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> found <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span> <span style="color: #990000">);</span>
 
-	// check that values are stored
-	ok &amp;= (f.size_forward_set() &gt; 0);
-	ok &amp;= (f.size_forward_bool() == 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that values are stored</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_set</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	return ok;
-}
-} // End empty namespace
-# include &lt;vector&gt;
-# include &lt;valarray&gt;
-bool ForSparseJac(void)
-{	bool ok = true;
-	// Run with Vector equal to four different cases
-	// all of which are Simple Vectors with elements of type bool.
-	ok &amp;= BoolCases&lt; CppAD::vectorBool     &gt;();
-	ok &amp;= BoolCases&lt; CppAD::vector  &lt;bool&gt; &gt;();
-	ok &amp;= BoolCases&lt; std::vector    &lt;bool&gt; &gt;();
-	ok &amp;= BoolCases&lt; std::valarray  &lt;bool&gt; &gt;();
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Run with Vector equal to four different cases</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// all of which are Simple Vectors with elements of type bool.</span></span>
+     ok <span style="color: #990000">&amp;=</span> BoolCases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vectorBool     <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> BoolCases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector  <span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> BoolCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector    <span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> BoolCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray  <span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
 
-	// Run with Vector equal to two different cases both of which are
-	// Simple Vectors with elements of type std::set&lt;size_t&gt;
-	typedef std::set&lt;size_t&gt; set;
-	ok &amp;= SetCases&lt; CppAD::vector  &lt;set&gt; &gt;();
-	// ok &amp;= SetCases&lt; std::vector    &lt;set&gt; &gt;();
+     <span style="font-style: italic"><span style="color: #9A1900">// Run with Vector equal to two different cases both of which are</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Simple Vectors with elements of type std::set&lt;size_t&gt;</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> std<span style="color: #990000">::</span><span style="color: #008080">set&lt;size_t&gt;</span> set<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> SetCases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector  <span style="color: #990000">&lt;</span>set<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ok &amp;= SetCases&lt; std::vector    &lt;set&gt; &gt;();</span></span>
 
-	// Do not use valarray because its element access in the const case
-	// returns a copy instead of a reference
-	// ok &amp;= SetCases&lt; std::valarray  &lt;set&gt; &gt;();
+     <span style="font-style: italic"><span style="color: #9A1900">// Do not use valarray because its element access in the const case</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// returns a copy instead of a reference</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ok &amp;= SetCases&lt; std::valarray  &lt;set&gt; &gt;();</span></span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/for_sparse_jac.cpp
 
 </body>

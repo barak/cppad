@@ -116,169 +116,164 @@ to calls to <a href="thread_alloc.xml" target="_top"><span style='white-space: n
 .
 
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/utility/omp_alloc.hpp&gt;
-# include &lt;cppad/utility/memory_leak.hpp&gt;
-# include &lt;vector&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/omp_alloc.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/memory_leak.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
 
-namespace { // Begin empty namespace
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace</span></span>
 
-bool omp_alloc_bytes(void)
-{	bool ok = true;
-	using CppAD::omp_alloc;
-	size_t thread;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">omp_alloc_bytes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> thread<span style="color: #990000">;</span>
 
-	// check initial memory values
-	ok &amp;= ! CppAD::memory_leak();
+     <span style="font-style: italic"><span style="color: #9A1900">// check initial memory values</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
 
-	// amount of static memory used by thread zero
-	size_t static_inuse = omp_alloc::inuse(0);
+     <span style="font-style: italic"><span style="color: #9A1900">// amount of static memory used by thread zero</span></span>
+     <span style="color: #008080">size_t</span> static_inuse <span style="color: #990000">=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// determine the currently executing thread
-	// (should be zero because not in parallel mode)
-	thread = omp_alloc::get_thread_num();
+     <span style="font-style: italic"><span style="color: #9A1900">// determine the currently executing thread</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (should be zero because not in parallel mode)</span></span>
+     thread <span style="color: #990000">=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_thread_num</span></span><span style="color: #990000">();</span>
 
-	// repeatedly allocate enough memory for at least two size_t values.
-	size_t min_size_t = 2;
-	size_t min_bytes  = min_size_t * sizeof(size_t);
-	size_t n_outter   = 10;
-	size_t n_inner    = 5;
-	size_t cap_bytes(0), i, j, k;
-	for(i = 0; i &lt; n_outter; i++)
-	{	// Do not use CppAD::vector here because its use of omp_alloc
-		// complicates the inuse and avaialble results.
-		std::vector&lt;void*&gt; v_ptr(n_inner);
-		for( j = 0; j &lt; n_inner; j++)
-		{	// allocate enough memory for min_size_t size_t objects
-			v_ptr[j]    = omp_alloc::get_memory(min_bytes, cap_bytes);
-			size_t* ptr = reinterpret_cast&lt;size_t*&gt;(v_ptr[j]);
-			// determine the number of size_t values we have obtained
-			size_t  cap_size_t = cap_bytes / sizeof(size_t);
-			ok                &amp;= min_size_t &lt;= cap_size_t;
-			// use placement new to call the size_t copy constructor
-			for(k = 0; k &lt; cap_size_t; k++)
-				new(ptr + k) size_t(i + j + k);
-			// check that the constructor worked
-			for(k = 0; k &lt; cap_size_t; k++)
-				ok &amp;= ptr[k] == (i + j + k);
-		}
-		// check that n_inner * cap_bytes are inuse and none are available
-		ok &amp;= omp_alloc::inuse(thread) == n_inner*cap_bytes + static_inuse;
-		ok &amp;= omp_alloc::available(thread) == 0;
-		// return the memrory to omp_alloc
-		for(j = 0; j &lt; n_inner; j++)
-			omp_alloc::return_memory(v_ptr[j]);
-		// check that now n_inner * cap_bytes are now available
-		// and none are in use
-		ok &amp;= omp_alloc::inuse(thread) == static_inuse;
-		ok &amp;= omp_alloc::available(thread) == n_inner * cap_bytes;
-	}
-	// return all the available memory to the system
-	omp_alloc::free_available(thread);
-	ok &amp;= ! CppAD::memory_leak();
+     <span style="font-style: italic"><span style="color: #9A1900">// repeatedly allocate enough memory for at least two size_t values.</span></span>
+     <span style="color: #008080">size_t</span> min_size_t <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> min_bytes  <span style="color: #990000">=</span> min_size_t <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>size_t<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> n_outter   <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n_inner    <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">cap_bytes</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">),</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_outter<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Do not use CppAD::vector here because its use of omp_alloc</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// complicates the inuse and avaialble results.</span></span>
+          std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;void*&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v_ptr</span></span><span style="color: #990000">(</span>n_inner<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_inner<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// allocate enough memory for min_size_t size_t objects</span></span>
+               v_ptr<span style="color: #990000">[</span>j<span style="color: #990000">]</span>    <span style="color: #990000">=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_memory</span></span><span style="color: #990000">(</span>min_bytes<span style="color: #990000">,</span> cap_bytes<span style="color: #990000">);</span>
+               size_t<span style="color: #990000">*</span> ptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">reinterpret_cast</span></span><span style="color: #990000">&lt;</span>size_t<span style="color: #990000">*&gt;(</span>v_ptr<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// determine the number of size_t values we have obtained</span></span>
+               <span style="color: #008080">size_t</span>  cap_size_t <span style="color: #990000">=</span> cap_bytes <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>size_t<span style="color: #990000">);</span>
+               ok                <span style="color: #990000">&amp;=</span> min_size_t <span style="color: #990000">&lt;=</span> cap_size_t<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// use placement new to call the size_t copy constructor</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> cap_size_t<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">new</span></span><span style="color: #990000">(</span>ptr <span style="color: #990000">+</span> k<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>i <span style="color: #990000">+</span> j <span style="color: #990000">+</span> k<span style="color: #990000">);</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// check that the constructor worked</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> cap_size_t<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+                    ok <span style="color: #990000">&amp;=</span> ptr<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span>i <span style="color: #990000">+</span> j <span style="color: #990000">+</span> k<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check that n_inner * cap_bytes are inuse and none are available</span></span>
+          ok <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> n_inner<span style="color: #990000">*</span>cap_bytes <span style="color: #990000">+</span> static_inuse<span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// return the memrory to omp_alloc</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_inner<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">return_memory</span></span><span style="color: #990000">(</span>v_ptr<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check that now n_inner * cap_bytes are now available</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// and none are in use</span></span>
+          ok <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> static_inuse<span style="color: #990000">;</span>
+          ok <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> n_inner <span style="color: #990000">*</span> cap_bytes<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// return all the available memory to the system</span></span>
+     omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
 
-	return ok;
-}
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-class my_char {
-public:
-	char ch_ ;
-	my_char(void) : ch_(' ')
-	{ }
-	my_char(const my_char&amp; my_ch) : ch_(my_ch.ch_)
-	{ }
-};
+<span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">my_char</span> <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+     <span style="color: #009900">char</span> ch_ <span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">my_char</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">ch_</span></span><span style="color: #990000">(</span><span style="color: #FF0000">' '</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #000000">my_char</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> my_char<span style="color: #990000">&amp;</span> my_ch<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">ch_</span></span><span style="color: #990000">(</span>my_ch<span style="color: #990000">.</span>ch_<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span><span style="color: #990000">;</span>
 
-bool omp_alloc_array(void)
-{	bool ok = true;
-	using CppAD::omp_alloc;
-	size_t i;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">omp_alloc_array</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
 
-	// check initial memory values
-	size_t thread = omp_alloc::get_thread_num();
-	ok &amp;= thread == 0;
-	ok &amp;= ! CppAD::memory_leak();
-	size_t static_inuse = omp_alloc::inuse(0);
+     <span style="font-style: italic"><span style="color: #9A1900">// check initial memory values</span></span>
+     <span style="color: #008080">size_t</span> thread <span style="color: #990000">=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_thread_num</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> thread <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> static_inuse <span style="color: #990000">=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// initial allocation of an array
-	size_t  size_min  = 3;
-	size_t  size_one;
-	my_char *array_one  =
-		omp_alloc::create_array&lt;my_char&gt;(size_min, size_one);
+     <span style="font-style: italic"><span style="color: #9A1900">// initial allocation of an array</span></span>
+     <span style="color: #008080">size_t</span>  size_min  <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>  size_one<span style="color: #990000">;</span>
+     <span style="color: #008080">my_char</span> <span style="color: #990000">*</span>array_one  <span style="color: #990000">=</span>
+          omp_alloc<span style="color: #990000">::</span>create_array<span style="color: #990000">&lt;</span>my_char<span style="color: #990000">&gt;(</span>size_min<span style="color: #990000">,</span> size_one<span style="color: #990000">);</span>
 
-	// check the values and change them to null 'x'
-	for(i = 0; i &lt; size_one; i++)
-	{	ok &amp;= array_one[i].ch_ == ' ';
-		array_one[i].ch_ = 'x';
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// check the values and change them to null 'x'</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> size_one<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> array_one<span style="color: #990000">[</span>i<span style="color: #990000">].</span>ch_ <span style="color: #990000">==</span> <span style="color: #FF0000">' '</span><span style="color: #990000">;</span>
+          array_one<span style="color: #990000">[</span>i<span style="color: #990000">].</span>ch_ <span style="color: #990000">=</span> <span style="color: #FF0000">'x'</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// now create a longer array
-	size_t size_two;
-	my_char *array_two =
-		omp_alloc::create_array&lt;my_char&gt;(2 * size_min, size_two);
+     <span style="font-style: italic"><span style="color: #9A1900">// now create a longer array</span></span>
+     <span style="color: #008080">size_t</span> size_two<span style="color: #990000">;</span>
+     <span style="color: #008080">my_char</span> <span style="color: #990000">*</span>array_two <span style="color: #990000">=</span>
+          omp_alloc<span style="color: #990000">::</span>create_array<span style="color: #990000">&lt;</span>my_char<span style="color: #990000">&gt;(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> size_min<span style="color: #990000">,</span> size_two<span style="color: #990000">);</span>
 
-	// check the values in array one
-	for(i = 0; i &lt; size_one; i++)
-		ok &amp;= array_one[i].ch_ == 'x';
+     <span style="font-style: italic"><span style="color: #9A1900">// check the values in array one</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> size_one<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> array_one<span style="color: #990000">[</span>i<span style="color: #990000">].</span>ch_ <span style="color: #990000">==</span> <span style="color: #FF0000">'x'</span><span style="color: #990000">;</span>
 
-	// check the values in array two
-	for(i = 0; i &lt; size_two; i++)
-		ok &amp;= array_two[i].ch_ == ' ';
+     <span style="font-style: italic"><span style="color: #9A1900">// check the values in array two</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> size_two<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> array_two<span style="color: #990000">[</span>i<span style="color: #990000">].</span>ch_ <span style="color: #990000">==</span> <span style="color: #FF0000">' '</span><span style="color: #990000">;</span>
 
-	// check the amount of inuse and available memory
-	// (an extra size_t value is used for each memory block).
-	size_t check = static_inuse + sizeof(my_char)*(size_one + size_two);
-	ok   &amp;= omp_alloc::inuse(thread) - check &lt; sizeof(my_char);
-	ok   &amp;= omp_alloc::available(thread) == 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// check the amount of inuse and available memory</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (an extra size_t value is used for each memory block).</span></span>
+     <span style="color: #008080">size_t</span> check <span style="color: #990000">=</span> static_inuse <span style="color: #990000">+</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>my_char<span style="color: #990000">)*(</span>size_one <span style="color: #990000">+</span> size_two<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">-</span> check <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>my_char<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// delete the arrays
-	omp_alloc::delete_array(array_one);
-	omp_alloc::delete_array(array_two);
-	ok   &amp;= omp_alloc::inuse(thread) == static_inuse;
-	check = sizeof(my_char)*(size_one + size_two);
-	ok   &amp;= omp_alloc::available(thread) - check &lt; sizeof(my_char);
+     <span style="font-style: italic"><span style="color: #9A1900">// delete the arrays</span></span>
+     omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">delete_array</span></span><span style="color: #990000">(</span>array_one<span style="color: #990000">);</span>
+     omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">delete_array</span></span><span style="color: #990000">(</span>array_two<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> static_inuse<span style="color: #990000">;</span>
+     check <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>my_char<span style="color: #990000">)*(</span>size_one <span style="color: #990000">+</span> size_two<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">-</span> check <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>my_char<span style="color: #990000">);</span>
 
-	// free the memory for use by this thread
-	omp_alloc::free_available(thread);
-	ok &amp;= ! CppAD::memory_leak();
+     <span style="font-style: italic"><span style="color: #9A1900">// free the memory for use by this thread</span></span>
+     omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
 
-	return ok;
-}
-} // End empty namespace
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
 
-bool omp_alloc(void)
-{	bool ok  = true;
-	using CppAD::omp_alloc;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">omp_alloc</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">;</span>
 
-	// check initial state of allocator
-	ok  &amp;= omp_alloc::get_max_num_threads() == 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// check initial state of allocator</span></span>
+     ok  <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_max_num_threads</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// set the maximum number of threads greater than one
-	// so that omp_alloc holds onto memory
-	CppAD::omp_alloc::set_max_num_threads(2);
-	ok  &amp;= omp_alloc::get_max_num_threads() == 2;
-	ok  &amp;= ! CppAD::memory_leak();
+     <span style="font-style: italic"><span style="color: #9A1900">// set the maximum number of threads greater than one</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// so that omp_alloc holds onto memory</span></span>
+     CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">set_max_num_threads</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_max_num_threads</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
 
-	// now use memory allocator in state where it holds onto memory
-	ok   &amp;= omp_alloc_bytes();
-	ok   &amp;= omp_alloc_array();
+     <span style="font-style: italic"><span style="color: #9A1900">// now use memory allocator in state where it holds onto memory</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">omp_alloc_bytes</span></span><span style="color: #990000">();</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">omp_alloc_array</span></span><span style="color: #990000">();</span>
 
-	// check that the tests have not held onto memory
-	ok  &amp;= ! CppAD::memory_leak();
+     <span style="font-style: italic"><span style="color: #9A1900">// check that the tests have not held onto memory</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
 
-	// set the maximum number of threads back to one
-	// so that omp_alloc no longer holds onto memory
-	CppAD::omp_alloc::set_max_num_threads(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// set the maximum number of threads back to one</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// so that omp_alloc no longer holds onto memory</span></span>
+     CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">set_max_num_threads</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	return ok;
-}
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-
-</pre>
-
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: test_more/omp_alloc.cpp
 
 </body>

@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="reverse_any.xml" target="_top">Prev</a>
-</td><td><a href="reverse_any.cpp.xml" target="_top">Next</a>
+</td><td><a href="reverse_checkpoint.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -65,7 +65,7 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>reverse_any-&gt;</option>
 <option>reverse_three.cpp</option>
-<option>reverse_any.cpp</option>
+<option>reverse_checkpoint.cpp</option>
 </select>
 </td>
 <td>reverse_three.cpp</td>
@@ -215,116 +215,111 @@ Thus, we need to be careful to properly account for the fact that
 ).
 
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-namespace { // ----------------------------------------------------------
-// define the template function cases&lt;Vector&gt; in empty namespace
-template &lt;typename Vector&gt;
-bool cases(void)
-{	bool ok    = true;
-	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-	using CppAD::AD;
-	using CppAD::NearEqual;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function cases&lt;Vector&gt; in empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">cases</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	X[0] = 0.;
-	X[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and start recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
-	Y[0] = X[0] * X[1];
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-	// create f : X -&gt; Y and stop recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f : X -&gt; Y and stop recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// define x^0 and compute y^0 using user zero order forward
-	Vector x0(n), y0(m);
-	x0[0]    = 2.;
-	x0[1]    = 3.;
-	y0       = f.<a href="forward.xml" target="_top">Forward</a>(0, x0);
+     <span style="font-style: italic"><span style="color: #9A1900">// define x^0 and compute y^0 using user zero order forward</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x0</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y0</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     y0       <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x0<span style="color: #990000">);</span>
 
-	// y^0 = F(x^0)
-	double check;
-	check    =  x0[0] * x0[1];
-	ok      &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y0[0] , check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// y^0 = F(x^0)</span></span>
+     <span style="color: #009900">double</span> check<span style="color: #990000">;</span>
+     check    <span style="color: #990000">=</span>  x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok      <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// define x^1 and compute y^1 using first order forward mode
-	Vector x1(n), y1(m);
-	x1[0] = 4.;
-	x1[1] = 5.;
-	y1    = f.<a href="forward.xml" target="_top">Forward</a>(1, x1);
+     <span style="font-style: italic"><span style="color: #9A1900">// define x^1 and compute y^1 using first order forward mode</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y1</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">.;</span>
+     y1    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> x1<span style="color: #990000">);</span>
 
-	// Y^1 (x) = partial_t F( x^0 + x^1 * t )
-	// y^1     = Y^1 (0)
-	check = x1[0] * x0[1] + x0[0] * x1[1];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y1[0], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// Y^1 (x) = partial_t F( x^0 + x^1 * t )</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// y^1     = Y^1 (0)</span></span>
+     check <span style="color: #990000">=</span> x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// define x^2 and compute y^2 using second order forward mode
-	Vector x2(n), y2(m);
-	x2[0] = 6.;
-	x2[1] = 7.;
-	y2    = f.<a href="forward.xml" target="_top">Forward</a>(2, x2);
+     <span style="font-style: italic"><span style="color: #9A1900">// define x^2 and compute y^2 using second order forward mode</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y2</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">6</span><span style="color: #990000">.;</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">7</span><span style="color: #990000">.;</span>
+     y2    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> x2<span style="color: #990000">);</span>
 
-	// Y^2 (x) = partial_tt F( x^0 + x^1 * t + x^2 * t^2 )
-	// y^2     = (1/2) *  Y^2 (0)
-	check  = x2[0] * x0[1] + x1[0] * x1[1] + x0[0] * x2[1];
-	ok    &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[0], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// Y^2 (x) = partial_tt F( x^0 + x^1 * t + x^2 * t^2 )</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// y^2     = (1/2) *  Y^2 (0)</span></span>
+     check  <span style="color: #990000">=</span> x2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok    <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// W(x)  = Y^0 (x) + 2 * Y^1 (x) + 3 * (1/2) * Y^2 (x)
-	size_t p = 3;
-	Vector dw(n*p), w(m*p);
-	w[0] = 1.;
-	w[1] = 2.;
-	w[2] = 3.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
+     <span style="font-style: italic"><span style="color: #9A1900">// W(x)  = Y^0 (x) + 2 * Y^1 (x) + 3 * (1/2) * Y^2 (x)</span></span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">*</span>p<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">*</span>p<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> w<span style="color: #990000">);</span>
 
-	// check partial w.r.t x^0_0 of W(x)
-	check = x0[1] + 2. * x1[1] + 3. * x2[1];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*p+0], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check partial w.r.t x^0_0 of W(x)</span></span>
+     check <span style="color: #990000">=</span> x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check partial w.r.t x^0_1 of W(x)
-	check = x0[0] + 2. * x1[0] + 3. * x2[0];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1*p+0], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check partial w.r.t x^0_1 of W(x)</span></span>
+     check <span style="color: #990000">=</span> x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check partial w.r.t x^1_0 of W(x)
-	check = 2. * x0[1] + 3. * x1[1];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*p+1], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check partial w.r.t x^1_0 of W(x)</span></span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check partial w.r.t x^1_1 of W(x)
-	check = 2. * x0[0] + 3. * x1[0];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1*p+1], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check partial w.r.t x^1_1 of W(x)</span></span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check partial w.r.t x^2_0 of W(x)
-	check = 3. * x0[1];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*p+2], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check partial w.r.t x^2_0 of W(x)</span></span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">2</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check partial w.r.t x^2_1 of W(x)
-	check = 3. * x0[0];
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1*p+2], check, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check partial w.r.t x^2_1 of W(x)</span></span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">2</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	return ok;
-}
-} // End empty namespace
-# include &lt;vector&gt;
-# include &lt;valarray&gt;
-bool reverse_three(void)
-{	bool ok = true;
-	ok &amp;= cases&lt; CppAD::vector  &lt;double&gt; &gt;();
-	ok &amp;= cases&lt; std::vector    &lt;double&gt; &gt;();
-	ok &amp;= cases&lt; std::valarray  &lt;double&gt; &gt;();
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse_three</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> cases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> cases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector    <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> cases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/reverse_three.cpp
 
 </body>

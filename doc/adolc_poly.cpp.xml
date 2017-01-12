@@ -105,128 +105,127 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;vector&gt;
-# include &lt;adolc/adolc.h&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;adolc/adolc.h&gt;</span>
 
-# include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;cppad/utility/poly.hpp&gt;
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/utility/thread_alloc.hpp&gt;
-# include &quot;adolc_alloc_mat.hpp&quot;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/uniform_01.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/poly.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/thread_alloc.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"adolc_alloc_mat.hpp"</span>
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
+<span style="font-style: italic"><span style="color: #9A1900">// list of possible options</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;map&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> std<span style="color: #990000">::</span><span style="color: #008080">map&lt;std::string, bool&gt;</span> global_option<span style="color: #990000">;</span>
 
-bool link_poly(
-     size_t                     size     ,
-     size_t                     repeat   ,
-     CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
-     CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-     CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
-{
-     if( global_atomic )
-          return false;
-     if( global_memory || global_optimize )
-          return false;
-     // -----------------------------------------------------
-     // setup
-     size_t i;
-     int tag  = 0;  // tape identifier
-     int keep = 0;  // do not keep forward mode results in buffer
-     int m    = 1;  // number of dependent variables
-     int n    = 1;  // number of independent variables
-     int d    = 2;  // highest derivative degree
-     double f;      // function value
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">link_poly</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>                     size     <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>                     repeat   <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>a        <span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// coefficients of polynomial</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>z        <span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// polynomial argument value</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>ddp      <span style="color: #990000">)</span>  <span style="font-style: italic"><span style="color: #9A1900">// second derivative w.r.t z</span></span>
+<span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"atomic"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"memory"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"optimize"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// setup</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="color: #009900">int</span> tag  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// tape identifier</span></span>
+     <span style="color: #009900">int</span> keep <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// do not keep forward mode results in buffer</span></span>
+     <span style="color: #009900">int</span> m    <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// number of dependent variables</span></span>
+     <span style="color: #009900">int</span> n    <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// number of independent variables</span></span>
+     <span style="color: #009900">int</span> d    <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// highest derivative degree</span></span>
+     <span style="color: #009900">double</span> f<span style="color: #990000">;</span>      <span style="font-style: italic"><span style="color: #9A1900">// function value</span></span>
 
-     // set up for thread_alloc memory allocator (fast and checks for leaks)
-     using CppAD::thread_alloc; // the allocator
-     size_t capacity;           // capacity of an allocation
+     <span style="font-style: italic"><span style="color: #9A1900">// set up for thread_alloc memory allocator (fast and checks for leaks)</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// the allocator</span></span>
+     <span style="color: #008080">size_t</span> capacity<span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// capacity of an allocation</span></span>
 
-     // choose a vector of polynomial coefficients
-     CppAD::uniform_01(size, a);
+     <span style="font-style: italic"><span style="color: #9A1900">// choose a vector of polynomial coefficients</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span>size<span style="color: #990000">,</span> a<span style="color: #990000">);</span>
 
-     // AD copy of the polynomial coefficients
-     std::vector&lt;adouble&gt; A(size);
-     for(i = 0; i &lt; size; i++)
-          A[i] = a[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// AD copy of the polynomial coefficients</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;adouble&gt;</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>size<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> size<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-     // domain and range space AD values
-     adouble Z, P;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain and range space AD values</span></span>
+     <span style="color: #008080">adouble</span> Z<span style="color: #990000">,</span> P<span style="color: #990000">;</span>
 
-     // allocate arguments to hos_forward
-     double* x0 = thread_alloc::create_array&lt;double&gt;(size_t(n), capacity);
-     double* y0 = thread_alloc::create_array&lt;double&gt;(size_t(m), capacity);
-     double** x = adolc_alloc_mat(size_t(n), size_t(d));
-     double** y = adolc_alloc_mat(size_t(m), size_t(d));
+     <span style="font-style: italic"><span style="color: #9A1900">// allocate arguments to hos_forward</span></span>
+     <span style="color: #009900">double</span><span style="color: #990000">*</span> x0 <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span>create_array<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> capacity<span style="color: #990000">);</span>
+     <span style="color: #009900">double</span><span style="color: #990000">*</span> y0 <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span>create_array<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> capacity<span style="color: #990000">);</span>
+     <span style="color: #009900">double</span><span style="color: #990000">**</span> x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">adolc_alloc_mat</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>d<span style="color: #990000">));</span>
+     <span style="color: #009900">double</span><span style="color: #990000">**</span> y <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">adolc_alloc_mat</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>d<span style="color: #990000">));</span>
 
-     // Taylor coefficient for argument
-     x[0][0] = 1.;  // first order
-     x[0][1] = 0.;  // second order
+     <span style="font-style: italic"><span style="color: #9A1900">// Taylor coefficient for argument</span></span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">][</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>  <span style="font-style: italic"><span style="color: #9A1900">// first order</span></span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">][</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>  <span style="font-style: italic"><span style="color: #9A1900">// second order</span></span>
 
-     // ----------------------------------------------------------------------
-     if( ! global_onetape ) while(repeat--)
-     {    // choose an argument value
-          CppAD::uniform_01(1, z);
+     <span style="font-style: italic"><span style="color: #9A1900">// ----------------------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"onetape"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// choose an argument value</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> z<span style="color: #990000">);</span>
 
-          // declare independent variables
-          trace_on(tag, keep);
-          Z &lt;&lt;= z[0];
+          <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">trace_on</span></span><span style="color: #990000">(</span>tag<span style="color: #990000">,</span> keep<span style="color: #990000">);</span>
+          Z <span style="color: #990000">&lt;&lt;=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-          // AD computation of the function value
-          P = CppAD::Poly(0, A, Z);
+          <span style="font-style: italic"><span style="color: #9A1900">// AD computation of the function value</span></span>
+          P <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> A<span style="color: #990000">,</span> Z<span style="color: #990000">);</span>
 
-          // create function object f : Z -&gt; P
-          P &gt;&gt;= f;
-          trace_off();
+          <span style="font-style: italic"><span style="color: #9A1900">// create function object f : Z -&gt; P</span></span>
+          P <span style="color: #990000">&gt;&gt;=</span> f<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">trace_off</span></span><span style="color: #990000">();</span>
 
-          // set the argument value
-          x0[0] = z[0];
+          <span style="font-style: italic"><span style="color: #9A1900">// set the argument value</span></span>
+          x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-          // evaluate the polynomial at the new argument value
-          hos_forward(tag, m, n, d, keep, x0, x, y0, y);
+          <span style="font-style: italic"><span style="color: #9A1900">// evaluate the polynomial at the new argument value</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">hos_forward</span></span><span style="color: #990000">(</span>tag<span style="color: #990000">,</span> m<span style="color: #990000">,</span> n<span style="color: #990000">,</span> d<span style="color: #990000">,</span> keep<span style="color: #990000">,</span> x0<span style="color: #990000">,</span> x<span style="color: #990000">,</span> y0<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-          // second derivative is twice second order Taylor coef
-          ddp[0] = 2. * y[0][1];
-     }
-     else
-     {
-          // choose an argument value
-          CppAD::uniform_01(1, z);
+          <span style="font-style: italic"><span style="color: #9A1900">// second derivative is twice second order Taylor coef</span></span>
+          ddp<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">][</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// choose an argument value</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> z<span style="color: #990000">);</span>
 
-          // declare independent variables
-          trace_on(tag, keep);
-          Z &lt;&lt;= z[0];
+          <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">trace_on</span></span><span style="color: #990000">(</span>tag<span style="color: #990000">,</span> keep<span style="color: #990000">);</span>
+          Z <span style="color: #990000">&lt;&lt;=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-          // AD computation of the function value
-          P = CppAD::Poly(0, A, Z);
+          <span style="font-style: italic"><span style="color: #9A1900">// AD computation of the function value</span></span>
+          P <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> A<span style="color: #990000">,</span> Z<span style="color: #990000">);</span>
 
-          // create function object f : Z -&gt; P
-          P &gt;&gt;= f;
-          trace_off();
+          <span style="font-style: italic"><span style="color: #9A1900">// create function object f : Z -&gt; P</span></span>
+          P <span style="color: #990000">&gt;&gt;=</span> f<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">trace_off</span></span><span style="color: #990000">();</span>
 
-          while(repeat--)
-          {    // get the next argument value
-               CppAD::uniform_01(1, z);
-               x0[0] = z[0];
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// get the next argument value</span></span>
+               CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> z<span style="color: #990000">);</span>
+               x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-               // evaluate the polynomial at the new argument value
-               hos_forward(tag, m, n, d, keep, x0, x, y0, y);
+               <span style="font-style: italic"><span style="color: #9A1900">// evaluate the polynomial at the new argument value</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">hos_forward</span></span><span style="color: #990000">(</span>tag<span style="color: #990000">,</span> m<span style="color: #990000">,</span> n<span style="color: #990000">,</span> d<span style="color: #990000">,</span> keep<span style="color: #990000">,</span> x0<span style="color: #990000">,</span> x<span style="color: #990000">,</span> y0<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-               // second derivative is twice second order Taylor coef
-               ddp[0] = 2. * y[0][1];
-          }
-     }
-     // ------------------------------------------------------
-     // tear down
-     adolc_free_mat(x);
-     adolc_free_mat(y);
-     thread_alloc::delete_array(x0);
-     thread_alloc::delete_array(y0);
+               <span style="font-style: italic"><span style="color: #9A1900">// second derivative is twice second order Taylor coef</span></span>
+               ddp<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">][</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// tear down</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">adolc_free_mat</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">adolc_free_mat</span></span><span style="color: #990000">(</span>y<span style="color: #990000">);</span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">delete_array</span></span><span style="color: #990000">(</span>x0<span style="color: #990000">);</span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">delete_array</span></span><span style="color: #990000">(</span>y0<span style="color: #990000">);</span>
 
-     return true;
-}
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: speed/adolc/poly.cpp
 

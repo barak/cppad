@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -273,123 +274,119 @@ It follows that
 The example tests OdeGearControl using the relations above:
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/ode_gear_control.hpp&gt;</span>   <span style="font-style: italic"><span style="color: #9A1900">// CppAD::OdeGearControl</span></span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/utility/ode_gear_control.hpp&gt;   // CppAD::OdeGearControl
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Fun</span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+           <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> w<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// constructor</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">Fun</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="color: #990000">&amp;</span>w_<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>w_<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
 
-namespace {
-	// --------------------------------------------------------------
-	class Fun {
-	private:
-		 <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w;
-	public:
-		// constructor
-		Fun(const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;w_) : w(w_)
-		{ }
+          <span style="font-style: italic"><span style="color: #9A1900">// set f = x'(t)</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Scalar</span><span style="color: #990000">&gt;</span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">Ode</span></span><span style="color: #990000">(</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Scalar</span>                    <span style="color: #990000">&amp;</span>t<span style="color: #990000">,</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span>       <span style="color: #990000">&amp;</span>f<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     f<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">-</span> w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+               f<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">+</span> w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+          <span style="color: #FF0000">}</span>
 
-		// set f = x'(t)
-		template &lt;typename Scalar&gt;
-		void Ode(
-			const Scalar                    &amp;t,
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) &amp;x,
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar)       &amp;f)
-		{	f[0] = - w[0] * x[0];
-			f[1] = + w[0] * x[0] - w[1] * x[1];
-		}
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">Ode_dep</span></span><span style="color: #990000">(</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span>                    <span style="color: #990000">&amp;</span>t<span style="color: #990000">,</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>       <span style="color: #990000">&amp;</span>f_x<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD<span style="color: #990000">;</span>
 
-		void Ode_dep(
-			const double                    &amp;t,
-			const <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) &amp;x,
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       &amp;f_x)
-		{	using namespace CppAD;
+               <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">T</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">F</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-			size_t n  = x.size();
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) T(1);
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) F(n);
+               <span style="font-style: italic"><span style="color: #9A1900">// set argument values</span></span>
+               T<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> t<span style="color: #990000">;</span>
+               <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                    X<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-			// set argument values
-			T[0] = t;
-			size_t i, j;
-			for(i = 0; i &lt; n; i++)
-				X[i] = x[i];
+               <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-			// declare independent variables
-			<a href="independent.xml" target="_top">Independent</a>(X);
+               <span style="font-style: italic"><span style="color: #9A1900">// compute f(t, x)</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">this</span></span><span style="color: #990000">-&gt;</span><span style="font-weight: bold"><span style="color: #000000">Ode</span></span><span style="color: #990000">(</span>T<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> X<span style="color: #990000">,</span> F<span style="color: #990000">);</span>
 
-			// compute f(t, x)
-			this-&gt;Ode(T[0], X, F);
+               <span style="font-style: italic"><span style="color: #9A1900">// define AD function object</span></span>
+               <span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">fun</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> F<span style="color: #990000">);</span>
 
-			// define AD function object
-			<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; fun(X, F);
+               <span style="font-style: italic"><span style="color: #9A1900">// compute partial of f w.r.t x</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">df</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    dx<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     dx<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+                    df <span style="color: #990000">=</span> fun<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                         f_x <span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> df<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+                    dx<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-			// compute partial of f w.r.t x
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
-			<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) df(n);
-			for(j = 0; j &lt; n; j++)
-				dx[j] = 0.;
-			for(j = 0; j &lt; n; j++)
-			{	dx[j] = 1.;
-				df = fun.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-				for(i = 0; i &lt; n; i++)
-					f_x [i * n + j] = df[i];
-				dx[j] = 0.;
-			}
-		}
-	};
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeGearControl</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>     <span style="font-style: italic"><span style="color: #9A1900">// initial return value</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
 
-bool OdeGearControl(void)
-{	bool ok = true;     // initial return value
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #008080">Fun</span> <span style="font-weight: bold"><span style="color: #000000">F</span></span><span style="color: #990000">(</span>w<span style="color: #990000">);</span>
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(2);
-	w[0] = 10.;
-	w[1] = 1.;
-	Fun F(w);
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">xi</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xi(2);
-	xi[0] = 1.;
-	xi[1] = 0.;
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">eabs</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     eabs<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1e-4</span><span style="color: #990000">;</span>
+     eabs<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1e-4</span><span style="color: #990000">;</span>
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) eabs(2);
-	eabs[0] = 1e-4;
-	eabs[1] = 1e-4;
+     <span style="font-style: italic"><span style="color: #9A1900">// return values</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">ef</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">maxabs</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">xf</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span>                nstep<span style="color: #990000">;</span>
 
-	// return values
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) ef(2);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) maxabs(2);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xf(2);
-	size_t                nstep;
+     <span style="font-style: italic"><span style="color: #9A1900">// input values</span></span>
+     <span style="color: #008080">size_t</span>  M   <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> ti   <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> tf   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> smin <span style="color: #990000">=</span> <span style="color: #993399">1e-8</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> smax <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> sini <span style="color: #990000">=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> erel <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// input values
-	size_t  M   = 5;
-	double ti   = 0.;
-	double tf   = 1.;
-	double smin = 1e-8;
-	double smax = 1.;
-	double sini = 1e-10;
-	double erel = 0.;
+     xf <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">OdeGearControl</span></span><span style="color: #990000">(</span>F<span style="color: #990000">,</span> M<span style="color: #990000">,</span>
+          ti<span style="color: #990000">,</span> tf<span style="color: #990000">,</span> xi<span style="color: #990000">,</span> smin<span style="color: #990000">,</span> smax<span style="color: #990000">,</span> sini<span style="color: #990000">,</span> eabs<span style="color: #990000">,</span> erel<span style="color: #990000">,</span> ef<span style="color: #990000">,</span> maxabs<span style="color: #990000">,</span> nstep<span style="color: #990000">);</span>
 
-	xf = CppAD::OdeGearControl(F, M,
-		ti, tf, xi, smin, smax, sini, eabs, erel, ef, maxabs, nstep);
+     <span style="color: #009900">double</span> x0 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(-</span>w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>tf<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>x0<span style="color: #990000">,</span> xf<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">.,</span> ef<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
 
-	double x0 = exp(-w[0]*tf);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(x0, xf[0], 1e-4, 1e-4);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(0., ef[0], 1e-4, 1e-4);
+     <span style="color: #009900">double</span> x1 <span style="color: #990000">=</span> w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(-</span>w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>tf<span style="color: #990000">)</span> <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(-</span>w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]*</span>tf<span style="color: #990000">))/(</span>w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>x1<span style="color: #990000">,</span> xf<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">.,</span> ef<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
 
-	double x1 = w[0] * (exp(-w[0]*tf) - exp(-w[1]*tf))/(w[1] - w[0]);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(x1, xf[1], 1e-4, 1e-4);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(0., ef[1], 1e-4, 1e-4);
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/ode_gear_control.cpp
 
 </body>

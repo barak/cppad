@@ -1,6 +1,5 @@
-dnl $Id: configure.ac 3786 2016-02-08 13:14:26Z bradbell $
 dnl ---------------------------------------------------------------------------
-dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 dnl
 dnl CppAD is distributed under multiple licenses. This distribution is under
 dnl the terms of the
@@ -12,7 +11,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20160000.1], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20170000.0], [cppad@list.coin-or.org])
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -98,6 +97,22 @@ AC_ARG_WITH(PrintFor, AC_HELP_STRING(
 )
 if test "$PrintFor" = "yes" ; then
     AC_MSG_ERROR([--with-PrintFor not necessary, see install instructions.])
+fi
+AC_ARG_WITH(sparse_set,
+	AC_HELP_STRING([--with-sparse_set], [no longer available]),
+	[sparse_set="yes"],
+	[sparse_set="no"]
+)
+if test "$sparse_set" = "yes" ; then
+	AC_MSG_ERROR([--with-sparse_set is no longer available])
+fi
+AC_ARG_WITH(sparse_list,
+	AC_HELP_STRING([--with-sparse_list], [no longer necessary]),
+	[sparse_set="yes"],
+	[sparse_set="no"]
+)
+if test "$sparse_set" = "yes" ; then
+	AC_MSG_ERROR([--with-sparse_set is no longer necessary])
 fi
 dnl --------------------------------------------------------------------------
 AC_MSG_NOTICE([******  Check command line arguments that are used ***********])
@@ -186,32 +201,6 @@ if test "$eigenvector" = "yes" ; then
 else
 	AC_SUBST(cppad_eigenvector, 0)
 fi
-
-dnl Are we using sparse_set or sparse_list ----------------------------
-AC_MSG_CHECKING([--with-sparse_set])
-AC_ARG_WITH(sparse_set,
-	AC_HELP_STRING([--with-sparse_set], [default is not specified]),
-	[sparse_set="yes"],
-	[sparse_set="no"]
-)
-AC_MSG_RESULT([$sparse_set])
-dnl
-AC_MSG_CHECKING([--with-sparse_list])
-AC_ARG_WITH(sparse_list,
-	AC_HELP_STRING([--with-sparse_list], [default is not specified]),
-	[sparse_list="yes"],
-	[sparse_list="no"]
-)
-AC_MSG_RESULT([$sparse_list])
-if test "$sparse_set" = "yes" ; then
-	if test "$sparse_list" == "yes" ; then
-		AC_MSG_ERROR([cannot --with both sparse_set and sparse_list])
-	fi
-	AC_SUBST(cppad_internal_sparse_set, sparse_set)
-else
-	AC_SUBST(cppad_internal_sparse_set, sparse_list)
-fi
-
 
 dnl Are we including deprecated features in the install-----------
 AC_MSG_CHECKING([--with-deprecated])
@@ -487,7 +476,7 @@ if test "$have_ar" = 'no'; then
 	)
 fi
 
-dnl test_one.sh.in settings for cppad_cxx_flags
+dnl test_one.sh.in settings for cppad_cxx_flags (no longer used ?)
 AC_SUBST(cppad_cxx_flags, "-g -O0")
 
 dnl auto-tools version does not colpack
@@ -495,14 +484,15 @@ AC_SUBST(cppad_has_colpack, 0)
 
 dnl auto-tools version will assumes mkstemp is available.
 AC_SUBST(cppad_has_mkstemp, 1)
+AC_SUBST(cppad_has_tmpnam_s, 0)
 
 dnl auto-tools version cannot use c++11 compiler
 dnl so supress corresponding features
 AC_SUBST(cppad_has_nullptr, 0)
 AC_SUBST(cppad_has_rvalue, 0)
 AC_SUBST(cppad_has_cstdint_8_to_64, 0)
-AC_SUBST(cppad_use_cplusplus_2011, 0)
-AC_SUBST(cppad_has_high_resolution_clock, 0)
+AC_SUBST(cppad_cplusplus_201100_ok, 0)
+AC_SUBST(cppad_has_steady_clock, 0)
 
 dnl Determine if size_t has same size as unsigned int
 AC_CHECK_SIZEOF([size_t])
@@ -752,7 +742,7 @@ else
 	cppad_pkgconfig_libs_value="-L$prefix/lib"
 fi
 if test "$POSTFIX_DIR" != "" ; then
-	cppad_pkgconfig_cflags_value="$cppad_cflags_value/$POSTFIX_DIR"
+	cppad_pkgconfig_cflags_value="$cppad_pkgconfig_cflags_value/$POSTFIX_DIR"
 	cppad_pkgconfig_libs_value="$cppad_pkgconfig_libs_value/$POSTFIX_DIR"
 fi
 if test "$IPOPT_DIR" == "" ; then
@@ -765,11 +755,14 @@ fi
 AC_SUBST(cppad_pkgconfig_cflags,   "$cppad_pkgconfig_cflags_value")
 AC_SUBST(cppad_pkgconfig_libs,     "$cppad_pkgconfig_libs_value")
 AC_SUBST(cppad_pkgconfig_requires, "$cppad_pkgconfig_requires_value")
+AC_SUBST(cppad_prefix,             "$prefix")
+AC_SUBST(cppad_abs_includedir,     "$includedir")
 dnl
 dnl names set here so cppad.pc-uninstalled works both with cmake and autoconf
 AC_SUBST(cppad_SOURCE_DIR,  ${ABS_TOP_SRCDIR} )
 dnl
 dnl names set here so */test_one.sh.in works both with cmake and autoconf
+dnl (no longer used ?)
 AC_SUBST(adolc_prefix,      ${ADOLC_DIR} )
 AC_SUBST(eigen_prefix,      ${EIGEN_DIR} )
 AC_SUBST(ipopt_prefix,      ${IPOPT_DIR} )
@@ -783,10 +776,8 @@ AC_CONFIG_FILES([
 	cppad_ipopt/speed/test.sh
 	cppad_ipopt/test/test.sh
 	example/ipopt_solve/test.sh
-	example/test_one.sh
 	pkgconfig/cppad.pc
 	pkgconfig/cppad-uninstalled.pc
-	test_more/test_one.sh
 
 	makefile
 	compare_c/makefile
@@ -797,6 +788,7 @@ AC_CONFIG_FILES([
 	example/makefile
 	example/atomic/makefile
 	example/ipopt_solve/makefile
+	example/optimize/makefile
 	introduction/get_started/makefile
 	introduction/exp_apx/makefile
 	multi_thread/makefile
@@ -832,16 +824,6 @@ AC_CONFIG_COMMANDS(
 AC_CONFIG_COMMANDS(
 	[cppad_ipopt_test_test.sh],
 	[chmod +x cppad_ipopt/test/test.sh],
-	[]
-)
-AC_CONFIG_COMMANDS(
-	[example_test_one.sh],
-	[chmod +x example/test_one.sh],
-	[]
-)
-AC_CONFIG_COMMANDS(
-	[test_more_test_one.sh],
-	[chmod +x test_more/test_one.sh],
 	[]
 )
 

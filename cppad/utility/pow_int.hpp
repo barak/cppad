@@ -1,9 +1,9 @@
-// $Id: pow_int.hpp 3766 2015-12-08 23:12:56Z bradbell $
-# ifndef CPPAD_POW_INT_HPP
-# define CPPAD_POW_INT_HPP
+// $Id: pow_int.hpp 3804 2016-03-20 15:08:46Z bradbell $
+# ifndef CPPAD_UTILITY_POW_INT_HPP
+# define CPPAD_UTILITY_POW_INT_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the

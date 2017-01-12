@@ -74,6 +74,7 @@ A:active { color : purple }
 <option>RevSparseJac</option>
 <option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>ForSparseHes</option>
 <option>bool_sparsity.cpp</option>
 </select>
 </td>
@@ -105,9 +106,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Jacobian Sparsity Pattern: Reverse Mode</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -225,8 +223,12 @@ The object
 <br/>
 <b><big><a name="x" id="x">x</a></big></b>
 <br/>
-the sparsity pattern is valid for all values of the independent
-variables in 
+If the operation sequence in 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ is
+<a href="glossary.xml#Operation.Independent" target="_top"><span style='white-space: nowrap'>independent</span></a>
+ of
+the independent variables in 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">&#x02208;</mo>
@@ -235,7 +237,8 @@ variables in
 </msup>
 </mrow></math>
 
-
+,
+the sparsity pattern is valid for all values of
 (even if it has <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
  or <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  operations).
@@ -599,7 +602,7 @@ contains an example and test of this operation.
 It returns true if it succeeds and false otherwise.
 
 
-<hr/>Input File: cppad/local/rev_sparse_jac.hpp
+<hr/>Input File: cppad/core/rev_sparse_jac.hpp
 
 </body>
 </html>

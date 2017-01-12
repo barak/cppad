@@ -29,6 +29,7 @@ var list_down2 = [
 'base_std_math.xml',
 'base_limits.xml',
 'base_to_string.xml',
+'base_hash.xml',
 'base_example.xml'
 ];
 var list_down1 = [
@@ -58,7 +59,9 @@ var list_current0 = [
 'base_adolc.hpp.xml#sign',
 'base_adolc.hpp.xml#abs',
 'base_adolc.hpp.xml#pow',
-'base_adolc.hpp.xml#numeric_limits'
+'base_adolc.hpp.xml#numeric_limits',
+'base_adolc.hpp.xml#to_string',
+'base_adolc.hpp.xml#hash_code'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3768 2015-12-28 18:58:35Z bradbell $
+# $Id: CMakeLists.txt 3859 2017-01-01 10:59:24Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -19,7 +19,7 @@ MACRO(check_match match_variable match_constant output_variable)
 	ELSE( match_flag )
 		SET(${output_variable} 0)
 	ENDIF( match_flag )
-	MESSAGE(STATUS "${output_variable} = ${${output_variable}}" )
+	print_variable(${output_variable})
 ENDMACRO(check_match)
 # -----------------------------------------------------------------------------
 # command line arguments
@@ -34,9 +34,12 @@ command_line_arg(cppad_max_num_threads 48 STRING
 	"maximum number of threads that CppAD can use use"
 )
 # cppad_sparse_list
-command_line_arg(cppad_sparse_list YES BOOL
-	"use sparse list for internal sparse set representation"
-)
+IF( cppad_sparse_list )
+	MESSAGE(FATAL_ERROR
+		"cppad_sparse_list = ${cppad_sparse_list}"
+		": this command line argument has been removed"
+	)
+ENDIF( cppad_sparse_list )
 #
 # cppad_tape_id_type
 command_line_arg(cppad_tape_id_type "unsigned int" STRING
@@ -59,16 +62,6 @@ IF( cppad_deprecated )
 ELSE( cppad_deprecated )
 	SET(cppad_deprecated 0)
 ENDIF( cppad_deprecated )
-# -----------------------------------------------------------------------------
-# cppad_internal_sparse_set
-#
-IF( cppad_sparse_list )
-	SET(cppad_internal_sparse_set  sparse_list )
-ELSE( cppad_sparse_list )
-	SET(cppad_internal_sparse_set  sparse_set )
-ENDIF( cppad_sparse_list )
-MESSAGE(STATUS "cppad_internal_sparse_set = ${cppad_internal_sparse_set}" )
-#
 # -----------------------------------------------------------------------------
 # cppad_boostvector, cppad_cppadvector, cppad_eigenvector, cppad_stdvector
 #
@@ -192,30 +185,33 @@ FOREACH(c11_function erf asinh acosh atanh expm1 log1p)
 	ENDIF( NOT cppad_compiler_has_${c11_function} )
 ENDFOREACH(c11_function)
 # -----------------------------------------------------------------------------
-# cppad_has_high_resolution_clock
+# cppad_has_steady_clock
 #
 SET(source "
 # include <chrono>
+# include <thread>
+# include <iostream>
 int main(void)
-{	std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
-    start = std::chrono::high_resolution_clock::now();
-    end   = std::chrono::high_resolution_clock::now();
+{	std::chrono::time_point<std::chrono::steady_clock> start, end;
+    start = std::chrono::steady_clock::now();
+	std::this_thread::sleep_for( std::chrono::milliseconds(1) );
+    end   = std::chrono::steady_clock::now();
     std::chrono::duration<double> difference = end - start;
 	double elapsed_seconds = difference.count();
-	if( elapsed_seconds > 0.0 )
+	if( elapsed_seconds >= 0.9e-3 ) // 1e-3 = one millisecond
 		return 0;
 	return 1;
 }
 "
 )
-check_source_runs("${source}" cppad_has_high_resolution_clock)
-IF( NOT cppad_has_high_resolution_clock )
+check_source_runs("${source}" cppad_has_steady_clock)
+IF( NOT cppad_has_steady_clock )
 	SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_high_resolution_clock )
+ENDIF( NOT cppad_has_steady_clock )
 # =============================================================================
 # End C++11 features
 #
-MESSAGE(STATUS "cppad_cplusplus_201100_ok = ${cppad_cplusplus_201100_ok}")
+print_variable(cppad_cplusplus_201100_ok)
 # -----------------------------------------------------------------------------
 # cppad_has_gettimeofday
 #

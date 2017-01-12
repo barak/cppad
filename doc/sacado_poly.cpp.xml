@@ -105,65 +105,64 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 
 
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/utility/poly.hpp&gt;
-# include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;Sacado.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/poly.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/uniform_01.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;Sacado.hpp&gt;</span>
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
+<span style="font-style: italic"><span style="color: #9A1900">// list of possible options</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;map&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> std<span style="color: #990000">::</span><span style="color: #008080">map&lt;std::string, bool&gt;</span> global_option<span style="color: #990000">;</span>
 
-bool link_poly(
-     size_t                     size     ,
-     size_t                     repeat   ,
-     CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
-     CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-     CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
-{
-     if( global_atomic )
-          return false;
-     if( global_memory || global_onetape || global_optimize )
-          return false;
-     // -----------------------------------------------------
-     // setup
-     typedef Sacado::Tay::Taylor&lt;double&gt;  ADScalar;
-     CppAD::vector&lt;ADScalar&gt;              A(size);
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">link_poly</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>                     size     <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>                     repeat   <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>a        <span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// coefficients of polynomial</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>z        <span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// polynomial argument value</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>ddp      <span style="color: #990000">)</span>  <span style="font-style: italic"><span style="color: #9A1900">// second derivative w.r.t z</span></span>
+<span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"atomic"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"memory"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"onetape"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"optimize"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// setup</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> Sacado<span style="color: #990000">::</span>Tay<span style="color: #990000">::</span><span style="color: #008080">Taylor&lt;double&gt;</span>  ADScalar<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;ADScalar&gt;</span>              <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>size<span style="color: #990000">);</span>
 
-     size_t i;               // temporary index
-     ADScalar   Z;           // domain space AD value
-     ADScalar   P;           // range space AD value
-     unsigned int order = 2; // order of Taylor coefficients
-     Z.resize(order+1, false);
-     P.resize(order+1, false);
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>               <span style="font-style: italic"><span style="color: #9A1900">// temporary index</span></span>
+     <span style="color: #008080">ADScalar</span>   Z<span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// domain space AD value</span></span>
+     <span style="color: #008080">ADScalar</span>   P<span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// range space AD value</span></span>
+     <span style="color: #009900">unsigned</span> <span style="color: #009900">int</span> order <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// order of Taylor coefficients</span></span>
+     Z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span>order<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
+     P<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span>order<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
 
-     // choose the polynomial coefficients
-     CppAD::uniform_01(size, a);
+     <span style="font-style: italic"><span style="color: #9A1900">// choose the polynomial coefficients</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span>size<span style="color: #990000">,</span> a<span style="color: #990000">);</span>
 
-     // AD copy of the polynomial coefficients
-     for(i = 0; i &lt; size; i++)
-          A[i] = a[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// AD copy of the polynomial coefficients</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> size<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-     // ------------------------------------------------------
-     while(repeat--)
-     {    // get the next argument value
-          CppAD::uniform_01(1, z);
+     <span style="font-style: italic"><span style="color: #9A1900">// ------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// get the next argument value</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> z<span style="color: #990000">);</span>
 
-          // independent variable value
-          Z.fastAccessCoeff(0)   = z[0]; // argument value
-          Z.fastAccessCoeff(1)   = 1.;   // first order coefficient
-          Z.fastAccessCoeff(2)   = 0.;   // second order coefficient
+          <span style="font-style: italic"><span style="color: #9A1900">// independent variable value</span></span>
+          Z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">fastAccessCoeff</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span>   <span style="color: #990000">=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span> <span style="font-style: italic"><span style="color: #9A1900">// argument value</span></span>
+          Z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">fastAccessCoeff</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span>   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>   <span style="font-style: italic"><span style="color: #9A1900">// first order coefficient</span></span>
+          Z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">fastAccessCoeff</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span>   <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>   <span style="font-style: italic"><span style="color: #9A1900">// second order coefficient</span></span>
 
-          // AD computation of the dependent variable
-          P = CppAD::Poly(0, A, Z);
+          <span style="font-style: italic"><span style="color: #9A1900">// AD computation of the dependent variable</span></span>
+          P <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> A<span style="color: #990000">,</span> Z<span style="color: #990000">);</span>
 
-          // second derivative is twice second order Taylor coefficient
-          ddp[0] = 2. * P.fastAccessCoeff(2);
-     }
-     // ------------------------------------------------------
-     return true;
-}
-</pre></font></code>
+          <span style="font-style: italic"><span style="color: #9A1900">// second derivative is twice second order Taylor coefficient</span></span>
+          ddp<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> P<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">fastAccessCoeff</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: speed/sacado/poly.cpp
 

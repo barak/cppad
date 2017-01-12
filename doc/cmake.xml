@@ -6,7 +6,7 @@
 <title>Using CMake to Configure CppAD</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Using CMake to Configure CppAD"/>
-<meta name="keywords" id="keywords" content=" using cmake to configure cppad makefile install prefix postfix include directories lib datadir documentation package compile flags profile maximum number threads sparsity internal structure vector sets memory usage tape ctor implicit explicit the program command build directory cmake_verbose_makefile generator cppad_prefix cppad_postfix cmake_install_includedirs cmake_install_libdirs cmake_install_datadir cmake_install_docdir package_prefix cppad_cxx_flags c++11 cppad_profile_flag eigen fadbad cppad_testvector cppad_max_num_threads cppad_sparse_list cppad_tape_id_type cstdint cppad_tape_addr_type cppad_deprecated "/>
+<meta name="keywords" id="keywords" content=" using cmake to configure cppad makefile install prefix postfix include directories lib datadir documentation package compile flags profile maximum number threads sparsity internal structure vector sets memory usage tape ctor implicit explicit the program command build directory make check cmake_verbose_makefile generator cppad_prefix cppad_postfix cmake_install_includedirs cmake_install_libdirs cmake_install_datadir cmake_install_docdir package_prefix cppad_cxx_flags c++11 cppad_profile_flag eigen fadbad cppad_testvector cppad_max_num_threads cppad_tape_id_type cstdint cppad_tape_addr_type cppad_deprecated "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>The CMake Program</option>
 <option>CMake Command</option>
 <option>---..Build Directory</option>
+<option>make check</option>
 <option>cmake_verbose_makefile</option>
 <option>generator</option>
 <option>cppad_prefix</option>
@@ -101,7 +102,6 @@ A:active { color : purple }
 <option>---..Eigen and Fadbad</option>
 <option>cppad_testvector</option>
 <option>cppad_max_num_threads</option>
-<option>cppad_sparse_list</option>
 <option>cppad_tape_id_type</option>
 <option>---..cstdint</option>
 <option>cppad_tape_addr_type</option>
@@ -176,13 +176,22 @@ cmake&#xA0;</span></font><i><font color="black"></font></i><font color="blue"><s
 &#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_testvector=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_testvector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_max_num_threads=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_sparse_list=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_id_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_addr_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_deprecated=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_deprecated</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;..<br/>
 </span></font></code>
+<br/>
+<b><big><a name="make check" id="make check">make check</a></big></b>
+<br/>
+Important information about the CppAD configuration is output
+by this command. If you have the <code><font color="blue">grep</font></code> program,
+and store the output in <code><font color="blue">cmake.log</font></code>, you can get a list of
+all the test options with the command:
+<code><font color='blue'><pre style='display:inline'> 
+     grep 'make check' cmake.log
+</pre></font></code>
 <br/>
 <b><big><a name="cmake_verbose_makefile" id="cmake_verbose_makefile">cmake_verbose_makefile</a></big></b>
 <br/>
@@ -487,33 +496,6 @@ The value
 the default value for the preprocessor symbol
 <a href="multi_thread.xml#CPPAD_MAX_NUM_THREADS" target="_top"><span style='white-space: nowrap'>CPPAD_MAX_NUM_THREADS</span></a>
 .
-
-<br/>
-<br/>
-<b><big><a name="cppad_sparse_list" id="cppad_sparse_list">cppad_sparse_list</a></big></b>
-<br/>
-There are two possible values for this option, <code><font color="blue">YES</font></code> and <code><font color="blue">NO</font></code>.
-This affect the internal data structure used to store a
-<a href="glossary.xml#Sparsity Pattern" target="_top"><span style='white-space: nowrap'>sparsity&#xA0;pattern</span></a>
- when the
-users version of the sparsity pattern is a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code>.
-If 
-<code><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i></code>
- is <code><font color="blue">NO</font></code>
-the vectors of standard sets are also used internally.
-If 
-<code><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i></code>
- is <code><font color="blue">YES</font></code>,
-a special sparse list structure is used instead.
-This should affect the speed and memory required by the
-<a href="sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
-, <a href="sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
-, and
-<a href="sparse.xml" target="_top"><span style='white-space: nowrap'>sparse&#xA0;drivers</span></a>
-
-The default value for 
-<code><i><font color="black"><span style='white-space: nowrap'>cppad_sparse_list</span></font></i></code>
- is <code><font color="blue">YES</font></code>
 
 <br/>
 <br/>

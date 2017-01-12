@@ -79,63 +79,58 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Unary Plus Operator: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-
-bool UnaryPlus(void)
-{	bool ok = true;
-	using CppAD::AD;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">UnaryPlus</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
 
-	// domain space vector
-	size_t n = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = 3.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = + x[0];
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// check values
-	ok &amp;= ( y[0] == 3. );
+     <span style="font-style: italic"><span style="color: #9A1900">// check values</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>
 
-	// forward computation of partials w.r.t. x[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
-	size_t p = 1;
-	dx[0]    = 1.;
-	dy       = f.<a href="forward.xml" target="_top">Forward</a>(p, dx);
-	ok      &amp;= ( dy[0] == 1. );   // dy[0] / dx[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// forward computation of partials w.r.t. x[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>    <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dy       <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok      <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// dy[0] / dx[0]</span></span>
 
-	// reverse computation of dertivative of y[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
-	w[0] = 1.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(p, w);
-	ok &amp;= ( dw[0] == 1. );       // dy[0] / dx[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse computation of dertivative of y[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>  <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>       <span style="font-style: italic"><span style="color: #9A1900">// dy[0] / dx[0]</span></span>
 
-	// use a VecAD&lt;Base&gt;::reference object with unary plus
-	CppAD::VecAD&lt;double&gt; v(1);
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
-	v[zero] = x[0];
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; result = + v[zero];
-	ok     &amp;= (result == y[0]);
+     <span style="font-style: italic"><span style="color: #9A1900">// use a VecAD&lt;Base&gt;::reference object with unary plus</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     v<span style="color: #990000">[</span>zero<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> result <span style="color: #990000">=</span> <span style="color: #990000">+</span> v<span style="color: #990000">[</span>zero<span style="color: #990000">];</span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>result <span style="color: #990000">==</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/unary_plus.cpp
 
 </body>

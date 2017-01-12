@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -100,168 +101,163 @@ A:active { color : purple }
 
 
 <center><b><big><big>The CheckSimpleVector Function: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/utility/check_simple_vector.hpp&gt;
-# include &lt;iostream&gt;
-
-
-// Chosing a value between 1 and 9 selects a simple vector properity to be
-// omitted and result in an error message being generated
-# define CppADMyVectorOmit 0
-
-// -------------------------------------------------------------------------
-
-// example class used for non-constant elements (different from Scalar)
-template &lt;class Scalar&gt;
-class MyElement {
-private:
-	Scalar *element;
-public:
-	// element constructor
-	MyElement(Scalar *e)
-	{	element = e; }
-	// an example element assignment that returns void
-	void operator = (const Scalar &amp;s)
-	{	*element = s; }
-	// conversion to Scalar
-	operator Scalar() const
-	{	return *element; }
-};
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/check_simple_vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>
 
 
-// example simple vector class
-template &lt;class Scalar&gt;
-class MyVector {
-private:
-	size_t length;
-	Scalar * data;
-public:
+<span style="font-style: italic"><span style="color: #9A1900">// Chosing a value between 1 and 9 selects a simple vector properity to be</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// omitted and result in an error message being generated</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> CppADMyVectorOmit <span style="color: #993399">0</span>
 
-# if CppADMyVectorOmit != 1
-	// type of the elements in the vector
-	typedef Scalar value_type;
-# endif
-# if CppADMyVectorOmit != 2
-	// default constructor
-	inline MyVector(void) : length(0) , data(0)
-	{ }
-# endif
-# if CppADMyVectorOmit != 3
-	// constructor with a specified size
-	inline MyVector(size_t n) : length(n)
-	{	if( length == 0 )
-			data = 0;
-		else	data = new Scalar[length];
-	}
-# endif
-# if CppADMyVectorOmit != 4
-	// copy constructor
-	inline MyVector(const MyVector &amp;x) : length(x.length)
-	{	size_t i;
-		if( length == 0 )
-			data = 0;
-		else	data = new Scalar[length];
+<span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------------</span></span>
 
-		for(i = 0; i &lt; length; i++)
-			data[i] = x.data[i];
-	}
-# endif
-# if CppADMyVectorOmit != 4
-# if CppADMyVectorOmit != 7
-	// destructor (it is not safe to delete the pointer in cases 4 and 7)
-	~MyVector(void)
-	{	delete [] data; }
-# endif
-# endif
-# if CppADMyVectorOmit != 5
-	// size function
-	inline size_t size(void) const
-	{	return length; }
-# endif
-# if CppADMyVectorOmit != 6
-	// resize function
-	inline void resize(size_t n)
-	{	if( length &gt; 0 )
-			delete [] data;
-		length = n;
-		if( length &gt; 0 )
-			data = new Scalar[length];
-		else	data = 0;
-	}
-# endif
-# if CppADMyVectorOmit != 7
-	// assignment operator
-	inline MyVector &amp; operator=(const MyVector &amp;x)
-	{	size_t i;
-		for(i = 0; i &lt; length; i++)
-			data[i] = x.data[i];
-		return *this;
-	}
-# endif
-# if CppADMyVectorOmit != 8
-	// non-constant element access
-	MyElement&lt;Scalar&gt; operator[](size_t i)
-	{	return data + i; }
-# endif
-# if CppADMyVectorOmit != 9
-	// constant element access
-	const Scalar &amp; operator[](size_t i) const
-	{	return data[i]; }
-# endif
-};
-// -------------------------------------------------------------------------
+<span style="font-style: italic"><span style="color: #9A1900">// example class used for non-constant elements (different from Scalar)</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Scalar</span><span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">MyElement</span> <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+     <span style="color: #008080">Scalar</span> <span style="color: #990000">*</span>element<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// element constructor</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">MyElement</span></span><span style="color: #990000">(</span><span style="color: #008080">Scalar</span> <span style="color: #990000">*</span>e<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     element <span style="color: #990000">=</span> e<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// an example element assignment that returns void</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span> <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Scalar</span> <span style="color: #990000">&amp;</span>s<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #990000">*</span>element <span style="color: #990000">=</span> s<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// conversion to Scalar</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">()</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">*</span>element<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span><span style="color: #990000">;</span>
 
-/*
-Compute r = a * v, where a is a scalar with same type as the elements of
-the Simple Vector v. This routine uses the CheckSimpleVector function to ensure that
-the types agree.
-*/
-namespace { // Empty namespace
-	template &lt;class Scalar, class Vector&gt;
-	Vector Sscal(const Scalar &amp;a, const Vector &amp;v)
-	{
-		// invoke CheckSimpleVector function
-		CppAD::CheckSimpleVector&lt;Scalar, Vector&gt;();
 
-		size_t n = v.size();
-		Vector r(n);
+<span style="font-style: italic"><span style="color: #9A1900">// example simple vector class</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Scalar</span><span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">MyVector</span> <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+     <span style="color: #008080">size_t</span> length<span style="color: #990000">;</span>
+     Scalar <span style="color: #990000">*</span> data<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
 
-		size_t i;
-		for(i = 0; i &lt; n; i++)
-			r[i] = a * v[i];
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">1</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// type of the elements in the vector</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">Scalar</span> value_type<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">2</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// default constructor</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="font-weight: bold"><span style="color: #000000">MyVector</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">length</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">data</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">3</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// constructor with a specified size</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="font-weight: bold"><span style="color: #000000">MyVector</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">length</span></span><span style="color: #990000">(</span>n<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> length <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               data <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     data <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> Scalar<span style="color: #990000">[</span>length<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">4</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// copy constructor</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="font-weight: bold"><span style="color: #000000">MyVector</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">MyVector</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">length</span></span><span style="color: #990000">(</span>x<span style="color: #990000">.</span>length<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> length <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               data <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     data <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> Scalar<span style="color: #990000">[</span>length<span style="color: #990000">];</span>
 
-		return r;
-	}
-}
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> length<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               data<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">.</span>data<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">4</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">7</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// destructor (it is not safe to delete the pointer in cases 4 and 7)</span></span>
+     <span style="color: #990000">~</span><span style="font-weight: bold"><span style="color: #000000">MyVector</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> data<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">5</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// size function</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> length<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">6</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// resize function</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> length <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> data<span style="color: #990000">;</span>
+          length <span style="color: #990000">=</span> n<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> length <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               data <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> Scalar<span style="color: #990000">[</span>length<span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     data <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">7</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// assignment operator</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> MyVector <span style="color: #990000">&amp;</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span><span style="color: #990000">=(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">MyVector</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> length<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               data<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">.</span>data<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">*</span><span style="font-weight: bold"><span style="color: #0000FF">this</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">8</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// non-constant element access</span></span>
+     <span style="color: #008080">MyElement&lt;Scalar&gt;</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span><span style="color: #990000">[](</span><span style="color: #008080">size_t</span> i<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> data <span style="color: #990000">+</span> i<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CppADMyVectorOmit <span style="color: #990000">!=</span> <span style="color: #993399">9</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// constant element access</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> Scalar <span style="color: #990000">&amp;</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span><span style="color: #990000">[](</span><span style="color: #008080">size_t</span> i<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> data<span style="color: #990000">[</span>i<span style="color: #990000">];</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------------</span></span>
 
-bool CheckSimpleVector(void)
-{	bool ok  = true;
-	using CppAD::vector;
+<span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">Compute r = a * v, where a is a scalar with same type as the elements of</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">the Simple Vector v. This routine uses the CheckSimpleVector function to ensure that</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">the types agree.</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">*/</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// Empty namespace</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Scalar</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">Sscal</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Scalar</span> <span style="color: #990000">&amp;</span>a<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>v<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// invoke CheckSimpleVector function</span></span>
+          CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span>Scalar<span style="color: #990000">,</span> Vector<span style="color: #990000">&gt;();</span>
 
-	// --------------------------------------------------------
-	// If you change double to float in the next statement,
-	// CheckSimpleVector will generate an error message at compile time.
-	double a = 3.;
-	// --------------------------------------------------------
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	size_t n = 2;
-	MyVector&lt;double&gt; v(n);
-	v[0]     = 1.;
-	v[1]     = 2.;
-	MyVector&lt;double&gt; r = Sscal(a, v);
-	ok      &amp;= (r[0] == 3.);
-	ok      &amp;= (r[1] == 6.);
+          <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               r<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a <span style="color: #990000">*</span> v<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-	return ok;
-}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> r<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-</pre>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CheckSimpleVector</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// If you change double to float in the next statement,</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// CheckSimpleVector will generate an error message at compile time.</span></span>
+     <span style="color: #009900">double</span> a <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------</span></span>
+
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">MyVector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     <span style="color: #008080">MyVector&lt;double&gt;</span> r <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Sscal</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> v<span style="color: #990000">);</span>
+     ok      <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>r<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">.);</span>
+     ok      <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>r<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">6</span><span style="color: #990000">.);</span>
+
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/check_simple_vector.cpp
 
 </body>

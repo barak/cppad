@@ -1,6 +1,6 @@
-// $Id: compare.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: compare.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -22,7 +22,7 @@ $mindex compare < <= > >= == !=$$
 
 
 $code
-$verbatim%example/compare.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/compare.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -34,6 +34,7 @@ bool Compare(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// declare independent variables and start tape recording
 	size_t n  = 2;
@@ -74,7 +75,7 @@ bool Compare(void)
 	CppAD::ADFun<double> f(x, y);
 
 	// check value
-	ok &= NearEqual(y[0] , x0*x0*x1*x1*x1*x0,  1e-10 , 1e-10);
+	ok &= NearEqual(y[0] , x0*x0*x1*x1*x1*x0, eps99, eps99);
 
 	// forward computation of partials w.r.t. x[0]
 	CPPAD_TESTVECTOR(double) dx(n);
@@ -82,21 +83,21 @@ bool Compare(void)
 	dx[0] = 1.;
 	dx[1] = 0.;
 	dy    = f.Forward(1, dx);
-	ok   &= NearEqual(dy[0], 3.*x0*x0*x1*x1*x1, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], 3.*x0*x0*x1*x1*x1, eps99, eps99);
 
 	// forward computation of partials w.r.t. x[1]
 	dx[0] = 0.;
 	dx[1] = 1.;
 	dy    = f.Forward(1, dx);
-	ok   &= NearEqual(dy[0], 3.*x0*x0*x1*x1*x0, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], 3.*x0*x0*x1*x1*x0, eps99, eps99);
 
 	// reverse computation of derivative of y[0]
 	CPPAD_TESTVECTOR(double)  w(m);
 	CPPAD_TESTVECTOR(double) dw(n);
 	w[0]  = 1.;
 	dw    = f.Reverse(1, w);
-	ok   &= NearEqual(dw[0], 3.*x0*x0*x1*x1*x1, 1e-10, 1e-10);
-	ok   &= NearEqual(dw[1], 3.*x0*x0*x1*x1*x0, 1e-10, 1e-10);
+	ok   &= NearEqual(dw[0], 3.*x0*x0*x1*x1*x1, eps99, eps99);
+	ok   &= NearEqual(dw[1], 3.*x0*x0*x1*x1*x0, eps99, eps99);
 
 	return ok;
 }

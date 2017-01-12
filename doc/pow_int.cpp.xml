@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -101,72 +102,67 @@ A:active { color : purple }
 
 
 <center><b><big><big>The Pow Integer Exponent: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cmath&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">pow_int</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool pow_int(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
 
-	using CppAD::AD;
-	using CppAD::NearEqual;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x0 <span style="color: #990000">=</span> <span style="color: #990000">-</span><span style="color: #993399">0.5</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	size_t n  = 1;
-	double x0 = -0.5;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0;
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// dependent variable vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">7</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="color: #009900">int</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>m<span style="color: #990000">);</span> i<span style="color: #990000">++)</span>
+          y<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> i <span style="color: #990000">-</span> <span style="color: #993399">3</span><span style="color: #990000">);</span>
 
-	// dependent variable vector
-	size_t m = 7;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	int i;
-	for(i = 0; i &lt; int(m); i++)
-		y[i] = CppAD::pow(x[0], i - 3);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// check value</span></span>
+     <span style="color: #009900">double</span> check<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>m<span style="color: #990000">);</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     check <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span>x0<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i <span style="color: #990000">-</span> <span style="color: #993399">3</span><span style="color: #990000">));</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// check value
-	double check;
-	for(i = 0; i &lt; int(m); i++)
-	{	check = std::pow(x0, double(i - 3));
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[i] , check,  1e-10 , 1e-10);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// forward computation of first partial w.r.t. x[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>m<span style="color: #990000">);</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     check <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">-</span><span style="color: #993399">3</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span>x0<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i <span style="color: #990000">-</span> <span style="color: #993399">4</span><span style="color: #990000">));</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// forward computation of first partial w.r.t. x[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
-	dx[0] = 1.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	for(i = 0; i &lt; int(m); i++)
-	{	check = double(i-3) * std::pow(x0, double(i - 4));
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[i] , check,  1e-10 , 1e-10);
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse computation of derivative of y[i]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>  <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>m<span style="color: #990000">);</span> i<span style="color: #990000">++)</span>
+          w<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>m<span style="color: #990000">);</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     w<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          dw    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+          check <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">-</span><span style="color: #993399">3</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span>x0<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i <span style="color: #990000">-</span> <span style="color: #993399">4</span><span style="color: #990000">));</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+          w<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
 
-	// reverse computation of derivative of y[i]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
-	for(i = 0; i &lt; int(m); i++)
-		w[i] = 0.;
-	for(i = 0; i &lt; int(m); i++)
-	{	w[i] = 1.;
-		dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-		check = double(i-3) * std::pow(x0, double(i - 4));
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  1e-10 , 1e-10);
-		w[i] = 0.;
-	}
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/pow_int.cpp
 
 </body>

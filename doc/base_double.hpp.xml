@@ -66,6 +66,7 @@ A:active { color : purple }
 <option>base_std_math</option>
 <option>base_limits</option>
 <option>base_to_string</option>
+<option>base_hash</option>
 <option>base_example</option>
 </select>
 </td>
@@ -112,28 +113,26 @@ The type <code><font color="blue">double</font></code> is a relatively simple ty
 <a href="base_cond_exp.xml#CondExpTemplate.Ordered Type" target="_top"><span style='white-space: nowrap'>ordered&#xA0;type</span></a>
 .
 Hence its <code><font color="blue">CondExpOp</font></code> function is defined by
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline double CondExpOp(
-          enum CompareOp     cop          ,
-          const double&amp;       left         ,
-          const double&amp;       right        ,
-          const double&amp;       exp_if_true  ,
-          const double&amp;       exp_if_false )
-     {    return CondExpTemplate(cop, left, right, exp_if_true, exp_if_false);
-     }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">CondExpOp</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">enum</span></span> <span style="color: #008080">CompareOp</span>     cop          <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span>       left         <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span>       right        <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span>       exp_if_true  <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span>       exp_if_false <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">CondExpTemplate</span></span><span style="color: #990000">(</span>cop<span style="color: #990000">,</span> left<span style="color: #990000">,</span> right<span style="color: #990000">,</span> exp_if_true<span style="color: #990000">,</span> exp_if_false<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="CondExpRel" id="CondExpRel">CondExpRel</a></big></b>
 <br/>
 The <a href="base_cond_exp.xml#CondExpRel" target="_top"><span style='white-space: nowrap'>CPPAD_COND_EXP_REL</span></a>
  macro invocation
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_COND_EXP_REL(double)
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_COND_EXP_REL</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 uses <code><font color="blue">CondExpOp</font></code> above to
 define 
 <code><font color="blue"><span style='white-space: nowrap'>CondExp</span></font><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
@@ -148,140 +147,133 @@ and
 <b><big><a name="EqualOpSeq" id="EqualOpSeq">EqualOpSeq</a></big></b>
 <br/>
 The type <code><font color="blue">double</font></code> is simple (in this respect) and so we define
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline bool EqualOpSeq(const double&amp; x, const double&amp; y)
-     {    return x == y; }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">==</span> y<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Identical" id="Identical">Identical</a></big></b>
 <br/>
 The type <code><font color="blue">double</font></code> is simple (in this respect) and so we define
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline bool IdenticalPar(const double&amp; x)
-     {    return true; }
-     inline bool IdenticalZero(const double&amp; x)
-     {    return (x == 0.); }
-     inline bool IdenticalOne(const double&amp; x)
-     {    return (x == 1.); }
-     inline bool IdenticalEqualPar(const double&amp; x, const double&amp; y)
-     {    return (x == y); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalPar</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>x <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalOne</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>x <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.);</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalEqualPar</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>x <span style="color: #990000">==</span> y<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Integer" id="Integer">Integer</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline int Integer(const double&amp; x)
-     {    return static_cast&lt;int&gt;(x); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span>x<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="azmul" id="azmul">azmul</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_AZMUL( double )
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_AZMUL</span></span><span style="color: #990000">(</span> <span style="color: #009900">double</span> <span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 <br/>
 <b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
 <br/>
 The <code><font color="blue">double</font></code> type supports ordered comparisons
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline bool GreaterThanZero(const double&amp; x)
-     {    return x &gt; 0.; }
-     inline bool GreaterThanOrZero(const double&amp; x)
-     {    return x &gt;= 0.; }
-     inline bool LessThanZero(const double&amp; x)
-     {    return x &lt; 0.; }
-     inline bool LessThanOrZero(const double&amp; x)
-     {    return x &lt;= 0.; }
-     inline bool abs_geq(const double&amp; x, const double&amp; y)
-     {    return std::fabs(x) &gt;= std::fabs(y); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">GreaterThanZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">GreaterThanOrZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">&gt;=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LessThanZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LessThanOrZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">&lt;=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">abs_geq</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>x<span style="color: #990000">)</span> <span style="color: #990000">&gt;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>y<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Unary Standard Math" id="Unary Standard Math">Unary Standard Math</a></big></b>
 <br/>
-The following macro invocations define the unary standard math functions
-required to use <code><font color="blue">AD&lt;double&gt;</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_STANDARD_MATH_UNARY(double, acos)
-     CPPAD_STANDARD_MATH_UNARY(double, asin)
-     CPPAD_STANDARD_MATH_UNARY(double, atan)
-     CPPAD_STANDARD_MATH_UNARY(double, cos)
-     CPPAD_STANDARD_MATH_UNARY(double, cosh)
-     CPPAD_STANDARD_MATH_UNARY(double, exp)
-     CPPAD_STANDARD_MATH_UNARY(double, fabs)
-     CPPAD_STANDARD_MATH_UNARY(double, log)
-     CPPAD_STANDARD_MATH_UNARY(double, log10)
-     CPPAD_STANDARD_MATH_UNARY(double, sin)
-     CPPAD_STANDARD_MATH_UNARY(double, sinh)
-     CPPAD_STANDARD_MATH_UNARY(double, sqrt)
-     CPPAD_STANDARD_MATH_UNARY(double, tan)
-     CPPAD_STANDARD_MATH_UNARY(double, tanh)
-# if CPPAD_USE_CPLUSPLUS_2011
-     CPPAD_STANDARD_MATH_UNARY(double, erf)
-     CPPAD_STANDARD_MATH_UNARY(double, asinh)
-     CPPAD_STANDARD_MATH_UNARY(double, acosh)
-     CPPAD_STANDARD_MATH_UNARY(double, atanh)
-     CPPAD_STANDARD_MATH_UNARY(double, expm1)
-     CPPAD_STANDARD_MATH_UNARY(double, log1p)
-# endif
-}
-</pre></font></code>
+The following macro invocations import the <code><font color="blue">double</font></code> versions of
+the unary standard math functions into the <code><font color="blue">CppAD</font></code> namespace.
+Importing avoids ambiguity errors when using both the
+<code><font color="blue">CppAD</font></code> and <code><font color="blue">std</font></code> namespaces.
+Note this also defines the <a href="base_float.hpp.xml#Unary Standard Math" target="_top"><span style='white-space: nowrap'>float</span></a>
+
+versions of these functions.
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>acos<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>asin<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>atan<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cos<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cosh<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>exp<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>fabs<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>log<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>log10<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>sin<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>sinh<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>sqrt<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>tan<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>tanh<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_USE_CPLUSPLUS_2011
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>erf<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>asinh<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>acosh<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>atanh<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>expm1<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>log1p<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="color: #FF0000">}</span></tt></pre>
 The absolute value function is special because its <code><font color="blue">std</font></code> name is
 <code><font color="blue">fabs</font></code>
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline double abs(const double&amp; x)
-     {    return std::fabs(x); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="sign" id="sign">sign</a></big></b>
 <br/>
 The following defines the <code><font color="blue">CppAD::sign</font></code> function that
 is required to use <code><font color="blue">AD&lt;double&gt;</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline double sign(const double&amp; x)
-     {    if( x &gt; 0. )
-               return 1.;
-          if( x == 0. )
-               return 0.;
-          return -1.;
-     }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">sign</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> x <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> x <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="pow" id="pow">pow</a></big></b>
 <br/>
 The following defines a <code><font color="blue">CppAD::pow</font></code> function that
-is required to use <code><font color="blue">AD&lt;double&gt;</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline double pow(const double&amp; x, const double&amp; y)
-     { return std::pow(x, y); }
-}
-</pre></font></code>
+is required to use <code><font color="blue">AD&lt;double&gt;</font></code>.
+As with the unary standard math functions,
+this has the exact same signature as <code><font color="blue">std::pow</font></code>,
+so use it instead of defining another function.
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>pow<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 <br/>
 <b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
 <br/>
 The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
 
 for the type <code><font color="blue">double</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_NUMERIC_LIMITS(double, double)
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_NUMERIC_LIMITS</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 <br/>
 <b><big><a name="to_string" id="to_string">to_string</a></big></b>
 <br/>
@@ -296,7 +288,7 @@ it is necessary to define <code><font color="blue">to_string</font></code> for a
  type.
 
 
-<hr/>Input File: cppad/local/base_double.hpp
+<hr/>Input File: cppad/core/base_double.hpp
 
 </body>
 </html>

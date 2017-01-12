@@ -38,6 +38,7 @@ var list_down2 = [
 'license.xml'
 ];
 var list_down1 = [
+'whats_new_16.xml',
 'whats_new_15.xml',
 'whats_new_14.xml',
 'whats_new_13.xml',
@@ -54,6 +55,7 @@ var list_down1 = [
 ];
 var list_current0 = [
 'whats_new_15.xml#Introduction',
+'whats_new_15.xml#12-31',
 'whats_new_15.xml#12-29',
 'whats_new_15.xml#12-28',
 'whats_new_15.xml#12-08',

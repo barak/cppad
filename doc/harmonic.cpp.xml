@@ -102,10 +102,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Multi-Threaded Implementation of Summation of 1/i</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -207,35 +203,30 @@ If it is zero, the test is run without a multi-threading environment.
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-// general purpose multi-threading interface
-# include &quot;team_thread.hpp&quot;
-// special utilities for the harmonic problem
-# include &quot;harmonic_work.hpp&quot;
+<pre><tt>
+<span style="font-style: italic"><span style="color: #9A1900">// general purpose multi-threading interface</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_thread.hpp"</span>
+<span style="font-style: italic"><span style="color: #9A1900">// special utilities for the harmonic problem</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic_work.hpp"</span>
 
-bool harmonic(double&amp; sum, size_t num_sum, size_t num_threads)
-{	// sum = 1/num_sum + 1/(num_sum-1) + ... + 1
-	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">harmonic</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">&amp;</span> sum<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> num_sum<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> num_threads<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// sum = 1/num_sum + 1/(num_sum-1) + ... + 1</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// setup the work for num_threads_ threads
-	ok &amp;= harmonic_setup(num_sum, num_threads);
+     <span style="font-style: italic"><span style="color: #9A1900">// setup the work for num_threads_ threads</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_setup</span></span><span style="color: #990000">(</span>num_sum<span style="color: #990000">,</span> num_threads<span style="color: #990000">);</span>
 
-	// now do the work for each thread
-	if( num_threads &gt; 0 )
-		team_work( harmonic_worker );
-	else	harmonic_worker();
+     <span style="font-style: italic"><span style="color: #9A1900">// now do the work for each thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #000000">team_work</span></span><span style="color: #990000">(</span> harmonic_worker <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     <span style="font-weight: bold"><span style="color: #000000">harmonic_worker</span></span><span style="color: #990000">();</span>
 
-	// now combine the result for all the threads
-	ok &amp;= harmonic_combine(sum);
+     <span style="font-style: italic"><span style="color: #9A1900">// now combine the result for all the threads</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_combine</span></span><span style="color: #990000">(</span>sum<span style="color: #990000">);</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/harmonic.cpp
 
 </body>

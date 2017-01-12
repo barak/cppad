@@ -1,6 +1,6 @@
-/* $Id: check_for_nan.cpp 3753 2015-11-24 16:39:04Z bradbell $ */
+// $Id: check_for_nan.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -16,7 +16,7 @@ $begin check_for_nan.cpp$$
 $section ADFun Checking For Nan: Example and Test$$
 
 $code
-$verbatim%example/check_for_nan.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/check_for_nan.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -82,7 +82,7 @@ bool check_for_nan(void)
 		size_t vector_size = std::atoi(number.c_str());
 		ok &= vector_size == 2;
 
-		// get and check first dependent varialbe index that is nan
+		// get and check first dependent variable index that is nan
 		pattern = "index = ";
 		start   = msg.find(pattern) + pattern.size();
 		number  = "";

@@ -125,27 +125,25 @@ It value is <code><font color="blue">1</font></code> if the test passes and <cod
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-bool correct_det_by_minor(void)
-{    double a[9], det, check;
+<pre><tt><span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">correct_det_by_minor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> a<span style="color: #990000">[</span><span style="color: #993399">9</span><span style="color: #990000">],</span> det<span style="color: #990000">,</span> check<span style="color: #990000">;</span>
 
-     <a href="uniform_01_c.xml" target="_top">random_seed</a>(123);
-     <a href="uniform_01_c.xml" target="_top">uniform_01</a>(9, a);
+     <span style="font-weight: bold"><span style="color: #000000">random_seed</span></span><span style="color: #990000">(</span><span style="color: #993399">123</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #993399">9</span><span style="color: #990000">,</span> a<span style="color: #990000">);</span>
 
-     /* compute determinant using expansion by minors */
-     det = det_by_minor(a, 3);
-     
-     /* use expansion by minors to hand code the determinant  */
-     check = 0.;
-     check += a[0] * ( a[4] * a[8] - a[5] * a[7] );
-     check -= a[1] * ( a[3] * a[8] - a[5] * a[6] );
-     check += a[2] * ( a[3] * a[7] - a[4] * a[6] );
+     <span style="font-style: italic"><span style="color: #9A1900">/* compute determinant using expansion by minors */</span></span>
+     det <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">det_by_minor</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> <span style="color: #993399">3</span><span style="color: #990000">);</span>
 
-     if( fabs(det / check - 1.0) &lt; 1e-10 )
-          return true;
-     return false;
-}
-</pre></font></code>
+     <span style="font-style: italic"><span style="color: #9A1900">/* use expansion by minors to hand code the determinant  */</span></span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     check <span style="color: #990000">+=</span> a<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> a<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     check <span style="color: #990000">-=</span> a<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     check <span style="color: #990000">+=</span> a<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>det <span style="color: #990000">/</span> check <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: compare_c/det_by_minor.c
 

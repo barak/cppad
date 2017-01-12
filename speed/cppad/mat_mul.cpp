@@ -1,6 +1,6 @@
-/* $Id: mat_mul.cpp 3741 2015-10-07 14:51:10Z bradbell $ */
+// $Id: mat_mul.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -40,15 +40,15 @@ See $cref link_mat_mul$$.
 
 $head Implementation$$
 
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
 # include <cppad/speed/mat_sum_sq.hpp>
 # include <cppad/speed/uniform_01.hpp>
-# include <cppad/example/matrix_mul.hpp>
+# include <cppad/example/mat_mul.hpp>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize, global_boolsparsity;
+// Note that CppAD uses global_option["memory"] at the main program level
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_mat_mul(
 	size_t                           size     ,
@@ -58,6 +58,8 @@ bool link_mat_mul(
 	CppAD::vector<double>&           dz
 )
 {
+	// optimization options: no conditional skips or compare operators
+	std::string options="no_compare_op";
 	// -----------------------------------------------------
 	// setup
 	typedef CppAD::AD<double>           ADScalar;
@@ -76,18 +78,15 @@ bool link_mat_mul(
 	w[0] = 1.;
 
 	// user atomic information
-	CppAD::vector<ADScalar> ax(2 * n), ay(n);
-	size_t nr_result = size;
-	size_t n_middle  = size;
-	size_t nc_result = size;
-	matrix_mul atom_mul(nr_result, n_middle, nc_result);
+	CppAD::vector<ADScalar> ax(3 + 2 * n), ay(n);
+	atomic_mat_mul atom_mul;
 	//
-	if( global_boolsparsity )
+	if( global_option["boolsparsity"] )
 		atom_mul.option( CppAD::atomic_base<double>::pack_sparsity_enum );
 	else
 		atom_mul.option( CppAD::atomic_base<double>::set_sparsity_enum );
 	// ------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( ! global_option["onetape"] ) while(repeat--)
 	{	// get the next matrix
 		CppAD::uniform_01(n, x);
 		for( j = 0; j < n; j++)
@@ -97,12 +96,15 @@ bool link_mat_mul(
 		Independent(X);
 
 		// do computations
-		if( ! global_atomic )
+		if( ! global_option["atomic"] )
 			mat_sum_sq(size, X, Y, Z);
 		else
-		{	for(j = 0; j < n; j++)
-			{	ax[j]   = X[j];
-				ax[j+n] = X[j];
+		{	ax[0] = ADScalar( size ); // number of rows in left matrix
+			ax[1] = ADScalar( size ); // rows in left and columns in right
+			ax[2] = ADScalar( size ); // number of columns in right matrix
+			for(j = 0; j < n; j++)
+			{	ax[3 + j]     = X[j];
+				ax[3 + n + j] = X[j];
 			}
 			// Y = X * X
 			atom_mul(ax, ay);
@@ -113,8 +115,8 @@ bool link_mat_mul(
 		// create function object f : X -> Z
 		f.Dependent(X, Z);
 
-		if( global_optimize )
-			f.optimize();
+		if( global_option["optimize"] )
+			f.optimize(options);
 
 		// skip comparison operators
 		f.compare_change_count(0);
@@ -133,7 +135,7 @@ bool link_mat_mul(
 		Independent(X);
 
 		// do computations
-		if( ! global_atomic )
+		if( ! global_option["atomic"] )
 			mat_sum_sq(size, X, Y, Z);
 		else
 		{	for(j = 0; j < n; j++)
@@ -150,8 +152,8 @@ bool link_mat_mul(
 		// create function object f : X -> Z
 		f.Dependent(X, Z);
 
-		if( global_optimize )
-			f.optimize();
+		if( global_option["optimize"] )
+			f.optimize(options);
 
 		// skip comparison operators
 		f.compare_change_count(0);
@@ -166,12 +168,12 @@ bool link_mat_mul(
 		}
 	}
 	// --------------------------------------------------------------------
-	// Free temporary work space. (If there are future calls to
-	// mat_mul they would create new temporary work space.)
+	// Free temporary work space (any future atomic_mat_mul constructors
+	// would create new temporary work space.)
 	CppAD::user_atomic<double>::clear();
 
 	return true;
 }
-/* $$
+/* %$$
 $end
 */

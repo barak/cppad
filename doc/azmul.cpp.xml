@@ -78,69 +78,64 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Absolute Zero Multiplication: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cmath&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool azmul(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> inf <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">infinity</span></span><span style="color: #990000">();</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	double inf = std::numeric_limits&lt;double&gt;::infinity();
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x <span style="color: #990000">=</span> <span style="color: #993399">0.5</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> y <span style="color: #990000">=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">axy</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     axy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x<span style="color: #990000">;</span>
+     axy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> y<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n  = 2;
-	double x = 0.5;
-	double y = 2.0;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) axy(n);
-	axy[0]      = x;
-	axy[1]      = y;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>axy<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(axy);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">az</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     az<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span>axy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> axy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span> <span style="font-style: italic"><span style="color: #9A1900">// azmul(variable, variable)</span></span>
+     az<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span>axy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> inf<span style="color: #990000">);</span>    <span style="font-style: italic"><span style="color: #9A1900">// azmul(variable, parameter=inf)</span></span>
+     az<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span>axy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">3.0</span><span style="color: #990000">);</span>    <span style="font-style: italic"><span style="color: #9A1900">// azmul(variable, parameter=3.0)</span></span>
+     az<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span><span style="color: #993399">0.0</span><span style="color: #990000">,</span> axy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>    <span style="font-style: italic"><span style="color: #9A1900">// azmul(parameter=0.0, variable)</span></span>
+     az<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span><span style="color: #993399">4.0</span><span style="color: #990000">,</span> axy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>    <span style="font-style: italic"><span style="color: #9A1900">// azmul(parameter=4.0, variable)</span></span>
 
-	// range space vector
-	size_t m = 5;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) az(m);
-	az[0] = CppAD::azmul(axy[0], axy[1]); // azmul(variable, variable)
-	az[1] = CppAD::azmul(axy[0], inf);    // azmul(variable, parameter=inf)
-	az[2] = CppAD::azmul(axy[0], 3.0);    // azmul(variable, parameter=3.0)
-	az[3] = CppAD::azmul(0.0, axy[1]);    // azmul(parameter=0.0, variable)
-	az[4] = CppAD::azmul(4.0, axy[1]);    // azmul(parameter=4.0, variable)
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: axy -&gt; az and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>axy<span style="color: #990000">,</span> az<span style="color: #990000">);</span>
 
-	// create f: axy -&gt; az and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(axy, az);
-
-	// check value when x is not zero
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(az[0] , x * y,  eps, eps);
-	ok &amp;= az[1] == inf;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(az[2] , x * 3.0,  eps, eps);
-	ok &amp;= az[3] == 0.0;
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(az[4] , 4.0 * y,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check value when x is not zero</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>az<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x <span style="color: #990000">*</span> y<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> az<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> inf<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>az<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x <span style="color: #990000">*</span> <span style="color: #993399">3.0</span><span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> az<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>az<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">4.0</span> <span style="color: #990000">*</span> y<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
 
-	// check value x is zero and y is infinity
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) xy(n), z(m);
-	xy[0] = 0.0;
-	xy[1] = inf;
-	z     = f.<a href="forward.xml" target="_top">Forward</a>(0, xy);
-	ok &amp;= z[0] == 0.0;
-	ok &amp;= z[1] == 0.0;
-	ok &amp;= z[2] == 0.0;
-	ok &amp;= z[3] == 0.0;
-	ok &amp;= z[4] == inf;
+     <span style="font-style: italic"><span style="color: #9A1900">// check value x is zero and y is infinity</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">xy</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     xy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     xy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> inf<span style="color: #990000">;</span>
+     z     <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> xy<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> z<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> inf<span style="color: #990000">;</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/azmul.cpp
 
 </body>

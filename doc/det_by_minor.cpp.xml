@@ -85,49 +85,44 @@ A:active { color : purple }
 
 
 <center><b><big><big>Determinant Using Expansion by Minors: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/det_by_minor.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/speed/det_by_minor.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">det_by_minor</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool det_by_minor()
-{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// dimension of the matrix</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
 
-	// dimension of the matrix
-	size_t n = 3;
+     <span style="font-style: italic"><span style="color: #9A1900">// construct the determinat object</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">det_by_minor&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// construct the determinat object
-	CppAD::det_by_minor&lt;double&gt; Det(n);
-
-	double  a[] = {
-		1., 2., 3.,  // a[0] a[1] a[2]
-		3., 2., 1.,  // a[3] a[4] a[5]
-		2., 1., 2.   // a[6] a[7] a[8]
-	};
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) A(9);
-	size_t i;
-	for(i = 0; i &lt; 9; i++)
-		A[i] = a[i];
+     <span style="color: #009900">double</span>  a<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">3</span><span style="color: #990000">.,</span>  <span style="font-style: italic"><span style="color: #9A1900">// a[0] a[1] a[2]</span></span>
+          <span style="color: #993399">3</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span>  <span style="font-style: italic"><span style="color: #9A1900">// a[3] a[4] a[5]</span></span>
+          <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.</span>   <span style="font-style: italic"><span style="color: #9A1900">// a[6] a[7] a[8]</span></span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span><span style="color: #993399">9</span><span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">9</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
 
-	// evaluate the determinant
-	double det = Det(A);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the determinant</span></span>
+     <span style="color: #009900">double</span> det <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>A<span style="color: #990000">);</span>
 
-	double check;
-	check = a[0]*(a[4]*a[8] - a[5]*a[7])
-	      - a[1]*(a[3]*a[8] - a[5]*a[6])
-	      + a[2]*(a[3]*a[7] - a[4]*a[6]);
+     <span style="color: #009900">double</span> check<span style="color: #990000">;</span>
+     check <span style="color: #990000">=</span> a<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*(</span>a<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]*</span>a<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]*</span>a<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">])</span>
+           <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]*(</span>a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]*</span>a<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]*</span>a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">])</span>
+           <span style="color: #990000">+</span> a<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]*(</span>a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]*</span>a<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]*</span>a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]);</span>
 
-	ok = det == check;
+     ok <span style="color: #990000">=</span> det <span style="color: #990000">==</span> check<span style="color: #990000">;</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: speed/example/det_by_minor.cpp
 
 </body>

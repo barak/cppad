@@ -112,7 +112,7 @@ A:active { color : purple }
 <br/>
 
 <code><i><font color="black"><span style='white-space: nowrap'>d</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;det_of_minor(</span></font><i><font color="black"><span style='white-space: nowrap'>a</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>r</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
- 
+
 
 <br/>
 <br/>
@@ -137,7 +137,7 @@ The elements of the
 <mi mathvariant='italic'>M</mi>
 </mrow></math>
 
- 
+
 of the matrix 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
@@ -192,7 +192,7 @@ for
 </msub>
 </mrow></math>
 
-where the functions 
+where the functions
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>R</mi>
@@ -221,7 +221,7 @@ Expansion by minors is chosen as an example because it uses
 a lot of floating point operations yet does not require much source code
 (on the order of 
 <code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i></code>
- factorial floating point operations and 
+ factorial floating point operations and
 about 70 lines of source code including comments).
 This is not an efficient method for computing a determinant;
 for example, using an LU factorization would be better.
@@ -279,7 +279,7 @@ for
 <mn>1</mn>
 </mrow></math>
 
-, 
+,
 and 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>r</mi>
@@ -470,7 +470,7 @@ This vector defines the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 which specifies the rows of the minor 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>M</mi>
@@ -485,7 +485,7 @@ To be specific, the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>i</mi>
@@ -498,7 +498,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- is defined by 
+ is defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtable rowalign="center" ><mtr><mtd columnalign="right" >
@@ -541,7 +541,7 @@ less than or equal
 .
 The elements of vector 
 <code><i><font color="black"><span style='white-space: nowrap'>r</span></font></i></code>
- are modified during the computation, 
+ are modified during the computation,
 and restored to their original value before the return from
 <code><font color="blue">det_of_minor</font></code>.
 
@@ -572,7 +572,7 @@ This vector defines the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 which specifies the rows of the minor 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>M</mi>
@@ -587,7 +587,7 @@ To be specific, the function
 <mo stretchy="false">)</mo>
 </mrow></math>
 
- 
+
 for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>j</mi>
@@ -600,7 +600,7 @@ for
 <mn>-1</mn>
 </mrow></math>
 
- is defined by 
+ is defined by
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <mtable rowalign="center" ><mtr><mtd columnalign="right" >
@@ -643,7 +643,7 @@ less than or equal
 .
 The elements of vector 
 <code><i><font color="black"><span style='white-space: nowrap'>c</span></font></i></code>
- are modified during the computation, 
+ are modified during the computation,
 and restored to their original value before the return from
 <code><font color="blue">det_of_minor</font></code>.
 
@@ -670,65 +670,63 @@ and is equal to the determinant of the minor
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-double det_of_minor( 
-     const double*        a  , 
-     size_t               m  , 
-     size_t               n  , 
-     size_t*              r  , 
-     size_t*              c  )
-{    size_t R0, Cj, Cj1, j;
-     double detM, M0j, detS;
-     int s;
-     
-     R0 = r[m]; /* R(0) */
-     Cj = c[m]; /* C(j)    (case j = 0) */
-     Cj1 = m;   /* C(j-1)  (case j = 0) */
+<pre><tt><span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">det_of_minor</span></span><span style="color: #990000">(</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span><span style="color: #990000">*</span>        a  <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>               m  <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>               n  <span style="color: #990000">,</span>
+     size_t<span style="color: #990000">*</span>              r  <span style="color: #990000">,</span>
+     size_t<span style="color: #990000">*</span>              c  <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> R0<span style="color: #990000">,</span> Cj<span style="color: #990000">,</span> Cj1<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> detM<span style="color: #990000">,</span> M0j<span style="color: #990000">,</span> detS<span style="color: #990000">;</span>
+     <span style="color: #009900">int</span> s<span style="color: #990000">;</span>
 
-     /* check for 1 by 1 case */
-     if( n == 1 ) return a[ R0 * m + Cj ];
+     R0 <span style="color: #990000">=</span> r<span style="color: #990000">[</span>m<span style="color: #990000">];</span> <span style="font-style: italic"><span style="color: #9A1900">/* R(0) */</span></span>
+     Cj <span style="color: #990000">=</span> c<span style="color: #990000">[</span>m<span style="color: #990000">];</span> <span style="font-style: italic"><span style="color: #9A1900">/* C(j)    (case j = 0) */</span></span>
+     Cj1 <span style="color: #990000">=</span> m<span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">/* C(j-1)  (case j = 0) */</span></span>
 
-     /* initialize determinant of the minor M */
-     detM = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">/* check for 1 by 1 case */</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> a<span style="color: #990000">[</span> R0 <span style="color: #990000">*</span> m <span style="color: #990000">+</span> Cj <span style="color: #990000">];</span>
 
-     /* initialize sign of factor for neat sub-minor */
-     s = 1;
+     <span style="font-style: italic"><span style="color: #9A1900">/* initialize determinant of the minor M */</span></span>
+     detM <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-     /* remove row with index 0 in M from all the sub-minors of M */
-     r[m] = r[R0];
+     <span style="font-style: italic"><span style="color: #9A1900">/* initialize sign of factor for neat sub-minor */</span></span>
+     s <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-     /* for each column of M */
-     for(j = 0; j &lt; n; j++)
-     {    /* element with index (0,j) in the minor M */
-          M0j = a[ R0 * m + Cj ];
+     <span style="font-style: italic"><span style="color: #9A1900">/* remove row with index 0 in M from all the sub-minors of M */</span></span>
+     r<span style="color: #990000">[</span>m<span style="color: #990000">]</span> <span style="color: #990000">=</span> r<span style="color: #990000">[</span>R0<span style="color: #990000">];</span>
 
-          /* remove column with index j in M to form next sub-minor S of M */
-          c[Cj1] = c[Cj];
+     <span style="font-style: italic"><span style="color: #9A1900">/* for each column of M */</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">/* element with index (0,j) in the minor M */</span></span>
+          M0j <span style="color: #990000">=</span> a<span style="color: #990000">[</span> R0 <span style="color: #990000">*</span> m <span style="color: #990000">+</span> Cj <span style="color: #990000">];</span>
 
-          /* compute determinant of the current sub-minor S */
-          detS = det_of_minor(a, m, n - 1, r, c);
+          <span style="font-style: italic"><span style="color: #9A1900">/* remove column with index j in M to form next sub-minor S of M */</span></span>
+          c<span style="color: #990000">[</span>Cj1<span style="color: #990000">]</span> <span style="color: #990000">=</span> c<span style="color: #990000">[</span>Cj<span style="color: #990000">];</span>
 
-          /* restore column Cj to representation of M as a minor of A */
-          c[Cj1] = Cj;
+          <span style="font-style: italic"><span style="color: #9A1900">/* compute determinant of the current sub-minor S */</span></span>
+          detS <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">det_of_minor</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> m<span style="color: #990000">,</span> n <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> r<span style="color: #990000">,</span> c<span style="color: #990000">);</span>
 
-          /* include this sub-minor term in the summation */
-          if( s &gt; 0 )
-               detM = detM + M0j * detS;
-          else detM = detM - M0j * detS;
+          <span style="font-style: italic"><span style="color: #9A1900">/* restore column Cj to representation of M as a minor of A */</span></span>
+          c<span style="color: #990000">[</span>Cj1<span style="color: #990000">]</span> <span style="color: #990000">=</span> Cj<span style="color: #990000">;</span>
 
-          /* advance to neat column of M */
-          Cj1 = Cj;
-          Cj  = c[Cj];
-          s   = - s;          
-     }
+          <span style="font-style: italic"><span style="color: #9A1900">/* include this sub-minor term in the summation */</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> s <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               detM <span style="color: #990000">=</span> detM <span style="color: #990000">+</span> M0j <span style="color: #990000">*</span> detS<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     detM <span style="color: #990000">=</span> detM <span style="color: #990000">-</span> M0j <span style="color: #990000">*</span> detS<span style="color: #990000">;</span>
 
-     /* restore row zero to the minor representation for M */
-     r[m] = R0;
+          <span style="font-style: italic"><span style="color: #9A1900">/* advance to neat column of M */</span></span>
+          Cj1 <span style="color: #990000">=</span> Cj<span style="color: #990000">;</span>
+          Cj  <span style="color: #990000">=</span> c<span style="color: #990000">[</span>Cj<span style="color: #990000">];</span>
+          s   <span style="color: #990000">=</span> <span style="color: #990000">-</span> s<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-     /* return the determinant of the minor M */
-     return detM;
-}
-</pre></font></code>
+     <span style="font-style: italic"><span style="color: #9A1900">/* restore row zero to the minor representation for M */</span></span>
+     r<span style="color: #990000">[</span>m<span style="color: #990000">]</span> <span style="color: #990000">=</span> R0<span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">/* return the determinant of the minor M */</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> detM<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: compare_c/det_by_minor.c
 

@@ -1,9 +1,9 @@
-// $Id: ode_gear.hpp 3766 2015-12-08 23:12:56Z bradbell $
-# ifndef CPPAD_ODE_GEAR_HPP
-# define CPPAD_ODE_GEAR_HPP
+// $Id: ode_gear.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_UTILITY_ODE_GEAR_HPP
+# define CPPAD_UTILITY_ODE_GEAR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -355,7 +355,7 @@ $end
 */
 
 # include <cstddef>
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/check_simple_vector.hpp>
 # include <cppad/utility/check_numeric_type.hpp>
 # include <cppad/utility/vector.hpp>
@@ -481,9 +481,11 @@ void OdeGear(
 	}
 
 	// LU factor (and overwrite) the matrix A
-	int sign;
 	CppAD::vector<size_t> ip(n) , jp(n);
-	sign = LuFactor(ip, jp, A);
+# ifndef NDEBUG
+	int sign =
+# endif
+	LuFactor(ip, jp, A);
 	CPPAD_ASSERT_KNOWN(
 		sign != 0,
 		"OdeGear: step size is to large"

@@ -1,4 +1,4 @@
-// $Id: pow_int.cpp 3785 2016-02-08 12:53:06Z bradbell $
+// $Id: pow_int.cpp 3779 2016-01-01 11:26:11Z bradbell $
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 

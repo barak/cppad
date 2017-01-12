@@ -1,6 +1,6 @@
-// $Id: stack_machine.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: stack_machine.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -19,7 +19,7 @@ $mindex test$$
 
 
 $code
-$verbatim%example/stack_machine.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/stack_machine.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -137,6 +137,7 @@ bool StackMachine(void)
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 	using CppAD::vector;
 
 	// The users program in that stack machine language
@@ -199,17 +200,17 @@ bool StackMachine(void)
 	vector<double> dy(m);
 	dx[0] = 1.;
 	dy    = f.Forward(p, dx);
-	ok   &= NearEqual(dy[0], 1., 1e-10, 1e-10);
-	ok   &= NearEqual(dy[1], 2., 1e-10, 1e-10);
-	ok   &= NearEqual(dy[2], 2., 1e-10, 1e-10);
-	ok   &= NearEqual(dy[3], .5, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], 1., eps99, eps99);
+	ok   &= NearEqual(dy[1], 2., eps99, eps99);
+	ok   &= NearEqual(dy[2], 2., eps99, eps99);
+	ok   &= NearEqual(dy[3], .5, eps99, eps99);
 
 	// Use Jacobian routine (which automatically decides which mode to use)
 	dy = f.Jacobian(x);
-	ok   &= NearEqual(dy[0], 1., 1e-10, 1e-10);
-	ok   &= NearEqual(dy[1], 2., 1e-10, 1e-10);
-	ok   &= NearEqual(dy[2], 2., 1e-10, 1e-10);
-	ok   &= NearEqual(dy[3], .5, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], 1., eps99, eps99);
+	ok   &= NearEqual(dy[1], 2., eps99, eps99);
+	ok   &= NearEqual(dy[2], 2., eps99, eps99);
+	ok   &= NearEqual(dy[3], .5, eps99, eps99);
 
 	return ok;
 }

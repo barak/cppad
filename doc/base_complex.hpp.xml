@@ -66,6 +66,7 @@ A:active { color : purple }
 <option>base_std_math</option>
 <option>base_limits</option>
 <option>base_to_string</option>
+<option>base_hash</option>
 <option>base_example</option>
 </select>
 </td>
@@ -131,13 +132,11 @@ so it is necessary to define the error handler
 in addition to including
 <a href="base_require.xml#Include Order" target="_top"><span style='white-space: nowrap'>base_require.hpp</span></a>
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;limits&gt;
-# include &lt;complex&gt;
-# include &lt;cppad/base_require.hpp&gt;
-# include &lt;cppad/local/cppad_assert.hpp&gt;
-
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/base_require.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/core/cppad_assert.hpp&gt;</span>
+</tt></pre>
 <b><big><a name="CondExpOp" id="CondExpOp">CondExpOp</a></big></b>
 <br/>
 The type <code><font color="blue">std::complex&lt;double&gt;</font></code> does not supports the
@@ -145,33 +144,31 @@ The type <code><font color="blue">std::complex&lt;double&gt;</font></code> does 
 <a href="base_cond_exp.xml#CondExpTemplate.Not Ordered" target="_top"><span style='white-space: nowrap'>not&#xA0;ordered</span></a>
 .
 Hence its <code><font color="blue">CondExpOp</font></code> function is defined by
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline std::complex&lt;double&gt; CondExpOp(
-          enum CppAD::CompareOp      cop        ,
-          const std::complex&lt;double&gt; &amp;left      ,
-          const std::complex&lt;double&gt; &amp;right     ,
-          const std::complex&lt;double&gt; &amp;trueCase  ,
-          const std::complex&lt;double&gt; &amp;falseCase )
-     {    CppAD::ErrorHandler::Call(
-               true     , __LINE__ , __FILE__ ,
-               &quot;std::complex&lt;float&gt; CondExpOp(...)&quot;,
-               &quot;Error: cannot use CondExp with a complex type&quot;
-          );
-          return std::complex&lt;double&gt;(0);
-     }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">CondExpOp</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">enum</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">CompareOp</span>      cop        <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>left      <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>right     <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>trueCase  <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>falseCase <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     CppAD<span style="color: #990000">::</span>ErrorHandler<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Call</span></span><span style="color: #990000">(</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>     <span style="color: #990000">,</span> __LINE__ <span style="color: #990000">,</span> __FILE__ <span style="color: #990000">,</span>
+               <span style="color: #FF0000">"std::complex&lt;float&gt; CondExpOp(...)"</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"Error: cannot use CondExp with a complex type"</span>
+          <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="CondExpRel" id="CondExpRel">CondExpRel</a></big></b>
 <br/>
 The <a href="base_cond_exp.xml#CondExpRel" target="_top"><span style='white-space: nowrap'>CPPAD_COND_EXP_REL</span></a>
  macro invocation
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_COND_EXP_REL( std::complex&lt;double&gt; )
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_COND_EXP_REL</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 used <code><font color="blue">CondExpOp</font></code> above to
 define 
 <code><font color="blue"><span style='white-space: nowrap'>CondExp</span></font><i><font color="black"><span style='white-space: nowrap'>Rel</span></font></i></code>
@@ -187,59 +184,53 @@ and
 <br/>
 Complex numbers do not carry operation sequence information.
 Thus they are equal in this sense if and only if there values are equal.
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline bool EqualOpSeq(
-          const std::complex&lt;double&gt; &amp;x ,
-          const std::complex&lt;double&gt; &amp;y )
-     {    return x == y;
-     }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">EqualOpSeq</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>y <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">==</span> y<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Identical" id="Identical">Identical</a></big></b>
 <br/>
 Complex numbers do not carry operation sequence information.
 Thus they are all parameters so the identical functions just check values.
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline bool IdenticalPar(const std::complex&lt;double&gt; &amp;x)
-     {    return true; }
-     inline bool IdenticalZero(const std::complex&lt;double&gt; &amp;x)
-     {    return (x == std::complex&lt;double&gt;(0., 0.) ); }
-     inline bool IdenticalOne(const std::complex&lt;double&gt; &amp;x)
-     {    return (x == std::complex&lt;double&gt;(1., 0.) ); }
-     inline bool IdenticalEqualPar(
-          const std::complex&lt;double&gt; &amp;x, const std::complex&lt;double&gt; &amp;y)
-     {    return (x == y); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalPar</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalZero</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>x <span style="color: #990000">==</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.)</span> <span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalOne</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>x <span style="color: #990000">==</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.)</span> <span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IdenticalEqualPar</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt; &amp;x, const std::complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>x <span style="color: #990000">==</span> y<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Ordered" id="Ordered">Ordered</a></big></b>
 <br/>
 Complex types do not support comparison operators,
-<code><font color='blue'><pre style='display:inline'> 
-# undef  CPPAD_USER_MACRO
-# define CPPAD_USER_MACRO(Fun)                                     \
-inline bool Fun(const std::complex&lt;double&gt;&amp; x)                     \
-{      CppAD::ErrorHandler::Call(                                  \
-               true     , __LINE__ , __FILE__ ,                    \
-               #Fun&quot;(x)&quot;,                                          \
-               &quot;Error: cannot use &quot; #Fun &quot; with x complex&lt;double&gt; &quot; \
-       );                                                          \
-       return false;                                               \
-}
-namespace CppAD {
-     CPPAD_USER_MACRO(LessThanZero)
-     CPPAD_USER_MACRO(LessThanOrZero)
-     CPPAD_USER_MACRO(GreaterThanOrZero)
-     CPPAD_USER_MACRO(GreaterThanZero)
-     inline bool abs_geq(
-          const std::complex&lt;double&gt;&amp; x ,
-          const std::complex&lt;double&gt;&amp; y )
-     {    return std::abs(x) &gt;= std::abs(y); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># undef</span></span>  CPPAD_USER_MACRO
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>Fun<span style="color: #990000">)</span>                                     <span style="color: #990000">\</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Fun</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>                     <span style="color: #990000">\</span>
+<span style="color: #FF0000">{</span>      CppAD<span style="color: #990000">::</span>ErrorHandler<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Call</span></span><span style="color: #990000">(</span>                                  <span style="color: #990000">\</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>     <span style="color: #990000">,</span> __LINE__ <span style="color: #990000">,</span> __FILE__ <span style="color: #990000">,</span>                    <span style="color: #990000">\</span>
+<span style="font-weight: bold"><span style="color: #000080">               #Fun</span></span><span style="color: #FF0000">"(x)"</span><span style="color: #990000">,</span>                                          <span style="color: #990000">\</span>
+               <span style="color: #FF0000">"Error: cannot use "</span> #Fun <span style="color: #FF0000">" with x complex&lt;double&gt; "</span> <span style="color: #990000">\</span>
+       <span style="color: #990000">);</span>                                                          <span style="color: #990000">\</span>
+       <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>                                               <span style="color: #990000">\</span>
+<span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>LessThanZero<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>LessThanOrZero<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>GreaterThanOrZero<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>GreaterThanZero<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">abs_geq</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> x <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> y <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>x<span style="color: #990000">)</span> <span style="color: #990000">&gt;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>y<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Integer" id="Integer">Integer</a></big></b>
 <br/>
@@ -247,20 +238,18 @@ The implementation of this function must agree
 with the CppAD user specifications for complex arguments to the
 <a href="integer.xml#x.Complex Types" target="_top"><span style='white-space: nowrap'>Integer</span></a>
  function:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline int Integer(const std::complex&lt;double&gt; &amp;x)
-     {    return static_cast&lt;int&gt;( x.real() ); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">real</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="azmul" id="azmul">azmul</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_AZMUL( std::complex&lt;double&gt; )
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_AZMUL</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 <br/>
 <b><big><a name="isnan" id="isnan">isnan</a></big></b>
 <br/>
@@ -275,100 +264,92 @@ This causes an ambiguity between the function above and the CppAD
  template function.
 We avoid this ambiguity by defining a non-template version of
 this function in the CppAD namespace.
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline bool isnan(const std::complex&lt;double&gt;&amp; z)
-     {    return (z != z);
-     }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">isnan</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> z<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span>z <span style="color: #990000">!=</span> z<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Valid Unary Math" id="Valid Unary Math">Valid Unary Math</a></big></b>
 <br/>
 The following macro invocations define the standard unary
 math functions that are valid with complex arguments and are
 required to use <code><font color="blue">AD&lt; std::complex&lt;double&gt; &gt;</font></code>.
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, cos)
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, cosh)
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, exp)
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, log)
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, sin)
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, sinh)
-     CPPAD_STANDARD_MATH_UNARY(std::complex&lt;double&gt;, sqrt)
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> cos<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> cosh<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> exp<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> log<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> sin<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> sinh<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_STANDARD_MATH_UNARY</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> sqrt<span style="color: #990000">)</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Invalid Unary Math" id="Invalid Unary Math">Invalid Unary Math</a></big></b>
 <br/>
 The following macro definition and invocations define the standard unary
 math functions that are invalid with complex arguments and are
 required to use <code><font color="blue">AD&lt; std::complex&lt;double&gt; &gt;</font></code>.
-<code><font color='blue'><pre style='display:inline'> 
-# undef  CPPAD_USER_MACRO
-# define CPPAD_USER_MACRO(Fun)                                     \
-inline std::complex&lt;double&gt; Fun(const std::complex&lt;double&gt;&amp; x)     \
-{      CppAD::ErrorHandler::Call(                                  \
-               true     , __LINE__ , __FILE__ ,                    \
-               #Fun&quot;(x)&quot;,                                          \
-               &quot;Error: cannot use &quot; #Fun &quot; with x complex&lt;double&gt; &quot; \
-       );                                                          \
-       return std::complex&lt;double&gt;(0);                             \
-}
-namespace CppAD {
-     CPPAD_USER_MACRO(abs)
-     CPPAD_USER_MACRO(acos)
-     CPPAD_USER_MACRO(asin)
-     CPPAD_USER_MACRO(atan)
-     CPPAD_USER_MACRO(sign)
-# if CPPAD_USE_CPLUSPLUS_2011
-     CPPAD_USER_MACRO(erf)
-     CPPAD_USER_MACRO(asinh)
-     CPPAD_USER_MACRO(acosh)
-     CPPAD_USER_MACRO(atanh)
-     CPPAD_USER_MACRO(expm1)
-     CPPAD_USER_MACRO(log1p)
-# endif
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># undef</span></span>  CPPAD_USER_MACRO
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>Fun<span style="color: #990000">)</span>                                     <span style="color: #990000">\</span>
+<span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Fun</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>     <span style="color: #990000">\</span>
+<span style="color: #FF0000">{</span>      CppAD<span style="color: #990000">::</span>ErrorHandler<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Call</span></span><span style="color: #990000">(</span>                                  <span style="color: #990000">\</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">true</span></span>     <span style="color: #990000">,</span> __LINE__ <span style="color: #990000">,</span> __FILE__ <span style="color: #990000">,</span>                    <span style="color: #990000">\</span>
+<span style="font-weight: bold"><span style="color: #000080">               #Fun</span></span><span style="color: #FF0000">"(x)"</span><span style="color: #990000">,</span>                                          <span style="color: #990000">\</span>
+               <span style="color: #FF0000">"Error: cannot use "</span> #Fun <span style="color: #FF0000">" with x complex&lt;double&gt; "</span> <span style="color: #990000">\</span>
+       <span style="color: #990000">);</span>                                                          <span style="color: #990000">\</span>
+       <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>                             <span style="color: #990000">\</span>
+<span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>abs<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>acos<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>asin<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>atan<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>sign<span style="color: #990000">)</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_USE_CPLUSPLUS_2011
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>erf<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>asinh<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>acosh<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>atanh<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>expm1<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_USER_MACRO</span></span><span style="color: #990000">(</span>log1p<span style="color: #990000">)</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="pow" id="pow">pow</a></big></b>
 <br/>
 The following defines a <code><font color="blue">CppAD::pow</font></code> function that
 is required to use <code><font color="blue">AD&lt; std::complex&lt;double&gt; &gt;</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     inline std::complex&lt;double&gt; pow(
-          const std::complex&lt;double&gt; &amp;x ,
-          const std::complex&lt;double&gt; &amp;y )
-     {    return std::pow(x, y); }
-}
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> <span style="color: #990000">&amp;</span>y <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">pow</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="numeric_limits" id="numeric_limits">numeric_limits</a></big></b>
 <br/>
 The following defines the CppAD <a href="numeric_limits.xml" target="_top"><span style='white-space: nowrap'>numeric_limits</span></a>
 
 for the type <code><font color="blue">std::complex&lt;double&gt;</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_NUMERIC_LIMITS(double, std::complex&lt;double&gt;)
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_NUMERIC_LIMITS</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">,</span> std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 <br/>
 <b><big><a name="to_string" id="to_string">to_string</a></big></b>
 <br/>
 The following defines the function CppAD <a href="to_string.xml" target="_top"><span style='white-space: nowrap'>to_string</span></a>
 
 for the type <code><font color="blue">std::complex&lt;double&gt;</font></code>:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-     CPPAD_TO_STRING(std::complex&lt;double&gt;)
-}
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TO_STRING</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>complex<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 
-<hr/>Input File: cppad/local/base_complex.hpp
+<hr/>Input File: cppad/core/base_complex.hpp
 
 </body>
 </html>

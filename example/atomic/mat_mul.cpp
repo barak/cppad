@@ -1,6 +1,6 @@
-// $Id: mat_mul.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id$
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -17,40 +17,39 @@ $spell
 $$
 
 $section User Atomic Matrix Multiply: Example and Test$$
-$mindex multiply$$
+
+$head See Also$$
+$cref atomic_eigen_mat_mul.cpp$$
 
 $children%
-	cppad/example/matrix_mul.hpp
+	cppad/example/mat_mul.hpp
 %$$
 
 $head Class Definition$$
-This example uses the file $cref atomic_matrix_mul.hpp$$
+This example uses the file $cref atomic_mat_mul.hpp$$
 which defines matrix multiply as a $cref atomic_base$$ operation.
 
 $nospell
 
 $head Use Atomic Function$$
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
-# include <cppad/example/matrix_mul.hpp>
+# include <cppad/example/mat_mul.hpp>
 
 bool mat_mul(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::vector;
 	size_t i, j;
-/* $$
+/* %$$
 $subhead Constructor$$
-$codep */
+$srccode%cpp% */
 	// -------------------------------------------------------------------
 	// object that multiplies  2 x 2  matrices
-	size_t nr_result = 2;
-	size_t n_middle  = 2;
-	size_t nc_result = 2;
-	matrix_mul afun(nr_result, n_middle, nc_result);
-/* $$
+	atomic_mat_mul afun;
+/* %$$
 $subhead Recording$$
-$codep */
+$srccode%cpp% */
 	// start recording with four independent varables
 	size_t n = 4;
 	vector<double> x(n);
@@ -60,25 +59,33 @@ $codep */
 	CppAD::Independent(ax);
 
 	// ------------------------------------------------------------------
-	vector< AD<double> > atom_x(nr_result * n_middle + n_middle * nc_result);
+	size_t nr_left = 2;
+	size_t n_middle  = 2;
+	size_t nc_right = 2;
+	vector< AD<double> > atom_x(3 + (nr_left + nc_right) * n_middle );
+
+	// matrix dimensions
+	atom_x[0] = AD<double>( nr_left );
+	atom_x[1] = AD<double>( n_middle );
+	atom_x[2] = AD<double>( nc_right );
 
 	// left matrix
-	atom_x[0] = ax[0];  // left[0, 0] = x0
-	atom_x[1] = ax[1];  // left[0, 1] = x1
-	atom_x[2] = 5.;     // left[1, 0] = 5
-	atom_x[3] = 6.;     // left[1, 1] = 6
+	atom_x[3] = ax[0];  // left[0, 0] = x0
+	atom_x[4] = ax[1];  // left[0, 1] = x1
+	atom_x[5] = 5.;     // left[1, 0] = 5
+	atom_x[6] = 6.;     // left[1, 1] = 6
 
 	// right matix
-	atom_x[4] = ax[2];  // right[0, 0] = x2
-	atom_x[5] = 7.;     // right[0, 1] = 7
-	atom_x[6] = ax[3];  // right[1, 0] = x3
-	atom_x[7] = 8.;     // right[1, 1] = 8
+	atom_x[7] = ax[2];  // right[0, 0] = x2
+	atom_x[8] = 7.;     // right[0, 1] = 7
+	atom_x[9] = ax[3];  // right[1, 0] = x3
+	atom_x[10] = 8.;     // right[1, 1] = 8
 	// ------------------------------------------------------------------
 	/*
 	[ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]
 	[ 5  , 6  ]   [ x3 , 8 ]   [  5*x2 +  6*x3 ,  5*7 +  6*8 ]
 	*/
-	vector< AD<double> > atom_y(nr_result * nc_result);
+	vector< AD<double> > atom_y(nr_left * nc_right);
 	afun(atom_x, atom_y);
 
 	ok &= (atom_y[0] == x[0]*x[2] + x[1]*x[3]) & Variable(atom_y[0]);
@@ -90,9 +97,9 @@ $codep */
 	// define the function g : x -> atom_y
 	// g(x) = [ x0*x2 + x1*x3 , x0*7 + x1*8 , 5*x2  + 6*x3  , 5*7 + 6*8 ]^T
 	CppAD::ADFun<double> g(ax, atom_y);
-/* $$
+/* %$$
 $subhead forward$$
-$codep */
+$srccode%cpp% */
 	// Test zero order forward mode evaluation of g(x)
 	size_t m = atom_y.size();
 	vector<double> y(m);
@@ -137,9 +144,9 @@ $codep */
 	ok &= ddy[1] == 0.;
 	ok &= ddy[2] == 0.;
 	ok &= ddy[3] == 0.;
-/* $$
+/* %$$
 $subhead reverse$$
-$codep */
+$srccode%cpp% */
 	// Test second order reverse mode
 	CppAD::vector<double> w(m), dw(2 * n);
 	for(i = 0; i < m; i++)
@@ -159,18 +166,18 @@ $codep */
 	ok &= dw[1*2 + 1] == 4.;
 	ok &= dw[2*2 + 1] == 1.;
 	ok &= dw[3*2 + 1] == 2.;
-/* $$
+/* %$$
 $subhead option$$
-$codep */
+$srccode%cpp% */
 	//----------------------------------------------------------------------
 	// Test both the boolean and set sparsity at the atomic level
 	for(size_t sparse_index = 0; sparse_index < 2; sparse_index++)
 	{	if( sparse_index == 0 )
 			afun.option( CppAD::atomic_base<double>::bool_sparsity_enum );
 		else	afun.option( CppAD::atomic_base<double>::set_sparsity_enum );
-/* $$
+/* %$$
 $subhead for_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// Test forward Jacobian sparsity pattern
 	/*
 	g(x) = [ x0*x2 + x1*x3 , x0*7 + x1*8 , 5*x2  + 6*x3  , 5*7 + 6*8 ]^T
@@ -200,9 +207,9 @@ $codep */
 	}
 	// s[3] == {}
 	ok &= s[3].empty();
-/* $$
+/* %$$
 $subhead rev_sparse_jac$$
-$codep */
+$srccode%cpp% */
 	// Test reverse Jacobian sparsity pattern
 	for(i = 0; i <  m; i++)
 	{	s[i].clear();
@@ -223,9 +230,9 @@ $codep */
 	}
 	// r[3] == {}
 	ok &= r[3].empty();
-/* $$
+/* %$$
 $subhead rev_sparse_hes$$
-$codep */
+$srccode%cpp% */
 	/* Test reverse Hessian sparsity pattern
 	g_0^2 (x) = [ 0, 0, 1, 0 ] and for i > 0, g_i^2 = 0
 	            [ 0, 0, 0, 1 ]
@@ -266,7 +273,7 @@ $codep */
 
 	return ok;
 }
-/* $$
+/* %$$
 $$ $comment end nospell$$
 $end
 */

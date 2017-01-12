@@ -108,8 +108,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 <center><b><big><big>Enable Use of Eigen Linear Algebra Package with CppAD</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -154,11 +152,11 @@ is used to define <code><font color="blue">value_type</font></code>
 in the Eigen matrix class definition so its vectors are
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
 .
-<code><font color='blue'><pre style='display:inline'> 
-# define EIGEN_MATRIXBASE_PLUGIN &lt;cppad/example/eigen_plugin.hpp&gt;
-# include &lt;Eigen/Core&gt;
-# include &lt;cppad/cppad.hpp&gt;
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> EIGEN_MATRIXBASE_PLUGIN <span style="color: #990000">&lt;</span>cppad<span style="color: #990000">/</span>example<span style="color: #990000">/</span>eigen_plugin<span style="color: #990000">.</span>hpp<span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;Eigen/Core&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+</tt></pre>
 <br/>
 <b><big><a name="Eigen NumTraits" id="Eigen NumTraits">Eigen NumTraits</a></big></b>
 <br/>
@@ -166,54 +164,52 @@ Eigen needs the following definitions to work properly
 with 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  scalars:
-<code><font color='blue'><pre style='display:inline'> 
-namespace Eigen {
-     template &lt;class Base&gt; struct NumTraits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;
-     {    // type that corresponds to the real part of an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; value
-          typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Real;
-          // type for <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; operations that result in non-integer values
-          typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   NonInteger;
-          // type for nested value inside an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; expression tree
-          typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;   Nested;
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> Eigen <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">NumTraits</span><span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// type that corresponds to the real part of an AD&lt;Base&gt; value</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   Real<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// type for AD&lt;Base&gt; operations that result in non-integer values</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   NonInteger<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// type for nested value inside an AD&lt;Base&gt; expression tree</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   Nested<span style="color: #990000">;</span>
 
-          enum {
-               // does not support complex Base types
-               IsComplex             = 0 ,
-               // does not support integer Base types
-               IsInteger             = 0 ,
-               // only support signed Base types
-               IsSigned              = 1 ,
-               // must initialize an <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; object
-               RequireInitialization = 1 ,
-               // computational cost of the corresponding operations
-               ReadCost              = 1 ,
-               AddCost               = 2 ,
-               MulCost               = 2
-          };
+          <span style="font-weight: bold"><span style="color: #0000FF">enum</span></span> <span style="color: #FF0000">{</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// does not support complex Base types</span></span>
+               IsComplex             <span style="color: #990000">=</span> <span style="color: #993399">0</span> <span style="color: #990000">,</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// does not support integer Base types</span></span>
+               IsInteger             <span style="color: #990000">=</span> <span style="color: #993399">0</span> <span style="color: #990000">,</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// only support signed Base types</span></span>
+               IsSigned              <span style="color: #990000">=</span> <span style="color: #993399">1</span> <span style="color: #990000">,</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// must initialize an AD&lt;Base&gt; object</span></span>
+               RequireInitialization <span style="color: #990000">=</span> <span style="color: #993399">1</span> <span style="color: #990000">,</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// computational cost of the corresponding operations</span></span>
+               ReadCost              <span style="color: #990000">=</span> <span style="color: #993399">1</span> <span style="color: #990000">,</span>
+               AddCost               <span style="color: #990000">=</span> <span style="color: #993399">2</span> <span style="color: #990000">,</span>
+               MulCost               <span style="color: #990000">=</span> <span style="color: #993399">2</span>
+          <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
 
-          // machine epsilon with type of real part of x
-          // (use assumption that Base is not complex)
-          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; epsilon(void)
-          {    return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon(); }
+          <span style="font-style: italic"><span style="color: #9A1900">// machine epsilon with type of real part of x</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (use assumption that Base is not complex)</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span> <span style="color: #FF0000">}</span>
 
-          // relaxed version of machine epsilon for comparison of different
-          // operations that should result in the same value
-          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; dummy_precision(void)
-          {    return 100. *
-                    CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::epsilon();
-          }
+          <span style="font-style: italic"><span style="color: #9A1900">// relaxed version of machine epsilon for comparison of different</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// operations that should result in the same value</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dummy_precision</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span>
+                    CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #FF0000">}</span>
 
-          // minimum normalized positive value
-          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; lowest(void)
-          {    return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::min(); }
+          <span style="font-style: italic"><span style="color: #9A1900">// minimum normalized positive value</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">lowest</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">min</span></span><span style="color: #990000">();</span> <span style="color: #FF0000">}</span>
 
-          // maximum finite value
-          static CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; highest(void)
-          {    return CppAD::numeric_limits&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &gt;::max(); }
+          <span style="font-style: italic"><span style="color: #9A1900">// maximum finite value</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">highest</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">();</span> <span style="color: #FF0000">}</span>
 
-     };
-}
-</pre></font></code>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="CppAD Namespace" id="CppAD Namespace">CppAD Namespace</a></big></b>
 <br/>
@@ -221,42 +217,40 @@ Eigen also needs the following definitions to work properly
 with 
 <code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
  scalars:
-<code><font color='blue'><pre style='display:inline'> 
-namespace CppAD {
-          // functions that return references
-          template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; conj(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-          {    return x; }
-          template &lt;class Base&gt; const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; real(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-          {    return x; }
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// functions that return references</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> <span style="font-weight: bold"><span style="color: #000000">conj</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> <span style="font-weight: bold"><span style="color: #000000">real</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
 
-          // functions that return values (note abs is defined by cppad.hpp)
-          template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; imag(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-          {    return CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;(0.); }
-          template &lt;class Base&gt; <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; abs2(const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;&amp; x)
-          {    return x * x; }
-}
+          <span style="font-style: italic"><span style="color: #9A1900">// functions that return values (note abs is defined by cppad.hpp)</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">imag</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;(</span><span style="color: #993399">0</span><span style="color: #990000">.);</span> <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">abs2</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">*</span> x<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-namespace Eigen {
-     namespace internal {
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> Eigen <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> internal <span style="color: #FF0000">{</span>
 
-          template&lt;class Base&gt;
-          struct significant_decimals_default_impl&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt;, false&gt;
-          {    typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; Scalar;
+          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span><span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">significant_decimals_default_impl</span><span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;,</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">&gt;</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> Scalar<span style="color: #990000">;</span>
 
-               typedef typename NumTraits&lt;Scalar&gt;::Real RealScalar;
-               static inline int run()
-               {    Scalar neg_log_eps = - log(
-                         NumTraits&lt;RealScalar&gt;::epsilon()
-                    );
-                    int ceil_neg_log_eps = Integer( neg_log_eps );
-                    if( Scalar(ceil_neg_log_eps) &lt; neg_log_eps )
-                         ceil_neg_log_eps++;
-                    return ceil_neg_log_eps;
-               }
-          };
-     }
-}
-</pre></font></code>
+               <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">NumTraits</span><span style="color: #990000">&lt;</span>Scalar<span style="color: #990000">&gt;::</span><span style="color: #008080">Real</span> RealScalar<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">run</span></span><span style="color: #990000">()</span>
+               <span style="color: #FF0000">{</span>     <span style="color: #008080">Scalar</span> neg_log_eps <span style="color: #990000">=</span> <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span>
+                         NumTraits<span style="color: #990000">&lt;</span>RealScalar<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">()</span>
+                    <span style="color: #990000">);</span>
+                    <span style="color: #009900">int</span> ceil_neg_log_eps <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span> neg_log_eps <span style="color: #990000">);</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span>ceil_neg_log_eps<span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> neg_log_eps <span style="color: #990000">)</span>
+                         ceil_neg_log_eps<span style="color: #990000">++;</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ceil_neg_log_eps<span style="color: #990000">;</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: cppad/example/cppad_eigen.hpp
 

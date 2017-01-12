@@ -80,93 +80,88 @@ A:active { color : purple }
 
 
 <center><b><big><big>Forward Mode: Example and Test of Multiple Directions</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;limits&gt;
-# include &lt;cppad/cppad.hpp&gt;
-bool forward_dir(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
-	size_t j;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">forward_dir</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	ax[0] = 0.;
-	ax[1] = 1.;
-	ax[2] = 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and starting recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and starting recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
-	ay[0] = ax[0] * ax[1] * ax[2];
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-	// initially, the variable values during taping are stored in f
-	ok &amp;= f.size_order() == 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// initially, the variable values during taping are stored in f</span></span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// zero order Taylor coefficients
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x0(n), y0;
-	for(j = 0; j &lt; n; j++)
-		x0[j] = double(j+1);
-	y0          = f.<a href="forward.xml" target="_top">Forward</a>(0, x0);
-	ok         &amp;= size_t( y0.size() ) == m;
-	double y_0  = 1.*2.*3.;
-	ok         &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y0[0], y_0, eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// zero order Taylor coefficients</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x0</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> y0<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x0<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     y0          <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x0<span style="color: #990000">);</span>
+     ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> y0<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> m<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> y_0  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> y_0<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// first order Taylor coefficients
-	size_t r = 2, ell;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x1(r*n), y1;
-	for(ell = 0; ell &lt; r; ell++)
-	{	for(j = 0; j &lt; n; j++)
-			x1[ r * j + ell ] = double(j + 1 + ell);
-	}
-	y1  = f.<a href="forward.xml" target="_top">Forward</a>(1, r, x1);
-	ok &amp;= size_t( y1.size() ) == r*m;
+     <span style="font-style: italic"><span style="color: #9A1900">// first order Taylor coefficients</span></span>
+     <span style="color: #008080">size_t</span> r <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">,</span> ell<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span>r<span style="color: #990000">*</span>n<span style="color: #990000">),</span> y1<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>ell <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> ell <span style="color: #990000">&lt;</span> r<span style="color: #990000">;</span> ell<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               x1<span style="color: #990000">[</span> r <span style="color: #990000">*</span> j <span style="color: #990000">+</span> ell <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">+</span> ell<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     y1  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> r<span style="color: #990000">,</span> x1<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> y1<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> r<span style="color: #990000">*</span>m<span style="color: #990000">;</span>
 
-	// secondorder Taylor coefficients
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x2(r*n), y2;
-	for(ell = 0; ell &lt; r; ell++)
-	{	for(j = 0; j &lt; n; j++)
-			x2[ r * j + ell ] = 0.0;
-	}
-	y2  = f.<a href="forward.xml" target="_top">Forward</a>(2, r, x2);
-	ok &amp;= size_t( y2.size() ) == r*m;
-	//
-	// Y_0 (t)     = F[X_0(t)]
-	//             =  (1 + 1t)(2 + 2t)(3 + 3t)
-	double y_1_0   = 1.*2.*3. + 2.*1.*3. + 3.*1.*2.;
-	double y_2_0   = 1.*2.*3. + 2.*1.*3. + 3.*1.*2.;
-	//
-	// Y_1 (t)     = F[X_1(t)]
-	//             =  (1 + 2t)(2 + 3t)(3 + 4t)
-	double y_1_1   = 2.*2.*3. + 3.*1.*3. + 4.*1.*2.;
-	double y_2_1   = 1.*3.*4. + 2.*2.*4. + 3.*2.*3.;
-	//
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y1[0] , y_1_0, eps, eps);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y1[1] , y_1_1, eps, eps);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[0] , y_2_0, eps, eps);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[1] , y_2_1, eps, eps);
-	//
-	// check number of orders
-	ok   &amp;= f.size_order() == 3;
-	//
-	// check number of directions
-	ok   &amp;= f.size_direction() == 2;
-	//
-	return ok;
-}
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// secondorder Taylor coefficients</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span>r<span style="color: #990000">*</span>n<span style="color: #990000">),</span> y2<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>ell <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> ell <span style="color: #990000">&lt;</span> r<span style="color: #990000">;</span> ell<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               x2<span style="color: #990000">[</span> r <span style="color: #990000">*</span> j <span style="color: #990000">+</span> ell <span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     y2  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> r<span style="color: #990000">,</span> x2<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> y2<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> r<span style="color: #990000">*</span>m<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y_0 (t)     = F[X_0(t)]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//             =  (1 + 1t)(2 + 2t)(3 + 3t)</span></span>
+     <span style="color: #009900">double</span> y_1_0   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.*</span><span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> y_2_0   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.*</span><span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y_1 (t)     = F[X_1(t)]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//             =  (1 + 2t)(2 + 3t)(3 + 4t)</span></span>
+     <span style="color: #009900">double</span> y_1_1   <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.*</span><span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">4</span><span style="color: #990000">.*</span><span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> y_2_1   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.*</span><span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> y_1_0<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> y_1_1<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> y_2_0<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> y_2_1<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check number of orders</span></span>
+     ok   <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check number of directions</span></span>
+     ok   <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_direction</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/forward_dir.cpp
 
 </body>

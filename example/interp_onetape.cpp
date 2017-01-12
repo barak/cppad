@@ -1,6 +1,6 @@
-// $Id: interp_onetape.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: interp_onetape.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -27,7 +27,7 @@ $pre
 
 $$
 $code
-$verbatim%example/interp_onetape.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/interp_onetape.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -93,6 +93,7 @@ bool interp_onetape(void)
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n = 1;
@@ -128,7 +129,7 @@ bool interp_onetape(void)
 	double delta  = ArgumentValue[2] - ArgumentValue[1];
 	double check  = FunctionValue[2] * (x[0] - ArgumentValue[1]) / delta
 	              + FunctionValue[1] * (ArgumentValue[2] - x[0]) / delta;
-	ok  &= NearEqual(Y[0], check, 1e-10, 1e-10);
+	ok  &= NearEqual(Y[0], check, eps99, eps99);
 
 	// evaluate f where x has different value
 	x[0]   = .7 * ArgumentValue[2] + .3 * ArgumentValue[3];
@@ -138,7 +139,7 @@ bool interp_onetape(void)
 	delta  = ArgumentValue[3] - ArgumentValue[2];
 	check  = FunctionValue[3] * (x[0] - ArgumentValue[2]) / delta
 	              + FunctionValue[2] * (ArgumentValue[3] - x[0]) / delta;
-	ok  &= NearEqual(y[0], check, 1e-10, 1e-10);
+	ok  &= NearEqual(y[0], check, eps99, eps99);
 
 	// evaluate partials w.r.t. x[0]
 	dx[0] = 1.;
@@ -147,7 +148,7 @@ bool interp_onetape(void)
 	// check that the derivative is the slope
 	check = (FunctionValue[3] - FunctionValue[2])
 	      / (ArgumentValue[3] - ArgumentValue[2]);
-	ok   &= NearEqual(dy[0], check, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], check, eps99, eps99);
 
 	return ok;
 }

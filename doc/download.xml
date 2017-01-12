@@ -6,7 +6,7 @@
 <title>Download The CppAD Source Code</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Download The CppAD Source Code"/>
-<meta name="keywords" id="keywords" content=" download the cppad source code purpose distribution directory compressed archives current version release versions monthly unix file extraction windows testing install instructions subversion limitations stable "/>
+<meta name="keywords" id="keywords" content=" download the cppad source code purpose distribution directory compressed archives current version subversion git release versions coin github monthly daily windows file extraction testing install instructions no documentation building "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -75,18 +75,19 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>Distribution Directory</option>
 <option>Compressed Archives</option>
-<option>---..Current Version</option>
-<option>---..Release Versions</option>
-<option>---..Monthly Versions</option>
-<option>---..Unix File Extraction</option>
-<option>---..Windows File Extraction and Testing</option>
-<option>---..Install Instructions</option>
-<option>Subversion</option>
-<option>---..Limitations</option>
-<option>---..Current Version</option>
-<option>---..Stable Versions</option>
-<option>---..Release Versions</option>
-<option>---..Install Instructions</option>
+<option>Current Version</option>
+<option>---..Compressed Archives</option>
+<option>---..Subversion</option>
+<option>---..Git</option>
+<option>Release Versions</option>
+<option>---..Coin</option>
+<option>---..github</option>
+<option>Monthly Versions</option>
+<option>Daily Versions</option>
+<option>Windows File Extraction and Testing</option>
+<option>Install Instructions</option>
+<option>No Documentation</option>
+<option>---..Building Documentation</option>
 </select>
 </td>
 </tr></table><br/>
@@ -112,7 +113,53 @@ To be specific, the distribution directory contains the file
 <b><big><a name="Compressed Archives" id="Compressed Archives">Compressed Archives</a></big></b>
 <br/>
 These files have been archived using <code><font color="blue">tar</font></code> and compressed using
-<code><font color="blue">gzip</font></code>:
+<code><font color="blue">gzip</font></code>.
+We use 
+<code><i><font color="black"><span style='white-space: nowrap'>version</span></font></i></code>
+ to denote the year, month, and day,
+corresponding to a version of the CppAD API.
+For example <code><font color="blue">20160101</font></code> corresponds to January 1, 2016.
+We use 
+<code><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i></code>
+ to denote the release number.
+Higher release numbers corresponding to more bug fixes.
+We use 
+<code><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i></code>
+ to denote the licence corresponding to a compressed
+archive which can be either <code><font color="blue">epl</font></code> or <code><font color="blue">gpl</font></code>
+(<code><font color="blue">gpl</font></code> denotes the GNU General Public License and
+<code><font color="blue">epl</font></code> denotes the Eclipse Public License).
+The compressed archives names have one of the following formats:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+</span></font></code>
+In Unix, you can extract these compressed archives using <code><font color="blue">tar</font></code>.
+For example,
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;tar&#xA0;-xzf&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+</span></font></code>
+No matter what the format of the name, the corresponding distribution
+directory is 
+<code><font color="blue"><span style='white-space: nowrap'>cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i></code>
+.
+To see that the extraction has been done correctly,
+check for the following file:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad/cppad.hpp<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Current Version" id="Current Version">Current Version</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Current Version.Compressed Archives" id="Current Version.Compressed Archives">Compressed Archives</a></b>
+
 <table><tr><td align='left'  valign='top'>
 
 <b>version</b> <code><span style='white-space: nowrap'>&#xA0;&#xA0;</span></code> </td><td align='left'  valign='top'>
@@ -122,80 +169,86 @@ These files have been archived using <code><font color="blue">tar</font></code> 
 
 current  </td><td align='left'  valign='top'>
  EPL </td><td align='left'  valign='top'>
- <a href="http://www.coin-or.org/download/source/CppAD/cppad-20160000.1.epl.tgz" target="_top"><span style='white-space: nowrap'>cppad-20160000.1.epl.tgz</span></a>
+ <a href="http://www.coin-or.org/download/source/CppAD/cppad-20170000.0.epl.tgz" target="_top"><span style='white-space: nowrap'>cppad-20170000.0.epl.tgz</span></a>
 
 </td></tr><tr><td align='left'  valign='top'>
 
 current  </td><td align='left'  valign='top'>
  GPL </td><td align='left'  valign='top'>
- <a href="http://www.coin-or.org/download/source/CppAD/cppad-20160000.1.gpl.tgz" target="_top"><span style='white-space: nowrap'>cppad-20160000.1.gpl.tgz</span></a>
-
-</td></tr><tr><td align='left'  valign='top'>
-
-old      </td><td align='left'  valign='top'>
- Both </td><td align='left'  valign='top'>
-
-<a href="http://www.coin-or.org/download/source/CppAD/" target="_top"><span style='white-space: nowrap'>CppAD&#xA0;download&#xA0;page</span></a>
+ <a href="http://www.coin-or.org/download/source/CppAD/cppad-20170000.0.gpl.tgz" target="_top"><span style='white-space: nowrap'>cppad-20170000.0.gpl.tgz</span></a>
 
 </td></tr>
 </table>
 <br/>
-<b><a name="Compressed Archives.Current Version" id="Compressed Archives.Current Version">Current Version</a></b>
+<b><a name="Current Version.Subversion" id="Current Version.Subversion">Subversion</a></b>
 <br/>
-The current versions listed above correspond to the subversion
+The archives above correspond to the current subversion
 <a href="https://projects.coin-or.org/CppAD/browser/trunk" target="_top"><span style='white-space: nowrap'>trunk</span></a>
-
-and the git
-<a href="https://github.com/bradbell/cppad" target="_top"><span style='white-space: nowrap'>master</span></a>
 .
-These tarballs only last for a few days.
-
-<br/>
-<br/>
-<b><a name="Compressed Archives.Release Versions" id="Compressed Archives.Release Versions">Release Versions</a></b>
-<br/>
-Release versions of the compressed tar files are available on the
-<a href="http://www.coin-or.org/download/source/CppAD/" target="_top"><span style='white-space: nowrap'>CppAD&#xA0;download&#xA0;page</span></a>
-.
-This includes all the releases going back to 2007.
-These file have the form
+You can obtain a subversion copy of the current version using the command
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>yyyymmdd</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;svn&#xA0;checkout&#xA0;https://projects.coin-or.org/svn/CppAD/trunk&#xA0;cppad.svn/trunk<br/>
 </span></font></code>
-The license code 
-<code><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i></code>
+This procedure requires that
+the <a href="http://subversion.tigris.org/" target="_top"><span style='white-space: nowrap'>subversion</span></a>
+ program
+is installed on your system.
 
-is <code><font color="blue">gpl</font></code>, <code><font color="blue">epl</font></code> or <code><font color="blue">cpl</font></code> where
-<code><font color="blue">gpl</font></code> denotes the GNU General Public License,
-<code><font color="blue">epl</font></code> denotes the Eclipse Public License, and
-<code><font color="blue">cpl</font></code> denotes the Common Public License
-(not being used for new versions).
-The version number 
-<code><i><font color="black"><span style='white-space: nowrap'>yyyymmdd</span></font></i></code>
+<br/>
+<br/>
+<b><a name="Current Version.Git" id="Current Version.Git">Git</a></b>
+<br/>
+The archives above correspond to the current git
+<a href="https://github.com/bradbell/cppad" target="_top"><span style='white-space: nowrap'>master</span></a>
+.
+You can a git clone of the current version using the command
 
-is the date at which the features
-of the program were frozen where
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;git&#xA0;clone&#xA0;https://github.com/coin-or/CppAD.git&#xA0;cppad.git<br/>
+</span></font></code>
+This procedure requires that
+the <a href="https://en.wikipedia.org/wiki/Git_%28software%29" target="_top"><span style='white-space: nowrap'>git</span></a>
 
-<code><i><font color="black"><span style='white-space: nowrap'>yyyy</span></font></i></code>
- is the year, 
-<code><i><font color="black"><span style='white-space: nowrap'>mm</span></font></i></code>
- is the month, and 
-<code><i><font color="black"><span style='white-space: nowrap'>dd</span></font></i></code>
+is installed on your system.
 
-is the day.
-The release number 
+
+<br/>
+<br/>
+<b><big><a name="Release Versions" id="Release Versions">Release Versions</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Release Versions.Coin" id="Release Versions.Coin">Coin</a></b>
+<br/>
+Release versions have the 
 <code><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i></code>
+ field in the compressed archive name.
+The release version on the
+<a href="http://www.coin-or.org/download/source/CppAD/" target="_top"><span style='white-space: nowrap'>Coin&#xA0;download&#xA0;page</span></a>
 
-corresponds to a bug fix index where
-higher numbers corresponding to more bug fixes.
+have the format
 
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+</span></font></code>
 <br/>
+<b><a name="Release Versions.github" id="Release Versions.github">github</a></b>
 <br/>
-<b><a name="Compressed Archives.Monthly Versions" id="Compressed Archives.Monthly Versions">Monthly Versions</a></b>
+The release versions on the
+<a href="https://github.com/coin-or/CppAD/releases" target="_top"><span style='white-space: nowrap'>github&#xA0;download&#xA0;page</span></a>
+
+have the format
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>rel</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Monthly Versions" id="Monthly Versions">Monthly Versions</a></big></b>
 <br/>
 Monthly versions of the compressed tar files are available on the
-<a href="http://www.coin-or.org/download/source/CppAD/" target="_top"><span style='white-space: nowrap'>CppAD&#xA0;download&#xA0;page</span></a>
+<a href="http://www.coin-or.org/download/source/CppAD/" target="_top"><span style='white-space: nowrap'>Coin&#xA0;download&#xA0;page</span></a>
 .
 These are kept until the end of the current year,
 when the next release is created.
@@ -214,28 +267,31 @@ and
 
 <br/>
 <br/>
-<b><a name="Compressed Archives.Unix File Extraction" id="Compressed Archives.Unix File Extraction">Unix File Extraction</a></b>
+<b><big><a name="Daily Versions" id="Daily Versions">Daily Versions</a></big></b>
 <br/>
-On unix, you can use the command
+You can use the git version of the repository to obtain the version
+corresponding to a specific day as follows:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;tar&#xA0;-xvzf&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;git&#xA0;clone&#xA0;https://github.com/coin-or/CppAD.git&#xA0;cppad.git<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cd&#xA0;cppad.git<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;git&#xA0;checkout&#xA0;--quiet&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>hash_id</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
 where 
-<code><i><font color="black"><span style='white-space: nowrap'>version</span></font></i></code>
- either refers to the current version,
-or one of the release versions.
-This will decompress and extract the CppAD into
-the distribution directory 
-<code><font color="blue"><span style='white-space: nowrap'>cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i></code>
+<code><i><font color="black"><span style='white-space: nowrap'>hash_id</span></font></i></code>
+ is the SHA-1 hash code for the version
+of the repository for the day of interest.
+Note that a list of these 
+<code><i><font color="black"><span style='white-space: nowrap'>hash_id</span></font></i></code>
+ values can be found at the
+CppAD github
+<a href="https://github.com/coin-or/CppAD/commits/master" target="_top"><span style='white-space: nowrap'>commits/master</span></a>
 .
-To see if this has been done correctly, check for the following file:
+page.
 
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad/cppad.hpp<br/>
-</span></font></code>
 <br/>
-<b><a name="Compressed Archives.Windows File Extraction and Testing" id="Compressed Archives.Windows File Extraction and Testing">Windows File Extraction and Testing</a></b>
+<br/>
+<b><big><a name="Windows File Extraction and Testing" id="Windows File Extraction and Testing">Windows File Extraction and Testing</a></big></b>
 <br/>
 If you know how to extract the distribution directory from
 the tar file, just do so. Otherwise, below is one way you can do it.
@@ -269,7 +325,8 @@ For example, on one machine these paths had the following values:
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>path_to_vcdir</span></font></i><font color="blue"><span style='white-space: nowrap'>=C:\Program&#xA0;Files&#xA0;(x86)\Microsoft&#xA0;Visual&#xA0;Studio&#xA0;14.0\VC<br/>
 </span></font></code>
 </li><li>
-Use the following commands to extract the distribution from the tarball:
+Use the following commands to extract the distribution from the
+compressed archive:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;7z&#xA0;x&#xA0;cppad-</span></font><i><font color="black"><span style='white-space: nowrap'>version</span></font></i><font color="blue"><span style='white-space: nowrap'>.</span></font><i><font color="black"><span style='white-space: nowrap'>lic</span></font></i><font color="blue"><span style='white-space: nowrap'>.tgz<br/>
@@ -296,118 +353,46 @@ They run the CppAD tests using the default <a href="cmake.xml" target="_top"><sp
 </span></font></code>
 </li></ol>
 <br/>
-<b><a name="Compressed Archives.Install Instructions" id="Compressed Archives.Install Instructions">Install Instructions</a></b>
+<b><big><a name="Install Instructions" id="Install Instructions">Install Instructions</a></big></b>
 <br/>
-The instructions on the web correspond to the current version of CppAD.
+The <a href="install.xml" target="_top"><span style='white-space: nowrap'>install</span></a>
+ instructions on this web site correspond to the
+<a href="download.xml#Current Version" target="_top"><span style='white-space: nowrap'>current&#xA0;version</span></a>
+ of CppAD.
 If you are using an old version of CppAD
-You should follow the install instructions in
+these instructions may work.
+If you have trouble (or just to be careful),
+you should follow the instructions in
 the <code><font color="blue">doc</font></code> subdirectory of the distribution directory.
-
-
-<br/>
-<br/>
-<b><big><a name="Subversion" id="Subversion">Subversion</a></big></b>
-
+If there is no such documentation, you can build it; see
+<a href="download.xml#No Documentation.Building Documentation" target="_top"><span style='white-space: nowrap'>building&#xA0;documentation</span></a>
+.
 
 <br/>
 <br/>
-<b><a name="Subversion.Limitations" id="Subversion.Limitations">Limitations</a></b>
+<b><big><a name="No Documentation" id="No Documentation">No Documentation</a></big></b>
 <br/>
-This download procedure has the following limitations:
-<ol type="1"><li>
-The <a href="http://subversion.tigris.org/" target="_top"><span style='white-space: nowrap'>subversion</span></a>
-
-program must be installed on your system.
-</li><li>
-
-No documentation is included by this download procedure,
-though it can be build from the source code; see
-<a href="download.xml#Subversion.Install Instructions" target="_top"><span style='white-space: nowrap'>install&#xA0;instructions</span></a>
- below.
-</li><li>
-
-Only the
+Some of the download methods do not include documentation.
+To be specific, the
+<a href="download.xml#Current Version.Subversion" target="_top"><span style='white-space: nowrap'>subversion</span></a>
+ method,
+<a href="download.xml#Current Version.Git" target="_top"><span style='white-space: nowrap'>git</span></a>
+ method,
+<a href="download.xml#Daily Versions" target="_top"><span style='white-space: nowrap'>daily&#xA0;version</span></a>
+ method, and the
+<a href="download.xml#Release Versions.github" target="_top"><span style='white-space: nowrap'>github&#xA0;release&#xA0;version</span></a>
+ method.
+In addition, these methods only provide the
 <a href="http://opensource.org/licenses/EPL-1.0" target="_top"><span style='white-space: nowrap'>EPL&#xA0;licensed</span></a>
 
-version of CppAD can be obtained by this download procedure
-(some old versions correspond to CPL instead of EPL).
-</li></ol>
-
+version of CppAD.
 
 <br/>
 <br/>
-<b><a name="Subversion.Current Version" id="Subversion.Current Version">Current Version</a></b>
+<b><a name="No Documentation.Building Documentation" id="No Documentation.Building Documentation">Building Documentation</a></b>
 <br/>
-To obtain current version of CppAD, execute the following commands
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;svn&#xA0;export&#xA0;https://projects.coin-or.org/svn/CppAD/trunk&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-To see if this has been done correctly, check for the following file:
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad/cppad.hpp<br/>
-</span></font></code>
-We refer to your directory choice 
-<code><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i></code>
- above
-as the distribution directory.
-
-<br/>
-<br/>
-<b><a name="Subversion.Stable Versions" id="Subversion.Stable Versions">Stable Versions</a></b>
-<br/>
-Subversion downloads are available for a set of stable versions
-(after the specified date, only bug fixes get applied).
-The following link will list the available 
-<code><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i></code>
- values
-corresponding to
-<a href="https://projects.coin-or.org/CppAD/browser/stable" target="_top"><span style='white-space: nowrap'>stable&#xA0;versions</span></a>
-.
-The following command will download a
-stable version of the CppAD source code:
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;svn&#xA0;export&#xA0;https://projects.coin-or.org/svn/CppAD/stable/</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-To see if this has been done correctly, check for the following file:
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad/cppad.hpp<br/>
-</span></font></code>
-Note that it will correspond to the most recent release for this stable
-version.
-
-<br/>
-<br/>
-<b><a name="Subversion.Release Versions" id="Subversion.Release Versions">Release Versions</a></b>
-<br/>
-Subversion downloads are available for a set of release versions
-(no changes are applied).
-The following link will list the available 
-<code><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i></code>
- values
-corresponding to
-<a href="https://projects.coin-or.org/CppAD/browser/releases" target="_top"><span style='white-space: nowrap'>release&#xA0;versions</span></a>
-.
-The following command will download a
-release version of the CppAD source code:
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;svn&#xA0;export&#xA0;https://projects.coin-or.org/svn/CppAD/releases/</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
-To see if this has been done correctly, check for the following file:
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dir</span></font></i><font color="blue"><span style='white-space: nowrap'>/cppad/cppad.hpp<br/>
-</span></font></code>
-<br/>
-<b><a name="Subversion.Install Instructions" id="Subversion.Install Instructions">Install Instructions</a></b>
-<br/>
-If you are using subversion to download an old version of CppAD,
-you will have to build the documentation to get the corresponding install
-instructions.
+If you are using one of these download methods,
+you can build the documentation to get the corresponding install instructions.
 The documentation for CppAD is built from the source code files using
 <a href="http://www.seanet.com/~bradbell/omhelp/" target="_top"><span style='white-space: nowrap'>OMhelp</span></a>
 .
@@ -420,7 +405,7 @@ Once you have done this,
 in the distribution directory execute the following command:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;./build.sh&#xA0;omhelp<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;bin/run_omhelp.sh&#xA0;htm<br/>
 </span></font></code>
 You will then be able to follow the install instructions in
 the <code><font color="blue">doc</font></code> subdirectory of the distribution directory.

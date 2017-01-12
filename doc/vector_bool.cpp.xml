@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -98,95 +99,87 @@ A:active { color : purple }
 <td>vector_bool.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>CppAD::vectorBool Class: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/check_simple_vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;sstream&gt;</span> <span style="font-style: italic"><span style="color: #9A1900">// sstream and string are used to test output operation</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;string&gt;</span>
 
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/utility/check_simple_vector.hpp&gt;
-# include &lt;sstream&gt; // sstream and string are used to test output operation
-# include &lt;string&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">vectorBool</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vectorBool<span style="color: #990000">;</span>
 
-bool vectorBool(void)
-{	bool ok = true;
-	using CppAD::vectorBool;
+     <span style="color: #008080">vectorBool</span> x<span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// default constructor</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	vectorBool x;          // default constructor
-	ok &amp;= (x.size() == 0);
+     x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>             <span style="font-style: italic"><span style="color: #9A1900">// resize and set element assignment to bool</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	x.resize(2);             // resize and set element assignment to bool
-	ok &amp;= (x.size() == 2);
-	x[0] = false;
-	x[1] = true;
+     <span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>       <span style="font-style: italic"><span style="color: #9A1900">// sizing constructor</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
 
-	vectorBool y(2);       // sizing constructor
-	ok &amp;= (y.size() == 2);
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// copy constructor and const element access</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	const vectorBool z(x); // copy constructor and const element access
-	ok &amp;= (z.size() == 2);
-	ok &amp;= ( (z[0] == false) &amp;&amp; (z[1] == true) );
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// modify, assignment changes x</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>
 
-	x[0] = true;           // modify, assignment changes x
-	ok &amp;= (x[0] == true);
+     <span style="font-style: italic"><span style="color: #9A1900">// resize x to zero and check that vector assignment works for both</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// size zero and mathching sizes</span></span>
+     x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> z<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">());</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     x <span style="color: #990000">=</span> y <span style="color: #990000">=</span> z<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	// resize x to zero and check that vector assignment works for both
-	// size zero and mathching sizes
-	x.resize(0);
-	ok &amp;= (x.size() == 0);
-	ok &amp;= (y.size() == z.size());
-	//
-	x = y = z;
-	ok &amp;= ( (x[0] == false) &amp;&amp; (x[1] == true) );
-	ok &amp;= ( (y[0] == false) &amp;&amp; (y[1] == true) );
-	ok &amp;= ( (z[0] == false) &amp;&amp; (z[1] == true) );
+     <span style="font-style: italic"><span style="color: #9A1900">// test of push_vector</span></span>
+     y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_vector</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">)</span> <span style="color: #990000">&amp;&amp;</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	// test of push_vector
-	y.push_vector(z);
-	ok &amp;= y.size() == 4;
-	ok &amp;= ( (y[0] == false) &amp;&amp; (y[1] == true) );
-	ok &amp;= ( (y[2] == false) &amp;&amp; (y[3] == true) );
+     y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// element assignment to another element</span></span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
 
-	y[1] = false;           // element assignment to another element
-	x[0] = y[1];
-	ok &amp;= (x[0] == false);
+     <span style="font-style: italic"><span style="color: #9A1900">// test of output</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">string</span>        correct<span style="color: #990000">=</span> <span style="color: #FF0000">"01"</span><span style="color: #990000">;</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">string</span>        str<span style="color: #990000">;</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">ostringstream</span> buf<span style="color: #990000">;</span>
+     buf <span style="color: #990000">&lt;&lt;</span> z<span style="color: #990000">;</span>
+     str <span style="color: #990000">=</span> buf<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">str</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>str <span style="color: #990000">==</span> correct<span style="color: #990000">);</span>
 
-	// test of output
-	std::string        correct= &quot;01&quot;;
-	std::string        str;
-	std::ostringstream buf;
-	buf &lt;&lt; z;
-	str = buf.str();
-	ok &amp;= (str == correct);
+     <span style="font-style: italic"><span style="color: #9A1900">// test resize(0), capacity, and clear</span></span>
+     <span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">capacity</span></span><span style="color: #990000">();</span>
+     ok      <span style="color: #990000">&amp;=</span> i <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     ok      <span style="color: #990000">&amp;=</span> i <span style="color: #990000">==</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">capacity</span></span><span style="color: #990000">();</span>
+     x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     ok      <span style="color: #990000">&amp;=</span> <span style="color: #993399">0</span> <span style="color: #990000">==</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">capacity</span></span><span style="color: #990000">();</span>
 
-	// test resize(0), capacity, and clear
-	size_t i = x.capacity();
-	ok      &amp;= i &gt; 0;
-	x.resize(0);
-	ok      &amp;= i == x.capacity();
-	x.clear();
-	ok      &amp;= 0 == x.capacity();
+     <span style="font-style: italic"><span style="color: #9A1900">// test of push_back element</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">100</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span>i <span style="color: #990000">%</span> <span style="color: #993399">3</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">100</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">100</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">((</span>i <span style="color: #990000">%</span> <span style="color: #993399">3</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	// test of push_back element
-	for(i = 0; i &lt; 100; i++)
-		x.push_back( (i % 3) != 0 );
-	ok &amp;= (x.size() == 100);
-	for(i = 0; i &lt; 100; i++)
-		ok &amp;= ( x[i] == ((i % 3) != 0) );
+     <span style="font-style: italic"><span style="color: #9A1900">// is that boolvector is</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// a simple vector class with elements of type bool</span></span>
+     CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span> <span style="color: #009900">bool</span><span style="color: #990000">,</span> vectorBool <span style="color: #990000">&gt;();</span>
 
-	// is that boolvector is
-	// a simple vector class with elements of type bool
-	CppAD::CheckSimpleVector&lt; bool, vectorBool &gt;();
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/vector_bool.cpp
 
 </body>

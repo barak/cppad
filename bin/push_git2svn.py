@@ -1,7 +1,7 @@
 #! /bin/python
 # $Id
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -85,12 +85,8 @@ def print_system(cmd) :
 	return output
 
 id_pattern    = re.compile(r'^.*\$Id.*$',      re.MULTILINE)
-white_pattern = re.compile(r'[ \t]+$',         re.MULTILINE)
-date_pattern  = re.compile(r'2003-[0-9][0-9]', re.MULTILINE)
 def ignore_data(data) :
 	data = re.sub(id_pattern,    '', data)
-	data = re.sub(white_pattern, '', data)
-	data = re.sub(date_pattern,  '', data)
 	return data
 # -----------------------------------------------------------------------------
 # determine git_branch_name
@@ -123,7 +119,7 @@ if os.path.isdir(svn_directory) :
 	choice_list = [ 'use' , 'new' ]
 	choice      = pause(question, choice_list)
 	if choice == 'new' :
-		cmd         = 'rm -r ' + svn_directory
+		cmd         = 'rm -rf ' + svn_directory
 		print_system(cmd)
 else :
 	choice      = 'new'
@@ -170,7 +166,7 @@ else :
 # export the git verison of the directory
 git_directory = work_directory + '/git'
 if os.path.isdir(git_directory) :
-	cmd = 'rm -r ' + git_directory
+	cmd = 'rm -rf ' + git_directory
 	print_system(cmd)
 cmd  = 'svn export '
 cmd +=  git_repository + '/' + git_branch_path + ' ' + git_directory

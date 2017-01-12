@@ -1,6 +1,6 @@
-/* $Id: mul_level_adolc_ode.cpp 3738 2015-10-05 13:16:50Z bradbell $ */
+// $Id: mul_level_adolc_ode.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -164,7 +164,7 @@ $cref cmake$$ command line.
 $head Source$$
 
 $code
-$verbatim%example/mul_level_adolc_ode.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/mul_level_adolc_ode.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

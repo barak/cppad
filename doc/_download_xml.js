@@ -34,18 +34,19 @@ var list_current0 = [
 'download.xml#Purpose',
 'download.xml#Distribution Directory',
 'download.xml#Compressed Archives',
-'download.xml#Compressed Archives.Current Version',
-'download.xml#Compressed Archives.Release Versions',
-'download.xml#Compressed Archives.Monthly Versions',
-'download.xml#Compressed Archives.Unix File Extraction',
-'download.xml#Compressed Archives.Windows File Extraction and Testing',
-'download.xml#Compressed Archives.Install Instructions',
-'download.xml#Subversion',
-'download.xml#Subversion.Limitations',
-'download.xml#Subversion.Current Version',
-'download.xml#Subversion.Stable Versions',
-'download.xml#Subversion.Release Versions',
-'download.xml#Subversion.Install Instructions'
+'download.xml#Current Version',
+'download.xml#Current Version.Compressed Archives',
+'download.xml#Current Version.Subversion',
+'download.xml#Current Version.Git',
+'download.xml#Release Versions',
+'download.xml#Release Versions.Coin',
+'download.xml#Release Versions.github',
+'download.xml#Monthly Versions',
+'download.xml#Daily Versions',
+'download.xml#Windows File Extraction and Testing',
+'download.xml#Install Instructions',
+'download.xml#No Documentation',
+'download.xml#No Documentation.Building Documentation'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

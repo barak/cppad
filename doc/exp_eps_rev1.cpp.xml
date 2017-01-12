@@ -76,58 +76,56 @@ A:active { color : purple }
 <td>Headings</td>
 </tr></table><br/>
 <center><b><big><big>exp_eps: Verify First Order Reverse Sweep</big></big></b></center>
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cstddef&gt;                     // define size_t
-# include &lt;cmath&gt;                       // for fabs function
-extern bool exp_eps_for0(double *v0);   // computes zero order forward sweep
-bool exp_eps_rev1(void)
-{    bool ok = true;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>                     <span style="font-style: italic"><span style="color: #9A1900">// define size_t</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>                       <span style="font-style: italic"><span style="color: #9A1900">// for fabs function</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> <span style="color: #990000">*</span>v0<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// computes zero order forward sweep</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_rev1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-     // set the value of v0[j] for j = 1 , ... , 7
-     double v0[8];
-     ok &amp;= exp_eps_for0(v0);
+     <span style="font-style: italic"><span style="color: #9A1900">// set the value of v0[j] for j = 1 , ... , 7</span></span>
+     <span style="color: #009900">double</span> v0<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span>v0<span style="color: #990000">);</span>
 
-     // initial all partial derivatives as zero
-     double f_v[8];
-     size_t j;
-     for(j = 0; j &lt; 8; j++)
-          f_v[j] = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// initial all partial derivatives as zero</span></span>
+     <span style="color: #009900">double</span> f_v<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">];</span>
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> <span style="color: #993399">8</span><span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          f_v<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-     // set partial derivative for f7
-     f_v[7] = 1.;
-     ok    &amp;= std::fabs( f_v[7] - 1. ) &lt;= 1e-10;     // f7_v7
+     <span style="font-style: italic"><span style="color: #9A1900">// set partial derivative for f7</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok    <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>     <span style="font-style: italic"><span style="color: #9A1900">// f7_v7</span></span>
 
-     // f6( v1 , v2 , v3 , v4 , v5 , v6 )
-     f_v[4] += f_v[7] * 1.;
-     f_v[6] += f_v[7] * 1.;
-     ok     &amp;= std::fabs( f_v[4] - 1.  ) &lt;= 1e-10;   // f6_v4
-     ok     &amp;= std::fabs( f_v[6] - 1.  ) &lt;= 1e-10;   // f6_v6
+     <span style="font-style: italic"><span style="color: #9A1900">// f6( v1 , v2 , v3 , v4 , v5 , v6 )</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span>  <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f6_v4</span></span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span>  <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f6_v6</span></span>
 
-     // f5( v1 , v2 , v3 , v4 , v5 )
-     f_v[5] += f_v[6] / 2.;
-     ok     &amp;= std::fabs( f_v[5] - 0.5 ) &lt;= 1e-10;   // f5_v5
+     <span style="font-style: italic"><span style="color: #9A1900">// f5( v1 , v2 , v3 , v4 , v5 )</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.5</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f5_v5</span></span>
 
-     // f4( v1 , v2 , v3 , v4 )
-     f_v[1] += f_v[5] * v0[3];
-     f_v[3] += f_v[5] * v0[1];
-     ok     &amp;= std::fabs( f_v[1] - 0.25) &lt;= 1e-10;   // f4_v1
-     ok     &amp;= std::fabs( f_v[3] - 0.25) &lt;= 1e-10;   // f4_v3
+     <span style="font-style: italic"><span style="color: #9A1900">// f4( v1 , v2 , v3 , v4 )</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.25</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f4_v1</span></span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.25</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f4_v3</span></span>
 
-     // f3( v1 , v2 , v3 )
-     f_v[3] += f_v[4] * 1.;
-     ok     &amp;= std::fabs( f_v[3] - 1.25) &lt;= 1e-10;   // f3_v3
+     <span style="font-style: italic"><span style="color: #9A1900">// f3( v1 , v2 , v3 )</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1.25</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f3_v3</span></span>
 
-     // f2( v1 , v2 )
-     f_v[2] += f_v[3] / 1.;
-     ok     &amp;= std::fabs( f_v[2] - 1.25) &lt;= 1e-10;   // f2_v2
+     <span style="font-style: italic"><span style="color: #9A1900">// f2( v1 , v2 )</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1.25</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f2_v2</span></span>
 
-     // f1( v1 )
-     f_v[1] += f_v[2] * 1.;
-     ok     &amp;= std::fabs( f_v[1] - 1.5 ) &lt;= 1e-10;   // f1_v2
+     <span style="font-style: italic"><span style="color: #9A1900">// f1( v1 )</span></span>
+     f_v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok     <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1.5</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// f1_v2</span></span>
 
-     return ok;
-}
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: introduction/exp_apx/exp_eps_rev1.cpp
 

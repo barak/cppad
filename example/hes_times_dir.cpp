@@ -1,6 +1,6 @@
-// $Id: hes_times_dir.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: hes_times_dir.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -19,7 +19,7 @@ $section Hessian Times Direction: Example and Test$$
 $mindex direction$$
 
 $code
-$verbatim%example/hes_times_dir.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/hes_times_dir.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -48,6 +48,7 @@ bool HesTimesDir(void)
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n = 5;
@@ -83,7 +84,7 @@ bool HesTimesDir(void)
 	// F''(x)      = 2 * Identity_Matrix
 	// F''(x) * dx = 2 * dx
 	for(j = 0; j < n; j++)
-		ok &= NearEqual(ddw[j * 2 + 1], 2.*dx[j], 1e-10, 1e-10);
+		ok &= NearEqual(ddw[j * 2 + 1], 2.*dx[j], eps99, eps99);
 
 	return ok;
 }

@@ -101,16 +101,13 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Old Matrix Multiply as a User Atomic Operation: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Deprecated 2013-05-27" id="Deprecated 2013-05-27">Deprecated 2013-05-27</a></big></b>
 <br/>
 This example has been deprecated;
-see <a href="atomic_mat_mul.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_mat_mul.cpp</span></a>
-.
+use <a href="atomic_mat_mul.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_mat_mul.cpp</span></a>
+ instead.
 
 
 <br/>
@@ -121,241 +118,236 @@ This routine uses the include file <a href="old_mat_mul.hpp.xml" target="_top"><
 .
 
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &quot;old_mat_mul.hpp&quot;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"old_mat_mul.hpp"</span>
 
-bool old_mat_mul(void)
-{	bool ok = true;
-	using CppAD::AD;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">old_mat_mul</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-	// matrix sizes for this test
-	size_t nr_result = 2;
-	size_t n_middle  = 2;
-	size_t nc_result = 2;
+     <span style="font-style: italic"><span style="color: #9A1900">// matrix sizes for this test</span></span>
+     <span style="color: #008080">size_t</span> nr_result <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n_middle  <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> nc_result <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
 
-	// declare the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; vectors ax and ay and X
-	size_t n = nr_result * n_middle + n_middle * nc_result;
-	size_t m = nr_result * nc_result;
-	CppAD::vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; X(4), ax(n), ay(m);
-	size_t i, j;
-	for(j = 0; j &lt; X.size(); j++)
-		X[j] = (j + 1);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare the AD&lt;double&gt; vectors ax and ay and X</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> nr_result <span style="color: #990000">*</span> n_middle <span style="color: #990000">+</span> n_middle <span style="color: #990000">*</span> nc_result<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> nr_result <span style="color: #990000">*</span> nc_result<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span><span style="color: #993399">4</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span> j<span style="color: #990000">++)</span>
+          X<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// X is the vector of independent variables
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
-	// left matrix
-	ax[0]  = X[0];  // left[0,0]   = x[0] = 1
-	ax[1]  = X[1];  // left[0,1]   = x[1] = 2
-	ax[2]  = 5.;    // left[1,0]   = 5
-	ax[3]  = 6.;    // left[1,1]   = 6
-	// right matrix
-	ax[4]  = X[2];  // right[0,0]  = x[2] = 3
-	ax[5]  = 7.;    // right[0,1]  = 7
-	ax[6]  = X[3];  // right[1,0]  = x[3] = 4
-	ax[7]  = 8.;    // right[1,1]  = 8
-	/*
-	[ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]
-	[ 5  , 6 ]    [ x3 , 8 ]   [ 5*x2  + 6*x3  , 5*7 + 6*8 ]
-	*/
+     <span style="font-style: italic"><span style="color: #9A1900">// X is the vector of independent variables</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// left matrix</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// left[0,0]   = x[0] = 1</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// left[0,1]   = x[1] = 2</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">.;</span>    <span style="font-style: italic"><span style="color: #9A1900">// left[1,0]   = 5</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">6</span><span style="color: #990000">.;</span>    <span style="font-style: italic"><span style="color: #9A1900">// left[1,1]   = 6</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// right matrix</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// right[0,0]  = x[2] = 3</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">7</span><span style="color: #990000">.;</span>    <span style="font-style: italic"><span style="color: #9A1900">// right[0,1]  = 7</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// right[1,0]  = x[3] = 4</span></span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">8</span><span style="color: #990000">.;</span>    <span style="font-style: italic"><span style="color: #9A1900">// right[1,1]  = 8</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ 5  , 6 ]    [ x3 , 8 ]   [ 5*x2  + 6*x3  , 5*7 + 6*8 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
 
-	// The call back routines need to know the dimensions of the matrices.
-	// Store information about the matrix multiply for this call to mat_mul.
-	call_info info;
-	info.nr_result = nr_result;
-	info.n_middle  = n_middle;
-	info.nc_result = nc_result;
-	// info.vx gets set by forward during call to mat_mul below
-	assert( info.vx.size() == 0 );
-	size_t id      = info_.size();
-	info_.push_back(info);
+     <span style="font-style: italic"><span style="color: #9A1900">// The call back routines need to know the dimensions of the matrices.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Store information about the matrix multiply for this call to mat_mul.</span></span>
+     <span style="color: #008080">call_info</span> info<span style="color: #990000">;</span>
+     info<span style="color: #990000">.</span>nr_result <span style="color: #990000">=</span> nr_result<span style="color: #990000">;</span>
+     info<span style="color: #990000">.</span>n_middle  <span style="color: #990000">=</span> n_middle<span style="color: #990000">;</span>
+     info<span style="color: #990000">.</span>nc_result <span style="color: #990000">=</span> nc_result<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// info.vx gets set by forward during call to mat_mul below</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> info<span style="color: #990000">.</span>vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> id      <span style="color: #990000">=</span> info_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+     info_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>info<span style="color: #990000">);</span>
 
-	// user defined <a href="ad.xml" target="_top">AD</a>&lt;double&gt; version of matrix multiply
-	mat_mul(id, ax, ay);
-	//----------------------------------------------------------------------
-	// check <a href="ad.xml" target="_top">AD</a>&lt;double&gt;  results
-	ok &amp;= ay[0] == (1*3 + 2*4); ok &amp;= Variable( ay[0] );
-	ok &amp;= ay[1] == (1*7 + 2*8); ok &amp;= Variable( ay[1] );
-	ok &amp;= ay[2] == (5*3 + 6*4); ok &amp;= Variable( ay[2] );
-	ok &amp;= ay[3] == (5*7 + 6*8); ok &amp;= Parameter( ay[3] );
-	//----------------------------------------------------------------------
-	// use mat_mul to define a function g : X -&gt; ay
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; G;
-	G.Dependent(X, ay);
-	// g(x) = [ x0*x2 + x1*x3 , x0*7 + x1*8 , 5*x2  + 6*x3  , 5*7 + 6*8 ]^T
-	//----------------------------------------------------------------------
-	// Test zero order forward mode evaluation of g(x)
-	CppAD::vector&lt;double&gt; x( X.size() ), y(m);
-	for(j = 0; j &lt;  X.size() ; j++)
-		x[j] = j + 2;
-	y = G.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= y[0] == x[0] * x[2] + x[1] * x[3];
-	ok &amp;= y[1] == x[0] * 7.   + x[1] * 8.;
-	ok &amp;= y[2] == 5. * x[2]   + 6. * x[3];
-	ok &amp;= y[3] == 5. * 7.     + 6. * 8.;
+     <span style="font-style: italic"><span style="color: #9A1900">// user defined AD&lt;double&gt; version of matrix multiply</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">mat_mul</span></span><span style="color: #990000">(</span>id<span style="color: #990000">,</span> ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check AD&lt;double&gt;  results</span></span>
+     ok <span style="color: #990000">&amp;=</span> ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">3</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">*</span><span style="color: #993399">4</span><span style="color: #990000">);</span> ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span> ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> ay<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">7</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">*</span><span style="color: #993399">8</span><span style="color: #990000">);</span> ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span> ay<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> ay<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span><span style="color: #993399">5</span><span style="color: #990000">*</span><span style="color: #993399">3</span> <span style="color: #990000">+</span> <span style="color: #993399">6</span><span style="color: #990000">*</span><span style="color: #993399">4</span><span style="color: #990000">);</span> ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span> ay<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> ay<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">(</span><span style="color: #993399">5</span><span style="color: #990000">*</span><span style="color: #993399">7</span> <span style="color: #990000">+</span> <span style="color: #993399">6</span><span style="color: #990000">*</span><span style="color: #993399">8</span><span style="color: #990000">);</span> ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span> ay<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// use mat_mul to define a function g : X -&gt; ay</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> G<span style="color: #990000">;</span>
+     G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// g(x) = [ x0*x2 + x1*x3 , x0*7 + x1*8 , 5*x2  + 6*x3  , 5*7 + 6*8 ]^T</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Test zero order forward mode evaluation of g(x)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> j <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     y <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">7</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">8</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">5</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span>   <span style="color: #990000">+</span> <span style="color: #993399">6</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">5</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">7</span><span style="color: #990000">.</span>     <span style="color: #990000">+</span> <span style="color: #993399">6</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">8</span><span style="color: #990000">.;</span>
 
-	//----------------------------------------------------------------------
-	// Test first order forward mode evaluation of g'(x) * [1, 2, 3, 4]^T
-	// g'(x) = [ x2, x3, x0, x1 ]
-	//         [ 7 ,  8,  0, 0  ]
-	//         [ 0 ,  0,  5, 6  ]
-	//         [ 0 ,  0,  0, 0  ]
-	CppAD::vector&lt;double&gt; dx( X.size() ), dy(m);
-	for(j = 0; j &lt;  X.size() ; j++)
-		dx[j] = j + 1;
-	dy = G.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok &amp;= dy[0] == 1. * x[2] + 2. * x[3] + 3. * x[0] + 4. * x[1];
-	ok &amp;= dy[1] == 1. * 7.   + 2. * 8.   + 3. * 0.   + 4. * 0.;
-	ok &amp;= dy[2] == 1. * 0.   + 2. * 0.   + 3. * 5.   + 4. * 6.;
-	ok &amp;= dy[3] == 1. * 0.   + 2. * 0.   + 3. * 0.   + 4. * 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Test first order forward mode evaluation of g'(x) * [1, 2, 3, 4]^T</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// g'(x) = [ x2, x3, x0, x1 ]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//         [ 7 ,  8,  0, 0  ]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//         [ 0 ,  0,  5, 6  ]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//         [ 0 ,  0,  0, 0  ]</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          dx<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> j <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     dy <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">7</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">8</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> dy<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">5</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">6</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> dy<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>   <span style="color: #990000">+</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	//----------------------------------------------------------------------
-	// Test second order forward mode
-	// g_0^2 (x) = [ 0, 0, 1, 0 ], g_0^2 (x) * [1] = [3]
-	//             [ 0, 0, 0, 1 ]              [2]   [4]
-	//             [ 1, 0, 0, 0 ]              [3]   [1]
-	//             [ 0, 1, 0, 0 ]              [4]   [2]
-	CppAD::vector&lt;double&gt; ddx( X.size() ), ddy(m);
-	for(j = 0; j &lt;  X.size() ; j++)
-		ddx[j] = 0.;
-	ddy = G.<a href="forward.xml" target="_top">Forward</a>(2, ddx);
-	// [1, 2, 3, 4] * g_0^2 (x) * [1, 2, 3, 4]^T = 1*3 + 2*4 + 3*1 + 4*2
-	ok &amp;= 2. * ddy[0] == 1. * 3. + 2. * 4. + 3. * 1. + 4. * 2.;
-	// for i &gt; 0, [1, 2, 3, 4] * g_i^2 (x) * [1, 2, 3, 4]^T = 0
-	ok &amp;= ddy[1] == 0.;
-	ok &amp;= ddy[2] == 0.;
-	ok &amp;= ddy[3] == 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Test second order forward mode</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// g_0^2 (x) = [ 0, 0, 1, 0 ], g_0^2 (x) * [1] = [3]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//             [ 0, 0, 0, 1 ]              [2]   [4]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//             [ 1, 0, 0, 0 ]              [3]   [1]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//             [ 0, 1, 0, 0 ]              [4]   [2]</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">ddx</span></span><span style="color: #990000">(</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ddy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          ddx<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ddy <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> ddx<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// [1, 2, 3, 4] * g_0^2 (x) * [1, 2, 3, 4]^T = 1*3 + 2*4 + 3*1 + 4*2</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> ddy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// for i &gt; 0, [1, 2, 3, 4] * g_i^2 (x) * [1, 2, 3, 4]^T = 0</span></span>
+     ok <span style="color: #990000">&amp;=</span> ddy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> ddy<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> ddy<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	//----------------------------------------------------------------------
-	// Test second order reverse mode
-	CppAD::vector&lt;double&gt; w(m), dw(2 *  X.size() );
-	for(i = 0; i &lt; m; i++)
-		w[i] = 0.;
-	w[0] = 1.;
-	dw = G.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
-	// g_0'(x) = [ x2, x3, x0, x1 ]
-	ok &amp;= dw[0*2 + 0] == x[2];
-	ok &amp;= dw[1*2 + 0] == x[3];
-	ok &amp;= dw[2*2 + 0] == x[0];
-	ok &amp;= dw[3*2 + 0] == x[1];
-	// g_0'(x)   * [1, 2, 3, 4]  = 1 * x2 + 2 * x3 + 3 * x0 + 4 * x1
-	// g_0^2 (x) * [1, 2, 3, 4]  = [3, 4, 1, 2]
-	ok &amp;= dw[0*2 + 1] == 3.;
-	ok &amp;= dw[1*2 + 1] == 4.;
-	ok &amp;= dw[2*2 + 1] == 1.;
-	ok &amp;= dw[3*2 + 1] == 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Test second order reverse mode</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          w<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// g_0'(x) = [ x2, x3, x0, x1 ]</span></span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// g_0'(x)   * [1, 2, 3, 4]  = 1 * x2 + 2 * x3 + 3 * x0 + 4 * x1</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// g_0^2 (x) * [1, 2, 3, 4]  = [3, 4, 1, 2]</span></span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> dw<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">*</span><span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	//----------------------------------------------------------------------
-	// Test forward and reverse Jacobian sparsity pattern
-	/*
-	[ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]
-	[ 5  , 6 ]    [ x3 , 8 ]   [ 5*x2  + 6*x3  , 5*7 + 6*8 ]
-	so the sparsity pattern should be
-	s[0] = {0, 1, 2, 3}
-	s[1] = {0, 1}
-	s[2] = {2, 3}
-	s[3] = {}
-	*/
-	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; r( X.size() ), s(m);
-	for(j = 0; j &lt;  X.size() ; j++)
-	{	assert( r[j].empty() );
-		r[j].insert(j);
-	}
-	s = G.ForSparseJac( X.size() , r);
-	for(j = 0; j &lt;  X.size() ; j++)
-	{	// s[0] = {0, 1, 2, 3}
-		ok &amp;= s[0].find(j) != s[0].end();
-		// s[1] = {0, 1}
-		if( j == 0 || j == 1 )
-			ok &amp;= s[1].find(j) != s[1].end();
-		else	ok &amp;= s[1].find(j) == s[1].end();
-		// s[2] = {2, 3}
-		if( j == 2 || j == 3 )
-			ok &amp;= s[2].find(j) != s[2].end();
-		else	ok &amp;= s[2].find(j) == s[2].end();
-	}
-	// s[3] == {}
-	ok &amp;= s[3].empty();
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Test forward and reverse Jacobian sparsity pattern</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ 5  , 6 ]    [ x3 , 8 ]   [ 5*x2  + 6*x3  , 5*7 + 6*8 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     so the sparsity pattern should be</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     s[0] = {0, 1, 2, 3}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     s[1] = {0, 1}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     s[2] = {2, 3}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     s[3] = {}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; std::set&lt;size_t&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> r<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">empty</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          r<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     s <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">,</span> r<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// s[0] = {0, 1, 2, 3}</span></span>
+          ok <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// s[1] = {0, 1}</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> j <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">==</span> s<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// s[2] = {2, 3}</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">||</span> j <span style="color: #990000">==</span> <span style="color: #993399">3</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">!=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">==</span> s<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// s[3] == {}</span></span>
+     ok <span style="color: #990000">&amp;=</span> s<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">empty</span></span><span style="color: #990000">();</span>
 
-	//----------------------------------------------------------------------
-	// Test reverse Jacobian sparsity pattern
-	/*
-	[ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]
-	[ 5  , 6 ]    [ x3 , 8 ]   [ 5*x2  + 6*x3  , 5*7 + 6*8 ]
-	so the sparsity pattern should be
-	r[0] = {0, 1, 2, 3}
-	r[1] = {0, 1}
-	r[2] = {2, 3}
-	r[3] = {}
-	*/
-	for(i = 0; i &lt;  m; i++)
-	{	s[i].clear();
-		s[i].insert(i);
-	}
-	r = G.RevSparseJac(m, s);
-	for(j = 0; j &lt;  X.size() ; j++)
-	{	// r[0] = {0, 1, 2, 3}
-		ok &amp;= r[0].find(j) != r[0].end();
-		// r[1] = {0, 1}
-		if( j == 0 || j == 1 )
-			ok &amp;= r[1].find(j) != r[1].end();
-		else	ok &amp;= r[1].find(j) == r[1].end();
-		// r[2] = {2, 3}
-		if( j == 2 || j == 3 )
-			ok &amp;= r[2].find(j) != r[2].end();
-		else	ok &amp;= r[2].find(j) == r[2].end();
-	}
-	// r[3] == {}
-	ok &amp;= r[3].empty();
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Test reverse Jacobian sparsity pattern</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ x0 , x1 ] * [ x2 , 7 ] = [ x0*x2 + x1*x3 , x0*7 + x1*8 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ 5  , 6 ]    [ x3 , 8 ]   [ 5*x2  + 6*x3  , 5*7 + 6*8 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     so the sparsity pattern should be</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     r[0] = {0, 1, 2, 3}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     r[1] = {0, 1}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     r[2] = {2, 3}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     r[3] = {}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span>  m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     s<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+          s<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     r <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>m<span style="color: #990000">,</span> s<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// r[0] = {0, 1, 2, 3}</span></span>
+          ok <span style="color: #990000">&amp;=</span> r<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">!=</span> r<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// r[1] = {0, 1}</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> j <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> r<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">!=</span> r<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> r<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">==</span> r<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// r[2] = {2, 3}</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">||</span> j <span style="color: #990000">==</span> <span style="color: #993399">3</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> r<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">!=</span> r<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> r<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>j<span style="color: #990000">)</span> <span style="color: #990000">==</span> r<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// r[3] == {}</span></span>
+     ok <span style="color: #990000">&amp;=</span> r<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">empty</span></span><span style="color: #990000">();</span>
 
-	//----------------------------------------------------------------------
-	/* Test reverse Hessian sparsity pattern
-	g_0^2 (x) = [ 0, 0, 1, 0 ] and for i &gt; 0, g_i^2 = 0
-	            [ 0, 0, 0, 1 ]
-	            [ 1, 0, 0, 0 ]
-	            [ 0, 1, 0, 0 ]
-	so for the sparsity pattern for the first component of g is
-	h[0] = {2}
-	h[1] = {3}
-	h[2] = {0}
-	h[3] = {1}
-	*/
-	CppAD::vector&lt; std::set&lt;size_t&gt; &gt; h( X.size() ), t(1);
-	t[0].clear();
-	t[0].insert(0);
-	h = G.RevSparseHes(X.size() , t);
-	size_t check[] = {2, 3, 0, 1};
-	for(j = 0; j &lt;  X.size() ; j++)
-	{	// h[j] = { check[j] }
-		for(i = 0; i &lt; n; i++)
-		{	if( i == check[j] )
-				ok &amp;= h[j].find(i) != h[j].end();
-			else	ok &amp;= h[j].find(i) == h[j].end();
-		}
-	}
-	t[0].clear();
-	for( j = 1; j &lt; X.size(); j++)
-			t[0].insert(j);
-	h = G.RevSparseHes(X.size() , t);
-	for(j = 0; j &lt;  X.size() ; j++)
-	{	// h[j] = { }
-		for(i = 0; i &lt; X.size(); i++)
-			ok &amp;= h[j].find(i) == h[j].end();
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">//----------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">/* Test reverse Hessian sparsity pattern</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     g_0^2 (x) = [ 0, 0, 1, 0 ] and for i &gt; 0, g_i^2 = 0</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">                 [ 0, 0, 0, 1 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">                 [ 1, 0, 0, 0 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">                 [ 0, 1, 0, 0 ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     so for the sparsity pattern for the first component of g is</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     h[0] = {2}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     h[1] = {3}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     h[2] = {0}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     h[3] = {1}</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; std::set&lt;size_t&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">t</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     t<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     t<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     h <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">,</span> t<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> check<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span><span style="color: #993399">2</span><span style="color: #990000">,</span> <span style="color: #993399">3</span><span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// h[j] = { check[j] }</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">==</span> check<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">)</span>
+                    ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>i<span style="color: #990000">)</span> <span style="color: #990000">!=</span> h<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>i<span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     t<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span> j <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span> j<span style="color: #990000">++)</span>
+               t<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     h <span style="color: #990000">=</span> G<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">,</span> t<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span>  X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// h[j] = { }</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> X<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span> i<span style="color: #990000">++)</span>
+               ok <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>i<span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
 
-	// --------------------------------------------------------------------
-	// Free temporary work space. (If there are future calls to
-	// old_mat_mul they would create new temporary work space.)
-	CppAD::user_atomic&lt;double&gt;::clear();
-	info_.clear();
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Free temporary work space. (If there are future calls to</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// old_mat_mul they would create new temporary work space.)</span></span>
+     CppAD<span style="color: #990000">::</span>user_atomic<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     info_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: test_more/old_mat_mul.cpp
 
 </body>

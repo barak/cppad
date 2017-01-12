@@ -87,70 +87,65 @@ A:active { color : purple }
 
 
 <center><b><big><big>Abort Current Recording: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;limits&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">abort_recording</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-bool abort_recording(void)
-{	bool ok = true;
-	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-	using CppAD::AD;
+     <span style="font-weight: bold"><span style="color: #0000FF">try</span></span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	try
-	{	// domain space vector
-		size_t n = 1;
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-		x[0]     = 0.;
+          <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-		// declare independent variables and start tape recording
-		CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+          <span style="font-style: italic"><span style="color: #9A1900">// simulate an error during calculation of y and the execution</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// stream was aborted</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">throw</span></span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">catch</span></span> <span style="color: #990000">(</span><span style="color: #009900">int</span> e<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>e <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-		// simulate an error during calculation of y and the execution
-		// stream was aborted
-		throw 1;
-	}
-	catch (int e)
-	{	ok &amp;= (e == 1);
+          <span style="font-style: italic"><span style="color: #9A1900">// do this incase throw occured after the call to Independent</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (for case above this is known, but in general it is unknown)</span></span>
+          AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">abort_recording</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     Now make sure that we can start another recording</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
 
-		// do this incase throw occured after the call to Independent
-		// (for case above this is known, but in general it is unknown)
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt;::abort_recording();
-	}
-	/*
-	Now make sure that we can start another recording
-	*/
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x0 <span style="color: #990000">=</span> <span style="color: #993399">0.5</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	size_t n  = 1;
-	double x0 = 0.5;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0;
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = 2 * x[0];
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// forward computation of partials w.r.t. x[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// forward computation of partials w.r.t. x[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
-	dx[0] = 1.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok   &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 2., eps, eps);
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/abort_recording.cpp
 
 </body>

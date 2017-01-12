@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_makefile.sh 3762 2015-12-01 14:35:37Z bradbell $
+# $Id: check_makefile.sh 3845 2016-11-19 01:50:47Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -18,7 +18,7 @@ fi
 # -----------------------------------------------------------------------------
 echo "Checking include files listed in makefile.am"
 echo "-------------------------------------------------------"
-bin/list_files.sh .h .hpp | sed -n \
+bin/ls_files.sh .h .hpp | sed -n \
 	-e '/^cppad\/deprecated\//d' \
 	-e '/cppad\/.*\.h$/p' \
 	-e '/cppad\/.*\.hpp$/p' \
@@ -52,8 +52,7 @@ fi
 # -----------------------------------------------------------------------------
 echo "Checking debugging flags in all makefile.am files."
 echo "-------------------------------------------------------"
-list=`find . -name makefile.am | \
-	sed -e '/\/build\//d' -e'/\/work\//d' -e 's|\./||'`
+list=`bin/ls_files.sh | sed -n -e '/\/makefile.am$/p'`
 ok="yes"
 for file in $list
 do
