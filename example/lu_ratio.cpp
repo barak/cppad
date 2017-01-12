@@ -1,6 +1,6 @@
-// $Id: lu_ratio.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: lu_ratio.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -23,7 +23,7 @@ $mindex LuRatio$$
 
 
 $code
-$verbatim%example/lu_ratio.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/lu_ratio.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -91,6 +91,9 @@ bool CheckLuFactor(
 	const CPPAD_TESTVECTOR(size_t) &jp )
 {	bool     ok = true;
 
+	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
+
 	double  sum;                          // element of L * U
 	double  pij;                          // element of permuted x
 	size_t  i, j, k;                      // temporary indices
@@ -130,7 +133,7 @@ bool CheckLuFactor(
 			// element (i,j) in permuted version of A
 			pij  = x[ ip[i] * n + jp[j] ];
 			// compare
-			ok  &= CppAD::NearEqual(pij, sum, 1e-10, 1e-10);
+			ok  &= NearEqual(pij, sum, eps99, eps99);
 		}
 	}
 	return ok;

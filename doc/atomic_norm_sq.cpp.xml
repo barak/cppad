@@ -74,14 +74,17 @@ A:active { color : purple }
 <option>atomic_reverse</option>
 <option>atomic_for_sparse_jac</option>
 <option>atomic_rev_sparse_jac</option>
+<option>atomic_for_sparse_hes</option>
 <option>atomic_rev_sparse_hes</option>
 <option>atomic_base_clear</option>
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
-<option>atomic_sparsity.cpp</option>
+<option>atomic_set_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
-<option>atomic_hes_sparse.cpp</option>
+<option>atomic_eigen_mat_mul.cpp</option>
+<option>atomic_eigen_mat_inv.cpp</option>
+<option>atomic_eigen_cholesky.cpp</option>
 <option>atomic_mat_mul.cpp</option>
 </select>
 </td>
@@ -177,359 +180,349 @@ This example only uses bool sparsity patterns.
 <br/>
 <b><big><a name="Start Class Definition" id="Start Class Definition">Start Class Definition</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-namespace {           // isolate items below to this file
-using CppAD::vector;  // abbreviate as vector
-//
-class atomic_norm_sq : public CppAD::atomic_base&lt;double&gt; {
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>           <span style="font-style: italic"><span style="color: #9A1900">// isolate items below to this file</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// abbreviate as vector</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">atomic_norm_sq</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #0000FF">public</span></span> CppAD<span style="color: #990000">::</span>atomic_base<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #FF0000">{</span></tt></pre>
 <br/>
 <b><big><a name="Constructor" id="Constructor">Constructor</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     public:
-     // constructor (could use const char* for name)
-     atomic_norm_sq(const std::string&amp; name) :
-     // this example only uses boolean sparsity patterns
-     CppAD::atomic_base&lt;double&gt;(name, atomic_base&lt;double&gt;::bool_sparsity_enum)
-     { }
-     private:
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// constructor (could use const char* for name)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">atomic_norm_sq</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> std<span style="color: #990000">::</span>string<span style="color: #990000">&amp;</span> name<span style="color: #990000">)</span> <span style="color: #990000">:</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// this example only uses boolean sparsity patterns</span></span>
+     CppAD<span style="color: #990000">::</span>atomic_base<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>name<span style="color: #990000">,</span> atomic_base<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span>bool_sparsity_enum<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span></tt></pre>
 <br/>
 <b><big><a name="forward" id="forward">forward</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // forward mode routine called by CppAD
-     virtual bool forward(
-          size_t                    p ,
-          size_t                    q ,
-          const vector&lt;bool&gt;&amp;      vx ,
-                vector&lt;bool&gt;&amp;      vy ,
-          const vector&lt;double&gt;&amp;    tx ,
-                vector&lt;double&gt;&amp;    ty
-     )
-     {    size_t n = tx.size() / (q+1);
-          size_t m = ty.size() / (q+1);
-          assert( n == 2 );
-          assert( m == 1 );
-          assert( p &lt;= q );
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// forward mode routine called by CppAD</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">virtual</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">forward</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                    p <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                    q <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>      vx <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>      vy <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    tx <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    ty
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> NDEBUG
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> tx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> ty<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> p <span style="color: #990000">&lt;=</span> q <span style="color: #990000">);</span>
 
-          // return flag
-          bool ok = q &lt;= 1;
+          <span style="font-style: italic"><span style="color: #9A1900">// return flag</span></span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> q <span style="color: #990000">&lt;=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-          // Variable information must always be implemented.
-          // y_0 is a variable if and only if x_0 or x_1 is a variable.
-          if( vx.size() &gt; 0 )
-               vy[0] = vx[0] | vx[1];
+          <span style="font-style: italic"><span style="color: #9A1900">// Variable information must always be implemented.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// y_0 is a variable if and only if x_0 or x_1 is a variable.</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               vy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> vx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">|</span> vx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-          // Order zero forward mode must always be implemented.
-          // y^0 = f( x^0 )
-          double x_00 = tx[ 0*(q+1) + 0];        // x_0^0
-          double x_10 = tx[ 1*(q+1) + 0];        // x_10
-          double f = x_00 * x_00 + x_10 * x_10;  // f( x^0 )
-          if( p &lt;= 0 )
-               ty[0] = f;   // y_0^0
-          if( q &lt;= 0 )
-               return ok;
-          assert( vx.size() == 0 );
+          <span style="font-style: italic"><span style="color: #9A1900">// Order zero forward mode must always be implemented.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// y^0 = f( x^0 )</span></span>
+          <span style="color: #009900">double</span> x_00 <span style="color: #990000">=</span> tx<span style="color: #990000">[</span> <span style="color: #993399">0</span><span style="color: #990000">*(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">];</span>        <span style="font-style: italic"><span style="color: #9A1900">// x_0^0</span></span>
+          <span style="color: #009900">double</span> x_10 <span style="color: #990000">=</span> tx<span style="color: #990000">[</span> <span style="color: #993399">1</span><span style="color: #990000">*(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">];</span>        <span style="font-style: italic"><span style="color: #9A1900">// x_10</span></span>
+          <span style="color: #009900">double</span> f <span style="color: #990000">=</span> x_00 <span style="color: #990000">*</span> x_00 <span style="color: #990000">+</span> x_10 <span style="color: #990000">*</span> x_10<span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f( x^0 )</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> p <span style="color: #990000">&lt;=</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               ty<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> f<span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// y_0^0</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> q <span style="color: #990000">&lt;=</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> vx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
 
-          // Order one forward mode.
-          // This case needed if first order forward mode is used.
-          // y^1 = f'( x^0 ) x^1
-          double x_01 = tx[ 0*(q+1) + 1];   // x_0^1
-          double x_11 = tx[ 1*(q+1) + 1];   // x_1^1
-          double fp_0 = 2.0 * x_00;         // partial f w.r.t x_0^0
-          double fp_1 = 2.0 * x_10;         // partial f w.r.t x_1^0
-          if( p &lt;= 1 )
-               ty[1] = fp_0 * x_01 + fp_1 * x_11; // f'( x^0 ) * x^1
-          if( q &lt;= 1 )
-               return ok;
+          <span style="font-style: italic"><span style="color: #9A1900">// Order one forward mode.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// This case needed if first order forward mode is used.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// y^1 = f'( x^0 ) x^1</span></span>
+          <span style="color: #009900">double</span> x_01 <span style="color: #990000">=</span> tx<span style="color: #990000">[</span> <span style="color: #993399">0</span><span style="color: #990000">*(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">];</span>   <span style="font-style: italic"><span style="color: #9A1900">// x_0^1</span></span>
+          <span style="color: #009900">double</span> x_11 <span style="color: #990000">=</span> tx<span style="color: #990000">[</span> <span style="color: #993399">1</span><span style="color: #990000">*(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">];</span>   <span style="font-style: italic"><span style="color: #9A1900">// x_1^1</span></span>
+          <span style="color: #009900">double</span> fp_0 <span style="color: #990000">=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x_00<span style="color: #990000">;</span>         <span style="font-style: italic"><span style="color: #9A1900">// partial f w.r.t x_0^0</span></span>
+          <span style="color: #009900">double</span> fp_1 <span style="color: #990000">=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x_10<span style="color: #990000">;</span>         <span style="font-style: italic"><span style="color: #9A1900">// partial f w.r.t x_1^0</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> p <span style="color: #990000">&lt;=</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+               ty<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> fp_0 <span style="color: #990000">*</span> x_01 <span style="color: #990000">+</span> fp_1 <span style="color: #990000">*</span> x_11<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// f'( x^0 ) * x^1</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> q <span style="color: #990000">&lt;=</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 
-          // Assume we are not using forward mode with order &gt; 1
-          assert( ! ok );
-          return ok;
-     }
-</pre></font></code>
+          <span style="font-style: italic"><span style="color: #9A1900">// Assume we are not using forward mode with order &gt; 1</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="reverse" id="reverse">reverse</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // reverse mode routine called by CppAD
-     virtual bool reverse(
-          size_t                    q ,
-          const vector&lt;double&gt;&amp;    tx ,
-          const vector&lt;double&gt;&amp;    ty ,
-                vector&lt;double&gt;&amp;    px ,
-          const vector&lt;double&gt;&amp;    py
-     )
-     {    size_t n = tx.size() / (q+1);
-          size_t m = ty.size() / (q+1);
-          assert( px.size() == n * (q+1) );
-          assert( py.size() == m * (q+1) );
-          assert( n == 2 );
-          assert( m == 1 );
-          bool ok = q &lt;= 1;
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// reverse mode routine called by CppAD</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">virtual</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">reverse</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                    q <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    tx <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    ty <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    px <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>    py
+     <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> NDEBUG
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> tx<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> ty<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> px<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> <span style="color: #990000">(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> py<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> m <span style="color: #990000">*</span> <span style="color: #990000">(</span>q<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> q <span style="color: #990000">&lt;=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-          double fp_0, fp_1;
-          switch(q)
-          {    case 0:
-               // This case needed if first order reverse mode is used
-               // F ( {x} ) = f( x^0 ) = y^0
-               fp_0  =  2.0 * tx[0];  // partial F w.r.t. x_0^0
-               fp_1  =  2.0 * tx[1];  // partial F w.r.t. x_0^1
-               px[0] = py[0] * fp_0;; // partial G w.r.t. x_0^0
-               px[1] = py[0] * fp_1;; // partial G w.r.t. x_0^1
-               assert(ok);
-               break;
+          <span style="color: #009900">double</span> fp_0<span style="color: #990000">,</span> fp_1<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">switch</span></span><span style="color: #990000">(</span>q<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #993399">0</span><span style="color: #990000">:</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// This case needed if first order reverse mode is used</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// F ( {x} ) = f( x^0 ) = y^0</span></span>
+               fp_0  <span style="color: #990000">=</span>  <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> tx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// partial F w.r.t. x_0^0</span></span>
+               fp_1  <span style="color: #990000">=</span>  <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> tx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// partial F w.r.t. x_0^1</span></span>
+               px<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> py<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> fp_0<span style="color: #990000">;;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial G w.r.t. x_0^0</span></span>
+               px<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> py<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> fp_1<span style="color: #990000">;;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial G w.r.t. x_0^1</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span>ok<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-               default:
-               // Assume we are not using reverse with order &gt; 1 (q &gt; 0)
-               assert(!ok);
-          }
-          return ok;
-     }
-</pre></font></code>
+<span style="font-weight: bold"><span style="color: #008080">               default:</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// Assume we are not using reverse with order &gt; 1 (q &gt; 0)</span></span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(!</span>ok<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="for_sparse_jac" id="for_sparse_jac">for_sparse_jac</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // forward Jacobian bool sparsity routine called by CppAD
-     virtual bool for_sparse_jac(
-          size_t                                p ,
-          const vector&lt;bool&gt;&amp;                   r ,
-                vector&lt;bool&gt;&amp;                   s )
-     {    // This function needed if using f.ForSparseJac
-          size_t n = r.size() / p;
-          size_t m = s.size() / p;
-          assert( n == 2 );
-          assert( m == 1 );
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// forward Jacobian bool sparsity routine called by CppAD</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">virtual</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">for_sparse_jac</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   r <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   s <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>                 x <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// This function needed if using f.ForSparseJac</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> r<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> p<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> NDEBUG
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> p<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
 
-          // sparsity for S(x) = f'(x) * R
-          // where f'(x) = 2 * [ x_0, x_1 ]
-          for(size_t j = 0; j &lt; p; j++)
-          {    s[j] = false;
-               for(size_t i = 0; i &lt; n; i++)
-               {    // Visual Studio 2013 generates warning without bool below
-                    s[j] |= bool( r[i * p + j] );
-               }
-          }
-          return true;
-     }
-</pre></font></code>
+          <span style="font-style: italic"><span style="color: #9A1900">// sparsity for S(x) = f'(x) * R</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// where f'(x) = 2 * [ x_0, x_1 ]</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     s<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Visual Studio 2013 generates warning without bool below</span></span>
+                    s<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">|=</span> <span style="color: #009900">bool</span><span style="color: #990000">(</span> r<span style="color: #990000">[</span>i <span style="color: #990000">*</span> p <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="rev_sparse_jac" id="rev_sparse_jac">rev_sparse_jac</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // reverse Jacobian bool sparsity routine called by CppAD
-     virtual bool rev_sparse_jac(
-          size_t                                p  ,
-          const vector&lt;bool&gt;&amp;                   rt ,
-                vector&lt;bool&gt;&amp;                   st )
-     {    // This function needed if using RevSparseJac or optimize
-          size_t n = st.size() / p;
-          size_t m = rt.size() / p;
-          assert( n == 2 );
-          assert( m == 1 );
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// reverse Jacobian bool sparsity routine called by CppAD</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">virtual</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">rev_sparse_jac</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                                p  <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   rt <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   st <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>                 x  <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// This function needed if using RevSparseJac or optimize</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> st<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> p<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> NDEBUG
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> rt<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> p<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
 
-          // sparsity for S(x)^T = f'(x)^T * R^T
-          // where f'(x)^T = 2 * [ x_0, x_1]^T
-          for(size_t j = 0; j &lt; p; j++)
-               for(size_t i = 0; i &lt; n; i++)
-                    st[i * p + j] = rt[j];
+          <span style="font-style: italic"><span style="color: #9A1900">// sparsity for S(x)^T = f'(x)^T * R^T</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// where f'(x)^T = 2 * [ x_0, x_1]^T</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                    st<span style="color: #990000">[</span>i <span style="color: #990000">*</span> p <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> rt<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
 
-          return true;
-     }
-</pre></font></code>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="rev_sparse_hes" id="rev_sparse_hes">rev_sparse_hes</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // reverse Hessian bool sparsity routine called by CppAD
-     virtual bool rev_sparse_hes(
-          const vector&lt;bool&gt;&amp;                   vx,
-          const vector&lt;bool&gt;&amp;                   s ,
-                vector&lt;bool&gt;&amp;                   t ,
-          size_t                                p ,
-          const vector&lt;bool&gt;&amp;                   r ,
-          const vector&lt;bool&gt;&amp;                   u ,
-                vector&lt;bool&gt;&amp;                   v )
-     {    // This function needed if using RevSparseHes
-          size_t m = s.size();
-          size_t n = t.size();
-          assert( r.size() == n * p );
-          assert( u.size() == m * p );
-          assert( v.size() == n * p );
-          assert( n == 2 );
-          assert( m == 1 );
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// reverse Hessian bool sparsity routine called by CppAD</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">virtual</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">rev_sparse_hes</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   vx<span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   s <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   t <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                                p <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   r <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   u <span style="color: #990000">,</span>
+                vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;&amp;</span>                   v <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>                 x <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// This function needed if using RevSparseHes</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> NDEBUG
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> s<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> t<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> r<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> p <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> u<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> m <span style="color: #990000">*</span> p <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> p <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> n <span style="color: #990000">==</span> <span style="color: #993399">2</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> m <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">);</span>
 
-          // There are no cross term second derivatives for this case,
-          // so it is not necessary to use vx.
+          <span style="font-style: italic"><span style="color: #9A1900">// There are no cross term second derivatives for this case,</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// so it is not necessary to use vx.</span></span>
 
-          // sparsity for T(x) = S(x) * f'(x)
-          t[0] = s[0];
-          t[1] = s[0];
+          <span style="font-style: italic"><span style="color: #9A1900">// sparsity for T(x) = S(x) * f'(x)</span></span>
+          t<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          t<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-          // V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R
-          // U(x) = g''(y) * f'(x) * R
-          // S(x) = g'(y)
+          <span style="font-style: italic"><span style="color: #9A1900">// V(x) = f'(x)^T * g''(y) * f'(x) * R  +  g'(y) * f''(x) * R</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// U(x) = g''(y) * f'(x) * R</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// S(x) = g'(y)</span></span>
 
-          // back propagate the sparsity for U
-          size_t j;
-          for(j = 0; j &lt; p; j++)
-               for(size_t i = 0; i &lt; n; i++)
-                    v[ i * p + j] = u[j];
+          <span style="font-style: italic"><span style="color: #9A1900">// back propagate the sparsity for U</span></span>
+          <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                    v<span style="color: #990000">[</span> i <span style="color: #990000">*</span> p <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> u<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
 
-          // include forward Jacobian sparsity in Hessian sparsity
-          // sparsity for g'(y) * f''(x) * R  (Note f''(x) has same sparsity
-          // as the identity matrix)
-          if( s[0] )
-          {    for(j = 0; j &lt; p; j++)
-                    for(size_t i = 0; i &lt; n; i++)
-                    {    // Visual Studio 2013 generates warning without bool below
-                         v[ i * p + j] |= bool( r[ i * p + j] );
-                    }
-          }
+          <span style="font-style: italic"><span style="color: #9A1900">// include forward Jacobian sparsity in Hessian sparsity</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// sparsity for g'(y) * f''(x) * R  (Note f''(x) has same sparsity</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// as the identity matrix)</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> p<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                    <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// Visual Studio 2013 generates warning without bool below</span></span>
+                         v<span style="color: #990000">[</span> i <span style="color: #990000">*</span> p <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">|=</span> <span style="color: #009900">bool</span><span style="color: #990000">(</span> r<span style="color: #990000">[</span> i <span style="color: #990000">*</span> p <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+                    <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
 
-          return true;
-     }
-</pre></font></code>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="End Class Definition" id="End Class Definition">End Class Definition</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-}; // End of atomic_norm_sq class
-}  // End empty namespace
+<pre style='display:inline'><tt>
+<span style="color: #FF0000">}</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// End of atomic_norm_sq class</span></span>
+<span style="color: #FF0000">}</span>  <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
 
-</pre></font></code>
+</tt></pre>
 <b><big><a name="Use Atomic Function" id="Use Atomic Function">Use Atomic Function</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-bool norm_sq(void)
-{    bool ok = true;
-     using CppAD::AD;
-     using CppAD::NearEqual;
-     double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-</pre></font></code>
+<pre><tt><span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">norm_sq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span></tt></pre>
 <br/>
 <b><a name="Use Atomic Function.Constructor" id="Use Atomic Function.Constructor">Constructor</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // --------------------------------------------------------------------
-     // Create the atomic reciprocal object
-     atomic_norm_sq afun(&quot;atomic_norm_sq&quot;);
-</pre></font></code>
+<pre style='display:inline'><tt>
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Create the atomic reciprocal object</span></span>
+     <span style="color: #008080">atomic_norm_sq</span> <span style="font-weight: bold"><span style="color: #000000">afun</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"atomic_norm_sq"</span><span style="color: #990000">);</span>
+</tt></pre>
 <br/>
 <b><a name="Use Atomic Function.Recording" id="Use Atomic Function.Recording">Recording</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // Create the function f(x)
-     //
-     // domain space vector
-     size_t  n  = 2;
-     double  x0 = 0.25;
-     double  x1 = 0.75;
-     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n);
-     ax[0]      = x0;
-     ax[1]      = x1;
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// Create the function f(x)</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span>  n  <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span>  x0 <span style="color: #990000">=</span> <span style="color: #993399">0.25</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span>  x1 <span style="color: #990000">=</span> <span style="color: #993399">0.75</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
 
-     // declare independent variables and start tape recording
-     CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-     // range space vector
-     size_t m = 1;
-     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ay(m);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
 
-     // call user function and store norm_sq(x) in au[0]
-     afun(ax, ay);        // y_0 = x_0 * x_0 + x_1 * x_1
+     <span style="font-style: italic"><span style="color: #9A1900">// call user function and store norm_sq(x) in au[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">afun</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>        <span style="font-style: italic"><span style="color: #9A1900">// y_0 = x_0 * x_0 + x_1 * x_1</span></span>
 
-     // create f: x -&gt; y and stop tape recording
-     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
-     f.Dependent (ax, ay);
-</pre></font></code>
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> f<span style="color: #990000">;</span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span> <span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span></tt></pre>
 <br/>
 <b><a name="Use Atomic Function.forward" id="Use Atomic Function.forward">forward</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // check function value
-     double check = x0 * x0 + x1 * x1;
-     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Value(ay[0]) , check,  eps, eps);
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// check function value</span></span>
+     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> x0 <span style="color: #990000">*</span> x0 <span style="color: #990000">+</span> x1 <span style="color: #990000">*</span> x1<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-     // check zero order forward mode
-     size_t q;
-     vector&lt;double&gt; x_q(n), y_q(m);
-     q      = 0;
-     x_q[0] = x0;
-     x_q[1] = x1;
-     y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check zero order forward mode</span></span>
+     <span style="color: #008080">size_t</span> q<span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x_q</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y_q</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     q      <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+     y_q    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-     // check first order forward mode
-     q      = 1;
-     x_q[0] = 0.3;
-     x_q[1] = 0.7;
-     y_q    = f.<a href="forward.xml" target="_top">Forward</a>(q, x_q);
-     check  = 2.0 * x0 * x_q[0] + 2.0 * x1 * x_q[1];
-     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y_q[0] , check,  eps, eps);
-
-</pre></font></code>
+     <span style="font-style: italic"><span style="color: #9A1900">// check first order forward mode</span></span>
+     q      <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.3</span><span style="color: #990000">;</span>
+     x_q<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.7</span><span style="color: #990000">;</span>
+     y_q    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> x_q<span style="color: #990000">);</span>
+     check  <span style="color: #990000">=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x0 <span style="color: #990000">*</span> x_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x1 <span style="color: #990000">*</span> x_q<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y_q<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+</tt></pre>
 <b><a name="Use Atomic Function.reverse" id="Use Atomic Function.reverse">reverse</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // first order reverse mode
-     q     = 1;
-     vector&lt;double&gt; w(m), dw(n * q);
-     w[0]  = 1.;
-     dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(q, w);
-     check = 2.0 * x0;
-     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0] , check,  eps, eps);
-     check = 2.0 * x1;
-     ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1] , check,  eps, eps);
-</pre></font></code>
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// first order reverse mode</span></span>
+     q     <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> q<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x0<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">2.0</span> <span style="color: #990000">*</span> x1<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> check<span style="color: #990000">,</span>  eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span></tt></pre>
 <br/>
 <b><a name="Use Atomic Function.for_sparse_jac" id="Use Atomic Function.for_sparse_jac">for_sparse_jac</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // forward mode sparstiy pattern
-     size_t p = n;
-     CppAD::vectorBool r1(n * p), s1(m * p);
-     r1[0] = true;  r1[1] = false; // sparsity pattern identity
-     r1[2] = false; r1[3] = true;
-     //
-     s1    = f.ForSparseJac(p, r1);
-     ok  &amp;= s1[0] == true;  // f[0] depends on x[0]
-     ok  &amp;= s1[1] == true;  // f[0] depends on x[1]
-</pre></font></code>
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// forward mode sparstiy pattern</span></span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> n<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">r1</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> p<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s1</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> p<span style="color: #990000">);</span>
+     r1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  r1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern identity</span></span>
+     r1<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> r1<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     s1    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> r1<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> s1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f[0] depends on x[0]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> s1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f[0] depends on x[1]</span></span></tt></pre>
 <br/>
 <b><a name="Use Atomic Function.rev_sparse_jac" id="Use Atomic Function.rev_sparse_jac">rev_sparse_jac</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // reverse mode sparstiy pattern
-     q = m;
-     CppAD::vectorBool s2(q * m), r2(q * n);
-     s2[0] = true;          // compute sparsity pattern for f[0]
-     //
-     r2    = f.RevSparseJac(q, s2);
-     ok  &amp;= r2[0] == true;  // f[0] depends on x[0]
-     ok  &amp;= r2[1] == true;  // f[0] depends on x[1]
-</pre></font></code>
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// reverse mode sparstiy pattern</span></span>
+     q <span style="color: #990000">=</span> m<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">s2</span></span><span style="color: #990000">(</span>q <span style="color: #990000">*</span> m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">r2</span></span><span style="color: #990000">(</span>q <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     s2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for f[0]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     r2    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseJac</span></span><span style="color: #990000">(</span>q<span style="color: #990000">,</span> s2<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> r2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f[0] depends on x[0]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> r2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// f[0] depends on x[1]</span></span></tt></pre>
 <br/>
 <b><a name="Use Atomic Function.rev_sparse_hes" id="Use Atomic Function.rev_sparse_hes">rev_sparse_hes</a></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-     // Hessian sparsity (using previous ForSparseJac call)
-     CppAD::vectorBool s3(m), h(p * n);
-     s3[0] = true;        // compute sparsity pattern for f[0]
-     //
-     h     = f.RevSparseHes(p, s3);
-     ok  &amp;= h[0] == true;  // partial of f[0] w.r.t. x[0],x[0] is non-zero
-     ok  &amp;= h[1] == false; // partial of f[0] w.r.t. x[0],x[1] is zero
-     ok  &amp;= h[2] == false; // partial of f[0] w.r.t. x[1],x[0] is zero
-     ok  &amp;= h[3] == true;  // partial of f[0] w.r.t. x[1],x[1] is non-zero
-     //
-     return ok;
-}
-</pre></font></code>
+<pre><tt>     <span style="font-style: italic"><span style="color: #9A1900">// Hessian sparsity (using previous ForSparseJac call)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">s3</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span>p <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     s3<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>        <span style="font-style: italic"><span style="color: #9A1900">// compute sparsity pattern for f[0]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     h     <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>p<span style="color: #990000">,</span> s3<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// partial of f[0] w.r.t. x[0],x[0] is non-zero</span></span>
+     ok  <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial of f[0] w.r.t. x[0],x[1] is zero</span></span>
+     ok  <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial of f[0] w.r.t. x[1],x[0] is zero</span></span>
+     ok  <span style="color: #990000">&amp;=</span> h<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// partial of f[0] w.r.t. x[1],x[1] is non-zero</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: example/atomic/norm_sq.cpp
 

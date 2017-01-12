@@ -81,87 +81,82 @@ A:active { color : purple }
 
 
 <center><b><big><big>Forward Mode: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;limits&gt;
-# include &lt;cppad/cppad.hpp&gt;
-namespace { // --------------------------------------------------------
-// define the template function ForwardCases&lt;Vector&gt; in empty namespace
-template &lt;class Vector&gt;
-bool ForwardCases(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function ForwardCases&lt;Vector&gt; in empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForwardCases</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n);
-	ax[0] = 0.;
-	ax[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and starting recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and starting recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ay(m);
-	ay[0] = ax[0] * ax[0] * ax[1];
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-	// initially, the variable values during taping are stored in f
-	ok &amp;= f.size_order() == 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// initially, the variable values during taping are stored in f</span></span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// zero order forward mode using notation in forward_zero
-	// use the template parameter Vector for the vector type
-	Vector x0(n), y0(m);
-	x0[0] = 3.;
-	x0[1] = 4.;
-	y0    = f.<a href="forward.xml" target="_top">Forward</a>(0, x0);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y0[0] , x0[0]*x0[0]*x0[1], eps, eps);
-	ok  &amp;= f.size_order() == 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// zero order forward mode using notation in forward_zero</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// use the template parameter Vector for the vector type</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x0</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y0</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
+     y0    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x0<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// first order forward mode using notation in forward_one
-	// X(t)           = x0 + x1 * t
-	// Y(t) = F[X(t)] = y0 + y1 * t + o(t)
-	Vector x1(n), y1(m);
-	x1[0] = 1.;
-	x1[1] = 0.;
-	y1    = f.<a href="forward.xml" target="_top">Forward</a>(1, x1); // partial F w.r.t. x_0
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y1[0] , 2.*x0[0]*x0[1], eps, eps);
-	ok   &amp;= f.size_order() == 2;
+     <span style="font-style: italic"><span style="color: #9A1900">// first order forward mode using notation in forward_one</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// X(t)           = x0 + x1 * t</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y(t) = F[X(t)] = y0 + y1 * t + o(t)</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y1</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     x1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     y1    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> x1<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// partial F w.r.t. x_0</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>x0<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span>x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
 
-	// second order forward mode using notation in forward_order
-	// X(t) =           x0 + x1 * t + x2 * t^2
-	// Y(t) = F[X(t)] = y0 + y1 * t + y2 * t^2 + o(t^3)
-	Vector x2(n), y2(m);
-	x2[0]      = 0.;
-	x2[1]      = 0.;
-	y2         = f.<a href="forward.xml" target="_top">Forward</a>(2, x2);
-	double F_00 = 2. * y2[0]; // second partial F w.r.t. x_0, x_0
-	ok         &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(F_00, 2.*x0[1], eps, eps);
-	ok         &amp;= f.size_order() == 3;
+     <span style="font-style: italic"><span style="color: #9A1900">// second order forward mode using notation in forward_order</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// X(t) =           x0 + x1 * t + x2 * t^2</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Y(t) = F[X(t)] = y0 + y1 * t + y2 * t^2 + o(t^3)</span></span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y2</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     y2         <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> x2<span style="color: #990000">);</span>
+     <span style="color: #009900">double</span> F_00 <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> y2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span> <span style="font-style: italic"><span style="color: #9A1900">// second partial F w.r.t. x_0, x_0</span></span>
+     ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>F_00<span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>x0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok         <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
 
-	return ok;
-}
-} // End empty namespace
-# include &lt;vector&gt;
-# include &lt;valarray&gt;
-bool Forward(void)
-{	bool ok = true;
-	// Run with Vector equal to three different cases
-	// all of which are Simple Vectors with elements of type double.
-	ok &amp;= ForwardCases&lt; CppAD::vector  &lt;double&gt; &gt;();
-	ok &amp;= ForwardCases&lt; std::vector    &lt;double&gt; &gt;();
-	ok &amp;= ForwardCases&lt; std::valarray  &lt;double&gt; &gt;();
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Run with Vector equal to three different cases</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// all of which are Simple Vectors with elements of type double.</span></span>
+     ok <span style="color: #990000">&amp;=</span> ForwardCases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> ForwardCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector    <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> ForwardCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray  <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/forward.cpp
 
 </body>

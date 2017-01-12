@@ -81,84 +81,79 @@ A:active { color : purple }
 
 
 <center><b><big><big>Numeric Limits: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> _MSC_VER
+<span style="font-style: italic"><span style="color: #9A1900">// Supress Microsoft compiler warning about possible loss of precision,</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// in the constructors (when converting to std::complex&lt;float&gt;)</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">//     Float one = 1</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">//     Float two = 2</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// 1 and 2 are small enough so no loss of precision when converting to float.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># pragma</span></span> <span style="font-weight: bold"><span style="color: #000000">warning</span></span><span style="color: #990000">(</span>disable<span style="color: #990000">:</span><span style="color: #993399">4244</span><span style="color: #990000">)</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
 
-# ifdef _MSC_VER
-// Supress Microsoft compiler warning about possible loss of precision,
-// in the constructors (when converting to std::complex&lt;float&gt;)
-//	Float one = 1
-//	Float two = 2
-// 1 and 2 are small enough so no loss of precision when converting to float.
-# pragma warning(disable:4244)
-# endif
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;complex&gt;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span> Float<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_epsilon</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> eps   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Float</span> eps2  <span style="color: #990000">=</span> eps <span style="color: #990000">/</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> check <span style="color: #990000">=</span> <span style="color: #993399">1.0</span> <span style="color: #990000">+</span> eps<span style="color: #990000">;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="color: #993399">1.0</span> <span style="color: #990000">!=</span>  check<span style="color: #990000">;</span>
+          check       <span style="color: #990000">=</span> <span style="color: #993399">1.0</span> <span style="color: #990000">+</span> eps2<span style="color: #990000">;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="color: #993399">1.0</span> <span style="color: #990000">==</span> check<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_min</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> min   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">min</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Float</span> eps   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">Float</span> match <span style="color: #990000">=</span> <span style="color: #990000">(</span>min <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> min <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span>  <span style="color: #990000">&gt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          match       <span style="color: #990000">=</span> <span style="color: #990000">(</span>min <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> min <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span>  <span style="color: #990000">&lt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_max</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> max   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Float</span> eps   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">Float</span> match <span style="color: #990000">=</span> <span style="color: #990000">(</span>max <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> max <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          match       <span style="color: #990000">=</span> <span style="color: #990000">(</span>max <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> max <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_nan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> nan   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">quiet_NaN</span></span><span style="color: #990000">();</span>
+          ok         <span style="color: #990000">&amp;=</span> nan <span style="color: #990000">!=</span> nan<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-namespace {
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; Float;
-	//
-	// -----------------------------------------------------------------
-	bool check_epsilon(void)
-	{	bool ok    = true;
-		Float eps   = CppAD::numeric_limits&lt;Float&gt;::epsilon();
-		Float eps2  = eps / 2.0;
-		Float check = 1.0 + eps;
-		ok         &amp;= 1.0 !=  check;
-		check       = 1.0 + eps2;
-		ok         &amp;= 1.0 == check;
-		return ok;
-	}
-	// -----------------------------------------------------------------
-	bool check_min(void)
-	{	bool ok     = true;
-		Float min   = CppAD::numeric_limits&lt;Float&gt;::min();
-		Float eps   = CppAD::numeric_limits&lt;Float&gt;::epsilon();
-		//
-		Float match = (min / 100.) * 100.;
-		ok         &amp;= abs(match / min - 1.0)  &gt; 3.0 * eps;
-		//
-		match       = (min * 100.) / 100.;
-		ok         &amp;= abs(match / min - 1.0)  &lt; 3.0 * eps;
-		return ok;
-	}
-	// -----------------------------------------------------------------
-	bool check_max(void)
-	{	bool ok     = true;
-		Float max   = CppAD::numeric_limits&lt;Float&gt;::max();
-		Float eps   = CppAD::numeric_limits&lt;Float&gt;::epsilon();
-		//
-		Float match = (max * 100.) / 100.;
-		ok         &amp;= abs(match / max - 1.0) &gt; 3.0 * eps;
-		//
-		match       = (max / 100.) * 100.;
-		ok         &amp;= abs(match / max - 1.0) &lt; 3.0 * eps;
-		return ok;
-	}
-	// -----------------------------------------------------------------
-	bool check_nan(void)
-	{	bool ok     = true;
-		Float nan   = CppAD::numeric_limits&lt;Float&gt;::quiet_NaN();
-		ok         &amp;= nan != nan;
-		return ok;
-	}
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">num_limits</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool num_limits(void)
-{	bool ok = true;
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_epsilon</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_min</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_max</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_nan</span></span><span style="color: #990000">();</span>
 
-	ok &amp;= check_epsilon();
-	ok &amp;= check_min();
-	ok &amp;= check_max();
-	ok &amp;= check_nan();
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/num_limits.cpp
 
 </body>

@@ -80,10 +80,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Using The CppAD Test Vector Template Class</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -122,11 +118,11 @@ you specify <a href="cppad_testvector.xml" target="_top"><span style='white-spac
 <code><font color="blue">CPPAD_CPPADVECTOR</font></code> will be true.
 In this case,
 <code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
-<code><font color='blue'><pre style='display:inline'> 
-# if CPPAD_CPPADVECTOR
-# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) CppAD::vector&lt; Scalar &gt;
-# endif
-</pre></font></code>
+<pre style='display:inline'><tt>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_CPPADVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span> Scalar <span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+</tt></pre>
 In this case CppAD will use its own vector for
 many of its examples and tests.
 
@@ -141,12 +137,10 @@ you specify
 <code><font color="blue">CPPAD_STDVECTOR</font></code> will be true.
 In this case,
 <code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
-<code><font color='blue'><pre style='display:inline'> 
-# if CPPAD_STDVECTOR
-# include &lt;vector&gt;
-# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) std::vector&lt; Scalar &gt;
-# endif
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_STDVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span> Scalar <span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 In this case CppAD will use standard vector for
 many of its examples and tests.
 
@@ -161,12 +155,10 @@ you specify
 <code><font color="blue">CPPAD_BOOSTVECTOR</font></code> will be true.
 In this case,
 <code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
-<code><font color='blue'><pre style='display:inline'> 
-# if CPPAD_BOOSTVECTOR
-# include &lt;boost/numeric/ublas/vector.hpp&gt;
-# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) boost::numeric::ublas::vector&lt; Scalar &gt;
-# endif
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_BOOSTVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;boost/numeric/ublas/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> boost<span style="color: #990000">::</span>numeric<span style="color: #990000">::</span>ublas<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span> Scalar <span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 In this case CppAD will use this boost vector for
 many of its examples and tests.
 
@@ -181,17 +173,15 @@ you specify
 <code><font color="blue">CPPAD_EIGENVECTOR</font></code> will be true.
 In this case,
 <code><font color="blue">CPPAD_TESTVECTOR</font></code> is defined by the following source code:
-<code><font color='blue'><pre style='display:inline'> 
-# if CPPAD_EIGENVECTOR
-# include &lt;cppad/example/cppad_eigen.hpp&gt;
-# define <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Scalar) Eigen::Matrix&lt; Scalar , Eigen::Dynamic, 1&gt;
-# endif
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_EIGENVECTOR
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/example/cppad_eigen.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> Eigen<span style="color: #990000">::</span>Matrix<span style="color: #990000">&lt;</span> Scalar <span style="color: #990000">,</span> Eigen<span style="color: #990000">::</span>Dynamic<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span></tt></pre>
 In this case CppAD will use the Eigen vector
 for many of its examples and tests.
 
 
-<hr/>Input File: cppad/local/testvector.hpp
+<hr/>Input File: cppad/core/testvector.hpp
 
 </body>
 </html>

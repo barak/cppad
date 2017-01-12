@@ -88,9 +88,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Multi-threading Sum of 1/i Utility Routines</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -198,115 +195,109 @@ this function call will combine the results and return the final summation.
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &quot;harmonic_work.hpp&quot;
-# define MAX_NUMBER_THREADS 48
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic_work.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> MAX_NUMBER_THREADS <span style="color: #993399">48</span>
 
-namespace {
-	using CppAD::thread_alloc;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
 
-	// number of threads specified by previous call to harmonic_setup
-	size_t num_threads_ = 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of threads specified by previous call to harmonic_setup</span></span>
+     <span style="color: #008080">size_t</span> num_threads_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// structure with information for one thread
-	typedef struct {
-		// index to start summation at (worker input)
-		size_t start;
-		// index to end summation at (worker input)
-		size_t stop;
-		// summation for this thread (worker output)
-		double sum;
-		// false if an error occurs, true otherwise (worker output)
-		bool   ok;
-	} work_one_t;
-	// vector with information for all threads
-	// (use pointers instead of values to avoid false sharing)
-	work_one_t* work_all_[MAX_NUMBER_THREADS];
-}
-// -----------------------------------------------------------------------
-// do the work for one thread
-void harmonic_worker(void)
-{	// sum =  1/(stop-1) + 1/(stop-2) + ... + 1/start
-	size_t thread_num  = thread_alloc::thread_num();
-	size_t num_threads = std::max(num_threads_, size_t(1));
-	bool   ok          = thread_num &lt; num_threads;
-	size_t start       = work_all_[thread_num]-&gt;start;
-	size_t stop        = work_all_[thread_num]-&gt;stop;
-	double sum         = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// structure with information for one thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// index to start summation at (worker input)</span></span>
+          <span style="color: #008080">size_t</span> start<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// index to end summation at (worker input)</span></span>
+          <span style="color: #008080">size_t</span> stop<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// summation for this thread (worker output)</span></span>
+          <span style="color: #009900">double</span> sum<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// false if an error occurs, true otherwise (worker output)</span></span>
+          <span style="color: #009900">bool</span>   ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span> work_one_t<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// vector with information for all threads</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (use pointers instead of values to avoid false sharing)</span></span>
+     work_one_t<span style="color: #990000">*</span> work_all_<span style="color: #990000">[</span>MAX_NUMBER_THREADS<span style="color: #990000">];</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// do the work for one thread</span></span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_worker</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// sum =  1/(stop-1) + 1/(stop-2) + ... + 1/start</span></span>
+     <span style="color: #008080">size_t</span> thread_num  <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> num_threads <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+     <span style="color: #009900">bool</span>   ok          <span style="color: #990000">=</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> start       <span style="color: #990000">=</span> work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>start<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> stop        <span style="color: #990000">=</span> work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>stop<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> sum         <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	ok &amp;= stop &gt; start;
-	size_t i = stop;
-	while( i &gt; start )
-	{	i--;
-		sum += 1. / double(i);
-	}
+     ok <span style="color: #990000">&amp;=</span> stop <span style="color: #990000">&gt;</span> start<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> stop<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&gt;</span> start <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     i<span style="color: #990000">--;</span>
+          sum <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	work_all_[thread_num]-&gt;sum = sum;
-	work_all_[thread_num]-&gt;ok  = ok;
-}
-// -----------------------------------------------------------------------
-// setup the work up for multiple threads
-bool harmonic_setup(size_t num_sum, size_t num_threads)
-{	// sum = 1/num_sum + 1/(num_sum-1) + ... + 1
-	num_threads_ = num_threads;
-	num_threads  = std::max(num_threads_, size_t(1));
-	bool ok      = num_threads == thread_alloc::num_threads();
-	ok          &amp;= num_sum &gt;= num_threads;
+     work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>sum <span style="color: #990000">=</span> sum<span style="color: #990000">;</span>
+     work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>ok  <span style="color: #990000">=</span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// setup the work up for multiple threads</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_setup</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> num_sum<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> num_threads<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// sum = 1/num_sum + 1/(num_sum-1) + ... + 1</span></span>
+     num_threads_ <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
+     num_threads  <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+     <span style="color: #009900">bool</span> ok      <span style="color: #990000">=</span> num_threads <span style="color: #990000">==</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">num_threads</span></span><span style="color: #990000">();</span>
+     ok          <span style="color: #990000">&amp;=</span> num_sum <span style="color: #990000">&gt;=</span> num_threads<span style="color: #990000">;</span>
 
-	size_t thread_num;
-	for(thread_num = 0; thread_num &lt; num_threads; thread_num++)
-	{	// allocate separate memory for this thread to avoid false sharing
-		size_t min_bytes(sizeof(work_one_t)), cap_bytes;
-		void* v_ptr = thread_alloc::get_memory(min_bytes, cap_bytes);
-		work_all_[thread_num] = static_cast&lt;work_one_t*&gt;(v_ptr);
-		// in case this thread's worker does not get called
-		work_all_[thread_num]-&gt;ok = false;
-		// parameters that define the work for this and previous thread
-		if( thread_num == 0 )
-			work_all_[0]-&gt;start = 1;
-		else
-		{	size_t index  = (num_sum * thread_num) / num_threads;
-			work_all_[thread_num-1]-&gt;stop = index;
-			work_all_[thread_num]-&gt;start  = index;
-		}
-	}
-	work_all_[num_threads-1]-&gt;stop = num_sum + 1;
-	return ok;
-}
-// -----------------------------------------------------------------------
-// get the result of the work
-bool harmonic_combine(double&amp; sum)
-{	// sum = 1/num_sum + 1/(num_sum-1) + ... + 1
-	bool ok            = true;
-	size_t num_threads = std::max(num_threads_, size_t(1));
-	sum                = 0.;
+     <span style="color: #008080">size_t</span> thread_num<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// allocate separate memory for this thread to avoid false sharing</span></span>
+          <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">min_bytes</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>work_one_t<span style="color: #990000">)),</span> cap_bytes<span style="color: #990000">;</span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> v_ptr <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_memory</span></span><span style="color: #990000">(</span>min_bytes<span style="color: #990000">,</span> cap_bytes<span style="color: #990000">);</span>
+          work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span>work_one_t<span style="color: #990000">*&gt;(</span>v_ptr<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// in case this thread's worker does not get called</span></span>
+          work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// parameters that define the work for this and previous thread</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread_num <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               work_all_<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]-&gt;</span>start <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> index  <span style="color: #990000">=</span> <span style="color: #990000">(</span>num_sum <span style="color: #990000">*</span> thread_num<span style="color: #990000">)</span> <span style="color: #990000">/</span> num_threads<span style="color: #990000">;</span>
+               work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]-&gt;</span>stop <span style="color: #990000">=</span> index<span style="color: #990000">;</span>
+               work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>start  <span style="color: #990000">=</span> index<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     work_all_<span style="color: #990000">[</span>num_threads<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]-&gt;</span>stop <span style="color: #990000">=</span> num_sum <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// get the result of the work</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_combine</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">&amp;</span> sum<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// sum = 1/num_sum + 1/(num_sum-1) + ... + 1</span></span>
+     <span style="color: #009900">bool</span> ok            <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> num_threads <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+     sum                <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// go down so that free memory for other threads before memory for master
-	size_t thread_num = num_threads;
-	while(thread_num--)
-	{	// check that this tread was ok with the work it did
-		ok  &amp;= work_all_[thread_num]-&gt;ok;
-		// add this threads contribution to the sum
-		sum += work_all_[thread_num]-&gt;sum;
-		// delete problem specific information
-		void* v_ptr = static_cast&lt;void*&gt;( work_all_[thread_num] );
-		thread_alloc::return_memory( v_ptr );
-		// check that there is no longer any memory inuse by this thread
-		// (for general applications, the master might still be using memory)
-		ok &amp;= thread_alloc::inuse(thread_num) == 0;
-		// return all memory being held for future use by this thread
-		thread_alloc::free_available(thread_num);
-	}
-	return ok;
-}
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// go down so that free memory for other threads before memory for master</span></span>
+     <span style="color: #008080">size_t</span> thread_num <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// check that this tread was ok with the work it did</span></span>
+          ok  <span style="color: #990000">&amp;=</span> work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>ok<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// add this threads contribution to the sum</span></span>
+          sum <span style="color: #990000">+=</span> work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>sum<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// delete problem specific information</span></span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> v_ptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;(</span> work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">return_memory</span></span><span style="color: #990000">(</span> v_ptr <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check that there is no longer any memory inuse by this thread</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (for general applications, the master might still be using memory)</span></span>
+          ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// return all memory being held for future use by this thread</span></span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread_num<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
-
 <hr/>Input File: multi_thread/harmonic_work.cpp
 
 </body>

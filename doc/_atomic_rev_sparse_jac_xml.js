@@ -34,27 +34,33 @@ var list_down1 = [
 'atomic_reverse.xml',
 'atomic_for_sparse_jac.xml',
 'atomic_rev_sparse_jac.xml',
+'atomic_for_sparse_hes.xml',
 'atomic_rev_sparse_hes.xml',
 'atomic_base_clear.xml',
 'atomic_get_started.cpp.xml',
 'atomic_norm_sq.cpp.xml',
 'atomic_reciprocal.cpp.xml',
-'atomic_sparsity.cpp.xml',
+'atomic_set_sparsity.cpp.xml',
 'atomic_tangent.cpp.xml',
-'atomic_hes_sparse.cpp.xml',
+'atomic_eigen_mat_mul.cpp.xml',
+'atomic_eigen_mat_inv.cpp.xml',
+'atomic_eigen_cholesky.cpp.xml',
 'atomic_mat_mul.cpp.xml'
+];
+var list_down0 = [
+'atomic_rev_sparse_jac.cpp.xml'
 ];
 var list_current0 = [
 'atomic_rev_sparse_jac.xml#Syntax',
+'atomic_rev_sparse_jac.xml#Deprecated 2016-06-27',
 'atomic_rev_sparse_jac.xml#Purpose',
 'atomic_rev_sparse_jac.xml#Implementation',
 'atomic_rev_sparse_jac.xml#Implementation.q',
 'atomic_rev_sparse_jac.xml#Implementation.rt',
 'atomic_rev_sparse_jac.xml#Implementation.st',
+'atomic_rev_sparse_jac.xml#Implementation.x',
 'atomic_rev_sparse_jac.xml#ok',
-'atomic_rev_sparse_jac.xml#Examples',
-'atomic_rev_sparse_jac.xml#Examples.Define rev_sparse_jac',
-'atomic_rev_sparse_jac.xml#Examples.Use rev_sparse_jac'
+'atomic_rev_sparse_jac.xml#Examples'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

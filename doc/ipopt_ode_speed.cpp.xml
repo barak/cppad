@@ -88,80 +88,73 @@ A:active { color : purple }
 <td>ipopt_ode_speed.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
 <center><b><big><big>Speed Test for Both Simple and Fast Representations</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &quot;../example/ode_run.hpp&quot;
-# include &quot;../example/ode_simple.hpp&quot;
-# include &quot;../example/ode_fast.hpp&quot;
-# include &lt;cassert&gt;
-# include &lt;cstring&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"../example/ode_run.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"../example/ode_simple.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"../example/ode_fast.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstring&gt;</span>
 
-# if CPPAD_HAS_GETTIMEOFDAY &amp; CPPAD_NO_MICROSOFT
-# include &lt;sys/time.h&gt;
-# else
-# include &lt;ctime&gt;
-# endif
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_HAS_GETTIMEOFDAY <span style="color: #990000">&amp;</span> CPPAD_NO_MICROSOFT
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;sys/time.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;ctime&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
 
-namespace {
-	double current_second(void)
-	{
-# if CPPAD_HAS_GETTIMEOFDAY &amp; CPPAD_NOT_MICOROSOFT
-		struct timeval value;
-		gettimeofday(&amp;value, 0);
-		return double(value.tv_sec) + double(value.tv_usec) * 1e-6;
-# else
-		return (double) clock() / (double) CLOCKS_PER_SEC;
-# endif
-	}
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">current_second</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_HAS_GETTIMEOFDAY <span style="color: #990000">&amp;</span> CPPAD_NOT_MICOROSOFT
+          <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">timeval</span> value<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">gettimeofday</span></span><span style="color: #990000">(&amp;</span>value<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #009900">double</span><span style="color: #990000">(</span>value<span style="color: #990000">.</span>tv_sec<span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>value<span style="color: #990000">.</span>tv_usec<span style="color: #990000">)</span> <span style="color: #990000">*</span> <span style="color: #993399">1e-6</span><span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">clock</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> CLOCKS_PER_SEC<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-double ode_speed(const char* name, size_t&amp; count)
-{
-	// determine simple and retape flags
-	bool simple = true, retape = true;
-	if( std::strcmp(name, &quot;simple_retape_no&quot;) == 0 )
-	{	simple = true; retape = false; }
-	else if( std::strcmp(name, &quot;simple_retape_yes&quot;) == 0 )
-	{	simple = true; retape = true; }
-	else if( std::strcmp(name, &quot;fast_retape_no&quot;) == 0 )
-	{	simple = false; retape = false; }
-	else if( std::strcmp(name, &quot;fast_retape_yes&quot;) == 0 )
-	{	simple = false; retape = true; }
-	else	assert(false);
+<span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">ode_speed</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> name<span style="color: #990000">,</span> size_t<span style="color: #990000">&amp;</span> count<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// determine simple and retape flags</span></span>
+     <span style="color: #009900">bool</span> simple <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">,</span> retape <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>name<span style="color: #990000">,</span> <span style="color: #FF0000">"simple_retape_no"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     simple <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> retape <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>name<span style="color: #990000">,</span> <span style="color: #FF0000">"simple_retape_yes"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     simple <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> retape <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>name<span style="color: #990000">,</span> <span style="color: #FF0000">"fast_retape_no"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     simple <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> retape <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>name<span style="color: #990000">,</span> <span style="color: #FF0000">"fast_retape_yes"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     simple <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span> retape <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
 
-	size_t i;
-        double s0, s1;
-	size_t  c0, c1;
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+        <span style="color: #009900">double</span> s0<span style="color: #990000">,</span> s1<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>  c0<span style="color: #990000">,</span> c1<span style="color: #990000">;</span>
 
-	// solution vector
-	NumberVector x;
+     <span style="font-style: italic"><span style="color: #9A1900">// solution vector</span></span>
+     <span style="color: #008080">NumberVector</span> x<span style="color: #990000">;</span>
 
-	// number of time grid intervals between measurement values
-	SizeVector N(Nz + 1);
-	N[0] = 0;
-	for(i = 1; i &lt;= Nz; i++)
-	{	N[i] = 10;
-		// n   += N[i] * Ny;
-	}
-	// n += Na;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of time grid intervals between measurement values</span></span>
+     <span style="color: #008080">SizeVector</span> <span style="font-weight: bold"><span style="color: #000000">N</span></span><span style="color: #990000">(</span>Nz <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+     N<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;=</span> Nz<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     N<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// n   += N[i] * Ny;</span></span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// n += Na;</span></span>
 
-	s0              = current_second();
-	c0              = count_eval_r();
-	if( simple )
-		ipopt_ode_case&lt;FG_simple&gt;(retape, N, x);
-	else	ipopt_ode_case&lt;FG_fast&gt;(retape, N, x);
-	s1              = current_second();
-	c1              = count_eval_r();
-	count           = c1 - c0 - 1;
-	return s1 - s0;
-}
-</pre>
-
+     s0              <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">current_second</span></span><span style="color: #990000">();</span>
+     c0              <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">count_eval_r</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> simple <span style="color: #990000">)</span>
+          ipopt_ode_case<span style="color: #990000">&lt;</span>FG_simple<span style="color: #990000">&gt;(</span>retape<span style="color: #990000">,</span> N<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ipopt_ode_case<span style="color: #990000">&lt;</span>FG_fast<span style="color: #990000">&gt;(</span>retape<span style="color: #990000">,</span> N<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     s1              <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">current_second</span></span><span style="color: #990000">();</span>
+     c1              <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">count_eval_r</span></span><span style="color: #990000">();</span>
+     count           <span style="color: #990000">=</span> c1 <span style="color: #990000">-</span> c0 <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> s1 <span style="color: #990000">-</span> s0<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: cppad_ipopt/speed/ode_speed.cpp
 
 </body>

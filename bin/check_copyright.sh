@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: check_copyright.sh 3768 2015-12-28 18:58:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -28,18 +27,28 @@ list=`git status | sed -n \
         -e '/^[#\t ]*renamed:/p' \
         -e '/^[#\t ]*new file:/p' | \
             sed -e 's/^.*: *//' -e 's/ -> /\n/' | \
-			sed -e '/makefile.in$/d' |
+			sed -e '/^makefile.in$/d' \
+				-e '/^.gitignore$/d' \
+				-e '/\/makefile.in$/d' \
+				-e '/\/check_copyright.sh$/d' \
+				-e '/AUTHORS/d' \
+				-e '/COPYING/d' |
                 sort -u`
 cat << EOF > check_copyright.1.$$
 # Change copyright second year to current year
-s/Copyright (C) \\([0-9]*\\)-[0-9][0-9] Bradley M. Bell/Copyright (C) \\1-15 Bradley M. Bell/
-s/Copyright (C) \\([0-9]*\\)-20[0-9][0-9] Bradley M. Bell/Copyright (C) \\1-15 Bradley M. Bell/
+s/Copyright (C) \\([0-9]*\\)-[0-9][0-9] Bradley M. Bell/Copyright (C) \\1-16 Bradley M. Bell/
+s/Copyright (C) \\([0-9]*\\)-20[0-9][0-9] Bradley M. Bell/Copyright (C) \\1-16 Bradley M. Bell/
 EOF
 ok=true
 for file in $list
 do
 	if [ -e $file ]
 	then
+		if ! grep 'Copyright (C) [0-9]*-[0-9][0-9]' $file > /dev/null
+		then
+			echo "Cannot find copyright message in $file"
+			exit 1
+		fi
 		sed -f check_copyright.1.$$ $file > check_copyright.2.$$
 		if ! diff $file check_copyright.2.$$ > /dev/null
 		then

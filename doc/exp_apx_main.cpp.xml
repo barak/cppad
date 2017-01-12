@@ -88,85 +88,80 @@ To build this program and run its correctness tests see <a href="cmake_check.xml
 <b><big><a name="main.cpp" id="main.cpp">main.cpp</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
+<pre><tt>
 
-// system include files used for I/O
-# include &lt;iostream&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// system include files used for I/O</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>
 
-// external complied tests
-extern bool exp_2(void);
-extern bool exp_2_cppad(void);
-extern bool exp_2_for1(void);
-extern bool exp_2_for2(void);
-extern bool exp_2_rev1(void);
-extern bool exp_2_rev2(void);
-extern bool exp_2_for0(void);
-extern bool exp_eps(void);
-extern bool exp_eps_cppad(void);
-extern bool exp_eps_for1(void);
-extern bool exp_eps_for2(void);
-extern bool exp_eps_for0(void);
-extern bool exp_eps_rev1(void);
-extern bool exp_eps_rev2(void);
+<span style="font-style: italic"><span style="color: #9A1900">// external complied tests</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_cppad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_rev1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_rev2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_cppad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_rev1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_rev2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
 
-namespace {
-	static size_t Run_ok_count    = 0;
-	static size_t Run_error_count = 0;
-	bool Run(bool TestOk(void), std::string name)
-	{	bool ok               = true;
-		std::streamsize width =  20;
-		std::cout.width( width );
-		std::cout.setf( std::ios_base::left );
-		std::cout &lt;&lt; name.c_str();
-		//
-		ok &amp;= name.size() &lt; size_t(width);
-		ok &amp;= TestOk();
-		if( ok )
-		{	std::cout &lt;&lt; &quot;OK&quot; &lt;&lt; std::endl;
-			Run_ok_count++;
-		}
-		else
-		{	std::cout &lt;&lt; &quot;Error&quot; &lt;&lt; std::endl;
-			Run_error_count++;
-		}
-		return ok;
-	}
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #008080">size_t</span> Run_ok_count    <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #008080">size_t</span> Run_error_count <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">TestOk</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">),</span> std<span style="color: #990000">::</span><span style="color: #008080">string</span> name<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok               <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span><span style="color: #008080">streamsize</span> width <span style="color: #990000">=</span>  <span style="color: #993399">20</span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cout<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">width</span></span><span style="color: #990000">(</span> width <span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cout<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setf</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>ios_base<span style="color: #990000">::</span>left <span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> name<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">c_str</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          ok <span style="color: #990000">&amp;=</span> name<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>width<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">TestOk</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               Run_ok_count<span style="color: #990000">++;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Error"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               Run_error_count<span style="color: #990000">++;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-// main program that runs all the tests
-int main(void)
-{	bool ok = true;
-	using namespace std;
+<span style="font-style: italic"><span style="color: #9A1900">// main program that runs all the tests</span></span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> std<span style="color: #990000">;</span>
 
-	// This comment is used by OneTest
+     <span style="font-style: italic"><span style="color: #9A1900">// This comment is used by OneTest</span></span>
 
-	// external compiled tests
-	ok &amp;= Run( exp_2,           &quot;exp_2&quot;          );
-	ok &amp;= Run( exp_2_cppad,     &quot;exp_2_cppad&quot;    );
-	ok &amp;= Run( exp_2_for0,      &quot;exp_2_for0&quot;     );
-	ok &amp;= Run( exp_2_for1,      &quot;exp_2_for1&quot;     );
-	ok &amp;= Run( exp_2_for2,      &quot;exp_2_for2&quot;     );
-	ok &amp;= Run( exp_2_rev1,      &quot;exp_2_rev1&quot;     );
-	ok &amp;= Run( exp_2_rev2,      &quot;exp_2_rev2&quot;     );
-	ok &amp;= Run( exp_eps,         &quot;exp_eps&quot;        );
-	ok &amp;= Run( exp_eps_cppad,   &quot;exp_eps_cppad&quot;  );
-	ok &amp;= Run( exp_eps_for0,    &quot;exp_eps_for0&quot;   );
-	ok &amp;= Run( exp_eps_for1,    &quot;exp_eps_for1&quot;   );
-	ok &amp;= Run( exp_eps_for2,    &quot;exp_eps_for2&quot;   );
-	ok &amp;= Run( exp_eps_rev1,    &quot;exp_eps_rev1&quot;   );
-	ok &amp;= Run( exp_eps_rev2,    &quot;exp_eps_rev2&quot;   );
-	if( ok )
-		cout &lt;&lt; &quot;All &quot; &lt;&lt; int(Run_ok_count) &lt;&lt; &quot; tests passed.&quot; &lt;&lt; endl;
-	else	cout &lt;&lt; int(Run_error_count) &lt;&lt; &quot; tests failed.&quot; &lt;&lt; endl;
+     <span style="font-style: italic"><span style="color: #9A1900">// external compiled tests</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2<span style="color: #990000">,</span>           <span style="color: #FF0000">"exp_2"</span>          <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_cppad<span style="color: #990000">,</span>     <span style="color: #FF0000">"exp_2_cppad"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_for0<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_for0"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_for1<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_for1"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_for2<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_for2"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_rev1<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_rev1"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_rev2<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_rev2"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps<span style="color: #990000">,</span>         <span style="color: #FF0000">"exp_eps"</span>        <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_cppad<span style="color: #990000">,</span>   <span style="color: #FF0000">"exp_eps_cppad"</span>  <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_for0<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_for0"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_for1<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_for1"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_for2<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_for2"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_rev1<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_rev1"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_rev2<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_rev2"</span>   <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"All "</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>Run_ok_count<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" tests passed."</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>Run_error_count<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" tests failed."</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	return static_cast&lt;int&gt;( ! ok );
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: introduction/exp_apx/main.cpp
 
 </body>

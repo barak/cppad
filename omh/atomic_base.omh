@@ -1,6 +1,6 @@
-/* $Id: atomic_base.omh 3717 2015-08-31 22:16:15Z bradbell $ */
+// $Id: atomic_base.omh 3845 2016-11-19 01:50:47Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -41,6 +41,7 @@ $codei%
 %ok% = %afun%.reverse(%q%, %tx%, %ty%, %px%, %py%)
 %ok% = %afun%.for_sparse_jac(%q%, %r%, %s%)
 %ok% = %afun%.rev_sparse_jac(%q%, %r%, %s%)
+%ok% = %afun%.for_sparse_hes(%vx%, %r%, %s%, %h%)
 %ok% = %afun%.rev_sparse_hes(%vx%, %s%, %t%, %q%, %r%, %u%, %v%)
 atomic_base<%Base%>::clear()%$$
 
@@ -76,13 +77,15 @@ $icode%ok% == false%$$ unless you require
 forward mode calculation of second derivatives.
 
 $childtable%
-	cppad/local/atomic_base.hpp%
+	cppad/core/atomic_base.hpp%
 	example/atomic/get_started.cpp%
 	example/atomic/norm_sq.cpp%
 	example/atomic/reciprocal.cpp%
-	example/atomic/sparsity.cpp%
+	example/atomic/set_sparsity.cpp%
 	example/atomic/tangent.cpp%
-	example/atomic/hes_sparse.cpp%
+	example/atomic/eigen_mat_mul.cpp%
+	example/atomic/eigen_mat_inv.cpp%
+	example/atomic/eigen_cholesky.cpp%
 	example/atomic/mat_mul.cpp
 %$$
 
@@ -104,7 +107,7 @@ where the user provides the code for computing derivatives.
 This example is more complex because the range has two components.
 
 $subhead Hessian Sparsity Patterns$$
-The file $cref atomic_hes_sparse.cpp$$ contains an minimal example
+The file $cref atomic_rev_sparse_hes.cpp$$ contains an minimal example
 where the user provides the code for computing Hessian sparsity patterns.
 
 $head General Case$$

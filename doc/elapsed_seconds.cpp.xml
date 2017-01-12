@@ -71,6 +71,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -93,40 +94,35 @@ A:active { color : purple }
 
 
 <center><b><big><big>Elapsed Seconds: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/utility/elapsed_seconds.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/elapsed_seconds.hpp&gt;</span>
 
-# include &lt;iostream&gt;
-# include &lt;algorithm&gt;
-# include &lt;cmath&gt;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;algorithm&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
 
-# define CPPAD_DEBUG_ELAPSED_SECONDS 0
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> CPPAD_DEBUG_ELAPSED_SECONDS <span style="color: #993399">0</span>
 
-bool elapsed_seconds(void)
-{	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	double max_diff = 0.;
-	double s0 = CppAD::elapsed_seconds();
-	double s1 = CppAD::elapsed_seconds();
-	double s2 = CppAD::elapsed_seconds();
-	while(s2 - s0 &lt; 1.)
-	{	max_diff = std::max(s2 - s1, max_diff);
-		s1 = s2;
-		s2 = CppAD::elapsed_seconds();
+     <span style="color: #009900">double</span> max_diff <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> s0 <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
+     <span style="color: #009900">double</span> s1 <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
+     <span style="color: #009900">double</span> s2 <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>s2 <span style="color: #990000">-</span> s0 <span style="color: #990000">&lt;</span> <span style="color: #993399">1</span><span style="color: #990000">.)</span>
+     <span style="color: #FF0000">{</span>     max_diff <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>s2 <span style="color: #990000">-</span> s1<span style="color: #990000">,</span> max_diff<span style="color: #990000">);</span>
+          s1 <span style="color: #990000">=</span> s2<span style="color: #990000">;</span>
+          s2 <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">();</span>
 
-	}
-# if CPPAD_DEBUG_ELAPSED_SECONDS
-	std::cout &lt;&lt; &quot;max_diff = &quot; &lt;&lt; max_diff &lt;&lt; std::endl;
-# endif
-	ok &amp;= 0. &lt; max_diff &amp;&amp; max_diff &lt; .04;
-	return ok;
-}
-
-</pre>
-
+     <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_DEBUG_ELAPSED_SECONDS
+     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"max_diff = "</span> <span style="color: #990000">&lt;&lt;</span> max_diff <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">&lt;</span> max_diff <span style="color: #990000">&amp;&amp;</span> max_diff <span style="color: #990000">&lt;</span> <span style="color: #990000">.</span><span style="color: #993399">04</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: speed/example/elapsed_seconds.cpp
 
 </body>

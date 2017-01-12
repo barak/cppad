@@ -76,63 +76,61 @@ A:active { color : purple }
 <td>Headings</td>
 </tr></table><br/>
 <center><b><big><big>exp_2: Verify Second Order Reverse Sweep</big></big></b></center>
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cstddef&gt;                 // define size_t
-# include &lt;cmath&gt;                   // prototype for fabs
-extern bool exp_2_for0(double *v0); // computes zero order forward sweep
-extern bool exp_2_for1(double *v1); // computes first order forward sweep
-bool exp_2_rev2(void)
-{    bool ok = true;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>                 <span style="font-style: italic"><span style="color: #9A1900">// define size_t</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>                   <span style="font-style: italic"><span style="color: #9A1900">// prototype for fabs</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> <span style="color: #990000">*</span>v0<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// computes zero order forward sweep</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for1</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> <span style="color: #990000">*</span>v1<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// computes first order forward sweep</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_rev2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-     // set the value of v0[j], v1[j] for j = 1 , ... , 5
-     double v0[6], v1[6];
-     ok &amp;= exp_2_for0(v0);
-     ok &amp;= exp_2_for1(v1);
+     <span style="font-style: italic"><span style="color: #9A1900">// set the value of v0[j], v1[j] for j = 1 , ... , 5</span></span>
+     <span style="color: #009900">double</span> v0<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">],</span> v1<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for0</span></span><span style="color: #990000">(</span>v0<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for1</span></span><span style="color: #990000">(</span>v1<span style="color: #990000">);</span>
 
-     // initial all partial derivatives as zero
-     double f_v0[6], f_v1[6];
-     size_t j;
-     for(j = 0; j &lt; 6; j++)
-     {    f_v0[j] = 0.;
-          f_v1[j] = 0.;
-     }
+     <span style="font-style: italic"><span style="color: #9A1900">// initial all partial derivatives as zero</span></span>
+     <span style="color: #009900">double</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">],</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">];</span>
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> <span style="color: #993399">6</span><span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     f_v0<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          f_v1<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
 
-     // set partial derivative for f_5
-     f_v1[5] = 1.;
-     ok &amp;= std::fabs( f_v1[5] - 1. ) &lt;= 1e-10; // partial f_5 w.r.t v_5^1
+     <span style="font-style: italic"><span style="color: #9A1900">// set partial derivative for f_5</span></span>
+     f_v1<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_5 w.r.t v_5^1</span></span>
 
-     // f_4 = f_5( v_1^0 , ... , v_4^1 , v_2^0 + v_4^0 , v_2^1 + v_4^1 )
-     f_v0[2] += f_v0[5] * 1.;
-     f_v0[4] += f_v0[5] * 1.;
-     f_v1[2] += f_v1[5] * 1.;
-     f_v1[4] += f_v1[5] * 1.;
-     ok &amp;= std::fabs( f_v0[2] - 0. ) &lt;= 1e-10; // partial f_4 w.r.t. v_2^0
-     ok &amp;= std::fabs( f_v0[4] - 0. ) &lt;= 1e-10; // partial f_4 w.r.t. v_4^0
-     ok &amp;= std::fabs( f_v1[2] - 1. ) &lt;= 1e-10; // partial f_4 w.r.t. v_2^1
-     ok &amp;= std::fabs( f_v1[4] - 1. ) &lt;= 1e-10; // partial f_4 w.r.t. v_4^1
+     <span style="font-style: italic"><span style="color: #9A1900">// f_4 = f_5( v_1^0 , ... , v_4^1 , v_2^0 + v_4^0 , v_2^1 + v_4^1 )</span></span>
+     f_v0<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     f_v0<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     f_v1<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     f_v1<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_4 w.r.t. v_2^0</span></span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_4 w.r.t. v_4^0</span></span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_4 w.r.t. v_2^1</span></span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_4 w.r.t. v_4^1</span></span>
 
-     // f_3 = f_4( v_1^0 , ... , v_3^1, v_3^0 / 2 , v_3^1 / 2 )
-     f_v0[3] += f_v0[4] / 2.;
-     f_v1[3] += f_v1[4] / 2.;
-     ok &amp;= std::fabs( f_v0[3] - 0.  ) &lt;= 1e-10; // partial f_3 w.r.t. v_3^0
-     ok &amp;= std::fabs( f_v1[3] - 0.5 ) &lt;= 1e-10; // partial f_3 w.r.t. v_3^1
+     <span style="font-style: italic"><span style="color: #9A1900">// f_3 = f_4( v_1^0 , ... , v_3^1, v_3^0 / 2 , v_3^1 / 2 )</span></span>
+     f_v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     f_v1<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>  <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_3 w.r.t. v_3^0</span></span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.5</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_3 w.r.t. v_3^1</span></span>
 
-     // f_2 = f_3(  v_1^0 , ... , v_2^1, v_1^0 * v_1^0 , 2 * v_1^0 * v_1^1 )
-     f_v0[1] += f_v0[3] * 2. * v0[1];
-     f_v0[1] += f_v1[3] * 2. * v1[1];
-     f_v1[1] += f_v1[3] * 2. * v0[1];
-     ok &amp;= std::fabs( f_v0[1] - 1.  ) &lt;= 1e-10; // partial f_2 w.r.t. v_1^0
-     ok &amp;= std::fabs( f_v1[1] - 0.5 ) &lt;= 1e-10; // partial f_2 w.r.t. v_1^1
+     <span style="font-style: italic"><span style="color: #9A1900">// f_2 = f_3(  v_1^0 , ... , v_2^1, v_1^0 * v_1^0 , 2 * v_1^0 * v_1^1 )</span></span>
+     f_v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     f_v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> v1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     f_v1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span>  <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_2 w.r.t. v_1^0</span></span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">0.5</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_2 w.r.t. v_1^1</span></span>
 
-     // f_1 = f_2( v_1^0 , v_1^1 , 1 + v_1^0 , v_1^1 )
-     f_v0[1] += f_v0[2] * 1.;
-     f_v1[1] += f_v1[2] * 1.;
-     ok &amp;= std::fabs( f_v0[1] - 1. ) &lt;= 1e-10; // partial f_1 w.r.t. v_1^0
-     ok &amp;= std::fabs( f_v1[1] - 1.5) &lt;= 1e-10; // partial f_1 w.r.t. v_1^1
+     <span style="font-style: italic"><span style="color: #9A1900">// f_1 = f_2( v_1^0 , v_1^1 , 1 + v_1^0 , v_1^1 )</span></span>
+     f_v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     f_v1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v0<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_1 w.r.t. v_1^0</span></span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> f_v1<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> <span style="color: #993399">1.5</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// partial f_1 w.r.t. v_1^1</span></span>
 
-     return ok;
-}
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: introduction/exp_apx/exp_2_rev2.cpp
 

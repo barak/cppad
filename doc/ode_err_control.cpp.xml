@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -304,109 +305,104 @@ we return <code><font color="blue">nan</font></code> in order to inform
 
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>                      <span style="font-style: italic"><span style="color: #9A1900">// for quiet_NaN</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>                     <span style="font-style: italic"><span style="color: #9A1900">// for size_t</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>                       <span style="font-style: italic"><span style="color: #9A1900">// for exp</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/ode_err_control.hpp&gt;</span>   <span style="font-style: italic"><span style="color: #9A1900">// CppAD::OdeErrControl</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/near_equal.hpp&gt;</span>        <span style="font-style: italic"><span style="color: #9A1900">// CppAD::NearEqual</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>            <span style="font-style: italic"><span style="color: #9A1900">// CppAD::vector</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/runge_45.hpp&gt;</span>          <span style="font-style: italic"><span style="color: #9A1900">// CppAD::Runge45</span></span>
 
-# include &lt;limits&gt;                      // for quiet_NaN
-# include &lt;cstddef&gt;                     // for size_t
-# include &lt;cmath&gt;                       // for exp
-# include &lt;cppad/utility/ode_err_control.hpp&gt;   // CppAD::OdeErrControl
-# include &lt;cppad/utility/near_equal.hpp&gt;        // CppAD::NearEqual
-# include &lt;cppad/utility/vector.hpp&gt;            // CppAD::vector
-# include &lt;cppad/utility/runge_45.hpp&gt;          // CppAD::Runge45
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Fun</span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span> alpha_<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// constructor</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">Fun</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> alpha<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">alpha_</span></span><span style="color: #990000">(</span>alpha<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
 
-namespace {
-	// --------------------------------------------------------------
-	class Fun {
-	private:
-		const double alpha_;
-	public:
-		// constructor
-		Fun(double alpha) : alpha_(alpha)
-		{ }
+          <span style="font-style: italic"><span style="color: #9A1900">// set f = x'(t)</span></span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">Ode</span></span><span style="color: #990000">(</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span>                <span style="color: #990000">&amp;</span>t<span style="color: #990000">,</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span>
+               CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>       <span style="color: #990000">&amp;</span>f<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     f<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">-</span> alpha_ <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+               f<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">/</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// case where ODE does not make sense</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span>
+                    f<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">quiet_NaN</span></span><span style="color: #990000">();</span>
+          <span style="color: #FF0000">}</span>
 
-		// set f = x'(t)
-		void Ode(
-			const double                &amp;t,
-			const CppAD::vector&lt;double&gt; &amp;x,
-			CppAD::vector&lt;double&gt;       &amp;f)
-		{	f[0] = - alpha_ * x[0];
-			f[1] = 1. / x[0];
-			// case where ODE does not make sense
-			if( x[0] &lt; 0. )
-				f[1] = std::numeric_limits&lt;double&gt;::quiet_NaN();
-		}
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
 
-	};
+     <span style="font-style: italic"><span style="color: #9A1900">// --------------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Method</span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+          <span style="color: #008080">Fun</span> F<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// constructor</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">Method</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> alpha<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">F</span></span><span style="color: #990000">(</span>alpha<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">step</span></span><span style="color: #990000">(</span>
+               <span style="color: #009900">double</span> ta<span style="color: #990000">,</span>
+               <span style="color: #009900">double</span> tb<span style="color: #990000">,</span>
+               CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="color: #990000">&amp;</span>xa <span style="color: #990000">,</span>
+               CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="color: #990000">&amp;</span>xb <span style="color: #990000">,</span>
+               CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="color: #990000">&amp;</span>eb <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     xb <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Runge45</span></span><span style="color: #990000">(</span>F<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> ta<span style="color: #990000">,</span> tb<span style="color: #990000">,</span> xa<span style="color: #990000">,</span> eb<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">order</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">4</span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-	// --------------------------------------------------------------
-	class Method {
-	private:
-		Fun F;
-	public:
-		// constructor
-		Method(double alpha) : F(alpha)
-		{ }
-		void step(
-			double ta,
-			double tb,
-			CppAD::vector&lt;double&gt; &amp;xa ,
-			CppAD::vector&lt;double&gt; &amp;xb ,
-			CppAD::vector&lt;double&gt; &amp;eb )
-		{	xb = CppAD::Runge45(F, 1, ta, tb, xa, eb);
-		}
-		size_t order(void)
-		{	return 4; }
-	};
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeErrControl</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>     <span style="font-style: italic"><span style="color: #9A1900">// initial return value</span></span>
 
-bool OdeErrControl(void)
-{	bool ok = true;     // initial return value
+     <span style="color: #009900">double</span> alpha <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.;</span>
+     <span style="color: #008080">Method</span> <span style="font-weight: bold"><span style="color: #000000">method</span></span><span style="color: #990000">(</span>alpha<span style="color: #990000">);</span>
 
-	double alpha = 10.;
-	Method method(alpha);
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">xi</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     xi<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	CppAD::vector&lt;double&gt; xi(2);
-	xi[0] = 1.;
-	xi[1] = 0.;
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">eabs</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     eabs<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1e-4</span><span style="color: #990000">;</span>
+     eabs<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1e-4</span><span style="color: #990000">;</span>
 
-	CppAD::vector&lt;double&gt; eabs(2);
-	eabs[0] = 1e-4;
-	eabs[1] = 1e-4;
+     <span style="font-style: italic"><span style="color: #9A1900">// inputs</span></span>
+     <span style="color: #009900">double</span> ti   <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> tf   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> smin <span style="color: #990000">=</span> <span style="color: #993399">1e-4</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> smax <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> scur <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> erel <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// inputs
-	double ti   = 0.;
-	double tf   = 1.;
-	double smin = 1e-4;
-	double smax = 1.;
-	double scur = 1.;
-	double erel = 0.;
-
-	// outputs
-	CppAD::vector&lt;double&gt; ef(2);
-	CppAD::vector&lt;double&gt; xf(2);
-	CppAD::vector&lt;double&gt; maxabs(2);
-	size_t nstep;
+     <span style="font-style: italic"><span style="color: #9A1900">// outputs</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">ef</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">xf</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">maxabs</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> nstep<span style="color: #990000">;</span>
 
 
-	xf = OdeErrControl(method,
-		ti, tf, xi, smin, smax, scur, eabs, erel, ef, maxabs, nstep);
+     xf <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">OdeErrControl</span></span><span style="color: #990000">(</span>method<span style="color: #990000">,</span>
+          ti<span style="color: #990000">,</span> tf<span style="color: #990000">,</span> xi<span style="color: #990000">,</span> smin<span style="color: #990000">,</span> smax<span style="color: #990000">,</span> scur<span style="color: #990000">,</span> eabs<span style="color: #990000">,</span> erel<span style="color: #990000">,</span> ef<span style="color: #990000">,</span> maxabs<span style="color: #990000">,</span> nstep<span style="color: #990000">);</span>
 
-	double x0 = exp(-alpha*tf);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(x0, xf[0], 1e-4, 1e-4);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(0., ef[0], 1e-4, 1e-4);
+     <span style="color: #009900">double</span> x0 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(-</span>alpha<span style="color: #990000">*</span>tf<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>x0<span style="color: #990000">,</span> xf<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">.,</span> ef<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
 
-	double x1 = (exp(alpha*tf) - 1) / alpha;
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(x1, xf[1], 1e-4, 1e-4);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(0., ef[1], 1e-4, 1e-4);
+     <span style="color: #009900">double</span> x1 <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span>alpha<span style="color: #990000">*</span>tf<span style="color: #990000">)</span> <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">/</span> alpha<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>x1<span style="color: #990000">,</span> xf<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">.,</span> ef<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">1e-4</span><span style="color: #990000">,</span> <span style="color: #993399">1e-4</span><span style="color: #990000">);</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/ode_err_control.cpp
 
 </body>

@@ -1,10 +1,10 @@
 // $Id$
-# ifndef CPPAD_ACOSH_OP_HPP
-# define CPPAD_ACOSH_OP_HPP
+# ifndef CPPAD_LOCAL_ACOSH_OP_HPP
+# define CPPAD_LOCAL_ACOSH_OP_HPP
 # if CPPAD_USE_CPLUSPLUS_2011
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -15,7 +15,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file acosh_op.hpp
 Forward and reverse mode calculations for z = acosh(x).
@@ -261,6 +261,6 @@ inline void reverse_acosh_op(
 	px[0] += azmul(pz[0] + azmul(pb[0], x[0]),  inv_b0);
 }
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif
 # endif

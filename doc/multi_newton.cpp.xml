@@ -108,10 +108,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>A Multi-Threaded Newton's Method</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -531,47 +527,42 @@ If it is zero, the test is run without the multi-threading environment.
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-// general purpose multi-threading interface
-# include &quot;team_thread.hpp&quot;
-// special utilities for the multi_newton problem
-# include &quot;multi_newton_work.hpp&quot;
+<pre><tt>
+<span style="font-style: italic"><span style="color: #9A1900">// general purpose multi-threading interface</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_thread.hpp"</span>
+<span style="font-style: italic"><span style="color: #9A1900">// special utilities for the multi_newton problem</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"multi_newton_work.hpp"</span>
 
-bool multi_newton(
-	CppAD::vector&lt;double&gt; &amp;xout                ,
-	void fun(double x, double&amp; f, double&amp; df)  ,
-	size_t num_sub                             ,
-	double xlow                                ,
-	double xup                                 ,
-	double epsilon                             ,
-	size_t max_itr                             ,
-	size_t num_threads                         )
-{
-	bool ok = true;
-	using CppAD::AD;
-	using CppAD::vector;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton</span></span><span style="color: #990000">(</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="color: #990000">&amp;</span>xout                <span style="color: #990000">,</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">fun</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> x<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> f<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> df<span style="color: #990000">)</span>  <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span> num_sub                             <span style="color: #990000">,</span>
+     <span style="color: #009900">double</span> xlow                                <span style="color: #990000">,</span>
+     <span style="color: #009900">double</span> xup                                 <span style="color: #990000">,</span>
+     <span style="color: #009900">double</span> epsilon                             <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span> max_itr                             <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span> num_threads                         <span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-	// setup the work for num_threads threads
-	ok &amp;= multi_newton_setup(
-		fun, num_sub, xlow, xup, epsilon, max_itr, num_threads
-	);
+     <span style="font-style: italic"><span style="color: #9A1900">// setup the work for num_threads threads</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton_setup</span></span><span style="color: #990000">(</span>
+          fun<span style="color: #990000">,</span> num_sub<span style="color: #990000">,</span> xlow<span style="color: #990000">,</span> xup<span style="color: #990000">,</span> epsilon<span style="color: #990000">,</span> max_itr<span style="color: #990000">,</span> num_threads
+     <span style="color: #990000">);</span>
 
-	// now do the work for each thread
-	if( num_threads &gt; 0 )
-		team_work( multi_newton_worker );
-	else	multi_newton_worker();
+     <span style="font-style: italic"><span style="color: #9A1900">// now do the work for each thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #000000">team_work</span></span><span style="color: #990000">(</span> multi_newton_worker <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     <span style="font-weight: bold"><span style="color: #000000">multi_newton_worker</span></span><span style="color: #990000">();</span>
 
-	// now combine the result for all the threads
-	ok &amp;= multi_newton_combine(xout);
+     <span style="font-style: italic"><span style="color: #9A1900">// now combine the result for all the threads</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton_combine</span></span><span style="color: #990000">(</span>xout<span style="color: #990000">);</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/multi_newton.cpp
 
 </body>

@@ -100,9 +100,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>ADFun Sequence Properties</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -144,6 +141,7 @@ A:active { color : purple }
 <br/>
 <a href="size_order.xml" target="_top"><span style='white-space: nowrap'>size_order</span></a>
 , <a href="capacity_order.xml" target="_top"><span style='white-space: nowrap'>capacity_order</span></a>
+, <a href="number_skip.xml" target="_top"><span style='white-space: nowrap'>number_skip</span></a>
 .
 
 <br/>
@@ -474,7 +472,7 @@ and is the amount of memory required to store the operation sequence
 For the current version of CppAD, this is given by
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_op()&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;*&#xA0;sizeof(CppAD::OpCode)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_op()&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;*&#xA0;sizeof(CppAD::local::OpCode)<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;+&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_op_arg()&#xA0;*&#xA0;sizeof(</span></font><i><font color="black"><span style='white-space: nowrap'>tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;+&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_par()&#xA0;&#xA0;&#xA0;&#xA0;*&#xA0;sizeof(</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;+&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_text()&#xA0;&#xA0;&#xA0;*&#xA0;sizeof(char)<br/>

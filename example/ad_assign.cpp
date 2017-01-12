@@ -1,6 +1,6 @@
-// $Id: ad_assign.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: ad_assign.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -21,7 +21,7 @@ $mindex assign object$$
 
 
 $code
-$verbatim%example/ad_assign.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/ad_assign.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 $end
 */

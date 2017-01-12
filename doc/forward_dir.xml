@@ -6,7 +6,7 @@
 <title>Multiple Directions Forward Mode</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Multiple Directions Forward Mode"/>
-<meta name="keywords" id="keywords" content=" multiple directions forward mode syntax purpose notation n m f q r xq zero order non-zero lower orders x(t) y(t) yq vector example "/>
+<meta name="keywords" id="keywords" content=" multiple directions forward mode syntax purpose reverse notation n m f q r xq zero order non-zero lower orders x(t) y(t) yq vector example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -92,6 +92,7 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Syntax</option>
 <option>Purpose</option>
+<option>Reverse Mode</option>
 <option>Notation</option>
 <option>---..n</option>
 <option>---..m</option>
@@ -109,9 +110,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Multiple Directions Forward Mode</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -173,6 +171,20 @@ forward mode computes the Taylor coefficients for the function
 <mo stretchy="false">]</mo>
 </mrow></math>
 
+This version of forward mode computes multiple directions as the same
+time (reducing the number of passes through the tape). This requires more
+memory, but might be faster in some cases.
+
+<br/>
+<br/>
+<b><big><a name="Reverse Mode" id="Reverse Mode">Reverse Mode</a></big></b>
+<br/>
+Reverse mode for multiple directions has not yet been implemented.
+If you have speed tests that indicate that multiple direction forward
+mode is faster, and you want to try multiple direction reverse mode,
+contact the CppAD project manager.
+
+<br/>
 <br/>
 <b><big><a name="Notation" id="Notation">Notation</a></big></b>
 

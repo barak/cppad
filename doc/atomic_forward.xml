@@ -6,7 +6,7 @@
 <title>Atomic Forward Mode</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Atomic Forward Mode"/>
-<meta name="keywords" id="keywords" content=" atomic forward mode callback virtual syntax purpose implementation p q vx vy tx ty ok discussion examples define use "/>
+<meta name="keywords" id="keywords" content=" atomic forward mode callback virtual syntax purpose implementation p q vx vy tx ty ok discussion examples "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="atomic_afun.xml" target="_top">Prev</a>
-</td><td><a href="atomic_reverse.xml" target="_top">Next</a>
+</td><td><a href="atomic_forward.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -74,18 +74,26 @@ A:active { color : purple }
 <option>atomic_reverse</option>
 <option>atomic_for_sparse_jac</option>
 <option>atomic_rev_sparse_jac</option>
+<option>atomic_for_sparse_hes</option>
 <option>atomic_rev_sparse_hes</option>
 <option>atomic_base_clear</option>
 <option>atomic_get_started.cpp</option>
 <option>atomic_norm_sq.cpp</option>
 <option>atomic_reciprocal.cpp</option>
-<option>atomic_sparsity.cpp</option>
+<option>atomic_set_sparsity.cpp</option>
 <option>atomic_tangent.cpp</option>
-<option>atomic_hes_sparse.cpp</option>
+<option>atomic_eigen_mat_mul.cpp</option>
+<option>atomic_eigen_mat_inv.cpp</option>
+<option>atomic_eigen_cholesky.cpp</option>
 <option>atomic_mat_mul.cpp</option>
 </select>
 </td>
-<td>atomic_forward</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>atomic_forward-&gt;</option>
+<option>atomic_forward.cpp</option>
+</select>
+</td>
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
@@ -101,8 +109,6 @@ A:active { color : purple }
 <option>ok</option>
 <option>Discussion</option>
 <option>Examples</option>
-<option>---..Define forward</option>
-<option>---..Use forward</option>
 </select>
 </td>
 </tr></table><br/>
@@ -226,7 +232,7 @@ for
 in the corresponding call to
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>id</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>(</span></font><i><font color="black"><span style='white-space: nowrap'>ax</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ay</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
 </span></font></code>
 If 
 <code><i><font color="black"><span style='white-space: nowrap'>vx</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;0</span></font></code>
@@ -1042,43 +1048,14 @@ For
 
 <br/>
 <b><big><a name="Examples" id="Examples">Examples</a></big></b>
+<br/>
+The file <a href="atomic_forward.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_forward.cpp</span></a>
+ contains an example and test
+that uses this routine.
+It returns true if the test passes and false if it fails.
 
 
-<br/>
-<br/>
-<b><a name="Examples.Define forward" id="Examples.Define forward">Define forward</a></b>
-<br/>
-The following files contain example atomic <code><font color="blue">forward</font></code> functions:
-<a href="atomic_get_started.cpp.xml#forward" target="_top"><span style='white-space: nowrap'>get_started.cpp</span></a>
-,
-<a href="atomic_norm_sq.cpp.xml#forward" target="_top"><span style='white-space: nowrap'>norm_sq.cpp</span></a>
-,
-<a href="atomic_reciprocal.cpp.xml#forward" target="_top"><span style='white-space: nowrap'>reciprocal.cpp</span></a>
-,
-<a href="atomic_tangent.cpp.xml#forward" target="_top"><span style='white-space: nowrap'>tangent.cpp</span></a>
-,
-<a href="atomic_matrix_mul.hpp.xml#forward" target="_top"><span style='white-space: nowrap'>matrix_mul.hpp</span></a>
-.
-
-<br/>
-<br/>
-<b><a name="Examples.Use forward" id="Examples.Use forward">Use forward</a></b>
-<br/>
-The following are links to user atomic function forward uses:
-<a href="atomic_get_started.cpp.xml#Use Atomic Function.forward" target="_top"><span style='white-space: nowrap'>get_started.cpp</span></a>
-,
-<a href="atomic_norm_sq.cpp.xml#Use Atomic Function.forward" target="_top"><span style='white-space: nowrap'>norm_sq.cpp</span></a>
-,
-<a href="atomic_reciprocal.cpp.xml#Use Atomic Function.forward" target="_top"><span style='white-space: nowrap'>reciprocal.cpp</span></a>
-,
-<a href="atomic_tangent.cpp.xml#Use Atomic Function.forward" target="_top"><span style='white-space: nowrap'>tangent.cpp</span></a>
-,
-<a href="atomic_mat_mul.cpp.xml#Use Atomic Function.forward" target="_top"><span style='white-space: nowrap'>mat_mul.cpp</span></a>
-.
-
-
-
-<hr/>Input File: cppad/local/atomic_base.hpp
+<hr/>Input File: cppad/core/atomic_base.hpp
 
 </body>
 </html>

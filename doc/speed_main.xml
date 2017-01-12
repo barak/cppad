@@ -6,7 +6,7 @@
 <title>Running the Speed Test Program</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Running the Speed Test Program"/>
-<meta name="keywords" id="keywords" content=" running the speed test program cppad uniform_01 syntax purpose package ad double profile correct seed option_list onetape optimize atomic memory sparsity options boolsparsity colpack correctness results n_sweep link functions "/>
+<meta name="keywords" id="keywords" content=" running the speed test program cppad uniform_01 syntax purpose package ad double profile correct seed global options onetape optimize atomic memory sparsity boolsparsity revsparsity colpack correctness results n_sweep link functions "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -96,13 +96,14 @@ A:active { color : purple }
 <option>---..correct</option>
 <option>---..speed</option>
 <option>seed</option>
-<option>option_list</option>
+<option>Global Options</option>
 <option>---..onetape</option>
 <option>---..optimize</option>
 <option>---..atomic</option>
 <option>---..memory</option>
 <option>Sparsity Options</option>
 <option>---..boolsparsity</option>
+<option>---..revsparsity</option>
 <option>---..colpack</option>
 <option>Correctness Results</option>
 <option>Speed Results</option>
@@ -252,13 +253,17 @@ before any of the testing routines (listed above) are called.
 
 <br/>
 <br/>
-<b><big><a name="option_list" id="option_list">option_list</a></big></b>
+<b><big><a name="Global Options" id="Global Options">Global Options</a></big></b>
 <br/>
-This is a list of options that follow 
+This global variable has prototype
+<pre style='display:inline'><tt>
+     <span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> std<span style="color: #990000">::</span><span style="color: #008080">map&lt;std::string, bool&gt;</span> global_option<span style="color: #990000">;</span>
+</tt></pre>
+This is true for each option that follows 
 <code><i><font color="black"><span style='white-space: nowrap'>seed</span></font></i></code>
- value.
+.
 The order of the options does not matter and the list can be empty.
-Each option in the list, must be separate
+Each option, must be separate
 command line argument to the main program.
 The documentation below specifics how CppAD uses these options,
 see the examples in <a href="speed_adolc.xml" target="_top"><span style='white-space: nowrap'>speed_adolc</span></a>
@@ -267,11 +272,11 @@ uses these options.
 
 <br/>
 <br/>
-<b><a name="option_list.onetape" id="option_list.onetape">onetape</a></b>
+<b><a name="Global Options.onetape" id="Global Options.onetape">onetape</a></b>
 <br/>
-If the option <code><font color="blue">onetape</font></code> is present, the symbol
+If the option <code><font color="blue">onetape</font></code> is present,
 <code><font color='blue'><pre style='display:inline'> 
-     extern bool global_onetape
+     global_option[&quot;onetape&quot;]
 </pre></font></code>
 is true and otherwise it is false.
 If this external symbol is true,
@@ -297,11 +302,11 @@ when <code><font color="blue">global_onetape</font></code> is true.
 
 <br/>
 <br/>
-<b><a name="option_list.optimize" id="option_list.optimize">optimize</a></b>
+<b><a name="Global Options.optimize" id="Global Options.optimize">optimize</a></b>
 <br/>
-If the option <code><font color="blue">optimize</font></code> is present, the symbol
+If the option <code><font color="blue">optimize</font></code> is present,
 <code><font color='blue'><pre style='display:inline'> 
-     extern bool global_optimize
+     global_option[&quot;optimize&quot;]
 </pre></font></code>
 is true and otherwise it is false.
 If this external symbol is true,
@@ -310,11 +315,11 @@ If it is false, this optimization will not be done.
 
 <br/>
 <br/>
-<b><a name="option_list.atomic" id="option_list.atomic">atomic</a></b>
+<b><a name="Global Options.atomic" id="Global Options.atomic">atomic</a></b>
 <br/>
-If the option <code><font color="blue">atomic</font></code> is present, the symbol
+If the option <code><font color="blue">atomic</font></code> is present,
 <code><font color='blue'><pre style='display:inline'> 
-     extern bool global_atomic
+     global_option[&quot;atomic&quot;]
 </pre></font></code>
 is true and otherwise it is false.
 If this external symbol is true, CppAD will use its user defined
@@ -325,11 +330,11 @@ and atomic is chosen, CppAD returns false for the test.
 
 <br/>
 <br/>
-<b><a name="option_list.memory" id="option_list.memory">memory</a></b>
+<b><a name="Global Options.memory" id="Global Options.memory">memory</a></b>
 <br/>
-If the option <code><font color="blue">memory</font></code> is present, the symbol
+If the option <code><font color="blue">memory</font></code> is present,
 <code><font color='blue'><pre style='display:inline'> 
-     extern bool global_memory
+     global_option[&quot;memory&quot;]
 </pre></font></code>
 is true and otherwise it is false.
 If it is true, the CppAD
@@ -354,9 +359,9 @@ The other tests will ignore these options:
 <br/>
 <b><a name="Sparsity Options.boolsparsity" id="Sparsity Options.boolsparsity">boolsparsity</a></b>
 <br/>
-If the option <code><font color="blue">boolsparsity</font></code> is present, the symbol
+If the option <code><font color="blue">boolsparsity</font></code> is present,
 <code><font color='blue'><pre style='display:inline'> 
-     extern bool global_boolsparsity
+     global_option[&quot;boolsparsity&quot;]
 </pre></font></code>
 is true and otherwise it is false.
 If it is true, CppAD will use a
@@ -369,11 +374,29 @@ Otherwise it will use a
 
 <br/>
 <br/>
+<b><a name="Sparsity Options.revsparsity" id="Sparsity Options.revsparsity">revsparsity</a></b>
+<br/>
+If the option <code><font color="blue">revsparsity</font></code> is present,
+<code><font color='blue'><pre style='display:inline'> 
+     global_option[&quot;revsparsity&quot;]
+</pre></font></code>
+is true and otherwise it is false.
+If it is true, CppAD will use a
+<a href="forsparsejac.xml" target="_top"><span style='white-space: nowrap'>ForSparseJac</span></a>
+ and <a href="forsparsehes.xml" target="_top"><span style='white-space: nowrap'>ForSparseHes</span></a>
+ where possible
+for its sparsity patterns.
+Otherwise it will use <a href="revsparsejac.xml" target="_top"><span style='white-space: nowrap'>RevSparseJac</span></a>
+ and <a href="revsparsehes.xml" target="_top"><span style='white-space: nowrap'>RevSparseHes</span></a>
+.
+
+<br/>
+<br/>
 <b><a name="Sparsity Options.colpack" id="Sparsity Options.colpack">colpack</a></b>
 <br/>
-If the option <code><font color="blue">colpack</font></code> is present, the symbol
+If the option <code><font color="blue">colpack</font></code> is present,
 <code><font color='blue'><pre style='display:inline'> 
-     extern bool global_colpack
+     global_option[&quot;colpack&quot;]
 </pre></font></code>
 is true and otherwise it is false.
 If this external symbol is true,

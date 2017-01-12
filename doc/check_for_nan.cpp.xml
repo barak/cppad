@@ -86,104 +86,99 @@ A:active { color : purple }
 
 
 <center><b><big><big>ADFun Checking For Nan: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cctype&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cctype&gt;</span>
 
-namespace {
-	void myhandler(
-		bool known       ,
-		int  line        ,
-		const char *file ,
-		const char *exp  ,
-		const char *msg  )
-	{	// error handler must not return, so throw an exception
-		std::string message = msg;
-		throw message;
-	}
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">myhandler</span></span><span style="color: #990000">(</span>
+          <span style="color: #009900">bool</span> known       <span style="color: #990000">,</span>
+          <span style="color: #009900">int</span>  line        <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>file <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>exp  <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>msg  <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// error handler must not return, so throw an exception</span></span>
+          std<span style="color: #990000">::</span><span style="color: #008080">string</span> message <span style="color: #990000">=</span> msg<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">throw</span></span> message<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-bool check_for_nan(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using std::string;
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_for_nan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>string<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	// replace the default CppAD error handler
-	CppAD::ErrorHandler info(myhandler);
+     <span style="font-style: italic"><span style="color: #9A1900">// replace the default CppAD error handler</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ErrorHandler</span> <span style="font-weight: bold"><span style="color: #000000">info</span></span><span style="color: #990000">(</span>myhandler<span style="color: #990000">);</span>
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(2), ay(2);
-	ax[0] = 2.0;
-	ax[1] = 1.0;
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
-	ay[0] = sqrt( ax[0] );
-	ay[1] = sqrt( ax[1] );
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+     ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sqrt</span></span><span style="color: #990000">(</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ay<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">sqrt</span></span><span style="color: #990000">(</span> ax<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(2), y(2);
-	x[0] = 2.0;
-	x[1] = -1.0;
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">-</span><span style="color: #993399">1.0</span><span style="color: #990000">;</span>
 
-	// use try / catch because this causes an exception
-	// (assuming that NDEBUG is not defined)
-	f.check_for_nan(true);
-	try {
-		y = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
+     <span style="font-style: italic"><span style="color: #9A1900">// use try / catch because this causes an exception</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (assuming that NDEBUG is not defined)</span></span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">check_for_nan</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">try</span></span> <span style="color: #FF0000">{</span>
+          y <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
 
-# ifndef NDEBUG
-		// When compiled with NDEBUG defined,
-		// CppAD does not spend time checking for nan.
-		ok = false;
-# endif
-	}
-	catch(std::string msg)
-	{
-		// get and check size of the independent variable vector
-		string pattern = &quot;vector_size = &quot;;
-		size_t start   = msg.find(pattern) + pattern.size();
-		string number;
-		for(size_t i = start; msg[i] != '\n'; i++)
-			number += msg[i];
-		size_t vector_size = std::atoi(number.c_str());
-		ok &amp;= vector_size == 2;
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> NDEBUG
+          <span style="font-style: italic"><span style="color: #9A1900">// When compiled with NDEBUG defined,</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// CppAD does not spend time checking for nan.</span></span>
+          ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">catch</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span><span style="color: #008080">string</span> msg<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// get and check size of the independent variable vector</span></span>
+          <span style="color: #008080">string</span> pattern <span style="color: #990000">=</span> <span style="color: #FF0000">"vector_size = "</span><span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> start   <span style="color: #990000">=</span> msg<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>pattern<span style="color: #990000">)</span> <span style="color: #990000">+</span> pattern<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">string</span> number<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> start<span style="color: #990000">;</span> msg<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">!=</span> <span style="color: #FF0000">'</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               number <span style="color: #990000">+=</span> msg<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="color: #008080">size_t</span> vector_size <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atoi</span></span><span style="color: #990000">(</span>number<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">c_str</span></span><span style="color: #990000">());</span>
+          ok <span style="color: #990000">&amp;=</span> vector_size <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
 
-		// get and check first dependent varialbe index that is nan
-		pattern = &quot;index = &quot;;
-		start   = msg.find(pattern) + pattern.size();
-		number  = &quot;&quot;;
-		for(size_t i = start; msg[i] != '\n'; i++)
-			number += msg[i];
-		size_t index = std::atoi(number.c_str());
-		ok &amp;= index == 1;
+          <span style="font-style: italic"><span style="color: #9A1900">// get and check first dependent variable index that is nan</span></span>
+          pattern <span style="color: #990000">=</span> <span style="color: #FF0000">"index = "</span><span style="color: #990000">;</span>
+          start   <span style="color: #990000">=</span> msg<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>pattern<span style="color: #990000">)</span> <span style="color: #990000">+</span> pattern<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          number  <span style="color: #990000">=</span> <span style="color: #FF0000">""</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> start<span style="color: #990000">;</span> msg<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">!=</span> <span style="color: #FF0000">'</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               number <span style="color: #990000">+=</span> msg<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="color: #008080">size_t</span> index <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atoi</span></span><span style="color: #990000">(</span>number<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">c_str</span></span><span style="color: #990000">());</span>
+          ok <span style="color: #990000">&amp;=</span> index <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-		// get the name of the file
-		pattern = &quot;file_name = &quot;;
-		start   = msg.find(pattern) + pattern.size();
-		string file_name;
-		for(size_t i = start; msg[i] != '\n'; i++)
-			file_name += msg[i];
+          <span style="font-style: italic"><span style="color: #9A1900">// get the name of the file</span></span>
+          pattern <span style="color: #990000">=</span> <span style="color: #FF0000">"file_name = "</span><span style="color: #990000">;</span>
+          start   <span style="color: #990000">=</span> msg<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span>pattern<span style="color: #990000">)</span> <span style="color: #990000">+</span> pattern<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">string</span> file_name<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> start<span style="color: #990000">;</span> msg<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">!=</span> <span style="color: #FF0000">'</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               file_name <span style="color: #990000">+=</span> msg<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-		// get and check independent variable vector that resulted in the nan
-		CppAD::vector&lt;double&gt; vec(vector_size);
-		CppAD::get_check_for_nan(vec, file_name);
-		for(size_t i = 0; i &lt; vector_size; i++)
-			ok &amp;= vec[i] == x[i];
-	}
+          <span style="font-style: italic"><span style="color: #9A1900">// get and check independent variable vector that resulted in the nan</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">vec</span></span><span style="color: #990000">(</span>vector_size<span style="color: #990000">);</span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_check_for_nan</span></span><span style="color: #990000">(</span>vec<span style="color: #990000">,</span> file_name<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> vector_size<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               ok <span style="color: #990000">&amp;=</span> vec<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> x<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
 
-	// now do calculation without an exception
-	f.check_for_nan(false);
-	y = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(y[0], std::sqrt(x[0]), eps, eps);
-	ok &amp;= CppAD::isnan( y[1] );
+     <span style="font-style: italic"><span style="color: #9A1900">// now do calculation without an exception</span></span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">check_for_nan</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
+     y <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">sqrt</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]),</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">isnan</span></span><span style="color: #990000">(</span> y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/check_for_nan.cpp
 
 </body>

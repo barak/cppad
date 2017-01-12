@@ -1,6 +1,6 @@
-// $Id: eigen_array.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: eigen_array.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -21,7 +21,7 @@ $mindex array$$
 
 
 $code
-$verbatim%example/eigen_array.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/eigen_array.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -53,7 +53,7 @@ bool eigen_array(void)
 	CppAD::Independent(a_x);
 
 	// evaluate a component wise function
-	a_y = a_x.array() + sin(a_x.array());
+	a_y = a_x.array() + a_x.array().sin();
 
 	// create f: x -> y and stop tape recording
 	CppAD::ADFun<double> f(a_x, a_y);

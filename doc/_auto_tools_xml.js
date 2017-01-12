@@ -41,7 +41,6 @@ var list_current0 = [
 'auto_tools.xml#prefix_dir',
 'auto_tools.xml#--with-Documentation',
 'auto_tools.xml#--with-testvector',
-'auto_tools.xml#--with-sparse_option',
 'auto_tools.xml#--with-deprecated',
 'auto_tools.xml#max_num_threads',
 'auto_tools.xml#cxx_flags',

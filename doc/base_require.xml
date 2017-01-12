@@ -80,6 +80,7 @@ A:active { color : purple }
 <option>base_std_math</option>
 <option>base_limits</option>
 <option>base_to_string</option>
+<option>base_hash</option>
 <option>base_example</option>
 </select>
 </td>
@@ -100,9 +101,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>AD&lt;Base&gt; Requirements for a CppAD Base Type</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -263,20 +261,18 @@ namespace&#xA0;CppAD&#xA0;{<br/>
 }<br/>
 </span></font></code>
 where the macro is defined by
-<code><font color='blue'><pre style='display:inline'> 
-# define CPPAD_AZMUL(Base) \
-    inline Base azmul(const Base&amp; x, const Base&amp; y) \
-    {   Base zero(0.0);   \
-        if( x == zero ) \
-            return zero;  \
-        return x * y;     \
-    }
-</pre></font></code>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_AZMUL</span></span><span style="color: #990000">(</span>Base<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #008080">Base</span> <span style="font-weight: bold"><span style="color: #000000">azmul</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> Base<span style="color: #990000">&amp;</span> x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> Base<span style="color: #990000">&amp;</span> y<span style="color: #990000">)</span> <span style="color: #990000">\</span>
+    <span style="color: #FF0000">{</span>   <span style="color: #008080">Base</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0.0</span><span style="color: #990000">);</span>   <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> x <span style="color: #990000">==</span> zero <span style="color: #990000">)</span> <span style="color: #990000">\</span>
+            <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> zero<span style="color: #990000">;</span>  <span style="color: #990000">\</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">*</span> y<span style="color: #990000">;</span>     <span style="color: #990000">\</span>
+    <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="Contents" id="Contents">Contents</a></big></b>
 <br/>
 <table>
-<tr><td><a href="base_member.xml" target="_top">base_member</a></td><td>Required&#xA0;Base&#xA0;Class&#xA0;Member&#xA0;Functions</td></tr><tr><td><a href="base_cond_exp.xml" target="_top">base_cond_exp</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Conditional&#xA0;Expressions</td></tr><tr><td><a href="base_identical.xml" target="_top">base_identical</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Identically&#xA0;Equal&#xA0;Comparisons</td></tr><tr><td><a href="base_ordered.xml" target="_top">base_ordered</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Ordered&#xA0;Comparisons</td></tr><tr><td><a href="base_std_math.xml" target="_top">base_std_math</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Standard&#xA0;Math&#xA0;Functions</td></tr><tr><td><a href="base_limits.xml" target="_top">base_limits</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Numeric&#xA0;Limits</td></tr><tr><td><a href="base_to_string.xml" target="_top">base_to_string</a></td><td>Extending&#xA0;to_string&#xA0;To&#xA0;Another&#xA0;Floating&#xA0;Point&#xA0;Type</td></tr><tr><td><a href="base_example.xml" target="_top">base_example</a></td><td>Example&#xA0;AD&#xA0;Base&#xA0;Types&#xA0;That&#xA0;are&#xA0;not&#xA0;AD&lt;OtherBase&gt;</td></tr></table>
+<tr><td><a href="base_member.xml" target="_top">base_member</a></td><td>Required&#xA0;Base&#xA0;Class&#xA0;Member&#xA0;Functions</td></tr><tr><td><a href="base_cond_exp.xml" target="_top">base_cond_exp</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Conditional&#xA0;Expressions</td></tr><tr><td><a href="base_identical.xml" target="_top">base_identical</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Identically&#xA0;Equal&#xA0;Comparisons</td></tr><tr><td><a href="base_ordered.xml" target="_top">base_ordered</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Ordered&#xA0;Comparisons</td></tr><tr><td><a href="base_std_math.xml" target="_top">base_std_math</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Standard&#xA0;Math&#xA0;Functions</td></tr><tr><td><a href="base_limits.xml" target="_top">base_limits</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Numeric&#xA0;Limits</td></tr><tr><td><a href="base_to_string.xml" target="_top">base_to_string</a></td><td>Extending&#xA0;to_string&#xA0;To&#xA0;Another&#xA0;Floating&#xA0;Point&#xA0;Type</td></tr><tr><td><a href="base_hash.xml" target="_top">base_hash</a></td><td>Base&#xA0;Type&#xA0;Requirements&#xA0;for&#xA0;Hash&#xA0;Coding&#xA0;Values</td></tr><tr><td><a href="base_example.xml" target="_top">base_example</a></td><td>Example&#xA0;AD&#xA0;Base&#xA0;Types&#xA0;That&#xA0;are&#xA0;not&#xA0;AD&lt;OtherBase&gt;</td></tr></table>
 <hr/>Input File: cppad/base_require.hpp
 
 </body>

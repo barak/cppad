@@ -193,9 +193,10 @@ CSCOPE = cscope
 DIST_SUBDIRS = cppad_ipopt/src example/ipopt_solve cppad_ipopt/example \
 	cppad_ipopt/speed cppad_ipopt/test speed/src speed/adolc \
 	speed/cppad speed/double speed/example speed/fadbad \
-	speed/profile speed/sacado example example/atomic compare_c \
-	introduction/get_started introduction/exp_apx print_for \
-	multi_thread multi_thread/test_multi test_more
+	speed/profile speed/sacado example example/atomic \
+	example/optimize compare_c introduction/get_started \
+	introduction/exp_apx print_for multi_thread \
+	multi_thread/test_multi test_more
 am__DIST_COMMON = $(srcdir)/makefile.in \
 	$(top_srcdir)/cppad/configure.hpp.in \
 	$(top_srcdir)/pkgconfig/cppad-uninstalled.pc.in \
@@ -343,7 +344,9 @@ build_os = @build_os@
 build_vendor = @build_vendor@
 builddir = @builddir@
 cppad_SOURCE_DIR = @cppad_SOURCE_DIR@
+cppad_abs_includedir = @cppad_abs_includedir@
 cppad_boostvector = @cppad_boostvector@
+cppad_cplusplus_201100_ok = @cppad_cplusplus_201100_ok@
 cppad_cppadvector = @cppad_cppadvector@
 cppad_cxx_flags = @cppad_cxx_flags@
 cppad_deprecated = @cppad_deprecated@
@@ -352,21 +355,21 @@ cppad_eigenvector = @cppad_eigenvector@
 cppad_has_colpack = @cppad_has_colpack@
 cppad_has_cstdint_8_to_64 = @cppad_has_cstdint_8_to_64@
 cppad_has_gettimeofday = @cppad_has_gettimeofday@
-cppad_has_high_resolution_clock = @cppad_has_high_resolution_clock@
 cppad_has_mkstemp = @cppad_has_mkstemp@
 cppad_has_nullptr = @cppad_has_nullptr@
 cppad_has_rvalue = @cppad_has_rvalue@
-cppad_internal_sparse_set = @cppad_internal_sparse_set@
+cppad_has_steady_clock = @cppad_has_steady_clock@
+cppad_has_tmpnam_s = @cppad_has_tmpnam_s@
 cppad_max_num_threads = @cppad_max_num_threads@
 cppad_pkgconfig_cflags = @cppad_pkgconfig_cflags@
 cppad_pkgconfig_libs = @cppad_pkgconfig_libs@
 cppad_pkgconfig_requires = @cppad_pkgconfig_requires@
+cppad_prefix = @cppad_prefix@
 cppad_size_t_not_unsigned_int = @cppad_size_t_not_unsigned_int@
 cppad_stdvector = @cppad_stdvector@
 cppad_tape_addr_type = @cppad_tape_addr_type@
 cppad_tape_id_type = @cppad_tape_id_type@
 cppad_url = @cppad_url@
-cppad_use_cplusplus_2011 = @cppad_use_cplusplus_2011@
 cppad_version = @cppad_version@
 datadir = @datadir@
 datarootdir = @datarootdir@
@@ -405,9 +408,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
-# $Id: makefile.in 3769 2015-12-29 16:13:16Z bradbell $
+# $Id: makefile.in 3854 2016-12-14 17:36:26Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -477,183 +480,216 @@ myinclude_HEADERS = \
 
 #
 nobase_myinclude_HEADERS = \
-	cppad/utility.hpp \
 	cppad/base_require.hpp \
-	cppad/utility/check_numeric_type.hpp \
-	cppad/utility/check_simple_vector.hpp \
 	cppad/configure.hpp \
+	cppad/core/abort_recording.hpp \
+	cppad/core/abs.hpp \
+	cppad/core/acosh.hpp \
+	cppad/core/ad_assign.hpp \
+	cppad/core/ad_binary.hpp \
+	cppad/core/ad_ctor.hpp \
+	cppad/core/add_eq.hpp \
+	cppad/core/add.hpp \
+	cppad/core/ad_fun.hpp \
+	cppad/core/ad.hpp \
+	cppad/core/ad_io.hpp \
+	cppad/core/ad_to_string.hpp \
+	cppad/core/ad_valued.hpp \
+	cppad/core/arithmetic.hpp \
+	cppad/core/asinh.hpp \
+	cppad/core/atan2.hpp \
+	cppad/core/atanh.hpp \
+	cppad/core/atomic_base.hpp \
+	cppad/core/azmul.hpp \
+	cppad/core/base_complex.hpp \
+	cppad/core/base_cond_exp.hpp \
+	cppad/core/base_double.hpp \
+	cppad/core/base_float.hpp \
+	cppad/core/base_hash.hpp \
+	cppad/core/base_limits.hpp \
+	cppad/core/base_std_math.hpp \
+	cppad/core/base_to_string.hpp \
+	cppad/core/bender_quad.hpp \
+	cppad/core/bool_fun.hpp \
+	cppad/core/bool_valued.hpp \
+	cppad/core/capacity_order.hpp \
+	cppad/core/check_for_nan.hpp \
+	cppad/core/checkpoint.hpp \
+	cppad/core/compare.hpp \
+	cppad/core/compute_assign.hpp \
+	cppad/core/cond_exp.hpp \
+	cppad/core/convert.hpp \
+	cppad/core/cppad_assert.hpp \
+	cppad/core/define.hpp \
+	cppad/core/dependent.hpp \
+	cppad/core/discrete.hpp \
+	cppad/core/div_eq.hpp \
+	cppad/core/div.hpp \
+	cppad/core/drivers.hpp \
+	cppad/core/epsilon.hpp \
+	cppad/core/equal_op_seq.hpp \
+	cppad/core/erf.hpp \
+	cppad/core/expm1.hpp \
+	cppad/core/for_one.hpp \
+	cppad/core/for_sparse_hes.hpp \
+	cppad/core/for_sparse_jac.hpp \
+	cppad/core/for_two.hpp \
+	cppad/core/forward.hpp \
+	cppad/core/fun_check.hpp \
+	cppad/core/fun_construct.hpp \
+	cppad/core/fun_eval.hpp \
+	cppad/core/hash_code.hpp \
+	cppad/core/hessian.hpp \
+	cppad/core/identical.hpp \
+	cppad/core/independent.hpp \
+	cppad/core/integer.hpp \
+	cppad/core/jacobian.hpp \
+	cppad/core/log1p.hpp \
+	cppad/core/lu_ratio.hpp \
+	cppad/core/mul_eq.hpp \
+	cppad/core/mul.hpp \
+	cppad/core/near_equal_ext.hpp \
+	cppad/core/numeric_limits.hpp \
+	cppad/core/num_skip.hpp \
+	cppad/core/old_atomic.hpp \
+	cppad/core/omp_max_thread.hpp \
+	cppad/core/optimize.hpp \
+	cppad/core/opt_val_hes.hpp \
+	cppad/core/ordered.hpp \
+	cppad/core/parallel_ad.hpp \
+	cppad/core/par_var.hpp \
+	cppad/core/pow.hpp \
+	cppad/core/print_for.hpp \
+	cppad/core/reverse.hpp \
+	cppad/core/rev_one.hpp \
+	cppad/core/rev_sparse_hes.hpp \
+	cppad/core/rev_sparse_jac.hpp \
+	cppad/core/rev_two.hpp \
+	cppad/core/sign.hpp \
+	cppad/core/sparse_hessian.hpp \
+	cppad/core/sparse.hpp \
+	cppad/core/sparse_jacobian.hpp \
+	cppad/core/standard_math.hpp \
+	cppad/core/std_math_98.hpp \
+	cppad/core/sub_eq.hpp \
+	cppad/core/sub.hpp \
+	cppad/core/tape_link.hpp \
+	cppad/core/test_vector.hpp \
+	cppad/core/testvector.hpp \
+	cppad/core/unary_minus.hpp \
+	cppad/core/unary_plus.hpp \
+	cppad/core/undef.hpp \
+	cppad/core/user_ad.hpp \
+	cppad/core/value.hpp \
+	cppad/core/var2par.hpp \
+	cppad/core/vec_ad.hpp \
+	cppad/core/zdouble.hpp \
 	cppad/cppad.hpp \
-	cppad/utility/elapsed_seconds.hpp \
 	cppad/example/base_adolc.hpp \
 	cppad/example/cppad_eigen.hpp \
+	cppad/example/eigen_cholesky.hpp \
+	cppad/example/eigen_mat_inv.hpp \
+	cppad/example/eigen_mat_mul.hpp \
 	cppad/example/eigen_plugin.hpp \
-	cppad/example/matrix_mul.hpp \
-	cppad/utility/error_handler.hpp \
-	cppad/utility/index_sort.hpp \
-	cppad/ipopt/solve.hpp \
+	cppad/example/mat_mul.hpp \
 	cppad/ipopt/solve_callback.hpp \
+	cppad/ipopt/solve.hpp \
 	cppad/ipopt/solve_result.hpp \
-	cppad/local/abort_recording.hpp \
-	cppad/local/abs.hpp \
 	cppad/local/abs_op.hpp \
-	cppad/local/acos_op.hpp \
-	cppad/local/acosh.hpp \
 	cppad/local/acosh_op.hpp \
-	cppad/local/ad_assign.hpp \
-	cppad/local/ad_binary.hpp \
-	cppad/local/ad_ctor.hpp \
-	cppad/local/add_eq.hpp \
-	cppad/local/add.hpp \
+	cppad/local/acos_op.hpp \
 	cppad/local/add_op.hpp \
-	cppad/local/ad_io.hpp \
-	cppad/local/ad_fun.hpp \
-	cppad/local/ad.hpp \
 	cppad/local/ad_tape.hpp \
-	cppad/local/ad_to_string.hpp \
-	cppad/local/ad_valued.hpp \
-	cppad/local/arithmetic.hpp \
-	cppad/local/asin_op.hpp \
-	cppad/local/asinh.hpp \
 	cppad/local/asinh_op.hpp \
-	cppad/local/atan2.hpp \
-	cppad/local/atan_op.hpp \
-	cppad/local/atanh.hpp \
+	cppad/local/asin_op.hpp \
 	cppad/local/atanh_op.hpp \
-	cppad/local/atomic_base.hpp \
-	cppad/local/azmul.hpp \
-	cppad/local/base_complex.hpp \
-	cppad/local/base_cond_exp.hpp \
-	cppad/local/base_double.hpp \
-	cppad/local/base_float.hpp \
-	cppad/local/base_limits.hpp \
-	cppad/local/base_std_math.hpp \
-	cppad/local/base_to_string.hpp \
-	cppad/local/bender_quad.hpp \
-	cppad/local/bool_fun.hpp \
-	cppad/local/bool_valued.hpp \
-	cppad/local/capacity_order.hpp \
-	cppad/local/checkpoint.hpp \
-	cppad/local/check_for_nan.hpp \
+	cppad/local/atan_op.hpp \
 	cppad/local/color_general.hpp \
 	cppad/local/color_symmetric.hpp \
-	cppad/local/compare.hpp \
 	cppad/local/comp_op.hpp \
-	cppad/local/compute_assign.hpp \
-	cppad/local/cond_exp.hpp \
 	cppad/local/cond_op.hpp \
-	cppad/local/convert.hpp \
 	cppad/local/cosh_op.hpp \
 	cppad/local/cos_op.hpp \
-	cppad/local/cppad_assert.hpp \
 	cppad/local/cppad_colpack.hpp \
 	cppad/local/cskip_op.hpp \
 	cppad/local/csum_op.hpp \
 	cppad/local/declare_ad.hpp \
-	cppad/local/define.hpp \
-	cppad/local/dependent.hpp \
-	cppad/local/discrete.hpp \
 	cppad/local/discrete_op.hpp \
-	cppad/local/div_eq.hpp \
-	cppad/local/div.hpp \
 	cppad/local/div_op.hpp \
-	cppad/local/drivers.hpp \
-	cppad/local/epsilon.hpp \
-	cppad/local/equal_op_seq.hpp \
-	cppad/local/erf.hpp \
 	cppad/local/erf_op.hpp \
-	cppad/local/exp_op.hpp \
-	cppad/local/expm1.hpp \
 	cppad/local/expm1_op.hpp \
+	cppad/local/exp_op.hpp \
+	cppad/local/for_hes_sweep.hpp \
 	cppad/local/for_jac_sweep.hpp \
-	cppad/local/for_one.hpp \
-	cppad/local/for_sparse_jac.hpp \
-	cppad/local/for_two.hpp \
 	cppad/local/forward0sweep.hpp \
 	cppad/local/forward1sweep.hpp \
 	cppad/local/forward2sweep.hpp \
-	cppad/local/forward.hpp \
-	cppad/local/fun_check.hpp \
-	cppad/local/fun_construct.hpp \
-	cppad/local/fun_eval.hpp \
 	cppad/local/hash_code.hpp \
-	cppad/local/hessian.hpp \
-	cppad/local/identical.hpp \
 	cppad/local/independent.hpp \
-	cppad/local/integer.hpp \
-	cppad/local/jacobian.hpp \
 	cppad/local/load_op.hpp \
-	cppad/local/log_op.hpp \
-	cppad/local/log1p.hpp \
 	cppad/local/log1p_op.hpp \
-	cppad/local/lu_ratio.hpp \
-	cppad/local/mul_eq.hpp \
-	cppad/local/mul.hpp \
+	cppad/local/log_op.hpp \
 	cppad/local/mul_op.hpp \
-	cppad/local/near_equal_ext.hpp \
-	cppad/local/numeric_limits.hpp \
-	cppad/local/num_skip.hpp \
-	cppad/local/old_atomic.hpp \
-	cppad/local/omp_max_thread.hpp \
 	cppad/local/op_code.hpp \
 	cppad/local/op.hpp \
-	cppad/local/optimize.hpp \
-	cppad/local/opt_val_hes.hpp \
-	cppad/local/ordered.hpp \
-	cppad/local/parallel_ad.hpp \
+	cppad/local/optimize/match_op.hpp \
+	cppad/local/optimize/cskip_info.hpp \
+	cppad/local/optimize/csum_stacks.hpp \
+	cppad/local/optimize/csum_variable.hpp \
+	cppad/local/optimize/get_op_info.hpp \
+	cppad/local/optimize/hash_code.hpp \
+	cppad/local/optimize/old2new.hpp \
+	cppad/local/optimize/op_info.hpp \
+	cppad/local/optimize/optimize_run.hpp \
+	cppad/local/optimize/record_csum.hpp \
+	cppad/local/optimize/record_pv.hpp \
+	cppad/local/optimize/record_vp.hpp \
+	cppad/local/optimize/record_vv.hpp \
+	cppad/local/optimize/size_pair.hpp \
+	cppad/local/optimize/usage.hpp \
 	cppad/local/parameter_op.hpp \
-	cppad/local/par_var.hpp \
 	cppad/local/player.hpp \
 	cppad/local/pod_vector.hpp \
-	cppad/local/pow.hpp \
 	cppad/local/pow_op.hpp \
-	cppad/local/print_for.hpp \
 	cppad/local/print_op.hpp \
 	cppad/local/prototype_op.hpp \
 	cppad/local/recorder.hpp \
-	cppad/local/reverse.hpp \
 	cppad/local/reverse_sweep.hpp \
 	cppad/local/rev_hes_sweep.hpp \
 	cppad/local/rev_jac_sweep.hpp \
-	cppad/local/rev_one.hpp \
-	cppad/local/rev_sparse_hes.hpp \
-	cppad/local/rev_sparse_jac.hpp \
-	cppad/local/rev_two.hpp \
 	cppad/local/set_get_in_parallel.hpp \
-	cppad/local/sign.hpp \
 	cppad/local/sign_op.hpp \
-	cppad/local/sin_op.hpp \
 	cppad/local/sinh_op.hpp \
+	cppad/local/sin_op.hpp \
 	cppad/local/sparse_binary_op.hpp \
-	cppad/local/sparse_hessian.hpp \
-	cppad/local/sparse.hpp \
-	cppad/local/sparse_jacobian.hpp \
 	cppad/local/sparse_list.hpp \
 	cppad/local/sparse_pack.hpp \
 	cppad/local/sparse_pattern.hpp \
-	cppad/local/sparse_set.hpp \
 	cppad/local/sparse_unary_op.hpp \
 	cppad/local/sqrt_op.hpp \
-	cppad/local/standard_math.hpp \
-	cppad/local/std_math_98.hpp \
 	cppad/local/std_set.hpp \
 	cppad/local/store_op.hpp \
-	cppad/local/sub_eq.hpp \
-	cppad/local/sub.hpp \
 	cppad/local/sub_op.hpp \
 	cppad/local/tanh_op.hpp \
 	cppad/local/tan_op.hpp \
-	cppad/local/tape_link.hpp \
-	cppad/local/test_vector.hpp \
-	cppad/local/testvector.hpp \
-	cppad/local/unary_minus.hpp \
-	cppad/local/unary_plus.hpp \
-	cppad/local/undef.hpp \
-	cppad/local/user_ad.hpp \
-	cppad/local/value.hpp \
-	cppad/local/var2par.hpp \
-	cppad/local/vec_ad.hpp \
-	cppad/local/zdouble.hpp \
+	cppad/local/user_state.hpp \
 	cppad/local/zmul_op.hpp \
+	cppad/speed/det_33.hpp \
+	cppad/speed/det_by_lu.hpp \
+	cppad/speed/det_by_minor.hpp \
+	cppad/speed/det_grad_33.hpp \
+	cppad/speed/det_of_minor.hpp \
+	cppad/speed/mat_sum_sq.hpp \
+	cppad/speed/ode_evaluate.hpp \
+	cppad/speed/sparse_hes_fun.hpp \
+	cppad/speed/sparse_jac_fun.hpp \
+	cppad/speed/uniform_01.hpp \
+	cppad/utility/check_numeric_type.hpp \
+	cppad/utility/check_simple_vector.hpp \
+	cppad/utility/elapsed_seconds.hpp \
+	cppad/utility/error_handler.hpp \
+	cppad/utility.hpp \
+	cppad/utility/index_sort.hpp \
 	cppad/utility/lu_factor.hpp \
 	cppad/utility/lu_invert.hpp \
 	cppad/utility/lu_solve.hpp \
@@ -670,20 +706,11 @@ nobase_myinclude_HEADERS = \
 	cppad/utility/romberg_one.hpp \
 	cppad/utility/rosen_34.hpp \
 	cppad/utility/runge_45.hpp \
-	cppad/utility/to_string.hpp \
-	cppad/speed/det_33.hpp \
-	cppad/speed/det_by_lu.hpp \
-	cppad/speed/det_by_minor.hpp \
-	cppad/speed/det_grad_33.hpp \
-	cppad/speed/det_of_minor.hpp \
-	cppad/speed/mat_sum_sq.hpp \
-	cppad/speed/ode_evaluate.hpp \
-	cppad/speed/sparse_hes_fun.hpp \
-	cppad/speed/sparse_jac_fun.hpp \
+	cppad/utility/set_union.hpp \
 	cppad/utility/speed_test.hpp \
-	cppad/speed/uniform_01.hpp \
 	cppad/utility/thread_alloc.hpp \
 	cppad/utility/time_test.hpp \
+	cppad/utility/to_string.hpp \
 	cppad/utility/track_new_del.hpp \
 	cppad/utility/vector.hpp
 
@@ -697,6 +724,7 @@ SUBDIRS = \
 	$(SPEED_DIRS) \
 	example \
 	example/atomic \
+	example/optimize \
 	compare_c \
 	introduction/get_started \
 	introduction/exp_apx \
@@ -723,6 +751,7 @@ EXTRA_DIST = \
 	example/CMakeLists.txt \
 	example/atomic/CMakeLists.txt \
 	example/ipopt_solve/CMakeLists.txt \
+	example/optimize/CMakeLists.txt \
 	test_more/CMakeLists.txt \
 	CMakeLists.txt \
 	cppad_ipopt/src/CMakeLists.txt \
@@ -751,6 +780,7 @@ test_directory_list = \
 	$(SPEED_TESTS) \
 	example \
 	example/atomic \
+	example/optimize \
 	compare_c \
 	introduction/get_started \
 	introduction/exp_apx \

@@ -66,6 +66,7 @@ A:active { color : purple }
 <option>base_std_math</option>
 <option>base_limits</option>
 <option>base_to_string</option>
+<option>base_hash</option>
 <option>base_example</option>
 </select>
 </td>
@@ -89,49 +90,42 @@ A:active { color : purple }
 </td>
 </tr></table><br/>
 <center><b><big><big>Using a User Defined AD Base Type: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &quot;base_alloc.hpp&quot;
-# include &lt;cppad/cppad.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"base_alloc.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-bool base_require(void)
-{	bool ok = true;
-	using CppAD::thread_alloc;
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;base_alloc&gt; ad_base_alloc;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">base_require</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;base_alloc&gt;</span> ad_base_alloc<span style="color: #990000">;</span>
 
-	// check the amount of memory inuse by this thread (thread zero)
-	size_t thread = thread_alloc::thread_num();
-	ok &amp;= thread == 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// check the amount of memory inuse by this thread (thread zero)</span></span>
+     <span style="color: #008080">size_t</span> thread <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> thread <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// y = x^2
-	size_t n = 1, m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ad_base_alloc) a_x(n), a_y(m);
-	a_x[0] = ad_base_alloc(1.);
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
-	a_y[0] = a_x[0] * a_x[0];
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;base_alloc&gt; f(a_x, a_y);
+     <span style="font-style: italic"><span style="color: #9A1900">// y = x^2</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ad_base_alloc<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">a_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">a_y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ad_base_alloc</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
+     a_y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;base_alloc&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">,</span> a_y<span style="color: #990000">);</span>
 
-	// check function value f(x) = x^2
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(base_alloc) x(n), y(m);
-	base_alloc eps =
-		base_alloc(100.) * CppAD::numeric_limits&lt;base_alloc&gt;::epsilon();
-	x[0] = base_alloc(3.);
-	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(y[0], x[0] * x[0], eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check function value f(x) = x^2</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>base_alloc<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="color: #008080">base_alloc</span> eps <span style="color: #990000">=</span>
+          <span style="font-weight: bold"><span style="color: #000000">base_alloc</span></span><span style="color: #990000">(</span><span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>base_alloc<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">base_alloc</span></span><span style="color: #990000">(</span><span style="color: #993399">3</span><span style="color: #990000">.);</span>
+     y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	// check derivative value f'(x) = 2 * x
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(base_alloc) dy(m * n);
-	dy   = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
-	ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], base_alloc(2.) * x[0], eps, eps);
+     <span style="font-style: italic"><span style="color: #9A1900">// check derivative value f'(x) = 2 * x</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>base_alloc<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     dy   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="font-weight: bold"><span style="color: #000000">base_alloc</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-	return ok;
-}
-</pre>
-
-</font></code>
-
-<br/>
-<br/>
-<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
+</font></code><b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
 The type <code><font color="blue">base_alloc</font></code>, defined in <a href="base_alloc.hpp.xml" target="_top"><span style='white-space: nowrap'>base_alloc.hpp</span></a>
 ,

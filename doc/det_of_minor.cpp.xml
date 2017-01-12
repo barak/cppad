@@ -85,59 +85,54 @@ A:active { color : purple }
 
 
 <center><b><big><big>Determinant of a Minor: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;vector&gt;
-# include &lt;cstddef&gt;
-# include &lt;cppad/speed/det_of_minor.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/det_of_minor.hpp&gt;</span>
 
-bool det_of_minor()
-{	bool   ok = true;
-	size_t i;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">det_of_minor</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>   ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
 
-	// dimension of the matrix A
-	size_t m = 3;
-	// index vectors set so minor is the entire matrix A
-	std::vector&lt;size_t&gt; r(m + 1);
-	std::vector&lt;size_t&gt; c(m + 1);
-	for(i= 0; i &lt; m; i++)
-	{	r[i] = i+1;
-		c[i] = i+1;
-	}
-	r[m] = 0;
-	c[m] = 0;
-	// values in the matrix A
-	double  data[] = {
-		1., 2., 3.,
-		3., 2., 1.,
-		2., 1., 2.
-	};
-	// construct vector a with the values of the matrix A
-	std::vector&lt;double&gt; a(data, data + 9);
+     <span style="font-style: italic"><span style="color: #9A1900">// dimension of the matrix A</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// index vectors set so minor is the entire matrix A</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>m <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">c</span></span><span style="color: #990000">(</span>m <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i<span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     r<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">;</span>
+          c<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     r<span style="color: #990000">[</span>m<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     c<span style="color: #990000">[</span>m<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// values in the matrix A</span></span>
+     <span style="color: #009900">double</span>  data<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">3</span><span style="color: #990000">.,</span>
+          <span style="color: #993399">3</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span>
+          <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// construct vector a with the values of the matrix A</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">a</span></span><span style="color: #990000">(</span>data<span style="color: #990000">,</span> data <span style="color: #990000">+</span> <span style="color: #993399">9</span><span style="color: #990000">);</span>
 
-	// evaluate the determinant of A
-	size_t n   = m; // minor has same dimension as A
-	double det = CppAD::det_of_minor(a, m, n, r, c);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the determinant of A</span></span>
+     <span style="color: #008080">size_t</span> n   <span style="color: #990000">=</span> m<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// minor has same dimension as A</span></span>
+     <span style="color: #009900">double</span> det <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">det_of_minor</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> m<span style="color: #990000">,</span> n<span style="color: #990000">,</span> r<span style="color: #990000">,</span> c<span style="color: #990000">);</span>
 
-	// check the value of the determinant of A
-	ok &amp;= (det == (double) (1*(2*2-1*1) - 2*(3*2-1*2) + 3*(3*1-2*2)) );
+     <span style="font-style: italic"><span style="color: #9A1900">// check the value of the determinant of A</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>det <span style="color: #990000">==</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">*(</span><span style="color: #993399">2</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">-</span> <span style="color: #993399">2</span><span style="color: #990000">*(</span><span style="color: #993399">3</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">*(</span><span style="color: #993399">3</span><span style="color: #990000">*</span><span style="color: #993399">1</span><span style="color: #990000">-</span><span style="color: #993399">2</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">))</span> <span style="color: #990000">);</span>
 
-	// minor where row 0 and column 1 are removed
-	r[m] = 1;  // skip row index 0 by starting at row index 1
-	c[0] = 2;  // skip column index 1 by pointing from index 0 to index 2
-	// evaluate determinant of the minor
-	n   = m - 1; // dimension of the minor
-	det = CppAD::det_of_minor(a, m, m-1, r, c);
+     <span style="font-style: italic"><span style="color: #9A1900">// minor where row 0 and column 1 are removed</span></span>
+     r<span style="color: #990000">[</span>m<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// skip row index 0 by starting at row index 1</span></span>
+     c<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// skip column index 1 by pointing from index 0 to index 2</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate determinant of the minor</span></span>
+     n   <span style="color: #990000">=</span> m <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// dimension of the minor</span></span>
+     det <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">det_of_minor</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> m<span style="color: #990000">,</span> m<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">,</span> r<span style="color: #990000">,</span> c<span style="color: #990000">);</span>
 
-	// check the value of the determinant of the minor
-	ok &amp;= (det == (double) (3*2-1*2) );
+     <span style="font-style: italic"><span style="color: #9A1900">// check the value of the determinant of the minor</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>det <span style="color: #990000">==</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="color: #990000">(</span><span style="color: #993399">3</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: speed/example/det_of_minor.cpp
 
 </body>

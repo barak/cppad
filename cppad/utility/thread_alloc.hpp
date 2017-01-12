@@ -1,9 +1,9 @@
-// $Id: thread_alloc.hpp 3766 2015-12-08 23:12:56Z bradbell $
-# ifndef CPPAD_THREAD_ALLOC_HPP
-# define CPPAD_THREAD_ALLOC_HPP
+// $Id: thread_alloc.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_UTILITY_THREAD_ALLOC_HPP
+# define CPPAD_UTILITY_THREAD_ALLOC_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -25,8 +25,8 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # pragma warning(disable:4345)
 # endif
 
-# include <cppad/local/cppad_assert.hpp>
-# include <cppad/local/define.hpp>
+# include <cppad/core/cppad_assert.hpp>
+# include <cppad/core/define.hpp>
 # include <cppad/local/set_get_in_parallel.hpp>
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
@@ -518,7 +518,7 @@ $end
 		{	bool set = true;
 			set_get_num_threads(num_threads);
 			// emphasize that this routine is outside thread_alloc class
-			CppAD::set_get_in_parallel(CPPAD_NULL, set);
+			CppAD::local::set_get_in_parallel(CPPAD_NULL, set);
 			set_get_thread_num(CPPAD_NULL, set);
 			return;
 		}
@@ -558,7 +558,7 @@ $end
 		{	bool set = true;
 			set_get_num_threads(num_threads);
 			// emphasize that this routine is outside thread_alloc class
-			CppAD::set_get_in_parallel(in_parallel, set);
+			CppAD::local::set_get_in_parallel(in_parallel, set);
 			set_get_thread_num(thread_num, set);
 		}
 	}
@@ -636,7 +636,7 @@ $end
 	/// other threads are currently executing.
 	static bool in_parallel(void)
 	{	// emphasize that this routine is outside thread_alloc class
-		return CppAD::set_get_in_parallel(0);
+		return CppAD::local::set_get_in_parallel(0);
 	}
 /* -----------------------------------------------------------------------
 $begin ta_thread_num$$

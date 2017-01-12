@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -233,92 +234,90 @@ It follows that
 The example tests Runge45 using the relations above:
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>                 <span style="font-style: italic"><span style="color: #9A1900">// for size_t</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/near_equal.hpp&gt;</span>    <span style="font-style: italic"><span style="color: #9A1900">// for CppAD::NearEqual</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>        <span style="font-style: italic"><span style="color: #9A1900">// for CppAD::vector</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/runge_45.hpp&gt;</span>      <span style="font-style: italic"><span style="color: #9A1900">// for CppAD::Runge45</span></span>
 
-# include &lt;cstddef&gt;                 // for size_t
-# include &lt;cppad/utility/near_equal.hpp&gt;    // for CppAD::NearEqual
-# include &lt;cppad/utility/vector.hpp&gt;        // for CppAD::vector
-# include &lt;cppad/utility/runge_45.hpp&gt;      // for CppAD::Runge45
+<span style="font-style: italic"><span style="color: #9A1900">// Runge45 requires fabs to be defined (not std::fabs)</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// &lt;cppad/cppad.hpp&gt; defines this for doubles, but runge_45.hpp does not.</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;math.h&gt;</span>      <span style="font-style: italic"><span style="color: #9A1900">// for fabs without std in front</span></span>
 
-// Runge45 requires fabs to be defined (not std::fabs)
-// &lt;cppad/cppad.hpp&gt; defines this for doubles, but runge_45.hpp does not.
-# include &lt;math.h&gt;      // for fabs without std in front
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Fun</span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// constructor</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">Fun</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span> use_x_<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">use_x</span></span><span style="color: #990000">(</span>use_x_<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span> <span style="color: #FF0000">}</span>
 
-namespace {
-	class Fun {
-	public:
-		// constructor
-		Fun(bool use_x_) : use_x(use_x_)
-		{ }
+          <span style="font-style: italic"><span style="color: #9A1900">// set f = x'(t)</span></span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">Ode</span></span><span style="color: #990000">(</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">double</span>                <span style="color: #990000">&amp;</span>t<span style="color: #990000">,</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span>
+               CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>       <span style="color: #990000">&amp;</span>f<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+               <span style="color: #009900">double</span> ti <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+               f<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+               <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               <span style="color: #FF0000">{</span>     ti <span style="color: #990000">*=</span> t<span style="color: #990000">;</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> use_x <span style="color: #990000">)</span>
+                         f<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     f<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> ti<span style="color: #990000">;</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">bool</span> use_x<span style="color: #990000">;</span>
 
-		// set f = x'(t)
-		void Ode(
-			const double                &amp;t,
-			const CppAD::vector&lt;double&gt; &amp;x,
-			CppAD::vector&lt;double&gt;       &amp;f)
-		{	size_t n  = x.size();
-			double ti = 1.;
-			f[0]      = 1.;
-			size_t i;
-			for(i = 1; i &lt; n; i++)
-			{	ti *= t;
-				if( use_x )
-					f[i] = (i+1) * x[i-1];
-				else	f[i] = (i+1) * ti;
-			}
-		}
-	private:
-		const bool use_x;
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-	};
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">runge_45_1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>     <span style="font-style: italic"><span style="color: #9A1900">// initial return value</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// temporary indices</span></span>
 
-bool runge_45_1(void)
-{	bool ok = true;     // initial return value
-	size_t i;           // temporary indices
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	size_t  n = 5;      // number components in X(t) and order of method
-	size_t  M = 2;      // number of Runge45 steps in [ti, tf]
-	double ti = 0.;     // initial time
-	double tf = 2.;     // final time
+     <span style="color: #008080">size_t</span>  n <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>      <span style="font-style: italic"><span style="color: #9A1900">// number components in X(t) and order of method</span></span>
+     <span style="color: #008080">size_t</span>  M <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>      <span style="font-style: italic"><span style="color: #9A1900">// number of Runge45 steps in [ti, tf]</span></span>
+     <span style="color: #009900">double</span> ti <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>     <span style="font-style: italic"><span style="color: #9A1900">// initial time</span></span>
+     <span style="color: #009900">double</span> tf <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>     <span style="font-style: italic"><span style="color: #9A1900">// final time</span></span>
 
-	// xi = X(0)
-	CppAD::vector&lt;double&gt; xi(n);
-	for(i = 0; i &lt;n; i++)
-		xi[i] = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// xi = X(0)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">xi</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span>n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          xi<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	size_t use_x;
-	for( use_x = 0; use_x &lt; 2; use_x++)
-	{	// function object depends on value of use_x
-		Fun F(use_x &gt; 0);
+     <span style="color: #008080">size_t</span> use_x<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span> use_x <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> use_x <span style="color: #990000">&lt;</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> use_x<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// function object depends on value of use_x</span></span>
+          <span style="color: #008080">Fun</span> <span style="font-weight: bold"><span style="color: #000000">F</span></span><span style="color: #990000">(</span>use_x <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-		// compute Runge45 approximation for X(tf)
-		CppAD::vector&lt;double&gt; xf(n), e(n);
-		xf = CppAD::Runge45(F, M, ti, tf, xi, e);
+          <span style="font-style: italic"><span style="color: #9A1900">// compute Runge45 approximation for X(tf)</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">xf</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">e</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          xf <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Runge45</span></span><span style="color: #990000">(</span>F<span style="color: #990000">,</span> M<span style="color: #990000">,</span> ti<span style="color: #990000">,</span> tf<span style="color: #990000">,</span> xi<span style="color: #990000">,</span> e<span style="color: #990000">);</span>
 
-		double check = tf;
-		for(i = 0; i &lt; n; i++)
-		{	// check that error is always positive
-			ok    &amp;= (e[i] &gt;= 0.);
-			// 5th order method is exact for i &lt; 5
-			if( i &lt; 5 ) ok &amp;=
-				CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(xf[i], check, 1e-10, 1e-10);
-			// 4th order method is exact for i &lt; 4
-			if( i &lt; 4 )
-				ok &amp;= (e[i] &lt;= 1e-10);
+          <span style="color: #009900">double</span> check <span style="color: #990000">=</span> tf<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// check that error is always positive</span></span>
+               ok    <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>e<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">&gt;=</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// 5th order method is exact for i &lt; 5</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">5</span> <span style="color: #990000">)</span> ok <span style="color: #990000">&amp;=</span>
+                    <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>xf<span style="color: #990000">[</span>i<span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// 4th order method is exact for i &lt; 4</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">4</span> <span style="color: #990000">)</span>
+                    ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>e<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
 
-			// check value for next i
-			check *= tf;
-		}
-	}
-	return ok;
-}
-
-</pre>
-
+               <span style="font-style: italic"><span style="color: #9A1900">// check value for next i</span></span>
+               check <span style="color: #990000">*=</span> tf<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/runge45_1.cpp
 
 </body>

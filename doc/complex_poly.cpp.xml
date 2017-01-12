@@ -55,6 +55,7 @@ A:active { color : purple }
 <option>base_std_math</option>
 <option>base_limits</option>
 <option>base_to_string</option>
+<option>base_hash</option>
 <option>base_example</option>
 </select>
 </td>
@@ -91,63 +92,58 @@ Select this link to view specifications for <a href="poly.xml" target="_top"><sp
 :
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;complex&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">complex_poly</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> deg <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
 
-bool complex_poly(void)
-{	bool ok    = true;
-	size_t deg = 4;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>Poly<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> Complex<span style="color: #990000">;</span>
 
-	using CppAD::AD;
-	using CppAD::Poly;
-	typedef std::complex&lt;double&gt; Complex;
+     <span style="font-style: italic"><span style="color: #9A1900">// polynomial coefficients</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> Complex <span style="color: #990000">)</span>     <span style="font-weight: bold"><span style="color: #000000">a</span></span>   <span style="color: #990000">(</span>deg <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// coefficients for p(z)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span>   <span style="color: #990000">(</span>deg <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;=</span> deg<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> i<span style="color: #990000">);</span>
 
-	// polynomial coefficients
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>( Complex )     a   (deg + 1); // coefficients for p(z)
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;) A   (deg + 1);
-	size_t i;
-	for(i = 0; i &lt;= deg; i++)
-		A[i] = a[i] = Complex(i, i);
+     <span style="font-style: italic"><span style="color: #9A1900">// independent variable vector</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Z</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #008080">Complex</span> z <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.);</span>
+     Z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> z<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>Z<span style="color: #990000">);</span>
 
-	// independent variable vector
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;) Z(1);
-	Complex z = Complex(1., 2.);
-	Z[0]      = z;
-	<a href="independent.xml" target="_top">Independent</a>(Z);
+     <span style="font-style: italic"><span style="color: #9A1900">// dependent variable vector and indices</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">P</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// dependent variable vector and indices
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;) P(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// dependent variable values</span></span>
+     P<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> A<span style="color: #990000">,</span> Z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
 
-	// dependent variable values
-	P[0] = Poly(0, A, Z[0]);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: Z -&gt; P and vectors used for derivative calculations</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;Complex&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>Z<span style="color: #990000">,</span> P<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Domain</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
 
-	// create f: Z -&gt; P and vectors used for derivative calculations
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;Complex&gt; f(Z, P);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Complex) v( f.Domain() );
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Complex) w( f.Range() );
+     <span style="font-style: italic"><span style="color: #9A1900">// check first derivative w.r.t z</span></span>
+     v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     w         <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> v<span style="color: #990000">);</span>
+     <span style="color: #008080">Complex</span> p <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> a<span style="color: #990000">,</span> z<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">==</span> p <span style="color: #990000">);</span>
 
-	// check first derivative w.r.t z
-	v[0]      = 1.;
-	w         = f.<a href="forward.xml" target="_top">Forward</a>(1, v);
-	Complex p = Poly(1, a, z);
-	ok &amp;= ( w[0]  == p );
+     <span style="font-style: italic"><span style="color: #9A1900">// second derivative w.r.t z is 2 times its second order Taylor coeff</span></span>
+     v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     w    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> v<span style="color: #990000">);</span>
+     p    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> a<span style="color: #990000">,</span> z<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">==</span> p <span style="color: #990000">);</span>
 
-	// second derivative w.r.t z is 2 times its second order Taylor coeff
-	v[0] = 0.;
-	w    = f.<a href="forward.xml" target="_top">Forward</a>(2, v);
-	p    = Poly(2, a, z);
-	ok &amp;= ( 2. * w[0]  == p );
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/complex_poly.cpp
 
 </body>

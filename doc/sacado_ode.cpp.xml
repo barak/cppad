@@ -104,64 +104,63 @@ See <a href="link_ode.xml" target="_top"><span style='white-space: nowrap'>link_
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;Sacado.hpp&gt;
-// # include &lt;algorithm&gt;
-# include &lt;cassert&gt;
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;cppad/speed/ode_evaluate.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;Sacado.hpp&gt;</span>
+<span style="font-style: italic"><span style="color: #9A1900">// # include &lt;algorithm&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/uniform_01.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/ode_evaluate.hpp&gt;</span>
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
+<span style="font-style: italic"><span style="color: #9A1900">// list of possible options</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;map&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> std<span style="color: #990000">::</span><span style="color: #008080">map&lt;std::string, bool&gt;</span> global_option<span style="color: #990000">;</span>
 
-bool link_ode(
-     size_t                     size       ,
-     size_t                     repeat     ,
-     CppAD::vector&lt;double&gt;      &amp;x         ,
-     CppAD::vector&lt;double&gt;      &amp;jacobian
-)
-{
-     // speed test global option values
-     if( global_atomic )
-          return false;
-     if( global_memory || global_onetape || global_optimize )
-          return false;
-     // -------------------------------------------------------------
-     // setup
-     assert( x.size() == size );
-     assert( jacobian.size() == size * size );
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">link_ode</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>                     size       <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>                     repeat     <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>      <span style="color: #990000">&amp;</span>x         <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span>      <span style="color: #990000">&amp;</span>jacobian
+<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// speed test global option values</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"atomic"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"memory"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"onetape"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"optimize"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// setup</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> size <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> jacobian<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> size <span style="color: #990000">*</span> size <span style="color: #990000">);</span>
 
-     typedef Sacado::Fad::DFad&lt;double&gt;  ADScalar;
-     typedef CppAD::vector&lt;ADScalar&gt;    ADVector;
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> Sacado<span style="color: #990000">::</span>Fad<span style="color: #990000">::</span><span style="color: #008080">DFad&lt;double&gt;</span>  ADScalar<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;ADScalar&gt;</span>    ADVector<span style="color: #990000">;</span>
 
-     size_t i, j;
-     size_t p = 0;          // use ode to calculate function values
-     size_t n = size;       // number of independent variables
-     size_t m = n;          // number of dependent variables
-     ADVector X(n), Y(m);   // independent and dependent variables
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// use ode to calculate function values</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> size<span style="color: #990000">;</span>       <span style="font-style: italic"><span style="color: #9A1900">// number of independent variables</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> n<span style="color: #990000">;</span>          <span style="font-style: italic"><span style="color: #9A1900">// number of dependent variables</span></span>
+     <span style="color: #008080">ADVector</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// independent and dependent variables</span></span>
 
-     // -------------------------------------------------------------
-     while(repeat--)
-     {    // choose next x value
-          CppAD::uniform_01(n, x);
-          for(j = 0; j &lt; n; j++)
-          {    // set up for X as the independent variable vector
-               X[j] = ADScalar(int(n), int(j), x[j]);
-          }
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// choose next x value</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// set up for X as the independent variable vector</span></span>
+               X<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">ADScalar</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>j<span style="color: #990000">),</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+          <span style="color: #FF0000">}</span>
 
-          // evaluate function
-          CppAD::ode_evaluate(X, p, Y);
+          <span style="font-style: italic"><span style="color: #9A1900">// evaluate function</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">ode_evaluate</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> p<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-          // return values with Y as the dependent variable vector
-          for(i = 0; i &lt; m; i++)
-          {    for(j = 0; j &lt; n; j++)
-                    jacobian[ i * n + j ] = Y[i].dx(j);
-          }
-     }
-     return true;
-}
-</pre></font></code>
+          <span style="font-style: italic"><span style="color: #9A1900">// return values with Y as the dependent variable vector</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    jacobian<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">=</span> Y<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: speed/sacado/ode.cpp
 

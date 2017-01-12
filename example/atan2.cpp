@@ -1,6 +1,6 @@
-// $Id: atan2.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: atan2.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -21,7 +21,7 @@ $section The AD atan2 Function: Example and Test$$
 
 
 $code
-$verbatim%example/atan2.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/atan2.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -35,6 +35,7 @@ bool atan2(void)
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n  = 1;
@@ -58,21 +59,21 @@ bool atan2(void)
 	CppAD::ADFun<double> f(x, y);
 
 	// check value
-	ok &= NearEqual(y[0] , x0,  1e-10 , 1e-10);
+	ok &= NearEqual(y[0] , x0, eps99, eps99);
 
 	// forward computation of first partial w.r.t. x[0]
 	CPPAD_TESTVECTOR(double) dx(n);
 	CPPAD_TESTVECTOR(double) dy(m);
 	dx[0] = 1.;
 	dy    = f.Forward(1, dx);
-	ok   &= NearEqual(dy[0], 1., 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], 1., eps99, eps99);
 
 	// reverse computation of derivative of y[0]
 	CPPAD_TESTVECTOR(double)  w(m);
 	CPPAD_TESTVECTOR(double) dw(n);
 	w[0]  = 1.;
 	dw    = f.Reverse(1, w);
-	ok   &= NearEqual(dw[0], 1., 1e-10, 1e-10);
+	ok   &= NearEqual(dw[0], 1., eps99, eps99);
 
 	// use a VecAD<Base>::reference object with atan2
 	CppAD::VecAD<double> v(2);
@@ -81,7 +82,7 @@ bool atan2(void)
 	v[zero]           = sin_of_x0;
 	v[one]            = cos_of_x0;
 	AD<double> result = CppAD::atan2(v[zero], v[one]);
-	ok               &= NearEqual(result, x0, 1e-10, 1e-10);
+	ok               &= NearEqual(result, x0, eps99, eps99);
 
 	return ok;
 }

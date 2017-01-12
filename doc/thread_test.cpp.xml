@@ -368,240 +368,235 @@ Pthread Implementation of a Team of AD Threads</td></tr>
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
+<pre><tt>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cmath&gt;
-# include &lt;cstring&gt;
-# include &lt;ctime&gt;
-# include &quot;team_thread.hpp&quot;
-# include &quot;team_example.hpp&quot;
-# include &quot;harmonic_time.hpp&quot;
-# include &quot;multi_newton_time.hpp&quot;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstring&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;ctime&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_thread.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_example.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic_time.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"multi_newton_time.hpp"</span>
 
-extern bool a11c(void);
-extern bool simple_ad(void);
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">a11c</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">simple_ad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
 
-namespace {
-	size_t arg2size_t(
-		const char* arg       ,
-		int limit             ,
-		const char* error_msg )
-	{	int i = std::atoi(arg);
-		if( i &gt;= limit )
-			return size_t(i);
-		std::cerr &lt;&lt; &quot;value = &quot; &lt;&lt; i &lt;&lt; std::endl;
-		std::cerr &lt;&lt; error_msg &lt;&lt; std::endl;
-		exit(1);
-	}
-	double arg2double(
-		const char* arg       ,
-		double limit          ,
-		const char* error_msg )
-	{	double d = std::atof(arg);
-		if( d &gt;= limit )
-			return d;
-		std::cerr &lt;&lt; &quot;value = &quot; &lt;&lt; d &lt;&lt; std::endl;
-		std::cerr &lt;&lt; error_msg &lt;&lt; std::endl;
-		exit(1);
-	}
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> arg       <span style="color: #990000">,</span>
+          <span style="color: #009900">int</span> limit             <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> error_msg <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">int</span> i <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atoi</span></span><span style="color: #990000">(</span>arg<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&gt;=</span> limit <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"value = "</span> <span style="color: #990000">&lt;&lt;</span> i <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> error_msg <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">arg2double</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> arg       <span style="color: #990000">,</span>
+          <span style="color: #009900">double</span> limit          <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> error_msg <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> d <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atof</span></span><span style="color: #990000">(</span>arg<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> d <span style="color: #990000">&gt;=</span> limit <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> d<span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"value = "</span> <span style="color: #990000">&lt;&lt;</span> d <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> error_msg <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-int main(int argc, char *argv[])
-{	using CppAD::thread_alloc;
-	bool ok         = true;
-	using std::cout;
-	using std::endl;
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> argc<span style="color: #990000">,</span> <span style="color: #009900">char</span> <span style="color: #990000">*</span>argv<span style="color: #990000">[])</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> ok         <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cout<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
 
-	// commnd line usage message
-	const char* usage =
-	&quot;./&lt;thread&gt;_test a11c\n&quot;
-	&quot;./&lt;thread&gt;_test simple_ad\n&quot;
-	&quot;./&lt;thread&gt;_test team_example\n&quot;
-	&quot;./&lt;thread&gt;_test harmonic    test_time max_threads mega_sum\n&quot;
-	&quot;./&lt;thread&gt;_test multi_newton test_time max_threads\\\n&quot;
-	&quot;	num_zero num_sub num_sum use_ad\\\n&quot;
-	&quot;where &lt;thread&gt; is bthread, openmp, or pthread&quot;;
+     <span style="font-style: italic"><span style="color: #9A1900">// commnd line usage message</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> usage <span style="color: #990000">=</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test a11c</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test simple_ad</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test team_example</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test harmonic    test_time max_threads mega_sum</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test multi_newton test_time max_threads</span><span style="color: #CC33CC">\\\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"     num_zero num_sub num_sum use_ad</span><span style="color: #CC33CC">\\\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"where &lt;thread&gt; is bthread, openmp, or pthread"</span><span style="color: #990000">;</span>
 
-	// command line argument values (assign values to avoid compiler warnings)
-	size_t num_zero=0, num_sub=0, num_sum=0;
-	bool use_ad=true;
+     <span style="font-style: italic"><span style="color: #9A1900">// command line argument values (assign values to avoid compiler warnings)</span></span>
+     <span style="color: #008080">size_t</span> num_zero<span style="color: #990000">=</span><span style="color: #993399">0</span><span style="color: #990000">,</span> num_sub<span style="color: #990000">=</span><span style="color: #993399">0</span><span style="color: #990000">,</span> num_sum<span style="color: #990000">=</span><span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> use_ad<span style="color: #990000">=</span><span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// put the date and time in the output file
-	std::time_t rawtime;
-	std::time( &amp;rawtime );
-	const char* gmt = std::asctime( std::gmtime( &amp;rawtime ) );
-	size_t len = size_t( std::strlen(gmt) );
-	cout &lt;&lt; &quot;gmtime        = '&quot;;
-	for(size_t i = 0; i &lt; len; i++)
-		if( gmt[i] != '\n' ) cout &lt;&lt; gmt[i];
-	cout &lt;&lt; &quot;';&quot; &lt;&lt; endl;
+     <span style="font-style: italic"><span style="color: #9A1900">// put the date and time in the output file</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">time_t</span> rawtime<span style="color: #990000">;</span>
+     std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">time</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>rawtime <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> gmt <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">asctime</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">gmtime</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>rawtime <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> len <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strlen</span></span><span style="color: #990000">(</span>gmt<span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"gmtime        = '"</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> len<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> gmt<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">!=</span> <span style="color: #FF0000">'</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">'</span> <span style="color: #990000">)</span> cout <span style="color: #990000">&lt;&lt;</span> gmt<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"';"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	// CppAD version number
-	cout &lt;&lt; &quot;cppad_version = '&quot; &lt;&lt; CPPAD_PACKAGE_STRING &lt;&lt; &quot;';&quot; &lt;&lt; endl;
+     <span style="font-style: italic"><span style="color: #9A1900">// CppAD version number</span></span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"cppad_version = '"</span> <span style="color: #990000">&lt;&lt;</span> CPPAD_PACKAGE_STRING <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"';"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	// put the team name in the output file
-	cout &lt;&lt; &quot;team_name     = '&quot; &lt;&lt; team_name() &lt;&lt; &quot;';&quot; &lt;&lt; endl;
+     <span style="font-style: italic"><span style="color: #9A1900">// put the team name in the output file</span></span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"team_name     = '"</span> <span style="color: #990000">&lt;&lt;</span> <span style="font-weight: bold"><span style="color: #000000">team_name</span></span><span style="color: #990000">()</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"';"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	// print command line as valid matlab/octave
-	cout &lt;&lt; &quot;command       = '&quot; &lt;&lt; argv[0];
-	for(int i = 1; i &lt; argc; i++)
-		cout &lt;&lt; &quot; &quot; &lt;&lt; argv[i];
-	cout &lt;&lt; &quot;';&quot; &lt;&lt; endl;
+     <span style="font-style: italic"><span style="color: #9A1900">// print command line as valid matlab/octave</span></span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"command       = '"</span> <span style="color: #990000">&lt;&lt;</span> argv<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> argc<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" "</span> <span style="color: #990000">&lt;&lt;</span> argv<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"';"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	ok = false;
-	const char* test_name = &quot;&quot;;
-	if( argc &gt; 1 )
-		test_name = *++argv;
-	bool run_a11c         = std::strcmp(test_name, &quot;a11c&quot;)         == 0;
-	bool run_simple_ad    = std::strcmp(test_name, &quot;simple_ad&quot;)    == 0;
-	bool run_team_example = std::strcmp(test_name, &quot;team_example&quot;) == 0;
-	bool run_harmonic     = std::strcmp(test_name, &quot;harmonic&quot;)     == 0;
-	bool run_multi_newton = std::strcmp(test_name, &quot;multi_newton&quot;) == 0;
-	if( run_a11c || run_simple_ad || run_team_example )
-		ok = (argc == 2);
-	else if( run_harmonic )
-		ok = (argc == 5);
-	else if( run_multi_newton )
-		ok = (argc == 8);
-	if( ! ok )
-	{	std::cerr &lt;&lt; &quot;test_name     = &quot; &lt;&lt; test_name &lt;&lt; endl;
-		std::cerr &lt;&lt; &quot;argc          = &quot; &lt;&lt; argc      &lt;&lt; endl;
-		std::cerr &lt;&lt; usage &lt;&lt; endl;
-		exit(1);
-	}
-	if( run_a11c || run_simple_ad || run_team_example )
-	{	if( run_a11c )
-			ok        = a11c();
-		else if( run_simple_ad )
-			ok        = simple_ad();
-		else	ok        = team_example();
-		if( thread_alloc::free_all() )
-			cout &lt;&lt; &quot;free_all      = true;&quot;  &lt;&lt; endl;
-		else
-		{	ok = false;
-			cout &lt;&lt; &quot;free_all      = false;&quot; &lt;&lt; endl;
-		}
-		if( ok )
-			cout &lt;&lt; &quot;OK            = true;&quot;  &lt;&lt; endl;
-		else cout &lt;&lt; &quot;OK            = false;&quot; &lt;&lt; endl;
-		return ! ok;
-	}
+     ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> test_name <span style="color: #990000">=</span> <span style="color: #FF0000">""</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> argc <span style="color: #990000">&gt;</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+          test_name <span style="color: #990000">=</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> run_a11c         <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"a11c"</span><span style="color: #990000">)</span>         <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> run_simple_ad    <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"simple_ad"</span><span style="color: #990000">)</span>    <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> run_team_example <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"team_example"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> run_harmonic     <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"harmonic"</span><span style="color: #990000">)</span>     <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> run_multi_newton <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"multi_newton"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_a11c <span style="color: #990000">||</span> run_simple_ad <span style="color: #990000">||</span> run_team_example <span style="color: #990000">)</span>
+          ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>argc <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">)</span>
+          ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>argc <span style="color: #990000">==</span> <span style="color: #993399">5</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_multi_newton <span style="color: #990000">)</span>
+          ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>argc <span style="color: #990000">==</span> <span style="color: #993399">8</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"test_name     = "</span> <span style="color: #990000">&lt;&lt;</span> test_name <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"argc          = "</span> <span style="color: #990000">&lt;&lt;</span> argc      <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> usage <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_a11c <span style="color: #990000">||</span> run_simple_ad <span style="color: #990000">||</span> run_team_example <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_a11c <span style="color: #990000">)</span>
+               ok        <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a11c</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_simple_ad <span style="color: #990000">)</span>
+               ok        <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">simple_ad</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok        <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">team_example</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span>
+               cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"free_all      = true;"</span>  <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+               cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"free_all      = false;"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+               cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK            = true;"</span>  <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK            = false;"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">!</span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// test_time
-	double test_time = arg2double( *++argv, 0.,
-		&quot;run: test_time is less than zero&quot;
-	);
+     <span style="font-style: italic"><span style="color: #9A1900">// test_time</span></span>
+     <span style="color: #009900">double</span> test_time <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2double</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span>
+          <span style="color: #FF0000">"run: test_time is less than zero"</span>
+     <span style="color: #990000">);</span>
 
-	// max_threads
-	size_t max_threads = arg2size_t( *++argv, 0,
-		&quot;run: max_threads is less than zero&quot;
-	);
+     <span style="font-style: italic"><span style="color: #9A1900">// max_threads</span></span>
+     <span style="color: #008080">size_t</span> max_threads <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"run: max_threads is less than zero"</span>
+     <span style="color: #990000">);</span>
 
-	size_t mega_sum = 0; // assignment to avoid compiler warning
-	if( run_harmonic )
-	{	// mega_sum
-		mega_sum = arg2size_t( *++argv, 1,
-			&quot;run: mega_sum is less than one&quot;
-		);
-	}
-	else
-	{	ok &amp;= run_multi_newton;
+     <span style="color: #008080">size_t</span> mega_sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// assignment to avoid compiler warning</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// mega_sum</span></span>
+          mega_sum <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"run: mega_sum is less than one"</span>
+          <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> run_multi_newton<span style="color: #990000">;</span>
 
-		// num_zero
-		num_zero = arg2size_t( *++argv, 2,
-			&quot;run: num_zero is less than two&quot;
-		);
+          <span style="font-style: italic"><span style="color: #9A1900">// num_zero</span></span>
+          num_zero <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"run: num_zero is less than two"</span>
+          <span style="color: #990000">);</span>
 
-		// num_sub
-		num_sub = arg2size_t( *++argv, 1,
-			&quot;run: num_sub is less than one&quot;
-		);
+          <span style="font-style: italic"><span style="color: #9A1900">// num_sub</span></span>
+          num_sub <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"run: num_sub is less than one"</span>
+          <span style="color: #990000">);</span>
 
-		// num_sum
-		num_sum = arg2size_t( *++argv, 1,
-			&quot;run: num_sum is less than one&quot;
-		);
+          <span style="font-style: italic"><span style="color: #9A1900">// num_sum</span></span>
+          num_sum <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"run: num_sum is less than one"</span>
+          <span style="color: #990000">);</span>
 
-		// use_ad
-		++argv;
-		if( std::strcmp(*argv, &quot;true&quot;) == 0 )
-			use_ad = true;
-		else if( std::strcmp(*argv, &quot;false&quot;) == 0 )
-			use_ad = false;
-		else
-		{	std::cerr &lt;&lt; &quot;run: use_ad = '&quot; &lt;&lt; *argv;
-			std::cerr &lt;&lt; &quot;' is not true or false&quot; &lt;&lt; endl;
-			exit(1);
-		}
-	}
+          <span style="font-style: italic"><span style="color: #9A1900">// use_ad</span></span>
+          <span style="color: #990000">++</span>argv<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(*</span>argv<span style="color: #990000">,</span> <span style="color: #FF0000">"true"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               use_ad <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(*</span>argv<span style="color: #990000">,</span> <span style="color: #FF0000">"false"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               use_ad <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"run: use_ad = '"</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #990000">*</span>argv<span style="color: #990000">;</span>
+               std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"' is not true or false"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
 
-	// run the test for each number of threads
-	size_t num_threads, inuse_this_thread = 0;
-	cout &lt;&lt; &quot;time_all  = [&quot; &lt;&lt; endl;
-	for(num_threads = 0; num_threads &lt;= max_threads; num_threads++)
-	{	double time_out;
+     <span style="font-style: italic"><span style="color: #9A1900">// run the test for each number of threads</span></span>
+     <span style="color: #008080">size_t</span> num_threads<span style="color: #990000">,</span> inuse_this_thread <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"time_all  = ["</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>num_threads <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> num_threads <span style="color: #990000">&lt;=</span> max_threads<span style="color: #990000">;</span> num_threads<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> time_out<span style="color: #990000">;</span>
 
-		// set the number of threads
-		if( num_threads &gt; 0 )
-			ok &amp;= team_create(num_threads);
+          <span style="font-style: italic"><span style="color: #9A1900">// set the number of threads</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">team_create</span></span><span style="color: #990000">(</span>num_threads<span style="color: #990000">);</span>
 
-		// ammount of memory initialy inuse by thread zero
-		ok &amp;= 0 == thread_alloc::thread_num();
-		inuse_this_thread = thread_alloc::inuse(0);
+          <span style="font-style: italic"><span style="color: #9A1900">// ammount of memory initialy inuse by thread zero</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #993399">0</span> <span style="color: #990000">==</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
+          inuse_this_thread <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-		// run the requested test
-		if( run_harmonic ) ok &amp;=
-			harmonic_time(time_out, test_time, num_threads, mega_sum);
-		else
-		{	ok &amp;= run_multi_newton;
-			ok &amp;= multi_newton_time(
-				time_out                ,
-				test_time               ,
-				num_threads             ,
-				num_zero                ,
-				num_sub                 ,
-				num_sum                 ,
-				use_ad
-			);
-		}
+          <span style="font-style: italic"><span style="color: #9A1900">// run the requested test</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">)</span> ok <span style="color: #990000">&amp;=</span>
+               <span style="font-weight: bold"><span style="color: #000000">harmonic_time</span></span><span style="color: #990000">(</span>time_out<span style="color: #990000">,</span> test_time<span style="color: #990000">,</span> num_threads<span style="color: #990000">,</span> mega_sum<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> run_multi_newton<span style="color: #990000">;</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton_time</span></span><span style="color: #990000">(</span>
+                    time_out                <span style="color: #990000">,</span>
+                    test_time               <span style="color: #990000">,</span>
+                    num_threads             <span style="color: #990000">,</span>
+                    num_zero                <span style="color: #990000">,</span>
+                    num_sub                 <span style="color: #990000">,</span>
+                    num_sum                 <span style="color: #990000">,</span>
+                    use_ad
+               <span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
 
-		// set back to one thread and fee all avaialable memory
-		if( num_threads &gt; 0 )
-			ok &amp;= team_destroy();
-		size_t thread;
-		for(thread = 0; thread &lt; num_threads; thread++)
-		{	thread_alloc::free_available(thread);
-			if( thread == 0 )
-				ok &amp;= thread_alloc::inuse(thread) == inuse_this_thread;
-			else	ok &amp;= thread_alloc::inuse(thread) == 0;
-		}
-		cout &lt;&lt; &quot;\t&quot; &lt;&lt; time_out &lt;&lt; &quot; % &quot;;
-		if( num_threads == 0 )
-			cout &lt;&lt; &quot;no threading&quot; &lt;&lt; endl;
-		else	cout &lt;&lt; num_threads &lt;&lt; &quot; threads&quot; &lt;&lt; endl;
-	}
-	cout &lt;&lt; &quot;];&quot; &lt;&lt; endl;
-	//
-	if( thread_alloc::free_all() )
-		cout &lt;&lt; &quot;free_all      = true;&quot;  &lt;&lt; endl;
-	else
-	{	ok = false;
-		cout &lt;&lt; &quot;free_all      = false;&quot; &lt;&lt; endl;
-	}
-	if( ok )
-		cout &lt;&lt; &quot;OK            = true;&quot;  &lt;&lt; endl;
-	else cout &lt;&lt; &quot;OK            = false;&quot; &lt;&lt; endl;
+          <span style="font-style: italic"><span style="color: #9A1900">// set back to one thread and fee all avaialable memory</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">team_destroy</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">size_t</span> thread<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+                    ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> inuse_this_thread<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\t</span><span style="color: #FF0000">"</span> <span style="color: #990000">&lt;&lt;</span> time_out <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" % "</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"no threading"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     cout <span style="color: #990000">&lt;&lt;</span> num_threads <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" threads"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"];"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"free_all      = true;"</span>  <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"free_all      = false;"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK            = true;"</span>  <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK            = false;"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
-	return  ! ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span>  <span style="color: #990000">!</span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/thread_test.cpp
 
 </body>

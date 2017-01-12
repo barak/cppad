@@ -1,6 +1,6 @@
-// $Id: exp_2_rev1.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: exp_2_rev1.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -25,7 +25,7 @@ $mindex exp_2 mode$$
 
 
 
-$codep */
+$srccode%cpp% */
 # include <cstddef>                 // define size_t
 # include <cmath>                   // prototype for fabs
 extern bool exp_2_for0(double *v0); // computes zero order forward sweep
@@ -66,6 +66,6 @@ bool exp_2_rev1(void)
 
 	return ok;
 }
-/* $$
+/* %$$
 $end
 */

@@ -1,9 +1,9 @@
-// $Id: sparse_pattern.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_SPARSE_PATTERN_HPP
-# define CPPAD_SPARSE_PATTERN_HPP
+// $Id: sparse_pattern.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_SPARSE_PATTERN_HPP
+# define CPPAD_LOCAL_SPARSE_PATTERN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -14,12 +14,11 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
 // necessary definitions
-# include <cppad/local/define.hpp>
+# include <cppad/core/define.hpp>
 # include <cppad/local/sparse_pack.hpp>
-# include <cppad/local/sparse_set.hpp>
 # include <cppad/local/sparse_list.hpp>
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file sparse_pattern.hpp
 Determine internal spasity pattern from correpsonding element type.
@@ -51,9 +50,9 @@ Specilization for <code>std::set<size_t></code> elements.
 template <>
 struct internal_sparsity< std::set<size_t> >
 {
-	typedef CPPAD_INTERNAL_SPARSE_SET pattern_type;
+	typedef sparse_list pattern_type;
 };
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 
 # endif

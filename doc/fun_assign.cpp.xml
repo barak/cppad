@@ -86,93 +86,88 @@ A:active { color : purple }
 
 
 <center><b><big><big>ADFun Assignment: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;limits&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
 
-bool fun_assign(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	size_t i, j;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">fun_assign</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
 
-	// ten times machine percision
-	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+     <span style="font-style: italic"><span style="color: #9A1900">// ten times machine percision</span></span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	// two <a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; objects
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; g;
+     <span style="font-style: italic"><span style="color: #9A1900">// two ADFun&lt;double&gt; objects</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> g<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n  = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	for(j = 0; j &lt; n; j++)
-		x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt;(j + 2);
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>j <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = x[0] + x[0] * x[1];
-	y[1] = x[1] * x[2] + x[2];
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
 
-	// Store operation sequence, and order zero forward results, in f.
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// Store operation sequence, and order zero forward results, in f.</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// sparsity pattern for the identity matrix
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(std::set&lt;size_t&gt;) r(n);
-	for(j = 0; j &lt; n; j++)
-		r[j].insert(j);
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern for the identity matrix</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          r<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
 
-	// Store forward mode sparsity pattern in f
-	f.ForSparseJac(n, r);
+     <span style="font-style: italic"><span style="color: #9A1900">// Store forward mode sparsity pattern in f</span></span>
+     f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
 
-	// make a copy in g
-	g = f;
+     <span style="font-style: italic"><span style="color: #9A1900">// make a copy in g</span></span>
+     g <span style="color: #990000">=</span> f<span style="color: #990000">;</span>
 
-	// check values that should be equal
-	ok &amp;= ( g.size_order()       == f.size_order() );
-	ok &amp;= ( g.size_forward_bool() == f.size_forward_bool() );
-	ok &amp;= ( g.size_forward_set()  == f.size_forward_set() );
+     <span style="font-style: italic"><span style="color: #9A1900">// check values that should be equal</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span>       <span style="color: #990000">==</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_order</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_bool</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_set</span></span><span style="color: #990000">()</span>  <span style="color: #990000">==</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_forward_set</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
 
-	// Use zero order Taylor coefficient from f for first order
-	// calculation using g.
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n), dy(m);
-	for(i = 0; i &lt; n; i++)
-		dx[i] = 0.;
-	dx[1] = 1;
-	dy    = g.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], x[0], eps, eps); // partial y[0] w.r.t x[1]
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], x[2], eps, eps); // partial y[1] w.r.t x[1]
+     <span style="font-style: italic"><span style="color: #9A1900">// Use zero order Taylor coefficient from f for first order</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// calculation using g.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          dx<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     dy    <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// partial y[0] w.r.t x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// partial y[1] w.r.t x[1]</span></span>
 
-	// Use forward Jacobian sparsity pattern from f to calculate
-	// Hessian sparsity pattern using g.
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(std::set&lt;size_t&gt;) s(1), h(n);
-	s[0].insert(0); // Compute sparsity pattern for Hessian of y[0]
-	h =  f.RevSparseHes(n, s);
+     <span style="font-style: italic"><span style="color: #9A1900">// Use forward Jacobian sparsity pattern from f to calculate</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Hessian sparsity pattern using g.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// Compute sparsity pattern for Hessian of y[0]</span></span>
+     h <span style="color: #990000">=</span>  f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> s<span style="color: #990000">);</span>
 
-	// check sparsity pattern for Hessian of y[0] = x[0] + x[0] * x[1]
-	ok  &amp;= ( h[0].find(0) == h[0].end() ); // zero     w.r.t x[0], x[0]
-	ok  &amp;= ( h[0].find(1) != h[0].end() ); // non-zero w.r.t x[0], x[1]
-	ok  &amp;= ( h[0].find(2) == h[0].end() ); // zero     w.r.t x[0], x[2]
+     <span style="font-style: italic"><span style="color: #9A1900">// check sparsity pattern for Hessian of y[0] = x[0] + x[0] * x[1]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[0], x[0]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// non-zero w.r.t x[0], x[1]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[0], x[2]</span></span>
 
-	ok  &amp;= ( h[1].find(0) != h[1].end() ); // non-zero w.r.t x[1], x[0]
-	ok  &amp;= ( h[1].find(1) == h[1].end() ); // zero     w.r.t x[1], x[1]
-	ok  &amp;= ( h[1].find(2) == h[1].end() ); // zero     w.r.t x[1], x[2]
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">!=</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// non-zero w.r.t x[1], x[0]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[1], x[1]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[1], x[2]</span></span>
 
-	ok  &amp;= ( h[2].find(0) == h[2].end() ); // zero     w.r.t x[2], x[0]
-	ok  &amp;= ( h[2].find(1) == h[2].end() ); // zero     w.r.t x[2], x[1]
-	ok  &amp;= ( h[2].find(2) == h[2].end() ); // zero     w.r.t x[2], x[2]
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[2], x[0]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[2], x[1]</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// zero     w.r.t x[2], x[2]</span></span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/fun_assign.cpp
 
 </body>

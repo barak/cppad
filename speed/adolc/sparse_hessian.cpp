@@ -1,6 +1,6 @@
-// $Id: sparse_hessian.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: sparse_hessian.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -42,7 +42,7 @@ See $cref link_sparse_hessian$$.
 
 $head Implementation$$
 
-$codep */
+$srccode%cpp% */
 # include <adolc/adolc.h>
 # include <adolc/adolc_sparse.h>
 # include <cppad/utility/vector.hpp>
@@ -51,8 +51,8 @@ $codep */
 # include <cppad/speed/sparse_hes_fun.hpp>
 
 // list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
-extern bool global_colpack, global_boolsparsity;
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_sparse_hessian(
 	size_t                           size     ,
@@ -63,9 +63,9 @@ bool link_sparse_hessian(
 	CppAD::vector<double>&           hessian  ,
 	size_t&                          n_sweep )
 {
-	if( global_atomic || (! global_colpack) )
+	if( global_option["atomic"] || (! global_option["colpack"]) )
 		return false;
-	if( global_memory || global_optimize || global_boolsparsity )
+	if( global_option["memory"] || global_option["optimize"] || global_option["boolsparsity"] )
 		return false;
 	// -----------------------------------------------------
 	// setup
@@ -107,7 +107,7 @@ bool link_sparse_hessian(
 	DblVector  values = CPPAD_NULL;   // Hessian values
 
 	// ----------------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( ! global_option["onetape"] ) while(repeat--)
 	{	// choose a value for x
 		CppAD::uniform_01(n, x);
 
@@ -211,6 +211,6 @@ bool link_sparse_hessian(
 	return true;
 
 }
-/* $$
+/* %$$
 $end
 */

@@ -1,6 +1,6 @@
-// $Id: print_for.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: print_for.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -39,7 +39,7 @@ $head Running$$
 To build this program and run its correctness test see $cref cmake_check$$.
 
 $head Source Code$$
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
 
 namespace {
@@ -124,7 +124,7 @@ int main(void)
 		return 1;
 	return 0;
 }
-/* $$
+/* %$$
 
 $head Output$$
 Executing the program above generates the following output:

@@ -84,156 +84,152 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Vectors that Record Index Operations: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cassert&gt;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// return the vector x that solves the following linear system</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//     a[0] * x[0] + a[1] * x[1] = b[0]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//     a[2] * x[0] + a[3] * x[1] = b[1]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// in a way that will record pivot operations on the AD&lt;double&gt; tape</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> Vector<span style="color: #990000">;</span>
+     <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">Solve</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>a <span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>b<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span>a<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">4</span> <span style="color: #990000">&amp;&amp;</span> b<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
 
-namespace {
-	// return the vector x that solves the following linear system
-	//	a[0] * x[0] + a[1] * x[1] = b[0]
-	//	a[2] * x[0] + a[3] * x[1] = b[1]
-	// in a way that will record pivot operations on the <a href="ad.xml" target="_top">AD</a>&lt;double&gt; tape
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt;) Vector;
-	Vector Solve(const Vector &amp;a , const Vector &amp;b)
-	{	using namespace CppAD;
-		assert(a.size() == 4 &amp;&amp; b.size() == 2);
+          <span style="font-style: italic"><span style="color: #9A1900">// copy the vector b into the VecAD object B</span></span>
+          <span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">B</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+          <span style="color: #008080">AD&lt;double&gt;</span>    u<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>u <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> u <span style="color: #990000">&lt;</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> u <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">.)</span>
+               B<span style="color: #990000">[</span>u<span style="color: #990000">]</span> <span style="color: #990000">=</span> b<span style="color: #990000">[</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span>u<span style="color: #990000">)</span> <span style="color: #990000">];</span>
 
-		// copy the vector b into the VecAD object B
-		VecAD&lt;double&gt; B(2);
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt;    u;
-		for(u = 0; u &lt; 2; u += 1.)
-			B[u] = b[ Integer(u) ];
+          <span style="font-style: italic"><span style="color: #9A1900">// copy the matrix a into the VecAD object A</span></span>
+          <span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span><span style="color: #993399">4</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>u <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> u <span style="color: #990000">&lt;</span> <span style="color: #993399">4</span><span style="color: #990000">;</span> u <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">.)</span>
+               A<span style="color: #990000">[</span>u<span style="color: #990000">]</span> <span style="color: #990000">=</span> a <span style="color: #990000">[</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span>u<span style="color: #990000">)</span> <span style="color: #990000">];</span>
 
-		// copy the matrix a into the VecAD object A
-		VecAD&lt;double&gt; A(4);
-		for(u = 0; u &lt; 4; u += 1.)
-			A[u] = a [ Integer(u) ];
+          <span style="font-style: italic"><span style="color: #9A1900">// tape AD operation sequence that determines the row of A</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// with maximum absolute element in column zero</span></span>
+          <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">one</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> rmax <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>a<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]),</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>a<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]),</span> zero<span style="color: #990000">,</span> one<span style="color: #990000">);</span>
 
-		// tape AD operation sequence that determines the row of A
-		// with maximum absolute element in column zero
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0), one(1);
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; rmax = CondExpGt(abs(a[0]), abs(a[2]), zero, one);
+          <span style="font-style: italic"><span style="color: #9A1900">// divide row rmax by A(rmax, 0)</span></span>
+          A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">];</span>
+          B<span style="color: #990000">[</span>rmax<span style="color: #990000">]</span>          <span style="color: #990000">=</span> B<span style="color: #990000">[</span>rmax<span style="color: #990000">]</span>         <span style="color: #990000">/</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">];</span>
+          A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> one<span style="color: #990000">;</span>
 
-		// divide row rmax by A(rmax, 0)
-		A[rmax * 2 + 1]  = A[rmax * 2 + 1] / A[rmax * 2 + 0];
-		B[rmax]          = B[rmax]         / A[rmax * 2 + 0];
-		A[rmax * 2 + 0]  = one;
+          <span style="font-style: italic"><span style="color: #9A1900">// subtract A(other,0) times row A(rmax, *) from row A(other,*)</span></span>
+          <span style="color: #008080">AD&lt;double&gt;</span> other   <span style="color: #990000">=</span> one <span style="color: #990000">-</span> rmax<span style="color: #990000">;</span>
+          A<span style="color: #990000">[</span>other <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> A<span style="color: #990000">[</span>other <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span>
+                             <span style="color: #990000">-</span> A<span style="color: #990000">[</span>other <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">];</span>
+          B<span style="color: #990000">[</span>other<span style="color: #990000">]</span>           <span style="color: #990000">=</span> B<span style="color: #990000">[</span>other<span style="color: #990000">]</span>
+                             <span style="color: #990000">-</span> A<span style="color: #990000">[</span>other <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> B<span style="color: #990000">[</span>rmax<span style="color: #990000">];</span>
+          A<span style="color: #990000">[</span>other <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> zero<span style="color: #990000">;</span>
 
-		// subtract A(other,0) times row A(rmax, *) from row A(other,*)
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; other   = one - rmax;
-		A[other * 2 + 1]   = A[other * 2 + 1]
-		                   - A[other * 2 + 0] * A[rmax * 2 + 1];
-		B[other]           = B[other]
-		                   - A[other * 2 + 0] * B[rmax];
-		A[other * 2 + 0] = zero;
+          <span style="font-style: italic"><span style="color: #9A1900">// back substitute to compute the solution vector x.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Note that the columns of A correspond to rows of x.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Also note that A[rmax * 2 + 0] is equal to one.</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> B<span style="color: #990000">[</span>other<span style="color: #990000">]</span> <span style="color: #990000">/</span> A<span style="color: #990000">[</span>other <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">];</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> B<span style="color: #990000">[</span>rmax<span style="color: #990000">]</span> <span style="color: #990000">-</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
 
-		// back substitute to compute the solution vector x.
-		// Note that the columns of A correspond to rows of x.
-		// Also note that A[rmax * 2 + 0] is equal to one.
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(2);
-		x[1] = B[other] / A[other * 2 + 1];
-		x[0] = B[rmax] - A[rmax * 2 + 1] * x[1];
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-		return x;
-	}
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">vec_ad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool vec_ad(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	using CppAD::AD;
-	using CppAD::NearEqual;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>       <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// 2 * identity matrix (rmax in Solve will be 0)</span></span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> X<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 4;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       x(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) X(n);
-	// 2 * identity matrix (rmax in Solve will be 0)
-	X[0] = x[0] = 2.; X[1] = x[1] = 0.;
-	X[2] = x[2] = 0.; X[3] = x[3] = 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// define the vector b</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>       <span style="font-weight: bold"><span style="color: #000000">b</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">B</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     B<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> b<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     B<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// define the vector b
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)       b(2);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) B(2);
-	B[0] = b[0] = 0.;
-	B[1] = b[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector solves X * Y = b</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Solve</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> B<span style="color: #990000">);</span>
 
-	// range space vector solves X * Y = b
-	size_t m = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) Y(m);
-	Y = Solve(X, B);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: X -&gt; Y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// create f: X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// By Cramer's rule:</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// y[0] = [ b[0] * x[3] - x[1] * b[1] ] / [ x[0] * x[3] - x[1] * x[2] ]</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// y[1] = [ x[0] * b[1] - b[0] * x[2] ] / [ x[0] * x[3] - x[1] * x[2] ]</span></span>
 
-	// By Cramer's rule:
-	// y[0] = [ b[0] * x[3] - x[1] * b[1] ] / [ x[0] * x[3] - x[1] * x[2] ]
-	// y[1] = [ x[0] * b[1] - b[0] * x[2] ] / [ x[0] * x[3] - x[1] * x[2] ]
+     <span style="color: #009900">double</span> den   <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+     <span style="color: #009900">double</span> dsq   <span style="color: #990000">=</span> den <span style="color: #990000">*</span> den<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> num0  <span style="color: #990000">=</span> b<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     <span style="color: #009900">double</span> num1  <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> b<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
 
-	double den   = x[0] * x[3] - x[1] * x[2];
-	double dsq   = den * den;
-	double num0  = b[0] * x[3] - x[1] * b[1];
-	double num1  = x[0] * b[1] - b[0] * x[2];
+     <span style="font-style: italic"><span style="color: #9A1900">// check value</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> num0 <span style="color: #990000">/</span> den<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> num1 <span style="color: #990000">/</span> den<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// check value
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Y[0] , num0 / den,  1e-10 , 1e-10);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Y[1] , num1 / den,  1e-10 , 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// forward computation of partials w.r.t. x[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> dx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> dx<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>         <span style="color: #990000">-</span> num0 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> den <span style="color: #990000">-</span> num1 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// forward computation of partials w.r.t. x[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
-	dx[0] = 1.; dx[1] = 0.;
-	dx[2] = 0.; dx[3] = 0.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 0.         - num0 * x[3] / dsq, 1e-10, 1e-10);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], b[1] / den - num1 * x[3] / dsq, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the solution for a new x matrix such that pivioting</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// on the original rmax row would divide by zero</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// compute the solution for a new x matrix such that pivioting
-	// on the original rmax row would divide by zero
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) y(m);
-	x[0] = 0.; x[1] = 2.;
-	x[2] = 2.; x[3] = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// new values for Cramer's rule</span></span>
+     den   <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+     dsq   <span style="color: #990000">=</span> den <span style="color: #990000">*</span> den<span style="color: #990000">;</span>
+     num0  <span style="color: #990000">=</span> b<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     num1  <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> b<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
 
-	// new values for Cramer's rule
-	den   = x[0] * x[3] - x[1] * x[2];
-	dsq   = den * den;
-	num0  = b[0] * x[3] - x[1] * b[1];
-	num1  = x[0] * b[1] - b[0] * x[2];
+     <span style="font-style: italic"><span style="color: #9A1900">// check values</span></span>
+     y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> num0 <span style="color: #990000">/</span> den<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> num1 <span style="color: #990000">/</span> den<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// check values
-	y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , num0 / den,  1e-10 , 1e-10);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[1] , num1 / den,  1e-10 , 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// forward computation of partials w.r.t. x[1]</span></span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> dx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> dx<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],-</span>b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> den <span style="color: #990000">+</span> num0 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>         <span style="color: #990000">+</span> num1 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// forward computation of partials w.r.t. x[1]
-	dx[0] = 0.; dx[1] = 1.;
-	dx[2] = 0.; dx[3] = 0.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0],-b[1] / den + num0 * x[2] / dsq, 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], 0.         + num1 * x[2] / dsq, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse computation of derivative of y[0] w.r.t x</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>         <span style="color: #990000">-</span> num0 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],-</span>b<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> den <span style="color: #990000">+</span> num0 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.</span>         <span style="color: #990000">+</span> num0 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">],</span> b<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> den <span style="color: #990000">-</span> num0 <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> dsq<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// reverse computation of derivative of y[0] w.r.t x
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
-	w[0] = 1.; w[1] = 0.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], 0.         - num0 * x[3] / dsq, 1e-10, 1e-10);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[1],-b[1] / den + num0 * x[2] / dsq, 1e-10, 1e-10);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[2], 0.         + num0 * x[1] / dsq, 1e-10, 1e-10);
-	ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[3], b[0] / den - num0 * x[0] / dsq, 1e-10, 1e-10);
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/vec_ad.cpp
 
 </body>

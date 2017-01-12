@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -104,10 +105,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Example Use of SpeedTest</big></big></b></center>
 <br/>
 <b><big><a name="Running This Program" id="Running This Program">Running This Program</a></big></b>
@@ -122,43 +119,41 @@ you can compile and run this program by changing into the
 <br/>
 <b><big><a name="Program" id="Program">Program</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/utility/speed_test.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/speed_test.hpp&gt;</span>
 
-std::string Test(size_t size, size_t repeat)
-{    // setup
-     double *a = new double[size];
-     double *b = new double[size];
-     double *c = new double[size];
-     size_t i  = size;;
-     while(i)
-     {    --i;
-          a[i] = i;
-          b[i] = 2 * i;
-     }
-     // operations we are timing
-     while(repeat--)
-     {    i = size;;
-          while(i)
-          {    --i;
-               c[i] = a[i] + b[i];
-          }
-     }
-     // teardown
-     delete [] a;
-     delete [] b;
-     delete [] c;
+std<span style="color: #990000">::</span><span style="color: #008080">string</span> <span style="font-weight: bold"><span style="color: #000000">Test</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> size<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> repeat<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// setup</span></span>
+     <span style="color: #009900">double</span> <span style="color: #990000">*</span>a <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">double</span><span style="color: #990000">[</span>size<span style="color: #990000">];</span>
+     <span style="color: #009900">double</span> <span style="color: #990000">*</span>b <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">double</span><span style="color: #990000">[</span>size<span style="color: #990000">];</span>
+     <span style="color: #009900">double</span> <span style="color: #990000">*</span>c <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">double</span><span style="color: #990000">[</span>size<span style="color: #990000">];</span>
+     <span style="color: #008080">size_t</span> i  <span style="color: #990000">=</span> size<span style="color: #990000">;;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>i<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #990000">--</span>i<span style="color: #990000">;</span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> i<span style="color: #990000">;</span>
+          b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> i<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// operations we are timing</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     i <span style="color: #990000">=</span> size<span style="color: #990000">;;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>i<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="color: #990000">--</span>i<span style="color: #990000">;</span>
+               c<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> b<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// teardown</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> a<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> b<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> c<span style="color: #990000">;</span>
 
-     // return a test name that is valid for all sizes and repeats
-     return &quot;double: c[*] = a[*] + b[*]&quot;;
-}
-int main(void)
-{
-     CppAD::SpeedTest(Test, 10, 10, 100);
-     return 0;
-}
-
-</pre></font></code>
+     <span style="font-style: italic"><span style="color: #9A1900">// return a test name that is valid for all sizes and repeats</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #FF0000">"double: c[*] = a[*] + b[*]"</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">SpeedTest</span></span><span style="color: #990000">(</span>Test<span style="color: #990000">,</span> <span style="color: #993399">10</span><span style="color: #990000">,</span> <span style="color: #993399">10</span><span style="color: #990000">,</span> <span style="color: #993399">100</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 <b><big><a name="Output" id="Output">Output</a></big></b>
 <br/>
 Executing of the program above generated the following output

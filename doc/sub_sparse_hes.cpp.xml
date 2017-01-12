@@ -92,8 +92,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 <center><b><big><big>Computing Sparse Hessian for a Subset of Variables</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -218,120 +216,115 @@ Hessian of
 
 .
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-namespace {
-	using CppAD::vector;
-	template &lt;class Scalar&gt;
-	Scalar f(const vector&lt;Scalar&gt;&amp; u,const vector&lt;Scalar&gt;&amp; v)
-	{	size_t i;
-		Scalar sum_v = Scalar(0);
-		for(i = 0; i &lt; v.size(); i++)
-			sum_v += v[i];
-		Scalar sum_cube_u = Scalar(0);
-		for(i = 0; i &lt; u.size(); i++)
-			sum_cube_u += u[i] * u[i] * u[i] / 6.0;
-		return sum_v * sum_cube_u;
-	}
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Scalar</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">Scalar</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span>Scalar<span style="color: #990000">&gt;&amp;</span> u<span style="color: #990000">,</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> vector<span style="color: #990000">&lt;</span>Scalar<span style="color: #990000">&gt;&amp;</span> v<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="color: #008080">Scalar</span> sum_v <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> v<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span> i<span style="color: #990000">++)</span>
+               sum_v <span style="color: #990000">+=</span> v<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          <span style="color: #008080">Scalar</span> sum_cube_u <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> u<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span> i<span style="color: #990000">++)</span>
+               sum_cube_u <span style="color: #990000">+=</span> u<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> u<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> u<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">6.0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> sum_v <span style="color: #990000">*</span> sum_cube_u<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-bool sub_sparse_hes(void)
-{	bool ok = true;
-	using CppAD::AD;
-	typedef <a href="ad.xml" target="_top">AD</a>&lt;double&gt;   adouble;
-	typedef <a href="ad.xml" target="_top">AD</a>&lt;adouble&gt; a2double;
-	typedef vector&lt; std::set&lt;size_t&gt; &gt; pattern;
-	double eps = 10. * std::numeric_limits&lt;double&gt;::epsilon();
-	size_t i, j;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sub_sparse_hes</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">AD&lt;double&gt;</span>   adouble<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">AD&lt;adouble&gt;</span> a2double<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">vector&lt; std::set&lt;size_t&gt; &gt;</span> pattern<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
 
-	// start recording with x = (u , v)
-	size_t nu = 10;
-	size_t nv = 5;
-	size_t n  = nu + nv;
-	vector&lt;adouble&gt; ax(n);
-	for(j = 0; j &lt; n; j++)
-		ax[j] = adouble(j + 2);
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+     <span style="font-style: italic"><span style="color: #9A1900">// start recording with x = (u , v)</span></span>
+     <span style="color: #008080">size_t</span> nu <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> nv <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> nu <span style="color: #990000">+</span> nv<span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;adouble&gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          ax<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">adouble</span></span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-	// extract u as independent variables
-	vector&lt;a2double&gt; a2u(nu);
-	for(j = 0; j &lt; nu; j++)
-		a2u[j] = a2double(j + 2);
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a2u);
+     <span style="font-style: italic"><span style="color: #9A1900">// extract u as independent variables</span></span>
+     <span style="color: #008080">vector&lt;a2double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">a2u</span></span><span style="color: #990000">(</span>nu<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nu<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a2u<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">a2double</span></span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a2u<span style="color: #990000">);</span>
 
-	// extract v as parameters
-	vector&lt;a2double&gt; a2v(nv);
-	for(j = 0; j &lt; nv; j++)
-		a2v[j] = ax[nu+j];
+     <span style="font-style: italic"><span style="color: #9A1900">// extract v as parameters</span></span>
+     <span style="color: #008080">vector&lt;a2double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">a2v</span></span><span style="color: #990000">(</span>nv<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nv<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a2v<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> ax<span style="color: #990000">[</span>nu<span style="color: #990000">+</span>j<span style="color: #990000">];</span>
 
-	// record g(u)
-	vector&lt;a2double&gt; a2y(1);
-	a2y[0] = f(a2u, a2v);
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;adouble&gt; g;
-	g.Dependent(a2u, a2y);
+     <span style="font-style: italic"><span style="color: #9A1900">// record g(u)</span></span>
+     <span style="color: #008080">vector&lt;a2double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">a2y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     a2y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>a2u<span style="color: #990000">,</span> a2v<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;adouble&gt;</span> g<span style="color: #990000">;</span>
+     g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a2u<span style="color: #990000">,</span> a2y<span style="color: #990000">);</span>
 
-	// compue sparsity pattern for Hessian of g(u)
-	pattern r(nu), s(1);
-	for(j = 0; j &lt; nu; j++)
-		r[j].insert(j);
-	g.ForSparseJac(nu, r);
-	s[0].insert(0);
-	pattern p = g.RevSparseHes(nu, s);
+     <span style="font-style: italic"><span style="color: #9A1900">// compue sparsity pattern for Hessian of g(u)</span></span>
+     <span style="color: #008080">pattern</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>nu<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nu<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          r<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+     g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>nu<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
+     s<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #008080">pattern</span> p <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>nu<span style="color: #990000">,</span> s<span style="color: #990000">);</span>
 
-	// Row and column indices for non-zeros in lower triangle of Hessian
-	vector&lt;size_t&gt; row, col;
-	for(i = 0; i &lt; nu; i++)
-	{	std::set&lt;size_t&gt;::const_iterator itr;
-		for(itr = p[i].begin(); itr != p[i].end(); itr++)
-		{	j = *itr;
-			if( j &lt;= i )
-			{	row.push_back(i);
-				col.push_back(j);
-			}
-		}
-	}
-	size_t K = row.size();
-	CppAD::sparse_hessian_work work;
-	vector&lt;adouble&gt; au(nu), ahes(K), aw(1);
-	aw[0] = 1.0;
-	for(j = 0; j &lt; nu; j++)
-		au[j] = ax[j];
-	size_t n_sweep = g.SparseHessian(au, aw, p, row, col, ahes, work);
+     <span style="font-style: italic"><span style="color: #9A1900">// Row and column indices for non-zeros in lower triangle of Hessian</span></span>
+     <span style="color: #008080">vector&lt;size_t&gt;</span> row<span style="color: #990000">,</span> col<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> nu<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>set<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;::</span><span style="color: #008080">const_iterator</span> itr<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>itr <span style="color: #990000">=</span> p<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">begin</span></span><span style="color: #990000">();</span> itr <span style="color: #990000">!=</span> p<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">end</span></span><span style="color: #990000">();</span> itr<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     j <span style="color: #990000">=</span> <span style="color: #990000">*</span>itr<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">&lt;=</span> i <span style="color: #990000">)</span>
+               <span style="color: #FF0000">{</span>     row<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+                    col<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #008080">size_t</span> K <span style="color: #990000">=</span> row<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">sparse_hessian_work</span> work<span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt;adouble&gt;</span> <span style="font-weight: bold"><span style="color: #000000">au</span></span><span style="color: #990000">(</span>nu<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ahes</span></span><span style="color: #990000">(</span>K<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">aw</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     aw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nu<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          au<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> ax<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+     <span style="color: #008080">size_t</span> n_sweep <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">SparseHessian</span></span><span style="color: #990000">(</span>au<span style="color: #990000">,</span> aw<span style="color: #990000">,</span> p<span style="color: #990000">,</span> row<span style="color: #990000">,</span> col<span style="color: #990000">,</span> ahes<span style="color: #990000">,</span> work<span style="color: #990000">);</span>
 
-	// The Hessian w.r.t u is diagonal
-	ok &amp;= n_sweep == 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// The Hessian w.r.t u is diagonal</span></span>
+     ok <span style="color: #990000">&amp;=</span> n_sweep <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// record H(u, v) = Hessian of f w.r.t u
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; H(ax, ahes);
+     <span style="font-style: italic"><span style="color: #9A1900">// record H(u, v) = Hessian of f w.r.t u</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">H</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ahes<span style="color: #990000">);</span>
 
-	// remove unecessary operations
-	H.optimize();
+     <span style="font-style: italic"><span style="color: #9A1900">// remove unecessary operations</span></span>
+     H<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">optimize</span></span><span style="color: #990000">();</span>
 
-	// Now evaluate the Hessian at a particular value for u, v
-	vector&lt;double&gt; u(nu), v(nv), x(n);
-	for(j = 0; j &lt; n; j++)
-		x[j] = double(j + 2);
-	vector&lt;double&gt; hes = H.<a href="forward.xml" target="_top">Forward</a>(0, x);
+     <span style="font-style: italic"><span style="color: #9A1900">// Now evaluate the Hessian at a particular value for u, v</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">u</span></span><span style="color: #990000">(</span>nu<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span>nv<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="color: #008080">vector&lt;double&gt;</span> hes <span style="color: #990000">=</span> H<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
 
-	// Now check the Hessian
-	double sum_v = 0.0;
-	for(j = 0; j &lt; nv; j++)
-		sum_v += x[nu + j];
-	for(size_t k = 0; k &lt; K; k++)
-	{	i     = row[k];
-		j     = col[k];
-		ok   &amp;= i == j;
-		double check = sum_v * x[i];
-		ok &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(hes[k], check, eps, eps);
-	}
-	return ok;
-}
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// Now check the Hessian</span></span>
+     <span style="color: #009900">double</span> sum_v <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> nv<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          sum_v <span style="color: #990000">+=</span> x<span style="color: #990000">[</span>nu <span style="color: #990000">+</span> j<span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     i     <span style="color: #990000">=</span> row<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+          j     <span style="color: #990000">=</span> col<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+          ok   <span style="color: #990000">&amp;=</span> i <span style="color: #990000">==</span> j<span style="color: #990000">;</span>
+          <span style="color: #009900">double</span> check <span style="color: #990000">=</span> sum_v <span style="color: #990000">*</span> x<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>hes<span style="color: #990000">[</span>k<span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/sub_sparse_hes.cpp
 
 </body>

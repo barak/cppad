@@ -35,13 +35,20 @@ var list_down1 = [
 'atomic_base.xml'
 ];
 var list_down0 = [
-'checkpoint.cpp.xml'
+'checkpoint.cpp.xml',
+'atomic_mul_level.cpp.xml',
+'checkpoint_ode.cpp.xml',
+'checkpoint_extended_ode.cpp.xml'
 ];
 var list_current0 = [
 'checkpoint.xml#Syntax',
+'checkpoint.xml#See Also',
 'checkpoint.xml#Purpose',
 'checkpoint.xml#Purpose.Reduce Memory',
 'checkpoint.xml#Purpose.Faster Recording',
+'checkpoint.xml#Purpose.Repeating Forward',
+'checkpoint.xml#Purpose.Restriction',
+'checkpoint.xml#Purpose.Multiple Level AD',
 'checkpoint.xml#Method',
 'checkpoint.xml#constructor',
 'checkpoint.xml#Base',
@@ -50,6 +57,7 @@ var list_current0 = [
 'checkpoint.xml#ax',
 'checkpoint.xml#ay',
 'checkpoint.xml#sparsity',
+'checkpoint.xml#optimize',
 'checkpoint.xml#size_var',
 'checkpoint.xml#option',
 'checkpoint.xml#algo',

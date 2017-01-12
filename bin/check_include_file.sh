@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_include_file.sh 3762 2015-12-01 14:35:37Z bradbell $
+# $Id: check_include_file.sh 3847 2016-11-20 09:34:00Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -25,7 +25,7 @@ then
 	echo "bin/check_include_file.sh: unexpected bin/check_include_file.1.$$"
 	exit 1
 fi
-list=`bin/list_files.sh | sed -n \
+list=`bin/ls_files.sh | sed -n \
 	-e '/\.cpp$/p' \
 	-e '/\.hpp$/p'`
 for file in $list
@@ -40,13 +40,15 @@ cat bin/check_include_file.1.$$ | \
 #
 # The following files should never be included:
 #	cppad/local/prototype_op.hpp
+#	cppad/local/optimize/define_prototype.hpp
 #	cppad/example/eigen_plugin.hpp
 # All other files should.
 # The file cppad/configure.hpp may not yet be created.
-bin/list_files.sh | sed -n -e '/cppad\/.*\.hpp$/p' | \
+bin/ls_files.sh | sed -n -e '/cppad\/.*\.hpp$/p' | \
 	sed \
 		-e '1,1s|^|cppad/configure.hpp\n|' \
 		-e '/cppad\/local\/prototype_op.hpp/d' \
+		-e '/cppad\/local\/optimize\/define_prototype.hpp/d' \
 		-e '/cppad\/example\/eigen_plugin.hpp/d'  \
 		-e '/cppad\/deprecated\//d' | \
 	sort -u > bin/check_include_file.3.$$

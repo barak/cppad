@@ -91,76 +91,68 @@ A:active { color : purple }
 <td>hes_lu_det.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Gradient of Determinant Using LU Factorization: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/det_by_lu.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/speed/det_by_lu.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">HesLuDet</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool HesLuDet(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD<span style="color: #990000">;</span>
 
-	using namespace CppAD;
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> Complex<span style="color: #990000">;</span>
 
-	typedef std::complex&lt;double&gt; Complex;
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
 
-	size_t n = 2;
+     <span style="font-style: italic"><span style="color: #9A1900">// object for computing determinants</span></span>
+     <span style="color: #008080">det_by_lu&lt; AD&lt;Complex&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// object for computing determinants
-	det_by_lu&lt; <a href="ad.xml" target="_top">AD</a>&lt;Complex&gt; &gt; Det(n);
+     <span style="font-style: italic"><span style="color: #9A1900">// independent and dependent variable vectors</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span>  <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span>  <span style="font-weight: bold"><span style="color: #000000">D</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// independent and dependent variable vectors
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;)  X(n * n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;Complex&gt;)  D(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// value of the independent variable</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          X<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span><span style="color: #990000">(</span>i<span style="color: #990000">),</span> <span style="color: #990000">-</span><span style="color: #009900">int</span><span style="color: #990000">(</span>i<span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	// value of the independent variable
-	size_t i;
-	for(i = 0; i &lt; n * n; i++)
-		X[i] = Complex(int(i), -int(i) );
+     <span style="font-style: italic"><span style="color: #9A1900">// set the independent variables</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// set the independent variables
-	<a href="independent.xml" target="_top">Independent</a>(X);
+     D<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	D[0]  = Det(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// create the function object</span></span>
+     <span style="color: #008080">ADFun&lt;Complex&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> D<span style="color: #990000">);</span>
 
-	// create the function object
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;Complex&gt; f(X, D);
+     <span style="font-style: italic"><span style="color: #9A1900">// argument value</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">)</span>     <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> i<span style="color: #990000">,</span> i<span style="color: #990000">);</span>
 
-	// argument value
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Complex)     x( n * n );
-	for(i = 0; i &lt; n * n; i++)
-		x[i] = Complex(2 * i, i);
+     <span style="font-style: italic"><span style="color: #9A1900">// first derivative of the determinant</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">H</span></span><span style="color: #990000">(</span> n <span style="color: #990000">*</span> n <span style="color: #990000">*</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
+     H <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Hessian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// first derivative of the determinant
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Complex) H( n * n * n * n );
-	H = f.Hessian(x, 0);
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     f(x)     = x[0] * x[3] - x[1] * x[2]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     f'(x)    = ( x[3], -x[2], -x[1], x[0] )</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     <span style="color: #008080">Complex</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+     <span style="color: #008080">Complex</span> <span style="font-weight: bold"><span style="color: #000000">one</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+     <span style="color: #008080">Complex</span> Htrue<span style="color: #990000">[]</span>  <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          zero<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> zero<span style="color: #990000">,</span>  one<span style="color: #990000">,</span>
+          zero<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> <span style="color: #990000">-</span>one<span style="color: #990000">,</span> zero<span style="color: #990000">,</span>
+          zero<span style="color: #990000">,</span> <span style="color: #990000">-</span>one<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> zero<span style="color: #990000">,</span>
+           one<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> zero
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">*</span>n<span style="color: #990000">*</span>n<span style="color: #990000">*</span>n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> Htrue<span style="color: #990000">[</span>i<span style="color: #990000">],</span> H<span style="color: #990000">[</span>i<span style="color: #990000">],</span> <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span> <span style="color: #990000">);</span>
 
-	/*
-	f(x)     = x[0] * x[3] - x[1] * x[2]
-	f'(x)    = ( x[3], -x[2], -x[1], x[0] )
-	*/
-	Complex zero(0., 0.);
-	Complex one(1., 0.);
-	Complex Htrue[]  = {
-		zero, zero, zero,  one,
-		zero, zero, -one, zero,
-		zero, -one, zero, zero,
-		 one, zero, zero, zero
-	};
-	for( i = 0; i &lt; n*n*n*n; i++)
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Htrue[i], H[i], 1e-10 , 1e-10 );
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/hes_lu_det.cpp
 
 </body>

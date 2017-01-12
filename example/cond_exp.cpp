@@ -1,6 +1,6 @@
-// $Id: cond_exp.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: cond_exp.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -19,7 +19,9 @@ $spell
 $$
 
 $section Conditional Expressions: Example and Test$$
-$mindex CondExp$$
+
+$head See Also$$
+$cref optimize_conditional_skip.cpp$$
 
 
 $head Description$$
@@ -37,7 +39,7 @@ we need to handle the case $latex x_j = 0$$
 in a special way to avoid multiplying zero by infinity.
 
 $code
-$verbatim%example/cond_exp.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/cond_exp.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

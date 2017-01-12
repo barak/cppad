@@ -91,67 +91,59 @@ A:active { color : purple }
 <td>jac_lu_det.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Gradient of Determinant Using Lu Factorization: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/det_by_lu.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/speed/det_by_lu.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">JacLuDet</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool JacLuDet(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD<span style="color: #990000">;</span>
 
-	using namespace CppAD;
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
 
-	size_t n = 2;
+     <span style="font-style: italic"><span style="color: #9A1900">// object for computing determinants</span></span>
+     <span style="color: #008080">det_by_lu&lt;ADComplex&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// object for computing determinants
-	det_by_lu&lt;ADComplex&gt; Det(n);
+     <span style="font-style: italic"><span style="color: #9A1900">// independent and dependent variable vectors</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ADComplex<span style="color: #990000">)</span>  <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ADComplex<span style="color: #990000">)</span>  <span style="font-weight: bold"><span style="color: #000000">D</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// independent and dependent variable vectors
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADComplex)  X(n * n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADComplex)  D(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// value of the independent variable</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          X<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span><span style="color: #990000">(</span>i<span style="color: #990000">),</span> <span style="color: #990000">-</span><span style="color: #009900">int</span><span style="color: #990000">(</span>i<span style="color: #990000">));</span>
 
-	// value of the independent variable
-	size_t i;
-	for(i = 0; i &lt; n * n; i++)
-		X[i] = Complex(int(i), -int(i));
+     <span style="font-style: italic"><span style="color: #9A1900">// set the independent variables</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// set the independent variables
-	<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the determinant</span></span>
+     D<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// compute the determinant
-	D[0]  = Det(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// create the function object</span></span>
+     <span style="color: #008080">ADFun&lt;Complex&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> D<span style="color: #990000">);</span>
 
-	// create the function object
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;Complex&gt; f(X, D);
+     <span style="font-style: italic"><span style="color: #9A1900">// argument value</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">)</span>     <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> i<span style="color: #990000">,</span> i<span style="color: #990000">);</span>
 
-	// argument value
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Complex)     x( n * n );
-	for(i = 0; i &lt; n * n; i++)
-		x[i] = Complex(2 * i, i);
+     <span style="font-style: italic"><span style="color: #9A1900">// first derivative of the determinant</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">J</span></span><span style="color: #990000">(</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
+     J <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// first derivative of the determinant
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(Complex) J( n * n );
-	J = f.<a href="jacobian.xml" target="_top">Jacobian</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     f(x)     = x[0] * x[3] - x[1] * x[2]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     <span style="color: #008080">Complex</span> Jtrue<span style="color: #990000">[]</span>  <span style="color: #990000">=</span> <span style="color: #FF0000">{</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">],</span> <span style="color: #990000">-</span>x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #990000">-</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">*</span>n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> Jtrue<span style="color: #990000">[</span>i<span style="color: #990000">],</span> J<span style="color: #990000">[</span>i<span style="color: #990000">],</span> <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span> <span style="color: #990000">);</span>
 
-	/*
-	f(x)     = x[0] * x[3] - x[1] * x[2]
-	*/
-	Complex Jtrue[]  = { x[3], -x[2], -x[1], x[0] };
-	for( i = 0; i &lt; n*n; i++)
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( Jtrue[i], J[i], 1e-10 , 1e-10 );
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/jac_lu_det.cpp
 
 </body>

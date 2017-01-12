@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3785 2016-02-08 12:53:06Z bradbell $
+# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -18,17 +18,10 @@ SET(CMAKE_BUILD_TYPE DEBUG)
 # Local link directories to search, as determined by pkg-config for ipopt
 LINK_DIRECTORIES( ${ipopt_LIBRARY_DIRS} )
 
-# Copy a file to another location and modify its contents.
-# configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])
-CONFIGURE_FILE(
-	${CMAKE_CURRENT_SOURCE_DIR}/test_one.sh.in
-	${CMAKE_CURRENT_SOURCE_DIR}/test_one.sh
-)
-
 #
 ADD_EXECUTABLE(example_ipopt_solve EXCLUDE_FROM_ALL
-	solve.cpp
 	get_started.cpp
+	ipopt_solve.cpp
 	ode_inverse.cpp
 	retape.cpp
 )
@@ -49,3 +42,4 @@ ADD_CUSTOM_TARGET(check_example_ipopt_solve
 	example_ipopt_solve
 	DEPENDS example_ipopt_solve
 )
+MESSAGE(STATUS "make check_example_ipopt_solve: available")

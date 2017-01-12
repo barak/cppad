@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="rev_sparse_hes.cpp.xml" target="_top">Prev</a>
-</td><td><a href="bool_sparsity.cpp.xml" target="_top">Next</a>
+</td><td><a href="forsparsehes.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -60,6 +60,7 @@ A:active { color : purple }
 <option>RevSparseJac</option>
 <option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>ForSparseHes</option>
 <option>bool_sparsity.cpp</option>
 </select>
 </td>
@@ -80,9 +81,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Sparsity Patterns For a Subset of Variables: Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="See Also" id="See Also">See Also</a></big></b>
@@ -119,74 +117,69 @@ and a subset of the Hessian (see
 ).
 
 <code><font color="blue">
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-bool sparsity_sub(void)
-{	// C++ source code
-	bool ok = true;
-	//
-	using std::cout;
-	using CppAD::vector;
-	using CppAD::AD;
-	using CppAD::vectorBool;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparsity_sub</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// C++ source code</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cout<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vectorBool<span style="color: #990000">;</span>
 
-	size_t n = 4;
-	size_t m = n-1;
-	vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; ax(n), ay(m);
-	for(size_t j = 0; j &lt; n; j++)
-		ax[j] = double(j+1);
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
-	for(size_t i = 0; i &lt; m; i++)
-		ay[i] = (ax[i+1] - ax[i]) * (ax[i+1] - ax[i]);
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(ax, ay);
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> n<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          ax<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ay<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>ax<span style="color: #990000">[</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> ax<span style="color: #990000">[</span>i<span style="color: #990000">])</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span>ax<span style="color: #990000">[</span>i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> ax<span style="color: #990000">[</span>i<span style="color: #990000">]);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-	// Evaluate the full Jacobian sparsity pattern for f
-	vectorBool r(n * n), s(m * n);
-	for(size_t j = 0 ; j &lt; n; j++)
-	{	for(size_t i = 0; i &lt; n; i++)
-			r[i * n + j] = (i == j);
-	}
-	s = f.ForSparseJac(n, r);
+     <span style="font-style: italic"><span style="color: #9A1900">// Evaluate the full Jacobian sparsity pattern for f</span></span>
+     <span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">r</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span> <span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               r<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>i <span style="color: #990000">==</span> j<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     s <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
 
-	// evaluate the sparsity for the Hessian of f_0 + ... + f_{m-1}
-	vectorBool t(m), h(n * n);
-	for(size_t i = 0; i &lt; m; i++)
-		t[i] = true;
-	h = f.RevSparseHes(n, t);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the sparsity for the Hessian of f_0 + ... + f_{m-1}</span></span>
+     <span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">t</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">h</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          t<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     h <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> t<span style="color: #990000">);</span>
 
-	// evaluate the Jacobian sparsity pattern for first n/2 components of x
-	size_t n2 = n / 2;
-	vectorBool r2(n * n2), s2(m * n2);
-	for(size_t j = 0 ; j &lt; n2; j++)
-	{	for(size_t i = 0; i &lt; n; i++)
-			r2[i * n2 + j] = (i == j);
-	}
-	s2 = f.ForSparseJac(n2, r2);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the Jacobian sparsity pattern for first n/2 components of x</span></span>
+     <span style="color: #008080">size_t</span> n2 <span style="color: #990000">=</span> n <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">r2</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n2<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">s2</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> n2<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span> <span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n2<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               r2<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n2 <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>i <span style="color: #990000">==</span> j<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     s2 <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForSparseJac</span></span><span style="color: #990000">(</span>n2<span style="color: #990000">,</span> r2<span style="color: #990000">);</span>
 
-	// evaluate the sparsity for the subset of Hessian of
-	// f_0 + ... + f_{m-1} where first partial has only first n/2 components
-	vectorBool h2(n2 * n);
-	h2 = f.RevSparseHes(n2, t);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate the sparsity for the subset of Hessian of</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// f_0 + ... + f_{m-1} where first partial has only first n/2 components</span></span>
+     <span style="color: #008080">vectorBool</span> <span style="font-weight: bold"><span style="color: #000000">h2</span></span><span style="color: #990000">(</span>n2 <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     h2 <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">RevSparseHes</span></span><span style="color: #990000">(</span>n2<span style="color: #990000">,</span> t<span style="color: #990000">);</span>
 
-	// check sparsity pattern for Jacobian
-	for(size_t i = 0; i &lt; m; i++)
-	{	for(size_t j = 0; j &lt; n2; j++)
-			ok &amp;= s2[i * n2 + j] == s[i * n + j];
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// check sparsity pattern for Jacobian</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n2<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               ok <span style="color: #990000">&amp;=</span> s2<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n2 <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">==</span> s<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
 
-	// check sparsity pattern for Hessian
-	for(size_t i = 0; i &lt; n2; i++)
-	{	for(size_t j = 0; j &lt; n; j++)
-			ok &amp;= h2[i * n + j] == h[i * n + j];
-	}
-	return ok;
-}
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// check sparsity pattern for Hessian</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n2<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               ok <span style="color: #990000">&amp;=</span> h2<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">==</span> h<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/sparsity_sub.cpp
 
 </body>

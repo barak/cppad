@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3785 2016-02-08 12:53:06Z bradbell $
+# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -17,38 +17,27 @@
 SET(CMAKE_BUILD_TYPE DEBUG)
 
 # initialize check_depends
-SET(check_depends example)
+SET(check_example_depends example)
 
 # atomic examples
 ADD_SUBDIRECTORY(atomic)
-add_to_list(check_depends check_example_atomic)
 
-# adolc_prefix
+# optimize examples
+ADD_SUBDIRECTORY(optimize)
+
+# adolc_sources, adolc_libs, and CPPAD_HAS_ADOLC
 SET(sources mul_level_adolc.cpp mul_level_adolc_ode.cpp)
-sources_libs_define(adolc "${sources}" adolc ADOLC_EXAMPLES)
+sources_libs_define(adolc "${sources}" adolc HAS_ADOLC)
+
+# eigen_sources and CPPAD_HAS_EIGEN
+SET(sources eigen_det.cpp eigen_array.cpp)
+sources_libs_define(eigen "${sources}" "" HAS_EIGEN)
 
 # colpack_prefix
 SET(colpack_sources
 	colpack_hes.cpp
 	colpack_jac.cpp
 )
-
-# eigen_prefix
-IF ( eigen_prefix )
-	# compile eigen library separately so can use different compiler flags
-	ADD_LIBRARY(example_eigen_lib EXCLUDE_FROM_ALL
-		eigen_det.cpp
-		eigen_array.cpp
-	)
-	# Adds -D define flags to the compilation of source files.
-	ADD_DEFINITIONS("-DCPPAD_EIGEN_EXAMPLES")
-	add_cppad_cxx_flags(example_eigen_lib)
-	#
-	# Add eigen to list of libraries
-	SET(eigen_libs example_eigen_lib)
-ELSE ( eigen_prefix )
-	SET(eigen_libs "")
-ENDIF ( eigen_prefix )
 
 # ipopt_prefix
 IF( ipopt_prefix )
@@ -57,37 +46,30 @@ IF( ipopt_prefix )
 ENDIF( ipopt_prefix )
 
 
-# Copy a file to another location and modify its contents.
-# configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])
-CONFIGURE_FILE(
-	${CMAKE_CURRENT_SOURCE_DIR}/test_one.sh.in
-	${CMAKE_CURRENT_SOURCE_DIR}/test_one.sh
-)
-
-
 # add_executable(<name> [WIN32] [MACOSX_BUNDLE] [EXCLUDE_FROM_ALL]
 #                 source1 source2 ... sourceN
 # )
 ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	${adolc_sources}
+	${eigen_sources}
 	${colpack_sources}
 	abort_recording.cpp
 	abs.cpp
 	acos.cpp
 	acosh.cpp
-	add.cpp
-	add_eq.cpp
 	ad_assign.cpp
 	ad_ctor.cpp
+	add.cpp
+	add_eq.cpp
 	ad_fun.cpp
 	ad_in_c.cpp
 	ad_input.cpp
 	ad_output.cpp
 	asin.cpp
 	asinh.cpp
+	atan2.cpp
 	atan.cpp
 	atanh.cpp
-	atan2.cpp
 	azmul.cpp
 	base_alloc.hpp
 	base_require.cpp
@@ -99,8 +81,8 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	check_for_nan.cpp
 	check_numeric_type.cpp
 	check_simple_vector.cpp
-	compare.cpp
 	compare_change.cpp
+	compare.cpp
 	complex_poly.cpp
 	cond_exp.cpp
 	conj_grad.cpp
@@ -116,11 +98,12 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	exp.cpp
 	expm1.cpp
 	for_one.cpp
+	for_sparse_hes.cpp
+	for_sparse_jac.cpp
 	for_two.cpp
 	forward.cpp
 	forward_dir.cpp
 	forward_order.cpp
-	for_sparse_jac.cpp
 	fun_assign.cpp
 	fun_check.cpp
 	hes_lagrangian.cpp
@@ -137,10 +120,9 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	jac_lu_det.cpp
 	jac_minor_det.cpp
 	jacobian.cpp
-	num_limits.cpp
-	log.cpp
-	log1p.cpp
 	log10.cpp
+	log1p.cpp
+	log.cpp
 	lu_factor.cpp
 	lu_invert.cpp
 	lu_ratio.cpp
@@ -157,20 +139,20 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	near_equal_ext.cpp
 	number_skip.cpp
 	numeric_type.cpp
+	num_limits.cpp
 	ode_err_control.cpp
 	ode_err_maxabs.cpp
-	ode_gear.cpp
 	ode_gear_control.cpp
+	ode_gear.cpp
 	ode_stiff.cpp
 	ode_taylor.cpp
 	opt_val_hes.cpp
-	optimize.cpp
 	par_var.cpp
 	poly.cpp
 	pow.cpp
 	pow_int.cpp
 	print_for.cpp
-	reverse_any.cpp
+	reverse_checkpoint.cpp
 	reverse_one.cpp
 	reverse_three.cpp
 	reverse_two.cpp
@@ -184,8 +166,9 @@ ADD_EXECUTABLE(example EXCLUDE_FROM_ALL example.cpp
 	runge45_1.cpp
 	runge45_2.cpp
 	seq_property.cpp
-	simple_vector.cpp
+	set_union.cpp
 	sign.cpp
+	simple_vector.cpp
 	sin.cpp
 	sinh.cpp
 	sparse_hessian.cpp
@@ -218,8 +201,12 @@ TARGET_LINK_LIBRARIES(example
 	${cppad_lib}
 	${adolc_libs}
 	${colpack_libs}
-	${eigen_libs}
 )
 
 # Add the check_example target
-ADD_CUSTOM_TARGET(check_example example DEPENDS ${check_depends})
+ADD_CUSTOM_TARGET(check_example example DEPENDS ${check_example_depends})
+MESSAGE(STATUS "make check_example: available")
+
+# Change check depends in parent environment
+add_to_list(check_depends check_example)
+SET(check_depends "${check_depends}" PARENT_SCOPE)

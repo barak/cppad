@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -100,43 +101,38 @@ A:active { color : purple }
 
 
 <center><b><big><big>nan: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/utility/nan.hpp&gt;
-# include &lt;vector&gt;
-# include &lt;limits&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/nan.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
 
-bool nan(void)
-{	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">nan</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// get a nan
-	double double_zero = 0.;
-	double double_nan = std::numeric_limits&lt;double&gt;::quiet_NaN();
+     <span style="font-style: italic"><span style="color: #9A1900">// get a nan</span></span>
+     <span style="color: #009900">double</span> double_zero <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #009900">double</span> double_nan <span style="color: #990000">=</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">quiet_NaN</span></span><span style="color: #990000">();</span>
 
-	// create a simple vector with no nans
-	std::vector&lt;double&gt; v(2);
-	v[0] = double_zero;
-	v[1] = double_zero;
+     <span style="font-style: italic"><span style="color: #9A1900">// create a simple vector with no nans</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> double_zero<span style="color: #990000">;</span>
+     v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> double_zero<span style="color: #990000">;</span>
 
-	// check that zero is not nan
-	ok &amp;= ! CppAD::isnan(double_zero);
-	ok &amp;= ! CppAD::hasnan(v);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that zero is not nan</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">isnan</span></span><span style="color: #990000">(</span>double_zero<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hasnan</span></span><span style="color: #990000">(</span>v<span style="color: #990000">);</span>
 
-	// check that nan is a nan
-	v[1] = double_nan;
-	ok &amp;= CppAD::isnan(double_nan);
-	ok &amp;= CppAD::hasnan(v);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that nan is a nan</span></span>
+     v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> double_nan<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">isnan</span></span><span style="color: #990000">(</span>double_nan<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hasnan</span></span><span style="color: #990000">(</span>v<span style="color: #990000">);</span>
 
-	// check that nan is not equal to itself
-	ok &amp;= (double_nan != double_nan);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that nan is not equal to itself</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>double_nan <span style="color: #990000">!=</span> double_nan<span style="color: #990000">);</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/nan.cpp
 
 </body>

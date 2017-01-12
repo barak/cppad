@@ -1,9 +1,9 @@
-// $Id: declare_ad.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_DECLARE_AD_HPP
-# define CPPAD_DECLARE_AD_HPP
+// $Id: declare_ad.hpp 3846 2016-11-19 11:35:04Z bradbell $
+# ifndef CPPAD_LOCAL_DECLARE_AD_HPP
+# define CPPAD_LOCAL_DECLARE_AD_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -17,6 +17,18 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # if CPPAD_USE_CPLUSPLUS_2011
 # include <cstdint>
 # endif
+
+/*!
+\file declare_ad.hpp CppAD forward declarations; i.e., before definition
+*/
+
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
+
+template <class Base> class ADTape;
+template <class Base> class player;
+template <class Base> class recorder;
+
+} } // END_CPPAD_LOCAL_NAMESPACE
 
 namespace CppAD {
 	// The conditional expression operator enum type
@@ -38,11 +50,8 @@ namespace CppAD {
 	class sparse_hessian_work;
 	template <class Base> class AD;
 	template <class Base> class ADFun;
-	template <class Base> class ADTape;
 	template <class Base> class atomic_base;
 	template <class Base> class discrete;
-	template <class Base> class player;
-	template <class Base> class recorder;
 	template <class Base> class VecAD;
 	template <class Base> class VecAD_reference;
 

@@ -41,6 +41,7 @@ var list_down1 = [
 'base_std_math.xml',
 'base_limits.xml',
 'base_to_string.xml',
+'base_hash.xml',
 'base_example.xml'
 ];
 var list_current0 = [

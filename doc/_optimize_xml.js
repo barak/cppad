@@ -36,20 +36,29 @@ var list_down1 = [
 'check_for_nan.xml'
 ];
 var list_down0 = [
-'optimize.cpp.xml'
+'optimize_forward_active.cpp.xml',
+'optimize_reverse_active.cpp.xml',
+'optimize_compare_op.cpp.xml',
+'optimize_print_for.cpp.xml',
+'optimize_conditional_skip.cpp.xml',
+'optimize_nest_conditional.cpp.xml',
+'optimize_cumulative_sum.cpp.xml'
 ];
 var list_current0 = [
 'optimize.xml#Syntax',
 'optimize.xml#Purpose',
 'optimize.xml#f',
-'optimize.xml#Improvements',
-'optimize.xml#Improvements.Testing',
+'optimize.xml#options',
+'optimize.xml#options.no_conditional_skip',
+'optimize.xml#options.no_compare_op',
+'optimize.xml#options.no_print_for_op',
+'optimize.xml#Examples',
 'optimize.xml#Efficiency',
+'optimize.xml#Speed Testing',
 'optimize.xml#Atomic Functions',
 'optimize.xml#Atomic Functions.rev_sparse_jac',
 'optimize.xml#Atomic Functions.nan',
-'optimize.xml#Checking Optimization',
-'optimize.xml#Example'
+'optimize.xml#Checking Optimization'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

@@ -84,11 +84,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
-
 <center><b><big><big>Run the Speed Examples</big></big></b></center>
 <br/>
 <b><big><a name="Running Tests" id="Running Tests">Running Tests</a></big></b>
@@ -98,102 +93,97 @@ To build this program and run its correctness tests see <a href="cmake_check.xml
 
 
 <code><font color="blue">
-<pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// various example routines</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">det_of_minor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">det_by_lu</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">det_by_minor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">elapsed_seconds</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_sum_sq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ode_evaluate</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparse_hes_fun</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparse_jac_fun</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">speed_test</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">time_test</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
 
-// various example routines
-extern bool det_of_minor(void);
-extern bool det_by_lu(void);
-extern bool det_by_minor(void);
-extern bool elapsed_seconds(void);
-extern bool mat_sum_sq(void);
-extern bool ode_evaluate(void);
-extern bool sparse_hes_fun(void);
-extern bool sparse_jac_fun(void);
-extern bool speed_test(void);
-extern bool time_test(void);
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// function that runs one test</span></span>
+     <span style="color: #008080">size_t</span> Run_ok_count    <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> Run_error_count <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> exception_list<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #FF0000">"elapsed_seconds"</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"speed_test"</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"time_test"</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> n_exception <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>exception_list<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>exception_list<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">TestOk</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">),</span> std<span style="color: #990000">::</span><span style="color: #008080">string</span> name<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok               <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span><span style="color: #008080">streamsize</span> width <span style="color: #990000">=</span>  <span style="color: #993399">20</span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cout<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">width</span></span><span style="color: #990000">(</span> width <span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cout<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">setf</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span>ios_base<span style="color: #990000">::</span>left <span style="color: #990000">);</span>
+          std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> name<span style="color: #990000">;</span>
+          <span style="color: #009900">bool</span> exception <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_exception<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               exception <span style="color: #990000">|=</span> exception_list<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> name<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          ok <span style="color: #990000">&amp;=</span> name<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>width<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">TestOk</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"OK"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               Run_ok_count<span style="color: #990000">++;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">(</span> exception <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Error: perhaps too many other programs running"</span><span style="color: #990000">;</span>
+               std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// no change to Run_ok_count</span></span>
+               ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Error"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               Run_error_count<span style="color: #990000">++;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-namespace {
-	// function that runs one test
-	size_t Run_ok_count    = 0;
-	size_t Run_error_count = 0;
-	const char* exception_list[] = {
-		&quot;elapsed_seconds&quot;,
-		&quot;speed_test&quot;,
-		&quot;time_test&quot;
-	};
-	size_t n_exception = sizeof(exception_list) / sizeof(exception_list[0]);
-	bool Run(bool TestOk(void), std::string name)
-	{	bool ok               = true;
-		std::streamsize width =  20;
-		std::cout.width( width );
-		std::cout.setf( std::ios_base::left );
-		std::cout &lt;&lt; name;
-		bool exception = false;
-		for(size_t i = 0; i &lt; n_exception; i++)
-			exception |= exception_list[i] == name;
-		//
-		ok &amp;= name.size() &lt; size_t(width);
-		ok &amp;= TestOk();
-		if( ok )
-		{	std::cout &lt;&lt; &quot;OK&quot; &lt;&lt; std::endl;
-			Run_ok_count++;
-		}
-		else if ( exception )
-		{	std::cout &lt;&lt; &quot;Error: perhaps too many other programs running&quot;;
-			std::cout &lt;&lt; std::endl;
-			// no change to Run_ok_count
-			ok = true;
-		}
-		else
-		{	std::cout &lt;&lt; &quot;Error&quot; &lt;&lt; std::endl;
-			Run_error_count++;
-		}
-		return ok;
-	}
-}
+<span style="font-style: italic"><span style="color: #9A1900">// main program that runs all the tests</span></span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>cout<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
 
-// main program that runs all the tests
-int main(void)
-{	bool ok = true;
-	using std::cout;
-	using std::endl;
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>det_of_minor<span style="color: #990000">,</span>          <span style="color: #FF0000">"det_of_minor"</span>   <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>det_by_minor<span style="color: #990000">,</span>         <span style="color: #FF0000">"det_by_minor"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>det_by_lu<span style="color: #990000">,</span>               <span style="color: #FF0000">"det_by_lu"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>elapsed_seconds<span style="color: #990000">,</span>   <span style="color: #FF0000">"elapsed_seconds"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>mat_sum_sq<span style="color: #990000">,</span>             <span style="color: #FF0000">"mat_sum_sq"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>ode_evaluate<span style="color: #990000">,</span>         <span style="color: #FF0000">"ode_evaluate"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>sparse_hes_fun<span style="color: #990000">,</span>    <span style="color: #FF0000">"sparse_hes_fun"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>sparse_jac_fun<span style="color: #990000">,</span>    <span style="color: #FF0000">"sparse_jac_fun"</span>     <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>speed_test<span style="color: #990000">,</span>             <span style="color: #FF0000">"speed_test"</span>    <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>time_test<span style="color: #990000">,</span>               <span style="color: #FF0000">"time_test"</span>    <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">||</span> <span style="color: #990000">(</span>Run_error_count <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-	ok &amp;= Run(det_of_minor,          &quot;det_of_minor&quot;   );
-	ok &amp;= Run(det_by_minor,         &quot;det_by_minor&quot;    );
-	ok &amp;= Run(det_by_lu,               &quot;det_by_lu&quot;    );
-	ok &amp;= Run(elapsed_seconds,   &quot;elapsed_seconds&quot;    );
-	ok &amp;= Run(mat_sum_sq,             &quot;mat_sum_sq&quot;    );
-	ok &amp;= Run(ode_evaluate,         &quot;ode_evaluate&quot;    );
-	ok &amp;= Run(sparse_hes_fun,    &quot;sparse_hes_fun&quot;     );
-	ok &amp;= Run(sparse_jac_fun,    &quot;sparse_jac_fun&quot;     );
-	ok &amp;= Run(speed_test,             &quot;speed_test&quot;    );
-	ok &amp;= Run(time_test,               &quot;time_test&quot;    );
-	assert( ok || (Run_error_count &gt; 0) );
+     <span style="font-style: italic"><span style="color: #9A1900">// check for memory leak in previous calculations</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">()</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"Error: memroy leak detected"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// check for memory leak in previous calculations
-	if( ! CppAD::thread_alloc::free_all() )
-	{	ok = false;
-		cout &lt;&lt; &quot;Error: memroy leak detected&quot; &lt;&lt; endl;
-	}
-
-	if( ok )
-	{	cout &lt;&lt; &quot;All &quot; &lt;&lt; int(Run_ok_count) &lt;&lt; &quot; tests passed &quot;;
-		cout &lt;&lt; &quot;(possibly excepting elapsed_seconds).&quot;;
-	}
-	else	cout &lt;&lt; int(Run_error_count) &lt;&lt; &quot; tests failed.&quot;;
-	cout &lt;&lt; endl;
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> ok <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"All "</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>Run_ok_count<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" tests passed "</span><span style="color: #990000">;</span>
+          cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"(possibly excepting elapsed_seconds)."</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>Run_error_count<span style="color: #990000">)</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" tests failed."</span><span style="color: #990000">;</span>
+     cout <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
 
 
-	return static_cast&lt;int&gt;( ! ok );
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: speed/example/example.cpp
 
 </body>

@@ -110,10 +110,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>AD Conditional Expressions</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -284,9 +280,6 @@ From this point on, values corresponding to the case that is not required
 are not computed.
 This optimization is done for the rest of zero order forward mode
 as well as forward and reverse derivatives calculations.
-There is one exception to this optimization; see
-<a href="wish_list.xml#Optimizing Nested Conditional Expressions" target="_top"><span style='white-space: nowrap'>optimizing&#xA0;nested&#xA0;conditional&#xA0;expressions</span></a>
-.
 
 <br/>
 <br/>
@@ -346,44 +339,38 @@ AD <a href="atan2.xml" target="_top"><span style='white-space: nowrap'>atan2</sp
  function is a more complex
 example of using conditional expressions:
 <code><font color="blue">
-<pre style='display:inline'> 
-template &lt;class Base&gt;
-<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; atan2 (const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &amp;y, const <a href="ad.xml" target="_top">AD</a>&lt;Base&gt; &amp;x)
-{	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; alpha;
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; beta;
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; theta;
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span>
+<span style="color: #008080">AD&lt;Base&gt; atan2 (const AD&lt;Base&gt; &amp;y, const AD&lt;Base&gt;</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #008080">AD&lt;Base&gt;</span> alpha<span style="color: #990000">;</span>
+     <span style="color: #008080">AD&lt;Base&gt;</span> beta<span style="color: #990000">;</span>
+     <span style="color: #008080">AD&lt;Base&gt;</span> theta<span style="color: #990000">;</span>
 
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; zero(0.);
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; pi2(2. * atan(1.));
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; pi(2. * pi2);
+     <span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">.);</span>
+     <span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">pi2</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.));</span>
+     <span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">pi</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> pi2<span style="color: #990000">);</span>
 
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; ax = abs(x);
-	<a href="ad.xml" target="_top">AD</a>&lt;Base&gt; ay = abs(y);
+     <span style="color: #008080">AD&lt;Base&gt;</span> ax <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     <span style="color: #008080">AD&lt;Base&gt;</span> ay <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>y<span style="color: #990000">);</span>
 
-	// if( ax &gt; ay )
-	//	theta = atan(ay / ax);
-	// else	theta = pi2 - atan(ax / ay);
-	alpha = atan(ay / ax);
-	beta  = pi2 - atan(ax / ay);
-	theta = CondExpGt(ax, ay, alpha, beta);         // use of CondExp
+     <span style="font-style: italic"><span style="color: #9A1900">// if( ax &gt; ay )</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//     theta = atan(ay / ax);</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// else     theta = pi2 - atan(ax / ay);</span></span>
+     alpha <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span>ay <span style="color: #990000">/</span> ax<span style="color: #990000">);</span>
+     beta  <span style="color: #990000">=</span> pi2 <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span>ax <span style="color: #990000">/</span> ay<span style="color: #990000">);</span>
+     theta <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">,</span> alpha<span style="color: #990000">,</span> beta<span style="color: #990000">);</span>         <span style="font-style: italic"><span style="color: #9A1900">// use of CondExp</span></span>
 
-	// if( x &lt;= 0 )
-	//	theta = pi - theta;
-	theta = CondExpLe(x, zero, pi - theta, theta);  // use of CondExp
+     <span style="font-style: italic"><span style="color: #9A1900">// if( x &lt;= 0 )</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//     theta = pi - theta;</span></span>
+     theta <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpLe</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> pi <span style="color: #990000">-</span> theta<span style="color: #990000">,</span> theta<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// use of CondExp</span></span>
 
-	// if( y &lt;= 0 )
-	//	theta = - theta;
-	theta = CondExpLe(y, zero, -theta, theta);      // use of CondExp
+     <span style="font-style: italic"><span style="color: #9A1900">// if( y &lt;= 0 )</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">//     theta = - theta;</span></span>
+     theta <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpLe</span></span><span style="color: #990000">(</span>y<span style="color: #990000">,</span> zero<span style="color: #990000">,</span> <span style="color: #990000">-</span>theta<span style="color: #990000">,</span> theta<span style="color: #990000">);</span>      <span style="font-style: italic"><span style="color: #9A1900">// use of CondExp</span></span>
 
-	return theta;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> theta<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
-
-<hr/>Input File: cppad/local/cond_exp.hpp
+<hr/>Input File: cppad/core/cond_exp.hpp
 
 </body>
 </html>

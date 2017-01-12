@@ -1,9 +1,9 @@
-// $Id: det_of_minor.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_DET_OF_MINOR_HPP
-# define CPPAD_DET_OF_MINOR_HPP
+// $Id: det_of_minor.hpp 3855 2016-12-19 00:30:54Z bradbell $
+# ifndef CPPAD_SPEED_DET_OF_MINOR_HPP
+# define CPPAD_SPEED_DET_OF_MINOR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -251,7 +251,7 @@ Scalar det_of_minor(
 		// compute determinant of the current sub-minor S
 		Scalar detS = det_of_minor(a, m, n - 1, r, c);
 
-		// restore column Cj to representaion of M as a minor of A
+		// restore column Cj to represenation of M as a minor of A
 		c[Cj1] = Cj;
 
 		// include this sub-minor term in the summation

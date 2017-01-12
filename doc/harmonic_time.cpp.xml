@@ -88,10 +88,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Timing Test of Multi-Threaded Summation of 1/i</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -229,88 +225,83 @@ is equal to
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;omp.h&gt;
-# include &lt;cstring&gt;
-# include &lt;limits&gt;
-# include &lt;vector&gt;
-# include &lt;iostream&gt;
-# include &lt;cstdlib&gt;
-# include &lt;algorithm&gt;
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;omp.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstring&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstdlib&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;algorithm&gt;</span>
 
-// Note there is no mention of parallel mode in the documentation for
-// speed_test (so it is safe to use without special consideration).
-# include &lt;cppad/utility/time_test.hpp&gt;
-# include &quot;harmonic.hpp&quot;
+<span style="font-style: italic"><span style="color: #9A1900">// Note there is no mention of parallel mode in the documentation for</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// speed_test (so it is safe to use without special consideration).</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/time_test.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic.hpp"</span>
 
-namespace { // empty namespace
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// empty namespace</span></span>
 
-	// value of num_threads in previous call to harmonic_time.
-	size_t num_threads_;
+     <span style="font-style: italic"><span style="color: #9A1900">// value of num_threads in previous call to harmonic_time.</span></span>
+     <span style="color: #008080">size_t</span> num_threads_<span style="color: #990000">;</span>
 
-	// value of mega_sum in previous call to harmonic_time.
-	size_t mega_sum_;
+     <span style="font-style: italic"><span style="color: #9A1900">// value of mega_sum in previous call to harmonic_time.</span></span>
+     <span style="color: #008080">size_t</span> mega_sum_<span style="color: #990000">;</span>
 
-	// value of sum resulting from most recent call to test_once
-	double sum_ = 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// value of sum resulting from most recent call to test_once</span></span>
+     <span style="color: #009900">double</span> sum_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	void test_once(void)
-	{	if( mega_sum_ &lt; 1 )
-		{	std::cerr &lt;&lt; &quot;harmonic_time: mega_sum &lt; 1&quot; &lt;&lt; std::endl;
-			exit(1);
-		}
-		size_t num_sum = mega_sum_ * 1000000;
-		bool ok = harmonic(sum_, num_sum, num_threads_);
-		if( ! ok )
-		{	std::cerr &lt;&lt; &quot;harmonic: error&quot; &lt;&lt; std::endl;
-			exit(1);
-		}
-		return;
-	}
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">test_once</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> mega_sum_ <span style="color: #990000">&lt;</span> <span style="color: #993399">1</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"harmonic_time: mega_sum &lt; 1"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="color: #008080">size_t</span> num_sum <span style="color: #990000">=</span> mega_sum_ <span style="color: #990000">*</span> <span style="color: #993399">1000000</span><span style="color: #990000">;</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">harmonic</span></span><span style="color: #990000">(</span>sum_<span style="color: #990000">,</span> num_sum<span style="color: #990000">,</span> num_threads_<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"harmonic: error"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	void test_repeat(size_t repeat)
-	{	size_t i;
-		for(i = 0; i &lt; repeat; i++)
-			test_once();
-		return;
-	}
-} // end empty namespace
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">test_repeat</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> repeat<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> repeat<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #000000">test_once</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// end empty namespace</span></span>
 
-bool harmonic_time(
-	double&amp; time_out, double test_time, size_t num_threads, size_t mega_sum)
-{	bool ok  = true;
-	using std::vector;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_time</span></span><span style="color: #990000">(</span>
+     <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> time_out<span style="color: #990000">,</span> <span style="color: #009900">double</span> test_time<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> num_threads<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> mega_sum<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-	// arguments passed to harmonic_time
-	num_threads_ = num_threads;
-	mega_sum_    = mega_sum;
+     <span style="font-style: italic"><span style="color: #9A1900">// arguments passed to harmonic_time</span></span>
+     num_threads_ <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
+     mega_sum_    <span style="color: #990000">=</span> mega_sum<span style="color: #990000">;</span>
 
-	// convert zero to actual number of threads
-	num_threads  = std::max(num_threads_, size_t(1));
+     <span style="font-style: italic"><span style="color: #9A1900">// convert zero to actual number of threads</span></span>
+     num_threads  <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
 
-	// expect number of threads to already be set up
-	ok &amp;= num_threads == CppAD::thread_alloc::num_threads();
+     <span style="font-style: italic"><span style="color: #9A1900">// expect number of threads to already be set up</span></span>
+     ok <span style="color: #990000">&amp;=</span> num_threads <span style="color: #990000">==</span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">num_threads</span></span><span style="color: #990000">();</span>
 
-	// run the test case and set the time return value
-	time_out = CppAD::time_test(test_repeat, test_time);
+     <span style="font-style: italic"><span style="color: #9A1900">// run the test case and set the time return value</span></span>
+     time_out <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">time_test</span></span><span style="color: #990000">(</span>test_repeat<span style="color: #990000">,</span> test_time<span style="color: #990000">);</span>
 
-	// Correctness check
-	double eps   = mega_sum_ * 1e3 * std::numeric_limits&lt;double&gt;::epsilon();
-	size_t i     = mega_sum_ * 1000000;
-	double check = 0.;
-	while(i)
-		check += 1. / double(i--);
-	ok &amp;= std::fabs(sum_ - check) &lt;= eps;
+     <span style="font-style: italic"><span style="color: #9A1900">// Correctness check</span></span>
+     <span style="color: #009900">double</span> eps   <span style="color: #990000">=</span> mega_sum_ <span style="color: #990000">*</span> <span style="color: #993399">1e3</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> i     <span style="color: #990000">=</span> mega_sum_ <span style="color: #990000">*</span> <span style="color: #993399">1000000</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>i<span style="color: #990000">)</span>
+          check <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">--);</span>
+     ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>sum_ <span style="color: #990000">-</span> check<span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> eps<span style="color: #990000">;</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/harmonic_time.cpp
 
 </body>

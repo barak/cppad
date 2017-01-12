@@ -51,7 +51,8 @@ var list_down0 = [
 'zdouble.xml'
 ];
 var list_current0 = [
-'deprecated.xml#Contents'
+'deprecated.xml#Contents',
+'deprecated.xml#Atomic Functions'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

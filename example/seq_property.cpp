@@ -1,6 +1,6 @@
-// $Id: seq_property.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: seq_property.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -27,7 +27,7 @@ $mindex Domain Range Parameter size_var size_par size_op_arg size_VecAD$$
 
 
 $code
-$verbatim%example/seq_property.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/seq_property.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -112,7 +112,7 @@ bool seq_property(void)
 
 	// create f: x -> y and stop tape recording
 	CppAD::ADFun<double> f(x, y);
-	nop   += 1;   // special operator for y[0] becasue it is a parameter
+	nop   += 1;   // special operator for y[0] because it is a parameter
 	nvar  += 1;   // special variable for y[0] because it is a parameter
 	narg  += 1;   // identifies which parameter corresponds to y[0]
 	nop   += 1;   // special operator at the end of operation sequence
@@ -130,7 +130,7 @@ bool seq_property(void)
 	ok &= f.size_text()   == ntext;
 	ok &= f.size_VecAD()  == nvecad;
 	size_t sum = 0;
-	sum += nop    * sizeof(CppAD::OpCode);
+	sum += nop    * sizeof(CppAD::local::OpCode);
 	sum += narg   * sizeof(CPPAD_TAPE_ADDR_TYPE);
 	sum += npar   * sizeof(double);
 	sum += ntext  * sizeof(char);

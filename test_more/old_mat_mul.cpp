@@ -1,6 +1,6 @@
 // $Id$
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -20,7 +20,7 @@ $section Old Matrix Multiply as a User Atomic Operation: Example and Test$$
 
 $head Deprecated 2013-05-27$$
 This example has been deprecated;
-see $cref atomic_mat_mul.cpp$$.
+use $cref atomic_mat_mul.cpp$$ instead.
 
 $children%
 	test_more/old_mat_mul.hpp
@@ -29,7 +29,7 @@ $head Include File$$
 This routine uses the include file $cref old_mat_mul.hpp$$.
 
 $code
-$verbatim%test_more/old_mat_mul.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%test_more/old_mat_mul.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

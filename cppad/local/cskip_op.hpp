@@ -1,9 +1,9 @@
-// $Id: cskip_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_CSKIP_OP_HPP
-# define CPPAD_CSKIP_OP_HPP
+// $Id: cskip_op.hpp 3853 2016-12-14 14:40:11Z bradbell $
+# ifndef CPPAD_LOCAL_CSKIP_OP_HPP
+# define CPPAD_LOCAL_CSKIP_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -13,7 +13,7 @@ A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file cskip_op.hpp
 Zero order forward mode set which operations to skip.
@@ -131,7 +131,7 @@ inline void forward_cskip_op_0(
 
 	Base left, right;
 	if( arg[1] & 1 )
-	{	// If varialbe arg[2] <= i_z, it has already been computed,
+	{	// If variable arg[2] <= i_z, it has already been computed,
 		// but it will be skipped for higher orders.
 		left = taylor[ arg[2] * cap_order + 0 ];
 	}
@@ -140,7 +140,7 @@ inline void forward_cskip_op_0(
 		left = parameter[ arg[2] ];
 	}
 	if( arg[1] & 2 )
-	{	// If varialbe arg[3] <= i_z, it has already been computed,
+	{	// If variable arg[3] <= i_z, it has already been computed,
 		// but it will be skipped for higher orders.
 		right = taylor[ arg[3] * cap_order + 0 ];
 	}
@@ -194,6 +194,6 @@ inline void forward_cskip_op_0(
 	}
 	return;
 }
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif
 

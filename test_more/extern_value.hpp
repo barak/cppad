@@ -1,6 +1,6 @@
-// $Id: extern_value.hpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: extern_value.hpp 3804 2016-03-20 15:08:46Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -10,8 +10,8 @@ A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
-# ifndef CPPAD_EXTERN_VALUE_HPP
-# define CPPAD_EXTERN_VALUE_HPP
+# ifndef CPPAD_TEST_MORE_EXTERN_VALUE_HPP
+# define CPPAD_TEST_MORE_EXTERN_VALUE_HPP
 
 template <class Type>
 class extern_value  {

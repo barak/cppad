@@ -87,119 +87,114 @@ A:active { color : purple }
 
 
 <center><b><big><big>ADFun Sequence Properties: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">seq_property</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
 
-bool seq_property(void)
-{	bool ok = true;
-	using CppAD::AD;
+     <span style="font-style: italic"><span style="color: #9A1900">// Use nvar to track the number of variables in the operation sequence.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Start with one for the phantom variable at tape address zero.</span></span>
+     <span style="color: #008080">size_t</span> nvar <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// Use nvar to track the number of variables in the operation sequence.
-	// Start with one for the phantom variable at tape address zero.
-	size_t nvar = 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// Use npar to track the number of parameters in the operation sequence.</span></span>
+     <span style="color: #008080">size_t</span> npar <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// Use npar to track the number of parameters in the operation sequence.
-	size_t npar = 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// Start with one for operator corresponding to phantom variable</span></span>
+     <span style="color: #008080">size_t</span> nop  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// Start with one for operator corresponding to phantom variable
-	size_t nop  = 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// Start with one for operator corresponding to phantom argument</span></span>
+     <span style="color: #008080">size_t</span> narg <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-	// Start with one for operator corresponding to phantom argument
-	size_t narg = 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// Use ntext to track the number of characters used to label</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// output generated using PrintFor commands.</span></span>
+     <span style="color: #008080">size_t</span> ntext <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// Use ntext to track the number of characters used to label
-	// output generated using PrintFor commands.
-	size_t ntext = 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// Use nvecad to track the number of VecAD vectors, plus the number</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// of VecAD vector elements, in the operation sequence.</span></span>
+     <span style="color: #008080">size_t</span> nvecad <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// Use nvecad to track the number of VecAD vectors, plus the number
-	// of VecAD vector elements, in the operation sequence.
-	size_t nvecad = 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// a VecAD vector</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// requires the parameter 0, when becomes a variable</span></span>
+     v<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// requires the parameter 1, when becomes a variable</span></span>
 
-	// a VecAD vector
-	CppAD::VecAD&lt;double&gt; v(2);
-	v[0]     = 0; // requires the parameter 0, when becomes a variable
-	v[1]     = 1; // requires the parameter 1, when becomes a variable
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]     = 0.;
-	x[1]     = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     nvar    <span style="color: #990000">+=</span> n<span style="color: #990000">;</span>
+     nop     <span style="color: #990000">+=</span> n<span style="color: #990000">;</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
-	nvar    += n;
-	nop     += n;
+     <span style="font-style: italic"><span style="color: #9A1900">// a computation that adds to the operation sequence</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> I <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     v<span style="color: #990000">[</span>I<span style="color: #990000">]</span>         <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     nvecad      <span style="color: #990000">+=</span>   <span style="color: #993399">3</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// one for vector, two for its elements</span></span>
+     npar        <span style="color: #990000">+=</span>   <span style="color: #993399">2</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// need parameters 0 and 1 for initial v</span></span>
+     nop         <span style="color: #990000">+=</span>   <span style="color: #993399">1</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// operator for storing in a VecAD object</span></span>
+     narg        <span style="color: #990000">+=</span>   <span style="color: #993399">3</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// the three arguments are v, I, and x[0]</span></span>
 
-	// a computation that adds to the operation sequence
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; I = 0;
-	v[I]         = x[0];
-	nvecad      +=   3;  // one for vector, two for its elements
-	npar        +=   2;  // need parameters 0 and 1 for initial v
-	nop         +=   1;  // operator for storing in a VecAD object
-	narg        +=   3;  // the three arguments are v, I, and x[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// some operations that do not add to the operation sequence</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> u <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// use same variable as x[0]</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> w <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>  <span style="font-style: italic"><span style="color: #9A1900">// use same variable as x[1]</span></span>
 
-	// some operations that do not add to the operation sequence
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; u = x[0];  // use same variable as x[0]
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; w = x[1];  // use same variable as x[1]
+     <span style="font-style: italic"><span style="color: #9A1900">// a computation that adds to the operation sequence</span></span>
+     w      <span style="color: #990000">=</span> w <span style="color: #990000">*</span> <span style="color: #990000">(</span>u <span style="color: #990000">+</span> w<span style="color: #990000">);</span>
+     nop   <span style="color: #990000">+=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// requires two new operators, an add and a multiply</span></span>
+     nvar  <span style="color: #990000">+=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// each operator results in its own variable</span></span>
+     narg  <span style="color: #990000">+=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// each operator has two arguments</span></span>
 
-	// a computation that adds to the operation sequence
-	w      = w * (u + w);
-	nop   += 2;   // requires two new operators, an add and a multiply
-	nvar  += 2;   // each operator results in its own variable
-	narg  += 4;   // each operator has two arguments
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
+     <span style="font-style: italic"><span style="color: #9A1900">// operations that do not add to the operation sequence</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>  <span style="font-style: italic"><span style="color: #9A1900">// re-use the parameter 1</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> u<span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// use same variable as u</span></span>
 
-	// operations that do not add to the operation sequence
-	y[0]   = 1.;  // re-use the parameter 1
-	y[1]   = u;   // use same variable as u
+     <span style="font-style: italic"><span style="color: #9A1900">// a computation that adds to the operation sequence</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span>   <span style="color: #990000">=</span> w <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     nop   <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// requires a new add operator</span></span>
+     npar  <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// new parameter 2 is new, so it must be included</span></span>
+     nvar  <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// variable corresponding to the result</span></span>
+     narg  <span style="color: #990000">+=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// operator has two arguments</span></span>
 
-	// a computation that adds to the operation sequence
-	y[2]   = w + 2.;
-	nop   += 1;   // requires a new add operator
-	npar  += 1;   // new parameter 2 is new, so it must be included
-	nvar  += 1;   // variable corresponding to the result
-	narg  += 2;   // operator has two arguments
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
+     nop   <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// special operator for y[0] because it is a parameter</span></span>
+     nvar  <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// special variable for y[0] because it is a parameter</span></span>
+     narg  <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// identifies which parameter corresponds to y[0]</span></span>
+     nop   <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// special operator at the end of operation sequence</span></span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
-	nop   += 1;   // special operator for y[0] becasue it is a parameter
-	nvar  += 1;   // special variable for y[0] because it is a parameter
-	narg  += 1;   // identifies which parameter corresponds to y[0]
-	nop   += 1;   // special operator at the end of operation sequence
+     <span style="font-style: italic"><span style="color: #9A1900">// check the sequence property functions</span></span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Domain</span></span><span style="color: #990000">()</span>      <span style="color: #990000">==</span> n<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">()</span>       <span style="color: #990000">==</span> m<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span>  <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">)</span>  <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">)</span>  <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_var</span></span><span style="color: #990000">()</span>    <span style="color: #990000">==</span> nvar<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_op</span></span><span style="color: #990000">()</span>     <span style="color: #990000">==</span> nop<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_op_arg</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> narg<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_par</span></span><span style="color: #990000">()</span>    <span style="color: #990000">==</span> npar<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_text</span></span><span style="color: #990000">()</span>   <span style="color: #990000">==</span> ntext<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_VecAD</span></span><span style="color: #990000">()</span>  <span style="color: #990000">==</span> nvecad<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     sum <span style="color: #990000">+=</span> nop    <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>CppAD<span style="color: #990000">::</span>local<span style="color: #990000">::</span>OpCode<span style="color: #990000">);</span>
+     sum <span style="color: #990000">+=</span> narg   <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>CPPAD_TAPE_ADDR_TYPE<span style="color: #990000">);</span>
+     sum <span style="color: #990000">+=</span> npar   <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">);</span>
+     sum <span style="color: #990000">+=</span> ntext  <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span><span style="color: #009900">char</span><span style="color: #990000">);</span>
+     sum <span style="color: #990000">+=</span> nvecad <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>CPPAD_TAPE_ADDR_TYPE<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size_op_seq</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> sum<span style="color: #990000">;</span>
 
-	// check the sequence property functions
-	ok &amp;= f.Domain()      == n;
-	ok &amp;= f.Range()       == m;
-	ok &amp;= f.Parameter(0)  == true;
-	ok &amp;= f.Parameter(1)  == false;
-	ok &amp;= f.Parameter(2)  == false;
-	ok &amp;= f.size_var()    == nvar;
-	ok &amp;= f.size_op()     == nop;
-	ok &amp;= f.size_op_arg() == narg;
-	ok &amp;= f.size_par()    == npar;
-	ok &amp;= f.size_text()   == ntext;
-	ok &amp;= f.size_VecAD()  == nvecad;
-	size_t sum = 0;
-	sum += nop    * sizeof(CppAD::OpCode);
-	sum += narg   * sizeof(CPPAD_TAPE_ADDR_TYPE);
-	sum += npar   * sizeof(double);
-	sum += ntext  * sizeof(char);
-	sum += nvecad * sizeof(CPPAD_TAPE_ADDR_TYPE);
-	ok &amp;= f.size_op_seq() == sum;
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/seq_property.cpp
 
 </body>

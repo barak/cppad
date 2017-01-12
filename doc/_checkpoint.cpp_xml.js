@@ -27,7 +27,10 @@ var list_down2 = [
 'atomic_base.xml'
 ];
 var list_down1 = [
-'checkpoint.cpp.xml'
+'checkpoint.cpp.xml',
+'atomic_mul_level.cpp.xml',
+'checkpoint_ode.cpp.xml',
+'checkpoint_extended_ode.cpp.xml'
 ];
 var list_current0 = [
 'checkpoint.cpp.xml#Purpose'

@@ -74,6 +74,7 @@ A:active { color : purple }
 <option>RevSparseJac</option>
 <option>dependency.cpp</option>
 <option>RevSparseHes</option>
+<option>ForSparseHes</option>
 <option>bool_sparsity.cpp</option>
 </select>
 </td>
@@ -104,9 +105,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Hessian Sparsity Pattern: Reverse Mode</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -117,7 +115,6 @@ A:active { color : purple }
 </span></font></code>
 
 <code><i><font color="black"><span style='white-space: nowrap'>h</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.RevSparseHes(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>s</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>transpose</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
-
 
 
 <br/>
@@ -294,18 +291,22 @@ The object
 <br/>
 <b><big><a name="x" id="x">x</a></big></b>
 <br/>
-the sparsity pattern is valid for all values of the independent
-variables in 
+If the operation sequence in 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+ is
+<a href="glossary.xml#Operation.Independent" target="_top"><span style='white-space: nowrap'>independent</span></a>
+ of
+the independent variables in 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>x</mi>
 <mo stretchy="false">&#x02208;</mo>
-<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
-</mstyle></mrow>
+<msup><mi mathvariant='italic'>B</mi>
 <mi mathvariant='italic'>n</mi>
 </msup>
 </mrow></math>
 
-
+,
+the sparsity pattern is valid for all values of
 (even if it has <a href="condexp.xml" target="_top"><span style='white-space: nowrap'>CondExp</span></a>
  or <a href="vecad.xml" target="_top"><span style='white-space: nowrap'>VecAD</span></a>
  operations).
@@ -684,7 +685,7 @@ contains an example and test of using <code><font color="blue">RevSparseHes</fon
 to compute the sparsity pattern for a subset of the Hessian.
 
 
-<hr/>Input File: cppad/local/rev_sparse_hes.hpp
+<hr/>Input File: cppad/core/rev_sparse_hes.hpp
 
 </body>
 </html>

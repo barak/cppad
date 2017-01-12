@@ -71,6 +71,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -95,98 +96,95 @@ A:active { color : purple }
 
 
 <center><b><big><big>LuFactor: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cstdlib&gt;               // for rand function
-# include &lt;cppad/utility/lu_factor.hpp&gt;      // for CppAD::LuFactor
-# include &lt;cppad/utility/near_equal.hpp&gt;     // for CppAD::NearEqual
-# include &lt;cppad/utility/vector.hpp&gt;  // for CppAD::vector
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstdlib&gt;</span>               <span style="font-style: italic"><span style="color: #9A1900">// for rand function</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/lu_factor.hpp&gt;</span>      <span style="font-style: italic"><span style="color: #9A1900">// for CppAD::LuFactor</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/near_equal.hpp&gt;</span>     <span style="font-style: italic"><span style="color: #9A1900">// for CppAD::NearEqual</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// for CppAD::vector</span></span>
 
-bool LuFactor(void)
-{	bool  ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuFactor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>  ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-# ifndef _MSC_VER
-	using std::rand;
-	using std::srand;
-# endif
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> _MSC_VER
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>rand<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>srand<span style="color: #990000">;</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	size_t  n = 5;                        // number rows in A
-	double  rand_max = double(RAND_MAX);  // maximum rand value
-	double  sum;                          // element of L * U
-	double  pij;                          // element of permuted A
-	size_t  i, j, k;                      // temporary indices
+     <span style="color: #008080">size_t</span>  n <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>                        <span style="font-style: italic"><span style="color: #9A1900">// number rows in A</span></span>
+     <span style="color: #009900">double</span>  rand_max <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>RAND_MAX<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// maximum rand value</span></span>
+     <span style="color: #009900">double</span>  sum<span style="color: #990000">;</span>                          <span style="font-style: italic"><span style="color: #9A1900">// element of L * U</span></span>
+     <span style="color: #009900">double</span>  pij<span style="color: #990000">;</span>                          <span style="font-style: italic"><span style="color: #9A1900">// element of permuted A</span></span>
+     <span style="color: #008080">size_t</span>  i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">;</span>                      <span style="font-style: italic"><span style="color: #9A1900">// temporary indices</span></span>
 
-	// A is an n by n matrix
-	CppAD::vector&lt;double&gt; A(n*n), LU(n*n), L(n*n), U(n*n);
+     <span style="font-style: italic"><span style="color: #9A1900">// A is an n by n matrix</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>n<span style="color: #990000">*</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">LU</span></span><span style="color: #990000">(</span>n<span style="color: #990000">*</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">L</span></span><span style="color: #990000">(</span>n<span style="color: #990000">*</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">U</span></span><span style="color: #990000">(</span>n<span style="color: #990000">*</span>n<span style="color: #990000">);</span>
 
-	// set A equal to an n by n random matrix
-	for(i = 0; i &lt; n; i++)
-		for(j = 0; j &lt; n; j++)
-			A[i * n + j] = rand() / rand_max;
+     <span style="font-style: italic"><span style="color: #9A1900">// set A equal to an n by n random matrix</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               A<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">rand</span></span><span style="color: #990000">()</span> <span style="color: #990000">/</span> rand_max<span style="color: #990000">;</span>
 
-	// pivot vectors
-	CppAD::vector&lt;size_t&gt; ip(n);
-	CppAD::vector&lt;size_t&gt; jp(n);
+     <span style="font-style: italic"><span style="color: #9A1900">// pivot vectors</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">ip</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span> <span style="font-weight: bold"><span style="color: #000000">jp</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// factor the matrix A
-	LU       = A;
-	CppAD::LuFactor(ip, jp, LU);
+     <span style="font-style: italic"><span style="color: #9A1900">// factor the matrix A</span></span>
+     LU       <span style="color: #990000">=</span> A<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">LuFactor</span></span><span style="color: #990000">(</span>ip<span style="color: #990000">,</span> jp<span style="color: #990000">,</span> LU<span style="color: #990000">);</span>
 
-	// check that ip and jp are permutations of the indices 0, ... , n-1
-	for(i = 0; i &lt; n; i++)
-	{	ok &amp;= (ip[i] &lt; n);
-		ok &amp;= (jp[i] &lt; n);
-		for(j = 0; j &lt; n; j++)
-		{	if( i != j )
-			{	ok &amp;= (ip[i] != ip[j]);
-				ok &amp;= (jp[i] != jp[j]);
-			}
-		}
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// check that ip and jp are permutations of the indices 0, ... , n-1</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>ip<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">&lt;</span> n<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>jp<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">&lt;</span> n<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">!=</span> j <span style="color: #990000">)</span>
+               <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>ip<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">!=</span> ip<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+                    ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>jp<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">!=</span> jp<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
 
-	// Extract L from LU
-	for(i = 0; i &lt; n; i++)
-	{	// elements along and below the diagonal
-		for(j = 0; j &lt;= i; j++)
-			L[i * n + j] = LU[ ip[i] * n + jp[j] ];
-		// elements above the diagonal
-		for(j = i+1; j &lt; n; j++)
-			L[i * n + j] = 0.;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Extract L from LU</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// elements along and below the diagonal</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;=</span> i<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               L<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> LU<span style="color: #990000">[</span> ip<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> jp<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">];</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// elements above the diagonal</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               L<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
 
-	// Extract U from LU
-	for(i = 0; i &lt; n; i++)
-	{	// elements below the diagonal
-		for(j = 0; j &lt; i; j++)
-			U[i * n + j] = 0.;
-		// elements along the diagonal
-		U[i * n + i] = 1.;
-		// elements above the diagonal
-		for(j = i+1; j &lt; n; j++)
-			U[i * n + j] = LU[ ip[i] * n + jp[j] ];
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Extract U from LU</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// elements below the diagonal</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> i<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               U<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// elements along the diagonal</span></span>
+          U<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// elements above the diagonal</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> i<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               U<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> LU<span style="color: #990000">[</span> ip<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> jp<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
 
-	// Compute L * U
-	for(i = 0; i &lt; n; i++)
-	{	for(j = 0; j &lt; n; j++)
-		{	// compute element (i,j) entry in L * U
-			sum = 0.;
-			for(k = 0; k &lt; n; k++)
-				sum += L[i * n + k] * U[k * n + j];
-			// element (i,j) in permuted version of A
-			pij  = A[ ip[i] * n + jp[j] ];
-			// compare
-			ok  &amp;= CppAD::<a href="nearequal.xml" target="_top">NearEqual</a>(pij, sum, 1e-10, 1e-10);
-		}
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Compute L * U</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// compute element (i,j) entry in L * U</span></span>
+               sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+                    sum <span style="color: #990000">+=</span> L<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> k<span style="color: #990000">]</span> <span style="color: #990000">*</span> U<span style="color: #990000">[</span>k <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">];</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// element (i,j) in permuted version of A</span></span>
+               pij  <span style="color: #990000">=</span> A<span style="color: #990000">[</span> ip<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> jp<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">];</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// compare</span></span>
+               ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>pij<span style="color: #990000">,</span> sum<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/lu_factor.cpp
 
 </body>

@@ -1,6 +1,6 @@
-// $Id: link_sparse_hessian.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: link_sparse_hessian.cpp 3855 2016-12-19 00:30:54Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -346,9 +346,17 @@ is the dimension of the argument space for this speed test.
 is the number of times to repeate the speed test.
 */
 void speed_sparse_hessian(size_t size, size_t repeat)
-{	CPPAD_ASSERT_UNKNOWN( size > 0 );
+{
 	static size_t previous_size = 0;
 	static vector<size_t> row, col;
+	//
+	// free statically allocated memory
+	if( size == 0 && repeat == 0 )
+	{	row.clear();
+		col.clear();
+		previous_size = size;
+		return;
+	}
 
 	size_t n = size;
 	vector<double> x(n);

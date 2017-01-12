@@ -78,73 +78,67 @@ A:active { color : purple }
 <td>mul_eq.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
 <center><b><big><big>AD Computed Assignment Multiplication: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-bool MulEq(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">MulEq</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	// domain space vector
-	size_t  n = 1;
-	double x0 = .5;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]      = x0;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span>  n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x0 <span style="color: #990000">=</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>      <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// range space vector
-	size_t m = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = x[0];         // initial value
-	y[0] *= 2;           // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; *= int
-	y[0] *= 4.;          // <a href="ad.xml" target="_top">AD</a>&lt;double&gt; *= double
-	y[1] = y[0] *= x[0]; // use the result of a computed assignment
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>         <span style="font-style: italic"><span style="color: #9A1900">// initial value</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>           <span style="font-style: italic"><span style="color: #9A1900">// AD&lt;double&gt; *= int</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>          <span style="font-style: italic"><span style="color: #9A1900">// AD&lt;double&gt; *= double</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span> <span style="font-style: italic"><span style="color: #9A1900">// use the result of a computed assignment</span></span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// check value
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0] , x0*2.*4.*x0,  1e-10 , 1e-10);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[1] ,        y[0],  1e-10 , 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// check value</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x0<span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="color: #993399">4</span><span style="color: #990000">.*</span>x0<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>        y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// forward computation of partials w.r.t. x[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dy(m);
-	dx[0] = 1.;
-	dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 8.*2.*x0, 1e-10, 1e-10);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[1], 8.*2.*x0, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// forward computation of partials w.r.t. x[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">8</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span>x0<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">8</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span>x0<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// reverse computation of derivative of y[0]
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)  w(m);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
-	w[0]  = 1.;
-	w[1]  = 0.;
-	dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], 8.*2.*x0, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse computation of derivative of y[0]</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>  <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     dw    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">8</span><span style="color: #990000">.*</span><span style="color: #993399">2</span><span style="color: #990000">.*</span>x0<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// use a VecAD&lt;Base&gt;::reference object with computed multiplication
-	CppAD::VecAD&lt;double&gt; v(1);
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; zero(0);
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; result = 1;
-	v[zero] = 2;
-	result *= v[zero];
-	ok     &amp;= (result == 2);
+     <span style="font-style: italic"><span style="color: #9A1900">// use a VecAD&lt;Base&gt;::reference object with computed multiplication</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> result <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     v<span style="color: #990000">[</span>zero<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     result <span style="color: #990000">*=</span> v<span style="color: #990000">[</span>zero<span style="color: #990000">];</span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>result <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/mul_eq.cpp
 
 </body>

@@ -1,6 +1,6 @@
-// $Id: lu_factor.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: lu_factor.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -23,7 +23,7 @@ $mindex LuFactor$$
 
 
 $code
-$verbatim%example/lu_factor.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/lu_factor.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -42,6 +42,8 @@ bool LuFactor(void)
 	using std::rand;
 	using std::srand;
 # endif
+	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	size_t  n = 5;                        // number rows in A
 	double  rand_max = double(RAND_MAX);  // maximum rand value
@@ -109,7 +111,7 @@ bool LuFactor(void)
 			// element (i,j) in permuted version of A
 			pij  = A[ ip[i] * n + jp[j] ];
 			// compare
-			ok  &= CppAD::NearEqual(pij, sum, 1e-10, 1e-10);
+			ok  &= NearEqual(pij, sum, eps99, eps99);
 		}
 	}
 

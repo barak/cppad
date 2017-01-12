@@ -82,223 +82,215 @@ A:active { color : purple }
 <td>hes_lagrangian.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
-
 <center><b><big><big>Hessian of Lagrangian and  ADFun Default Constructor: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cassert&gt;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Lagragian</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; CppAD::AD&lt;double&gt; &gt;</span> <span style="color: #990000">&amp;</span>xyz <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> xyz<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">6</span> <span style="color: #990000">);</span>
 
-namespace {
-	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; Lagragian(
-		const CppAD::vector&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;xyz )
-	{	using CppAD::AD;
-		assert( xyz.size() == 6 );
+          <span style="color: #008080">AD&lt;double&gt;</span> x0 <span style="color: #990000">=</span> xyz<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> x1 <span style="color: #990000">=</span> xyz<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> x2 <span style="color: #990000">=</span> xyz<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> y0 <span style="color: #990000">=</span> xyz<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> y1 <span style="color: #990000">=</span> xyz<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">];</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> z  <span style="color: #990000">=</span> xyz<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">];</span>
 
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x0 = xyz[0];
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x1 = xyz[1];
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; x2 = xyz[2];
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; y0 = xyz[3];
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; y1 = xyz[4];
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; z  = xyz[5];
+          <span style="font-style: italic"><span style="color: #9A1900">// compute objective function</span></span>
+          <span style="color: #008080">AD&lt;double&gt;</span> f <span style="color: #990000">=</span> x0 <span style="color: #990000">*</span> x0<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// compute constraint functions</span></span>
+          <span style="color: #008080">AD&lt;double&gt;</span> g0 <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>x1 <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.*</span>x2<span style="color: #990000">;</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> g1 <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> x0 <span style="color: #990000">*</span> x2 <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// compute the Lagragian</span></span>
+          <span style="color: #008080">AD&lt;double&gt;</span> L <span style="color: #990000">=</span> y0 <span style="color: #990000">*</span> g0 <span style="color: #990000">+</span> y1 <span style="color: #990000">*</span> g1 <span style="color: #990000">+</span> z <span style="color: #990000">*</span> f<span style="color: #990000">;</span>
 
-		// compute objective function
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; f = x0 * x0;
-		// compute constraint functions
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; g0 = 1. + 2.*x1 + 3.*x2;
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; g1 = log( x0 * x2 );
-		// compute the Lagragian
-		<a href="ad.xml" target="_top">AD</a>&lt;double&gt; L = y0 * g0 + y1 * g1 + z * f;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> L<span style="color: #990000">;</span>
 
-		return L;
+     <span style="color: #FF0000">}</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; CppAD::AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">fg</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; CppAD::AD&lt;double&gt; &gt;</span> <span style="color: #990000">&amp;</span>x <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span> <span style="color: #990000">);</span>
 
-	}
-	CppAD::vector&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; fg(
-		const CppAD::vector&lt; CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; &amp;x )
-	{	using CppAD::AD;
-		using CppAD::vector;
-		assert( x.size() == 3 );
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">fg</span></span><span style="color: #990000">(</span><span style="color: #993399">3</span><span style="color: #990000">);</span>
+          fg<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          fg<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+          fg<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; fg(3);
-		fg[0] = x[0] * x[0];
-		fg[1] = 1. + 2. * x[1] + 3. * x[2];
-		fg[2] = log( x[0] * x[2] );
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> fg<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">CheckHessian</span></span><span style="color: #990000">(</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> H <span style="color: #990000">,</span>
+     <span style="color: #009900">double</span> x0<span style="color: #990000">,</span> <span style="color: #009900">double</span> x1<span style="color: #990000">,</span> <span style="color: #009900">double</span> x2<span style="color: #990000">,</span> <span style="color: #009900">double</span> y0<span style="color: #990000">,</span> <span style="color: #009900">double</span> y1<span style="color: #990000">,</span> <span style="color: #009900">double</span> z <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+          <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #009900">bool</span> ok  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> H<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">          L   =    z*x0*x0 + y0*(1 + 2*x1 + 3*x2) + y1*log(x0*x2)</span></span>
 
-		return fg;
-	}
-	bool CheckHessian(
-	CppAD::vector&lt;double&gt; H ,
-	double x0, double x1, double x2, double y0, double y1, double z )
-	{	using CppAD::NearEqual;
-		bool ok  = true;
-		size_t n = 3;
-		assert( H.size() == n * n );
-		/*
-		L   =    z*x0*x0 + y0*(1 + 2*x1 + 3*x2) + y1*log(x0*x2)
+<span style="font-style: italic"><span style="color: #9A1900">          L_0 = 2 * z * x0 + y1 / x0</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">          L_1 = y0 * 2</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">          L_2 = y0 * 3 + y1 / x2</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">          */</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// L_00 = 2 * z - y1 / ( x0 * x0 )</span></span>
+          <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> z <span style="color: #990000">-</span> y1 <span style="color: #990000">/</span> <span style="color: #990000">(</span>x0 <span style="color: #990000">*</span> x0<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">0</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// L_01 = L_10 = 0</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">0</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">1</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// L_02 = L_20 = 0</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">0</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// L_11 = 0</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">1</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// L_12 = L_21 = 0</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">1</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// L_22 = - y1 / (x2 * x2)</span></span>
+          check <span style="color: #990000">=</span> <span style="color: #990000">-</span> y1 <span style="color: #990000">/</span> <span style="color: #990000">(</span>x2 <span style="color: #990000">*</span> x2<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>H<span style="color: #990000">[</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-		L_0 = 2 * z * x0 + y1 / x0
-		L_1 = y0 * 2
-		L_2 = y0 * 3 + y1 / x2
-		*/
-		// L_00 = 2 * z - y1 / ( x0 * x0 )
-		double check = 2. * z - y1 / (x0 * x0);
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[0 * n + 0], check, 1e-10, 1e-10);
-		// L_01 = L_10 = 0
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[0 * n + 1], 0., 1e-10, 1e-10);
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[1 * n + 0], 0., 1e-10, 1e-10);
-		// L_02 = L_20 = 0
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[0 * n + 2], 0., 1e-10, 1e-10);
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[2 * n + 0], 0., 1e-10, 1e-10);
-		// L_11 = 0
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[1 * n + 1], 0., 1e-10, 1e-10);
-		// L_12 = L_21 = 0
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[1 * n + 2], 0., 1e-10, 1e-10);
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[2 * n + 1], 0., 1e-10, 1e-10);
-		// L_22 = - y1 / (x2 * x2)
-		check = - y1 / (x2 * x2);
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(H[2 * n + 2], check, 1e-10, 1e-10);
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">UseL</span></span><span style="color: #990000">()</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-		return ok;
-	}
-	bool UseL()
-	{	using CppAD::AD;
-		using CppAD::vector;
+          <span style="font-style: italic"><span style="color: #9A1900">// double values corresponding to XYZ vector</span></span>
+          <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">x0</span></span><span style="color: #990000">(.</span><span style="color: #993399">5</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span><span style="color: #993399">1e3</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y0</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.),</span> <span style="font-weight: bold"><span style="color: #000000">y1</span></span><span style="color: #990000">(</span><span style="color: #993399">3</span><span style="color: #990000">.),</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span><span style="color: #993399">4</span><span style="color: #990000">.);</span>
 
-		// double values corresponding to XYZ vector
-		double x0(.5), x1(1e3), x2(1), y0(2.), y1(3.), z(4.);
+          <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">XYZ</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          XYZ<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+          XYZ<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+          XYZ<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
 
-		// domain space vector
-		size_t n = 3;
-		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;  XYZ(n);
-		XYZ[0] = x0;
-		XYZ[1] = x1;
-		XYZ[2] = x2;
+          <span style="font-style: italic"><span style="color: #9A1900">// declare X as independent variable vector and start recording</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>XYZ<span style="color: #990000">);</span>
 
-		// declare X as independent variable vector and start recording
-		CppAD::<a href="independent.xml" target="_top">Independent</a>(XYZ);
+          <span style="font-style: italic"><span style="color: #9A1900">// add the Lagragian multipliers to XYZ</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (note that this modifies the vector XYZ)</span></span>
+          XYZ<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>y0<span style="color: #990000">);</span>
+          XYZ<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">);</span>
+          XYZ<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>
 
-		// add the Lagragian multipliers to XYZ
-		// (note that this modifies the vector XYZ)
-		XYZ.push_back(y0);
-		XYZ.push_back(y1);
-		XYZ.push_back(z);
+          <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">L</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          L<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Lagragian</span></span><span style="color: #990000">(</span>XYZ<span style="color: #990000">);</span>
 
-		// range space vector
-		size_t m = 1;
-		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;  L(m);
-		L[0] = Lagragian(XYZ);
+          <span style="font-style: italic"><span style="color: #9A1900">// create K: X -&gt; L and stop tape recording</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// We cannot use the ADFun sequence constructor because XYZ has</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// changed between the call to Independent and here.</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> K<span style="color: #990000">;</span>
+          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>L<span style="color: #990000">);</span>
 
-		// create K: X -&gt; L and stop tape recording
-		// We cannot use the ADFun sequence constructor because XYZ has
-		// changed between the call to Independent and here.
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; K;
-		K.Dependent(L);
+          <span style="font-style: italic"><span style="color: #9A1900">// Operation sequence corresponding to K does depends on</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// value of y0, y1, and z. Must redo calculations above when</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// y0, y1, or z changes.</span></span>
 
-		// Operation sequence corresponding to K does depends on
-		// value of y0, y1, and z. Must redo calculations above when
-		// y0, y1, or z changes.
+          <span style="font-style: italic"><span style="color: #9A1900">// declare independent variable vector and Hessian</span></span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">H</span></span><span style="color: #990000">(</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
 
-		// declare independent variable vector and Hessian
-		vector&lt;double&gt; x(n);
-		vector&lt;double&gt; H( n * n );
+          <span style="font-style: italic"><span style="color: #9A1900">// point at which we are computing the Hessian</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (must redo calculations below each time x changes)</span></span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
+          H <span style="color: #990000">=</span> K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Hessian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-		// point at which we are computing the Hessian
-		// (must redo calculations below each time x changes)
-		x[0] = x0;
-		x[1] = x1;
-		x[2] = x2;
-		H = K.Hessian(x, 0);
+          <span style="font-style: italic"><span style="color: #9A1900">// check this Hessian calculation</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">CheckHessian</span></span><span style="color: #990000">(</span>H<span style="color: #990000">,</span> x0<span style="color: #990000">,</span> x1<span style="color: #990000">,</span> x2<span style="color: #990000">,</span> y0<span style="color: #990000">,</span> y1<span style="color: #990000">,</span> z<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Usefg</span></span><span style="color: #990000">()</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-		// check this Hessian calculation
-		return CheckHessian(H, x0, x1, x2, y0, y1, z);
-	}
-	bool Usefg()
-	{	using CppAD::AD;
-		using CppAD::vector;
+          <span style="font-style: italic"><span style="color: #9A1900">// parameters defining problem</span></span>
+          <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">x0</span></span><span style="color: #990000">(.</span><span style="color: #993399">5</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span><span style="color: #993399">1e3</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y0</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.),</span> <span style="font-weight: bold"><span style="color: #000000">y1</span></span><span style="color: #990000">(</span><span style="color: #993399">3</span><span style="color: #990000">.),</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span><span style="color: #993399">4</span><span style="color: #990000">.);</span>
 
-		// parameters defining problem
-		double x0(.5), x1(1e3), x2(1), y0(2.), y1(3.), z(4.);
+          <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+          <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+          X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+          X<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
 
-		// domain space vector
-		size_t n = 3;
-		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;  X(n);
-		X[0] = x0;
-		X[1] = x1;
-		X[2] = x2;
+          <span style="font-style: italic"><span style="color: #9A1900">// declare X as independent variable vector and start recording</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-		// declare X as independent variable vector and start recording
-		CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+          <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+          <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">FG</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          FG <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">fg</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-		// range space vector
-		size_t m = 3;
-		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt;  FG(m);
-		FG = fg(X);
+          <span style="font-style: italic"><span style="color: #9A1900">// create K: X -&gt; FG and stop tape recording</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> K<span style="color: #990000">;</span>
+          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>FG<span style="color: #990000">);</span>
 
-		// create K: X -&gt; FG and stop tape recording
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; K;
-		K.Dependent(FG);
+          <span style="font-style: italic"><span style="color: #9A1900">// Operation sequence corresponding to K does not depend on</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// value of x0, x1, x2, y0, y1, or z.</span></span>
 
-		// Operation sequence corresponding to K does not depend on
-		// value of x0, x1, x2, y0, y1, or z.
+          <span style="font-style: italic"><span style="color: #9A1900">// forward and reverse mode arguments and results</span></span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">H</span></span><span style="color: #990000">(</span> n <span style="color: #990000">*</span> n <span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt;double&gt;</span>  <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt;double&gt;</span>   <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt;double&gt;</span>  <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">*</span>n<span style="color: #990000">);</span>
 
-		// forward and reverse mode arguments and results
-		vector&lt;double&gt; x(n);
-		vector&lt;double&gt; H( n * n );
-		vector&lt;double&gt;  dx(n);
-		vector&lt;double&gt;   w(m);
-		vector&lt;double&gt;  dw(2*n);
+          <span style="font-style: italic"><span style="color: #9A1900">// compute Hessian at this value of x</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (must redo calculations below each time x changes)</span></span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
+          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
 
-		// compute Hessian at this value of x
-		// (must redo calculations below each time x changes)
-		x[0] = x0;
-		x[1] = x1;
-		x[2] = x2;
-		K.<a href="forward.xml" target="_top">Forward</a>(0, x);
+          <span style="font-style: italic"><span style="color: #9A1900">// set weights to Lagrange multiplier values</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (must redo calculations below each time y0, y1, or z changes)</span></span>
+          w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> z<span style="color: #990000">;</span>
+          w<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> y0<span style="color: #990000">;</span>
+          w<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> y1<span style="color: #990000">;</span>
 
-		// set weights to Lagrange multiplier values
-		// (must redo calculations below each time y0, y1, or z changes)
-		w[0] = z;
-		w[1] = y0;
-		w[2] = y1;
+          <span style="font-style: italic"><span style="color: #9A1900">// initialize dx as zero</span></span>
+          <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               dx<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// loop over components of x</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     dx<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>             <span style="font-style: italic"><span style="color: #9A1900">// dx is i-th elementary vector</span></span>
+               K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>       <span style="font-style: italic"><span style="color: #9A1900">// partial w.r.t dx</span></span>
+               dw <span style="color: #990000">=</span> K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// deritavtive of partial</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    H<span style="color: #990000">[</span> i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j <span style="color: #990000">]</span> <span style="color: #990000">=</span> dw<span style="color: #990000">[</span> j <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">];</span>
+               dx<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>             <span style="font-style: italic"><span style="color: #9A1900">// dx is zero vector</span></span>
+          <span style="color: #FF0000">}</span>
 
-		// initialize dx as zero
-		size_t i, j;
-		for(i = 0; i &lt; n; i++)
-			dx[i] = 0.;
-		// loop over components of x
-		for(i = 0; i &lt; n; i++)
-		{	dx[i] = 1.;             // dx is i-th elementary vector
-			K.<a href="forward.xml" target="_top">Forward</a>(1, dx);       // partial w.r.t dx
-			dw = K.<a href="reverse.xml" target="_top">Reverse</a>(2, w);   // deritavtive of partial
-			for(j = 0; j &lt; n; j++)
-				H[ i * n + j ] = dw[ j * 2 + 1 ];
-			dx[i] = 0.;             // dx is zero vector
-		}
+          <span style="font-style: italic"><span style="color: #9A1900">// check this Hessian calculation</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">CheckHessian</span></span><span style="color: #990000">(</span>H<span style="color: #990000">,</span> x0<span style="color: #990000">,</span> x1<span style="color: #990000">,</span> x2<span style="color: #990000">,</span> y0<span style="color: #990000">,</span> y1<span style="color: #990000">,</span> z<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-		// check this Hessian calculation
-		return CheckHessian(H, x0, x1, x2, y0, y1, z);
-	}
-}
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">HesLagrangian</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool HesLagrangian(void)
-{	bool ok = true;
+     <span style="font-style: italic"><span style="color: #9A1900">// UseL is simpler, but must retape every time that y of z changes</span></span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">UseL</span></span><span style="color: #990000">();</span>
 
-	// UseL is simpler, but must retape every time that y of z changes
-	ok     &amp;= UseL();
-
-	// Usefg does not need to retape unless operation sequence changes
-	ok     &amp;= Usefg();
-	return ok;
-}
-
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// Usefg does not need to retape unless operation sequence changes</span></span>
+     ok     <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Usefg</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/hes_lagrangian.cpp
 
 </body>

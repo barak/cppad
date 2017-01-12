@@ -138,20 +138,18 @@ matrix we are computing the determinant of.
 <br/>
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
-<code><font color='blue'><pre style='display:inline'> 
-void repeat_det_by_minor(size_t repeat, size_t size)
-{    double *a;
-     a = (double*) malloc( (size * size) * sizeof(double) );
+<pre><tt><span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">repeat_det_by_minor</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> repeat<span style="color: #990000">,</span> <span style="color: #008080">size_t</span> size<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> <span style="color: #990000">*</span>a<span style="color: #990000">;</span>
+     a <span style="color: #990000">=</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">*)</span> <span style="font-weight: bold"><span style="color: #000000">malloc</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span>size <span style="color: #990000">*</span> size<span style="color: #990000">)</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
-     while(repeat--)
-     {    <a href="uniform_01_c.xml" target="_top">uniform_01</a>(size * size, a);
-          <a href="det_by_minor_c.xml" target="_top">det_by_minor</a>(a, size);
-     }
-     
-     free(a);
-     return;
-}
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span>size <span style="color: #990000">*</span> size<span style="color: #990000">,</span> a<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">det_by_minor</span></span><span style="color: #990000">(</span>a<span style="color: #990000">,</span> size<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-weight: bold"><span style="color: #000000">free</span></span><span style="color: #990000">(</span>a<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: compare_c/det_by_minor.c
 

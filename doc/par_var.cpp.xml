@@ -78,62 +78,57 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Parameter and Variable Functions: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ParVar</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool ParVar(void)
-{	bool ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>VecAD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>Parameter<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>Variable<span style="color: #990000">;</span>
 
-	using CppAD::AD;
-	using CppAD::VecAD;
-	using CppAD::Parameter;
-	using CppAD::Variable;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>     <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>     <span style="font-style: italic"><span style="color: #9A1900">// x[0] is a paraemter here</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>      <span style="font-style: italic"><span style="color: #9A1900">// now x[0] is a variable</span></span>
 
-	// declare independent variables and start tape recording
-	size_t n = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0]     = 0.;
-	ok &amp;= Parameter(x[0]);     // x[0] is a paraemter here
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
-	ok &amp;= Variable(x[0]);      // now x[0] is a variable
+     <span style="font-style: italic"><span style="color: #9A1900">// dependent variable vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>    <span style="font-style: italic"><span style="color: #9A1900">// y[0] does not depend on x[0]</span></span>
+     y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>     <span style="font-style: italic"><span style="color: #9A1900">// y[1] does depends on x[0]</span></span>
 
-	// dependent variable vector
-	size_t m = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = 2.;
-	ok  &amp;= Parameter(y[0]);    // y[0] does not depend on x[0]
-	y[1] = abs(x[0]);
-	ok  &amp;= Variable(y[1]);     // y[1] does depends on x[0]
-
-	// VecAD objects
-	VecAD&lt;double&gt; z(2);
-	z[0] = 0.;
-	z[1] = 1.;
-	ok  &amp;= Parameter(z);      // z does not depend on x[0]
-	z[x[0]] = 2.;
-	ok  &amp;= Variable(z);       // z depends on x[0]
+     <span style="font-style: italic"><span style="color: #9A1900">// VecAD objects</span></span>
+     <span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>      <span style="font-style: italic"><span style="color: #9A1900">// z does not depend on x[0]</span></span>
+     z<span style="color: #990000">[</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>       <span style="font-style: italic"><span style="color: #9A1900">// z depends on x[0]</span></span>
 
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// check that now all <a href="ad.xml" target="_top">AD</a>&lt;double&gt; objects are parameters
-	ok &amp;= Parameter(x[0]); ok &amp;= ! Variable(x[0]);
-	ok &amp;= Parameter(y[0]); ok &amp;= ! Variable(y[0]);
-	ok &amp;= Parameter(y[1]); ok &amp;= ! Variable(y[1]);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that now all AD&lt;double&gt; objects are parameters</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span> ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span> ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span> ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> <span style="font-weight: bold"><span style="color: #000000">Variable</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
 
-	// check that the VecAD&lt;double&gt; object is a parameter
-	ok &amp;= Parameter(z);
+     <span style="font-style: italic"><span style="color: #9A1900">// check that the VecAD&lt;double&gt; object is a parameter</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">Parameter</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/par_var.cpp
 
 </body>

@@ -96,7 +96,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = test_one.sh
+CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
@@ -106,9 +106,10 @@ am__v_AR_0 = @echo "  AR      " $@;
 am__v_AR_1 = 
 libeigen_a_AR = $(AR) $(ARFLAGS)
 libeigen_a_LIBADD =
-am__libeigen_a_SOURCES_DIST = cppad_eigen.cpp
+am__libeigen_a_SOURCES_DIST = cppad_eigen.cpp eigen_mat_inv.cpp
 @CppAD_EIGEN_DIR_TRUE@am_libeigen_a_OBJECTS =  \
-@CppAD_EIGEN_DIR_TRUE@	libeigen_a-cppad_eigen.$(OBJEXT)
+@CppAD_EIGEN_DIR_TRUE@	libeigen_a-cppad_eigen.$(OBJEXT) \
+@CppAD_EIGEN_DIR_TRUE@	libeigen_a-eigen_mat_inv.$(OBJEXT)
 libeigen_a_OBJECTS = $(am_libeigen_a_OBJECTS)
 am__test_more_SOURCES_DIST = base_adolc.cpp ipopt_solve.cpp \
 	alloc_openmp.cpp test_more.cpp abs.cpp acos.cpp acosh.cpp \
@@ -119,16 +120,16 @@ am__test_more_SOURCES_DIST = base_adolc.cpp ipopt_solve.cpp \
 	cond_exp_rev.cpp copy.cpp cos.cpp cosh.cpp dbl_epsilon.cpp \
 	div.cpp div_eq.cpp div_zero_one.cpp erf.cpp exp.cpp expm1.cpp \
 	extern_value.cpp extern_value.hpp for_hess.cpp \
-	for_sparse_jac.cpp forward.cpp forward_dir.cpp \
-	forward_order.cpp from_base.cpp fun_check.cpp jacobian.cpp \
-	num_limits.cpp log.cpp log1p.cpp log10.cpp mul.cpp \
-	mul_cskip.cpp mul_eq.cpp mul_level.cpp mul_cond_rev.cpp \
-	mul_zdouble.cpp mul_zero_one.cpp near_equal_ext.cpp neg.cpp \
-	ode_err_control.cpp old_usead_2.cpp old_usead_1.cpp \
-	old_tan.cpp old_reciprocal.cpp old_mat_mul.cpp old_mat_mul.hpp \
-	omp_alloc.cpp optimize.cpp parameter.cpp poly.cpp pow.cpp \
-	pow_int.cpp print_for.cpp romberg_one.cpp rosen_34.cpp \
-	runge_45.cpp reverse.cpp rev_sparse_hes.cpp rev_sparse_jac.cpp \
+	for_sparse_hes.cpp for_sparse_jac.cpp forward.cpp \
+	forward_dir.cpp forward_order.cpp from_base.cpp fun_check.cpp \
+	hes_sparsity.cpp jacobian.cpp num_limits.cpp log.cpp log1p.cpp \
+	log10.cpp mul.cpp mul_cskip.cpp mul_eq.cpp mul_level.cpp \
+	mul_cond_rev.cpp mul_zdouble.cpp mul_zero_one.cpp \
+	near_equal_ext.cpp neg.cpp ode_err_control.cpp old_usead_2.cpp \
+	old_usead_1.cpp old_tan.cpp old_reciprocal.cpp old_mat_mul.cpp \
+	old_mat_mul.hpp omp_alloc.cpp optimize.cpp parameter.cpp \
+	poly.cpp pow.cpp pow_int.cpp print_for.cpp romberg_one.cpp \
+	rosen_34.cpp runge_45.cpp reverse.cpp rev_sparse_jac.cpp \
 	rev_two.cpp simple_vector.cpp sin.cpp sin_cos.cpp sinh.cpp \
 	sparse_hessian.cpp sparse_jacobian.cpp sparse_vec_ad.cpp \
 	sqrt.cpp std_math.cpp sub.cpp sub_eq.cpp sub_zero.cpp tan.cpp \
@@ -151,9 +152,10 @@ am_test_more_OBJECTS = $(am__objects_1) $(am__objects_2) \
 	div.$(OBJEXT) div_eq.$(OBJEXT) div_zero_one.$(OBJEXT) \
 	erf.$(OBJEXT) exp.$(OBJEXT) expm1.$(OBJEXT) \
 	extern_value.$(OBJEXT) for_hess.$(OBJEXT) \
-	for_sparse_jac.$(OBJEXT) forward.$(OBJEXT) \
-	forward_dir.$(OBJEXT) forward_order.$(OBJEXT) \
-	from_base.$(OBJEXT) fun_check.$(OBJEXT) jacobian.$(OBJEXT) \
+	for_sparse_hes.$(OBJEXT) for_sparse_jac.$(OBJEXT) \
+	forward.$(OBJEXT) forward_dir.$(OBJEXT) \
+	forward_order.$(OBJEXT) from_base.$(OBJEXT) \
+	fun_check.$(OBJEXT) hes_sparsity.$(OBJEXT) jacobian.$(OBJEXT) \
 	num_limits.$(OBJEXT) log.$(OBJEXT) log1p.$(OBJEXT) \
 	log10.$(OBJEXT) mul.$(OBJEXT) mul_cskip.$(OBJEXT) \
 	mul_eq.$(OBJEXT) mul_level.$(OBJEXT) mul_cond_rev.$(OBJEXT) \
@@ -165,10 +167,9 @@ am_test_more_OBJECTS = $(am__objects_1) $(am__objects_2) \
 	omp_alloc.$(OBJEXT) optimize.$(OBJEXT) parameter.$(OBJEXT) \
 	poly.$(OBJEXT) pow.$(OBJEXT) pow_int.$(OBJEXT) \
 	print_for.$(OBJEXT) romberg_one.$(OBJEXT) rosen_34.$(OBJEXT) \
-	runge_45.$(OBJEXT) reverse.$(OBJEXT) rev_sparse_hes.$(OBJEXT) \
-	rev_sparse_jac.$(OBJEXT) rev_two.$(OBJEXT) \
-	simple_vector.$(OBJEXT) sin.$(OBJEXT) sin_cos.$(OBJEXT) \
-	sinh.$(OBJEXT) sparse_hessian.$(OBJEXT) \
+	runge_45.$(OBJEXT) reverse.$(OBJEXT) rev_sparse_jac.$(OBJEXT) \
+	rev_two.$(OBJEXT) simple_vector.$(OBJEXT) sin.$(OBJEXT) \
+	sin_cos.$(OBJEXT) sinh.$(OBJEXT) sparse_hessian.$(OBJEXT) \
 	sparse_jacobian.$(OBJEXT) sparse_vec_ad.$(OBJEXT) \
 	sqrt.$(OBJEXT) std_math.$(OBJEXT) sub.$(OBJEXT) \
 	sub_eq.$(OBJEXT) sub_zero.$(OBJEXT) tan.$(OBJEXT) \
@@ -255,8 +256,7 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 ETAGS = etags
 CTAGS = ctags
-am__DIST_COMMON = $(srcdir)/makefile.in $(srcdir)/test_one.sh.in \
-	$(top_srcdir)/depcomp
+am__DIST_COMMON = $(srcdir)/makefile.in $(top_srcdir)/depcomp
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ABS_TOP_BUILDDIR = @ABS_TOP_BUILDDIR@
 ABS_TOP_SRCDIR = @ABS_TOP_SRCDIR@
@@ -287,9 +287,9 @@ CXX_FLAGS_EIGEN = @CXX_FLAGS_EIGEN@
 CXX_FLAGS_FADBAD = @CXX_FLAGS_FADBAD@
 CYGPATH_W = @CYGPATH_W@
 
-# $Id: makefile.in 3769 2015-12-29 16:13:16Z bradbell $
+# $Id: makefile.in 3839 2016-10-14 18:10:09Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -372,7 +372,9 @@ build_os = @build_os@
 build_vendor = @build_vendor@
 builddir = @builddir@
 cppad_SOURCE_DIR = @cppad_SOURCE_DIR@
+cppad_abs_includedir = @cppad_abs_includedir@
 cppad_boostvector = @cppad_boostvector@
+cppad_cplusplus_201100_ok = @cppad_cplusplus_201100_ok@
 cppad_cppadvector = @cppad_cppadvector@
 cppad_cxx_flags = @cppad_cxx_flags@
 cppad_deprecated = @cppad_deprecated@
@@ -381,21 +383,21 @@ cppad_eigenvector = @cppad_eigenvector@
 cppad_has_colpack = @cppad_has_colpack@
 cppad_has_cstdint_8_to_64 = @cppad_has_cstdint_8_to_64@
 cppad_has_gettimeofday = @cppad_has_gettimeofday@
-cppad_has_high_resolution_clock = @cppad_has_high_resolution_clock@
 cppad_has_mkstemp = @cppad_has_mkstemp@
 cppad_has_nullptr = @cppad_has_nullptr@
 cppad_has_rvalue = @cppad_has_rvalue@
-cppad_internal_sparse_set = @cppad_internal_sparse_set@
+cppad_has_steady_clock = @cppad_has_steady_clock@
+cppad_has_tmpnam_s = @cppad_has_tmpnam_s@
 cppad_max_num_threads = @cppad_max_num_threads@
 cppad_pkgconfig_cflags = @cppad_pkgconfig_cflags@
 cppad_pkgconfig_libs = @cppad_pkgconfig_libs@
 cppad_pkgconfig_requires = @cppad_pkgconfig_requires@
+cppad_prefix = @cppad_prefix@
 cppad_size_t_not_unsigned_int = @cppad_size_t_not_unsigned_int@
 cppad_stdvector = @cppad_stdvector@
 cppad_tape_addr_type = @cppad_tape_addr_type@
 cppad_tape_id_type = @cppad_tape_id_type@
 cppad_url = @cppad_url@
-cppad_use_cplusplus_2011 = @cppad_use_cplusplus_2011@
 cppad_version = @cppad_version@
 datadir = @datadir@
 datarootdir = @datarootdir@
@@ -457,12 +459,12 @@ top_srcdir = @top_srcdir@
 
 @CppAD_IPOPT_FALSE@IPOPT_FLAGS = 
 @CppAD_IPOPT_TRUE@IPOPT_FLAGS = -DCPPAD_IPOPT_TEST -I$(IPOPT_DIR)/include
-@CppAD_EIGEN_DIR_FALSE@EIGEN_EXTRA_FILES = cppad_eigen.cpp
+@CppAD_EIGEN_DIR_FALSE@EIGEN_EXTRA_FILES = cppad_eigen.cpp eigen_mat_inv.cpp
 # -------------------------------------------------------------------------
 # make a special library so can have it's own compile flags (see configure.ac)
 @CppAD_EIGEN_DIR_TRUE@EIGEN_EXTRA_FILES = 
 @CppAD_EIGEN_DIR_TRUE@noinst_LIBRARIES = libeigen.a
-@CppAD_EIGEN_DIR_TRUE@libeigen_a_SOURCES = cppad_eigen.cpp
+@CppAD_EIGEN_DIR_TRUE@libeigen_a_SOURCES = cppad_eigen.cpp eigen_mat_inv.cpp
 @CppAD_EIGEN_DIR_FALSE@EIGEN_LIB = 
 @CppAD_EIGEN_DIR_TRUE@EIGEN_LIB = -L. -leigen
 @CppAD_EIGEN_DIR_TRUE@libeigen_a_CXXFLAGS = \
@@ -474,7 +476,6 @@ top_srcdir = @top_srcdir@
 # -------------------------------------------------------------------------
 # Microsoft project files and script to run a single test
 EXTRA_DIST = \
-	test_one.sh.in  \
 	$(ADOLC_EXTRA_FILES) \
 	$(IPOPT_EXTRA_FILES) \
 	$(EIGEN_EXTRA_FILES)
@@ -534,12 +535,14 @@ test_more_SOURCES = \
 	extern_value.cpp \
 	extern_value.hpp \
 	for_hess.cpp \
+	for_sparse_hes.cpp \
 	for_sparse_jac.cpp \
 	forward.cpp \
 	forward_dir.cpp \
 	forward_order.cpp \
 	from_base.cpp \
 	fun_check.cpp \
+	hes_sparsity.cpp \
 	jacobian.cpp \
 	num_limits.cpp \
 	log.cpp \
@@ -572,7 +575,6 @@ test_more_SOURCES = \
 	rosen_34.cpp \
 	runge_45.cpp \
 	reverse.cpp \
-	rev_sparse_hes.cpp \
 	rev_sparse_jac.cpp \
 	rev_two.cpp \
 	simple_vector.cpp \
@@ -630,8 +632,6 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-test_one.sh: $(top_builddir)/config.status $(srcdir)/test_one.sh.in
-	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
@@ -690,15 +690,18 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/expm1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extern_value.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/for_hess.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/for_sparse_hes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/for_sparse_jac.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forward.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forward_dir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/forward_order.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/from_base.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fun_check.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hes_sparsity.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ipopt_solve.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/jacobian.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libeigen_a-cppad_eigen.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libeigen_a-eigen_mat_inv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log10.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log1p.Po@am__quote@
@@ -725,7 +728,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pow_int.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/print_for.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rev_sparse_hes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rev_sparse_jac.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rev_two.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/reverse.Po@am__quote@
@@ -784,6 +786,20 @@ libeigen_a-cppad_eigen.obj: cppad_eigen.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='cppad_eigen.cpp' object='libeigen_a-cppad_eigen.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libeigen_a_CXXFLAGS) $(CXXFLAGS) -c -o libeigen_a-cppad_eigen.obj `if test -f 'cppad_eigen.cpp'; then $(CYGPATH_W) 'cppad_eigen.cpp'; else $(CYGPATH_W) '$(srcdir)/cppad_eigen.cpp'; fi`
+
+libeigen_a-eigen_mat_inv.o: eigen_mat_inv.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libeigen_a_CXXFLAGS) $(CXXFLAGS) -MT libeigen_a-eigen_mat_inv.o -MD -MP -MF $(DEPDIR)/libeigen_a-eigen_mat_inv.Tpo -c -o libeigen_a-eigen_mat_inv.o `test -f 'eigen_mat_inv.cpp' || echo '$(srcdir)/'`eigen_mat_inv.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libeigen_a-eigen_mat_inv.Tpo $(DEPDIR)/libeigen_a-eigen_mat_inv.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='eigen_mat_inv.cpp' object='libeigen_a-eigen_mat_inv.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libeigen_a_CXXFLAGS) $(CXXFLAGS) -c -o libeigen_a-eigen_mat_inv.o `test -f 'eigen_mat_inv.cpp' || echo '$(srcdir)/'`eigen_mat_inv.cpp
+
+libeigen_a-eigen_mat_inv.obj: eigen_mat_inv.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libeigen_a_CXXFLAGS) $(CXXFLAGS) -MT libeigen_a-eigen_mat_inv.obj -MD -MP -MF $(DEPDIR)/libeigen_a-eigen_mat_inv.Tpo -c -o libeigen_a-eigen_mat_inv.obj `if test -f 'eigen_mat_inv.cpp'; then $(CYGPATH_W) 'eigen_mat_inv.cpp'; else $(CYGPATH_W) '$(srcdir)/eigen_mat_inv.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libeigen_a-eigen_mat_inv.Tpo $(DEPDIR)/libeigen_a-eigen_mat_inv.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='eigen_mat_inv.cpp' object='libeigen_a-eigen_mat_inv.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libeigen_a_CXXFLAGS) $(CXXFLAGS) -c -o libeigen_a-eigen_mat_inv.obj `if test -f 'eigen_mat_inv.cpp'; then $(CYGPATH_W) 'eigen_mat_inv.cpp'; else $(CYGPATH_W) '$(srcdir)/eigen_mat_inv.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

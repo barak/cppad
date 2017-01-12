@@ -90,9 +90,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>A Simple Boost Thread Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -104,102 +101,98 @@ This example just demonstrates Boost threads and does not use CppAD at all.
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;boost/thread.hpp&gt;
-# include &lt;limits&gt;
-# include &lt;cmath&gt;
-# include &lt;cassert&gt;
-# define NUMBER_THREADS 4
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;boost/thread.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> NUMBER_THREADS <span style="color: #993399">4</span>
 
-namespace { // Begin empty namespace
-	class worker_t
-	{
-	private:
-		int    n_;
-		float* a_;
-		float* b_;
-	public:
-		void setup(size_t n, float* a, float* b)
-		{	n_ = static_cast&lt;int&gt;(n);
-			a_ = a;
-			b_ = b;
-		}
-		// Beginning of Example A.1.1.1c of OpenMP 2.5 standard document
-		void a1(int n, float *a, float *b)
-		{	int i;
-			// for some reason this function is missing on some systems
-			// assert( bthread_is_multithreaded_np() &gt; 0 );
-			for(i = 1; i &lt; n; i++)
-				b[i] = (a[i] + a[i-1]) / 2.0;
-			return;
-		}
-		// End of Example A.1.1.1c of OpenMP 2.5 standard document
-		void operator()()
-		{	a1(n_, a_, b_); }
-	};
-}
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// Begin empty namespace</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">worker_t</span>
+     <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
+          <span style="color: #009900">int</span>    n_<span style="color: #990000">;</span>
+          <span style="color: #009900">float</span><span style="color: #990000">*</span> a_<span style="color: #990000">;</span>
+          <span style="color: #009900">float</span><span style="color: #990000">*</span> b_<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">setup</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #009900">float</span><span style="color: #990000">*</span> a<span style="color: #990000">,</span> <span style="color: #009900">float</span><span style="color: #990000">*</span> b<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     n_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span>n<span style="color: #990000">);</span>
+               a_ <span style="color: #990000">=</span> a<span style="color: #990000">;</span>
+               b_ <span style="color: #990000">=</span> b<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Beginning of Example A.1.1.1c of OpenMP 2.5 standard document</span></span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">a1</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> n<span style="color: #990000">,</span> <span style="color: #009900">float</span> <span style="color: #990000">*</span>a<span style="color: #990000">,</span> <span style="color: #009900">float</span> <span style="color: #990000">*</span>b<span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="color: #009900">int</span> i<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">// for some reason this function is missing on some systems</span></span>
+               <span style="font-style: italic"><span style="color: #9A1900">// assert( bthread_is_multithreaded_np() &gt; 0 );</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                    b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// End of Example A.1.1.1c of OpenMP 2.5 standard document</span></span>
+          <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span><span style="color: #990000">()()</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">a1</span></span><span style="color: #990000">(</span>n_<span style="color: #990000">,</span> a_<span style="color: #990000">,</span> b_<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
 
-bool a11c(void)
-{	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">a11c</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// Test setup
-	size_t i, j, n_total = 10;
-	float *a = new float[n_total];
-	float *b = new float[n_total];
-	for(i = 0; i &lt; n_total; i++)
-		a[i] = float(i);
+     <span style="font-style: italic"><span style="color: #9A1900">// Test setup</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> n_total <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+     <span style="color: #009900">float</span> <span style="color: #990000">*</span>a <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">float</span><span style="color: #990000">[</span>n_total<span style="color: #990000">];</span>
+     <span style="color: #009900">float</span> <span style="color: #990000">*</span>b <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">float</span><span style="color: #990000">[</span>n_total<span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_total<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">float</span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
 
-	// number of threads
-	size_t number_threads = NUMBER_THREADS;
+     <span style="font-style: italic"><span style="color: #9A1900">// number of threads</span></span>
+     <span style="color: #008080">size_t</span> number_threads <span style="color: #990000">=</span> NUMBER_THREADS<span style="color: #990000">;</span>
 
-	// set of workers
-	worker_t worker[NUMBER_THREADS];
-	// threads for each worker
-	boost::thread* bthread[NUMBER_THREADS];
+     <span style="font-style: italic"><span style="color: #9A1900">// set of workers</span></span>
+     <span style="color: #008080">worker_t</span> worker<span style="color: #990000">[</span>NUMBER_THREADS<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// threads for each worker</span></span>
+     boost<span style="color: #990000">::</span>thread<span style="color: #990000">*</span> bthread<span style="color: #990000">[</span>NUMBER_THREADS<span style="color: #990000">];</span>
 
-	// Break the work up into sub work for each thread
-	size_t  n     = n_total / number_threads;
-	size_t  n_tmp = n;
-	float*  a_tmp = a;
-	float*  b_tmp = b;
-	worker[0].setup(n_tmp, a_tmp, b_tmp);
-	for(j = 1; j &lt; number_threads; j++)
-	{	n_tmp = n + 1;
-		a_tmp = a_tmp + n - 1;
-		b_tmp = b_tmp + n - 1;
-		if( j == (number_threads - 1) )
-			n_tmp = n_total - j * n + 1;
+     <span style="font-style: italic"><span style="color: #9A1900">// Break the work up into sub work for each thread</span></span>
+     <span style="color: #008080">size_t</span>  n     <span style="color: #990000">=</span> n_total <span style="color: #990000">/</span> number_threads<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>  n_tmp <span style="color: #990000">=</span> n<span style="color: #990000">;</span>
+     <span style="color: #009900">float</span><span style="color: #990000">*</span>  a_tmp <span style="color: #990000">=</span> a<span style="color: #990000">;</span>
+     <span style="color: #009900">float</span><span style="color: #990000">*</span>  b_tmp <span style="color: #990000">=</span> b<span style="color: #990000">;</span>
+     worker<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">setup</span></span><span style="color: #990000">(</span>n_tmp<span style="color: #990000">,</span> a_tmp<span style="color: #990000">,</span> b_tmp<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> number_threads<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     n_tmp <span style="color: #990000">=</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          a_tmp <span style="color: #990000">=</span> a_tmp <span style="color: #990000">+</span> n <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          b_tmp <span style="color: #990000">=</span> b_tmp <span style="color: #990000">+</span> n <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">==</span> <span style="color: #990000">(</span>number_threads <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">)</span>
+               n_tmp <span style="color: #990000">=</span> n_total <span style="color: #990000">-</span> j <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
-		worker[j].setup(n_tmp, a_tmp, b_tmp);
+          worker<span style="color: #990000">[</span>j<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">setup</span></span><span style="color: #990000">(</span>n_tmp<span style="color: #990000">,</span> a_tmp<span style="color: #990000">,</span> b_tmp<span style="color: #990000">);</span>
 
-		// create this thread
-		bthread[j] = new boost::thread(worker[j]);
-	}
+          <span style="font-style: italic"><span style="color: #9A1900">// create this thread</span></span>
+          bthread<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> boost<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread</span></span><span style="color: #990000">(</span>worker<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
+     <span style="color: #FF0000">}</span>
 
-	// do this threads protion of the work
-	worker[0]();
+     <span style="font-style: italic"><span style="color: #9A1900">// do this threads protion of the work</span></span>
+     worker<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]();</span>
 
-	// wait for other threads to finish
-	for(j = 1; j &lt; number_threads; j++)
-	{	bthread[j]-&gt;join();
-		delete bthread[j];
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// wait for other threads to finish</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> number_threads<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     bthread<span style="color: #990000">[</span>j<span style="color: #990000">]-&gt;</span><span style="font-weight: bold"><span style="color: #000000">join</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> bthread<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+     <span style="color: #FF0000">}</span>
 
-	// check the result
-	float eps = 100. * std::numeric_limits&lt;float&gt;::epsilon();
-	for(i = 1; i &lt; n ; i++)
-		ok &amp;= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) &lt;= eps;
+     <span style="font-style: italic"><span style="color: #9A1900">// check the result</span></span>
+     <span style="color: #009900">float</span> eps <span style="color: #990000">=</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> eps<span style="color: #990000">;</span>
 
-	delete [] a;
-	delete [] b;
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> a<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> b<span style="color: #990000">;</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
 <hr/>Input File: multi_thread/bthread/a11c_bthread.cpp
 
 </body>

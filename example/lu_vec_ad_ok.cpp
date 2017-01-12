@@ -1,6 +1,6 @@
-// $Id: lu_vec_ad_ok.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: lu_vec_ad_ok.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -23,7 +23,7 @@ $mindex record pivot$$
 
 
 $code
-$verbatim%example/lu_vec_ad_ok.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/lu_vec_ad_ok.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -40,6 +40,8 @@ bool LuVecADOk(void)
 
 	using namespace CppAD;
 	typedef AD<double> ADdouble;
+	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	size_t              n = 3;
 	size_t              m = 2;
@@ -115,7 +117,7 @@ bool LuVecADOk(void)
 
 	// check determinant using minors routine
 	ADdouble determinant = Det( A );
-	ok &= NearEqual(Y[n * m], determinant, 1e-10, 1e-10);
+	ok &= NearEqual(Y[n * m], determinant, eps99, eps99);
 
 
 	// Check solution of Rhs = A * Result
@@ -125,7 +127,7 @@ bool LuVecADOk(void)
 		{	sum = 0.;
 			for(j = 0; j < n; j++)
 				sum += a1[i * n + j] * Value( Y[j * m + k] );
-			ok &= NearEqual( rhs[i * m + k], sum, 1e-10, 1e-10 );
+			ok &= NearEqual( rhs[i * m + k], sum, eps99, eps99);
 		}
 	}
 
@@ -137,7 +139,7 @@ bool LuVecADOk(void)
 
 	y2          = f.Forward(0, A2);
 	determinant = Det(A);
-	ok &= NearEqual(y2[ n * m], Value(determinant), 1e-10, 1e-10);
+	ok &= NearEqual(y2[ n * m], Value(determinant), eps99, eps99);
 
 	// Check solution of Rhs = A2 * Result
 	for(k = 0; k < m; k++)
@@ -145,7 +147,7 @@ bool LuVecADOk(void)
 		{	sum = 0.;
 			for(j = 0; j < n; j++)
 				sum += a2[i * n + j] * y2[j * m + k];
-			ok &= NearEqual( rhs[i * m + k], sum, 1e-10, 1e-10 );
+			ok &= NearEqual( rhs[i * m + k], sum, eps99, eps99);
 		}
 	}
 

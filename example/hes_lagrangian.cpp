@@ -1,6 +1,6 @@
-// $Id: hes_lagrangian.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: hes_lagrangian.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -23,7 +23,7 @@ $mindex HesLagrangian constructor$$
 
 
 $code
-$verbatim%example/hes_lagrangian.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/hes_lagrangian.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -74,6 +74,7 @@ namespace {
 	CppAD::vector<double> H ,
 	double x0, double x1, double x2, double y0, double y1, double z )
 	{	using CppAD::NearEqual;
+		double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 		bool ok  = true;
 		size_t n = 3;
 		assert( H.size() == n * n );
@@ -86,21 +87,21 @@ namespace {
 		*/
 		// L_00 = 2 * z - y1 / ( x0 * x0 )
 		double check = 2. * z - y1 / (x0 * x0);
-		ok &= NearEqual(H[0 * n + 0], check, 1e-10, 1e-10);
+		ok &= NearEqual(H[0 * n + 0], check, eps99, eps99);
 		// L_01 = L_10 = 0
-		ok &= NearEqual(H[0 * n + 1], 0., 1e-10, 1e-10);
-		ok &= NearEqual(H[1 * n + 0], 0., 1e-10, 1e-10);
+		ok &= NearEqual(H[0 * n + 1], 0., eps99, eps99);
+		ok &= NearEqual(H[1 * n + 0], 0., eps99, eps99);
 		// L_02 = L_20 = 0
-		ok &= NearEqual(H[0 * n + 2], 0., 1e-10, 1e-10);
-		ok &= NearEqual(H[2 * n + 0], 0., 1e-10, 1e-10);
+		ok &= NearEqual(H[0 * n + 2], 0., eps99, eps99);
+		ok &= NearEqual(H[2 * n + 0], 0., eps99, eps99);
 		// L_11 = 0
-		ok &= NearEqual(H[1 * n + 1], 0., 1e-10, 1e-10);
+		ok &= NearEqual(H[1 * n + 1], 0., eps99, eps99);
 		// L_12 = L_21 = 0
-		ok &= NearEqual(H[1 * n + 2], 0., 1e-10, 1e-10);
-		ok &= NearEqual(H[2 * n + 1], 0., 1e-10, 1e-10);
+		ok &= NearEqual(H[1 * n + 2], 0., eps99, eps99);
+		ok &= NearEqual(H[2 * n + 1], 0., eps99, eps99);
 		// L_22 = - y1 / (x2 * x2)
 		check = - y1 / (x2 * x2);
-		ok &= NearEqual(H[2 * n + 2], check, 1e-10, 1e-10);
+		ok &= NearEqual(H[2 * n + 2], check, eps99, eps99);
 
 		return ok;
 	}

@@ -91,8 +91,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
 .
 
 <center><b><big><big>Timing Test of Multi-Threaded Newton Method</big></big></b></center>
@@ -335,164 +333,159 @@ derivatives will be computed using a hand coded routine.
 <b><big><a name="Source" id="Source">Source</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;cppad/utility/time_test.hpp&gt;
-# include &lt;cmath&gt;
-# include &lt;cstring&gt;
-# include &quot;multi_newton.hpp&quot;
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/time_test.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstring&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"multi_newton.hpp"</span>
 
-namespace { // empty namespace
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// empty namespace</span></span>
 
-	// values correspond to arguments in previous call to multi_newton_time
-	size_t num_threads_;// value passed to multi_newton_time
-	size_t num_zero_;   // number of zeros of f(x) in the total interval
-	size_t num_sub_;    // number of sub-intervals to split calculation into
-	size_t num_sum_;    // larger values make f(x) take longer to calculate
+     <span style="font-style: italic"><span style="color: #9A1900">// values correspond to arguments in previous call to multi_newton_time</span></span>
+     <span style="color: #008080">size_t</span> num_threads_<span style="color: #990000">;</span><span style="font-style: italic"><span style="color: #9A1900">// value passed to multi_newton_time</span></span>
+     <span style="color: #008080">size_t</span> num_zero_<span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// number of zeros of f(x) in the total interval</span></span>
+     <span style="color: #008080">size_t</span> num_sub_<span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// number of sub-intervals to split calculation into</span></span>
+     <span style="color: #008080">size_t</span> num_sum_<span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// larger values make f(x) take longer to calculate</span></span>
 
-	// value of xout corresponding to most recent call to test_once
-	CppAD::vector&lt;double&gt; xout_;
+     <span style="font-style: italic"><span style="color: #9A1900">// value of xout corresponding to most recent call to test_once</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> xout_<span style="color: #990000">;</span>
 
-	// either fun_ad or fun_no depending on value of use_ad
-	void (*fun_)(double x, double&amp; f, double&amp; df) = 0;
+     <span style="font-style: italic"><span style="color: #9A1900">// either fun_ad or fun_no depending on value of use_ad</span></span>
+     <span style="color: #009900">void</span> <span style="color: #990000">(*</span>fun_<span style="color: #990000">)(</span><span style="color: #009900">double</span> x<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> f<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> df<span style="color: #990000">)</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 
-	// A version of the sine function that can be made as slow as we like
-	template &lt;class Float&gt;
-	Float f_eval(Float x)
-	{	Float sum = 0.;
-		size_t i;
-		for(i = 0; i &lt; num_sum_; i++)
-			sum += sin(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// A version of the sine function that can be made as slow as we like</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Float</span><span style="color: #990000">&gt;</span>
+     <span style="color: #008080">Float</span> <span style="font-weight: bold"><span style="color: #000000">f_eval</span></span><span style="color: #990000">(</span><span style="color: #008080">Float</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">Float</span> sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> num_sum_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               sum <span style="color: #990000">+=</span> <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-		return sum / Float(num_sum_);
-	}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> sum <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #000000">Float</span></span><span style="color: #990000">(</span>num_sum_<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// Direct calculation of derivative with same number of floating point
-	// operations as for f_eval.
-	double df_direct(double x)
-	{	double sum = 0.;
-		size_t i;
-		for(i = 0; i &lt; num_sum_; i++)
-			sum += cos(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// Direct calculation of derivative with same number of floating point</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// operations as for f_eval.</span></span>
+     <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">df_direct</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> num_sum_<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               sum <span style="color: #990000">+=</span> <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-		return sum / double(num_sum_);
-	}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> sum <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>num_sum_<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// AD calculation of detivative
-	void fun_ad(double x, double&amp; f, double&amp; df)
-	{	// use CppAD::vector because it uses fast multi-threaded memory alloc
-		using CppAD::vector;
-		using CppAD::AD;
-		vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; X(1), Y(1);
-		X[0] = x;
-		CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
-		Y[0] = f_eval(X[0]);
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; F(X, Y);
-		vector&lt;double&gt; dx(1), dy(1);
-		dx[0] = 1.;
-		dy    = F.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-		f     = Value( Y[0] );
-		df    = dy[0];
-		return;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// AD calculation of detivative</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">fun_ad</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> x<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> f<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> df<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// use CppAD::vector because it uses fast multi-threaded memory alloc</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">;</span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
+          Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">f_eval</span></span><span style="color: #990000">(</span>X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">F</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          dy    <span style="color: #990000">=</span> F<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+          f     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span> Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          df    <span style="color: #990000">=</span> dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// evaulate the function and its derivative
-	void fun_no(double x, double&amp; f, double&amp; df)
-	{	f  = f_eval(x);
-		df = df_direct(x);
-		return;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// evaulate the function and its derivative</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">fun_no</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span> x<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> f<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> df<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     f  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">f_eval</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+          df <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">df_direct</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
 
-	// Run computation of all the zeros once
-	void test_once(void)
-	{	if(  num_zero_ == 0 )
-		{	std::cerr &lt;&lt; &quot;multi_newton_time: num_zero == 0&quot; &lt;&lt; std::endl;
-			exit(1);
-		}
-		double pi      = 4. * std::atan(1.);
-		double xlow    = 0.;
-		double xup     = (num_zero_ - 1) * pi;
-		double eps     =
-			xup * 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-		size_t max_itr = 20;
+     <span style="font-style: italic"><span style="color: #9A1900">// Run computation of all the zeros once</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">test_once</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span>  num_zero_ <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"multi_newton_time: num_zero == 0"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="color: #009900">double</span> pi      <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+          <span style="color: #009900">double</span> xlow    <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="color: #009900">double</span> xup     <span style="color: #990000">=</span> <span style="color: #990000">(</span>num_zero_ <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> pi<span style="color: #990000">;</span>
+          <span style="color: #009900">double</span> eps     <span style="color: #990000">=</span>
+               xup <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">size_t</span> max_itr <span style="color: #990000">=</span> <span style="color: #993399">20</span><span style="color: #990000">;</span>
 
-		bool ok = multi_newton(
-			xout_       ,
-			fun_        ,
-			num_sub_    ,
-			xlow        ,
-			xup         ,
-			eps         ,
-			max_itr     ,
-			num_threads_
-		);
-		if( ! ok )
-		{	std::cerr &lt;&lt; &quot;multi_newton: error&quot; &lt;&lt; std::endl;
-			exit(1);
-		}
-		return;
-	}
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton</span></span><span style="color: #990000">(</span>
+               xout_       <span style="color: #990000">,</span>
+               fun_        <span style="color: #990000">,</span>
+               num_sub_    <span style="color: #990000">,</span>
+               xlow        <span style="color: #990000">,</span>
+               xup         <span style="color: #990000">,</span>
+               eps         <span style="color: #990000">,</span>
+               max_itr     <span style="color: #990000">,</span>
+               num_threads_
+          <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cerr <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"multi_newton: error"</span> <span style="color: #990000">&lt;&lt;</span> std<span style="color: #990000">::</span>endl<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #000000">exit</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-	// Repeat computation of all the zeros a specied number of times
-	void test_repeat(size_t repeat)
-	{	size_t i;
-		for(i = 0; i &lt; repeat; i++)
-			test_once();
-		return;
-	}
-} // end empty namespace
+     <span style="font-style: italic"><span style="color: #9A1900">// Repeat computation of all the zeros a specied number of times</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">test_repeat</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> repeat<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> repeat<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #000000">test_once</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// end empty namespace</span></span>
 
-bool multi_newton_time(
-	double&amp; time_out      ,
-	double  test_time     ,
-	size_t  num_threads   ,
-	size_t  num_zero      ,
-	size_t  num_sub       ,
-	size_t  num_sum       ,
-	bool    use_ad
-)
-{	bool ok = true;
-	using CppAD::thread_alloc;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton_time</span></span><span style="color: #990000">(</span>
+     <span style="color: #009900">double</span><span style="color: #990000">&amp;</span> time_out      <span style="color: #990000">,</span>
+     <span style="color: #009900">double</span>  test_time     <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>  num_threads   <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>  num_zero      <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>  num_sub       <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>  num_sum       <span style="color: #990000">,</span>
+     <span style="color: #009900">bool</span>    use_ad
+<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
 
-	// Set local namespace environment variables
-	num_threads_  = num_threads;
-	num_zero_     = num_zero;
-	num_sub_      = num_sub;
-	num_sum_      = num_sum;
-	if( use_ad )
-		fun_ = fun_ad;
-	else	fun_ = fun_no;
+     <span style="font-style: italic"><span style="color: #9A1900">// Set local namespace environment variables</span></span>
+     num_threads_  <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
+     num_zero_     <span style="color: #990000">=</span> num_zero<span style="color: #990000">;</span>
+     num_sub_      <span style="color: #990000">=</span> num_sub<span style="color: #990000">;</span>
+     num_sum_      <span style="color: #990000">=</span> num_sum<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> use_ad <span style="color: #990000">)</span>
+          fun_ <span style="color: #990000">=</span> fun_ad<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     fun_ <span style="color: #990000">=</span> fun_no<span style="color: #990000">;</span>
 
-	// expect number of threads to already be set up
-	if( num_threads &gt; 0 )
-		ok &amp;= num_threads == CppAD::thread_alloc::num_threads();
-	else	ok &amp;= 1           == CppAD::thread_alloc::num_threads();
+     <span style="font-style: italic"><span style="color: #9A1900">// expect number of threads to already be set up</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          ok <span style="color: #990000">&amp;=</span> num_threads <span style="color: #990000">==</span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">num_threads</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> <span style="color: #993399">1</span>           <span style="color: #990000">==</span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">num_threads</span></span><span style="color: #990000">();</span>
 
-	// run the test case and set time return value
-	time_out = CppAD::time_test(test_repeat, test_time);
+     <span style="font-style: italic"><span style="color: #9A1900">// run the test case and set time return value</span></span>
+     time_out <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">time_test</span></span><span style="color: #990000">(</span>test_repeat<span style="color: #990000">,</span> test_time<span style="color: #990000">);</span>
 
-	// Call test_once for a correctness check
-	double pi      = 4. * std::atan(1.);
-	double xup     = (num_zero_ - 1) * pi;
-	double eps     = xup * 100. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-	ok        &amp;= (xout_.size() == num_zero);
-	size_t i   = 0;
-	for(i = 0; i &lt; num_zero; i++)
-		ok &amp;= std::fabs( xout_[i] - pi * i) &lt;= 2 * eps;
+     <span style="font-style: italic"><span style="color: #9A1900">// Call test_once for a correctness check</span></span>
+     <span style="color: #009900">double</span> pi      <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">atan</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     <span style="color: #009900">double</span> xup     <span style="color: #990000">=</span> <span style="color: #990000">(</span>num_zero_ <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> pi<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps     <span style="color: #990000">=</span> xup <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     ok        <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>xout_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> num_zero<span style="color: #990000">);</span>
+     <span style="color: #008080">size_t</span> i   <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> num_zero<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> xout_<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> pi <span style="color: #990000">*</span> i<span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
 
-	// xout_ is a static variable, so clear it to free its memory
-	xout_.clear();
+     <span style="font-style: italic"><span style="color: #9A1900">// xout_ is a static variable, so clear it to free its memory</span></span>
+     xout_<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
 
-	// return correctness check result
-	return  ok;
-}
-</pre>
-
+     <span style="font-style: italic"><span style="color: #9A1900">// return correctness check result</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span>  ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: multi_thread/multi_newton_time.cpp
 
 </body>

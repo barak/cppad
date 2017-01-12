@@ -1,9 +1,9 @@
 // $Id$
-# ifndef CPPAD_OLD_MAT_MUL_HPP
-# define CPPAD_OLD_MAT_MUL_HPP
+# ifndef CPPAD_TEST_MORE_OLD_MAT_MUL_HPP
+# define CPPAD_TEST_MORE_OLD_MAT_MUL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -62,14 +62,14 @@ $code old_mat_mul.hpp$$.
 It returns true if it succeeds and false otherwise.
 
 $head Begin Source$$
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>      // Include CppAD definitions
 namespace {                      // Begin empty namespace
 	using CppAD::vector;        // Let vector denote CppAD::vector
-/* $$
+/* %$$
 
 $head Extra Call Information$$
-$codep */
+$srccode%cpp% */
 	// Information we will attach to each mat_mul call
 	struct call_info {
 		size_t nr_result;
@@ -102,9 +102,9 @@ $codep */
 		assert(m ==  nr_result_ * nc_result_);
 	}
 
-/* $$
+/* %$$
 $head Matrix Indexing$$
-$codep */
+$srccode%cpp% */
 	// Convert left matrix index pair and order to a single argument index
 	size_t left(size_t i, size_t j, size_t ell)
 	{	assert( i < nr_result_ );
@@ -124,11 +124,11 @@ $codep */
 		assert( j < nc_result_ );
 		return (i * nc_result_ + j) * n_order_ + ell;
 	}
-/* $$
+/* %$$
 
 $head One Matrix Multiply$$
 Forward mode matrix multiply left times right and sum into result:
-$codep */
+$srccode%cpp% */
 	void multiply_and_sum(
 		size_t                order_left ,
 		size_t                order_right,
@@ -151,11 +151,11 @@ $codep */
 		}
 		return;
 	}
-/* $$
+/* %$$
 
 $head Reverse Partials One Order$$
 Compute reverse mode partials for one order and sum into px:
-$codep */
+$srccode%cpp% */
 	void reverse_multiply(
 		size_t                order_left ,
 		size_t                order_right,
@@ -180,27 +180,14 @@ $codep */
 		}
 		return;
 	}
-/* $$
+/* %$$
 $head Set Union$$
-$codep */
-	void my_union(
-		std::set<size_t>&         result  ,
-		const std::set<size_t>&   left    ,
-		const std::set<size_t>&   right   )
-	{	std::set<size_t> temp;
-		std::set_union(
-			left.begin()              ,
-			left.end()                ,
-			right.begin()             ,
-			right.end()               ,
-			std::inserter(temp, temp.begin())
-		);
-		result.swap(temp);
-	}
-/* $$
+$srccode%cpp% */
+	using CppAD::set_union;
+/* %$$
 
 $head CppAD User Atomic Callback Functions$$
-$codep */
+$srccode%cpp% */
 	// ----------------------------------------------------------------------
 	// forward mode routine called by CppAD
 	bool mat_mul_forward(
@@ -314,10 +301,10 @@ $codep */
 					mj_right  = right(middle, j, k);
 
 					// s[ij_result] = union( s[ij_result], r[im_left] )
-					my_union(s[ij_result], s[ij_result], r[im_left]);
+					s[ij_result] = set_union(s[ij_result], r[im_left]);
 
 					// s[ij_result] = union( s[ij_result], r[mj_right] )
-					my_union(s[ij_result], s[ij_result], r[mj_right]);
+					s[ij_result] = set_union(s[ij_result], r[mj_right]);
 				}
 			}
 		}
@@ -347,10 +334,10 @@ $codep */
 					mj_right  = right(middle, j, k);
 
 					// r[im_left] = union( r[im_left], s[ij_result] )
-					my_union(r[im_left], r[im_left], s[ij_result]);
+					r[im_left] = set_union(r[im_left], s[ij_result]);
 
 					// r[mj_right] = union( r[mj_right], s[ij_result] )
-					my_union(r[mj_right], r[mj_right], s[ij_result]);
+					r[mj_right] = set_union(r[mj_right], s[ij_result]);
 				}
 			}
 		}
@@ -396,31 +383,31 @@ $codep */
 					// back propagate Hessian sparsity
 					// v[im_left]  = union( v[im_left],  u[ij_result] )
 					// v[mj_right] = union( v[mj_right], u[ij_result] )
-					my_union(v[im_left],  v[im_left],  u[ij_result] );
-					my_union(v[mj_right], v[mj_right], u[ij_result] );
+					v[im_left] = set_union(v[im_left],  u[ij_result] );
+					v[mj_right] = set_union(v[mj_right], u[ij_result] );
 
 					// Check for case where the (i,j) result element
 					// is in reverse Jacobian and both left and right
 					// operands in multiplication are variables
 					if(s[ij_result] & (*vx_)[im_left] & (*vx_)[mj_right])
 					{	// v[im_left] = union( v[im_left], r[mj_right] )
-						my_union(v[im_left], v[im_left], r[mj_right] );
+						v[im_left] = set_union(v[im_left], r[mj_right] );
 						// v[mj_right] = union( v[mj_right], r[im_left] )
-						my_union(v[mj_right], v[mj_right], r[im_left] );
+						v[mj_right] = set_union(v[mj_right], r[im_left] );
 					}
 				}
 			}
 		}
 		return true;
 	}
-/* $$
+/* %$$
 
 $head Declare mat_mul Function$$
 Declare the $code AD<double>$$ routine $codei%mat_mul(%id%, %ax%, %ay%)%$$
 and end empty namespace
 (we could use any $cref/simple vector template class/SimpleVector/$$
 instead of $code CppAD::vector$$):
-$codep */
+$srccode%cpp% */
 	CPPAD_USER_ATOMIC(
 		mat_mul                 ,
 		CppAD::vector           ,
@@ -432,7 +419,7 @@ $codep */
 		mat_mul_rev_hes_sparse
 	)
 } // End empty namespace
-/* $$
+/* %$$
 $end
 */
 

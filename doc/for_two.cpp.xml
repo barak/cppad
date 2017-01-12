@@ -85,98 +85,94 @@ A:active { color : purple }
 
 
 <center><b><big><big>Subset of Second Order Partials: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
-namespace { // -----------------------------------------------------
-// define the template function in empty namespace
-// bool ForTwoCases&lt;VectorBase, VectorSize_t&gt;(void)
-template &lt;class VectorBase, class VectorSize_t&gt;
-bool ForTwoCases()
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	using CppAD::exp;
-	using CppAD::sin;
-	using CppAD::cos;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// define the template function in empty namespace</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">// bool ForTwoCases&lt;VectorBase, VectorSize_t&gt;(void)</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">VectorBase</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">VectorSize_t</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForTwoCases</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>exp<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>sin<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>cos<span style="color: #990000">;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)  X(n);
-	X[0] = 1.;
-	X[1] = 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span>  <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	// declare independent variables and starting recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and starting recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-	// a calculation between the domain and range values
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; Square = X[0] * X[0];
+     <span style="font-style: italic"><span style="color: #9A1900">// a calculation between the domain and range values</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> Square <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
 
-	// range space vector
-	size_t m = 3;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;)  Y(m);
-	Y[0] = Square * exp( X[1] );
-	Y[1] = Square * sin( X[1] );
-	Y[2] = Square * cos( X[1] );
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span>  <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> Square <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> Square <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> Square <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span> X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-	// create f: X -&gt; Y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: X -&gt; Y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// new value for the independent variable vector
-	VectorBase x(n);
-	x[0] = 2.;
-	x[1] = 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// new value for the independent variable vector</span></span>
+     <span style="color: #008080">VectorBase</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// set j and k to compute specific second partials of y
-	size_t p = 2;
-	VectorSize_t j(p);
-	VectorSize_t k(p);
-	j[0] = 0; k[0] = 0; // for second partial w.r.t. x[0] and x[0]
-	j[1] = 0; k[1] = 1; // for second partial w.r.t x[0] and x[1]
+     <span style="font-style: italic"><span style="color: #9A1900">// set j and k to compute specific second partials of y</span></span>
+     <span style="color: #008080">size_t</span> p <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #008080">VectorSize_t</span> <span style="font-weight: bold"><span style="color: #000000">j</span></span><span style="color: #990000">(</span>p<span style="color: #990000">);</span>
+     <span style="color: #008080">VectorSize_t</span> <span style="font-weight: bold"><span style="color: #000000">k</span></span><span style="color: #990000">(</span>p<span style="color: #990000">);</span>
+     j<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// for second partial w.r.t. x[0] and x[0]</span></span>
+     j<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// for second partial w.r.t x[0] and x[1]</span></span>
 
-	// compute the second partials
-	VectorBase ddy(m * p);
-	ddy = f.ForTwo(x, j, k);
-	/*
-	partial of y w.r.t x[0] is
-	[ 2 * x[0] * exp(x[1]) ]
-	[ 2 * x[0] * sin(x[1]) ]
-	[ 2 * x[0] * cos(x[1]) ]
-	*/
-	// second partial of y w.r.t x[0] and x[1]
-	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*exp(x[1]), ddy[0*p+0], 1e-10, 1e-10 );
-	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*sin(x[1]), ddy[1*p+0], 1e-10, 1e-10 );
-	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*cos(x[1]), ddy[2*p+0], 1e-10, 1e-10 );
+     <span style="font-style: italic"><span style="color: #9A1900">// compute the second partials</span></span>
+     <span style="color: #008080">VectorBase</span> <span style="font-weight: bold"><span style="color: #000000">ddy</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> p<span style="color: #990000">);</span>
+     ddy <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ForTwo</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     partial of y w.r.t x[0] is</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ 2 * x[0] * exp(x[1]) ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ 2 * x[0] * sin(x[1]) ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     [ 2 * x[0] * cos(x[1]) ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// second partial of y w.r.t x[0] and x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span>  <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> ddy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span>  <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> ddy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span>  <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span><span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> ddy<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	// second partial of F w.r.t x[0] and x[1]
-	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*x[0]*exp(x[1]), ddy[0*p+1], 1e-10, 1e-10 );
-	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>( 2.*x[0]*cos(x[1]), ddy[1*p+1], 1e-10, 1e-10 );
-	ok &amp;=  <a href="nearequal.xml" target="_top">NearEqual</a>(-2.*x[0]*sin(x[1]), ddy[2*p+1], 1e-10, 1e-10 );
+     <span style="font-style: italic"><span style="color: #9A1900">// second partial of F w.r.t x[0] and x[1]</span></span>
+     ok <span style="color: #990000">&amp;=</span>  <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span><span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> ddy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span>  <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> <span style="color: #993399">2</span><span style="color: #990000">.*</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span><span style="font-weight: bold"><span style="color: #000000">cos</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> ddy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span>  <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(-</span><span style="color: #993399">2</span><span style="color: #990000">.*</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]*</span><span style="font-weight: bold"><span style="color: #000000">sin</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> ddy<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">*</span>p<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
-	return ok;
-}
-} // End empty namespace
-# include &lt;vector&gt;
-# include &lt;valarray&gt;
-bool ForTwo(void)
-{	bool ok = true;
-        // Run with VectorBase equal to three different cases
-        // all of which are Simple Vectors with elements of type double.
-	ok &amp;= ForTwoCases&lt; CppAD::vector &lt;double&gt;, std::vector&lt;size_t&gt; &gt;();
-	ok &amp;= ForTwoCases&lt; std::vector   &lt;double&gt;, std::vector&lt;size_t&gt; &gt;();
-	ok &amp;= ForTwoCases&lt; std::valarray &lt;double&gt;, std::vector&lt;size_t&gt; &gt;();
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// End empty namespace</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ForTwo</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+        <span style="font-style: italic"><span style="color: #9A1900">// Run with VectorBase equal to three different cases</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">// all of which are Simple Vectors with elements of type double.</span></span>
+     ok <span style="color: #990000">&amp;=</span> ForTwoCases<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> ForTwoCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector   <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> ForTwoCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
 
-        // Run with VectorSize_t equal to two other cases
-        // which are Simple Vectors with elements of type size_t.
-	ok &amp;= ForTwoCases&lt; std::vector &lt;double&gt;, CppAD::vector&lt;size_t&gt; &gt;();
-	ok &amp;= ForTwoCases&lt; std::vector &lt;double&gt;, std::valarray&lt;size_t&gt; &gt;();
+        <span style="font-style: italic"><span style="color: #9A1900">// Run with VectorSize_t equal to two other cases</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900">// which are Simple Vectors with elements of type size_t.</span></span>
+     ok <span style="color: #990000">&amp;=</span> ForTwoCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> ForTwoCases<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector <span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;,</span> std<span style="color: #990000">::</span>valarray<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/for_two.cpp
 
 </body>

@@ -1,6 +1,6 @@
 $Id$
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -77,6 +77,11 @@ This section contains a list of the changes to CppAD during 2015
 (in reverse order by date).
 The purpose of this section is to
 assist you in learning about changes between various versions of CppAD.
+
+$head 12-31$$
+The $cref download$$ instructions were modified to have more mention of
+using $cref/git/download/Current Version/Git/$$ and less mention of
+$cref/subversion/download/Current Version/Subversion/$$.
 
 $head 12-29$$
 Separate $cref to_string$$ from $cref ad_to_string$$ so that it
@@ -222,8 +227,9 @@ There was a mistake in the documentation for $cref index_sort$$,
 the argument $cref/ind/index_sort/ind/$$ is not $code const$$.
 
 $head 10-16$$
-Add a $cref/PrintFor optimization/wish_list/PrintFor Optimization/$$
-item to the wish list.
+Add a $cref PrintFor$$ optimization wish list item.
+This has been done,
+see $cref/no_print_for_op/optimize/options/no_print_for_op/$$.
 
 $head 10-06$$
 $list number$$
@@ -351,7 +357,6 @@ $head 09-21$$
 Improve discussion of
 $cref/windows download and testing
 	/download
-	/Compressed Archives
 	/Windows File Extraction and Testing
 /$$.
 
@@ -421,7 +426,7 @@ $lnext
 Add the pack sparsity option to
 $cref/checkpoint/checkpoint/sparsity/$$ functions.
 $lnext
-Added the $cref atomic_sparsity.cpp$$ example.
+Added the $code example/atomic/sparsity.cpp$$ example.
 $lnext
 Remove mention of OpenMP from $cref/thread_alloc::thread_num/ta_thread_num/$$
 ($cref thread_alloc$$ never was OpenMP specific).
@@ -849,8 +854,8 @@ $codei%
 	%f%.optimize()
 %$$
 and was not even defined when $code NDEBUG$$ was defined.
-There was a resulting speed effect for this; see the wish list
-$cref/compare change/wish_list/Comparison Changes and Optimization/$$ entry.
+There was a resulting speed effect for this; see
+$cref/no_compare_op/optimize/options/no_compare_op/$$.
 
 $lnext
 The date when some features where deprecated has been added to the
@@ -871,7 +876,7 @@ $cref/sparse_hessian/link_sparse_hessian/$$ tests,
 the sparse function is only chosen once
 (it used to be different for every repeat).
 This reduced the amount of computation not connected what is being tested.
-It also make the $cref/onetape/speed_main/option_list/onetape/$$ a valid
+It also make the $cref/onetape/speed_main/Global Options/onetape/$$ a valid
 option for these tests.
 $lnext
 There was a bug in the

@@ -1,9 +1,9 @@
-// $Id: load_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_LOAD_OP_HPP
-# define CPPAD_LOAD_OP_HPP
+// $Id: load_op.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_LOAD_OP_HPP
+# define CPPAD_LOCAL_LOAD_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -14,7 +14,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file load_op.hpp
 Setting a variable so that it corresponds to current value of a VecAD element.
@@ -69,7 +69,7 @@ is the AD variable index corresponding to the variable z.
 \n
 arg[0]
 is the offset of this VecAD vector relative to the beginning
-of the isvar_by_ind and index)_by_ind arrays.
+of the isvar_by_ind and index_by_ind arrays.
 \n
 \n
 arg[1]
@@ -143,7 +143,7 @@ In this case, the error above should be detected during tape recording.
 */
 template <class Base>
 inline void forward_load_op_0(
-	player<Base>*  play        ,
+	local::player<Base>*  play        ,
 	size_t         i_z         ,
 	const addr_t*  arg         ,
 	const Base*    parameter   ,
@@ -176,7 +176,7 @@ where i_vec is defined under the heading arg[1] below:
 
 \tparam Vector_set
 is the type used for vectors of sets. It can be either
-\c sparse_pack, \c sparse_set, or \c sparse_list.
+sparse_pack or sparse_list.
 
 \param op
 is the code corresponding to this operator;
@@ -246,7 +246,7 @@ Zero order forward mode implementation of op = LdpOp.
 */
 template <class Base>
 inline void forward_load_p_op_0(
-	player<Base>*  play        ,
+	local::player<Base>*  play        ,
 	size_t         i_z         ,
 	const addr_t*  arg         ,
 	const Base*    parameter   ,
@@ -289,7 +289,7 @@ Zero order forward mode implementation of op = LdvOp.
 */
 template <class Base>
 inline void forward_load_v_op_0(
-	player<Base>*  play        ,
+	local::player<Base>*  play        ,
 	size_t         i_z         ,
 	const addr_t*  arg         ,
 	const Base*    parameter   ,
@@ -411,7 +411,7 @@ is set to the k-order Taylor coefficient for z in the ell-th direction.
 */
 template <class Base>
 inline void forward_load_op(
-	const player<Base>*  play                 ,
+	const local::player<Base>*  play                 ,
 	OpCode               op                   ,
 	size_t               p                    ,
 	size_t               q                    ,
@@ -684,5 +684,5 @@ inline void reverse_sparse_hessian_load_op(
 }
 
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif

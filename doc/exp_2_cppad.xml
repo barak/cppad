@@ -194,75 +194,73 @@ at the point
 .
 </li></ol>
 
-<code><font color='blue'><pre style='display:inline'> 
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// http://www.coin-or.org/CppAD/</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"exp_2.hpp"</span>        <span style="font-style: italic"><span style="color: #9A1900">// second order exponential approximation</span></span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_cppad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// can use any simple vector template class</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// checks if values are nearly equal</span></span>
 
-# include &lt;cppad/cppad.hpp&gt;  // http://www.coin-or.org/CppAD/
-# include &quot;exp_2.hpp&quot;        // second order exponential approximation
-bool exp_2_cppad(void)
-{    bool ok = true;
-     using CppAD::AD;
-     using CppAD::vector;    // can use any simple vector template class
-     using CppAD::NearEqual; // checks if values are nearly equal
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// dimension of the domain space</span></span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">.</span><span style="color: #993399">5</span><span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// value of x for this operation sequence</span></span>
 
-     // domain space vector
-     size_t n = 1; // dimension of the domain space
-     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; X(n);
-     X[0] = .5;    // value of x for this operation sequence
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start recording operation sequence</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
 
-     // declare independent variables and start recording operation sequence
-     CppAD::<a href="independent.xml" target="_top">Independent</a>(X);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate our exponential approximation</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> x   <span style="color: #990000">=</span> X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> apx <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">exp_2</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-     // evaluate our exponential approximation
-     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; x   = X[0];
-     <a href="ad.xml" target="_top">AD</a>&lt;double&gt; apx = exp_2(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// dimension of the range space</span></span>
+     <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> apx<span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// variable that represents only range space component</span></span>
 
-     // range space vector
-     size_t m = 1;  // dimension of the range space
-     vector&lt; <a href="ad.xml" target="_top">AD</a>&lt;double&gt; &gt; Y(m);
-     Y[0] = apx;    // variable that represents only range space component
+     <span style="font-style: italic"><span style="color: #9A1900">// Create f: X -&gt; Y corresponding to this operation sequence</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// and stop recording. This also executes a zero order forward</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// sweep using values in X for x.</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-     // Create f: X -&gt; Y corresponding to this operation sequence
-     // and stop recording. This also executes a zero order forward
-     // sweep using values in X for x.
-     CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(X, Y);
+     <span style="font-style: italic"><span style="color: #9A1900">// first order forward sweep that computes</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// partial of exp_2(x) with respect to x</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// differential in domain space</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>  <span style="font-style: italic"><span style="color: #9A1900">// differential in range space</span></span>
+     dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>            <span style="font-style: italic"><span style="color: #9A1900">// direction for partial derivative</span></span>
+     dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">1.5</span><span style="color: #990000">;</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
 
-     // first order forward sweep that computes
-     // partial of exp_2(x) with respect to x
-     vector&lt;double&gt; dx(n);  // differential in domain space
-     vector&lt;double&gt; dy(m);  // differential in range space
-     dx[0] = 1.;            // direction for partial derivative
-     dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-     double check = 1.5;
-     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], check, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// first order reverse sweep that computes the derivative</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span>  <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// weights for components of the range</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>   <span style="font-style: italic"><span style="color: #9A1900">// derivative of the weighted function</span></span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>              <span style="font-style: italic"><span style="color: #9A1900">// there is only one weight</span></span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// derivative of w[0] * exp_2(x)</span></span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">1.5</span><span style="color: #990000">;</span>            <span style="font-style: italic"><span style="color: #9A1900">// partial of exp_2(x) with respect to x</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
 
-     // first order reverse sweep that computes the derivative
-     vector&lt;double&gt;  w(m);   // weights for components of the range
-     vector&lt;double&gt; dw(n);   // derivative of the weighted function
-     w[0] = 1.;              // there is only one weight
-     dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w); // derivative of w[0] * exp_2(x)
-     check = 1.5;            // partial of exp_2(x) with respect to x
-     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0], check, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// second order forward sweep that computes</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// second partial of exp_2(x) with respect to x</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>     <span style="font-style: italic"><span style="color: #9A1900">// second order Taylor coefficients</span></span>
+     <span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">y2</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     x2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>               <span style="font-style: italic"><span style="color: #9A1900">// evaluate second partial .w.r.t. x</span></span>
+     y2    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> x2<span style="color: #990000">);</span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">0.5</span> <span style="color: #990000">*</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>         <span style="font-style: italic"><span style="color: #9A1900">// Taylor coef is 1/2 second derivative</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
 
-     // second order forward sweep that computes
-     // second partial of exp_2(x) with respect to x
-     vector&lt;double&gt; x2(n);     // second order Taylor coefficients
-     vector&lt;double&gt; y2(m);
-     x2[0] = 0.;               // evaluate second partial .w.r.t. x
-     y2    = f.<a href="forward.xml" target="_top">Forward</a>(2, x2);
-     check = 0.5 * 1.;         // Taylor coef is 1/2 second derivative
-     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[0], check, 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// second order reverse sweep that computes</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// derivative of partial of exp_2(x) w.r.t. x</span></span>
+     dw<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span> <span style="color: #990000">*</span> n<span style="color: #990000">);</span>         <span style="font-style: italic"><span style="color: #9A1900">// space for first and second derivatives</span></span>
+     dw    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     check <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>               <span style="font-style: italic"><span style="color: #9A1900">// result should be second derivative</span></span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">*</span><span style="color: #993399">2</span><span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">],</span> check<span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
 
-     // second order reverse sweep that computes
-     // derivative of partial of exp_2(x) w.r.t. x
-     dw.resize(2 * n);         // space for first and second derivatives
-     dw    = f.<a href="reverse.xml" target="_top">Reverse</a>(2, w);
-     check = 1.;               // result should be second derivative
-     ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dw[0*2+1], check, 1e-10, 1e-10);
-
-     return ok;
-}
-
-</pre></font></code>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 
 <hr/>Input File: introduction/exp_apx/exp_2_cppad.cpp
 

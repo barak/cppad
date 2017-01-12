@@ -1,6 +1,6 @@
-// $Id: erf.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: erf.cpp 3833 2016-09-29 14:31:50Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -21,7 +21,7 @@ $section The AD erf Function: Example and Test$$
 
 
 $code
-$verbatim%example/erf.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/erf.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -57,10 +57,11 @@ bool Erf(void)
 	CppAD::ADFun<double> f(ax, ay);
 
 	// check relative erorr
-	double erf_x0 = 0.52050;
+	double erf_x0 = 0.5204998778130465;
 	ok &= NearEqual(ay[0] , erf_x0,  0.,    4e-4);
 # if CPPAD_USE_CPLUSPLUS_2011
-	ok &= NearEqual(ay[0] , erf_x0,  0.,    1e-5);
+	double tmp = std::max(1e-15, eps);
+	ok &= NearEqual(ay[0] , erf_x0,  0.,    tmp);
 # endif
 
 	// value of derivative of erf at x0

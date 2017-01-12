@@ -1,9 +1,9 @@
-// $Id: op.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_OP_HPP
-# define CPPAD_OP_HPP
+// $Id: op.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_OP_HPP
+# define CPPAD_LOCAL_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -17,7 +17,7 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # include <cppad/local/sparse_pattern.hpp>
 
 // operations
-# include <cppad/local/std_math_98.hpp>
+# include <cppad/core/std_math_98.hpp>
 # include <cppad/local/abs_op.hpp>
 # include <cppad/local/add_op.hpp>
 # include <cppad/local/acos_op.hpp>

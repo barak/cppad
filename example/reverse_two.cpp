@@ -1,6 +1,6 @@
-// $Id: reverse_two.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: reverse_two.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -21,7 +21,7 @@ $mindex example$$
 
 
 $code
-$verbatim%example/reverse_two.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/reverse_two.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -35,6 +35,7 @@ bool reverse_two_cases(void)
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n = 2;
@@ -59,7 +60,7 @@ bool reverse_two_cases(void)
 	x[0]  = 3.;
 	x[1]  = 4.;
 	y     = f.Forward(0, x);
-	ok    &= NearEqual(y[0] , x[0]*x[0]*x[1], 1e-10, 1e-10);
+	ok    &= NearEqual(y[0] , x[0]*x[0]*x[1], eps99, eps99);
 
 	// use first order forward mode in x[0] direction
 	// (all second order partials below involve x[0])
@@ -68,7 +69,7 @@ bool reverse_two_cases(void)
 	dx[1] = 1.;
 	dy    = f.Forward(1, dx);
 	double check = 2.*x[0]*x[1]*dx[0] + x[0]*x[0]*dx[1];
-	ok   &= NearEqual(dy[0], check, 1e-10, 1e-10);
+	ok   &= NearEqual(dy[0], check, eps99, eps99);
 
 	// use second order reverse mode to evalaute second partials of y[0]
 	// with respect to (x[0], x[0]) and with respect to (x[0], x[1])
@@ -77,14 +78,14 @@ bool reverse_two_cases(void)
 	dw    = f.Reverse(2, w);
 
 	// check derivative of f
-	ok   &= NearEqual(dw[0*2+0] , 2.*x[0]*x[1], 1e-10, 1e-10);
-	ok   &= NearEqual(dw[1*2+0] ,    x[0]*x[0], 1e-10, 1e-10);
+	ok   &= NearEqual(dw[0*2+0] , 2.*x[0]*x[1], eps99, eps99);
+	ok   &= NearEqual(dw[1*2+0] ,    x[0]*x[0], eps99, eps99);
 
 	// check derivative of f^{(1)} (x) * dx
 	check = 2.*x[1]*dx[1] + 2.*x[0]*dx[1];
-	ok   &= NearEqual(dw[0*2+1] , check, 1e-10, 1e-10);
+	ok   &= NearEqual(dw[0*2+1] , check, eps99, eps99);
 	check = 2.*x[0]*dx[1];
-	ok   &= NearEqual(dw[1*2+1] , check, 1e-10, 1e-10);
+	ok   &= NearEqual(dw[1*2+1] , check, eps99, eps99);
 
 	return ok;
 }

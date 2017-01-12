@@ -1,9 +1,9 @@
-// $Id: rosen_34.hpp 3766 2015-12-08 23:12:56Z bradbell $
-# ifndef CPPAD_ROSEN_34_HPP
-# define CPPAD_ROSEN_34_HPP
+// $Id: rosen_34.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_UTILITY_ROSEN_34_HPP
+# define CPPAD_UTILITY_ROSEN_34_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -281,7 +281,7 @@ $end
 */
 
 # include <cstddef>
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/check_simple_vector.hpp>
 # include <cppad/utility/check_numeric_type.hpp>
 # include <cppad/utility/vector.hpp>

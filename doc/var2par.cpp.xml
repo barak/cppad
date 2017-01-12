@@ -81,59 +81,54 @@ A:active { color : purple }
 
 
 <center><b><big><big>Convert an AD Variable to a Parameter: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
 
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>Value<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>Var2Par<span style="color: #990000">;</span>
 
-bool Var2Par(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::Value;
-	using CppAD::Var2Par;
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
 
-	// domain space vector
-	size_t n = 2;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) x(n);
-	x[0] = 3.;
-	x[1] = 4.;
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
 
-	// declare independent variables and start tape recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(x);
+     <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>    <span style="font-style: italic"><span style="color: #9A1900">// same as y[0] = -x[1] * 3.;</span></span>
 
-	// range space vector
-	size_t m = 1;
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) y(m);
-	y[0] = - x[1] * Var2Par(x[0]);    // same as y[0] = -x[1] * 3.;
+     <span style="font-style: italic"><span style="color: #9A1900">// cannot call Value(x[j]) or Value(y[0]) here (currently variables)</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">4</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Var2Par</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #990000">-</span><span style="color: #993399">12</span><span style="color: #990000">.</span> <span style="color: #990000">);</span>
 
-	// cannot call Value(x[j]) or Value(y[0]) here (currently variables)
-	ok &amp;= ( Value( Var2Par(x[0]) ) == 3. );
-	ok &amp;= ( Value( Var2Par(x[1]) ) == 4. );
-	ok &amp;= ( Value( Var2Par(y[0]) ) == -12. );
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(x, y);
+     <span style="font-style: italic"><span style="color: #9A1900">// can call Value(x[j]) or Value(y[0]) here (currently parameters)</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">==</span>  <span style="color: #993399">3</span><span style="color: #990000">.);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">==</span>  <span style="color: #993399">4</span><span style="color: #990000">.);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">==</span> <span style="color: #990000">-</span><span style="color: #993399">12</span><span style="color: #990000">.);</span>
 
-	// can call Value(x[j]) or Value(y[0]) here (currently parameters)
-	ok &amp;= (Value(x[0]) ==  3.);
-	ok &amp;= (Value(x[1]) ==  4.);
-	ok &amp;= (Value(y[0]) == -12.);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate derivative of y w.r.t x</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dw</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     dw   <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> w<span style="color: #990000">);</span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.);</span>  <span style="font-style: italic"><span style="color: #9A1900">// derivative of y[0] w.r.t x[0] is zero</span></span>
+     ok  <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>dw<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="color: #990000">-</span><span style="color: #993399">3</span><span style="color: #990000">.);</span> <span style="font-style: italic"><span style="color: #9A1900">// derivative of y[0] w.r.t x[1] is 3</span></span>
 
-	// evaluate derivative of y w.r.t x
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) w(m);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dw(n);
-	w[0] = 1.;
-	dw   = f.<a href="reverse.xml" target="_top">Reverse</a>(1, w);
-	ok  &amp;= (dw[0] == 0.);  // derivative of y[0] w.r.t x[0] is zero
-	ok  &amp;= (dw[1] == -3.); // derivative of y[0] w.r.t x[1] is 3
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/var2par.cpp
 
 </body>

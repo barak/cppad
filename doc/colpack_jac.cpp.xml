@@ -81,103 +81,98 @@ A:active { color : purple }
 
 
 <center><b><big><big>Using ColPack: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">colpack_jac</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> a_vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>     d_vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span>        i_vector<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">,</span> ell<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-bool colpack_jac(void)
-{	bool ok = true;
-	using CppAD::AD;
-	using CppAD::NearEqual;
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) a_vector;
-	typedef <a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double)     d_vector;
-	typedef CppAD::vector&lt;size_t&gt;        i_vector;
-	size_t i, j, k, ell;
-	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
+     <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
+     <span style="color: #008080">a_vector</span>  <span style="font-weight: bold"><span style="color: #000000">a_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a_x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	// domain space vector
-	size_t n = 4;
-	a_vector  a_x(n);
-	for(j = 0; j &lt; n; j++)
-		a_x[j] = <a href="ad.xml" target="_top">AD</a>&lt;double&gt; (0);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and starting recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
 
-	// declare independent variables and starting recording
-	CppAD::<a href="independent.xml" target="_top">Independent</a>(a_x);
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #008080">a_vector</span>  <span style="font-weight: bold"><span style="color: #000000">a_y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     a_y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> a_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     a_y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> a_x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+     a_y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> a_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> a_x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> a_x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a_x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	size_t m = 3;
-	a_vector  a_y(m);
-	a_y[0] = a_x[0] + a_x[1];
-	a_y[1] = a_x[2] + a_x[3];
-	a_y[2] = a_x[0] + a_x[1] + a_x[2] + a_x[3] * a_x[3] / 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">,</span> a_y<span style="color: #990000">);</span>
 
-	// create f: x -&gt; y and stop tape recording
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(a_x, a_y);
+     <span style="font-style: italic"><span style="color: #9A1900">// new value for the independent variable vector</span></span>
+     <span style="color: #008080">d_vector</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
 
-	// new value for the independent variable vector
-	d_vector x(n);
-	for(j = 0; j &lt; n; j++)
-		x[j] = double(j);
+     <span style="font-style: italic"><span style="color: #9A1900">/*</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">           [ 1 1 0 0  ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     jac = [ 0 0 1 1  ]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">           [ 1 1 1 x_3]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">     */</span></span>
+     <span style="color: #008080">d_vector</span> <span style="font-weight: bold"><span style="color: #000000">check</span></span><span style="color: #990000">(</span>m <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     check<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     check<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     check<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">9</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">10</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span> check<span style="color: #990000">[</span><span style="color: #993399">11</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
 
-	/*
-	      [ 1 1 0 0  ]
-	jac = [ 0 0 1 1  ]
-	      [ 1 1 1 x_3]
-	*/
-	d_vector check(m * n);
-	check[0] = 1.; check[1] = 1.; check[2]  = 0.; check[3]  = 0.;
-	check[4] = 0.; check[5] = 0.; check[6]  = 1.; check[7]  = 1.;
-	check[8] = 1.; check[9] = 1.; check[10] = 1.; check[11] = x[3];
+     <span style="font-style: italic"><span style="color: #9A1900">// Normally one would use f.ForSparseJac or f.RevSparseJac to compute</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// sparsity pattern, but for this example we extract it from check.</span></span>
+     std<span style="color: #990000">::</span><span style="color: #008080">vector&lt; std::set&lt;size_t&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">p</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
 
-	// Normally one would use f.ForSparseJac or f.RevSparseJac to compute
-	// sparsity pattern, but for this example we extract it from check.
-	std::vector&lt; std::set&lt;size_t&gt; &gt;  p(m);
+     <span style="font-style: italic"><span style="color: #9A1900">// using row and column indices to compute non-zero in rows 1 and 2</span></span>
+     <span style="color: #008080">i_vector</span> row<span style="color: #990000">,</span> col<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     ell <span style="color: #990000">=</span> i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> check<span style="color: #990000">[</span>ell<span style="color: #990000">]</span> <span style="color: #990000">!=</span> <span style="color: #993399">0</span><span style="color: #990000">.</span> <span style="color: #990000">)</span>
+               <span style="color: #FF0000">{</span>     row<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
+                    col<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+                    p<span style="color: #990000">[</span>i<span style="color: #990000">].</span><span style="font-weight: bold"><span style="color: #000000">insert</span></span><span style="color: #990000">(</span>j<span style="color: #990000">);</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #008080">size_t</span> K <span style="color: #990000">=</span> row<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">d_vector</span> <span style="font-weight: bold"><span style="color: #000000">jac</span></span><span style="color: #990000">(</span>K<span style="color: #990000">);</span>
 
-	// using row and column indices to compute non-zero in rows 1 and 2
-	i_vector row, col;
-	for(i = 0; i &lt; m; i++)
-	{	for(j = 0; j &lt; n; j++)
-		{	ell = i * n + j;
-			if( check[ell] != 0. )
-			{	row.push_back(i);
-				col.push_back(j);
-				p[i].insert(j);
-			}
-		}
-	}
-	size_t K = row.size();
-	d_vector jac(K);
+     <span style="font-style: italic"><span style="color: #9A1900">// empty work structure</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">sparse_jacobian_work</span> work<span style="color: #990000">;</span>
+     ok <span style="color: #990000">&amp;=</span> work<span style="color: #990000">.</span>color_method <span style="color: #990000">==</span> <span style="color: #FF0000">"cppad"</span><span style="color: #990000">;</span>
 
-	// empty work structure
-	CppAD::sparse_jacobian_work work;
-	ok &amp;= work.color_method == &quot;cppad&quot;;
+     <span style="font-style: italic"><span style="color: #9A1900">// choose to use ColPack</span></span>
+     work<span style="color: #990000">.</span>color_method <span style="color: #990000">=</span> <span style="color: #FF0000">"colpack"</span><span style="color: #990000">;</span>
 
-	// choose to use ColPack
-	work.color_method = &quot;colpack&quot;;
+     <span style="font-style: italic"><span style="color: #9A1900">// forward mode</span></span>
+     <span style="color: #008080">size_t</span> n_sweep <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">SparseJacobianForward</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> p<span style="color: #990000">,</span> row<span style="color: #990000">,</span> col<span style="color: #990000">,</span> jac<span style="color: #990000">,</span> work<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ell <span style="color: #990000">=</span> row<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> col<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>check<span style="color: #990000">[</span>ell<span style="color: #990000">],</span> jac<span style="color: #990000">[</span>k<span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     ok <span style="color: #990000">&amp;=</span> n_sweep <span style="color: #990000">==</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>
 
-	// forward mode
-	size_t n_sweep = f.SparseJacobianForward(x, p, row, col, jac, work);
-	for(k = 0; k &lt; K; k++)
-	{	ell = row[k] * n + col[k];
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
-	}
-	ok &amp;= n_sweep == 4;
+     <span style="font-style: italic"><span style="color: #9A1900">// reverse mode</span></span>
+     work<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">clear</span></span><span style="color: #990000">();</span>
+     work<span style="color: #990000">.</span>color_method <span style="color: #990000">=</span> <span style="color: #FF0000">"colpack"</span><span style="color: #990000">;</span>
+     n_sweep <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">SparseJacobianReverse</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> p<span style="color: #990000">,</span> row<span style="color: #990000">,</span> col<span style="color: #990000">,</span> jac<span style="color: #990000">,</span> work<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     ell <span style="color: #990000">=</span> row<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> col<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>check<span style="color: #990000">[</span>ell<span style="color: #990000">],</span> jac<span style="color: #990000">[</span>k<span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     ok <span style="color: #990000">&amp;=</span> n_sweep <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
 
-	// reverse mode
-	work.clear();
-	work.color_method = &quot;colpack&quot;;
-	n_sweep = f.SparseJacobianReverse(x, p, row, col, jac, work);
-	for(k = 0; k &lt; K; k++)
-	{	ell = row[k] * n + col[k];
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(check[ell], jac[k], eps, eps);
-	}
-	ok &amp;= n_sweep == 2;
-
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/colpack_jac.cpp
 
 </body>

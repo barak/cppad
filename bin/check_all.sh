@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: check_all.sh 3785 2016-02-08 12:53:06Z bradbell $
+# $Id: check_all.sh 3781 2016-01-18 16:16:22Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the

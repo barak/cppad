@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: jenkins.sh 3758 2015-11-30 15:29:22Z bradbell $
+# $Id: jenkins.sh 3842 2016-10-25 02:39:34Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -17,7 +17,7 @@ then
 fi
 if [ "$1" != '' ]
 then
-	echo 'bin/junk.sh no longer has any arguments'
+	echo 'bin/jenkins.sh no longer has any arguments'
 	exit 1
 fi
 # -----------------------------------------------------------------------------
@@ -29,18 +29,29 @@ echo_eval() {
 	echo $*
 	eval $*
 }
-# bash function that logs stdout, stderr, and executes a command
+# Bash function that logs stdout, stderr, and executes a command.
+# In the special case where this is an echo command,
+# it just redirects the output to the log file.
 log_eval() {
-	echo "------------------------------------------------" >> ../jenkins.log
-	echo "------------------------------------------------" >> ../jenkins.err
-	echo $*  >> $trunk_dir/jenkins.log
-	echo $*  >> $trunk_dir/jenkins.err
-	echo $* "1>> $trunk_dir/jenkins.log 2>> $trunk_dir/jenkins.err"
-	if ! eval $*  1>> $trunk_dir/jenkins.log 2>> $trunk_dir/jenkins.err
+	if [ "$1" == 'echo' ]
 	then
-		echo_eval cat $trunk_dir/jenkins.log
-		echo_eval cat $trunk_dir/jenkins.err
-		exit 1
+		shift
+		if ! echo $* >> $trunk_dir/jenkins.log
+		then
+			echo_eval cat $trunk_dir/jenkins.log
+			echo_eval cat $trunk_dir/jenkins.err
+			exit 1
+		fi
+	else
+		echo $*  >> $trunk_dir/jenkins.log
+		echo $*  >> $trunk_dir/jenkins.err
+		echo $* "1>> jenkins.log 2>> jenkins.err"
+		if ! eval $*  1>> $trunk_dir/jenkins.log 2>> $trunk_dir/jenkins.err
+		then
+			echo_eval cat $trunk_dir/jenkins.log
+			echo_eval cat $trunk_dir/jenkins.err
+			exit 1
+		fi
 	fi
 }
 for ext in log err
@@ -91,6 +102,20 @@ log_eval bin/get_colpack.sh
 #	$trunk_dir/build/prefix/$libdir
 log_eval bin/get_adolc.sh
 # -------------------------------------------------------------------
+# something is wrong with the jenkins system or the autotools
+pushd build/prefix/$libdir
+for ver in 0 1 2
+do
+	for name in adolc ColPack
+	do
+		if [ -e "lib$name.so" ] && [ ! -e "lib$name.so.$ver" ]
+		then
+			log_eval ln -s lib$name.so lib$name.so.$ver
+		fi
+	done
+done
+popd
+# -------------------------------------------------------------------
 system_name=`uname | sed -e 's|\(......\).*|\1|'`
 if [ "$system_name" == 'CYGWIN' ]
 then
@@ -118,23 +143,25 @@ cat << EOF
 $trunk_dir/configure \\
 	$build_type \\
 	--disable-silent-rules \\
-	--with-implicit_ctor \\
 	ADOLC_DIR="$trunk_dir/build/prefix" \\
 	SACADO_DIR="$trunk_dir/build/prefix" \\
 	EIGEN_DIR="$trunk_dir/build/prefix" \\
 	IPOPT_DIR="$trunk_dir/build/prefix" \\
 	FADBAD_DIR="$trunk_dir/build/prefix"  \\
-	OPENMP_FLAGS=-fopenmp
+	CXX_FLAGS='-Wall -std=c++11' \\
+	OPENMP_FLAGS=-fopenmp \\
+	1>> jenkins.log 2>> jenkins.err
 EOF
 if ! $trunk_dir/configure $build_type \
 	--disable-silent-rules \
-	--with-implicit_ctor \
 	ADOLC_DIR="$trunk_dir/build/prefix" \
 	SACADO_DIR="$trunk_dir/build/prefix" \
 	EIGEN_DIR="$trunk_dir/build/prefix" \
 	IPOPT_DIR="$trunk_dir/build/prefix" \
 	FADBAD_DIR="$trunk_dir/build/prefix" \
-	OPENMP_FLAGS=-fopenmp
+	CXX_FLAGS='-Wall -std=c++11' \
+	OPENMP_FLAGS=-fopenmp \
+	1>> $trunk_dir/jenkins.log 2>> $trunk_dir/jenkins.err
 then
 	echo "Error during configure command. Here is config.log file:"
 	echo "--------------------------------------------------------"
@@ -146,6 +173,8 @@ fi
 log_eval make check
 #
 # run the tests
+log_eval echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+log_eval ls -l "$trunk_dir/build/prefix/$libdir"
 log_eval make test
 #
 # print the test results on the console

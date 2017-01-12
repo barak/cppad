@@ -6,7 +6,7 @@
 <title>The CppAD Wish List</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The CppAD Wish List"/>
-<meta name="keywords" id="keywords" content=" the cppad wish list base requirements printfor optimization checkpoint machine epsilon examples adolc optimizing nested conditional expressions forward mode recomputation iterator interface compilation speed operation sequence comparison changes software guidelines tracing atan2 benderquad "/>
+<meta name="keywords" id="keywords" content=" the cppad wish list optimization taping special operators checkpoint retape testing sparsity patterns check_finite compilation speed base requirements adolc forward mode recomputation iterator interface operation sequence software guidelines tracing atan2 benderquad "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -78,17 +78,20 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Base Requirements</option>
-<option>PrintFor Optimization</option>
+<option>Optimization</option>
+<option>---..Taping</option>
+<option>---..Special Operators</option>
 <option>checkpoint</option>
-<option>Machine Epsilon in Examples</option>
+<option>---..Retape</option>
+<option>---..Testing</option>
+<option>Sparsity Patterns</option>
+<option>check_finite</option>
+<option>Compilation Speed</option>
+<option>Base Requirements</option>
 <option>Adolc</option>
-<option>Optimizing Nested Conditional Expressions</option>
 <option>Forward Mode Recomputation</option>
 <option>Iterator Interface</option>
-<option>Compilation Speed</option>
 <option>Operation Sequence</option>
-<option>Comparison Changes and Optimization</option>
 <option>Software Guidelines</option>
 <option>Tracing</option>
 <option>atan2</option>
@@ -100,6 +103,126 @@ A:active { color : purple }
 
 
 <center><b><big><big>The CppAD Wish List</big></big></b></center>
+<br/>
+<b><big><a name="Optimization" id="Optimization">Optimization</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Optimization.Taping" id="Optimization.Taping">Taping</a></b>
+<br/>
+Perhaps some of the optimization done while taping forward mode
+should be delayed to the <code><font color="blue">optimization</font></code> step.
+
+<br/>
+<br/>
+<b><a name="Optimization.Special Operators" id="Optimization.Special Operators">Special Operators</a></b>
+<br/>
+Add special operators that can be implemented more efficiently, e.g.,
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;square(</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and have the optimizer recognize when they should be used.
+(They could also be in the user API, but it would not be expected
+that the user would use them.)
+
+
+<br/>
+<br/>
+<b><big><a name="checkpoint" id="checkpoint">checkpoint</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="checkpoint.Retape" id="checkpoint.Retape">Retape</a></b>
+<br/>
+Perhaps there should be a version of the
+<a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
+ class that uses a tapeless AD package to compute
+the derivative values.
+This would allow for algorithms where the operations sequence
+depends on the independent variable values.
+There is a question as to how sparsity patterns would be determined
+in this case.
+Perhaps they would be passed into the constructor.
+If it was known to be constant,
+the user could compute the pattern using CppAD.
+Otherwise, the user could input
+a conservative estimate of the pattern that would be correct.
+
+<br/>
+<br/>
+<b><a name="checkpoint.Testing" id="checkpoint.Testing">Testing</a></b>
+<br/>
+There should be some examples and tests for both speed and memory use
+that demonstrate that checkpointing is useful.
+
+
+
+<br/>
+<br/>
+<b><big><a name="Sparsity Patterns" id="Sparsity Patterns">Sparsity Patterns</a></big></b>
+<br/>
+It may be that each set has a large overhead in a large and very sparse
+<a href="glossary.xml#Sparsity Pattern.Vector of Sets" target="_top"><span style='white-space: nowrap'>vector&#xA0;of&#xA0;sets</span></a>
+
+representation of a sparsity pattern.
+The user API for this representation uses
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;&#xA0;std::set&lt;size_t&gt;&#xA0;&gt;<br/>
+</span></font></code>
+Perhaps CppAD's API should have a sparse matrix class with the following fields
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;size_t&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;size_t&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>val</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
+</span></font></code>
+where the vectors are arbitrary <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
+.
+If the 
+<code><i><font color="black"><span style='white-space: nowrap'>val</span></font></i></code>
+ vector has size zero,
+this would just be a sparsity pattern
+(and 
+<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
+ vectors would have the same size).
+Otherwise, it would be a sparse matrix with elements of type 
+<code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
+
+and 
+<code><i><font color="black"><span style='white-space: nowrap'>val</span></font></i></code>
+ would have the
+same size as 
+<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
+.
+
+
+<br/>
+<br/>
+<b><big><a name="check_finite" id="check_finite">check_finite</a></big></b>
+<br/>
+Sometimes one only gets infinite value during zero order forward
+and nan when computing corresponding derivatives.
+Change <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>check_for_nan</span></a>
+ to <code><font color="blue">check_finite</font></code>
+(not infinite or nan) so that error detection happens during zero
+order forward instead of later.
+
+<br/>
+<br/>
+<b><big><a name="Compilation Speed" id="Compilation Speed">Compilation Speed</a></big></b>
+<br/>
+Create a library corresponding to <code><font color="blue">AD&lt;double&gt;</font></code> so that
+one does not need to re-compile all the header files every time.
+
+<br/>
 <br/>
 <b><big><a name="Base Requirements" id="Base Requirements">Base Requirements</a></big></b>
 <br/>
@@ -116,59 +239,10 @@ the implementation of <a href="to_string.xml" target="_top"><span style='white-s
 
 <br/>
 <br/>
-<b><big><a name="PrintFor Optimization" id="PrintFor Optimization">PrintFor Optimization</a></big></b>
-<br/>
-Do not remove <a href="printfor.xml" target="_top"><span style='white-space: nowrap'>PrintFor</span></a>
- operations during <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
- because
-they are very useful when debugging expected calculations on the tape.
-If not this, we at least need to disable optimization of <a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
-
-functions.
-
-<br/>
-<br/>
-<b><big><a name="checkpoint" id="checkpoint">checkpoint</a></big></b>
-<br/>
-There should be some examples and tests for both speed and memory use
-that demonstrate that checkpointing is useful.
-
-<br/>
-<br/>
-<b><big><a name="Machine Epsilon in Examples" id="Machine Epsilon in Examples">Machine Epsilon in Examples</a></big></b>
-<br/>
-Use a multiple of <code><font color="blue">std::numeric_limits&lt;double&gt;::epsilon()</font></code> instead
-<code><font color="blue">1e-10</font></code> for a small number in correctness checks; e.g.,
-see <a href="sqrt.cpp.xml" target="_top"><span style='white-space: nowrap'>sqrt.cpp</span></a>
-.
-
-<br/>
-<br/>
 <b><big><a name="Adolc" id="Adolc">Adolc</a></big></b>
 <br/>
 Create a documentation page that shows how to convert Adolc commands to
 CppAD commands.
-
-<br/>
-<br/>
-<b><big><a name="Optimizing Nested Conditional Expressions" id="Optimizing Nested Conditional Expressions">Optimizing Nested Conditional Expressions</a></big></b>
-<br/>
-If one <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimizes</span></a>
- the code
-<code><font color='blue'><pre style='display:inline'> 
-     x = CondExpLt(left_x, right_x, true_x, false_x)
-     y = CondExpGt(left_y, right_y, true_y, false_y)
-     z = CondExpEq(left_z, right_z, x, y)
-</pre></font></code>
-only two of the expressions
-<code><font color="blue">true_x</font></code>, <code><font color="blue">false_x</font></code>, <code><font color="blue">true_y</font></code>, <code><font color="blue">false_y</font></code>
-will be evaluated
-(two will be skipped depending on the result of <code><font color="blue">left_z == right_z</font></code>).
-Not all of the expressions corresponding to
-<code><font color="blue">left_x</font></code>, <code><font color="blue">right_x</font></code>, <code><font color="blue">left_y</font></code>, <code><font color="blue">right_y</font></code> need to be
-evaluate, but they are.
-The optimizer could be improved to skip two more expressions
-(depending on the result of <code><font color="blue">left_z == right_z</font></code>).
 
 <br/>
 <br/>
@@ -198,16 +272,6 @@ repeatedly calculated
 </li></ol>
 
 
-<br/>
-<br/>
-<b><big><a name="Compilation Speed" id="Compilation Speed">Compilation Speed</a></big></b>
-<br/>
-One could build a CppAD library for use with the type <code><font color="blue">AD&lt;double&gt;</font></code>.
-This would speed up compilation for the most common usage where
-the 
-<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
- type is <code><font color="blue">double</font></code>.
-
 
 <br/>
 <br/>
@@ -225,21 +289,6 @@ does not depend on any of the
 This could be returned as an extra
 <a href="seq_property.xml" target="_top"><span style='white-space: nowrap'>seq_property</span></a>
 .
-
-<br/>
-<br/>
-<b><big><a name="Comparison Changes and Optimization" id="Comparison Changes and Optimization">Comparison Changes and Optimization</a></big></b>
-<br/>
-The comparison operators used to not be taped when
-<a href="faq.xml#Speed.NDEBUG" target="_top"><span style='white-space: nowrap'>NDEBUG</span></a>
- was defined.
-They are now taped so that the <a href="compare_change.xml" target="_top"><span style='white-space: nowrap'>compare_change</span></a>
- interface
-works even for compiler optimize code.
-This caused a significant slow down in the
-<a href="cppad_det_lu.cpp.xml" target="_top"><span style='white-space: nowrap'>cppad_det_lu.cpp</span></a>
- speed test (with no options specified).
-Perhaps there should be an option to skip the comparison taping.
 
 <br/>
 <br/>
@@ -297,7 +346,6 @@ to find all the possible tracing flags.
 The <a href="atan2.xml" target="_top"><span style='white-space: nowrap'>atan2</span></a>
  function could be made faster by adding
 a special operator for it.
-
 
 <br/>
 <br/>

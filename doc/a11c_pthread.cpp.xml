@@ -90,9 +90,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>A Simple Parallel Pthread Example and Test</big></big></b></center>
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
@@ -104,110 +101,106 @@ This example just demonstrates pthreads and does not use CppAD at all.
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
 <code><font color="blue">
-<br/>
-<pre style='display:inline'> 
-# include &lt;pthread.h&gt;
-# include &lt;limits&gt;
-# include &lt;cmath&gt;
-# include &lt;cassert&gt;
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;pthread.h&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cmath&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
 
-// define CPPAD_NULPTR
-# include &lt;cppad/configure.hpp&gt;
-# if CPPAD_USE_CPLUSPLUS_2011
-# define CPPAD_NULL nullptr
-# else
-# define CPPAD_NULL 0
-# endif
-//
-# define NUMBER_THREADS 4
+<span style="font-style: italic"><span style="color: #9A1900">// define CPPAD_NULPTR</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/configure.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># if</span></span> CPPAD_USE_CPLUSPLUS_2011
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> CPPAD_NULL nullptr
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> CPPAD_NULL <span style="color: #993399">0</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> NUMBER_THREADS <span style="color: #993399">4</span>
 
-# ifdef NDEBUG
-# define CHECK_ZERO(expression) expression
-# else
-# define CHECK_ZERO(expression) assert( expression == 0 );
-# endif
-namespace {
-	// Beginning of Example A.1.1.1c of OpenMP 2.5 standard document ---------
-	void a1(int n, float *a, float *b)
-	{	int i;
-		// for some reason this function is missing on some systems
-		// assert( pthread_is_multithreaded_np() &gt; 0 );
-		for(i = 1; i &lt; n; i++)
-			b[i] = (a[i] + a[i-1]) / 2.0;
-		return;
-	}
-	// End of Example A.1.1.1c of OpenMP 2.5 standard document ---------------
-	struct start_arg { int  n; float* a; float* b; };
-	void* start_routine(void* arg_vptr)
-	{	start_arg* arg = static_cast&lt;start_arg*&gt;( arg_vptr );
-		a1(arg-&gt;n, arg-&gt;a, arg-&gt;b);
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> NDEBUG
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CHECK_ZERO</span></span><span style="color: #990000">(</span>expression<span style="color: #990000">)</span> expression
+<span style="font-weight: bold"><span style="color: #000080"># else</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> <span style="font-weight: bold"><span style="color: #000000">CHECK_ZERO</span></span><span style="color: #990000">(</span>expression<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> expression <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Beginning of Example A.1.1.1c of OpenMP 2.5 standard document ---------</span></span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">a1</span></span><span style="color: #990000">(</span><span style="color: #009900">int</span> n<span style="color: #990000">,</span> <span style="color: #009900">float</span> <span style="color: #990000">*</span>a<span style="color: #990000">,</span> <span style="color: #009900">float</span> <span style="color: #990000">*</span>b<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">int</span> i<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// for some reason this function is missing on some systems</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// assert( pthread_is_multithreaded_np() &gt; 0 );</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// End of Example A.1.1.1c of OpenMP 2.5 standard document ---------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">start_arg</span> <span style="color: #FF0000">{</span> <span style="color: #009900">int</span>  n<span style="color: #990000">;</span> <span style="color: #009900">float</span><span style="color: #990000">*</span> a<span style="color: #990000">;</span> <span style="color: #009900">float</span><span style="color: #990000">*</span> b<span style="color: #990000">;</span> <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #009900">void</span><span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">start_routine</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">*</span> arg_vptr<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     start_arg<span style="color: #990000">*</span> arg <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span>start_arg<span style="color: #990000">*&gt;(</span> arg_vptr <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">a1</span></span><span style="color: #990000">(</span>arg<span style="color: #990000">-&gt;</span>n<span style="color: #990000">,</span> arg<span style="color: #990000">-&gt;</span>a<span style="color: #990000">,</span> arg<span style="color: #990000">-&gt;</span>b<span style="color: #990000">);</span>
 
-		void* no_status = CPPAD_NULL;
-		pthread_exit(no_status);
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> no_status <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">pthread_exit</span></span><span style="color: #990000">(</span>no_status<span style="color: #990000">);</span>
 
-		return no_status;
-	}
-}
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> no_status<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
 
-bool a11c(void)
-{	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">a11c</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// Test setup
-	int i, j, n_total = 10;
-	float *a = new float[n_total];
-	float *b = new float[n_total];
-	for(i = 0; i &lt; n_total; i++)
-		a[i] = float(i);
+     <span style="font-style: italic"><span style="color: #9A1900">// Test setup</span></span>
+     <span style="color: #009900">int</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> n_total <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">;</span>
+     <span style="color: #009900">float</span> <span style="color: #990000">*</span>a <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">float</span><span style="color: #990000">[</span>n_total<span style="color: #990000">];</span>
+     <span style="color: #009900">float</span> <span style="color: #990000">*</span>b <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> <span style="color: #009900">float</span><span style="color: #990000">[</span>n_total<span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n_total<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">float</span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
 
-	// number of threads
-	int n_thread = NUMBER_THREADS;
-	// the threads
-	pthread_t thread[NUMBER_THREADS];
-	// arguments to start_routine
-	struct start_arg arg[NUMBER_THREADS];
-	// attr
-	pthread_attr_t attr;
-	CHECK_ZERO( pthread_attr_init( &amp;attr ) );
-	CHECK_ZERO( pthread_attr_setdetachstate(&amp;attr, PTHREAD_CREATE_JOINABLE) );
-	//
-	// Break the work up into sub work for each thread
-	int n = n_total / n_thread;
-	arg[0].n = n;
-	arg[0].a = a;
-	arg[0].b = b;
-	for(j = 1; j &lt; n_thread; j++)
-	{	arg[j].n = n + 1;
-		arg[j].a = arg[j-1].a + n - 1;
-		arg[j].b = arg[j-1].b + n - 1;
-		if( j == (n_thread - 1) )
-			arg[j].n = n_total - j * n + 1;
-	}
-	for(j = 0; j &lt; n_thread; j++)
-	{	// inform each thread of which block it is working on
-		void* arg_vptr = static_cast&lt;void*&gt;( &amp;arg[j] );
-		CHECK_ZERO( pthread_create(
-			&amp;thread[j], &amp;attr, start_routine, arg_vptr
-		) );
-	}
-	for(j = 0; j &lt; n_thread; j++)
-	{	void* no_status = CPPAD_NULL;
-		CHECK_ZERO( pthread_join(thread[j], &amp;no_status) );
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// number of threads</span></span>
+     <span style="color: #009900">int</span> n_thread <span style="color: #990000">=</span> NUMBER_THREADS<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// the threads</span></span>
+     <span style="color: #008080">pthread_t</span> thread<span style="color: #990000">[</span>NUMBER_THREADS<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// arguments to start_routine</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">start_arg</span> arg<span style="color: #990000">[</span>NUMBER_THREADS<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// attr</span></span>
+     <span style="color: #008080">pthread_attr_t</span> attr<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #000000">CHECK_ZERO</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">pthread_attr_init</span></span><span style="color: #990000">(</span> <span style="color: #990000">&amp;</span>attr <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CHECK_ZERO</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">pthread_attr_setdetachstate</span></span><span style="color: #990000">(&amp;</span>attr<span style="color: #990000">,</span> PTHREAD_CREATE_JOINABLE<span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Break the work up into sub work for each thread</span></span>
+     <span style="color: #009900">int</span> n <span style="color: #990000">=</span> n_total <span style="color: #990000">/</span> n_thread<span style="color: #990000">;</span>
+     arg<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>n <span style="color: #990000">=</span> n<span style="color: #990000">;</span>
+     arg<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>a <span style="color: #990000">=</span> a<span style="color: #990000">;</span>
+     arg<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">].</span>b <span style="color: #990000">=</span> b<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_thread<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     arg<span style="color: #990000">[</span>j<span style="color: #990000">].</span>n <span style="color: #990000">=</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          arg<span style="color: #990000">[</span>j<span style="color: #990000">].</span>a <span style="color: #990000">=</span> arg<span style="color: #990000">[</span>j<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">].</span>a <span style="color: #990000">+</span> n <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          arg<span style="color: #990000">[</span>j<span style="color: #990000">].</span>b <span style="color: #990000">=</span> arg<span style="color: #990000">[</span>j<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">].</span>b <span style="color: #990000">+</span> n <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> j <span style="color: #990000">==</span> <span style="color: #990000">(</span>n_thread <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">)</span>
+               arg<span style="color: #990000">[</span>j<span style="color: #990000">].</span>n <span style="color: #990000">=</span> n_total <span style="color: #990000">-</span> j <span style="color: #990000">*</span> n <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_thread<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// inform each thread of which block it is working on</span></span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> arg_vptr <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">void</span><span style="color: #990000">*&gt;(</span> <span style="color: #990000">&amp;</span>arg<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">CHECK_ZERO</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">pthread_create</span></span><span style="color: #990000">(</span>
+               <span style="color: #990000">&amp;</span>thread<span style="color: #990000">[</span>j<span style="color: #990000">],</span> <span style="color: #990000">&amp;</span>attr<span style="color: #990000">,</span> start_routine<span style="color: #990000">,</span> arg_vptr
+          <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n_thread<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">void</span><span style="color: #990000">*</span> no_status <span style="color: #990000">=</span> CPPAD_NULL<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">CHECK_ZERO</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">pthread_join</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">[</span>j<span style="color: #990000">],</span> <span style="color: #990000">&amp;</span>no_status<span style="color: #990000">)</span> <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// check the result
-	float eps = 100. * std::numeric_limits&lt;float&gt;::epsilon();
-	for(i = 1; i &lt; n ; i++)
-		ok &amp;= std::fabs( (2. * b[i] - a[i] - a[i-1]) / b[i] ) &lt;= eps;
+     <span style="font-style: italic"><span style="color: #9A1900">// check the result</span></span>
+     <span style="color: #009900">float</span> eps <span style="color: #990000">=</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> eps<span style="color: #990000">;</span>
 
-	delete [] a;
-	delete [] b;
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> a<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">delete</span></span> <span style="color: #990000">[]</span> b<span style="color: #990000">;</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
 <hr/>Input File: multi_thread/pthread/a11c_pthread.cpp
 
 </body>

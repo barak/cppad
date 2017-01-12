@@ -79,54 +79,49 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Boolean Functions: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &lt;complex&gt;
 
+<span style="font-style: italic"><span style="color: #9A1900">// define abbreviation for double precision complex</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> Complex<span style="color: #990000">;</span>
 
-// define abbreviation for double precision complex
-typedef std::complex&lt;double&gt; Complex;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// a unary bool function with Complex argument</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">IsReal</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Complex</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">imag</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span> <span style="color: #FF0000">}</span>
 
-namespace {
-	// a unary bool function with Complex argument
-	static bool IsReal(const Complex &amp;x)
-	{	return x.imag() == 0.; }
+     <span style="font-style: italic"><span style="color: #9A1900">// a binary bool function with Complex arguments</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">AbsGeq</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Complex</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Complex</span> <span style="color: #990000">&amp;</span>y<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> axsq <span style="color: #990000">=</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">real</span></span><span style="color: #990000">()</span> <span style="color: #990000">*</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">real</span></span><span style="color: #990000">()</span> <span style="color: #990000">+</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">imag</span></span><span style="color: #990000">()</span> <span style="color: #990000">*</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">imag</span></span><span style="color: #990000">();</span>
+          <span style="color: #009900">double</span> aysq <span style="color: #990000">=</span> y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">real</span></span><span style="color: #990000">()</span> <span style="color: #990000">*</span> y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">real</span></span><span style="color: #990000">()</span> <span style="color: #990000">+</span> y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">imag</span></span><span style="color: #990000">()</span> <span style="color: #990000">*</span> y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">imag</span></span><span style="color: #990000">();</span>
 
-	// a binary bool function with Complex arguments
-	static bool AbsGeq(const Complex &amp;x, const Complex &amp;y)
-	{	double axsq = x.real() * x.real() + x.imag() * x.imag();
-		double aysq = y.real() * y.real() + y.imag() * y.imag();
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> axsq <span style="color: #990000">&gt;=</span> aysq<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
 
-		return axsq &gt;= aysq;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Create version of IsReal with AD&lt;Complex&gt; argument</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// inside of namespace and outside of any other function.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_BOOL_UNARY</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">,</span> IsReal<span style="color: #990000">)</span>
 
-	// Create version of IsReal with <a href="ad.xml" target="_top">AD</a>&lt;Complex&gt; argument
-	// inside of namespace and outside of any other function.
-	CPPAD_BOOL_UNARY(Complex, IsReal)
+     <span style="font-style: italic"><span style="color: #9A1900">// Create version of AbsGeq with AD&lt;Complex&gt; arguments</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// inside of namespace and outside of any other function.</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_BOOL_BINARY</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">,</span> AbsGeq<span style="color: #990000">)</span>
 
-	// Create version of AbsGeq with <a href="ad.xml" target="_top">AD</a>&lt;Complex&gt; arguments
-	// inside of namespace and outside of any other function.
-	CPPAD_BOOL_BINARY(Complex, AbsGeq)
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">BoolFun</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-}
-bool BoolFun(void)
-{	bool ok = true;
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Complex&gt;</span> x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.,</span>  <span style="color: #993399">0</span><span style="color: #990000">.);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Complex&gt;</span> y <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.,</span>  <span style="color: #993399">1</span><span style="color: #990000">.);</span>
 
-	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Complex&gt; x = Complex(1.,  0.);
-	CppAD::<a href="ad.xml" target="_top">AD</a>&lt;Complex&gt; y = Complex(1.,  1.);
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">IsReal</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> <span style="font-weight: bold"><span style="color: #000000">AbsGeq</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> y<span style="color: #990000">);</span>
 
-	ok &amp;= IsReal(x);
-	ok &amp;= ! AbsGeq(x, y);
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/bool_fun.cpp
 
 </body>

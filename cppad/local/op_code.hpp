@@ -1,9 +1,9 @@
-// $Id: op_code.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_OP_CODE_HPP
-# define CPPAD_OP_CODE_HPP
+// $Id: op_code.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_OP_CODE_HPP
+# define CPPAD_LOCAL_OP_CODE_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -16,13 +16,13 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # include <sstream>
 # include <iomanip>
 
-# include <cppad/local/define.hpp>
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/define.hpp>
+# include <cppad/core/cppad_assert.hpp>
 
 // needed before one can use CPPAD_ASSERT_FIRST_CALL_NOT_PARALLEL
 # include <cppad/utility/thread_alloc.hpp>
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file op_code.hpp
 Defines the OpCode enum type and functions related to it.
@@ -546,7 +546,7 @@ is the vector of argument indices for this operation
 template <class Base>
 void printOp(
 	std::ostream&          os     ,
-	const player<Base>*    play   ,
+	const local::player<Base>*    play   ,
 	size_t                 i_op   ,
 	size_t                 i_var  ,
 	OpCode                 op     ,
@@ -1066,5 +1066,5 @@ inline void assert_arg_before_result(
 	return;
 }
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif

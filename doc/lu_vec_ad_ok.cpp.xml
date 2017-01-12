@@ -74,134 +74,131 @@ A:active { color : purple }
 
 
 <center><b><big><big>Lu Factor and Solve With Recorded Pivoting: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"lu_vec_ad.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/det_by_minor.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
-# include &quot;lu_vec_ad.hpp&quot;
-# include &lt;cppad/speed/det_by_minor.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">LuVecADOk</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>  ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-bool LuVecADOk(void)
-{	bool  ok = true;
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="color: #008080">AD&lt;double&gt;</span> ADdouble<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
-	using namespace CppAD;
-	typedef <a href="ad.xml" target="_top">AD</a>&lt;double&gt; ADdouble;
+     <span style="color: #008080">size_t</span>              n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>              m <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> a1<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #993399">3</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="font-style: italic"><span style="color: #9A1900">// (1,1) is first  pivot</span></span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="font-style: italic"><span style="color: #9A1900">// (2,2) is second pivot</span></span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #990000">.</span><span style="color: #993399">5</span>  <span style="font-style: italic"><span style="color: #9A1900">// (3,3) is third  pivot</span></span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> a2<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="font-style: italic"><span style="color: #9A1900">// (1,2) is second pivot</span></span>
+          <span style="color: #993399">3</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="font-style: italic"><span style="color: #9A1900">// (2,1) is first  pivot</span></span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #990000">.</span><span style="color: #993399">5</span>  <span style="font-style: italic"><span style="color: #9A1900">// (3,3) is third  pivot</span></span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> rhs<span style="color: #990000">[]</span> <span style="color: #990000">=</span> <span style="color: #FF0000">{</span>
+          <span style="color: #993399">1</span><span style="color: #990000">.,</span> <span style="color: #993399">3</span><span style="color: #990000">.,</span>
+          <span style="color: #993399">2</span><span style="color: #990000">.,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span>
+          <span style="color: #993399">3</span><span style="color: #990000">.,</span> <span style="color: #993399">1</span><span style="color: #990000">.</span>
+     <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
 
-	size_t              n = 3;
-	size_t              m = 2;
-	double a1[] = {
-		3., 0., 0., // (1,1) is first  pivot
-		1., 2., 1., // (2,2) is second pivot
-		1., 0., .5  // (3,3) is third  pivot
-	};
-	double a2[] = {
-		1., 2., 1., // (1,2) is second pivot
-		3., 0., 0., // (2,1) is first  pivot
-		1., 0., .5  // (3,3) is third  pivot
-	};
-	double rhs[] = {
-		1., 3.,
-		2., 2.,
-		3., 1.
-	};
+     <span style="color: #008080">VecAD&lt;double&gt;</span>       <span style="font-weight: bold"><span style="color: #000000">Copy</span></span>    <span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="color: #008080">VecAD&lt;double&gt;</span>       <span style="font-weight: bold"><span style="color: #000000">Rhs</span></span>     <span style="color: #990000">(</span>n <span style="color: #990000">*</span> m<span style="color: #990000">);</span>
+     <span style="color: #008080">VecAD&lt;double&gt;</span>       <span style="font-weight: bold"><span style="color: #000000">Result</span></span>  <span style="color: #990000">(</span>n <span style="color: #990000">*</span> m<span style="color: #990000">);</span>
+     <span style="color: #008080">ADdouble</span>            logdet<span style="color: #990000">;</span>
+     <span style="color: #008080">ADdouble</span>            signdet<span style="color: #990000">;</span>
 
-	VecAD&lt;double&gt;       Copy    (n * n);
-	VecAD&lt;double&gt;       Rhs     (n * m);
-	VecAD&lt;double&gt;       Result  (n * m);
-	ADdouble            logdet;
-	ADdouble            signdet;
+     <span style="font-style: italic"><span style="color: #9A1900">// routine for checking determinants using expansion by minors</span></span>
+     <span style="color: #008080">det_by_minor&lt;ADdouble&gt;</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-	// routine for checking determinants using expansion by minors
-	det_by_minor&lt;ADdouble&gt; Det(n);
+     <span style="font-style: italic"><span style="color: #9A1900">// matrix we are computing the determinant of</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ADdouble<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
 
-	// matrix we are computing the determinant of
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADdouble) A(n * n);
+     <span style="font-style: italic"><span style="color: #9A1900">// dependent variable values</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>ADdouble<span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">Y</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span> <span style="color: #990000">+</span> n <span style="color: #990000">*</span> m<span style="color: #990000">);</span>
 
-	// dependent variable values
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(ADdouble) Y(1 + n * m);
+     <span style="color: #008080">size_t</span>  i<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>  j<span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>  k<span style="color: #990000">;</span>
 
-	size_t  i;
-	size_t  j;
-	size_t  k;
+     <span style="font-style: italic"><span style="color: #9A1900">// Original matrix</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a1<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-	// Original matrix
-	for(i = 0; i &lt; n * n; i++)
-		A[i] = a1[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// right hand side</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+               Rhs<span style="color: #990000">[</span> j <span style="color: #990000">*</span> m <span style="color: #990000">+</span> k <span style="color: #990000">]</span> <span style="color: #990000">=</span> rhs<span style="color: #990000">[</span> j <span style="color: #990000">*</span> m <span style="color: #990000">+</span> k <span style="color: #990000">];</span>
 
-	// right hand side
-	for(j = 0; j &lt; n; j++)
-		for(k = 0; k &lt; m; k++)
-			Rhs[ j * m + k ] = rhs[ j * m + k ];
+     <span style="font-style: italic"><span style="color: #9A1900">// Declare independent variables</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>A<span style="color: #990000">);</span>
 
-	// Declare independent variables
-	<a href="independent.xml" target="_top">Independent</a>(A);
+     <span style="font-style: italic"><span style="color: #9A1900">// Copy the matrix</span></span>
+     <span style="color: #008080">ADdouble</span> <span style="font-weight: bold"><span style="color: #000000">index</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">*</span>n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     Copy<span style="color: #990000">[</span>index<span style="color: #990000">]</span> <span style="color: #990000">=</span> A<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
+          index <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
 
-	// Copy the matrix
-	ADdouble index(0);
-	for(i = 0; i &lt; n*n; i++)
-	{	Copy[index] = A[i];
-		index += 1.;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Solve the equation</span></span>
+     signdet <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">LuVecAD</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> m<span style="color: #990000">,</span> Copy<span style="color: #990000">,</span> Rhs<span style="color: #990000">,</span> Result<span style="color: #990000">,</span> logdet<span style="color: #990000">);</span>
 
-	// Solve the equation
-	signdet = LuVecAD(n, m, Copy, Rhs, Result, logdet);
+     <span style="font-style: italic"><span style="color: #9A1900">// Result is the first n * m dependent variables</span></span>
+     index <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     Y<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> Result<span style="color: #990000">[</span>index<span style="color: #990000">];</span>
+          index <span style="color: #990000">+=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     <span style="color: #FF0000">}</span>
 
-	// Result is the first n * m dependent variables
-	index = 0.;
-	for(i = 0; i &lt; n * m; i++)
-	{	Y[i] = Result[index];
-		index += 1.;
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// Determinant is last component of the solution</span></span>
+     Y<span style="color: #990000">[</span> n <span style="color: #990000">*</span> m <span style="color: #990000">]</span> <span style="color: #990000">=</span> signdet <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span> logdet <span style="color: #990000">);</span>
 
-	// Determinant is last component of the solution
-	Y[ n * m ] = signdet * exp( logdet );
+     <span style="font-style: italic"><span style="color: #9A1900">// construct f: A -&gt; Y</span></span>
+     <span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>A<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
-	// construct f: A -&gt; Y
-	<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f(A, Y);
-
-	// check determinant using minors routine
-	ADdouble determinant = Det( A );
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(Y[n * m], determinant, 1e-10, 1e-10);
-
-
-	// Check solution of Rhs = A * Result
-	double sum;
-	for(k = 0; k &lt; m; k++)
-	{	for(i = 0; i &lt; n; i++)
-		{	sum = 0.;
-			for(j = 0; j &lt; n; j++)
-				sum += a1[i * n + j] * Value( Y[j * m + k] );
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( rhs[i * m + k], sum, 1e-10, 1e-10 );
-		}
-	}
-
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) y2(1 + n * m);
-	<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) A2(n * n);
-	for(i = 0; i &lt; n * n; i++)
-		A[i] = A2[i] = a2[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// check determinant using minors routine</span></span>
+     <span style="color: #008080">ADdouble</span> determinant <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span> A <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span>n <span style="color: #990000">*</span> m<span style="color: #990000">],</span> determinant<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
 
-	y2          = f.<a href="forward.xml" target="_top">Forward</a>(0, A2);
-	determinant = Det(A);
-	ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y2[ n * m], Value(determinant), 1e-10, 1e-10);
+     <span style="font-style: italic"><span style="color: #9A1900">// Check solution of Rhs = A * Result</span></span>
+     <span style="color: #009900">double</span> sum<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    sum <span style="color: #990000">+=</span> a1<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span> Y<span style="color: #990000">[</span>j <span style="color: #990000">*</span> m <span style="color: #990000">+</span> k<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> rhs<span style="color: #990000">[</span>i <span style="color: #990000">*</span> m <span style="color: #990000">+</span> k<span style="color: #990000">],</span> sum<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
 
-	// Check solution of Rhs = A2 * Result
-	for(k = 0; k &lt; m; k++)
-	{	for(i = 0; i &lt; n; i++)
-		{	sum = 0.;
-			for(j = 0; j &lt; n; j++)
-				sum += a2[i * n + j] * y2[j * m + k];
-			ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>( rhs[i * m + k], sum, 1e-10, 1e-10 );
-		}
-	}
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">y2</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span> <span style="color: #990000">+</span> n <span style="color: #990000">*</span> m<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">A2</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">*</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> A2<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a2<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-	return ok;
-}
 
-</pre>
+     y2          <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> A2<span style="color: #990000">);</span>
+     determinant <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Det</span></span><span style="color: #990000">(</span>A<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y2<span style="color: #990000">[</span> n <span style="color: #990000">*</span> m<span style="color: #990000">],</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>determinant<span style="color: #990000">),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
+     <span style="font-style: italic"><span style="color: #9A1900">// Check solution of Rhs = A2 * Result</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+                    sum <span style="color: #990000">+=</span> a2<span style="color: #990000">[</span>i <span style="color: #990000">*</span> n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">*</span> y2<span style="color: #990000">[</span>j <span style="color: #990000">*</span> m <span style="color: #990000">+</span> k<span style="color: #990000">];</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span> rhs<span style="color: #990000">[</span>i <span style="color: #990000">*</span> m <span style="color: #990000">+</span> k<span style="color: #990000">],</span> sum<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/lu_vec_ad_ok.cpp
 
 </body>

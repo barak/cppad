@@ -6,7 +6,7 @@
 <title>Sparse Hessian: Easy Driver</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Sparse Hessian: Easy Driver"/>
-<meta name="keywords" id="keywords" content=" sparse hessian: easy driver Sparsehessian syntax purpose f x w p row col hes work color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example subset hessian "/>
+<meta name="keywords" id="keywords" content=" sparse hessian: easy driver Sparsehessian syntax purpose f x w p work column subset row col hes color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example hessian "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -104,6 +104,9 @@ A:active { color : purple }
 <option>x</option>
 <option>w</option>
 <option>p</option>
+<option>---..Purpose</option>
+<option>---..work</option>
+<option>---..Column Subset</option>
 <option>row, col</option>
 <option>hes</option>
 <option>work</option>
@@ -120,9 +123,6 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Sparse Hessian: Easy Driver</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
@@ -362,9 +362,12 @@ for the Hessian
 </mrow></math>
 
 .
-<code><span style='white-space: nowrap'><br/>
+
 <br/>
-</span></code>If this sparsity pattern does not change between calls to
+<br/>
+<b><a name="p.Purpose" id="p.Purpose">Purpose</a></b>
+<br/>
+If this sparsity pattern does not change between calls to
 
 <code><font color="blue"><span style='white-space: nowrap'>SparseHessian</span></font></code>
 , it should be faster to calculate 
@@ -373,18 +376,7 @@ for the Hessian
 pass this argument to 
 <code><font color="blue"><span style='white-space: nowrap'>SparseHessian</span></font></code>
 .
-Furthermore, if you specify 
-<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
- in the calling sequence,
-it is not necessary to keep the sparsity pattern; see the heading
-<a href="sparse_hessian.xml#work.p" target="_top"><span style='white-space: nowrap'>p</span></a>
- under the 
-<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
- description.
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>In addition,
-if you specify 
+If you specify 
 <code><i><font color="black"><span style='white-space: nowrap'>p</span></font></i></code>
 , CppAD will use the same
 type of sparsity representation
@@ -392,6 +384,40 @@ type of sparsity representation
 for its internal calculations.
 Otherwise, the representation
 for the internal calculations is unspecified.
+
+<br/>
+<br/>
+<b><a name="p.work" id="p.work">work</a></b>
+<br/>
+If you specify 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ in the calling sequence,
+it is not necessary to keep the sparsity pattern; see the heading
+<a href="sparse_hessian.xml#work.p" target="_top"><span style='white-space: nowrap'>p</span></a>
+ under the 
+<code><i><font color="black"><span style='white-space: nowrap'>work</span></font></i></code>
+ description.
+
+<br/>
+<br/>
+<b><a name="p.Column Subset" id="p.Column Subset">Column Subset</a></b>
+<br/>
+If the arguments 
+<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
+ and 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
+ are present,
+and <a href="sparse_hessian.xml#work.color_method" target="_top"><span style='white-space: nowrap'>color_method</span></a>
+ is
+<code><font color="blue">cppad.general</font></code> or <code><font color="blue">cppad.symmetric</font></code>,
+it is not necessary to compute the entire sparsity pattern.
+Only the following subset of column values will matter:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;{&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;:&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>k</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;0&#xA0;,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>...</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>K</span></font></i><font color="blue"><span style='white-space: nowrap'>-1&#xA0;}<br/>
+</span></font></code>
+.
+
 
 <br/>
 <br/>
@@ -887,7 +913,7 @@ for a subset of the variables.
 They return <code><font color="blue">true</font></code>, if they succeed and <code><font color="blue">false</font></code> otherwise.
 
 
-<hr/>Input File: cppad/local/sparse_hessian.hpp
+<hr/>Input File: cppad/core/sparse_hessian.hpp
 
 </body>
 </html>

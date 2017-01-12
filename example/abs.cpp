@@ -1,6 +1,6 @@
-// $Id: abs.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: abs.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -22,7 +22,7 @@ $mindex abs fabs$$
 
 
 $code
-$verbatim%example/abs.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/abs.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -36,6 +36,7 @@ bool abs(void)
 
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	// domain space vector
 	size_t n = 1;
@@ -114,9 +115,9 @@ bool abs(void)
 	AD<double> zero(0);
 	v[zero]           = -1;
 	AD<double> result = abs(v[zero]);
-	ok    &= NearEqual(result, 1., 1e-10, 1e-10);
+	ok    &= NearEqual(result, 1., eps99, eps99);
 	result = fabs(v[zero]);
-	ok    &= NearEqual(result, 1., 1e-10, 1e-10);
+	ok    &= NearEqual(result, 1., eps99, eps99);
 
 	return ok;
 }

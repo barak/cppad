@@ -86,6 +86,7 @@ A:active { color : purple }
 <option>thread_alloc</option>
 <option>index_sort</option>
 <option>to_string</option>
+<option>set_union</option>
 </select>
 </td>
 <td>
@@ -101,72 +102,67 @@ A:active { color : purple }
 
 
 <center><b><big><big>Simple Vector Template Class: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;iostream&gt;                   // std::cout and std::endl
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>                   <span style="font-style: italic"><span style="color: #9A1900">// std::cout and std::endl</span></span>
 
-# include &lt;vector&gt;                     // std::vector
-# include &lt;valarray&gt;                   // std::valarray
-# include &lt;cppad/utility/vector.hpp&gt;       // CppAD::vector
-# include &lt;cppad/utility/check_simple_vector.hpp&gt;  // CppAD::CheckSimpleVector
-namespace {
-	template &lt;typename Vector&gt;
-	bool Ok(void)
-	{	// type corresponding to elements of Vector
-		typedef typename Vector::value_type Scalar;
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>                     <span style="font-style: italic"><span style="color: #9A1900">// std::vector</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;valarray&gt;</span>                   <span style="font-style: italic"><span style="color: #9A1900">// std::valarray</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>       <span style="font-style: italic"><span style="color: #9A1900">// CppAD::vector</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/check_simple_vector.hpp&gt;</span>  <span style="font-style: italic"><span style="color: #9A1900">// CppAD::CheckSimpleVector</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">Ok</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// type corresponding to elements of Vector</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">::</span><span style="color: #008080">value_type</span> Scalar<span style="color: #990000">;</span>
 
-		bool ok = true;             // initialize testing flag
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>             <span style="font-style: italic"><span style="color: #9A1900">// initialize testing flag</span></span>
 
-		Vector x;                   // use the default constructor
-		ok &amp;= (x.size() == 0);      // test size for an empty vector
-		Vector y(2);                // use the sizing constructor
-		ok &amp;= (y.size() == 2);      // size for an vector with elements
+          <span style="color: #008080">Vector</span> x<span style="color: #990000">;</span>                   <span style="font-style: italic"><span style="color: #9A1900">// use the default constructor</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>      <span style="font-style: italic"><span style="color: #9A1900">// test size for an empty vector</span></span>
+          <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>                <span style="font-style: italic"><span style="color: #9A1900">// use the sizing constructor</span></span>
+          ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>      <span style="font-style: italic"><span style="color: #9A1900">// size for an vector with elements</span></span>
 
-		// non-const access to the elements of y
-		size_t i;
-		for(i = 0; i &lt; 2; i++)
-			y[i] = Scalar(i);
+          <span style="font-style: italic"><span style="color: #9A1900">// non-const access to the elements of y</span></span>
+          <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               y<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span>i<span style="color: #990000">);</span>
 
-		const Vector z(y);          // copy constructor
-		x.resize(2);                // resize
-		x = z;                      // vector assignment
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span>y<span style="color: #990000">);</span>          <span style="font-style: italic"><span style="color: #9A1900">// copy constructor</span></span>
+          x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">resize</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>                <span style="font-style: italic"><span style="color: #9A1900">// resize</span></span>
+          x <span style="color: #990000">=</span> z<span style="color: #990000">;</span>                      <span style="font-style: italic"><span style="color: #9A1900">// vector assignment</span></span>
 
-		// use the const access to the elements of x
-		// and test the values of elements of x, y, z
-		for(i = 0; i &lt; 2; i++)
-		{	ok &amp;= (x[i] == Scalar(i));
-			ok &amp;= (y[i] == Scalar(i));
-			ok &amp;= (z[i] == Scalar(i));
-		}
-		return ok;
-	}
-}
-bool SimpleVector (void)
-{	bool ok = true;
+          <span style="font-style: italic"><span style="color: #9A1900">// use the const access to the elements of x</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// and test the values of elements of x, y, z</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span>i<span style="color: #990000">));</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>y<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span>i<span style="color: #990000">));</span>
+               ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>z<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">==</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span>i<span style="color: #990000">));</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">SimpleVector</span></span> <span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	// use routine above to check these cases
-	ok &amp;= Ok&lt; std::vector&lt;double&gt; &gt;();
-	ok &amp;= Ok&lt; std::valarray&lt;float&gt; &gt;();
-	ok &amp;= Ok&lt; CppAD::vector&lt;int&gt; &gt;();
-# ifndef _MSC_VER
-	// Avoid Microsoft following compiler warning:  'size_t' :
-	// forcing value to bool 'true' or 'false' (performance warning)
-	ok &amp;= Ok&lt; std::vector&lt;bool&gt; &gt;();
-	ok &amp;= Ok&lt; CppAD::vector&lt;bool&gt; &gt;();
-# endif
-	// use CheckSimpleVector for more extensive testing
-	CppAD::CheckSimpleVector&lt;double, std::vector&lt;double&gt;  &gt;();
-	CppAD::CheckSimpleVector&lt;float,  std::valarray&lt;float&gt; &gt;();
-	CppAD::CheckSimpleVector&lt;int,    CppAD::vector&lt;int&gt;   &gt;();
-	CppAD::CheckSimpleVector&lt;bool,   std::vector&lt;bool&gt;    &gt;();
-	CppAD::CheckSimpleVector&lt;bool,   CppAD::vector&lt;bool&gt;  &gt;();
+     <span style="font-style: italic"><span style="color: #9A1900">// use routine above to check these cases</span></span>
+     ok <span style="color: #990000">&amp;=</span> Ok<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> Ok<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>valarray<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> Ok<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifndef</span></span> _MSC_VER
+     <span style="font-style: italic"><span style="color: #9A1900">// Avoid Microsoft following compiler warning:  'size_t' :</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// forcing value to bool 'true' or 'false' (performance warning)</span></span>
+     ok <span style="color: #990000">&amp;=</span> Ok<span style="color: #990000">&lt;</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> Ok<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// use CheckSimpleVector for more extensive testing</span></span>
+     CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">,</span> std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;</span>  <span style="color: #990000">&gt;();</span>
+     CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">,</span>  std<span style="color: #990000">::</span>valarray<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;();</span>
+     CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">,</span>    CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;</span>   <span style="color: #990000">&gt;();</span>
+     CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">,</span>   std<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span>    <span style="color: #990000">&gt;();</span>
+     CppAD<span style="color: #990000">::</span>CheckSimpleVector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">,</span>   CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span><span style="color: #009900">bool</span><span style="color: #990000">&gt;</span>  <span style="color: #990000">&gt;();</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/simple_vector.cpp
 
 </body>

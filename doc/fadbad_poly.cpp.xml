@@ -104,66 +104,65 @@ See <a href="link_poly.xml" target="_top"><span style='white-space: nowrap'>link
 <b><big><a name="Implementation" id="Implementation">Implementation</a></big></b>
 
 
-<code><font color='blue'><pre style='display:inline'> 
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/utility/poly.hpp&gt;
-# include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;FADBAD++/tadiff.h&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/poly.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/uniform_01.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;FADBAD++/tadiff.h&gt;</span>
 
-// list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
+<span style="font-style: italic"><span style="color: #9A1900">// list of possible options</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;map&gt;</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> std<span style="color: #990000">::</span><span style="color: #008080">map&lt;std::string, bool&gt;</span> global_option<span style="color: #990000">;</span>
 
-bool link_poly(
-     size_t                     size     ,
-     size_t                     repeat   ,
-     CppAD::vector&lt;double&gt;     &amp;a        ,  // coefficients of polynomial
-     CppAD::vector&lt;double&gt;     &amp;z        ,  // polynomial argument value
-     CppAD::vector&lt;double&gt;     &amp;ddp      )  // second derivative w.r.t z
-{
-     if( global_atomic )
-          return false;
-     if( global_memory || global_onetape || global_optimize )
-          return false;
-     // -----------------------------------------------------
-     // setup
-     size_t i;             // temporary index
-     fadbad::T&lt;double&gt;  Z; // domain space AD value
-     fadbad::T&lt;double&gt;  P; // range space AD value
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">link_poly</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>                     size     <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>                     repeat   <span style="color: #990000">,</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>a        <span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// coefficients of polynomial</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>z        <span style="color: #990000">,</span>  <span style="font-style: italic"><span style="color: #9A1900">// polynomial argument value</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>     <span style="color: #990000">&amp;</span>ddp      <span style="color: #990000">)</span>  <span style="font-style: italic"><span style="color: #9A1900">// second derivative w.r.t z</span></span>
+<span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"atomic"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"memory"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"onetape"</span><span style="color: #990000">]</span> <span style="color: #990000">||</span> global_option<span style="color: #990000">[</span><span style="color: #FF0000">"optimize"</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// setup</span></span>
+     <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>             <span style="font-style: italic"><span style="color: #9A1900">// temporary index</span></span>
+     fadbad<span style="color: #990000">::</span><span style="color: #008080">T&lt;double&gt;</span>  Z<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// domain space AD value</span></span>
+     fadbad<span style="color: #990000">::</span><span style="color: #008080">T&lt;double&gt;</span>  P<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// range space AD value</span></span>
 
-     // choose the polynomial coefficients
-     CppAD::uniform_01(size, a);
+     <span style="font-style: italic"><span style="color: #9A1900">// choose the polynomial coefficients</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span>size<span style="color: #990000">,</span> a<span style="color: #990000">);</span>
 
-     // AD copy of the polynomial coefficients
-     CppAD::vector&lt; fadbad::T&lt;double&gt; &gt; A(size);
-     for(i = 0; i &lt; size; i++)
-          A[i] = a[i];
+     <span style="font-style: italic"><span style="color: #9A1900">// AD copy of the polynomial coefficients</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt; fadbad::T&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span><span style="color: #990000">(</span>size<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> size<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
 
-     // ------------------------------------------------------
-     while(repeat--)
-     {    // get the next argument value
-          CppAD::uniform_01(1, z);
+     <span style="font-style: italic"><span style="color: #9A1900">// ------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>repeat<span style="color: #990000">--)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// get the next argument value</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> z<span style="color: #990000">);</span>
 
-          // independent variable value
-          Z    = z[0]; // argument value
-          Z[1] = 1;    // argument first order Taylor coefficient
+          <span style="font-style: italic"><span style="color: #9A1900">// independent variable value</span></span>
+          Z    <span style="color: #990000">=</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span> <span style="font-style: italic"><span style="color: #9A1900">// argument value</span></span>
+          Z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// argument first order Taylor coefficient</span></span>
 
-          // AD computation of the dependent variable
-          P = CppAD::Poly(0, A, Z);
+          <span style="font-style: italic"><span style="color: #9A1900">// AD computation of the dependent variable</span></span>
+          P <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Poly</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> A<span style="color: #990000">,</span> Z<span style="color: #990000">);</span>
 
-          // Taylor-expand P to degree one
-          P.eval(2);
+          <span style="font-style: italic"><span style="color: #9A1900">// Taylor-expand P to degree one</span></span>
+          P<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">eval</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
 
-          // second derivative is twice second order Taylor coefficient
-          ddp[0] = 2. * P[2];
+          <span style="font-style: italic"><span style="color: #9A1900">// second derivative is twice second order Taylor coefficient</span></span>
+          ddp<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> P<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
 
-          // Free DAG corresponding to P does not seem to improve speed.
-          // Probably because it gets freed the next time P is assigned.
-          // P.reset();
-     }
-     // ------------------------------------------------------
-     return true;
-}
-</pre></font></code>
+          <span style="font-style: italic"><span style="color: #9A1900">// Free DAG corresponding to P does not seem to improve speed.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Probably because it gets freed the next time P is assigned.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// P.reset();</span></span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// ------------------------------------------------------</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 
 <hr/>Input File: speed/fadbad/poly.cpp
 

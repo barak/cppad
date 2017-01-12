@@ -1,6 +1,6 @@
-// $Id: ode.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: ode.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -34,7 +34,7 @@ See $cref link_ode$$.
 
 $head Implementation$$
 
-$codep */
+$srccode%cpp% */
 # include <adolc/adolc.h>
 
 # include <cppad/utility/vector.hpp>
@@ -42,7 +42,8 @@ $codep */
 # include <cppad/speed/uniform_01.hpp>
 
 // list of possible options
-extern bool global_memory, global_onetape, global_atomic, global_optimize;
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_ode(
 	size_t                     size       ,
@@ -52,9 +53,9 @@ bool link_ode(
 )
 {
 	// speed test global option values
-	if( global_atomic )
+	if( global_option["atomic"] )
 		return false;
-	if( global_memory || global_optimize )
+	if( global_option["memory"] || global_option["optimize"] )
 		return false;
 	// -------------------------------------------------------------
 	// setup
@@ -89,7 +90,7 @@ bool link_ode(
 		jac_ptr[i] = jac_raw + i * n;
 
 	// -------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( ! global_option["onetape"] ) while(repeat--)
 	{	// choose next x value
 		uniform_01(n, x);
 
@@ -151,6 +152,6 @@ bool link_ode(
 
 	return true;
 }
-/* $$
+/* %$$
 $end
 */

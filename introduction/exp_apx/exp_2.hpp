@@ -1,9 +1,9 @@
-// $Id: exp_2.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_EXP_2_HPP
-# define CPPAD_EXP_2_HPP
+// $Id: exp_2.hpp 3804 2016-03-20 15:08:46Z bradbell $
+# ifndef CPPAD_INTRODUCTION_EXP_APX_EXP_2_HPP
+# define CPPAD_INTRODUCTION_EXP_APX_EXP_2_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the

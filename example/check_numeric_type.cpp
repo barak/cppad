@@ -1,6 +1,6 @@
-// $Id: check_numeric_type.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: check_numeric_type.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -17,7 +17,7 @@ $section The CheckNumericType Function: Example and Test$$
 $mindex check NumericType$$
 
 $code
-$verbatim%example/check_numeric_type.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/check_numeric_type.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -166,6 +166,8 @@ namespace { // Empty namespace
 
 bool CheckNumericType(void)
 {	bool ok  = true;
+	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 
 	MyType A[4];
 	A[0] = MyType(1); A[1] = MyType(2);
@@ -180,10 +182,10 @@ bool CheckNumericType(void)
 
 	MyType sum;
 	sum = A[0] * x[0] + A[1] * x[1];
-	ok &= CppAD::NearEqual(sum.Double(), b[0].Double(), 1e-10, 1e-10);
+	ok &= NearEqual(sum.Double(), b[0].Double(), eps99, eps99);
 
 	sum = A[2] * x[0] + A[3] * x[1];
-	ok &= CppAD::NearEqual(sum.Double(), b[1].Double(), 1e-10, 1e-10);
+	ok &= NearEqual(sum.Double(), b[1].Double(), eps99, eps99);
 
 	return ok;
 }

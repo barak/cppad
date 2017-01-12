@@ -1,9 +1,9 @@
-// $Id: mul_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_MUL_OP_HPP
-# define CPPAD_MUL_OP_HPP
+// $Id: mul_op.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_MUL_OP_HPP
+# define CPPAD_LOCAL_MUL_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -13,7 +13,7 @@ A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file mul_op.hpp
 Forward and reverse mode calculations for z = x * y.
@@ -356,5 +356,5 @@ inline void reverse_mulpv_op(
 }
 
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif

@@ -1,6 +1,6 @@
-// $Id: team_openmp.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: team_openmp.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -20,7 +20,7 @@ $section OpenMP Implementation of a Team of AD Threads$$
 See $cref team_thread.hpp$$ for this routines specifications.
 
 $code
-$verbatim%multi_thread/openmp/team_openmp.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%multi_thread/openmp/team_openmp.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end

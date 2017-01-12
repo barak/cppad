@@ -6,7 +6,7 @@
 <title>Auto Tools Unix Test and Installation</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Auto Tools Unix Test and Installation"/>
-<meta name="keywords" id="keywords" content=" auto tools unix test installation speed profile prefix std vector boost eigen sparse internal sets ctor implicit explicit compile flags Openmp postfix Adolc Fadbad Ipopt Sacado memory usage tape deprecated 2012-12-26 distribution directory work configure make examples tests profiling cppad prefix_dir --with-documentation --with-testvector --with-sparse_option --with-deprecated max_num_threads cxx_flags openmp_flags postfix_dir adolc_dir linux cygwin boost_dir eigen_dir fadbad_dir ipopt_dir sacado_dir tape_addr_type tape_id_type install "/>
+<meta name="keywords" id="keywords" content=" auto tools unix test installation speed profile prefix std vector boost eigen sparse internal sets ctor implicit explicit compile flags Openmp postfix Adolc Fadbad Ipopt Sacado memory usage tape deprecated 2012-12-26 distribution directory work configure make examples tests profiling cppad prefix_dir --with-documentation --with-testvector --with-deprecated max_num_threads cxx_flags openmp_flags postfix_dir adolc_dir linux cygwin boost_dir eigen_dir fadbad_dir ipopt_dir sacado_dir tape_addr_type tape_id_type install "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -82,7 +82,6 @@ A:active { color : purple }
 <option>prefix_dir</option>
 <option>--with-Documentation</option>
 <option>--with-testvector</option>
-<option>--with-sparse_option</option>
 <option>--with-deprecated</option>
 <option>max_num_threads</option>
 <option>cxx_flags</option>
@@ -121,7 +120,7 @@ You must first obtain a copy of the CppAD distribution directory
 using the <a href="download.xml" target="_top"><span style='white-space: nowrap'>download</span></a>
  instructions.
 The install instructions below correspond to the
-<a href="download.xml#Compressed Archives.Current Version" target="_top"><span style='white-space: nowrap'>current&#xA0;version</span></a>
+<a href="download.xml#Current Version" target="_top"><span style='white-space: nowrap'>current&#xA0;version</span></a>
 
 which has distribution directory <code><font color="blue">cppad-20121230</font></code>.
 
@@ -143,7 +142,6 @@ Execute the following command in the build directory:
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;--prefix=</span></font><i><font color="black"><span style='white-space: nowrap'>prefix_dir</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;--with-Documentation&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;--with-</span></font><i><font color="black"><span style='white-space: nowrap'>test</span></font></i><font color="blue"><span style='white-space: nowrap'>vector&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;--with-sparse_</span></font><i><font color="black"><span style='white-space: nowrap'>option</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;--with-deprecated&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;MAX_NUM_THREADS=</span></font><i><font color="black"><span style='white-space: nowrap'>max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;CXX_FLAGS=</span></font><i><font color="black"><span style='white-space: nowrap'>cxx_flags</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
@@ -384,23 +382,6 @@ See also,
 
 and
 <a href="auto_tools.xml#eigen_dir" target="_top"><span style='white-space: nowrap'>eigen_dir</span></a>
-.
-
-
-<br/>
-<br/>
-<b><big><a name="--with-sparse_option" id="--with-sparse_option">--with-sparse_option</a></big></b>
-<br/>
-There are two options for the preprocessor symbol
-<code><font color="blue">CPPAD_INTERNAL_SPARSE_SET</font></code>.
-If <code><font color="blue">--with-sparse_set</font></code>
-(<code><font color="blue">--with-sparse_list</font></code>) is specified,
-this symbol is <code><font color="blue">sparse_set</font></code> (<code><font color="blue">sparse_list</font></code>).
-This should affect the speed and memory required by the
-<a href="sparse_jacobian.xml" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
-, <a href="sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
-, and the
-<a href="sparse.xml" target="_top"><span style='white-space: nowrap'>sparse&#xA0;drivers</span></a>
 .
 
 <br/>

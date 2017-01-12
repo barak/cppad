@@ -1,6 +1,6 @@
-// $Id: poly.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: poly.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -44,13 +44,13 @@ See $cref link_poly$$.
 
 $head Implementation$$
 
-$codep */
+$srccode%cpp% */
 # include <cppad/cppad.hpp>
 # include <cppad/speed/uniform_01.hpp>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize;
+// Note that CppAD uses global_option["memory"] at the main program level
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_poly(
 	size_t                     size     ,
@@ -60,9 +60,11 @@ bool link_poly(
 	CppAD::vector<double>     &ddp      )  // second derivative w.r.t z
 {
 	// speed test global option values
-	if( global_atomic )
+	if( global_option["atomic"] )
 		return false;
 
+	// optimization options: no conditional skips or compare operators
+	std::string options="no_compare_op";
 	// -----------------------------------------------------
 	// setup
 	typedef CppAD::AD<double>     ADScalar;
@@ -91,7 +93,7 @@ bool link_poly(
 	CppAD::ADFun<double> f;
 
 	// --------------------------------------------------------------------
-	if( ! global_onetape ) while(repeat--)
+	if( ! global_option["onetape"] ) while(repeat--)
 	{
 		// choose an argument value
 		CppAD::uniform_01(1, z);
@@ -106,8 +108,8 @@ bool link_poly(
 		// create function object f : A -> detA
 		f.Dependent(Z, P);
 
-		if( global_optimize )
-			f.optimize();
+		if( global_option["optimize"] )
+			f.optimize(options);
 
 		// skip comparison operators
 		f.compare_change_count(0);
@@ -140,8 +142,8 @@ bool link_poly(
 		// create function object f : A -> detA
 		f.Dependent(Z, P);
 
-		if( global_optimize )
-			f.optimize();
+		if( global_option["optimize"] )
+			f.optimize(options);
 
 		// skip comparison operators
 		f.compare_change_count(0);
@@ -165,6 +167,6 @@ bool link_poly(
 	}
 	return true;
 }
-/* $$
+/* %$$
 $end
 */

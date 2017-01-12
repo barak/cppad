@@ -1,6 +1,6 @@
-// $Id: jacobian.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: jacobian.cpp 3856 2016-12-21 05:51:22Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -22,7 +22,7 @@ $mindex Jacobian$$
 
 
 $code
-$verbatim%example/jacobian.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcfile%example/jacobian.cpp%0%// BEGIN C++%// END C++%1%$$
 $$
 
 $end
@@ -37,6 +37,7 @@ bool JacobianCases()
 {	bool ok = true;
 	using CppAD::AD;
 	using CppAD::NearEqual;
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 	using CppAD::exp;
 	using CppAD::sin;
 	using CppAD::cos;
@@ -77,13 +78,13 @@ bool JacobianCases()
 	        [ 2 * x[0] * sin(x[1]) ,  x[0] * x[0] * cos(x[1]) ]
 	        [ 2 * x[0] * cos(x[1]) , -x[0] * x[0] * sin(x[i]) ]
 	*/
-	ok &=  NearEqual( 2.*x[0]*exp(x[1]), jac[0*n+0], 1e-10, 1e-10 );
-	ok &=  NearEqual( 2.*x[0]*sin(x[1]), jac[1*n+0], 1e-10, 1e-10 );
-	ok &=  NearEqual( 2.*x[0]*cos(x[1]), jac[2*n+0], 1e-10, 1e-10 );
+	ok &=  NearEqual( 2.*x[0]*exp(x[1]), jac[0*n+0], eps99, eps99);
+	ok &=  NearEqual( 2.*x[0]*sin(x[1]), jac[1*n+0], eps99, eps99);
+	ok &=  NearEqual( 2.*x[0]*cos(x[1]), jac[2*n+0], eps99, eps99);
 
-	ok &=  NearEqual( x[0] * x[0] *exp(x[1]), jac[0*n+1], 1e-10, 1e-10 );
-	ok &=  NearEqual( x[0] * x[0] *cos(x[1]), jac[1*n+1], 1e-10, 1e-10 );
-	ok &=  NearEqual(-x[0] * x[0] *sin(x[1]), jac[2*n+1], 1e-10, 1e-10 );
+	ok &=  NearEqual( x[0] * x[0] *exp(x[1]), jac[0*n+1], eps99, eps99);
+	ok &=  NearEqual( x[0] * x[0] *cos(x[1]), jac[1*n+1], eps99, eps99);
+	ok &=  NearEqual(-x[0] * x[0] *sin(x[1]), jac[2*n+1], eps99, eps99);
 
 	return ok;
 }

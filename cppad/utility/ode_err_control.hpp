@@ -1,9 +1,9 @@
-// $Id: ode_err_control.hpp 3766 2015-12-08 23:12:56Z bradbell $
-# ifndef CPPAD_ODE_ERR_CONTROL_HPP
-# define CPPAD_ODE_ERR_CONTROL_HPP
+// $Id: ode_err_control.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_UTILITY_ODE_ERR_CONTROL_HPP
+# define CPPAD_UTILITY_ODE_ERR_CONTROL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -414,7 +414,7 @@ $end
 // link exp and log for float and double
 # include <cppad/base_require.hpp>
 
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/check_simple_vector.hpp>
 # include <cppad/utility/nan.hpp>
 

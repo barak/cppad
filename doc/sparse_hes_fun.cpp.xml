@@ -86,68 +86,63 @@ A:active { color : purple }
 
 
 <center><b><big><big>sparse_hes_fun: Example and test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/speed/sparse_hes_fun.hpp&gt;
-# include &lt;cppad/speed/uniform_01.hpp&gt;
-# include &lt;cppad/cppad.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/sparse_hes_fun.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/uniform_01.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-bool sparse_hes_fun(void)
-{	using CppAD::NearEqual;
-	bool ok = true;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">sparse_hes_fun</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
 
-	typedef CppAD::<a href="ad.xml" target="_top">AD</a>&lt;double&gt; ADScalar;
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span> ADScalar<span style="color: #990000">;</span>
 
-	size_t j, k;
-	double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-	size_t n   = 5;
-	size_t m   = 1;
-	size_t K   = 2 * n;
-	CppAD::vector&lt;size_t&gt;       row(K),  col(K);
-	CppAD::vector&lt;double&gt;       x(n),    ypp(K);
-	CppAD::vector&lt;ADScalar&gt;     a_x(n),  a_y(m);
+     <span style="color: #008080">size_t</span> j<span style="color: #990000">,</span> k<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="color: #008080">size_t</span> n   <span style="color: #990000">=</span> <span style="color: #993399">5</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> m   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span> K   <span style="color: #990000">=</span> <span style="color: #993399">2</span> <span style="color: #990000">*</span> n<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;size_t&gt;</span>       <span style="font-weight: bold"><span style="color: #000000">row</span></span><span style="color: #990000">(</span>K<span style="color: #990000">),</span>  <span style="font-weight: bold"><span style="color: #000000">col</span></span><span style="color: #990000">(</span>K<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>       <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span>    <span style="font-weight: bold"><span style="color: #000000">ypp</span></span><span style="color: #990000">(</span>K<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;ADScalar&gt;</span>     <span style="font-weight: bold"><span style="color: #000000">a_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span>  <span style="font-weight: bold"><span style="color: #000000">a_y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
 
-	// choose x
-	for(j = 0; j &lt; n; j++)
-		a_x[j] = x[j] = double(j + 1);
+     <span style="font-style: italic"><span style="color: #9A1900">// choose x</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a_x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// choose row, col
-	for(k = 0; k &lt; K; k++)
-	{	row[k] = k % 3;
-		col[k] = k / 3;
-	}
-	for(k = 0; k &lt; K; k++)
-	{	for(size_t k1 = 0; k1 &lt; K; k1++)
-			assert( k == k1 || row[k] != row[k1] || col[k] != col[k1] );
-	}
+     <span style="font-style: italic"><span style="color: #9A1900">// choose row, col</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     row<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">=</span> k <span style="color: #990000">%</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+          col<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">=</span> k <span style="color: #990000">/</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> k1 <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k1 <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k1<span style="color: #990000">++)</span>
+               <span style="font-weight: bold"><span style="color: #000000">assert</span></span><span style="color: #990000">(</span> k <span style="color: #990000">==</span> k1 <span style="color: #990000">||</span> row<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">!=</span> row<span style="color: #990000">[</span>k1<span style="color: #990000">]</span> <span style="color: #990000">||</span> col<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">!=</span> col<span style="color: #990000">[</span>k1<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
 
-	// declare independent variables
-	<a href="independent.xml" target="_top">Independent</a>(a_x);
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
 
-	// evaluate function
-	size_t order = 0;
-	CppAD::sparse_hes_fun&lt;ADScalar&gt;(n, a_x, row, col, order, a_y);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate function</span></span>
+     <span style="color: #008080">size_t</span> order <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span>sparse_hes_fun<span style="color: #990000">&lt;</span>ADScalar<span style="color: #990000">&gt;(</span>n<span style="color: #990000">,</span> a_x<span style="color: #990000">,</span> row<span style="color: #990000">,</span> col<span style="color: #990000">,</span> order<span style="color: #990000">,</span> a_y<span style="color: #990000">);</span>
 
-	// evaluate Hessian
-	order = 2;
-	CppAD::sparse_hes_fun&lt;double&gt;(n, x, row, col, order, ypp);
+     <span style="font-style: italic"><span style="color: #9A1900">// evaluate Hessian</span></span>
+     order <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span>sparse_hes_fun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>n<span style="color: #990000">,</span> x<span style="color: #990000">,</span> row<span style="color: #990000">,</span> col<span style="color: #990000">,</span> order<span style="color: #990000">,</span> ypp<span style="color: #990000">);</span>
 
-	// use AD to evaluate Hessian
-	CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt;   f(a_x, a_y);
-	CppAD::vector&lt;double&gt;  hes(n * n);
-	// compoute Hessian of f_0 (x)
-	hes = f.Hessian(x, 0);
+     <span style="font-style: italic"><span style="color: #9A1900">// use AD to evaluate Hessian</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span>   <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">,</span> a_y<span style="color: #990000">);</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span>  <span style="font-weight: bold"><span style="color: #000000">hes</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// compoute Hessian of f_0 (x)</span></span>
+     hes <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Hessian</span></span><span style="color: #990000">(</span>x<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-	for(k = 0; k &lt; K; k++)
-	{	size_t index = row[k] * n + col[k];
-		ok &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(hes[index], ypp[k] , eps, eps);
-	}
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> index <span style="color: #990000">=</span> row<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">*</span> n <span style="color: #990000">+</span> col<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+          ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>hes<span style="color: #990000">[</span>index<span style="color: #990000">],</span> ypp<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: speed/example/sparse_hes_fun.cpp
 
 </body>

@@ -1,9 +1,9 @@
-// $Id: sparse_hes_fun.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_SPARSE_HES_FUN_HPP
-# define CPPAD_SPARSE_HES_FUN_HPP
+// $Id: sparse_hes_fun.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_SPEED_SPARSE_HES_FUN_HPP
+# define CPPAD_SPEED_SPARSE_HES_FUN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -168,7 +168,7 @@ $end
 ------------------------------------------------------------------------------
 */
 // BEGIN C++
-# include <cppad/local/cppad_assert.hpp>
+# include <cppad/core/cppad_assert.hpp>
 # include <cppad/utility/check_numeric_type.hpp>
 # include <cppad/utility/vector.hpp>
 

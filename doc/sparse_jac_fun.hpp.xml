@@ -81,72 +81,65 @@ A:active { color : purple }
 <td>sparse_jac_fun.hpp</td>
 <td>Headings</td>
 </tr></table><br/>
-
-
-
 <center><b><big><big>Source: sparse_jac_fun</big></big></b></center>
 <code><font color="blue"># ifndef CPPAD_SPARSE_JAC_FUN_HPP
 <code><span style='white-space: nowrap'><br/>
 </span></code># define CPPAD_SPARSE_JAC_FUN_HPP
 
-<pre style='display:inline'> 
-# include &lt;cppad/local/cppad_assert.hpp&gt;
-# include &lt;cppad/utility/check_numeric_type.hpp&gt;
-# include &lt;cppad/utility/vector.hpp&gt;
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/core/cppad_assert.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/check_numeric_type.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
 
-// following needed by gcc under fedora 17 so that exp(double) is defined
-# include &lt;cppad/base_require.hpp&gt;
+<span style="font-style: italic"><span style="color: #9A1900">// following needed by gcc under fedora 17 so that exp(double) is defined</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/base_require.hpp&gt;</span>
 
-namespace CppAD {
-	template &lt;class Float, class FloatVector&gt;
-	void sparse_jac_fun(
-		size_t                       m    ,
-		size_t                       n    ,
-		const FloatVector&amp;           x    ,
-		const CppAD::vector&lt;size_t&gt;&amp; row  ,
-		const CppAD::vector&lt;size_t&gt;&amp; col  ,
-		size_t                       p    ,
-		FloatVector&amp;                 fp   )
-	{
-		// check numeric type specifications
-		CheckNumericType&lt;Float&gt;();
-		// check value of p
-		CPPAD_ASSERT_KNOWN(
-			p == 0 || p == 1,
-			&quot;sparse_jac_fun: p != 0 and p != 1&quot;
-		);
-		size_t K = row.size();
-		CPPAD_ASSERT_KNOWN(
-			K &gt;= m,
-			&quot;sparse_jac_fun: row.size() &lt; m&quot;
-		);
-		size_t i, j, k;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Float</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">FloatVector</span><span style="color: #990000">&gt;</span>
+     <span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">sparse_jac_fun</span></span><span style="color: #990000">(</span>
+          <span style="color: #008080">size_t</span>                       m    <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                       n    <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> FloatVector<span style="color: #990000">&amp;</span>           x    <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;&amp;</span> row  <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">&lt;</span>size_t<span style="color: #990000">&gt;&amp;</span> col  <span style="color: #990000">,</span>
+          <span style="color: #008080">size_t</span>                       p    <span style="color: #990000">,</span>
+          FloatVector<span style="color: #990000">&amp;</span>                 fp   <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check numeric type specifications</span></span>
+          CheckNumericType<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check value of p</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+               p <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">||</span> p <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"sparse_jac_fun: p != 0 and p != 1"</span>
+          <span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> K <span style="color: #990000">=</span> row<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+               K <span style="color: #990000">&gt;=</span> m<span style="color: #990000">,</span>
+               <span style="color: #FF0000">"sparse_jac_fun: row.size() &lt; m"</span>
+          <span style="color: #990000">);</span>
+          <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">,</span> k<span style="color: #990000">;</span>
 
-		if( p == 0 )
-			for(i = 0; i &lt; m; i++)
-				fp[i] = Float(0);
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> p <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> m<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+                    fp<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Float</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
-		Float t;
-		for(k = 0; k &lt; K; k++)
-		{	i    = row[k];
-			j    = col[k];
-			t    = exp( x[j] * x[j] / 2.0 );
-			switch(p)
-			{
-				case 0:
-				fp[i] += t;
-				break;
+          <span style="color: #008080">Float</span> t<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> K<span style="color: #990000">;</span> k<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     i    <span style="color: #990000">=</span> row<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+               j    <span style="color: #990000">=</span> col<span style="color: #990000">[</span>k<span style="color: #990000">];</span>
+               t    <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">2.0</span> <span style="color: #990000">);</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">switch</span></span><span style="color: #990000">(</span>p<span style="color: #990000">)</span>
+               <span style="color: #FF0000">{</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #993399">0</span><span style="color: #990000">:</span>
+                    fp<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+=</span> t<span style="color: #990000">;</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
 
-				case 1:
-				fp[k] = t * x[j];
-				break;
-			}
-		}
-	}
-}
-</pre>
-
-
+                    <span style="font-weight: bold"><span style="color: #0000FF">case</span></span> <span style="color: #993399">1</span><span style="color: #990000">:</span>
+                    fp<span style="color: #990000">[</span>k<span style="color: #990000">]</span> <span style="color: #990000">=</span> t <span style="color: #990000">*</span> x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">break</span></span><span style="color: #990000">;</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
 # endif
 </font></code>
 

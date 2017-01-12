@@ -1,6 +1,6 @@
-# $Id: CMakeLists.txt 3785 2016-02-08 12:53:06Z bradbell $
+# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -10,11 +10,7 @@
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
 # Build the cppad_ipopt/test directory tests
-# Inherit environment from ../CMakeList.txt
-
-# Specifies build type for this directory. Possible values are
-# empty, Debug, Release, RelWithDebInfo and MinSizeRel
-SET(CMAKE_BUILD_TYPE DEBUG)
+# Inherit build tyope from ../CMakeList.txt
 
 # Local include directories to search (not in package_prefix/include)
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
@@ -46,3 +42,8 @@ ADD_CUSTOM_TARGET(check_cppad_ipopt_test
 	cppad_ipopt_test
 	DEPENDS cppad_ipopt_test cppad_ipopt
 )
+MESSAGE(STATUS "make check_cppad_ipopt_test: available")
+
+# Change check depends in parent environment
+add_to_list(check_cppad_ipopt_depends check_cppad_ipopt_test)
+SET(check_cppad_ipopt_depends "${check_cppad_ipopt_depends}" PARENT_SCOPE)

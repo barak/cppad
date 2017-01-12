@@ -1,6 +1,6 @@
-// $Id: det_lu.cpp 3757 2015-11-30 12:03:07Z bradbell $
+// $Id: det_lu.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -37,14 +37,14 @@ $head Specifications$$
 See $cref link_det_lu$$.
 
 $head Implementation$$
-$codep */
+$srccode%cpp% */
 # include <cppad/utility/vector.hpp>
 # include <cppad/speed/det_by_lu.hpp>
 # include <cppad/speed/uniform_01.hpp>
 
-// Note that CppAD uses global_memory at the main program level
-extern bool
-	global_onetape, global_atomic, global_optimize;
+// Note that CppAD uses global_option["memory"] at the main program level
+# include <map>
+extern std::map<std::string, bool> global_option;
 
 bool link_det_lu(
 	size_t                           size     ,
@@ -53,9 +53,11 @@ bool link_det_lu(
 	CppAD::vector<double>           &gradient )
 {
 	// speed test global option values
-	if( global_onetape || global_atomic )
+	if( global_option["onetape"] || global_option["atomic"] )
 		return false;
 
+	// optimization options: no conditional skips or compare operators
+	std::string options="no_compare_op";
 	// -----------------------------------------------------
 	// setup
 	typedef CppAD::AD<double>           ADScalar;
@@ -88,8 +90,8 @@ bool link_det_lu(
 
 		// create function object f : A -> detA
 		f.Dependent(A, detA);
-		if( global_optimize )
-			f.optimize();
+		if( global_option["optimize"] )
+			f.optimize(options);
 
 		// skip comparison operators
 		f.compare_change_count(0);
@@ -100,6 +102,6 @@ bool link_det_lu(
 	}
 	return true;
 }
-/* $$
+/* %$$
 $end
 */

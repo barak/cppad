@@ -85,56 +85,51 @@ A:active { color : purple }
 
 
 <center><b><big><big>Sum of the Elements of the Square of a Matrix: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;vector&gt;
-# include &lt;cstddef&gt;
-# include &lt;cppad/utility/vector.hpp&gt;
-# include &lt;cppad/speed/mat_sum_sq.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cstddef&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/speed/mat_sum_sq.hpp&gt;</span>
 
-bool mat_sum_sq()
-{	bool   ok = true;
-	double x_00, x_01, x_10, x_11, check;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">mat_sum_sq</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span>   ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> x_00<span style="color: #990000">,</span> x_01<span style="color: #990000">,</span> x_10<span style="color: #990000">,</span> x_11<span style="color: #990000">,</span> check<span style="color: #990000">;</span>
 
-	// dimension of the matrices x, y, and the result z
-	size_t n = 2;
-	CppAD::vector&lt;double&gt; x(n * n), y(n * n), z(1);
+     <span style="font-style: italic"><span style="color: #9A1900">// dimension of the matrices x, y, and the result z</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
-	// x = [ 1 2 ; 3 4 ]
-	x[0] = x_00 = 1.;
-	x[1] = x_01 = 2.;
-	x[2] = x_10 = 3.;
-	x[3] = x_11 = 4.;
+     <span style="font-style: italic"><span style="color: #9A1900">// x = [ 1 2 ; 3 4 ]</span></span>
+     x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x_00 <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x_01 <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x_10 <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     x<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x_11 <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">.;</span>
 
-	// compute y = x * x and z = sum of elements in y
-	CppAD::mat_sum_sq(n, x, y, z);
+     <span style="font-style: italic"><span style="color: #9A1900">// compute y = x * x and z = sum of elements in y</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">mat_sum_sq</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> x<span style="color: #990000">,</span> y<span style="color: #990000">,</span> z<span style="color: #990000">);</span>
 
-	// check y_00
-	check = x_00 * x_00 + x_01 * x_10;
-	ok   &amp;= (check == y[0]);
+     <span style="font-style: italic"><span style="color: #9A1900">// check y_00</span></span>
+     check <span style="color: #990000">=</span> x_00 <span style="color: #990000">*</span> x_00 <span style="color: #990000">+</span> x_01 <span style="color: #990000">*</span> x_10<span style="color: #990000">;</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>check <span style="color: #990000">==</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
 
-	// check y_01
-	check = x_00 * x_01 + x_01 * x_11;
-	ok   &amp;= (check == y[1]);
+     <span style="font-style: italic"><span style="color: #9A1900">// check y_01</span></span>
+     check <span style="color: #990000">=</span> x_00 <span style="color: #990000">*</span> x_01 <span style="color: #990000">+</span> x_01 <span style="color: #990000">*</span> x_11<span style="color: #990000">;</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>check <span style="color: #990000">==</span> y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]);</span>
 
-	// check y_10
-	check = x_10 * x_00 + x_11 * x_10;
-	ok   &amp;= (check == y[2]);
+     <span style="font-style: italic"><span style="color: #9A1900">// check y_10</span></span>
+     check <span style="color: #990000">=</span> x_10 <span style="color: #990000">*</span> x_00 <span style="color: #990000">+</span> x_11 <span style="color: #990000">*</span> x_10<span style="color: #990000">;</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>check <span style="color: #990000">==</span> y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]);</span>
 
-	// check y_11
-	check = x_10 * x_01 + x_11 * x_11;
-	ok   &amp;= (check == y[3]);
+     <span style="font-style: italic"><span style="color: #9A1900">// check y_11</span></span>
+     check <span style="color: #990000">=</span> x_10 <span style="color: #990000">*</span> x_01 <span style="color: #990000">+</span> x_11 <span style="color: #990000">*</span> x_11<span style="color: #990000">;</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>check <span style="color: #990000">==</span> y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]);</span>
 
-	// check z
-	check = y[0] + y[1] + y[2] + y[3];
-	ok   &amp;= (check == z[0]);
+     <span style="font-style: italic"><span style="color: #9A1900">// check z</span></span>
+     check <span style="color: #990000">=</span> y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> y<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> y<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">];</span>
+     ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>check <span style="color: #990000">==</span> z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]);</span>
 
-	return ok;
-}
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-
-
 <hr/>Input File: speed/example/mat_sum_sq.cpp
 
 </body>

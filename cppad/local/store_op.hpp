@@ -1,9 +1,9 @@
-// $Id: store_op.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_STORE_OP_HPP
-# define CPPAD_STORE_OP_HPP
+// $Id: store_op.hpp 3845 2016-11-19 01:50:47Z bradbell $
+# ifndef CPPAD_LOCAL_STORE_OP_HPP
+# define CPPAD_LOCAL_STORE_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -13,7 +13,7 @@ A copy of this license is included in the COPYING file of this distribution.
 Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 -------------------------------------------------------------------------- */
 
-namespace CppAD { // BEGIN_CPPAD_NAMESPACE
+namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 \file store_op.hpp
 Changing the current value of a VecAD element.
@@ -144,7 +144,7 @@ op = StpvOp or StvvOp (not called).
 
 \tparam Vector_set
 is the type used for vectors of sets. It can be either
-\c sparse_pack, \c sparse_set, or \c sparse_list.
+sparse_pack or sparse_list.
 
 \param op
 is the code corresponding to this operator;
@@ -494,5 +494,5 @@ inline void reverse_sparse_hessian_store_op(
 	return;
 }
 
-} // END_CPPAD_NAMESPACE
+} } // END_CPPAD_LOCAL_NAMESPACE
 # endif

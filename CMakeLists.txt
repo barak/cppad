@@ -1,6 +1,5 @@
-# $Id: CMakeLists.txt 3786 2016-02-08 13:14:26Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -17,7 +16,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # cppad_version is used by set_version.sh to get the version number.
-SET(cppad_version      "20160000.1" )
+SET(cppad_version      "20170000.0" )
 SET(cppad_url          "http://www.coin-or.org/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 
@@ -31,8 +30,6 @@ PROJECT(cppad)
 # for the entire project.
 # include_directories([AFTER|BEFORE] [SYSTEM] dir1 dir2 ...)
 INCLUDE_DIRECTORIES( ${cppad_SOURCE_DIR} )
-
-
 
 # =============================================================================
 # Some system cmake language extensions
@@ -67,6 +64,12 @@ INCLUDE(cmake/sources_libs_define.cmake)
 #
 # check_source_runs(source variable)
 INCLUDE(cmake/check_source_runs.cmake)
+#
+# assert(variable)
+INCLUDE(cmake/assert.cmake)
+#
+# print_variable(variable)
+INCLUDE(cmake/print_variable.cmake)
 # =============================================================================
 # command line arguments
 # =============================================================================
@@ -120,28 +123,32 @@ command_line_arg(cppad_cxx_flags NOTFOUND STRING
 # -----------------------------------------------------------------------------
 # cppad_profile_flag
 command_line_arg(cppad_profile_flag NOTFOUND STRING
-	"compile flag used to compoile and link a profile version of a program"
+	"compile flag used to compile and link a profile version of a program"
 )
 # -----------------------------------------------------------------------------
-# External package prefixes
+# External package prefixes with warnings
+SET(system_include FALSE)
 #
 # adolc_prefix
-optional_package(adolc_prefix "adolc install prefix")
+optional_package(adolc_prefix ${system_include} "adolc install prefix")
 #
 # colpack_prefix
-optional_package(colpack_prefix "colpack install prefix")
-#
-# eigen_prefix
-optional_package(eigen_prefix "eigen install prefix")
-#
-# fadbad_prefix
-optional_package(fadbad_prefix "fadbad install prefix")
+optional_package(colpack_prefix ${system_include} "colpack install prefix")
 #
 # ipopt_prefix
-optional_package(ipopt_prefix "ipopt install prefix")
+optional_package(ipopt_prefix ${system_include} "ipopt install prefix")
 #
 # sacado_prefix
-optional_package(sacado_prefix "sacado install prefix")
+optional_package(sacado_prefix ${system_include} "sacado install prefix")
+# -----------------------------------------------------------------------------
+# External package prefixes without  warnings
+SET(system_include TRUE)
+#
+# eigen_prefix
+optional_package(eigen_prefix ${system_include} "eigen install prefix")
+#
+# fadbad_prefix
+optional_package(fadbad_prefix ${system_include} "fadbad install prefix")
 # -----------------------------------------------------------------------------
 # cppad_has_colpack, colpack_libs, cppad_lib
 #
@@ -157,40 +164,12 @@ ENDIF( colpack_prefix )
 # =============================================================================
 # automated system configuration
 # =============================================================================
-# cppad_cxx_flags_sacado
-IF( ${cppad_cxx_flags} MATCHES ".*-std=c[+][+]11.*" )
-	SET(cppad_cxx_flags_sacado "${cppad_cxx_flags} -D HAS_C99_TR1_CMATH" )
-ELSE( ${cppad_cxx_flags} MATCHES ".*-std=c[+][+]11.*" )
-	SET(cppad_cxx_flags_sacado ${cppad_cxx_flags} )
-ENDIF( ${cppad_cxx_flags} MATCHES ".*-std=c[+][+]11.*" )
-IF( sacado_prefix )
-	MESSAGE(STATUS "cppad_cxx_flags_sacado = ${cppad_cxx_flags_sacado}")
-ENDIF( sacado_prefix )
-# -----------------------------------------------------------------------------
-# cppad_cxx_flags_eigen
-STRING(REGEX REPLACE
-	"(.*)-Wshadow(.*)"         "\\1-Wno-shadow -Wno-deprecated-declarations\\2"
-	cppad_cxx_flags_eigen "${cppad_cxx_flags}"
-)
-IF( eigen_prefix )
-	MESSAGE(STATUS "cppad_cxx_flags_eigen = ${cppad_cxx_flags_eigen}")
-ENDIF( eigen_prefix )
-# -----------------------------------------------------------------------------
-# cppad_cxx_flags_fadbad
-STRING(REGEX REPLACE
-	"(.*)-Wshadow(.*)"         "\\1-Wno-shadow\\2"
-	cppad_cxx_flags_fadbad "${cppad_cxx_flags}"
-)
-IF( fadbad_prefix )
-	MESSAGE(STATUS "cppad_cxx_flags_fadbad = ${cppad_cxx_flags_fadbad}")
-ENDIF( fadbad_prefix )
-# -----------------------------------------------------------------------------
 # CMAKE_CXX_FLAGS
 # remove Visual Studio C++ warning level if specified in cppad_cxx_flags
 IF ( cppad_cxx_flags MATCHES "/W[0-9]" )
 	STRING( REGEX REPLACE "/W[0-9]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} )
 ENDIF ( cppad_cxx_flags MATCHES "/W[0-9]" )
-MESSAGE(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
+print_variable(CMAKE_CXX_FLAGS)
 # -----------------------------------------------------------------------------
 # set cppad_abs_${middle_name} for middle_name equal to:
 #	includedir, liddir, datadir, docdir
@@ -230,7 +209,7 @@ IF ( Boost_FOUND )
 		"([^ ]*)/[^/ ]*" "\\1"
 		boost_prefix "${boost_include_dir}"
 	)
-	MESSAGE(STATUS "boost_prefix = ${boost_prefix}")
+	print_variable(boost_prefix)
 	#
 	# add boost include directories
 	FOREACH(dir ${cmake_install_includedirs})
@@ -288,40 +267,38 @@ ENDIF( ipopt_prefix )
 # Initialize list of tests as empty
 SET(check_depends "")
 #
+# directories with no check depends entries
 ADD_SUBDIRECTORY(cppad)
 ADD_SUBDIRECTORY(pkgconfig)
 IF( colpack_prefix )
 	ADD_SUBDIRECTORY(cppad_lib)
 ENDIF( colpack_prefix)
 #
-ADD_SUBDIRECTORY(compare_c)
-add_to_list(check_depends check_compare_c)
+IF( NOT ( "${check_depends}" STREQUAL "" ) )
+	MESSAGE(FATAL_ERROR "Error in CMakeLists.txt scripts")
+ENDIF( NOT ( "${check_depends}" STREQUAL "" ) )
 #
+# directories with check depends entries
 ADD_SUBDIRECTORY(example)
-add_to_list(check_depends check_example)
-#
+ADD_SUBDIRECTORY(compare_c)
 ADD_SUBDIRECTORY(introduction)
-add_to_list(check_depends check_introduction)
-#
 ADD_SUBDIRECTORY(print_for)
-add_to_list(check_depends check_print_for)
-#
 ADD_SUBDIRECTORY(test_more)
-add_to_list(check_depends check_test_more)
-#
 ADD_SUBDIRECTORY(multi_thread)
-add_to_list(check_depends check_multi_thread)
-#
 ADD_SUBDIRECTORY(speed)
-add_to_list(check_depends check_speed)
-#
 IF ( ipopt_prefix )
 	ADD_SUBDIRECTORY(cppad_ipopt)
-	add_to_list(check_depends check_cppad_ipopt)
 ENDIF( ipopt_prefix )
 #
 ADD_CUSTOM_TARGET(check DEPENDS ${check_depends})
-#
+MESSAGE(STATUS "make check: avialable")
+# ============================================================================
+# Copy a file to another location and modify its contents.
+# configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])
+CONFIGURE_FILE(
+	${CMAKE_CURRENT_SOURCE_DIR}/bin/test_one.sh.in
+	${CMAKE_CURRENT_SOURCE_DIR}/bin/test_one.sh
+)
 # =============================================================================
 # install procedure
 # =============================================================================

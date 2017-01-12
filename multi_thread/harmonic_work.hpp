@@ -1,8 +1,8 @@
-// $Id: harmonic_work.hpp 3757 2015-11-30 12:03:07Z bradbell $
-# ifndef CPPAD_HARMONIC_WORK_HPP
-# define CPPAD_HARMONIC_WORK_HPP
+// $Id: harmonic_work.hpp 3804 2016-03-20 15:08:46Z bradbell $
+# ifndef CPPAD_MULTI_THREAD_HARMONIC_WORK_HPP
+# define CPPAD_MULTI_THREAD_HARMONIC_WORK_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the

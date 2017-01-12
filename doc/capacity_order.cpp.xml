@@ -80,103 +80,98 @@ A:active { color : purple }
 
 
 <center><b><big><big>Controlling Taylor Coefficient Memory Allocation: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
-# include &lt;cppad/cppad.hpp&gt;
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-namespace {
-	bool test(void)
-	{	bool ok = true;
-		using CppAD::AD;
-		using CppAD::NearEqual;
-		using CppAD::thread_alloc;
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">test</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
 
-		// domain space vector
-		size_t n(1), m(1);
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(AD&lt;double&gt;) ax(n), ay(n);
+          <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
+          <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">n</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">m</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">ax</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">ay</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
 
-		// declare independent variables and start tape recording
-		ax[0]  = 1.0;
-		CppAD::<a href="independent.xml" target="_top">Independent</a>(ax);
+          <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start tape recording</span></span>
+          ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">);</span>
 
-		// Set y = x^3, use enough variables so more that the minimal amount
-		// of memory is allocated for Taylor coefficients
-		ay[0] = 0.;
-		for( size_t i = 0; i &lt; 10; i++)
-			ay[0] += ax[0] * ax[0] * ax[0];
-		ay[0] = ay[0] / 10.;
+          <span style="font-style: italic"><span style="color: #9A1900">// Set y = x^3, use enough variables so more that the minimal amount</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// of memory is allocated for Taylor coefficients</span></span>
+          ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span> <span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">10</span><span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
+               ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> ax<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> ay<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">10</span><span style="color: #990000">.;</span>
 
-		// create f: x -&gt; y and stop tape recording
-		// (without running zero order forward mode).
-		CppAD::<a href="funconstruct.xml" target="_top">ADFun</a>&lt;double&gt; f;
-		f.Dependent(ax, ay);
+          <span style="font-style: italic"><span style="color: #9A1900">// create f: x -&gt; y and stop tape recording</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (without running zero order forward mode).</span></span>
+          CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> f<span style="color: #990000">;</span>
+          f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>ax<span style="color: #990000">,</span> ay<span style="color: #990000">);</span>
 
-		// check that this is master thread
-		size_t thread = thread_alloc::thread_num();
-		ok           &amp;= thread == 0; // this should be master thread
+          <span style="font-style: italic"><span style="color: #9A1900">// check that this is master thread</span></span>
+          <span style="color: #008080">size_t</span> thread <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
+          ok           <span style="color: #990000">&amp;=</span> thread <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// this should be master thread</span></span>
 
-		// The highest order forward mode calculation below is first order.
-		// This corresponds to two Taylor coefficient per variable,direction
-		// (orders zero and one). Preallocate memory for speed.
-		size_t inuse  = thread_alloc::inuse(thread);
-		f.capacity_order(2);
-		ok &amp;= thread_alloc::inuse(thread) &gt; inuse;
+          <span style="font-style: italic"><span style="color: #9A1900">// The highest order forward mode calculation below is first order.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// This corresponds to two Taylor coefficient per variable,direction</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (orders zero and one). Preallocate memory for speed.</span></span>
+          <span style="color: #008080">size_t</span> inuse  <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
+          f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">capacity_order</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> inuse<span style="color: #990000">;</span>
 
-		// zero order forward mode
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) x(n), y(m);
-		x[0] = 0.5;
-		y    = f.<a href="forward.xml" target="_top">Forward</a>(0, x);
-		double eps = 10. * CppAD::numeric_limits&lt;double&gt;::epsilon();
-		ok  &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(y[0], x[0] * x[0] * x[0], eps, eps);
+          <span style="font-style: italic"><span style="color: #9A1900">// zero order forward mode</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.5</span><span style="color: #990000">;</span>
+          y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
+          <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          ok  <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-		// forward computation of partials w.r.t. x
-		<a href="testvector.xml" target="_top">CPPAD_TESTVECTOR</a>(double) dx(n), dy(m);
-		dx[0] = 1.;
-		dy    = f.<a href="forward.xml" target="_top">Forward</a>(1, dx);
-		ok   &amp;= <a href="nearequal.xml" target="_top">NearEqual</a>(dy[0], 3. * x[0] * x[0], eps, eps);
+          <span style="font-style: italic"><span style="color: #9A1900">// forward computation of partials w.r.t. x</span></span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">dy</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
+          dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
+          ok   <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">3</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
 
-		// Suppose we no longer need the first order Taylor coefficients.
-		inuse = thread_alloc::inuse(thread);
-		f.capacity_order(1); // just keep zero order coefficients
-		ok   &amp;= thread_alloc::inuse(thread) &lt; inuse;
+          <span style="font-style: italic"><span style="color: #9A1900">// Suppose we no longer need the first order Taylor coefficients.</span></span>
+          inuse <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
+          f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">capacity_order</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// just keep zero order coefficients</span></span>
+          ok   <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> inuse<span style="color: #990000">;</span>
 
-		// Suppose we no longer need the zero order Taylor coefficients
-		// (could have done this first and not used f.capacity_order(1)).
-		inuse = thread_alloc::inuse(thread);
-		f.capacity_order(0);
-		ok   &amp;= thread_alloc::inuse(thread) &lt; inuse;
+          <span style="font-style: italic"><span style="color: #9A1900">// Suppose we no longer need the zero order Taylor coefficients</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (could have done this first and not used f.capacity_order(1)).</span></span>
+          inuse <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
+          f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">capacity_order</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
+          ok   <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> inuse<span style="color: #990000">;</span>
 
-		// turn off memory holding
-		thread_alloc::hold_memory(false);
+          <span style="font-style: italic"><span style="color: #9A1900">// turn off memory holding</span></span>
+          thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">hold_memory</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">);</span>
 
-		return ok;
-	}
-}
-bool capacity_order(void)
-{	bool ok = true;
-	using CppAD::thread_alloc;
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">capacity_order</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span>
 
-	// original amount of memory inuse
-	size_t thread = thread_alloc::thread_num();
-	ok           &amp;= thread == 0; // this should be master thread
-	size_t inuse  = thread_alloc::inuse(thread);
+     <span style="font-style: italic"><span style="color: #9A1900">// original amount of memory inuse</span></span>
+     <span style="color: #008080">size_t</span> thread <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
+     ok           <span style="color: #990000">&amp;=</span> thread <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// this should be master thread</span></span>
+     <span style="color: #008080">size_t</span> inuse  <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
 
-	// do test in separate routine so all objects are destroyed
-	ok &amp;= test();
+     <span style="font-style: italic"><span style="color: #9A1900">// do test in separate routine so all objects are destroyed</span></span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">test</span></span><span style="color: #990000">();</span>
 
-	// check that the amount of memroy inuse has not changed
-	ok &amp;= thread_alloc::inuse(thread) == inuse;
+     <span style="font-style: italic"><span style="color: #9A1900">// check that the amount of memroy inuse has not changed</span></span>
+     ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> inuse<span style="color: #990000">;</span>
 
-	// Test above uses hold_memory, so return available memory
-	thread_alloc::free_available(thread);
+     <span style="font-style: italic"><span style="color: #9A1900">// Test above uses hold_memory, so return available memory</span></span>
+     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
 
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
-
 <hr/>Input File: example/capacity_order.cpp
 
 </body>

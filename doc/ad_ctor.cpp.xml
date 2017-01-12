@@ -84,44 +84,40 @@ A:active { color : purple }
 
 
 <center><b><big><big>AD Constructors: Example and Test</big></big></b></center>
-<code><font color="blue"><pre style='display:inline'> 
+<code><font color="blue"><pre><tt>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
-# include &lt;cppad/cppad.hpp&gt;
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">ad_ctor</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>   <span style="font-style: italic"><span style="color: #9A1900">// initialize test result flag</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// so can use AD in place of CppAD::AD</span></span>
 
-bool ad_ctor(void)
-{	bool ok = true;   // initialize test result flag
-	using CppAD::AD;  // so can use AD in place of CppAD::AD
+     <span style="font-style: italic"><span style="color: #9A1900">// default constructor</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> a<span style="color: #990000">;</span>
+     a <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     ok <span style="color: #990000">&amp;=</span> a <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
-	// default constructor
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; a;
-	a = 0.;
-	ok &amp;= a == 0.;
+     <span style="font-style: italic"><span style="color: #9A1900">// constructor from base type</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">b</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">.);</span>
+     ok <span style="color: #990000">&amp;=</span> b <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
 
-	// constructor from base type
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; b(1.);
-	ok &amp;= b == 1.;
+     <span style="font-style: italic"><span style="color: #9A1900">// constructor from another type that converts to the base type</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">c</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> c <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	// constructor from another type that converts to the base type
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; c(2);
-	ok &amp;= c == 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// constructor from AD&lt;Base&gt;</span></span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">d</span></span><span style="color: #990000">(</span>c<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> d <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
 
-	// constructor from <a href="ad.xml" target="_top">AD</a>&lt;Base&gt;
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; d(c);
-	ok &amp;= d == 2.;
+     <span style="font-style: italic"><span style="color: #9A1900">// constructor from a VecAD&lt;Base&gt; element</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">VecAD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">v</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
+     <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">e</span></span><span style="color: #990000">(</span> v<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> e <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">.;</span>
 
-	// constructor from a VecAD&lt;Base&gt; element
-	CppAD::VecAD&lt;double&gt; v(1);
-	v[0] = 3.;
-	<a href="ad.xml" target="_top">AD</a>&lt;double&gt; e( v[0] );
-	ok &amp;= e == 3.;
-
-	return ok;
-}
-
-</pre>
-
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+</tt></pre>
 </font></code>
-
 <hr/>Input File: example/ad_ctor.cpp
 
 </body>

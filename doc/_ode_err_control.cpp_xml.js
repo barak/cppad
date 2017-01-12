@@ -48,7 +48,8 @@ var list_down2 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'to_string.xml'
+'to_string.xml',
+'set_union.xml'
 ];
 var list_down1 = [
 'ode_err_control.cpp.xml',

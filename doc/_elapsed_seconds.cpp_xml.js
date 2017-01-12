@@ -36,7 +36,8 @@ var list_down3 = [
 'cppad_vector.xml',
 'thread_alloc.xml',
 'index_sort.xml',
-'to_string.xml'
+'to_string.xml',
+'set_union.xml'
 ];
 var list_down2 = [
 'elapsed_seconds.xml',
