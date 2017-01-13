@@ -12,8 +12,9 @@ override_dh_installchangelogs:
 
 override_dh_link:
 	cd debian/cppad/usr/share/doc/cppad/doc && \
-	if cmp cppad.xml index.xml ; then \
-	  echo Identical copies: index.xml cppad.xml && \
+	if test -e cppad.xml -a \! -e index.xml \
+	   || cmp cppad.xml index.xml ; then \
+	  echo index.xml missing or identical to cppad.xml && \
 	  ln --verbose --symbolic --force cppad.xml index.xml ; \
 	fi
 	dh_link
