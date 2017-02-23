@@ -1,6 +1,5 @@
-# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -55,6 +54,7 @@ ADD_EXECUTABLE(test_more EXCLUDE_FROM_ALL test_more.cpp
 	atan.cpp
 	atanh.cpp
 	atan2.cpp
+	atomic_sparsity.cpp
 	azmul.cpp
 	base_alloc.cpp
 	check_simple_vector.cpp
