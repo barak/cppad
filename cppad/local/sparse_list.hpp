@@ -175,10 +175,9 @@ private:
 
 	\return
 	If zero, niether set is a subset of the other.
-	If one, then set one is a subset of set two.
-	If two, then set two is a subset of set one.
-	If the two sets are equal, the value two is returned; i.e., the set
-	in the other object is identified as a subset of the set in this object.
+	If one, then the two sets are equal.
+	If two, then set one is a subset of set two and not equal set two.
+	If three, then set two is a subset of set one and not equal set one..
 	*/
 	size_t is_subset(
 		size_t                  one_this    ,
@@ -192,10 +191,19 @@ private:
 		// start
 		size_t start_one    = start_[one_this];
 		size_t start_two    = other.start_[two_other];
-		if( start_two == 0 )
-			return 2;
+		//
 		if( start_one == 0 )
-			return 1;
+		{	// set one is empty
+			if( start_two == 0 )
+			{	// set two is empty
+				return 1;
+			}
+			return 2;
+		}
+		if( start_two == 0 )
+		{	// set two is empty and one is not empty
+			return 3;
+		}
 		//
 		// next
 		size_t next_one     = data_[start_one].next;
@@ -207,7 +215,7 @@ private:
 		//
 		bool one_subset     = true;
 		bool two_subset     = true;
-
+		//
 		size_t value_union = std::min(value_one, value_two);
 		while( (one_subset | two_subset) & (value_union < end_) )
 		{	if( value_one > value_union )
@@ -230,10 +238,20 @@ private:
 			}
 			value_union = std::min(value_one, value_two);
 		}
-		if( two_subset )
-			return 2;
 		if( one_subset )
-			return 1;
+		{	if( two_subset )
+			{	// sets are equal
+				return 1;
+			}
+			// one is a subset of two
+			return 2;
+		}
+		if( two_subset )
+		{	// two is a subset of one
+			return 3;
+		}
+		//
+		// neither is a subset
 		return 0;
 	}
 	// -----------------------------------------------------------------
@@ -663,12 +681,12 @@ public:
 		size_t subset = is_subset(this_left, other_right, other);
 
 		// case where right is a subset of left or right and left are equal
-		if( subset == 2 )
+		if( subset == 1 || subset == 3 )
 		{	assignment(this_target, this_left, *this);
 			return;
 		}
 		// case where the left is a subset of right and they are not equal
-		if( subset == 1 )
+		if( subset == 2 )
 		{	assignment(this_target, other_right, other);
 			return;
 		}
@@ -752,6 +770,137 @@ public:
 		if( data_not_used_ > data_.size() / 2 )
 			collect_garbage();
 		//
+	}
+	// -----------------------------------------------------------------
+	/*! Assign a set equal to the intersection of two other sets.
+
+	\param this_target
+	is the index in this sparse_list object of the set being assinged.
+
+	\param this_left
+	is the index in this sparse_list object of the
+	left operand for the intersection operation.
+	It is OK for this_target and this_left to be the same value.
+
+	\param other_right
+	is the index in the other sparse_list object of the
+	right operand for the intersection operation.
+	It is OK for this_target and other_right to be the same value.
+
+	\param other
+	is the other sparse_list object (which may be the same as this
+	sparse_list object).
+	*/
+	void binary_intersection(
+		size_t                  this_target  ,
+		size_t                  this_left    ,
+		size_t                  other_right  ,
+		const sparse_list&      other        )
+	{
+		CPPAD_ASSERT_UNKNOWN( this_target < start_.size()         );
+		CPPAD_ASSERT_UNKNOWN( this_left   < start_.size()         );
+		CPPAD_ASSERT_UNKNOWN( other_right < other.start_.size()   );
+		CPPAD_ASSERT_UNKNOWN( end_        == other.end_           );
+		//
+		// check if one of the two operands is a subset of the the other
+		size_t subset = is_subset(this_left, other_right, other);
+
+		// case where left is a subset of right or left and right are equal
+		if( subset == 1 || subset == 2 )
+		{	assignment(this_target, this_left, *this);
+			return;
+		}
+		// case where the right is a subset of left and they are not equal
+		if( subset == 3 )
+		{	assignment(this_target, other_right, other);
+			return;
+		}
+		// if niether case holds, then both left and right are non-empty
+		CPPAD_ASSERT_UNKNOWN( reference_count(this_left) > 0 );
+		CPPAD_ASSERT_UNKNOWN( other.reference_count(other_right) > 0 );
+
+		// must get all the start indices before modify start_this
+		// (incase start_this is the same as start_left or start_right)
+		size_t start_target  = start_[this_target];
+		size_t start_left    = start_[this_left];
+		size_t start_right   = other.start_[other_right];
+
+
+		// number of list elements that will be deleted by this operation
+		size_t number_delete = 0;
+		size_t ref_count     = reference_count(this_target);
+		if( ref_count == 1 )
+			number_delete = number_elements(this_target) + 1;
+		else if (ref_count > 1 )
+		{	// decrement reference counter
+			CPPAD_ASSERT_UNKNOWN( data_[start_target].value > 1 )
+			data_[start_target].value--;
+		}
+
+		// start the new list as emptyh
+		size_t start        = 0;
+		size_t next         = start;
+		start_[this_target] = start;
+
+		// next for left and right lists
+		size_t next_left   = data_[start_left].next;
+		size_t next_right  = other.data_[start_right].next;
+
+		// value for left and right sets
+		size_t value_left  = data_[next_left].value;
+		size_t value_right = other.data_[next_right].value;
+
+		CPPAD_ASSERT_UNKNOWN( value_left < end_ && value_right < end_ );
+		while( (value_left < end_) & (value_right < end_) )
+		{	if( value_left == value_right )
+			{	if( start == 0 )
+				{	// this is the first element in the intersection
+					start               = data_.extend(1);
+					next                = start;
+					start_[this_target] = start;
+					data_[start].value  = 1; // reference count
+					CPPAD_ASSERT_UNKNOWN( start > 0 );
+				}
+				size_t tmp        = data_.extend(1);
+				data_[next].next  = tmp;
+				next              = tmp;
+				data_[next].value = value_left;
+				//
+				// advance left to its next element
+				next_left  = data_[next_left].next;
+				if( next_left == 0 )
+					value_left = end_;
+				else
+					value_left = data_[next_left].value;
+				//
+			}
+			if( value_left > value_right )
+			{	// advance right
+				next_right  = other.data_[next_right].next;
+				if( next_right == 0 )
+					value_right = end_;
+				else
+					value_right = other.data_[next_right].value;
+			}
+			if( value_right > value_left )
+			{	// advance left
+				next_left  = data_[next_left].next;
+				if( next_left == 0 )
+					value_left = end_;
+				else
+					value_left = data_[next_left].value;
+			}
+		}
+		if( start != 0 )
+		{	CPPAD_ASSERT_UNKNOWN( next != 0 );
+			data_[next].next = 0;
+		}
+
+		// adjust data_not_used_
+		data_not_used_ += number_delete;
+		//
+		if( data_not_used_ > data_.size() / 2 )
+			collect_garbage();
 	}
 	// -----------------------------------------------------------------
 	/*! Fetch n_set for vector of sets object.

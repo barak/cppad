@@ -89,7 +89,7 @@ inline void usage_cexp_parent2arg(
 	size_t                  i_parent   ,
 	size_t                  i_arg      ,
 	vector<struct_op_info>& op_info    ,
-	sparse_pack&            cexp_set   )
+	sparse_list&            cexp_set   )
 {
 	// cexp_set
 	if( cexp_set.n_set() > 0 )
@@ -345,7 +345,7 @@ void get_op_info(
 	// comparisons results in the set holds. A set for operator i_op is
 	// not defined and left empty when op_info[i_op].usage = no_usage.
 	/// It is also left empty for the result of any VecAD operations.
-	sparse_pack cexp_set;
+	sparse_list cexp_set;
 	//
 	// number of sets
 	size_t num_set = 0;
@@ -470,38 +470,59 @@ void get_op_info(
 			CPPAD_ASSERT_UNKNOWN( NumRes(op) > 0 );
 			if( use_result != no_usage )
 			{	CPPAD_ASSERT_UNKNOWN( NumArg(CExpOp) == 6 );
-				addr_t mask[] = {1, 2, 4, 8};
-				for(size_t i = 0; i < 4; i++)
-				{	if( arg[1] & mask[i] )
-					{	size_t j_op = var2op[ arg[2 + i] ];
-						usage_cexp_parent2arg(
-							sum_op, i_op, j_op, op_info, cexp_set
-						);
-					}
+				// propgate from parent to left argument
+				if( arg[1] & 1 )
+				{	size_t j_op = var2op[ arg[2] ];
+					usage_cexp_parent2arg(
+						sum_op, i_op, j_op, op_info, cexp_set
+					);
 				}
-				// here is where we add elements to cexp_set
-				if( conditional_skip )
-				{	bool same_variable = bool(arg[1] & 4) && bool(arg[1] & 8);
-					same_variable     &= arg[4] == arg[5];
-					if( ( arg[1] & 4 ) && (! same_variable) )
-					{	// arg[4] is a variable
-						size_t j_op = var2op[ arg[4] ];
-						CPPAD_ASSERT_UNKNOWN(op_info[j_op].usage != no_usage);
-						// j_op corresponds to  the value used when the
+				// propgate from parent to right argument
+				if( arg[1] & 2 )
+				{	size_t j_op = var2op[ arg[3] ];
+					usage_cexp_parent2arg(
+							sum_op, i_op, j_op, op_info, cexp_set
+					);
+				}
+				// are if_true and if_false cases the same variable
+				bool same_variable = bool(arg[1] & 4) && bool(arg[1] & 8);
+				same_variable     &= arg[4] == arg[5];
+				//
+				// if_true
+				if( arg[1] & 4 )
+				{	size_t j_op = var2op[ arg[4] ];
+					bool can_skip = conditional_skip & (! same_variable);
+					can_skip     &= op_info[j_op].usage == no_usage;
+					usage_cexp_parent2arg(
+						sum_op, i_op, j_op, op_info, cexp_set
+					);
+					if( can_skip )
+					{	// j_op corresponds to the value used when the
 						// comparison result is true. It can be skipped when
 						// the comparison is false (0).
 						size_t element = 2 * cexp_index + 0;
 						cexp_set.add_element(j_op, element);
+						//
+						op_info[j_op].usage = yes_usage;
 					}
-					if( ( arg[1] & 8 ) && (! same_variable) )
-					{	// arg[5] is a variable
-						size_t j_op = var2op[ arg[5] ];
-						CPPAD_ASSERT_UNKNOWN(op_info[j_op].usage != no_usage);
-						// j_op corresponds to the value used when the
+				}
+				//
+				// if_false
+				if( arg[1] & 8 )
+				{	size_t j_op = var2op[ arg[5] ];
+					bool can_skip = conditional_skip & (! same_variable);
+					can_skip     &= op_info[j_op].usage == no_usage;
+					usage_cexp_parent2arg(
+						sum_op, i_op, j_op, op_info, cexp_set
+					);
+					if( can_skip )
+					{	// j_op corresponds to the value used when the
 						// comparison result is false. It can be skipped when
-						// the comparison is true (1).
+						// the comparison is true (0).
 						size_t element = 2 * cexp_index + 1;
 						cexp_set.add_element(j_op, element);
+						//
+						op_info[j_op].usage = yes_usage;
 					}
 				}
 			}
@@ -641,7 +662,7 @@ void get_op_info(
 			break; // -----------------------------------------------------
 
 			// =============================================================
-			// cumuilative summation operator
+			// cumulative summation operator
 			// ============================================================
 			case CSumOp:
 			CPPAD_ASSERT_UNKNOWN( NumRes(op) == 1 );
@@ -677,7 +698,7 @@ void get_op_info(
 				CPPAD_ASSERT_UNKNOWN(op_info[last_user_i_op].usage==no_usage);
 # ifndef NDEBUG
 				if( cexp_set.n_set() > 0 )
-				{	sparse_pack_const_iterator itr(cexp_set, last_user_i_op);
+				{	sparse_list_const_iterator itr(cexp_set, last_user_i_op);
 					CPPAD_ASSERT_UNKNOWN( *itr == cexp_set.end() );
 				}
 # endif
@@ -1024,7 +1045,7 @@ void get_op_info(
 		keep     &= op_info[i_op].usage != csum_usage;
 		keep     &= op_info[i_op].previous == 0;
 		if( keep )
-		{	sparse_pack_const_iterator itr(cexp_set, i_op);
+		{	sparse_list_const_iterator itr(cexp_set, i_op);
 			if( *itr != cexp_set.end() )
 			{	if( op_info[i_op].op == UserOp )
 				{	// i_op is the first operations in this user atomic call.
