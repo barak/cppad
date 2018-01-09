@@ -6,7 +6,7 @@
 <title>Using CMake to Configure CppAD</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Using CMake to Configure CppAD"/>
-<meta name="keywords" id="keywords" content=" using cmake to configure cppad makefile install prefix postfix include directories lib datadir documentation package compile flags profile maximum number threads sparsity internal structure vector sets memory usage tape ctor implicit explicit the program command build directory make check cmake_verbose_makefile generator cppad_prefix cppad_postfix cmake_install_includedirs cmake_install_libdirs cmake_install_datadir cmake_install_docdir package_prefix cppad_cxx_flags c++11 cppad_profile_flag eigen fadbad cppad_testvector cppad_max_num_threads cppad_tape_id_type cstdint cppad_tape_addr_type cppad_deprecated "/>
+<meta name="keywords" id="keywords" content=" using cmake to configure cppad makefile install prefix postfix include directories lib datadir documentation package compile flags profile maximum number threads sparsity internal structure vector sets memory usage tape ctor implicit explicit the program command build directory make check cmake_verbose_makefile generator cppad_prefix cppad_postfix cmake_install_includedirs cmake_install_libdirs cmake_install_datadir cmake_install_docdir package_prefix cppad_cxx_flags c++11 debug release cppad_profile_flag eigen fadbad cppad_testvector cppad_max_num_threads cppad_tape_id_type cstdint cppad_tape_addr_type cppad_debug_which exception cppad_deprecated "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -65,7 +65,6 @@ A:active { color : purple }
 <option>cmake</option>
 <option>cmake_check</option>
 <option>pkgconfig</option>
-<option>auto_tools</option>
 </select>
 </td>
 <td>
@@ -98,6 +97,7 @@ A:active { color : purple }
 <option>package_prefix</option>
 <option>cppad_cxx_flags</option>
 <option>---..C++11</option>
+<option>---..debug and release</option>
 <option>cppad_profile_flag</option>
 <option>---..Eigen and Fadbad</option>
 <option>cppad_testvector</option>
@@ -106,6 +106,8 @@ A:active { color : purple }
 <option>---..cstdint</option>
 <option>cppad_tape_addr_type</option>
 <option>---..cstdint</option>
+<option>cppad_debug_which</option>
+<option>---..Exception</option>
 <option>cppad_deprecated</option>
 </select>
 </td>
@@ -178,7 +180,8 @@ cmake&#xA0;</span></font><i><font color="black"></font></i><font color="blue"><s
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_max_num_threads=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_max_num_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_id_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_id_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_tape_addr_type=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_tape_addr_type</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_deprecated=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_deprecated</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_debug_which=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_debug_which</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;-D&#xA0;cppad_deprecated=</span></font><i><font color="black"><span style='white-space: nowrap'>cppad_deprecated</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;\<br/>
 &#xA0;&#xA0;&#xA0;&#xA0;..<br/>
 </span></font></code>
@@ -427,8 +430,7 @@ Including the Sacado Speed Tests</td></tr>
 <br/>
 <b><big><a name="cppad_cxx_flags" id="cppad_cxx_flags">cppad_cxx_flags</a></big></b>
 <br/>
-This specifies the addition compiler flags,
-besides the debug and release flags,
+This specifies the addition compiler flags
 that are used when compiling the CppAD examples and tests.
 The default value for these flags is the empty string <code><font color="blue">&quot;&quot;</font></code>.
 These flags must be valid for the C++ compiler
@@ -446,6 +448,22 @@ the
  must enable these features.
 The compiler may still be used with a flag that disables the new features
 (unless it is a Microsoft compiler; i.e., <code><font color="blue">_MSC_VER</font></code> is defined).
+
+<br/>
+<br/>
+<b><a name="cppad_cxx_flags.debug and release" id="cppad_cxx_flags.debug and release">debug and release</a></b>
+<br/>
+The CppAD examples and tests decide which files to compile for debugging
+and which to compile for release. Hence debug and release flags should
+not be included in 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_cxx_flags</span></font></i></code>
+.
+See also the
+<a href="preprocessor.xml#Documented Here.CPPAD_DEBUG_AND_RELEASE" target="_top"><span style='white-space: nowrap'>CPPAD_DEBUG_AND_RELEASE</span></a>
+
+compiler flag (which should not be included in 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_cxx_flags</span></font></i></code>
+).
 
 <br/>
 <br/>
@@ -563,11 +581,11 @@ must be larger than any of the following:
 ,
 <a href="seq_property.xml#size_op_arg" target="_top"><span style='white-space: nowrap'>size_op_arg</span></a>
 ,
-<a href="seq_property.xml#size_text" target="_top"><span style='white-space: nowrap'>size_par</span></a>
-,
 <a href="seq_property.xml#size_par" target="_top"><span style='white-space: nowrap'>size_par</span></a>
 ,
-<a href="seq_property.xml#size_VecAD" target="_top"><span style='white-space: nowrap'>size_par</span></a>
+<a href="seq_property.xml#size_text" target="_top"><span style='white-space: nowrap'>size_text</span></a>
+,
+<a href="seq_property.xml#size_VecAD" target="_top"><span style='white-space: nowrap'>size_VecAD</span></a>
 .
 
 <br/>
@@ -585,19 +603,44 @@ they can also be used as the value of
 
 <br/>
 <br/>
+<b><big><a name="cppad_debug_which" id="cppad_debug_which">cppad_debug_which</a></big></b>
+<br/>
+All of the CppAD examples and test can optionally be tested
+in debug or release mode (see exception below).
+This option controls which mode is chosen for the corresponding files.
+The value 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_debug_which</span></font></i></code>
+ be one of the following:
+<code><font color="blue">debug_even</font></code>, <code><font color="blue">debug_odd</font></code>, <code><font color="blue">debug_all</font></code>, <code><font color="blue">debug_none</font></code>.
+If it is <code><font color="blue">debug_even</font></code> (<code><font color="blue">debug_odd</font></code>),
+files with an even (old) index in a list for each case will be compiled
+in debug mode. The remaining files will be compiled in release mode.
+If it is <code><font color="blue">debug_all</font></code> (<code><font color="blue">debug_none</font></code>),
+all the files will be compiled in debug (release) mode.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_debug_which</span></font></i></code>
+ does not appear on the command line,
+the default value <code><font color="blue">debug_all</font></code> is used.
+
+<br/>
+<br/>
+<b><a name="cppad_debug_which.Exception" id="cppad_debug_which.Exception">Exception</a></b>
+<br/>
+The test corresponding to <code><font color="blue">make cppad_ipopt_speed</font></code>
+always get complied in release more (to avoid the extra time
+it would take to run in debug mode).
+Note that this test corresponds a deprecated interface; see
+<a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
+.
+
+<br/>
+<br/>
 <b><big><a name="cppad_deprecated" id="cppad_deprecated">cppad_deprecated</a></big></b>
 <br/>
 The default value for 
 <code><i><font color="black"><span style='white-space: nowrap'>cppad_deprecated</span></font></i></code>
- is <code><font color="blue">NO</font></code>.
-If it is <code><font color="blue">YES</font></code>, then all the CppAD
-<a href="deprecated.xml" target="_top"><span style='white-space: nowrap'>deprecated</span></a>
- features are included in the
-<a href="install.xml#Instructions.Step 4: Installation" target="_top"><span style='white-space: nowrap'>installation</span></a>
-.
-Otherwise, some of the deprecated features
-may be excluded from the installation.
-(The intention here is to exclude more deprecated features as time marches on.)
+ is <code><font color="blue">NO</font></code>
+(the value <code><font color="blue">YES</font></code> is not currently being used).
 
 
 

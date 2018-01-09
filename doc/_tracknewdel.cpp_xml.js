@@ -14,6 +14,7 @@ var list_up0 = [
 ];
 var list_down3 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -37,7 +38,8 @@ var list_down2 = [
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
 'old_atomic.xml',
-'zdouble.xml'
+'zdouble.xml',
+'autotools.xml'
 ];
 var list_down1 = [
 'tracknewdel.cpp.xml'

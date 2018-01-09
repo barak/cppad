@@ -27,8 +27,7 @@ var list_down1 = [
 'download.xml',
 'cmake.xml',
 'cmake_check.xml',
-'pkgconfig.xml',
-'auto_tools.xml'
+'pkgconfig.xml'
 ];
 var list_down0 = [
 'adolc_prefix.xml',
@@ -55,6 +54,7 @@ var list_current0 = [
 'cmake.xml#package_prefix',
 'cmake.xml#cppad_cxx_flags',
 'cmake.xml#cppad_cxx_flags.C++11',
+'cmake.xml#cppad_cxx_flags.debug and release',
 'cmake.xml#cppad_profile_flag',
 'cmake.xml#cppad_profile_flag.Eigen and Fadbad',
 'cmake.xml#cppad_testvector',
@@ -63,6 +63,8 @@ var list_current0 = [
 'cmake.xml#cppad_tape_id_type.cstdint',
 'cmake.xml#cppad_tape_addr_type',
 'cmake.xml#cppad_tape_addr_type.cstdint',
+'cmake.xml#cppad_debug_which',
+'cmake.xml#cppad_debug_which.Exception',
 'cmake.xml#cppad_deprecated'
 ];
 function choose_across0(item)

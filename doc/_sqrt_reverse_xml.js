@@ -14,6 +14,7 @@ var list_up0 = [
 ];
 var list_down3 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',

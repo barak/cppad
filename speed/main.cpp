@@ -1,6 +1,5 @@
-// $Id: main.cpp 3855 2016-12-19 00:30:54Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -48,6 +47,12 @@ Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 /*
 $begin speed_main$$
 $spell
+	jac
+	subgraph
+	Jacobians
+	hes
+	subgraphs
+	subsparsity
 	revsparsity
 	colpack
 	onetape
@@ -137,7 +142,8 @@ If $icode test$$ is equal to $code speed$$,
 all of the speed tests are run.
 
 $head seed$$
-The command line argument $icode seed$$ is a positive integer.
+The command line argument $icode seed$$ is an unsigned integer
+(all its characters are between 0 and 9).
 The random number simulator $cref uniform_01$$ is initialized with
 the call
 $codei%
@@ -150,22 +156,23 @@ This global variable has prototype
 $srccode%cpp%
 	extern std::map<std::string, bool> global_option;
 %$$
+The syntax
+$codei%
+	global_option["%option%"]
+%$$
+has the value true, if $icode option$$ is present,
+and false otherwise.
 This is true for each option that follows $icode seed$$.
 The order of the options does not matter and the list can be empty.
-Each option, must be separate
-command line argument to the main program.
-The documentation below specifics how CppAD uses these options,
+Each option, is be a separate command line argument to the main program.
+The documentation below specifics how
+$cref speed_cppad$$ uses these options,
 see the examples in $cref speed_adolc$$ for how another package might
 uses these options.
 
 $subhead onetape$$
-If the option $code onetape$$ is present,
-$codep
-	global_option["onetape"]
-$$
-is true and otherwise it is false.
-If this external symbol is true,
-CppAD will use one taping of the operation
+If this option is present,
+$cref speed_cppad$$ will use one taping of the operation
 sequence for all the repetitions of that speed test.
 Otherwise, the
 $cref/operation sequence/glossary/Operation/Sequence/$$
@@ -174,86 +181,87 @@ $pre
 
 $$
 All of the tests, except $cref/det_lu/link_det_lu/$$,
-have a fixed operations sequence.
+have the same operation sequence for each repetition.
 The operation sequence for $code det_lu$$
-may be different for each repetition of the test because it
-depends on the matrix for which the determinant is being calculated.
-For this reason, the CppAD test
-$cref cppad_det_lu.cpp$$ returns false
-(indicating that the test not implemented)
+may be different because it depends on the matrix for which the determinant
+is being calculated.
+For this reason, $cref cppad_det_lu.cpp$$ returns false,
+to indicate that the test not implemented,
 when $code global_onetape$$ is true.
 
+$subhead memory$$
+This option is special because individual CppAD speed tests need not do
+anything different if this option is true or false.
+If the $code memory$$ option is present, the CppAD
+$cref/hold_memory/ta_hold_memory/$$ routine will be called by
+the speed test main program before any of the tests are executed
+This should make the CppAD $code thread_alloc$$ allocator faster.
+If it is not present, CppAD will used standard memory allocation.
+Another package might use this option for a different
+memory allocation method.
+
 $subhead optimize$$
-If the option $code optimize$$ is present,
-$codep
-	global_option["optimize"]
-$$
-is true and otherwise it is false.
-If this external symbol is true,
-CppAD will optimize the operation sequence before doing computations.
+If this option is present,
+CppAD will $cref optimize$$
+the operation sequence before doing computations.
 If it is false, this optimization will not be done.
+Note that this option is usually slower unless it is combined with the
+$code onetape$$ option.
 
 $subhead atomic$$
-If the option $code atomic$$ is present,
-$codep
-	global_option["atomic"]
-$$
-is true and otherwise it is false.
-If this external symbol is true, CppAD will use its user defined
+If this option is present,
+CppAD will use a user defined
 $cref/atomic/atomic_base/$$ operation is used for the test.
-If no such atomic operation exists,
-and atomic is chosen, CppAD returns false for the test.
+So far, CppAD has only implemented
+the $cref/mat_mul/link_mat_mul/$$ test as an atomic operation.
 
-$subhead memory$$
-If the option $code memory$$ is present,
-$codep
-	global_option["memory"]
-$$
-is true and otherwise it is false.
-If it is true, the CppAD
-$cref/hold_memory/ta_hold_memory/$$ routine will be called by
-the main program before any of the tests are executed.
-This should make the CppAD $code thread_alloc$$ allocator faster.
-If it is false, CppAD will used standard memory allocation.
+$subhead hes2jac$$
+If this option is present,
+$cref speed_cppad$$ will compute hessians as the Jacobian
+of the gradient.
+This is accomplished using
+$cref/multiple levels/mul_level/$$ of AD.
+So far, CppAD has only implemented
+the $cref/sparse_hessian/link_sparse_hessian/$$
+test in this manner.
+
+$subhead subgraph$$
+If this option is present,
+$cref speed_cppad$$ will compute sparse Jacobians using subgraphs.
+The CppAD $cref/sparse_jacobian/link_sparse_jacobian/$$
+test is implemented for this option.
+In addition, the CppAD $cref/sparse_hessian/link_sparse_hessian/$$
+test is implemented for this option when $code hes2jac$$ is present.
 
 $head Sparsity Options$$
 The following options only apply to the
 $cref/sparse_jacobian/link_sparse_jacobian/$$ and
 $cref/sparse_hessian/link_sparse_hessian/$$ tests.
-The other tests will ignore these options:
+The other tests return false when any of these options
+are present.
 
 $subhead boolsparsity$$
-If the option $code boolsparsity$$ is present,
-$codep
-	global_option["boolsparsity"]
-$$
-is true and otherwise it is false.
-If it is true, CppAD will use a
-$cref/vector of bool/glossary/Sparsity Pattern/Vector of Boolean/$$
-for its sparsity patterns.
-Otherwise it will use a
-$cref/vector of sets/glossary/Sparsity Pattern/Vector of Sets/$$.
+If this option is present, CppAD will use a
+$cref/vectors of bool/glossary/Sparsity Pattern/Boolean Vector/$$
+to compute sparsity patterns.
+Otherwise CppAD will use
+$cref/vectors of sets/glossary/Sparsity Pattern/Vector of Sets/$$.
 
 $subhead revsparsity$$
-If the option $code revsparsity$$ is present,
-$codep
-	global_option["revsparsity"]
-$$
-is true and otherwise it is false.
-If it is true, CppAD will use a
-$cref ForSparseJac$$ and $cref ForSparseHes$$ where possible
-for its sparsity patterns.
-Otherwise it will use $cref RevSparseJac$$ and $cref RevSparseHes$$.
+If this option is present,
+CppAD will use reverse mode for to compute sparsity patterns.
+Otherwise CppAD will use forward mode.
+
+$subhead subsparsity$$
+If this option is present,
+CppAD will use subgraphs to compute sparsity patterns.
+If either the $code boolsparsity$$ or $code revsparsity$$ is also present,
+the CppAD speed tests will return false; i.e., these options are not
+supported by $cref subgraph_sparsity$$.
 
 $subhead colpack$$
-If the option $code colpack$$ is present,
-$codep
-	global_option["colpack"]
-$$
-is true and otherwise it is false.
-If this external symbol is true,
-CppAD will use $cref/colpack/colpack_prefix/$$ to do the coloring
-for its
+If this option is present,
+CppAD will use $cref/colpack/colpack_prefix/$$ to do the coloring.
 Otherwise, it will use it's own coloring algorithm.
 
 $head Correctness Results$$
@@ -356,13 +364,16 @@ namespace {
 	using std::cout;
 	using std::endl;
 	const char* option_list[] = {
+		"memory",
 		"onetape",
 		"optimize",
 		"atomic",
-		"memory",
+		"hes2jac",
+		"subgraph",
 		"boolsparsity",
 		"revsparsity",
-		"colpack",
+		"subsparsity",
+		"colpack"
 	};
 	size_t num_option = sizeof(option_list) / sizeof( option_list[0] );
 	// ----------------------------------------------------------------
@@ -370,9 +381,17 @@ namespace {
 	void not_available_message(const char* test_name)
 	{	cout << AD_PACKAGE << ": " << test_name;
 		cout << " is not availabe with " << endl;
+		int max_len = 0;
+		for(size_t i = 0; i < num_option; i++)
+		{	int len = int( std::strlen( option_list[i] ) );
+			max_len = std::max( max_len, len);
+		}
 		for(size_t i = 0; i < num_option; i++)
 		{	std::string option = option_list[i];
-			cout << option << " = " << global_option[option] << endl;
+			if( global_option[option] )
+				cout << std::setw(max_len + 1) << option << " = true\n";
+			else
+				cout << std::setw(max_len + 1) << option << " = false\n";
 		}
 	}
 	// ------------------------------------------------------
@@ -500,30 +519,45 @@ int main(int argc, char *argv[])
 			if( strcmp(test_list[i].name, argv[1]) == 0 )
 				match = test_list[i].index;
 		error = match == test_error;
+		for(size_t i = 0; *(argv[2] + i) != '\0'; ++i)
+		{	error |= *(argv[2] + i) < '0';
+			error |= '9' < *(argv[2] + i);
+		}
 		iseed = std::atoi( argv[2] );
 		error |= iseed < 0;
 		for(size_t i = 0; i < num_option; i++)
 			global_option[ option_list[i] ] = false;
 		for(size_t i = 3; i < size_t(argc); i++)
-		{	error = true;
+		{	bool found = false;
 			for(size_t j = 0; j < num_option; j++)
 			{	if( strcmp(argv[i], option_list[j]) == 0 )
 				{	global_option[ option_list[j] ] = true;
-					error = false;
+					found = true;
 				}
 			}
+			error |= ! found;
 		}
 	}
 	if( error )
 	{	cout << "usage: ./speed_"
 		     << AD_PACKAGE << " test seed option_list" << endl;
-		cout << "test choices: " << endl;
+		cout << "test choices:";
 		for(size_t i = 0; i < n_test; i++)
-			cout << "\t" << test_list[i].name << endl;
-		cout << "seed: is a positive integer used as a random seed." << endl;
-		cout << "option: is zero, one or more of the following:" << endl;
+		{	if( i % 5 == 0 )
+				std::cout << "\n\t";
+			else
+				std::cout << ", ";
+			cout << test_list[i].name;
+		}
+		cout << "\n\nseed: is a positive integer used as a random seed.";
+		cout << "\n\noption_list: zero or more of the following:";
 		for(size_t i = 0; i < num_option; i++)
-			cout << " " << option_list[i];
+		{	if( i % 5 == 0 )
+				std::cout << "\n\t";
+			else
+				std::cout << ", ";
+			cout << option_list[i];
+		}
 		cout << endl << endl;
 		return 1;
 	}

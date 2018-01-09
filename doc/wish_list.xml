@@ -6,7 +6,7 @@
 <title>The CppAD Wish List</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="The CppAD Wish List"/>
-<meta name="keywords" id="keywords" content=" the cppad wish list optimization taping special operators checkpoint retape testing sparsity patterns check_finite compilation speed base requirements adolc forward mode recomputation iterator interface operation sequence software guidelines tracing atan2 benderquad "/>
+<meta name="keywords" id="keywords" content=" the cppad wish list multi-threading atomic subgraph new api sparsity element-wise operations check_finite test_boolofvoid eigen example optimization taping special operators memory checkpoint retape testing compilation speed base requirements adolc forward mode recomputation iterator interface operation sequence software guidelines tracing atan2 benderquad "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -62,6 +62,7 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -78,14 +79,23 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
+<option>Multi-Threading</option>
+<option>Atomic</option>
+<option>---..Subgraph</option>
+<option>---..New API</option>
+<option>---..Sparsity</option>
+<option>---..Element-wise Operations</option>
+<option>check_finite</option>
+<option>test_boolofvoid</option>
+<option>Eigen</option>
+<option>Example</option>
 <option>Optimization</option>
 <option>---..Taping</option>
 <option>---..Special Operators</option>
+<option>---..Memory</option>
 <option>checkpoint</option>
 <option>---..Retape</option>
 <option>---..Testing</option>
-<option>Sparsity Patterns</option>
-<option>check_finite</option>
 <option>Compilation Speed</option>
 <option>Base Requirements</option>
 <option>Adolc</option>
@@ -103,6 +113,142 @@ A:active { color : purple }
 
 
 <center><b><big><big>The CppAD Wish List</big></big></b></center>
+<br/>
+<b><big><a name="Multi-Threading" id="Multi-Threading">Multi-Threading</a></big></b>
+<br/>
+The TMB packages has a special version of the
+<a href="checkpoint.xml" target="_top"><span style='white-space: nowrap'>checkpoint</span></a>
+ class
+that enables one checkpoint function to be my multiple OpenMp threads.
+Perhaps it would be useful to extend the CppAD multi-threading environment
+to allow for this.
+In addition, perhaps a multi-threading version of an ADFun object would
+be useful.
+
+
+<br/>
+<br/>
+<b><big><a name="Atomic" id="Atomic">Atomic</a></big></b>
+
+
+<br/>
+<br/>
+<b><a name="Atomic.Subgraph" id="Atomic.Subgraph">Subgraph</a></b>
+<br/>
+The <a href="subgraph_sparsity.xml" target="_top"><span style='white-space: nowrap'>subgraph_sparsity</span></a>
+ calculation treats
+each atomic function call as if
+all of its outputs depend on all of its inputs;
+see <a href="subgraph_sparsity.xml#Atomic Function" target="_top"><span style='white-space: nowrap'>atomic&#xA0;function</span></a>
+.
+These sparsity patterns could be made more efficient
+(could have fewer possibly non-zeros entries)
+by using the sparsity patterns for the atomic functions.
+
+<br/>
+<br/>
+<b><a name="Atomic.New API" id="Atomic.New API">New API</a></b>
+<br/>
+A new API for atomic functions could be created that uses
+<a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ for sparsity patterns and an interface like
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.jac_sparsity(</span></font><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>select_range</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>pattern_out</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>afun</span></font></i><font color="blue"><span style='white-space: nowrap'>.hes_sparsity(</span></font><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>select_range</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>pattern_out</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+see <a href="subgraph_sparsity.xml" target="_top"><span style='white-space: nowrap'>subgraph_sparsity</span></a>
+.
+This would be simpler for the user.
+
+<br/>
+<br/>
+<b><a name="Atomic.Sparsity" id="Atomic.Sparsity">Sparsity</a></b>
+<br/>
+Add an <a href="atomic_option.xml" target="_top"><span style='white-space: nowrap'>atomic_option</span></a>
+ that checks if the sparsity patterns calculated
+by user atomic functions have
+elements for arguments that are know to be parameters and
+could be more efficient.
+For example, the user's version of <code><font color="blue">for_sparse_jac</font></code> could check
+<a href="atomic_for_sparse_jac.xml#Implementation.x" target="_top"><span style='white-space: nowrap'>x</span></a>
+ to see for which components
+are variables;
+i.e., <a href="nan.xml#isnan" target="_top"><span style='white-space: nowrap'>isnan(x[j])</span></a>
+ is true for a particular call.
+Note that
+<a href="atomic_for_sparse_hes.xml#Implementation.vx" target="_top"><span style='white-space: nowrap'>vx</span></a>
+ should be removed,
+because the method above can be used to determine this information.
+
+<br/>
+<br/>
+<b><a name="Atomic.Element-wise Operations" id="Atomic.Element-wise Operations">Element-wise Operations</a></b>
+<br/>
+Add user atomic functions for element-wise addition, subtraction,
+multiplication, and division.
+Where the operands are <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
+
+with elements of type 
+<code><font color="blue"><span style='white-space: nowrap'>AD&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;</span></font></code>
+.
+
+
+
+<br/>
+<br/>
+<b><big><a name="check_finite" id="check_finite">check_finite</a></big></b>
+
+<ol type="1"><li>
+Sometimes one only gets infinite value during zero order forward
+and nan when computing corresponding derivatives.
+Change <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>check_for_nan</span></a>
+ to <code><font color="blue">check_finite</font></code>
+(not infinite or nan) so that error detection happens during zero
+order forward instead of later.
+</li><li>
+
+In addition, the current <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>check_for_nan</span></a>
+ writes the corresponding
+zero order values to a temporary file.
+It would be nice if the <code><font color="blue">check_finite</font></code> routine made writing
+the zero order values optional.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="test_boolofvoid" id="test_boolofvoid">test_boolofvoid</a></big></b>
+<br/>
+For general purpose use, the <a href="test_boolofvoid.xml" target="_top"><span style='white-space: nowrap'>test_boolofvoid</span></a>
+ should be usable
+without including a memory check at the end.
+
+<br/>
+<br/>
+<b><big><a name="Eigen" id="Eigen">Eigen</a></big></b>
+<br/>
+Use a wrapper class for
+<a href="testvector.xml#Eigen Vectors" target="_top"><span style='white-space: nowrap'>eigen&#xA0;vectors</span></a>
+ so that the
+<code><font color="blue">size</font></code> member function returns a
+<code><font color="blue">size_t</font></code> instead of an <code><font color="blue">int</font></code>.
+This would allow <a href="testvector.xml" target="_top"><span style='white-space: nowrap'>TESTVECTOR</span></a>
+ to be a true template class; i.e.,
+to use the syntax
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;TESTVECTOR&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Scalar</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+Split the <a href="listallexamples.xml" target="_top"><span style='white-space: nowrap'>example&#xA0;list</span></a>
+
+into separate groups by the corresponding example subdirectory.
+
+
+<br/>
 <br/>
 <b><big><a name="Optimization" id="Optimization">Optimization</a></big></b>
 
@@ -126,6 +272,15 @@ Add special operators that can be implemented more efficiently, e.g.,
 and have the optimizer recognize when they should be used.
 (They could also be in the user API, but it would not be expected
 that the user would use them.)
+
+<br/>
+<br/>
+<b><a name="Optimization.Memory" id="Optimization.Memory">Memory</a></b>
+<br/>
+The <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
+ command seems to use a lot of memory when the
+tape is large. We should create a test case that demonstrates this and then
+work on reducing the amount of memory needed by this operation.
 
 
 <br/>
@@ -159,61 +314,6 @@ There should be some examples and tests for both speed and memory use
 that demonstrate that checkpointing is useful.
 
 
-
-<br/>
-<br/>
-<b><big><a name="Sparsity Patterns" id="Sparsity Patterns">Sparsity Patterns</a></big></b>
-<br/>
-It may be that each set has a large overhead in a large and very sparse
-<a href="glossary.xml#Sparsity Pattern.Vector of Sets" target="_top"><span style='white-space: nowrap'>vector&#xA0;of&#xA0;sets</span></a>
-
-representation of a sparsity pattern.
-The user API for this representation uses
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;&#xA0;std::set&lt;size_t&gt;&#xA0;&gt;<br/>
-</span></font></code>
-Perhaps CppAD's API should have a sparse matrix class with the following fields
-
-<code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;size_t&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>row</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;size_t&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>val</span></font></i><font color="blue"><span style='white-space: nowrap'>;<br/>
-</span></font></code>
-where the vectors are arbitrary <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
-.
-If the 
-<code><i><font color="black"><span style='white-space: nowrap'>val</span></font></i></code>
- vector has size zero,
-this would just be a sparsity pattern
-(and 
-<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
- and 
-<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
- vectors would have the same size).
-Otherwise, it would be a sparse matrix with elements of type 
-<code><i><font color="black"><span style='white-space: nowrap'>Type</span></font></i></code>
-
-and 
-<code><i><font color="black"><span style='white-space: nowrap'>val</span></font></i></code>
- would have the
-same size as 
-<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
- and 
-<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
-.
-
-
-<br/>
-<br/>
-<b><big><a name="check_finite" id="check_finite">check_finite</a></big></b>
-<br/>
-Sometimes one only gets infinite value during zero order forward
-and nan when computing corresponding derivatives.
-Change <a href="check_for_nan.xml" target="_top"><span style='white-space: nowrap'>check_for_nan</span></a>
- to <code><font color="blue">check_finite</font></code>
-(not infinite or nan) so that error detection happens during zero
-order forward instead of later.
 
 <br/>
 <br/>
@@ -270,7 +370,6 @@ It would not be necessary to reallocate memory for a result that is
 repeatedly calculated
 (because an iterator for the result container would be passed in).
 </li></ol>
-
 
 
 <br/>
@@ -356,7 +455,7 @@ See the <a href="benderquad.xml#Problem" target="_top"><span style='white-space:
 current <code><font color="blue">BenderQuad</font></code> specifications.
 
 
-<hr/>Input File: omh/wish_list.omh
+<hr/>Input File: omh/appendix/wish_list.omh
 
 </body>
 </html>

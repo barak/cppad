@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="funcheck.xml" target="_top">Prev</a>
-</td><td><a href="optimize.xml" target="_top">Next</a>
+</td><td><a href="check_for_nan.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -62,15 +62,15 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down2(this)'>
 <option>ADFun-&gt;</option>
-<option>Independent</option>
-<option>FunConstruct</option>
-<option>Dependent</option>
-<option>abort_recording</option>
-<option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
 <option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
 <option>check_for_nan</option>
 </select>
 </td>
@@ -119,6 +119,7 @@ A:active { color : purple }
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>ADFun<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>Independent<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// use the ADFun default constructor</span></span>
      <span style="color: #008080">ADFun&lt;double&gt;</span> f<span style="color: #990000">;</span>
@@ -153,8 +154,8 @@ A:active { color : purple }
      <span style="color: #008080">size_t</span> j<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
           x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>X<span style="color: #990000">[</span>j<span style="color: #990000">]);</span>
-     <span style="color: #009900">double</span> r <span style="color: #990000">=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
-     <span style="color: #009900">double</span> a <span style="color: #990000">=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> r <span style="color: #990000">=</span> eps99<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> a <span style="color: #990000">=</span> eps99<span style="color: #990000">;</span>
      ok      <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">FunCheck</span></span><span style="color: #990000">(</span>f<span style="color: #990000">,</span> g<span style="color: #990000">,</span> x<span style="color: #990000">,</span> a<span style="color: #990000">,</span> r<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// function values should not agree when the independent variable</span></span>
@@ -198,7 +199,7 @@ A:active { color : purple }
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-<hr/>Input File: example/fun_check.cpp
+<hr/>Input File: example/general/fun_check.cpp
 
 </body>
 </html>

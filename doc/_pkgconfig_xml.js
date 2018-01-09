@@ -27,8 +27,7 @@ var list_down1 = [
 'download.xml',
 'cmake.xml',
 'cmake_check.xml',
-'pkgconfig.xml',
-'auto_tools.xml'
+'pkgconfig.xml'
 ];
 var list_current0 = [
 'pkgconfig.xml#Purpose',

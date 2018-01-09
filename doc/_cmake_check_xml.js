@@ -27,14 +27,14 @@ var list_down1 = [
 'download.xml',
 'cmake.xml',
 'cmake_check.xml',
-'pkgconfig.xml',
-'auto_tools.xml'
+'pkgconfig.xml'
 ];
 var list_current0 = [
 'cmake_check.xml#Purpose',
 'cmake_check.xml#Check All',
 'cmake_check.xml#Check All.Windows',
-'cmake_check.xml#Subsets'
+'cmake_check.xml#Subsets of make check',
+'cmake_check.xml#First Level'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

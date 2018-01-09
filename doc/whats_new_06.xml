@@ -63,6 +63,7 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_17</option>
 <option>whats_new_16</option>
 <option>whats_new_15</option>
 <option>whats_new_14</option>
@@ -272,7 +274,7 @@ Move <a href="get_started.cpp.xml" target="_top"><span style='white-space: nowra
 <code><font color="blue">--with-Introduction</font></code>
 unix configure option
 to build both the <a href="get_started.cpp.xml" target="_top"><span style='white-space: nowrap'>get_started.cpp</span></a>
- and <a href="exp_apx_main.cpp.xml" target="_top"><span style='white-space: nowrap'>exp_apx_main.cpp</span></a>
+ and <a href="exp_apx.cpp.xml" target="_top"><span style='white-space: nowrap'>exp_apx.cpp</span></a>
 
 example programs.
 (The <code><font color="blue">--with-GetStarted</font></code> configure command line option has been removed.)
@@ -427,7 +429,7 @@ to simplify and better organize the speed tests been completed:
 	</td><td align='left'  valign='top'>
  Fadbad drivers for the template functions </td></tr><tr><td align='left'  valign='top'>
 
-<a href="auto_tools.xml#Profiling CppAD" target="_top"><span style='white-space: nowrap'>speed/profile</span></a>
+<a href="autotools.xml#Profiling CppAD" target="_top"><span style='white-space: nowrap'>speed/profile</span></a>
 
 	</td><td align='left'  valign='top'>
  profiling version of CppAD drivers
@@ -541,7 +543,7 @@ This has been fixed.
 <b><big><a name="12-05" id="12-05">12-05</a></big></b>
 <br/>
 Add the unix installation
-<a href="auto_tools.xml#--with-Documentation" target="_top"><span style='white-space: nowrap'>--with-Documentation</span></a>
+<a href="autotools.xml#--with-Documentation" target="_top"><span style='white-space: nowrap'>--with-Documentation</span></a>
  option
 and remove the
 
@@ -674,7 +676,7 @@ its dependence on the rest of CppAD was removed
 <b><big><a name="11-12" id="11-12">11-12</a></big></b>
 <br/>
 The
-<a href="example.cpp.xml" target="_top"><span style='white-space: nowrap'>example.cpp</span></a>
+<a href="general.cpp.xml" target="_top"><span style='white-space: nowrap'>general.cpp</span></a>
  and
 <code><font color="blue">test_more/test_more.cpp</font></code>
 programs were
@@ -1215,7 +1217,7 @@ it so that it is visible at the too level of the documentation.
 The programs in <a href="introduction.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
  have been converted to automated
 test that return true or false with the driver program
-<a href="exp_apx_main.cpp.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
+<a href="exp_apx.cpp.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
 .
 
 <br/>
@@ -1450,8 +1452,8 @@ and moved to a separate section.
 <br/>
 </span></code>Group the documentation for the <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
  member functions that
-<a href="funeval.xml" target="_top"><span style='white-space: nowrap'>evaluate&#xA0;functions&#xA0;and&#xA0;derivative&#xA0;values</span></a>
-.
+evaluate functions and derivative values.
+This organization has since been changed.
 <code><span style='white-space: nowrap'><br/>
 <br/>
 </span></code>Remove the old <code><font color="blue">Fun.cpp</font></code> example and extend
@@ -1596,7 +1598,7 @@ documentation and examples for
 ,
 <a href="ad_binary.xml" target="_top"><span style='white-space: nowrap'>ad_binary</span></a>
 ,
-<a href="compute_assign.xml" target="_top"><span style='white-space: nowrap'>compute_assign</span></a>
+<a href="compound_assign.xml" target="_top"><span style='white-space: nowrap'>compound_assign</span></a>
 , and
 <a href="unary_standard_math.xml" target="_top"><span style='white-space: nowrap'>unary_standard_math</span></a>
 
@@ -1831,9 +1833,9 @@ The <a href="compare.xml" target="_top"><span style='white-space: nowrap'>Compar
 <br/>
 The documentation and examples have been improved for the following sections:
 <a href="ad_binary.xml" target="_top"><span style='white-space: nowrap'>division</span></a>
-, <a href="compute_assign.xml" target="_top"><span style='white-space: nowrap'>-=</span></a>
-, <a href="compute_assign.xml" target="_top"><span style='white-space: nowrap'>*=</span></a>
-, and <a href="compute_assign.xml" target="_top"><span style='white-space: nowrap'>/=</span></a>
+, <a href="compound_assign.xml" target="_top"><span style='white-space: nowrap'>-=</span></a>
+, <a href="compound_assign.xml" target="_top"><span style='white-space: nowrap'>*=</span></a>
+, and <a href="compound_assign.xml" target="_top"><span style='white-space: nowrap'>/=</span></a>
 .
 
 <br/>
@@ -1865,7 +1867,7 @@ and the problem has been fixed.
 <br/>
 <b><big><a name="02-15" id="02-15">02-15</a></big></b>
 <br/>
-The <a href="compute_assign.xml" target="_top"><span style='white-space: nowrap'>+=</span></a>
+The <a href="compound_assign.xml" target="_top"><span style='white-space: nowrap'>+=</span></a>
  documentation and example have been improved.
 
 <br/>
@@ -1880,7 +1882,7 @@ The <a href="ad_binary.xml" target="_top"><span style='white-space: nowrap'>addi
 <br/>
 <b><big><a name="02-13" id="02-13">02-13</a></big></b>
 <br/>
-Combine the old binary operator and computed assignment documentation
+Combine the old binary operator and compound assignment documentation
 into <a href="arithmetic.xml" target="_top"><span style='white-space: nowrap'>Arithmetic</span></a>
  documentation.
 <code><span style='white-space: nowrap'><br/>
@@ -1997,7 +1999,7 @@ file <code><font color="blue">cppad/local/CppADError.h</font></code>).
 <b><big><a name="01-02" id="01-02">01-02</a></big></b>
 <br/>
 Add the sed script <code><font color="blue">Speed/gprof.sed</font></code> to aid in the display of the
-<a href="auto_tools.xml#Profiling CppAD" target="_top"><span style='white-space: nowrap'>profiling</span></a>
+<a href="autotools.xml#Profiling CppAD" target="_top"><span style='white-space: nowrap'>profiling</span></a>
  output.
 <code><span style='white-space: nowrap'><br/>
 <br/>
@@ -2020,7 +2022,7 @@ Make the following source code files easier to understand:
 
 
 
-<hr/>Input File: omh/whats_new/whats_new_06.omh
+<hr/>Input File: omh/appendix/whats_new/whats_new_06.omh
 
 </body>
 </html>

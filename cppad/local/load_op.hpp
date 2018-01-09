@@ -1,9 +1,8 @@
-// $Id: load_op.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_LOCAL_LOAD_OP_HPP
 # define CPPAD_LOCAL_LOAD_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -143,7 +142,7 @@ In this case, the error above should be detected during tape recording.
 */
 template <class Base>
 inline void forward_load_op_0(
-	local::player<Base>*  play        ,
+	const local::player<Base>* play,
 	size_t         i_z         ,
 	const addr_t*  arg         ,
 	const Base*    parameter   ,
@@ -242,11 +241,11 @@ inline void sparse_load_op(
 /*!
 Zero order forward mode implementation of op = LdpOp.
 
-\copydetails forward_load_op_0
+\copydetails CppAD::local::forward_load_op_0
 */
 template <class Base>
 inline void forward_load_p_op_0(
-	local::player<Base>*  play        ,
+	const local::player<Base>* play,
 	size_t         i_z         ,
 	const addr_t*  arg         ,
 	const Base*    parameter   ,
@@ -259,6 +258,7 @@ inline void forward_load_p_op_0(
 	CPPAD_ASSERT_UNKNOWN( NumRes(LdpOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( 0 < arg[0] );
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[2]) < play->num_load_op_rec() );
+	CPPAD_ASSERT_UNKNOWN( std::numeric_limits<addr_t>::max() >= i_z );
 
 	// Because the index is a parameter, this indexing error should have been
 	// caught and reported to the user when the tape is recording.
@@ -270,7 +270,7 @@ inline void forward_load_p_op_0(
 	Base* z       = taylor + i_z * cap_order;
 	if( isvar_by_ind[ arg[0] + i_vec ]  )
 	{	CPPAD_ASSERT_UNKNOWN( i_v_x < i_z );
-		var_by_load_op[ arg[2] ] = i_v_x;
+		var_by_load_op[ arg[2] ] = addr_t( i_v_x );
 		Base* v_x = taylor + i_v_x * cap_order;
 		z[0]      = v_x[0];
 	}
@@ -285,11 +285,11 @@ inline void forward_load_p_op_0(
 /*!
 Zero order forward mode implementation of op = LdvOp.
 
-\copydetails forward_load_op_0
+\copydetails CppAD::local::forward_load_op_0
 */
 template <class Base>
 inline void forward_load_v_op_0(
-	local::player<Base>*  play        ,
+	const local::player<Base>* play,
 	size_t         i_z         ,
 	const addr_t*  arg         ,
 	const Base*    parameter   ,
@@ -302,6 +302,7 @@ inline void forward_load_v_op_0(
 	CPPAD_ASSERT_UNKNOWN( NumRes(LdvOp) == 1 );
 	CPPAD_ASSERT_UNKNOWN( 0 < arg[0] );
 	CPPAD_ASSERT_UNKNOWN( size_t(arg[2]) < play->num_load_op_rec() );
+	CPPAD_ASSERT_UNKNOWN( std::numeric_limits<addr_t>::max() >= i_z );
 
 	size_t i_vec = Integer( taylor[ arg[1] * cap_order + 0 ] );
 	CPPAD_ASSERT_KNOWN(
@@ -314,7 +315,7 @@ inline void forward_load_v_op_0(
 	Base* z       = taylor + i_z * cap_order;
 	if( isvar_by_ind[ arg[0] + i_vec ]  )
 	{	CPPAD_ASSERT_UNKNOWN( i_v_x < i_z );
-		var_by_load_op[ arg[2] ] = i_v_x;
+		var_by_load_op[ arg[2] ] = addr_t( i_v_x );
 		Base* v_x = taylor + i_v_x * cap_order;
 		z[0]      = v_x[0];
 	}
@@ -411,7 +412,7 @@ is set to the k-order Taylor coefficient for z in the ell-th direction.
 */
 template <class Base>
 inline void forward_load_op(
-	const local::player<Base>*  play                 ,
+	const local::player<Base>* play,
 	OpCode               op                   ,
 	size_t               p                    ,
 	size_t               q                    ,
@@ -448,7 +449,7 @@ inline void forward_load_op(
 	{	for(size_t ell = 0; ell < r; ell++)
 		{	for(size_t k = p; k <= q; k++)
 			{	size_t m = (k-1) * r + 1 + ell;
-				z[m]     = Base(0);
+				z[m]     = Base(0.0);
 			}
 		}
 	}
@@ -577,7 +578,7 @@ Forward mode sparsity operations for LdpOp and LdvOp
 \param dependency
 is this a dependency (or sparsity) calculation.
 
-\copydetails sparse_load_op
+\copydetails CppAD::local::sparse_load_op
 */
 template <class Vector_set>
 inline void forward_sparse_load_op(
@@ -611,7 +612,7 @@ Reverse mode Jacobian sparsity operations for LdpOp and LdvOp
 \param dependency
 is this a dependency (or sparsity) calculation.
 
-\copydetails sparse_load_op
+\copydetails CppAD::local::sparse_load_op
 */
 template <class Vector_set>
 inline void reverse_sparse_jacobian_load_op(
@@ -642,7 +643,7 @@ inline void reverse_sparse_jacobian_load_op(
 /*!
 Reverse mode Hessian sparsity operations for LdpOp and LdvOp
 
-\copydetails sparse_load_op
+\copydetails CppAD::local::sparse_load_op
 
 \param var_jacobian
 \a var_jacobian[i_z]

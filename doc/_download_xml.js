@@ -27,26 +27,24 @@ var list_down1 = [
 'download.xml',
 'cmake.xml',
 'cmake_check.xml',
-'pkgconfig.xml',
-'auto_tools.xml'
+'pkgconfig.xml'
 ];
 var list_current0 = [
 'download.xml#Purpose',
 'download.xml#Distribution Directory',
+'download.xml#Version',
+'download.xml#Release',
+'download.xml#License',
 'download.xml#Compressed Archives',
-'download.xml#Current Version',
-'download.xml#Current Version.Compressed Archives',
-'download.xml#Current Version.Subversion',
-'download.xml#Current Version.Git',
-'download.xml#Release Versions',
-'download.xml#Release Versions.Coin',
-'download.xml#Release Versions.github',
+'download.xml#Compressed Archives.Coin',
+'download.xml#Compressed Archives.Github',
+'download.xml#Source Code Control',
+'download.xml#Source Code Control.Git',
+'download.xml#Source Code Control.Subversion',
 'download.xml#Monthly Versions',
-'download.xml#Daily Versions',
 'download.xml#Windows File Extraction and Testing',
 'download.xml#Install Instructions',
-'download.xml#No Documentation',
-'download.xml#No Documentation.Building Documentation'
+'download.xml#Building Documentation'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

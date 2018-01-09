@@ -1,9 +1,8 @@
-// $Id: near_equal.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_UTILITY_NEAR_EQUAL_HPP
 # define CPPAD_UTILITY_NEAR_EQUAL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -114,7 +113,7 @@ the $code CppAD$$ routines.
 
 $head Example$$
 $children%
-	example/near_equal.cpp
+	example/utility/near_equal.cpp
 %$$
 The file $cref near_equal.cpp$$ contains an example
 and test of $code NearEqual$$.

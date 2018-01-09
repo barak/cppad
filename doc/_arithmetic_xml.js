@@ -46,7 +46,7 @@ var list_down0 = [
 'unaryplus.xml',
 'unaryminus.xml',
 'ad_binary.xml',
-'compute_assign.xml'
+'compound_assign.xml'
 ];
 var list_current0 = [
 'arithmetic.xml#Contents'

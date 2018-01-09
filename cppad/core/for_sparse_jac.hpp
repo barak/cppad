@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_FOR_SPARSE_JAC_HPP
 # define CPPAD_CORE_FOR_SPARSE_JAC_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -88,12 +87,13 @@ After $code ForSparseJac$$, if $icode k$$ is a $code size_t$$ object,
 $codei%
 	%k% = %f%.size_forward_set()
 %$$
-sets $icode s$$ to the total number of elements in all the sets corresponding
-to the sparsity pattern stored in the function object $icode f$$.
+sets $icode k$$ to the amount of memory (in unsigned character units)
+used to store the
+$cref/vector of sets/glossary/Sparsity Pattern/Vector of Sets/$$
+sparsity patterns.
 If the sparsity patterns for this operation use elements of type $code bool$$,
 the return value for $code size_forward_set$$ will be zero.
-Otherwise, its return value will be non-zero
-(unless the entire sparsity pattern is false).
+Otherwise, its return value will be non-zero.
 This sparsity pattern is stored for use by $cref RevSparseHes$$ and
 when it is not longer needed, it can be deleted
 (and the corresponding memory freed) using
@@ -204,7 +204,7 @@ sparsity pattern for the Jacobian $latex S(x) = F^{(1)} ( x )$$.
 
 $head Example$$
 $children%
-	example/for_sparse_jac.cpp
+	example/sparse/for_sparse_jac.cpp
 %$$
 The file
 $cref for_sparse_jac.cpp$$
@@ -271,9 +271,6 @@ void ADFun<Base>::ForSparseJacCase(
 	// dimension size of result vector
 	s.resize( m * q );
 
-	// temporary indices
-	size_t i, j;
-	//
 	CPPAD_ASSERT_KNOWN(
 		q > 0,
 		"ForSparseJac: q is not greater than zero"
@@ -288,48 +285,52 @@ void ADFun<Base>::ForSparseJacCase(
 	for_jac_sparse_pack_.resize(num_var_tape_, q);
 
 	// set values corresponding to independent variables
-	for(i = 0; i < n; i++)
+	for(size_t i = 0; i < n; i++)
 	{	CPPAD_ASSERT_UNKNOWN( ind_taddr_[i] < num_var_tape_ );
 		// ind_taddr_[i] is operator taddr for i-th independent variable
 		CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[i] ) == local::InvOp );
 
 		// set bits that are true
 		if( transpose )
-		{	for(j = 0; j < q; j++) if( r[ j * n + i ] )
-				for_jac_sparse_pack_.add_element( ind_taddr_[i], j);
+		{	for(size_t j = 0; j < q; j++) if( r[ j * n + i ] )
+				for_jac_sparse_pack_.post_element( ind_taddr_[i], j);
 		}
 		else
-		{	for(j = 0; j < q; j++) if( r[ i * q + j ] )
-				for_jac_sparse_pack_.add_element( ind_taddr_[i], j);
+		{	for(size_t j = 0; j < q; j++) if( r[ i * q + j ] )
+				for_jac_sparse_pack_.post_element( ind_taddr_[i], j);
 		}
 	}
+	// process posts
+	for(size_t j = 0; j < n; j++)
+		for_jac_sparse_pack_.process_post( ind_taddr_[j] );
 
 	// evaluate the sparsity patterns
-	local::ForJacSweep(
+	local::for_jac_sweep(
+		&play_,
 		dependency,
 		n,
 		num_var_tape_,
-		&play_,
 		for_jac_sparse_pack_
 	);
 
 	// return values corresponding to dependent variables
 	CPPAD_ASSERT_UNKNOWN( size_t(s.size()) == m * q );
-	for(i = 0; i < m; i++)
+	for(size_t i = 0; i < m; i++)
 	{	CPPAD_ASSERT_UNKNOWN( dep_taddr_[i] < num_var_tape_ );
 
 		// extract the result from for_jac_sparse_pack_
 		if( transpose )
-		{	for(j = 0; j < q; j++)
+		{	for(size_t j = 0; j < q; j++)
 				s[ j * m + i ] = false;
 		}
 		else
-		{	for(j = 0; j < q; j++)
+		{	for(size_t j = 0; j < q; j++)
 				s[ i * q + j ] = false;
 		}
 		CPPAD_ASSERT_UNKNOWN( for_jac_sparse_pack_.end() == q );
-		local::sparse_pack::const_iterator itr(for_jac_sparse_pack_, dep_taddr_[i] );
-		j = *itr;
+		local::sparse_pack::const_iterator
+			itr(for_jac_sparse_pack_, dep_taddr_[i] );
+		size_t j = *itr;
 		while( j < q )
 		{	if( transpose )
 				s[j * m + i] = true;
@@ -387,10 +388,9 @@ void ADFun<Base>::ForSparseJacCase(
 		s.resize(q);
 	else	s.resize( m );
 
-	// temporary indices
-	size_t i, j;
+	// temporary iterator
 	std::set<size_t>::const_iterator itr_1;
-	//
+
 	CPPAD_ASSERT_KNOWN(
 		q > 0,
 		"ForSparseJac: q is not greater than zero"
@@ -409,11 +409,11 @@ void ADFun<Base>::ForSparseJacCase(
 
 	// set values corresponding to independent variables
 	if( transpose )
-	{	for(i = 0; i < q; i++)
+	{	for(size_t i = 0; i < q; i++)
 		{	// add the elements that are present
 			itr_1 = r[i].begin();
 			while( itr_1 != r[i].end() )
-			{	j = *itr_1++;
+			{	size_t j = *itr_1++;
 				CPPAD_ASSERT_KNOWN(
 				j < n,
 				"ForSparseJac: transpose is true and element of the set\n"
@@ -421,13 +421,15 @@ void ADFun<Base>::ForSparseJacCase(
 				);
 				CPPAD_ASSERT_UNKNOWN( ind_taddr_[j] < num_var_tape_ );
 				// operator for j-th independent variable
-				CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[j] ) == local::InvOp );
-				for_jac_sparse_set_.add_element( ind_taddr_[j], i);
+				CPPAD_ASSERT_UNKNOWN(
+					play_.GetOp( ind_taddr_[j] ) == local::InvOp
+				);
+				for_jac_sparse_set_.post_element( ind_taddr_[j], i);
 			}
 		}
 	}
 	else
-	{	for(i = 0; i < n; i++)
+	{	for(size_t i = 0; i < n; i++)
 		{	CPPAD_ASSERT_UNKNOWN( ind_taddr_[i] < num_var_tape_ );
 			// ind_taddr_[i] is operator taddr for i-th independent variable
 			CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[i] ) == local::InvOp );
@@ -435,36 +437,41 @@ void ADFun<Base>::ForSparseJacCase(
 			// add the elements that are present
 			itr_1 = r[i].begin();
 			while( itr_1 != r[i].end() )
-			{	j = *itr_1++;
+			{	size_t j = *itr_1++;
 				CPPAD_ASSERT_KNOWN(
 					j < q,
 					"ForSparseJac: an element of the set r[i] "
 					"has value greater than or equal q."
 				);
-				for_jac_sparse_set_.add_element( ind_taddr_[i], j);
+				for_jac_sparse_set_.post_element( ind_taddr_[i], j);
 			}
 		}
 	}
+	// process posts
+	for(size_t j = 0; j < n; j++)
+		for_jac_sparse_set_.process_post( ind_taddr_[j] );
+
 	// evaluate the sparsity patterns
-	local::ForJacSweep(
+	local::for_jac_sweep(
+		&play_,
 		dependency,
 		n,
 		num_var_tape_,
-		&play_,
 		for_jac_sparse_set_
 	);
 
 	// return values corresponding to dependent variables
 	CPPAD_ASSERT_UNKNOWN( size_t(s.size()) == m || transpose );
 	CPPAD_ASSERT_UNKNOWN( size_t(s.size()) == q || ! transpose );
-	for(i = 0; i < m; i++)
+	for(size_t i = 0; i < m; i++)
 	{	CPPAD_ASSERT_UNKNOWN( dep_taddr_[i] < num_var_tape_ );
 
 		// extract results from for_jac_sparse_set_
 		// and add corresponding elements to sets in s
 		CPPAD_ASSERT_UNKNOWN( for_jac_sparse_set_.end() == q );
-		local::sparse_list::const_iterator itr_2(for_jac_sparse_set_, dep_taddr_[i] );
-		j = *itr_2;
+		local::sparse_list::const_iterator
+			itr_2(for_jac_sparse_set_, dep_taddr_[i] );
+		size_t j = *itr_2;
 		while( j < q )
 		{	if( transpose )
 				s[j].insert(i);
@@ -674,7 +681,7 @@ void ADFun<Base>::ForSparseJacCheckpoint(
 		{	local::sparse_list::const_iterator itr(r, i);
 			size_t j = *itr;
 			while( j < n )
-			{	for_jac_sparse_set_.add_element( ind_taddr_[j], i );
+			{	for_jac_sparse_set_.post_element( ind_taddr_[j], i );
 				j = *(++itr);
 			}
 		}
@@ -684,18 +691,21 @@ void ADFun<Base>::ForSparseJacCheckpoint(
 		{	local::sparse_list::const_iterator itr(r, j);
 			size_t i = *itr;
 			while( i < q )
-			{	for_jac_sparse_set_.add_element( ind_taddr_[j], i );
+			{	for_jac_sparse_set_.post_element( ind_taddr_[j], i );
 				i = *(++itr);
 			}
 		}
 	}
+	// process posts
+	for(size_t j = 0; j < n; j++)
+		for_jac_sparse_set_.process_post( ind_taddr_[j] );
 
 	// evaluate the sparsity pattern for all variables
-	local::ForJacSweep(
+	local::for_jac_sweep(
+		&play_,
 		dependency,
 		n,
 		num_var_tape_,
-		&play_,
 		for_jac_sparse_set_
 	);
 
@@ -711,16 +721,20 @@ void ADFun<Base>::ForSparseJacCheckpoint(
 
 		// extract the result from for_jac_sparse_set_
 		CPPAD_ASSERT_UNKNOWN( for_jac_sparse_set_.end() == q );
-		local::sparse_list::const_iterator itr(for_jac_sparse_set_, dep_taddr_[i] );
+		local::sparse_list::const_iterator
+			itr(for_jac_sparse_set_, dep_taddr_[i] );
 		size_t j = *itr;
 		while( j < q )
 		{	if( transpose )
-				s.add_element(j, i);
+				s.post_element(j, i);
 			else
-				s.add_element(i, j);
+				s.post_element(i, j);
 			j  = *(++itr);
 		}
 	}
+	// process posts
+	for(size_t i = 0; i < s.n_set(); ++i)
+		s.process_post(i);
 
 }
 

@@ -13,10 +13,12 @@ var list_up0 = [
 'mul_level.cpp.xml'
 ];
 var list_down3 = [
+'get_started.cpp.xml',
 'general.xml',
 'exampleutility.xml',
 'listallexamples.xml',
-'testvector.xml'
+'testvector.xml',
+'wno_conversion.xml'
 ];
 var list_down2 = [
 'ad_fun.cpp.xml',

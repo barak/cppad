@@ -1,8 +1,7 @@
-// $Id$
 # ifndef CPPAD_CORE_BASE_COMPLEX_HPP
 # define CPPAD_CORE_BASE_COMPLEX_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -57,7 +56,7 @@ $$
 
 $section Enable use of AD<Base> where Base is std::complex<double>$$
 
-$children%example/complex_poly.cpp
+$children%example/general/complex_poly.cpp
 %$$
 $head Example$$
 The file $cref complex_poly.cpp$$ contains an example use of
@@ -236,6 +235,7 @@ inline std::complex<double> Fun(const std::complex<double>& x)     \
 }
 namespace CppAD {
 	CPPAD_USER_MACRO(abs)
+	CPPAD_USER_MACRO(fabs)
 	CPPAD_USER_MACRO(acos)
 	CPPAD_USER_MACRO(asin)
 	CPPAD_USER_MACRO(atan)

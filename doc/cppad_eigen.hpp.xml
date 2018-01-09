@@ -62,10 +62,12 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down2(this)'>
 <option>Example-&gt;</option>
+<option>get_started.cpp</option>
 <option>General</option>
 <option>ExampleUtility</option>
 <option>ListAllExamples</option>
 <option>testvector</option>
+<option>wno_conversion</option>
 </select>
 </td>
 <td>
@@ -122,11 +124,12 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-Enables the use of the
-<a href="http://eigen.tuxfamily.org" target="_top"><span style='white-space: nowrap'>eigen</span></a>
+Enables the use of the <a href="eigen_prefix.xml" target="_top"><span style='white-space: nowrap'>eigen</span></a>
 
 linear algebra package with the type 
 <code><i><font color="black"><span style='white-space: nowrap'>AD&lt;</span></font></i><font color="blue"><span style='white-space: nowrap'>Base</span></font><i><font color="black"><span style='white-space: nowrap'>&gt;</span></font></i></code>
+; see
+<a href="https://eigen.tuxfamily.org/dox/TopicCustomizing_CustomScalar.html" target="_top"><span style='white-space: nowrap'>custom&#xA0;scalar&#xA0;types</span></a>
 .
 
 <br/>
@@ -137,7 +140,7 @@ The files <a href="eigen_array.cpp.xml" target="_top"><span style='white-space: 
  and <a href="eigen_det.cpp.xml" target="_top"><span style='white-space: nowrap'>eigen_det.cpp</span></a>
 
 contain an example and test of this include file.
-It returns true if it succeeds and false otherwise.
+They return true if they succeed and false otherwise.
 
 <br/>
 <br/>
@@ -145,13 +148,12 @@ It returns true if it succeeds and false otherwise.
 <br/>
 The file <code><font color="blue">cppad_eigen.hpp</font></code> includes both
 <code><font color="blue">&lt;cppad/cppad.hpp&gt;</font></code> and <code><font color="blue">&lt;Eigen/Core&gt;</font></code>.
-In addition,
 The file <a href="eigen_plugin.hpp.xml" target="_top"><span style='white-space: nowrap'>eigen_plugin.hpp</span></a>
-
-is used to define <code><font color="blue">value_type</font></code>
-in the Eigen matrix class definition so its vectors are
+ defines <code><font color="blue">value_type</font></code>
+in the Eigen matrix class so its vectors are
 <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
-.
+
+(not necessary for eigen-3.3.3 and later).
 <pre style='display:inline'><tt>
 <span style="font-weight: bold"><span style="color: #000080"># define</span></span> EIGEN_MATRIXBASE_PLUGIN <span style="color: #990000">&lt;</span>cppad<span style="color: #990000">/</span>example<span style="color: #990000">/</span>eigen_plugin<span style="color: #990000">.</span>hpp<span style="color: #990000">&gt;</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;Eigen/Core&gt;</span>
@@ -170,6 +172,8 @@ with
           <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   Real<span style="color: #990000">;</span>
           <span style="font-style: italic"><span style="color: #9A1900">// type for AD&lt;Base&gt; operations that result in non-integer values</span></span>
           <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   NonInteger<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//  type to use for numeric literals such as "2" or "0.5".</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   Literal<span style="color: #990000">;</span>
           <span style="font-style: italic"><span style="color: #9A1900">// type for nested value inside an AD&lt;Base&gt; expression tree</span></span>
           <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   Nested<span style="color: #990000">;</span>
 
@@ -208,6 +212,9 @@ with
           <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">highest</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
           <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">();</span> <span style="color: #FF0000">}</span>
 
+          <span style="font-style: italic"><span style="color: #9A1900">// number of decimal digits that can be represented without change.</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">digits10</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;</span> <span style="color: #990000">&gt;::</span>digits10<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
      <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 <br/>
@@ -230,27 +237,7 @@ with
           <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="color: #008080">AD&lt;Base&gt;</span> <span style="font-weight: bold"><span style="color: #000000">abs2</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;&amp;</span> x<span style="color: #990000">)</span>
           <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> x <span style="color: #990000">*</span> x<span style="color: #990000">;</span> <span style="color: #FF0000">}</span>
 <span style="color: #FF0000">}</span>
-
-<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> Eigen <span style="color: #FF0000">{</span>
-     <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> internal <span style="color: #FF0000">{</span>
-
-          <span style="font-weight: bold"><span style="color: #0000FF">template</span></span><span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span>
-          <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #008080">significant_decimals_default_impl</span><span style="color: #990000">&lt;</span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">&lt;</span>Base<span style="color: #990000">&gt;,</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">&gt;</span>
-          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span> Scalar<span style="color: #990000">;</span>
-
-               <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">typename</span></span> <span style="color: #008080">NumTraits</span><span style="color: #990000">&lt;</span>Scalar<span style="color: #990000">&gt;::</span><span style="color: #008080">Real</span> RealScalar<span style="color: #990000">;</span>
-               <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">run</span></span><span style="color: #990000">()</span>
-               <span style="color: #FF0000">{</span>     <span style="color: #008080">Scalar</span> neg_log_eps <span style="color: #990000">=</span> <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span>
-                         NumTraits<span style="color: #990000">&lt;</span>RealScalar<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">()</span>
-                    <span style="color: #990000">);</span>
-                    <span style="color: #009900">int</span> ceil_neg_log_eps <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span> neg_log_eps <span style="color: #990000">);</span>
-                    <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">Scalar</span></span><span style="color: #990000">(</span>ceil_neg_log_eps<span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> neg_log_eps <span style="color: #990000">)</span>
-                         ceil_neg_log_eps<span style="color: #990000">++;</span>
-                    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ceil_neg_log_eps<span style="color: #990000">;</span>
-               <span style="color: #FF0000">}</span>
-          <span style="color: #FF0000">}</span><span style="color: #990000">;</span>
-     <span style="color: #FF0000">}</span>
-<span style="color: #FF0000">}</span></tt></pre>
+</tt></pre>
 
 <hr/>Input File: cppad/example/cppad_eigen.hpp
 

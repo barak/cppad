@@ -24,14 +24,17 @@ var list_down2 = [
 'appendix.xml'
 ];
 var list_down1 = [
+'get_started.cpp.xml',
 'general.xml',
 'exampleutility.xml',
 'listallexamples.xml',
-'testvector.xml'
+'testvector.xml',
+'wno_conversion.xml'
 ];
 var list_current0 = [
 'testvector.xml#Syntax',
-'testvector.xml#Introduction',
+'testvector.xml#Purpose',
+'testvector.xml#Choice',
 'testvector.xml#CppAD::vector',
 'testvector.xml#std::vector',
 'testvector.xml#boost::numeric::ublas::vector',

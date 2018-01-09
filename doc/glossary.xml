@@ -6,7 +6,7 @@
 <title>Glossary</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Glossary"/>
-<meta name="keywords" id="keywords" content=" efficient ad function base type above elementary vector operation atomic sequence dependent independent parameter sparsity pattern boolean sets tape active inactive variable variables taylor coefficient "/>
+<meta name="keywords" id="keywords" content=" efficient ad function base type above elementary vector operation atomic sequence dependent independent parameter row-major representation sparsity pattern row column index vectors boolean sets tape active inactive variable variables taylor coefficient "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -62,6 +62,7 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -90,8 +91,10 @@ A:active { color : purple }
 <option>---..Dependent</option>
 <option>---..Independent</option>
 <option>Parameter</option>
+<option>Row-major Representation</option>
 <option>Sparsity Pattern</option>
-<option>---..Vector of Boolean</option>
+<option>---..Row and Column Index Vectors</option>
+<option>---..Boolean Vector</option>
 <option>---..Vector of Sets</option>
 <option>Tape</option>
 <option>---..Active</option>
@@ -436,38 +439,76 @@ and <a href="parvar.xml" target="_top"><span style='white-space: nowrap'>Variabl
 
 <br/>
 <br/>
+<b><big><a name="Row-major Representation" id="Row-major Representation">Row-major Representation</a></big></b>
+<br/>
+A <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
+ 
+<code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i></code>
+ is a row-major representation of a matrix
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>M</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mrow><mi mathvariant='italic'>m</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>n</mi>
+</mrow>
+</msup>
+</mrow></math>
+
+ if 
+<code><i><font color="black"><span style='white-space: nowrap'>v</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
+ and
+for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>m</mi>
+<mn>-1</mn>
+</mrow></math>
+
+, 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>n</mi>
+<mn>-1</mn>
+</mrow></math>
+
+
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msub><mi mathvariant='italic'>M</mi>
+<mrow><mi mathvariant='italic'>i</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>j</mi>
+</mrow>
+</msub>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>v</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">]</mo>
+</mrow></math>
+
+<br/>
 <b><big><a name="Sparsity Pattern" id="Sparsity Pattern">Sparsity Pattern</a></big></b>
 <br/>
-CppAD describes a sparse matrix as a vector of sets with each
-vector component corresponding to a row
-and the elements of the set corresponding to the possibly non-zero columns.
-A vector of <code><font color="blue">bool</font></code>
-can represent a vector of sets using one bit per element.
-(Some vectors of <code><font color="blue">bool</font></code> use one byte per element but
-<a href="cppad_vector.xml#vectorBool" target="_top"><span style='white-space: nowrap'>vectorBool</span></a>
- is an example class that
-uses one bit per element.)
-The problem is that this representation uses one bit for both the elements
-that are there and the ones that are not.
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>A vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code> does not
-represent the elements that are not present,
-but it uses about three <code><font color="blue">size_t</font></code> values
-for each element that is present.
-For example, if <code><font color="blue">size_t</font></code> uses 32 bits,
-a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code> uses
-about 100 bits for each element that is present in the
-vector of sets.
-Thus, a vector of <code><font color="blue">std::set&lt;size_t&gt;</font></code> should be more efficient for
-very sparse matrix representations.
-
-<br/>
-<br/>
-<b><a name="Sparsity Pattern.Vector of Boolean" id="Sparsity Pattern.Vector of Boolean">Vector of Boolean</a></b>
-<br/>
-Given a matrix
-
+Suppose that 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
 <mo stretchy="false">&#x02208;</mo>
@@ -479,238 +520,194 @@ Given a matrix
 </msup>
 </mrow></math>
 
-,
-a vector of <code><font color="blue">bool</font></code> 
+ is a sparse matrix.
+CppAD has several ways to specify the elements of 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>A</mi>
 </mrow></math>
 
- of length 
+
+that are possible non-zero.
+
+<br/>
+<br/>
+<b><a name="Sparsity Pattern.Row and Column Index Vectors" id="Sparsity Pattern.Row and Column Index Vectors">Row and Column Index Vectors</a></b>
+<br/>
+A pair of non-negative integer vectors 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>r</mi>
+</mrow></math>
+
+, 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>c</mi>
+</mrow></math>
+
+
+are a sparsity pattern for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+</mrow></math>
+
+
+if for every non-zero element 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>A</mi>
+<mrow><mi mathvariant='italic'>i</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>j</mi>
+</mrow>
+</msub>
+</mrow></math>
+
+,
+there is a 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+</mrow></math>
+
+ such that 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>r</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+</mrow></math>
+
+ and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>c</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+</mrow></math>
+
+.
+Furthermore, for every 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+<mo stretchy="false">!</mo>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>k</mi>
+</mrow></math>
+
+,
+either 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>r</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">!</mo>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>r</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+</mrow></math>
+
+ or 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>c</mi>
+<mo stretchy="false">&#x02113;</mo>
+</msub>
+<mo stretchy="false">!</mo>
+<mo stretchy="false">=</mo>
+<msub><mi mathvariant='italic'>c</mi>
+<mi mathvariant='italic'>k</mi>
+</msub>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><a name="Sparsity Pattern.Boolean Vector" id="Sparsity Pattern.Boolean Vector">Boolean Vector</a></b>
+<br/>
+A boolean vector 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>b</mi>
+</mrow></math>
+
+, of length 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>m</mi>
-<mo stretchy="false">&#x000D7;</mo>
 <mi mathvariant='italic'>n</mi>
 </mrow></math>
 
-
+,
 is a sparsity pattern for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
 </mrow></math>
 
- if
-for 
+
+if for every non-zero element 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>m</mi>
-<mn>-1</mn>
-</mrow></math>
-
- and 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mi mathvariant='italic'>n</mi>
-<mn>-1</mn>
-</mrow></math>
-
-,
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <msub><mi mathvariant='italic'>A</mi>
 <mrow><mi mathvariant='italic'>i</mi>
 <mo stretchy="false">,</mo>
 <mi mathvariant='italic'>j</mi>
 </mrow>
 </msub>
-<mo stretchy="false">&#x02260;</mo>
-<mn>0</mn>
-<mspace width='.3em'/>
-<mo stretchy="false">&#x021D2;</mo>
-<mspace width='.3em'/>
-<msub><mi mathvariant='italic'>B</mi>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msub><mi mathvariant='italic'>b</mi>
 <mrow><mi mathvariant='italic'>i</mi>
-<mo stretchy="false">*</mo>
 <mi mathvariant='italic'>n</mi>
 <mo stretchy="false">+</mo>
 <mi mathvariant='italic'>j</mi>
 </mrow>
 </msub>
-<mo stretchy="false">=</mo>
-<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>true</mi>
-</mstyle></mrow>
 </mrow></math>
 
-Given two sparsity patterns 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>B</mi>
-</mrow></math>
-
- and 
-<code><i><font color="black"><span style='white-space: nowrap'>C</span></font></i></code>
-
-for a matrix 
-<code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
-, we say that 
-<code><i><font color="black"><span style='white-space: nowrap'>B</span></font></i></code>
- is more efficient than
-
-<code><i><font color="black"><span style='white-space: nowrap'>C</span></font></i></code>
- if 
-<code><i><font color="black"><span style='white-space: nowrap'>B</span></font></i></code>
- has fewer true elements than 
-<code><i><font color="black"><span style='white-space: nowrap'>C</span></font></i></code>
-.
-For example, if 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>A</mi>
-</mrow></math>
-
- is the identity matrix,
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
-<msub><mi mathvariant='italic'>B</mi>
-<mrow><mi mathvariant='italic'>i</mi>
-<mo stretchy="false">*</mo>
-<mi mathvariant='italic'>n</mi>
-<mo stretchy="false">+</mo>
-<mi mathvariant='italic'>j</mi>
-</mrow>
-</msub>
-<mo stretchy="false">=</mo>
-<mo stretchy="false">(</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">=</mo>
-<mi mathvariant='italic'>j</mi>
-<mo stretchy="false">)</mo>
-</mrow></math>
-
-defines an efficient sparsity pattern for 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>A</mi>
-</mrow></math>
-
-.
+ is true.
 
 <br/>
 <br/>
 <b><a name="Sparsity Pattern.Vector of Sets" id="Sparsity Pattern.Vector of Sets">Vector of Sets</a></b>
 <br/>
-Given a matrix
-
+A vector of sets 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>A</mi>
-<mo stretchy="false">&#x02208;</mo>
-<msup><mi mathvariant='italic'>B</mi>
-<mrow><mi mathvariant='italic'>m</mi>
-<mo stretchy="false">&#x000D7;</mo>
-<mi mathvariant='italic'>n</mi>
-</mrow>
-</msup>
+<mi mathvariant='italic'>s</mi>
+</mrow></math>
+
+ of positive integers, of length 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>m</mi>
 </mrow></math>
 
 ,
-a vector of sets 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>S</mi>
-</mrow></math>
-
- of length 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>m</mi>
-</mrow></math>
-
- is a
-sparsity pattern for 
+is a sparsity pattern for 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>A</mi>
 </mrow></math>
 
- if
-for 
+
+if for every non-zero element 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">=</mo>
-<mn>0</mn>
-<mo stretchy="false">,</mo>
-<mo stretchy="false">&#x02026;</mo>
-<mo stretchy="false">,</mo>
-<mi mathvariant='italic'>m</mi>
-<mn>-1</mn>
-</mrow></math>
-
-
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
 <msub><mi mathvariant='italic'>A</mi>
 <mrow><mi mathvariant='italic'>i</mi>
 <mo stretchy="false">,</mo>
 <mi mathvariant='italic'>j</mi>
 </mrow>
 </msub>
-<mo stretchy="false">&#x02260;</mo>
-<mn>0</mn>
-<mspace width='.3em'/>
-<mo stretchy="false">&#x021D2;</mo>
-<mspace width='.3em'/>
+</mrow></math>
+
+, 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
 <mi mathvariant='italic'>j</mi>
 <mo stretchy="false">&#x02208;</mo>
-<msub><mi mathvariant='italic'>S</mi>
-<mi mathvariant='italic'>i</mi>
+<msub><mi mathvariant='italic'>s</mi>
+<mi mathvariant='italic'>k</mi>
 </msub>
 </mrow></math>
 
-Given two sparsity patterns 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>S</mi>
-</mrow></math>
-
- and 
-<code><i><font color="black"><span style='white-space: nowrap'>T</span></font></i></code>
-
-for a matrix 
-<code><i><font color="black"><span style='white-space: nowrap'>A</span></font></i></code>
-, we say that 
-<code><i><font color="black"><span style='white-space: nowrap'>S</span></font></i></code>
- is more efficient than
-
-<code><i><font color="black"><span style='white-space: nowrap'>T</span></font></i></code>
- if 
-<code><i><font color="black"><span style='white-space: nowrap'>S</span></font></i></code>
- has fewer elements than 
-<code><i><font color="black"><span style='white-space: nowrap'>T</span></font></i></code>
 .
-For example, if 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>A</mi>
-</mrow></math>
 
- is the identity matrix,
-
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
-<msub><mi mathvariant='italic'>S</mi>
-<mi mathvariant='italic'>i</mi>
-</msub>
-<mo stretchy="false">=</mo>
-<mo stretchy="false">{</mo>
-<mi mathvariant='italic'>i</mi>
-<mo stretchy="false">}</mo>
-</mrow></math>
-
-defines an efficient sparsity pattern for 
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
-<mi mathvariant='italic'>A</mi>
-</mrow></math>
-
-.
 
 <br/>
 <br/>
@@ -988,7 +985,7 @@ just refer to an
 or parameter.
 
 
-<hr/>Input File: omh/glossary.omh
+<hr/>Input File: omh/appendix/glossary.omh
 
 </body>
 </html>

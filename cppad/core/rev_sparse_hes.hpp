@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_REV_SPARSE_HES_HPP
 # define CPPAD_CORE_REV_SPARSE_HES_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -175,8 +174,8 @@ $latex F_k^{(2)} (x) \in \B{R}^{n \times n}$$.
 
 $head Example$$
 $children%
-	example/rev_sparse_hes.cpp
-	%example/sparsity_sub.cpp
+	example/sparse/rev_sparse_hes.cpp
+	%example/sparse/sparsity_sub.cpp
 %$$
 The file
 $cref rev_sparse_hes.cpp$$
@@ -263,8 +262,7 @@ void ADFun<Base>::RevSparseHesCase(
 
 	// Array that will hold reverse Jacobian dependency flag.
 	// Initialize as true for the dependent variables.
-	local::pod_vector<bool> RevJac;
-	RevJac.extend(num_var_tape_);
+	local::pod_vector<bool> RevJac(num_var_tape_);
 	for(i = 0; i < num_var_tape_; i++)
 		RevJac[i] = false;
 	for(i = 0; i < m; i++)
@@ -273,17 +271,17 @@ void ADFun<Base>::RevSparseHesCase(
 	}
 
 	// vector of sets that will hold reverse Hessain values
-	local::sparse_pack rev_hes_sparsity;
-	rev_hes_sparsity.resize(num_var_tape_, q);
+	local::sparse_pack rev_hes_pattern;
+	rev_hes_pattern.resize(num_var_tape_, q);
 
 	// compute the Hessian sparsity patterns
-	local::RevHesSweep(
+	local::rev_hes_sweep(
+		&play_,
 		n,
 		num_var_tape_,
-		&play_,
 		for_jac_sparse_pack_,
 		RevJac.data(),
-		rev_hes_sparsity
+		rev_hes_pattern
 	);
 
 	// return values corresponding to independent variables
@@ -304,9 +302,9 @@ void ADFun<Base>::RevSparseHesCase(
 		CPPAD_ASSERT_UNKNOWN( ind_taddr_[j] == j + 1 );
 		CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[j] ) == local::InvOp );
 
-		// extract the result from rev_hes_sparsity
-		CPPAD_ASSERT_UNKNOWN( rev_hes_sparsity.end() == q );
-		local::sparse_pack::const_iterator itr(rev_hes_sparsity, j + 1);
+		// extract the result from rev_hes_pattern
+		CPPAD_ASSERT_UNKNOWN( rev_hes_pattern.end() == q );
+		local::sparse_pack::const_iterator itr(rev_hes_pattern, j + 1);
 		i = *itr;
 		while( i < q )
 		{	if( transpose )
@@ -385,8 +383,7 @@ void ADFun<Base>::RevSparseHesCase(
 
 	// Array that will hold reverse Jacobian dependency flag.
 	// Initialize as true for the dependent variables.
-	local::pod_vector<bool> RevJac;
-	RevJac.extend(num_var_tape_);
+	local::pod_vector<bool> RevJac(num_var_tape_);
 	for(i = 0; i < num_var_tape_; i++)
 		RevJac[i] = false;
 	itr_1 = s[0].begin();
@@ -403,17 +400,17 @@ void ADFun<Base>::RevSparseHesCase(
 
 
 	// vector of sets that will hold reverse Hessain values
-	local::sparse_list rev_hes_sparsity;
-	rev_hes_sparsity.resize(num_var_tape_, q);
+	local::sparse_list rev_hes_pattern;
+	rev_hes_pattern.resize(num_var_tape_, q);
 
 	// compute the Hessian sparsity patterns
-	local::RevHesSweep(
+	local::rev_hes_sweep(
+		&play_,
 		n,
 		num_var_tape_,
-		&play_,
 		for_jac_sparse_set_,
 		RevJac.data(),
-		rev_hes_sparsity
+		rev_hes_pattern
 	);
 
 	// return values corresponding to independent variables
@@ -425,10 +422,10 @@ void ADFun<Base>::RevSparseHesCase(
 		CPPAD_ASSERT_UNKNOWN( ind_taddr_[j] == j + 1 );
 		CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[j] ) == local::InvOp );
 
-		// extract the result from rev_hes_sparsity
+		// extract the result from rev_hes_pattern
 		// and add corresponding elements to result sets in h
-		CPPAD_ASSERT_UNKNOWN( rev_hes_sparsity.end() == q );
-		local::sparse_list::const_iterator itr_2(rev_hes_sparsity, j+1);
+		CPPAD_ASSERT_UNKNOWN( rev_hes_pattern.end() == q );
+		local::sparse_list::const_iterator itr_2(rev_hes_pattern, j+1);
 		i = *itr_2;
 		while( i < q )
 		{	if( transpose )
@@ -556,7 +553,7 @@ void ADFun<Base>::RevSparseHesCheckpoint(
 	size_t                        q         ,
 	vector<bool>&                 s         ,
 	bool                          transpose ,
-	local::sparse_list&                  h         )
+	local::sparse_list&           h         )
 {	size_t n = Domain();
 	size_t m = Range();
 
@@ -568,8 +565,7 @@ void ADFun<Base>::RevSparseHesCheckpoint(
 
 	// Array that holds the reverse Jacobiain dependcy flags.
 	// Initialize as true for dependent variables, flase for others.
-	local::pod_vector<bool> RevJac;
-	RevJac.extend(num_var_tape_);
+	local::pod_vector<bool> RevJac(num_var_tape_);
 	for(size_t i = 0; i < num_var_tape_; i++)
 		RevJac[i] = false;
 	for(size_t i = 0; i < m; i++)
@@ -578,17 +574,17 @@ void ADFun<Base>::RevSparseHesCheckpoint(
 	}
 
 	// holds reverse Hessian sparsity pattern for all variables
-	local::sparse_list rev_hes_sparsity;
-	rev_hes_sparsity.resize(num_var_tape_, q);
+	local::sparse_list rev_hes_pattern;
+	rev_hes_pattern.resize(num_var_tape_, q);
 
 	// compute Hessian sparsity pattern for all variables
-	local::RevHesSweep(
+	local::rev_hes_sweep(
+		&play_,
 		n,
 		num_var_tape_,
-		&play_,
 		for_jac_sparse_set_,
 		RevJac.data(),
-		rev_hes_sparsity
+		rev_hes_pattern
 	);
 
 	// dimension the return value
@@ -605,17 +601,19 @@ void ADFun<Base>::RevSparseHesCheckpoint(
 		CPPAD_ASSERT_UNKNOWN( ind_taddr_[j] == j + 1 );
 		CPPAD_ASSERT_UNKNOWN( play_.GetOp( ind_taddr_[j] ) == local::InvOp );
 
-		// extract the result from rev_hes_sparsity
-		CPPAD_ASSERT_UNKNOWN( rev_hes_sparsity.end() == q );
-		local::sparse_list::const_iterator itr(rev_hes_sparsity, j + 1);
+		// extract the result from rev_hes_pattern
+		CPPAD_ASSERT_UNKNOWN( rev_hes_pattern.end() == q );
+		local::sparse_list::const_iterator itr(rev_hes_pattern, j + 1);
 		size_t i = *itr;
 		while( i < q )
 		{	if( transpose )
-				h.add_element(j,  i);
-			else	h.add_element(i, j);
+				h.post_element(j,  i);
+			else	h.post_element(i, j);
 			i = *(++itr);
 		}
 	}
+	for(size_t i = 0; i < h.n_set(); ++i)
+		h.process_post(i);
 }
 
 } // END_CPPAD_NAMESPACE

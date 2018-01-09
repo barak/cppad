@@ -6,7 +6,7 @@
 <title>Speed Test an Operator Overloading AD Package</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Speed Test an Operator Overloading AD Package"/>
-<meta name="keywords" id="keywords" content=" speed test operator overloading ad package purpose "/>
+<meta name="keywords" id="keywords" content=" speed test operator overloading ad package purpose debug_which "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="testvector.xml" target="_top">Prev</a>
+<td><a href="wno_conversion.xml" target="_top">Prev</a>
 </td><td><a href="speed_main.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -73,6 +73,7 @@ A:active { color : purple }
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Purpose</option>
+<option>debug_which</option>
 <option>Contents</option>
 </select>
 </td>
@@ -96,6 +97,22 @@ These tests can also be used to compare the AD packages
  and
 <a href="http://trilinos.sandia.gov/packages/sacado/" target="_top"><span style='white-space: nowrap'>Sacado</span></a>
 .
+
+<br/>
+<br/>
+<b><big><a name="debug_which" id="debug_which">debug_which</a></big></b>
+<br/>
+Usually, one wants to compile the speed tests in release mode.
+This can be done by setting
+<a href="cmake.xml#cppad_debug_which" target="_top"><span style='white-space: nowrap'>cppad_debug_which</span></a>
+ to <code><font color="blue">debug_none</font></code>
+in the cmake command.
+Correctness tests are included for all the speed tests,
+so it is possible you will want to compile these tests for debugging; i.e.,
+set 
+<code><i><font color="black"><span style='white-space: nowrap'>cppad_debug_which</span></font></i></code>
+ to <code><font color="blue">debug_all</font></code>.
+
 The sections below explain how you can run these tests on your computer.
 
 <br/>

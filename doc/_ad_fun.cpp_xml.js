@@ -25,10 +25,12 @@ var list_down3 = [
 'appendix.xml'
 ];
 var list_down2 = [
+'get_started.cpp.xml',
 'general.xml',
 'exampleutility.xml',
 'listallexamples.xml',
-'testvector.xml'
+'testvector.xml',
+'wno_conversion.xml'
 ];
 var list_down1 = [
 'ad_fun.cpp.xml',

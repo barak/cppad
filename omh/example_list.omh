@@ -1,6 +1,5 @@
-$Id: example_list.omh 3855 2016-12-19 00:30:54Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -28,21 +27,21 @@ example using the $cref/addition operator/ad_binary/$$.
 The examples list in this section are of a more general nature.
 
 $childtable%
-	example/ad_fun.cpp%
-	example/ad_in_c.cpp%
-	example/conj_grad.cpp%
+	example/general/ad_fun.cpp%
+	example/general/ad_in_c.cpp%
+	example/sparse/conj_grad.cpp%
 	cppad/example/cppad_eigen.hpp %
-	example/hes_minor_det.cpp%
-	example/hes_lu_det.cpp%
-	example/interface2c.cpp%
-	example/jac_minor_det.cpp%
-	example/jac_lu_det.cpp%
+	example/general/hes_minor_det.cpp%
+	example/general/hes_lu_det.cpp%
+	example/general/interface2c.cpp%
+	example/general/jac_minor_det.cpp%
+	example/general/jac_lu_det.cpp%
 	omh/mul_level.omh%
-	example/ode_stiff.cpp%
-	example/mul_level_ode.cpp%
-	example/mul_level_adolc_ode.cpp%
-	example/ode_taylor.cpp%
-	example/stack_machine.cpp
+	example/general/ode_stiff.cpp%
+	example/general/mul_level_ode.cpp%
+	example/general/mul_level_adolc_ode.cpp%
+	example/general/ode_taylor.cpp%
+	example/general/stack_machine.cpp
 %$$
 
 $end
@@ -56,9 +55,9 @@ $$
 $section Utility Routines used by CppAD Examples$$
 
 $childtable%
-	example/example.cpp%
+	example/general/general.cpp%
 	speed/example/example.cpp%
-	example/lu_vec_ad.cpp
+	example/general/lu_vec_ad.cpp
 %$$
 
 $end
@@ -68,18 +67,25 @@ $spell
 	CppAD
 $$
 
-$section List of All the CppAD Examples$$
+$section List All (Except Deprecated) CppAD Examples$$
 
 $comment
 	omit:   TestOne.cpp OneCase.cpp lu_vec_ad.cpp
 $$
 
+$comment BEGIN_SORT_THIS_LINE_PLUS_2$$
 $table
 $rref a11c_bthread.cpp$$
 $rref a11c_openmp.cpp$$
 $rref a11c_pthread.cpp$$
 $rref abort_recording.cpp$$
-$rref Abs.cpp$$
+$rref abs_eval.cpp$$
+$rref abs_eval.hpp$$
+$rref abs_get_started.cpp$$
+$rref abs_min_linear.cpp$$
+$rref abs_min_linear.hpp$$
+$rref abs_min_quad.cpp$$
+$rref abs_min_quad.hpp$$
 $rref acos.cpp$$
 $rref acosh.cpp$$
 $rref ad_assign.cpp$$
@@ -101,7 +107,6 @@ $rref atomic_eigen_mat_inv.cpp$$
 $rref atomic_eigen_mat_inv.hpp$$
 $rref atomic_eigen_mat_mul.cpp$$
 $rref atomic_eigen_mat_mul.hpp$$
-$rref checkpoint_extended_ode.cpp$$
 $rref atomic_for_sparse_hes.cpp$$
 $rref atomic_for_sparse_jac.cpp$$
 $rref atomic_forward.cpp$$
@@ -110,7 +115,6 @@ $rref atomic_mat_mul.cpp$$
 $rref atomic_mat_mul.hpp$$
 $rref atomic_mul_level.cpp$$
 $rref atomic_norm_sq.cpp$$
-$rref checkpoint_ode.cpp$$
 $rref atomic_reciprocal.cpp$$
 $rref atomic_reverse.cpp$$
 $rref atomic_rev_sparse_hes.cpp$$
@@ -124,15 +128,18 @@ $rref base_complex.hpp$$
 $rref base_require.cpp$$
 $rref bender_quad.cpp$$
 $rref bool_fun.cpp$$
-$rref bool_sparsity.cpp$$
 $rref capacity_order.cpp$$
 $rref change_param.cpp$$
 $rref check_for_nan.cpp$$
 $rref check_numeric_type.cpp$$
 $rref checkpoint.cpp$$
+$rref checkpoint_extended_ode.cpp$$
+$rref checkpoint_ode.cpp$$
 $rref check_simple_vector.cpp$$
 $rref colpack_hes.cpp$$
+$rref colpack_hessian.cpp$$
 $rref colpack_jac.cpp$$
+$rref colpack_jacobian.cpp$$
 $rref compare_change.cpp$$
 $rref compare.cpp$$
 $rref complex_poly.cpp$$
@@ -150,15 +157,16 @@ $rref div.cpp$$
 $rref div_eq.cpp$$
 $rref eigen_array.cpp$$
 $rref eigen_det.cpp$$
-$rref eigen_plugin.hpp$$
 $rref elapsed_seconds.cpp$$
 $rref equal_op_seq.cpp$$
 $rref erf.cpp$$
 $rref error_handler.cpp$$
-$rref example.cpp$$
 $rref exp.cpp$$
 $rref expm1.cpp$$
 $rref expm1.cpp$$
+$rref fabs.cpp$$
+$rref for_hes_sparsity.cpp$$
+$rref for_jac_sparsity.cpp$$
 $rref for_one.cpp$$
 $rref for_sparse_hes.cpp$$
 $rref for_sparse_jac.cpp$$
@@ -168,10 +176,9 @@ $rref forward_dir.cpp$$
 $rref forward_order.cpp$$
 $rref fun_assign.cpp$$
 $rref fun_check.cpp$$
+$rref general.cpp$$
 $rref get_started.cpp$$
 $rref harmonic.cpp$$
-$rref harmonic_time.cpp$$
-$rref harmonic_work.cpp$$
 $rref hes_lagrangian.cpp$$
 $rref hes_lu_det.cpp$$
 $rref hes_minor_det.cpp$$
@@ -192,21 +199,26 @@ $rref jacobian.cpp$$
 $rref log10.cpp$$
 $rref log1p.cpp$$
 $rref log.cpp$$
+$rref lp_box.cpp$$
+$rref lp_box.hpp$$
 $rref lu_factor.cpp$$
 $rref lu_invert.cpp$$
 $rref lu_ratio.cpp$$
 $rref lu_solve.cpp$$
 $rref lu_vec_ad_ok.cpp$$
 $rref mat_sum_sq.cpp$$
+$rref min_nso_linear.cpp$$
+$rref min_nso_linear.hpp$$
+$rref min_nso_quad.cpp$$
+$rref min_nso_quad.hpp$$
 $rref mul.cpp$$
 $rref mul_eq.cpp$$
 $rref mul_level_adolc.cpp$$
 $rref mul_level_adolc_ode.cpp$$
 $rref mul_level.cpp$$
 $rref mul_level_ode.cpp$$
+$rref multi_atomic.cpp$$
 $rref multi_newton.cpp$$
-$rref multi_newton_time.cpp$$
-$rref multi_newton_work.cpp$$
 $rref nan.cpp$$
 $rref near_equal.cpp$$
 $rref near_equal_ext.cpp$$
@@ -234,10 +246,17 @@ $rref pow.cpp$$
 $rref pow_int.cpp$$
 $rref print_for_cout.cpp$$
 $rref print_for_string.cpp$$
+$rref qp_box.cpp$$
+$rref qp_box.hpp$$
+$rref qp_interior.cpp$$
+$rref qp_interior.hpp$$
+$rref rc_sparsity.cpp$$
 $rref reverse_checkpoint.cpp$$
 $rref reverse_one.cpp$$
 $rref reverse_three.cpp$$
 $rref reverse_two.cpp$$
+$rref rev_hes_sparsity.cpp$$
+$rref rev_jac_sparsity.cpp$$
 $rref rev_one.cpp$$
 $rref rev_sparse_hes.cpp$$
 $rref rev_sparse_jac.cpp$$
@@ -253,12 +272,19 @@ $rref simple_ad_bthread.cpp$$
 $rref simple_ad_openmp.cpp$$
 $rref simple_ad_pthread.cpp$$
 $rref simple_vector.cpp$$
+$rref simplex_method.cpp$$
+$rref simplex_method.hpp$$
 $rref sin.cpp$$
 $rref sinh.cpp$$
+$rref sparse_hes.cpp$$
 $rref sparse_hes_fun.cpp$$
 $rref sparse_hessian.cpp$$
+$rref sparse_jac_for.cpp$$
 $rref sparse_jac_fun.cpp$$
 $rref sparse_jacobian.cpp$$
+$rref sparse_jac_rev.cpp$$
+$rref sparse_rc.cpp$$
+$rref sparse_rcv.cpp$$
 $rref sparse_sub_hes.cpp$$
 $rref sparsity_sub.cpp$$
 $rref speed_example.cpp$$
@@ -268,6 +294,10 @@ $rref sqrt.cpp$$
 $rref stack_machine.cpp$$
 $rref sub.cpp$$
 $rref sub_eq.cpp$$
+$rref subgraph_hes2jac.cpp$$
+$rref subgraph_jac_rev.cpp$$
+$rref subgraph_reverse.cpp$$
+$rref subgraph_sparsity.cpp$$
 $rref sub_sparse_hes.cpp$$
 $rref tan.cpp$$
 $rref tanh.cpp$$
@@ -288,6 +318,7 @@ $rref var2par.cpp$$
 $rref vec_ad.cpp$$
 $rref vector_bool.cpp$$
 $tend
+$comment END_SORT_THIS_LINE_MINUS_2$$
 
 $end
 

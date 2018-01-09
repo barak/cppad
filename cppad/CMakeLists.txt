@@ -1,6 +1,5 @@
-# $Id: CMakeLists.txt 3859 2017-01-01 10:59:24Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -9,9 +8,9 @@
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-# Build the cppad/configure.hpp file.
-# Inherit environment from ../CMakeLists.txt
+# Configure the CppAD include file directory
 # -----------------------------------------------------------------------------
+# check_match
 MACRO(check_match match_variable match_constant output_variable)
 	STRING(COMPARE EQUAL ${${match_variable}} ${match_constant} match_flag )
 	IF( match_flag )
@@ -22,46 +21,12 @@ MACRO(check_match match_variable match_constant output_variable)
 	print_variable(${output_variable})
 ENDMACRO(check_match)
 # -----------------------------------------------------------------------------
-# command line arguments
-#
-# cppad_testvector
-command_line_arg(cppad_testvector cppad STRING
-"Namespace of vector used for testing, one of: boost, cppad, eigen, std"
-)
-#
-# cppad_max_num_threads
-command_line_arg(cppad_max_num_threads 48 STRING
-	"maximum number of threads that CppAD can use use"
-)
-# cppad_sparse_list
-IF( cppad_sparse_list )
-	MESSAGE(FATAL_ERROR
-		"cppad_sparse_list = ${cppad_sparse_list}"
-		": this command line argument has been removed"
-	)
-ENDIF( cppad_sparse_list )
-#
-# cppad_tape_id_type
-command_line_arg(cppad_tape_id_type "unsigned int" STRING
-	"type used to identify different tapes, size must be <= sizeof(size_t)"
-)
-#
-# cppad_tape_addr_type
-command_line_arg(cppad_tape_addr_type "unsigned int" STRING
-"type used to identify variables on one tape, size must be <= sizeof(size_t)"
-)
-#
-# cppad_deprecated
-command_line_arg(cppad_deprecated NO BOOL
-	"implicit (instead of explicit) conversion from any type to AD<Base>"
-)
-# -----------------------------------------------------------------------------
-# cppad_deprecated
-IF( cppad_deprecated )
-	SET(cppad_deprecated 1)
-ELSE( cppad_deprecated )
-	SET(cppad_deprecated 0)
-ENDIF( cppad_deprecated )
+# cppad_compiler_is_gnucxx
+IF( CMAKE_COMPILER_IS_GNUCXX )
+	SET( cppad_compiler_is_gnucxx 1 )
+ELSE( CMAKE_COMPILER_IS_GNUCXX )
+	SET( cppad_compiler_is_gnucxx 0 )
+ENDIF( CMAKE_COMPILER_IS_GNUCXX )
 # -----------------------------------------------------------------------------
 # cppad_boostvector, cppad_cppadvector, cppad_eigenvector, cppad_stdvector
 #
@@ -97,7 +62,6 @@ IF( cppad_eigenvector )
 		)
 	ENDIF( NOT eigen_prefix )
 ENDIF( cppad_eigenvector )
-
 # =============================================================================
 # Begin C++11 features
 #
@@ -144,23 +108,20 @@ IF( NOT cppad_has_nullptr )
 	SET(cppad_cplusplus_201100_ok 0)
 ENDIF( NOT cppad_has_nullptr )
 # -----------------------------------------------------------------------------
-# cppad_has_cstdint_8_to_64
+# cppad_has_long_long
 #
 SET(source "
-# include <cstdint>
-template <class T> inline bool is_pod(void)               { return false; }
-template <>        inline bool is_pod<uint8_t>(void)      { return true;  }
-template <>        inline bool is_pod<uint16_t>(void)     { return true;  }
-template <>        inline bool is_pod<uint32_t>(void)     { return true;  }
-template <>        inline bool is_pod<uint64_t>(void)     { return true;  }
+template <class T> inline bool is_pod(void)  { return false; }
+template <>  inline bool is_pod<signed long long>(void) { return true;  }
+template <>  inline bool is_pod<unsigned long long>(void) { return true;  }
 int main(void)
 {	return 0; }
 "
 )
-check_source_runs("${source}" cppad_has_cstdint_8_to_64)
-IF( NOT cppad_has_cstdint_8_to_64 )
+check_source_runs("${source}" cppad_has_long_long)
+IF( NOT cppad_has_long_long )
 	SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_cstdint_8_to_64 )
+ENDIF( NOT cppad_has_long_long )
 # -----------------------------------------------------------------------------
 # cppad_compiler_has_erf
 # cppad_compiler_has_asinh
@@ -224,19 +185,6 @@ int main(void)
 }"
 )
 check_source_runs("${source}" cppad_has_gettimeofday)
-# -----------------------------------------------------------------------------
-# cppad_size_t_not_unsigned_int
-#
-SET(source "
-# include <cstring>
-template <class T> inline bool is_pod(void)               { return false; }
-template <>        inline bool is_pod<unsigned int>(void) { return true;  }
-template <>        inline bool is_pod<size_t>(void)       { return true;  }
-int main(void)
-{	return 0; }
-"
-)
-check_source_runs("${source}" cppad_size_t_not_unsigned_int)
 # -----------------------------------------------------------------------------
 # cppad_tape_addr_type, cppad_tape_id_type
 #
@@ -316,9 +264,11 @@ int main(void)
 " )
 check_source_runs("${source}" cppad_has_tmpnam_s )
 # -----------------------------------------------------------------------------
-# Copy a file to another location and modify its contents.
-# configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])
+# configure.hpp
 CONFIGURE_FILE(
 	${CMAKE_CURRENT_SOURCE_DIR}/configure.hpp.in
 	${CMAKE_CURRENT_SOURCE_DIR}/configure.hpp
 )
+# -----------------------------------------------------------------------------
+# configure files in local subdirectory
+ADD_SUBDIRECTORY(local)

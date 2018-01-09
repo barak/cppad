@@ -8,9 +8,10 @@ var list_across0 = [
 var list_up0 = [
 'cppad.xml',
 'adfun.xml',
+'record_adfun.xml',
 'seq_property.xml'
 ];
-var list_down2 = [
+var list_down3 = [
 'install.xml',
 'introduction.xml',
 'ad.xml',
@@ -23,17 +24,24 @@ var list_down2 = [
 'speed.xml',
 'appendix.xml'
 ];
+var list_down2 = [
+'record_adfun.xml',
+'drivers.xml',
+'forward.xml',
+'reverse.xml',
+'sparsity_pattern.xml',
+'sparse_derivative.xml',
+'optimize.xml',
+'abs_normal.xml',
+'funcheck.xml',
+'check_for_nan.xml'
+];
 var list_down1 = [
 'independent.xml',
 'funconstruct.xml',
 'dependent.xml',
 'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
-'drivers.xml',
-'funcheck.xml',
-'optimize.xml',
-'check_for_nan.xml'
+'seq_property.xml'
 ];
 var list_down0 = [
 'seq_property.cpp.xml'
@@ -66,6 +74,12 @@ function choose_up0(item)
 	item.selectedIndex = 0;
 	if(index > 0)
 		document.location = list_up0[index-1];
+}
+function choose_down3(item)
+{	var index          = item.selectedIndex;
+	item.selectedIndex = 0;
+	if(index > 0)
+		document.location = list_down3[index-1];
 }
 function choose_down2(item)
 {	var index          = item.selectedIndex;

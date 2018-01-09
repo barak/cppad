@@ -1,0 +1,455 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Reverse Mode Using Subgraphs</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Reverse Mode Using Subgraphs"/>
+<meta name="keywords" id="keywords" content=" reverse mode using subgraphs syntax purpose notation basevector boolvector sizevector select_domain q ell col dw example "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_subgraph_reverse_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="reverse_checkpoint.cpp.xml" target="_top">Prev</a>
+</td><td><a href="subgraph_reverse.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>Reverse</option>
+<option>subgraph_reverse</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>utility</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Reverse-&gt;</option>
+<option>reverse_one</option>
+<option>reverse_two</option>
+<option>reverse_any</option>
+<option>subgraph_reverse</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>subgraph_reverse-&gt;</option>
+<option>subgraph_reverse.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>Notation</option>
+<option>BaseVector</option>
+<option>BoolVector</option>
+<option>SizeVector</option>
+<option>select_domain</option>
+<option>q</option>
+<option>ell</option>
+<option>col</option>
+<option>dw</option>
+<option>Example</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Reverse Mode Using Subgraphs</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.subgraph_reverse(</span></font><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.subgraph_reverse(</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dw</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+We use 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>F</mi>
+<mo stretchy="false">:</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>n</mi>
+</msup>
+<mo stretchy="false">&#x02192;</mo>
+<msup><mi mathvariant='italic'>B</mi>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+ to denote the
+<a href="glossary.xml#AD Function" target="_top"><span style='white-space: nowrap'>AD&#xA0;function</span></a>
+ corresponding to 
+<code><i><font color="black"><span style='white-space: nowrap'>f</span></font></i></code>
+.
+Reverse mode computes the derivative of the <a href="forward.xml" target="_top"><span style='white-space: nowrap'>Forward</span></a>
+ mode
+<a href="glossary.xml#Taylor Coefficient" target="_top"><span style='white-space: nowrap'>Taylor&#xA0;coefficients</span></a>
+
+with respect to the domain variable 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+.
+
+<br/>
+<br/>
+<b><big><a name="Notation" id="Notation">Notation</a></big></b>
+<br/>
+We use the reverse mode
+<a href="reverse_any.xml#Notation" target="_top"><span style='white-space: nowrap'>notation</span></a>
+ with the following change:
+the vector
+<a href="reverse_any.xml#Notation.w^(k)" target="_top"><span style='white-space: nowrap'>w^(k)</span></a>
+ is defined
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<msubsup><mi mathvariant='italic'>w</mi>
+<mi mathvariant='italic'>i</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">=</mo>
+<mrow><mo stretchy="true">{</mo><mrow><mtable rowalign="center" ><mtr><mtd columnalign="left" >
+<mn>1</mn>
+</mtd><mtd columnalign="left" >
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>if</mi>
+</mstyle></mrow>
+<mspace width='.3em'/>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">=</mo>
+<mi mathvariant='italic'>q</mi>
+<mn>-1</mn>
+<mspace width='.3em'/>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>and</mi>
+</mstyle></mrow>
+<mspace width='.3em'/>
+<mi mathvariant='italic'>i</mi>
+<mo stretchy="false">=</mo>
+<mo stretchy="false">&#x02113;</mo>
+</mtd></mtr><mtr><mtd columnalign="left" >
+<mn>0</mn>
+</mtd><mtd columnalign="left" >
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>otherwise</mi>
+</mstyle></mrow>
+</mtd></mtr></mtable>
+</mrow><mo stretchy="true"> </mo></mrow>
+</mrow></math>
+
+<br/>
+<b><big><a name="BaseVector" id="BaseVector">BaseVector</a></big></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>BaseVector</span></font></i></code>
+ must be a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
+ class with
+<a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
+
+
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+.
+The routine <a href="checksimplevector.xml" target="_top"><span style='white-space: nowrap'>CheckSimpleVector</span></a>
+ will generate an error message
+if this is not the case.
+
+<br/>
+<br/>
+<b><big><a name="BoolVector" id="BoolVector">BoolVector</a></big></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>BoolVector</span></font></i></code>
+ is a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
+ class with
+<a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
+
+<code><font color="blue">bool</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="SizeVector" id="SizeVector">SizeVector</a></big></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>SizeVector</span></font></i></code>
+ is a <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>SimpleVector</span></a>
+ class with
+<a href="simplevector.xml#Elements of Specified Type" target="_top"><span style='white-space: nowrap'>elements&#xA0;of&#xA0;type</span></a>
+
+<code><font color="blue">size_t</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="select_domain" id="select_domain">select_domain</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;const&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>BoolVector</span></font></i><font color="blue"><span style='white-space: nowrap'>&amp;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It has size 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+ and specifies which independent variables
+to include in the calculation.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
+ is false,
+it is assumed that 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<msubsup><mi mathvariant='italic'>u</mi>
+<mi mathvariant='italic'>j</mi>
+<mrow><mo stretchy="false">(</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">)</mo>
+</mrow>
+</msubsup>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+</mrow></math>
+
+ for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">&gt;</mo>
+<mn>0</mn>
+</mrow></math>
+
+; i.e.,
+the <code><i>j</i></code>-th component of the Taylor coefficient for 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+,
+with order greater that zero, are zero; see
+<a href="reverse_any.xml#Notation.u^(k)" target="_top"><span style='white-space: nowrap'>u^(k)</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="q" id="q">q</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and specifies the number of Taylor coefficient orders to be differentiated.
+
+<br/>
+<br/>
+<b><big><a name="ell" id="ell">ell</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>ell</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+and specifies the dependent variable index that we are computing
+the derivatives for; i.e. 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mo stretchy="false">&#x02113;</mo>
+</mrow></math>
+
+.
+This index can only be used once per, and after, a call that selects
+the independent variables using 
+<code><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="col" id="col">col</a></big></b>
+<br/>
+This argument 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>SizeVector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+The input size and value of its elements do not matter.
+The 
+<code><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>.resize</span></font></code>
+ member function is used to change its size
+to the number the number of possible non-zero derivative components.
+For each 
+<code><i><font color="black"><span style='white-space: nowrap'>c</span></font></i></code>
+,
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>select_domain</span></font></i><font color="blue"><span style='white-space: nowrap'>[&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>]&#xA0;]&#xA0;==&#xA0;true<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>+1]&#xA0;&gt;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>]<br/>
+</span></font></code>
+and the derivative with respect to the <code><i>j</i></code>-th independent
+variable is possibly non-zero where
+
+<code><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="dw" id="dw">dw</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>dw</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>dw</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+Its input size and value does not matter.
+Upon return,
+it is a vector with size 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>q</mi>
+</mrow></math>
+
+.
+For 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>c</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+</mrow></math>
+
+,
+and 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">=</mo>
+<mn>0</mn>
+<mo stretchy="false">,</mo>
+<mo stretchy="false">&#x02026;</mo>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>q</mi>
+<mn>-1</mn>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mi mathvariant='italic'>dw</mi>
+<mo stretchy="false">[</mo>
+<mi mathvariant='italic'>j</mi>
+<mo stretchy="false">*</mo>
+<mi mathvariant='italic'>q</mi>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>k</mi>
+<mo stretchy="false">]</mo>
+<mo stretchy="false">=</mo>
+<msup><mi mathvariant='italic'>W</mi>
+<mrow><mo stretchy="false">(</mo>
+<mn>1</mn>
+<mo stretchy="false">)</mo>
+</mrow>
+</msup>
+<mo stretchy="false">(</mo>
+<mi mathvariant='italic'>x</mi>
+<msub><mo stretchy="false">)</mo>
+<mrow><mi mathvariant='italic'>j</mi>
+<mo stretchy="false">,</mo>
+<mi mathvariant='italic'>k</mi>
+</mrow>
+</msub>
+</mrow></math>
+
+is the derivative of the specified Taylor coefficients w.r.t the <code><i>j</i></code>-th
+independent variable where 
+<code><i><font color="black"><span style='white-space: nowrap'>j</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>col</span></font></i><font color="blue"><span style='white-space: nowrap'>[</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>]</span></font></code>
+.
+Note that this corresponds to the <a href="reverse_any.xml" target="_top"><span style='white-space: nowrap'>reverse_any</span></a>
+ convention when
+<a href="reverse_any.xml#w" target="_top"><span style='white-space: nowrap'>w</span></a>
+ has size 
+<code><i><font color="black"><span style='white-space: nowrap'>m</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;*&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>q</span></font></i></code>
+.
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+
+<br/>
+The file
+<a href="subgraph_reverse.cpp.xml" target="_top"><span style='white-space: nowrap'>subgraph_reverse.cpp</span></a>
+
+contains an example and test of this operation.
+It returns true if it succeeds and false otherwise.
+
+
+<hr/>Input File: cppad/core/subgraph_reverse.hpp
+
+</body>
+</html>

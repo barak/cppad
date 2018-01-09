@@ -67,6 +67,7 @@ A:active { color : purple }
 <option>speed_test</option>
 <option>SpeedTest</option>
 <option>time_test</option>
+<option>test_boolofvoid</option>
 <option>NumericType</option>
 <option>CheckNumericType</option>
 <option>SimpleVector</option>
@@ -87,6 +88,8 @@ A:active { color : purple }
 <option>index_sort</option>
 <option>to_string</option>
 <option>set_union</option>
+<option>sparse_rc</option>
+<option>sparse_rcv</option>
 </select>
 </td>
 <td>
@@ -113,7 +116,6 @@ A:active { color : purple }
 </tr></table><br/>
 <center><b><big><big>Fast Multi-Threading Memory Allocator: Example and Test</big></big></b></center>
 <code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/thread_alloc.hpp&gt;</span>
-<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/memory_leak.hpp&gt;</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;vector&gt;</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;limits&gt;</span>
 
@@ -173,7 +175,7 @@ A:active { color : purple }
      thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// check that the tests have not held onto memory</span></span>
-     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">();</span>
 
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span>
@@ -240,7 +242,7 @@ A:active { color : purple }
      thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// check that the tests have not held onto memory</span></span>
-     ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">memory_leak</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">();</span>
 
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span>
@@ -324,7 +326,7 @@ A:active { color : purple }
 
 </tt></pre>
 </font></code>
-<hr/>Input File: example/thread_alloc.cpp
+<hr/>Input File: example/utility/thread_alloc.cpp
 
 </body>
 </html>

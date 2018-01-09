@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: template.sh 3719 2015-09-02 18:41:58Z bradbell $
+# $Id: template.sh 3987 2017-12-01 23:09:09Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -30,6 +30,14 @@ int main(void)
 }
 EOF
 # -----------------------------------------------------------------------------
+if [ ! -e ../cppad/configure.hpp ]
+then
+	echo
+	echo 'Cannot find the file cppad/configure.hpp in directory ..'
+	echo 'Must change into .. directory and run bin/run_cmake.sh'
+	rm bug.$$
+	exit 1
+fi
 if [ ! -e build ]
 then
 	mkdir build

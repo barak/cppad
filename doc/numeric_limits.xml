@@ -6,7 +6,7 @@
 <title>Numeric Limits For an AD and Base Types</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Numeric Limits For an AD and Base Types"/>
-<meta name="keywords" id="keywords" content=" numeric limits ad base types syntax cppad::numeric_limits std::numeric_limits float epsilon min max quiet_nan example "/>
+<meta name="keywords" id="keywords" content=" numeric limits ad base types syntax cppad::numeric_limits std::numeric_limits float epsilon min max quiet_nan digits10 example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -100,6 +100,7 @@ A:active { color : purple }
 <option>min</option>
 <option>max</option>
 <option>quiet_NaN</option>
+<option>digits10</option>
 <option>Example</option>
 </select>
 </td>
@@ -121,6 +122,11 @@ A:active { color : purple }
 
 <code><i><font color="black"><span style='white-space: nowrap'>nan</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::quiet_NaN()<br/>
 </span></font></code>
+
+<code><font color="blue"><span style='white-space: nowrap'>numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::digits10</span></font></code>
+
+
+<br/>
 <br/>
 <b><big><a name="CppAD::numeric_limits" id="CppAD::numeric_limits">CppAD::numeric_limits</a></big></b>
 <br/>
@@ -133,6 +139,7 @@ where
 <code><i><font color="black"><span style='white-space: nowrap'>fun</span></font></i></code>
  is
 <code><font color="blue">epsilon</font></code>, <code><font color="blue">min</font></code>, <code><font color="blue">max</font></code>, and <code><font color="blue">quiet_NaN</font></code>.
+(Note that <code><font color="blue">digits10</font></code> is member variable and not a function.)
 
 <br/>
 <br/>
@@ -264,6 +271,25 @@ tests the value
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>nan</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;!=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>nan</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
+<br/>
+<b><big><a name="digits10" id="digits10">digits10</a></big></b>
+<br/>
+The member variable <code><font color="blue">digits10</font></code> has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;static&#xA0;const&#xA0;int&#xA0;numeric_limits&lt;</span></font><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i><font color="blue"><span style='white-space: nowrap'>&gt;::digits10<br/>
+</span></font></code>
+It is the number of decimal digits that can be represented by a
+
+<code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
+ value.  A number with this many decimal digits can be
+converted to 
+<code><i><font color="black"><span style='white-space: nowrap'>Float</span></font></i></code>
+ and back to a string,
+without change due to rounding or overflow.
+
+
+<br/>
 <br/>
 <b><big><a name="Example" id="Example">Example</a></big></b>
 

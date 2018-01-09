@@ -7,7 +7,7 @@ var list_across0 = [
 ];
 var list_up0 = [
 'cppad.xml',
-'introduction.xml',
+'example.xml',
 'get_started.cpp.xml'
 ];
 var list_down2 = [
@@ -25,9 +25,11 @@ var list_down2 = [
 ];
 var list_down1 = [
 'get_started.cpp.xml',
-'exp_2.xml',
-'exp_eps.xml',
-'exp_apx_main.cpp.xml'
+'general.xml',
+'exampleutility.xml',
+'listallexamples.xml',
+'testvector.xml',
+'wno_conversion.xml'
 ];
 var list_current0 = [
 'get_started.cpp.xml#Purpose',

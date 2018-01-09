@@ -1,9 +1,8 @@
-// $Id: ode_evaluate.hpp 3804 2016-03-20 15:08:46Z bradbell $
 # ifndef CPPAD_SPEED_ODE_EVALUATE_HPP
 # define CPPAD_SPEED_ODE_EVALUATE_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -60,9 +59,6 @@ The template function $code ode_evaluate$$
 is defined in the $code CppAD$$ namespace by including
 the file $code cppad/speed/ode_evaluate.hpp$$
 (relative to the CppAD distribution directory).
-It is only intended for example and testing purposes,
-so it is not automatically included by
-$cref/cppad.hpp/cppad/$$.
 
 $head Float$$
 
@@ -121,7 +117,7 @@ and contains the value of $latex y(x, 1)$$.
 
 $subhead Gradient$$
 If $icode p$$ is one, $icode fp$$ has size equal to $icode n^2$$
-and for $latex i = 0 , \ldots and n-1$$, $latex j = 0 , \ldots , n-1$$
+and for $latex i = 0 , \ldots 1$$, $latex j = 0 , \ldots , n-1$$
 $latex \[
 	\D{y[i]}{x[j]} (x, 1) = fp [ i \cdot n + j ]
 \] $$

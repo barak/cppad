@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_LU_RATIO_HPP
 # define CPPAD_CORE_LU_RATIO_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -199,7 +198,7 @@ if this is not the case.
 
 $head Example$$
 $children%
-	example/lu_ratio.cpp
+	example/general/lu_ratio.cpp
 %$$
 The file $cref lu_ratio.cpp$$
 contains an example and test of using $code LuRatio$$.
@@ -280,7 +279,7 @@ int LuRatio(SizeVector &ip, SizeVector &jp, ADvector &LU, AD<Base> &ratio) //
 		}
 		for(i = p; i < n; i++)                                       //
 		{	for(j = p; j < n; j++)                               //
-			{	etmp  = abs(LU[ ip[i] * n + jp[j] ] / emax); //
+			{	etmp  = fabs(LU[ ip[i] * n + jp[j] ] / emax); //
 				ratio =                                      //
 				CondExpGt(etmp, ratio, etmp, ratio);         //
 			}                                                    //

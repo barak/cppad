@@ -43,7 +43,7 @@ var list_down1 = [
 var list_current0 = [
 'base_alloc.hpp.xml#Purpose',
 'base_alloc.hpp.xml#Include File',
-'base_alloc.hpp.xml#Computed Assignment Macro',
+'base_alloc.hpp.xml#Compound Assignment Macro',
 'base_alloc.hpp.xml#Binary Operator Macro',
 'base_alloc.hpp.xml#Boolean Operator Macro',
 'base_alloc.hpp.xml#Class Definition',

@@ -1,9 +1,8 @@
-// $Id: color_general.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_LOCAL_COLOR_GENERAL_HPP
 # define CPPAD_LOCAL_COLOR_GENERAL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -30,42 +29,10 @@ i.e., do not have non-zero entries with the same column index.
 is a simple vector class with elements of type size_t.
 
 \tparam VectorSet
-is an unspecified type with the exception that it must support the
-operations under pattern and the following operations where
-p is a VectorSet object:
-\n
-<code>VectorSet p</code>
-Constructs a new vector of sets object.
-\n
-<code>p.resize(ns, ne)</code>
-resizes \c p to \c ns sets with elements between zero \c ne.
-All of the \c ns sets are initially empty.
-\n
-<code>p.add_element(s, e)</code>
-add element \c e to set with index \c s.
+is vector_of_sets class.
 
 \param pattern [in]
 Is a representation of the sparsity pattern for the matrix.
-\n
-<code>m = pattern.n_set()</code>
-\n
-sets \c m to the number of rows in the sparse matrix.
-All of the row indices are less than this value.
-\n
-<code>n = pattern.end()</code>
-\n
-sets \c n to the number of columns in the sparse matrix.
-All of the column indices are less than this value.
-\n
-<code>VectorSet::const_iterator itr(pattern, i)</code>
-constructs an iterator that starts iterating over
-columns in the i-th row of the sparsity pattern.
-\n
-<code>j = *itr</code>
-Sets j to the next possibly non-zero column.
-\n
-<code>++itr</code>
-Advances to the next possibly non-zero column.
 
 \param row [in]
 is a vector specifying which row indices to compute.
@@ -107,8 +74,7 @@ void color_general_cppad(
 	const VectorSize&       row     ,
 	const VectorSize&       col     ,
 	CppAD::vector<size_t>&  color   )
-{	size_t i, j, k, ell, r;
-
+{
 	size_t K = row.size();
 	size_t m = pattern.n_set();
 	size_t n = pattern.end();
@@ -121,37 +87,45 @@ void color_general_cppad(
 
 	// initialize rows that appear
 	CppAD::vector<bool> row_appear(m);
-	for(i = 0; i < m; i++)
+	for(size_t i = 0; i < m; i++)
 			row_appear[i] = false;
 
 	// rows and columns that appear
 	VectorSet c2r_appear, r2c_appear;
 	c2r_appear.resize(n, m);
 	r2c_appear.resize(m, n);
-	for(k = 0;  k < K; k++)
+	for(size_t k = 0;  k < K; k++)
 	{	CPPAD_ASSERT_UNKNOWN( pattern.is_element(row[k], col[k]) );
 		row_appear[ row[k] ] = true;
-		c2r_appear.add_element(col[k], row[k]);
-		r2c_appear.add_element(row[k], col[k]);
+		c2r_appear.post_element(col[k], row[k]);
+		r2c_appear.post_element(row[k], col[k]);
 	}
+	// process posts
+	for(size_t j = 0; j < n; ++j)
+		c2r_appear.process_post(j);
+	for(size_t i = 0; i < m; ++i)
+		r2c_appear.process_post(i);
 
 	// for each column, which rows are non-zero and do not appear
 	VectorSet not_appear;
 	not_appear.resize(n, m);
-	for(i = 0; i < m; i++)
+	for(size_t i = 0; i < m; i++)
 	{	typename VectorSet::const_iterator pattern_itr(pattern, i);
-		j = *pattern_itr;
+		size_t j = *pattern_itr;
 		while( j != pattern.end() )
 		{	if( ! c2r_appear.is_element(j , i) )
-				not_appear.add_element(j, i);
+				not_appear.post_element(j, i);
 			j = *(++pattern_itr);
 		}
 	}
+	// process posts
+	for(size_t j = 0; j < n; ++j)
+		not_appear.process_post(j);
 
 	// initial coloring
 	color.resize(m);
-	ell = 0;
-	for(i = 0; i < m; i++)
+	size_t ell = 0;
+	for(size_t i = 0; i < m; i++)
 	{	if( row_appear[i] )
 			color[i] = ell++;
 		else	color[i] = m;
@@ -166,7 +140,7 @@ void color_general_cppad(
 	row and col need to be computed.
 	*/
 	CppAD::vector<bool> forbidden(m);
-	for(i = 1; i < m; i++) // for each row that appears
+	for(size_t i = 1; i < m; i++) // for each row that appears
 	if( color[i] < m )
 	{
 		// initial all colors as ok for this row
@@ -179,11 +153,11 @@ void color_general_cppad(
 		//
 		// for each column that is non-zero for this row
 		typename VectorSet::const_iterator pattern_itr(pattern, i);
-		j = *pattern_itr;
+		size_t j = *pattern_itr;
 		while( j != pattern.end() )
 		{	// for each row that appears with this column
 			typename VectorSet::const_iterator c2r_itr(c2r_appear, j);
-			r = *c2r_itr;
+			size_t r = *c2r_itr;
 			while( r != c2r_appear.end() )
 			{	// if this is not the same row, forbid its color
 				if( (r < i) & (color[r] < m) )
@@ -204,7 +178,7 @@ void color_general_cppad(
 		{	// For each row that is non-zero for this column
 			// (the appear rows have already been checked above).
 			typename VectorSet::const_iterator not_itr(not_appear, j);
-			r = *not_itr;
+			size_t r = *not_itr;
 			while( r != not_appear.end() )
 			{	// if this is not the same row, forbid its color
 				if( (r < i) & (color[r] < m) )
@@ -238,17 +212,17 @@ void color_general_colpack(
 	const VectorSize&       row     ,
 	const VectorSize&       col     ,
 	CppAD::vector<size_t>&  color   )
-{	size_t i, j, k;
+{
 	size_t m = pattern.n_set();
 	size_t n = pattern.end();
 
 	// Determine number of non-zero entries in each row
 	CppAD::vector<size_t> n_nonzero(m);
 	size_t n_nonzero_total = 0;
-	for(i = 0; i < m; i++)
+	for(size_t i = 0; i < m; i++)
 	{	n_nonzero[i] = 0;
 		typename VectorSet::const_iterator pattern_itr(pattern, i);
-		j = *pattern_itr;
+		size_t j = *pattern_itr;
 		while( j != pattern.end() )
 		{	n_nonzero[i]++;
 			j = *(++pattern_itr);
@@ -260,14 +234,23 @@ void color_general_colpack(
 	CppAD::vector<unsigned int*> adolc_pattern(m);
 	CppAD::vector<unsigned int>  adolc_memory(m + n_nonzero_total);
 	size_t i_memory = 0;
-	for(i = 0; i < m; i++)
+	for(size_t i = 0; i < m; i++)
 	{	adolc_pattern[i]    = adolc_memory.data() + i_memory;
-		adolc_pattern[i][0] = n_nonzero[i];
+		CPPAD_ASSERT_KNOWN(
+			std::numeric_limits<unsigned int>::max() >= n_nonzero[i],
+			"Matrix is too large for colpack"
+		);
+		adolc_pattern[i][0] = static_cast<unsigned int>( n_nonzero[i] );
 		typename VectorSet::const_iterator pattern_itr(pattern, i);
-		j = *pattern_itr;
-		k = 1;
+		size_t j = *pattern_itr;
+		size_t k = 1;
 		while(j != pattern.end() )
-		{	adolc_pattern[i][k++] = j;
+		{
+			CPPAD_ASSERT_KNOWN(
+				std::numeric_limits<unsigned int>::max() >= j,
+				"Matrix is too large for colpack"
+			);
+			adolc_pattern[i][k++] = static_cast<unsigned int>( j );
 			j = *(++pattern_itr);
 		}
 		CPPAD_ASSERT_UNKNOWN( k == 1 + n_nonzero[i] );

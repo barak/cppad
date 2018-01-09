@@ -25,6 +25,7 @@ var list_down1 = [
 var list_current0 = [
 'preprocessor.xml#Purpose',
 'preprocessor.xml#Documented Here',
+'preprocessor.xml#Documented Here.CPPAD_DEBUG_AND_RELEASE',
 'preprocessor.xml#Documented Here.CPPAD_NULL',
 'preprocessor.xml#Documented Here.CPPAD_PACKAGE_STRING',
 'preprocessor.xml#Documented Here.CPPAD_USE_CPLUSPLUS_2011',

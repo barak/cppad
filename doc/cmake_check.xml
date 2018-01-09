@@ -6,7 +6,7 @@
 <title>Checking the CppAD Examples and Tests</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Checking the CppAD Examples and Tests"/>
-<meta name="keywords" id="keywords" content=" checking the cppad examples tests purpose check all windows subsets "/>
+<meta name="keywords" id="keywords" content=" checking the cppad examples tests purpose check all windows subsets make first level "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -65,7 +65,6 @@ A:active { color : purple }
 <option>cmake</option>
 <option>cmake_check</option>
 <option>pkgconfig</option>
-<option>auto_tools</option>
 </select>
 </td>
 <td>cmake_check</td>
@@ -75,7 +74,8 @@ A:active { color : purple }
 <option>Purpose</option>
 <option>Check All</option>
 <option>---..Windows</option>
-<option>Subsets</option>
+<option>Subsets of make check</option>
+<option>First Level</option>
 </select>
 </td>
 </tr></table><br/>
@@ -120,10 +120,22 @@ above and below; see
 
 <br/>
 <br/>
-<b><big><a name="Subsets" id="Subsets">Subsets</a></big></b>
+<b><big><a name="Subsets of make check" id="Subsets of make check">Subsets of make check</a></big></b>
 <br/>
-It is possible to build and run the following subsets of the
-examples and tests:
+In unix, you can determine which subsets of <code><font color="blue">make check</font></code> are available
+by putting the output of the <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
+
+in a file (called 
+<code><i><font color="black"><span style='white-space: nowrap'>cmake.out</span></font></i></code>
+ below) and executing:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;grep&#xA0;'make&#xA0;check.*available'&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>cmake.out</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+<br/>
+<b><big><a name="First Level" id="First Level">First Level</a></big></b>
+<br/>
+The first level of subsets of <code><font color="blue">make check</font></code> are described below:
 <table><tr><td align='left'  valign='top'>
 
 Command </td><td align='left'  valign='top'>
@@ -131,27 +143,17 @@ Command </td><td align='left'  valign='top'>
 	Description
 </td></tr><tr><td align='left'  valign='top'>
 
-<code><font color="blue">make check_compare_c</font></code> </td><td align='left'  valign='top'>
-
-	<a href="compare_c.xml" target="_top">Compare Speed of C and C++</a>
-</td></tr><tr><td align='left'  valign='top'>
-
 <code><font color="blue">make check_introduction</font></code>   </td><td align='left'  valign='top'>
 
-	the programs in the <a href="introduction.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
-
+	the <a href="introduction.xml" target="_top"><span style='white-space: nowrap'>Introduction</span></a>
+ functions
 </td></tr><tr><td align='left'  valign='top'>
 
 <code><font color="blue">make check_example</font></code>   </td><td align='left'  valign='top'>
 
-	most of the <a href="example.xml" target="_top"><span style='white-space: nowrap'>Example</span></a>
- programs
-</td></tr><tr><td align='left'  valign='top'>
-
-<code><font color="blue">make check_print_for</font></code> </td><td align='left'  valign='top'>
-
-	the <a href="printfor.xml" target="_top"><span style='white-space: nowrap'>PrintFor</span></a>
-  command
+	the normal <a href="listallexamples.xml" target="_top"><span style='white-space: nowrap'>example</span></a>
+ functions plus some deprecated
+	examples.
 </td></tr><tr><td align='left'  valign='top'>
 
 <code><font color="blue">make check_test_more</font></code> </td><td align='left'  valign='top'>
@@ -159,26 +161,25 @@ Command </td><td align='left'  valign='top'>
 	correctness tests that are not examples
 </td></tr><tr><td align='left'  valign='top'>
 
-<code><font color="blue">make check_multi_thread</font></code> </td><td align='left'  valign='top'>
-
-	<a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi_thread</span></a>
- tests (run correctness only)
-</td></tr><tr><td align='left'  valign='top'>
-
 <code><font color="blue">make check_speed</font></code> </td><td align='left'  valign='top'>
 
-	single threading <a href="speed.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
- tests (run correctness only)
+	correctness for single thread <a href="speed.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
+ tests
 </td></tr><tr><td align='left'  valign='top'>
 
 <code><font color="blue">make check_cppad_ipopt</font></code> </td><td align='left'  valign='top'>
 
-	the <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
+	the deprecated <a href="cppad_ipopt_nlp.xml" target="_top"><span style='white-space: nowrap'>cppad_ipopt_nlp</span></a>
  speed and correctness tests
 </td></tr><tr><td align='left'  valign='top'>
 
 </td></tr>
 </table>
+Note that <code><font color="blue">make check_example_multi_thread</font></code> is used for the
+<a href="multi_thread.xml" target="_top"><span style='white-space: nowrap'>multi-threading</span></a>
+ speed tests.
+
+
 
 <hr/>Input File: omh/install/cmake_check.omh
 

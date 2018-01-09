@@ -24,15 +24,15 @@ var list_down2 = [
 'appendix.xml'
 ];
 var list_down1 = [
-'independent.xml',
-'funconstruct.xml',
-'dependent.xml',
-'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
+'record_adfun.xml',
 'drivers.xml',
-'funcheck.xml',
+'forward.xml',
+'reverse.xml',
+'sparsity_pattern.xml',
+'sparse_derivative.xml',
 'optimize.xml',
+'abs_normal.xml',
+'funcheck.xml',
 'check_for_nan.xml'
 ];
 var list_down0 = [

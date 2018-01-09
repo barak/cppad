@@ -63,6 +63,7 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -78,6 +79,7 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down1(this)'>
 <option>whats_new-&gt;</option>
+<option>whats_new_17</option>
 <option>whats_new_16</option>
 <option>whats_new_15</option>
 <option>whats_new_14</option>
@@ -302,9 +304,9 @@ preprocessor symbols that are in the CppAD API.
 <br/>
 <b><big><a name="11-21" id="11-21">11-21</a></big></b>
 <br/>
-Separate <a href="auto_tools.xml#--with-testvector" target="_top"><span style='white-space: nowrap'>--with-boostvector</span></a>
+Separate <a href="autotools.xml#--with-testvector" target="_top"><span style='white-space: nowrap'>--with-boostvector</span></a>
 
-for <a href="auto_tools.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
+for <a href="autotools.xml#boost_dir" target="_top"><span style='white-space: nowrap'>boost_dir</span></a>
 .
 This enables one to specify 
 <code><i><font color="black"><span style='white-space: nowrap'>boost_dir</span></font></i></code>
@@ -373,7 +375,7 @@ like <a href="speed_test.xml" target="_top"><span style='white-space: nowrap'>sp
  but it returns the time instead of rate
 and as a <code><font color="blue">double</font></code> instead of a <code><font color="blue">size_t</font></code>.
 The use it for the timing tests in
-<code><font color="blue">sum_i_inv_time.cpp</font></code> and <a href="multi_newton_time.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
+<code><font color="blue">sum_i_inv_time.cpp</font></code> and <a href="multi_newton_time.xml" target="_top"><span style='white-space: nowrap'>multi_newton_time</span></a>
 .
 </li><li>
 
@@ -438,7 +440,7 @@ Reorganize and improve the <a href="multi_thread.xml" target="_top"><span style=
  section and its subsections.
 </li><li>
 
-There was a bug in <a href="multi_newton_work.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton_work.cpp</span></a>
+There was a bug in <a href="multi_newton.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton.cpp</span></a>
  that only showed up when
 the number of threads was greater than or equal 4.
 This has been fixed.
@@ -463,14 +465,14 @@ This check has been modified to include a correction for
 The following changes were merged in from <code><font color="blue">branches/thread</font></code>:
 
 <ol type="1"><li>
-Move <code><font color="blue">openmp</font></code> to <code><font color="blue">multi_thread/openmp</font></code>.
-and create <code><font color="blue">multi_thread/bthread</font></code>, <code><font color="blue">multi_thread/pthread</font></code>
+Move <code><font color="blue">openmp</font></code> to <code><font color="blue">example/multi_thread/openmp</font></code>.
+and create <code><font color="blue">example/multi_thread/bthread</font></code>, <code><font color="blue">multi_thread/pthread</font></code>
 with similar tests.
 </li><li>
 
 Put multi-threading common code in <code><font color="blue">multi_thread</font></code> directory
 and threading system specific code in 
-<code><font color="blue"><span style='white-space: nowrap'>multi_thread/</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
+<code><font color="blue"><span style='white-space: nowrap'>example/multi_thread/</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
 
 for 
 <code><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
@@ -663,7 +665,7 @@ Move the <code><font color="blue">sum_i_inv_time.cpp</font></code> test from
 </li><li>
 
 Change <code><font color="blue">--with-openmp</font></code> to
-<a href="auto_tools.xml#openmp_flags" target="_top"><span style='white-space: nowrap'>OPENMP_FLAGS=openmp_flags</span></a>
+<a href="autotools.xml#openmp_flags" target="_top"><span style='white-space: nowrap'>OPENMP_FLAGS=openmp_flags</span></a>
  configure
 command line argument.
 </li></ol>
@@ -677,7 +679,7 @@ command line argument.
 Create the <code><font color="blue">openmp/run.cpp</font></code> program
 and move the <code><font color="blue">openmp_multi_newton.cpp</font></code> test from
 <code><font color="blue">openmp/run.sh</font></code> to <code><font color="blue">openmp/run.cpp</font></code>.
-This uses <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+This uses <a href="autotools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
 
 information for building the tests.
 </li><li>
@@ -1089,11 +1091,11 @@ see the new <a href="old_atomic.xml" target="_top"><span style='white-space: now
 <b><big><a name="07-14" id="07-14">07-14</a></big></b>
 
 <ol type="1"><li>
-The <a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
+The <a href="autotools.xml" target="_top"><span style='white-space: nowrap'>autotools</span></a>
  instructions for running the individual
 correctness and speed tests were out of date.
 This has been fixed; see
-<a href="auto_tools.xml#make.Examples and Tests" target="_top"><span style='white-space: nowrap'>example&#xA0;and&#xA0;tests</span></a>
+<a href="autotools.xml#make.Examples and Tests" target="_top"><span style='white-space: nowrap'>example&#xA0;and&#xA0;tests</span></a>
 .
 </li><li>
 
@@ -1122,8 +1124,7 @@ when recording
  execution mode. This has been fixed.
 </li><li>
 
-Make the <a href="sparse.xml" target="_top"><span style='white-space: nowrap'>sparsity</span></a>
- calculations safe
+Make the sparse calculations safe
 for use during <a href="omp_in_parallel.xml" target="_top"><span style='white-space: nowrap'>omp_in_parallel</span></a>
  execution mode.
 </li><li>
@@ -1299,9 +1300,9 @@ the <code><font color="blue">openmp/run.sh</font></code> output.
 <b><big><a name="06-18" id="06-18">06-18</a></big></b>
 
 <ol type="1"><li>
-The <a href="auto_tools.xml#tape_addr_type" target="_top"><span style='white-space: nowrap'>tape_addr_type</span></a>
+The <a href="autotools.xml#tape_addr_type" target="_top"><span style='white-space: nowrap'>tape_addr_type</span></a>
  option was added
-to the <a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+to the <a href="autotools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command line.
 </li><li>
 
@@ -1317,7 +1318,7 @@ This removes the need to undefine symbols that were
 defined by <code><font color="blue">cppad/config.h</font></code> and that did not begin with <code><font color="blue">CPPAD_</font></code>.
 </li><li>
 
-Change <a href="auto_tools.xml#adolc_dir" target="_top"><span style='white-space: nowrap'>adolc</span></a>
+Change <a href="autotools.xml#adolc_dir" target="_top"><span style='white-space: nowrap'>adolc</span></a>
  library linkage so it
 works with version <code><font color="blue">ADOL-C-2.2.0</font></code>.
 </li></ol>
@@ -1682,12 +1683,12 @@ when it was done from a directory other than the top source directory.
 </li><li>
 
 The GPL distribution had the output of the
-<a href="auto_tools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
+<a href="autotools.xml#Configure" target="_top"><span style='white-space: nowrap'>configure</span></a>
  command in it.
 </li><li>
 
 Since the change on 01-09, the file
-<code><font color="blue">omh/whats_new_11.omh</font></code> has been required to build the
+<code><font color="blue">omh/appendix/whats_new_11.omh</font></code> has been required to build the
 documentation (and it has been missing from the distribution).
 </li><li>
 
@@ -1696,7 +1697,7 @@ with the <code><font color="blue">g++</font></code> compiler.
 The Fadbad <a href="speed_fadbad.xml" target="_top"><span style='white-space: nowrap'>speed</span></a>
  tests have a special
 flag with this warning removed from the
-<a href="auto_tools.xml#cxx_flags" target="_top"><span style='white-space: nowrap'>cxx_flags</span></a>
+<a href="autotools.xml#cxx_flags" target="_top"><span style='white-space: nowrap'>cxx_flags</span></a>
 .
 </li></ol>
 
@@ -1719,7 +1720,7 @@ The version of automake used to build the corresponding
 </li><li>
 
 The include file <code><font color="blue">cppad_ipopt_nlp.hpp</font></code> was always installed, even if
-<a href="auto_tools.xml#ipopt_dir" target="_top"><span style='white-space: nowrap'>ipopt_dir</span></a>
+<a href="autotools.xml#ipopt_dir" target="_top"><span style='white-space: nowrap'>ipopt_dir</span></a>
  was not defined on the
 <code><font color="blue">configure</font></code> command line.
 </li><li>
@@ -1738,7 +1739,7 @@ http://www.coin-or.org/download/source/CppAD/cppad-20110101.1.</span></font><i><
 will not have this problem.
 
 
-<hr/>Input File: omh/whats_new/whats_new_11.omh
+<hr/>Input File: omh/appendix/whats_new/whats_new_11.omh
 
 </body>
 </html>

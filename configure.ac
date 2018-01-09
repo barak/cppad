@@ -1,4 +1,4 @@
-dnl ---------------------------------------------------------------------------
+dnl --------------------------------------------------------------------------
 dnl CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 dnl
 dnl CppAD is distributed under multiple licenses. This distribution is under
@@ -11,7 +11,7 @@ dnl ---------------------------------------------------------------------------
 dnl
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20170000.8], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20180000.0], [cppad@list.coin-or.org])
 AM_SILENT_RULES([yes])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -26,10 +26,13 @@ dnl cygwin end delete:
 dnl cygwin replace: AC_PREFIX_DEFAULT(/usr)
 
 dnl Run any macros required for proper operation of generated makefiles
-dnl nostdinc: Do not define standard include directories in generated makefiles
 dnl Note this must come before AC_PROG_CC; see
 dnl http://lists.gnu.org/archive/html/automake/2010-08/msg00113.html
-AM_INIT_AUTOMAKE([nostdinc subdir-objects -Wall])
+dnl
+dnl nostdinc: Do not define standard include directories in generated makefiles
+dnl subdir-objects: create objects in sub-directories, same structure source
+dnl foreign: not GNU standard; no NEWS, AUTHORS, ...
+AM_INIT_AUTOMAKE([nostdinc subdir-objects -Wall foreign])
 
 # check if we have ar program
 have_ar='yes'
@@ -113,6 +116,19 @@ AC_ARG_WITH(sparse_list,
 )
 if test "$sparse_set" = "yes" ; then
 	AC_MSG_ERROR([--with-sparse_set is no longer necessary])
+fi
+AC_ARG_WITH(deprecated, AC_HELP_STRING(
+	[--with-deprecated],
+	[include deprectated features that are on the chopping block]
+	),
+	[deprecated="yes"],
+	[deprecated="no"]
+)
+AM_CONDITIONAL(CppAD_DEPRECATED, test "$deprecated" = 'yes' )
+if test "$deprecated" = "yes" ; then
+	AC_MSG_ERROR(
+		[autotools version does not install features on the chopping block]
+	)
 fi
 dnl --------------------------------------------------------------------------
 AC_MSG_NOTICE([******  Check command line arguments that are used ***********])
@@ -202,24 +218,6 @@ else
 	AC_SUBST(cppad_eigenvector, 0)
 fi
 
-dnl Are we including deprecated features in the install-----------
-AC_MSG_CHECKING([--with-deprecated])
-AC_ARG_WITH(deprecated,
-	AC_HELP_STRING(
-		[--with-deprecated],
-		[include an implicit AD<Base> constructor from any type]
-	),
-	[deprecated="yes"],
-	[deprecated="no"]
-)
-AC_MSG_RESULT([$deprecated])
-AM_CONDITIONAL(CppAD_DEPRECATED, test "$deprecated" = 'yes' )
-if test "$deprecated" = "yes" ; then
-	AC_SUBST(cppad_deprecated, "1")
-else
-	AC_SUBST(cppad_deprecated, "0")
-fi
-
 dnl The postfix directiory corresponding to CppAD ------------------------
 AC_MSG_CHECKING([POSTFIX_DIR])
 AC_ARG_VAR(POSTFIX_DIR,
@@ -243,8 +241,10 @@ if test "$ADOLC_DIR" != "" ; then
 	if test "$have_ar" = "no"; then
 		AC_MSG_ERROR([ar is missing and ADOLC_DIR is present])
 	fi
+	AC_SUBST(cppad_has_adolc, 1)
 else
 	AC_MSG_RESULT([no])
+	AC_SUBST(cppad_has_adolc, 0)
 fi
 
 dnl The prefix corresponding to the installation of Eigen ---------------
@@ -256,9 +256,11 @@ AM_CONDITIONAL(CppAD_EIGEN_DIR, test "$EIGEN_DIR" != "")
 if test "$EIGEN_DIR" != "" ; then
 	AC_MSG_RESULT([$EIGEN_DIR])
 	AC_SUBST(EIGEN_INCLUDE, [-I$EIGEN_DIR/include])
+	AC_SUBST(cppad_has_eigen, 1)
 else
 	AC_MSG_RESULT([no])
 	AC_SUBST(EIGEN_INCLUDE, [])
+	AC_SUBST(cppad_has_eigen, 0)
 fi
 
 dnl The directory corresponding to the installation of FADBAD -----------
@@ -272,8 +274,10 @@ if test "$FADBAD_DIR" != "" ; then
 	if test "$have_ar" = "no"; then
 		AC_MSG_ERROR([ar is missing and FADBAD_DIR is present])
 	fi
+	AC_SUBST(cppad_has_fadbad, 1)
 else
 	AC_MSG_RESULT([no])
+	AC_SUBST(cppad_has_fadbad, 0)
 fi
 
 dnl The directory corresponding to the installation of SACADO -----------
@@ -283,12 +287,10 @@ AC_ARG_VAR(SACADO_DIR,
 )
 AM_CONDITIONAL(CppAD_SACADO, test "$SACADO_DIR" != "")
 if test "$SACADO_DIR" != "" ; then
-	AC_MSG_RESULT([$SACADO_DIR])
-	if test "$have_ar" = "no"; then
-		AC_MSG_ERROR([ar is missing and SACADO_DIR is present])
-	fi
+	AC_MSG_ERROR([CppAD autotools build no longer support sacado, use cmake])
 else
 	AC_MSG_RESULT([no])
+	AC_SUBST(cppad_has_sacado, 0)
 fi
 
 dnl The directory corresponding to the installation of IPOPT -----------
@@ -302,8 +304,10 @@ if test "$IPOPT_DIR" != "" ; then
 	if test "$have_ar" = "no"; then
 		AC_MSG_ERROR([ar is missing and IPOPT_DIR is present])
 	fi
+	AC_SUBST(cppad_has_ipopt, 1)
 else
 	AC_MSG_RESULT([no])
+	AC_SUBST(cppad_has_ipopt, 0)
 fi
 
 dnl The directory corresponding to the installation of BOOST ------------
@@ -315,9 +319,11 @@ AM_CONDITIONAL(CppAD_BOOST_DIR, test "$BOOST_DIR" != "")
 if test "$BOOST_DIR" != "" ; then
 	AC_MSG_RESULT([$BOOST_DIR])
 	AC_SUBST(BOOST_INCLUDE, [-I$BOOST_DIR/include])
+	AC_SUBST(cppad_has_boost, 1)
 else
 	AC_MSG_RESULT([no])
 	AC_SUBST(BOOST_INCLUDE,[])
+	AC_SUBST(cppad_has_boost, 0)
 fi
 
 dnl The C++ compiler flags CXX_FLAGS -------------------------------------
@@ -479,29 +485,29 @@ fi
 dnl test_one.sh.in settings for cppad_cxx_flags (no longer used ?)
 AC_SUBST(cppad_cxx_flags, "-g -O0")
 
-dnl auto-tools version does not colpack
+dnl autotools version does not support installing deprecated features
+AC_SUBST(cppad_deprecated_01,  0)
+
+dnl autotools version does not colpack
 AC_SUBST(cppad_has_colpack, 0)
 
-dnl auto-tools version will assumes mkstemp is available.
+dnl autotools version will assumes mkstemp is available.
 AC_SUBST(cppad_has_mkstemp, 1)
 AC_SUBST(cppad_has_tmpnam_s, 0)
 
-dnl auto-tools version cannot use c++11 compiler
+dnl autotools version cannot use c++11 compiler
 dnl so supress corresponding features
-AC_SUBST(cppad_has_nullptr, 0)
-AC_SUBST(cppad_has_rvalue, 0)
-AC_SUBST(cppad_has_cstdint_8_to_64, 0)
 AC_SUBST(cppad_cplusplus_201100_ok, 0)
-AC_SUBST(cppad_has_steady_clock, 0)
 
-dnl Determine if size_t has same size as unsigned int
-AC_CHECK_SIZEOF([size_t])
-AC_CHECK_SIZEOF([unsigned int])
-if test "$ac_cv_sizeof_size_t" != "$ac_cv_sizeof_unsigned_int" ; then
-	AC_SUBST(cppad_size_t_not_unsigned_int, 1)
-else
-	AC_SUBST(cppad_size_t_not_unsigned_int, 0)
-fi
+dnl autotools version does not check if using g++
+AC_SUBST(cppad_compiler_is_gnucxx, 0)
+
+dnl autotools version is slower because it does not specialize is_pod
+dnl for the  Fundamental types
+AC_SUBST(is_pod_specialize_98,
+	"template <> inline bool is_pod<size_t>(void) { return true; }"
+)
+AC_SUBST(is_pod_specialize_11, "")
 
 dnl Determine which definition we are using for CPPAD_TESTVECTOR
 if test "$stdvector$boostvector$eigenvector" = "nonono" ; then
@@ -772,6 +778,7 @@ dnl AC_CONFIG_FILES(file-list) for each file in the list, configure will
 dnl read file.in, do its substitutions, and create file
 AC_CONFIG_FILES([
 	cppad/configure.hpp
+	cppad/local/is_pod.hpp
 	cppad_ipopt/example/test.sh
 	cppad_ipopt/speed/test.sh
 	cppad_ipopt/test/test.sh
@@ -780,20 +787,22 @@ AC_CONFIG_FILES([
 	pkgconfig/cppad-uninstalled.pc
 
 	makefile
-	compare_c/makefile
 	cppad_ipopt/src/makefile
 	cppad_ipopt/example/makefile
 	cppad_ipopt/speed/makefile
 	cppad_ipopt/test/makefile
-	example/makefile
+	example/general/makefile
+	example/abs_normal/makefile
 	example/atomic/makefile
+	example/deprecated/makefile
 	example/ipopt_solve/makefile
 	example/optimize/makefile
-	introduction/get_started/makefile
-	introduction/exp_apx/makefile
-	multi_thread/makefile
-	multi_thread/test_multi/makefile
-	print_for/makefile
+	example/sparse/makefile
+	example/utility/makefile
+	example/get_started/makefile
+	introduction/makefile
+	example/multi_thread/makefile
+	example/print_for/makefile
 	speed/adolc/makefile
 	speed/cppad/makefile
 	speed/double/makefile
@@ -803,11 +812,12 @@ AC_CONFIG_FILES([
 	speed/profile/gprof.sed
 	speed/sacado/makefile
 	speed/src/makefile
-	test_more/makefile
+	test_more/compare_c/makefile
+	test_more/general/makefile
 ])
 dnl END AC_CONFIG_FILES
-dnl the comment line above is used by ./new_stable.sh
 
+dnl scripts that set library path before running test
 AC_CONFIG_COMMANDS(
 	[example_ipopt_solve_test.sh],
 	[chmod +x example/ipopt_solve/test.sh],

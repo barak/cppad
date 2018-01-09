@@ -26,6 +26,7 @@ var list_down3 = [
 ];
 var list_down2 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -49,12 +50,12 @@ var list_down1 = [
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
 'old_atomic.xml',
-'zdouble.xml'
+'zdouble.xml',
+'autotools.xml'
 ];
 var list_current0 = [
 'include_deprecated.xml#Deprecated 2015-11-30',
-'include_deprecated.xml#Deprecated 2006-12-17',
-'include_deprecated.xml#Linking New Files to Deprecated Commands'
+'include_deprecated.xml#Deprecated 2006-12-17'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

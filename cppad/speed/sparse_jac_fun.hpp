@@ -1,9 +1,8 @@
-// $Id: sparse_jac_fun.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_SPEED_SPARSE_JAC_FUN_HPP
 # define CPPAD_SPEED_SPARSE_JAC_FUN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -56,9 +55,6 @@ The template function $code sparse_jac_fun$$
 is defined in the $code CppAD$$ namespace by including
 the file $code cppad/speed/sparse_jac_fun.hpp$$
 (relative to the CppAD distribution directory).
-It is only intended for example and testing purposes,
-so it is not automatically included by
-$cref/cppad.hpp/cppad/$$.
 
 $head Float$$
 The type $icode Float$$ must be a $cref NumericType$$.
@@ -109,11 +105,11 @@ The value $latex K$$ is defined by $icode%K% = %row%.size()%$$.
 All the elements of $icode row$$ must be between zero and $icode%m%-1%$$.
 
 $head col$$
-The argument $icode row$$ has prototype
+The argument $icode col$$ has prototype
 $codei%
 	 const CppAD::vector<size_t>& %col%
 %$$
-and its size must be $latex K$$; i.e., the same as for $icode col$$.
+and its size must be $latex K$$; i.e., the same as $icode row$$.
 It specifies the component of $latex x$$ for
 the non-zero Jacobian terms.
 All the elements of $icode col$$ must be between zero and $icode%n%-1%$$.

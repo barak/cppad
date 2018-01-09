@@ -23,13 +23,16 @@ var list_down1 = [
 'appendix.xml'
 ];
 var list_down0 = [
+'get_started.cpp.xml',
 'general.xml',
 'exampleutility.xml',
 'listallexamples.xml',
-'testvector.xml'
+'testvector.xml',
+'wno_conversion.xml'
 ];
 var list_current0 = [
 'example.xml#Introduction',
+'example.xml#get_started',
 'example.xml#Running Examples',
 'example.xml#The CppAD Test Vector Template Class',
 'example.xml#Contents'

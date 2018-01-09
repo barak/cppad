@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_VEC_AD_HPP
 # define CPPAD_CORE_VEC_AD_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -100,7 +99,7 @@ can be used to compute the corresponding $icode Base$$ value.
 
 $lnext
 The object $icode r$$ cannot be used
-with the $cref/computed assignments operators/Arithmetic/$$
+with the $cref/compound assignments operators/Arithmetic/$$
 $code +=$$,
 $code -=$$,
 $code *=$$, or
@@ -143,7 +142,7 @@ If one uses this type in a
 AD of $icode Base$$
 $cref/operation sequence/glossary/Operation/Sequence/$$,
 $cref/sparsity pattern/glossary/Sparsity Pattern/$$ calculations
-($cref Sparse$$)
+($cref sparsity_pattern$$)
 are less efficient because the dependence of different
 elements of the vector cannot be separated.
 
@@ -252,7 +251,7 @@ when $icode v$$ falls out of scope.
 
 $head Example$$
 $children%
-	example/vec_ad.cpp
+	example/general/vec_ad.cpp
 %$$
 The file
 $cref vec_ad.cpp$$
@@ -310,14 +309,14 @@ Defines the VecAD<Base> class.
 
 /*!
 \def CPPAD_VEC_AD_COMPUTED_ASSIGNMENT(op, name)
-Prints an error message if the correspinding computed assignment is used.
+Prints an error message if the correspinding compound assignment is used.
 
 THis macro is used to print an error message if any of the
-computed assignments are used with the VecAD_reference class.
+compound assignments are used with the VecAD_reference class.
 The argument \c op is one of the following:
 += , -= , *= , /=.
 The argument \c name, is a string literal with the name of the
-computed assignment \c op.
+compound assignment \c op.
 */
 # define CPPAD_VEC_AD_COMPUTED_ASSIGNMENT(op, name)                     \
 VecAD_reference& operator op (const VecAD_reference<Base> &right)       \
@@ -381,7 +380,7 @@ public:
 	void operator = (const Base     &right);
 	void operator = (int             right);
 
-	// computed assignments
+	// compound assignments
 	CPPAD_VEC_AD_COMPUTED_ASSIGNMENT( += , " += " )
 	CPPAD_VEC_AD_COMPUTED_ASSIGNMENT( -= , " -= " )
 	CPPAD_VEC_AD_COMPUTED_ASSIGNMENT( *= , " *= " )
@@ -418,7 +417,7 @@ public:
 
 				// put operand addresses in tape
 				tape->Rec_.PutArg(
-					vec_->offset_, i, load_op_index
+					(addr_t) vec_->offset_, (addr_t) i, (addr_t) load_op_index
 				);
 				// put operator in the tape, ind_ is a parameter
 				result.taddr_ = tape->Rec_.PutLoadOp(local::LdpOp);
@@ -441,9 +440,10 @@ public:
 				CPPAD_ASSERT_UNKNOWN( ind_taddr > 0 );
 
 				// put operand addresses in tape
-				// (value of third arugment does not matter)
 				tape->Rec_.PutArg(
-					vec_->offset_, ind_taddr, load_op_index
+					(addr_t) vec_->offset_,
+					(addr_t) ind_taddr,
+					(addr_t) load_op_index
 				);
 				// put operator in the tape, ind_ is a variable
 				result.taddr_ = tape->Rec_.PutLoadOp(local::LdvOp);
@@ -573,7 +573,7 @@ public:
 			AD<Base>::tape_ptr(x.tape_id_)->AddVec(length_, data_);
 
 			// Advance pointer by one so starts at first component of this
-			// vector; i.e., skip lenght at begining (so is always > 0)
+			// vector; i.e., skip length at begining (so is always > 0)
 			offset_++;
 
 			// tape id corresponding to this offest
@@ -637,7 +637,7 @@ void VecAD_reference<Base>::operator=(const AD<Base> &y)
 		CPPAD_ASSERT_UNKNOWN( local::NumRes(local::StpvOp) == 0 );
 
 		// put operand addresses in tape
-		tape->Rec_.PutArg(vec_->offset_, i, y.taddr_);
+		tape->Rec_.PutArg((addr_t) vec_->offset_, (addr_t) i, y.taddr_);
 
 		// put operator in the tape, ind_ is parameter, y is variable
 		tape->Rec_.PutOp(local::StpvOp);
@@ -648,7 +648,7 @@ void VecAD_reference<Base>::operator=(const AD<Base> &y)
 		CPPAD_ASSERT_UNKNOWN( ind_.taddr_ > 0 );
 
 		// put operand addresses in tape
-		tape->Rec_.PutArg(vec_->offset_, ind_.taddr_, y.taddr_);
+		tape->Rec_.PutArg((addr_t) vec_->offset_, ind_.taddr_, y.taddr_);
 
 		// put operator in the tape, ind_ is variable, y is variable
 		tape->Rec_.PutOp(local::StvvOp);
@@ -688,7 +688,7 @@ void VecAD_reference<Base>::operator=(const Base &y)
 		CPPAD_ASSERT_UNKNOWN( local::NumRes(local::StppOp) == 0 );
 
 		// put operand addresses in tape
-		tape->Rec_.PutArg(vec_->offset_, i, p);
+		tape->Rec_.PutArg((addr_t) vec_->offset_, (addr_t) i, p);
 
 		// put operator in the tape, ind_ is parameter, y is parameter
 		tape->Rec_.PutOp(local::StppOp);
@@ -699,7 +699,7 @@ void VecAD_reference<Base>::operator=(const Base &y)
 		CPPAD_ASSERT_UNKNOWN( ind_.taddr_ > 0 );
 
 		// put operand addresses in tape
-		tape->Rec_.PutArg(vec_->offset_, ind_.taddr_, p);
+		tape->Rec_.PutArg((addr_t) vec_->offset_, ind_.taddr_, p);
 
 		// put operator in the tape, ind_ is variable, y is parameter
 		tape->Rec_.PutOp(local::StvpOp);

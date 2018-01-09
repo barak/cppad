@@ -1,9 +1,8 @@
-// $Id: vector.hpp 3853 2016-12-14 14:40:11Z bradbell $
 # ifndef CPPAD_UTILITY_VECTOR_HPP
 # define CPPAD_UTILITY_VECTOR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -36,7 +35,7 @@ $section The CppAD::vector Template Class$$
 $mindex vector CppAD [] push thread_alloc$$
 
 $head Syntax$$
-$code%# include <cppad/utility/vector.hpp>$$
+$codei%# include <cppad/utility/vector.hpp>%$$
 
 $head Description$$
 The include file $code cppad/vector.hpp$$ defines the
@@ -291,8 +290,8 @@ $lend
 
 $head Example$$
 $children%
-	example/cppad_vector.cpp%
-	example/vector_bool.cpp
+	example/utility/cppad_vector.cpp%
+	example/utility/vector_bool.cpp
 %$$
 The files
 $cref cppad_vector.cpp$$ and
@@ -430,7 +429,7 @@ public:
 		const vector& x
 	)
 	{	size_t i;
-		// If original lenght is zero, then resize it.
+		// If original length is zero, then resize it.
 		// Otherwise a length mismatch is an error.
 		if( length_ == 0 )
 			resize( x.length_ );
@@ -750,7 +749,7 @@ public:
 		const vectorBool& v
 	)
 	{	size_t i;
-		// If original lenght is zero, then resize it.
+		// If original length is zero, then resize it.
 		// Otherwise a length mismatch is an error.
 		if( length_ == 0 )
 			resize( v.length_ );

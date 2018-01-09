@@ -97,9 +97,17 @@ DIST_COMMON = $(srcdir)/makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_atomic_OBJECTS = atomic.$(OBJEXT) checkpoint.$(OBJEXT) \
-	eigen_cholesky.$(OBJEXT) eigen_mat_inv.$(OBJEXT) \
-	eigen_mat_mul.$(OBJEXT) extended_ode.$(OBJEXT) \
+am__atomic_SOURCES_DIST = eigen_cholesky.cpp eigen_mat_inv.cpp \
+	eigen_mat_mul.cpp atomic.cpp checkpoint.cpp extended_ode.cpp \
+	for_sparse_hes.cpp for_sparse_jac.cpp forward.cpp \
+	get_started.cpp mat_mul.cpp mul_level.cpp norm_sq.cpp ode.cpp \
+	reciprocal.cpp rev_sparse_hes.cpp rev_sparse_jac.cpp \
+	reverse.cpp set_sparsity.cpp tangent.cpp
+@CppAD_EIGEN_DIR_TRUE@am__objects_1 = eigen_cholesky.$(OBJEXT) \
+@CppAD_EIGEN_DIR_TRUE@	eigen_mat_inv.$(OBJEXT) \
+@CppAD_EIGEN_DIR_TRUE@	eigen_mat_mul.$(OBJEXT)
+am_atomic_OBJECTS = $(am__objects_1) atomic.$(OBJEXT) \
+	checkpoint.$(OBJEXT) extended_ode.$(OBJEXT) \
 	for_sparse_hes.$(OBJEXT) for_sparse_jac.$(OBJEXT) \
 	forward.$(OBJEXT) get_started.$(OBJEXT) mat_mul.$(OBJEXT) \
 	mul_level.$(OBJEXT) norm_sq.$(OBJEXT) ode.$(OBJEXT) \
@@ -138,7 +146,7 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(atomic_SOURCES)
-DIST_SOURCES = $(atomic_SOURCES)
+DIST_SOURCES = $(am__atomic_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -194,9 +202,9 @@ CXX_FLAGS_EIGEN = @CXX_FLAGS_EIGEN@
 CXX_FLAGS_FADBAD = @CXX_FLAGS_FADBAD@
 CYGPATH_W = @CYGPATH_W@
 
-# $Id: makefile.in 3839 2016-10-14 18:10:09Z bradbell $
+# $Id: makefile.in 3973 2017-08-30 13:38:26Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -214,7 +222,6 @@ DL_LIB = @DL_LIB@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-EGREP = @EGREP@
 EIGEN_DIR = @EIGEN_DIR@
 EIGEN_INCLUDE = @EIGEN_INCLUDE@
 EXEEXT = @EXEEXT@
@@ -222,7 +229,6 @@ FADBAD_DIR = @FADBAD_DIR@
 FC = @FC@
 FCFLAGS = @FCFLAGS@
 FCLIBS = @FCLIBS@
-GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -281,26 +287,28 @@ builddir = @builddir@
 cppad_SOURCE_DIR = @cppad_SOURCE_DIR@
 cppad_abs_includedir = @cppad_abs_includedir@
 cppad_boostvector = @cppad_boostvector@
+cppad_compiler_is_gnucxx = @cppad_compiler_is_gnucxx@
 cppad_cplusplus_201100_ok = @cppad_cplusplus_201100_ok@
 cppad_cppadvector = @cppad_cppadvector@
 cppad_cxx_flags = @cppad_cxx_flags@
-cppad_deprecated = @cppad_deprecated@
+cppad_deprecated_01 = @cppad_deprecated_01@
 cppad_description = @cppad_description@
 cppad_eigenvector = @cppad_eigenvector@
+cppad_has_adolc = @cppad_has_adolc@
+cppad_has_boost = @cppad_has_boost@
 cppad_has_colpack = @cppad_has_colpack@
-cppad_has_cstdint_8_to_64 = @cppad_has_cstdint_8_to_64@
+cppad_has_eigen = @cppad_has_eigen@
+cppad_has_fadbad = @cppad_has_fadbad@
 cppad_has_gettimeofday = @cppad_has_gettimeofday@
+cppad_has_ipopt = @cppad_has_ipopt@
 cppad_has_mkstemp = @cppad_has_mkstemp@
-cppad_has_nullptr = @cppad_has_nullptr@
-cppad_has_rvalue = @cppad_has_rvalue@
-cppad_has_steady_clock = @cppad_has_steady_clock@
+cppad_has_sacado = @cppad_has_sacado@
 cppad_has_tmpnam_s = @cppad_has_tmpnam_s@
 cppad_max_num_threads = @cppad_max_num_threads@
 cppad_pkgconfig_cflags = @cppad_pkgconfig_cflags@
 cppad_pkgconfig_libs = @cppad_pkgconfig_libs@
 cppad_pkgconfig_requires = @cppad_pkgconfig_requires@
 cppad_prefix = @cppad_prefix@
-cppad_size_t_not_unsigned_int = @cppad_size_t_not_unsigned_int@
 cppad_stdvector = @cppad_stdvector@
 cppad_tape_addr_type = @cppad_tape_addr_type@
 cppad_tape_id_type = @cppad_tape_id_type@
@@ -323,6 +331,8 @@ includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 ipopt_prefix = @ipopt_prefix@
+is_pod_specialize_11 = @is_pod_specialize_11@
+is_pod_specialize_98 = @is_pod_specialize_98@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
@@ -342,6 +352,15 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+@CppAD_EIGEN_DIR_FALSE@EIGEN_SRC_FILES = 
+#
+@CppAD_EIGEN_DIR_TRUE@EIGEN_SRC_FILES = eigen_cholesky.cpp eigen_mat_inv.cpp eigen_mat_mul.cpp
+@CppAD_EIGEN_DIR_TRUE@EIGEN_EXTRA_FILES = 
+@CppAD_EIGEN_DIR_FALSE@EIGEN_EXTEA_FILES = eigen_cholesky.cpp eigen_mat_inv.cpp eigen_mat_mul.cpp
+#
+EXTRA_DIST = \
+	$(EIGEN_EXTRA_FILES)
+
 #
 AM_CXXFLAGS = -g $(CXX_FLAGS)
 #
@@ -352,11 +371,9 @@ AM_CPPFLAGS = -I. \
 
 #
 atomic_SOURCES = \
+	$(EIGEN_SRC_FILES) \
 	atomic.cpp \
 	checkpoint.cpp \
-	eigen_cholesky.cpp \
-	eigen_mat_inv.cpp \
-	eigen_mat_mul.cpp \
 	extended_ode.cpp \
 	for_sparse_hes.cpp \
 	for_sparse_jac.cpp \
@@ -386,9 +403,9 @@ $(srcdir)/makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu example/atomic/makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign example/atomic/makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu example/atomic/makefile
+	  $(AUTOMAKE) --foreign example/atomic/makefile
 makefile: $(srcdir)/makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

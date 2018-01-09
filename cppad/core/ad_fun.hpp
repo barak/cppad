@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_AD_FUN_HPP
 # define CPPAD_CORE_AD_FUN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -40,20 +39,16 @@ The $code ADFun$$ object can then be used to calculate function values,
 derivative values, and other values related to the corresponding function.
 
 $childtable%
-	cppad/core/independent.hpp%
-	cppad/core/fun_construct.hpp%
-	cppad/core/dependent.hpp%
-	cppad/core/abort_recording.hpp%
-	omh/seq_property.omh%
-	cppad/core/fun_eval.hpp%
-	cppad/core/drivers.hpp%
-	cppad/core/fun_check.hpp%
+	omh/adfun.omh%
 	cppad/core/optimize.hpp%
+	example/abs_normal/abs_normal.omh%
+	cppad/core/fun_check.hpp%
 	cppad/core/check_for_nan.hpp
 %$$
 
 $end
 */
+# include <cppad/local/subgraph/info.hpp>
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 /*!
@@ -68,6 +63,7 @@ Class used to hold function objects
 A function object has a recording of <tt>AD<Base></tt> operations.
 It does it calculations using \c Base operations.
 */
+
 
 template <class Base>
 class ADFun {
@@ -118,6 +114,11 @@ private:
 	/// results of the forward mode calculations
 	local::pod_vector<Base> taylor_;
 
+	/// Memory used for subgraph reverse mode calculations.
+	/// Declared here to avoid reallocation for each call to subgraph_reverse.
+	/// Not in subgraph_info_ because it depends on Base.
+	local::pod_vector<Base> subgraph_partial_;
+
 	/// which operations can be conditionally skipped
 	/// Set during forward pass of order zero
 	local::pod_vector<bool> cskip_op_;
@@ -132,11 +133,14 @@ private:
 	/// Packed results of the forward mode Jacobian sparsity calculations.
 	/// for_jac_sparse_pack_.n_set() != 0  implies other sparsity results
 	/// are empty
-	local::sparse_pack      for_jac_sparse_pack_;
+	local::sparse_pack for_jac_sparse_pack_;
 
 	/// Set results of the forward mode Jacobian sparsity calculations
 	/// for_jac_sparse_set_.n_set() != 0  implies for_sparse_pack_ is empty.
-	local::sparse_list         for_jac_sparse_set_;
+	local::sparse_list for_jac_sparse_set_;
+
+	/// subgraph information for this object
+	local::subgraph::subgraph_info subgraph_info_;
 
 // ------------------------------------------------------------
 // Private member functions
@@ -193,7 +197,7 @@ private:
 	);
 	// ------------------------------------------------------------
 	// vector of bool version of ForSparseHes
-	// (see doxygen in rev_sparse_hes.hpp)
+	// (see doxygen in for_sparse_hes.hpp)
 	template <class VectorSet>
 	void ForSparseHesCase(
 		bool               set_type  ,
@@ -202,7 +206,7 @@ private:
 		VectorSet&         h
 	);
 	// vector of std::set<size_t> version of ForSparseHes
-	// (see doxygen in rev_sparse_hes.hpp)
+	// (see doxygen in for_sparse_hes.hpp)
 	template <class VectorSet>
 	void ForSparseHesCase(
 		const std::set<size_t>&  set_type  ,
@@ -298,11 +302,11 @@ public:
 	~ADFun(void)
 	{ }
 
-	/// set value of check_for_nan_
-	void check_for_nan(bool value)
-	{	check_for_nan_ = value; }
-	bool check_for_nan(void) const
-	{	return check_for_nan_; }
+	/// set check_for_nan
+	void check_for_nan(bool value);
+
+	/// get check_for_nan
+	bool check_for_nan(void) const;
 
 	/// assign a new operation sequence
 	template <typename ADvector>
@@ -322,22 +326,109 @@ public:
 	template <typename VectorBase>
 	VectorBase Reverse(size_t p, const VectorBase &v);
 
-	// forward mode Jacobian sparsity
-	// (see doxygen documentation in for_sparse_jac.hpp)
+	// ---------------------------------------------------------------------
+	// Jacobian sparsity
 	template <typename VectorSet>
 	VectorSet ForSparseJac(
 		size_t q, const VectorSet &r, bool transpose = false,
 		bool dependency = false
 	);
-	// reverse mode Jacobian sparsity
-	// (see doxygen documentation in rev_sparse_jac.hpp)
 	template <typename VectorSet>
 	VectorSet RevSparseJac(
 		size_t q, const VectorSet &s, bool transpose = false,
 		bool dependency = false
 	);
+	// ---------------------------------------------------------------------
+	template <typename VectorBool>
+	void subgraph_reverse(
+		const VectorBool&                   select_domain
+	);
+	template <typename VectorBase, typename SizeVector>
+	void subgraph_reverse(
+		size_t                               q         ,
+		size_t                               ell       ,
+		SizeVector&                          col       ,
+		VectorBase&                          dw
+	);
+	template <typename SizeVector, typename BaseVector>
+	void subgraph_jac_rev(
+		const BaseVector&                    x         ,
+		sparse_rcv<SizeVector, BaseVector>&  subset
+	);
+	template <typename BoolVector, typename SizeVector, typename BaseVector>
+	void subgraph_jac_rev(
+		const BoolVector&                    select_domain ,
+		const BoolVector&                    select_range  ,
+		const BaseVector&                    x             ,
+		sparse_rcv<SizeVector, BaseVector>&  matrix_out
+	);
+	template <typename SizeVector, typename BaseVector>
+	size_t sparse_jac_for(
+		size_t                               group_max ,
+		const BaseVector&                    x         ,
+		sparse_rcv<SizeVector, BaseVector>&  subset    ,
+		const sparse_rc<SizeVector>&         pattern   ,
+		const std::string&                   coloring  ,
+		sparse_jac_work&                     work
+	);
+	template <typename SizeVector, typename BaseVector>
+	size_t sparse_jac_rev(
+		const BaseVector&                    x        ,
+		sparse_rcv<SizeVector, BaseVector>&  subset   ,
+		const sparse_rc<SizeVector>&         pattern  ,
+		const std::string&                   coloring ,
+		sparse_jac_work&                     work
+	);
+	template <typename SizeVector, typename BaseVector>
+	size_t sparse_hes(
+		const BaseVector&                    x        ,
+		const BaseVector&                    w        ,
+		sparse_rcv<SizeVector, BaseVector>&  subset   ,
+		const sparse_rc<SizeVector>&         pattern  ,
+		const std::string&                   coloring ,
+		sparse_hes_work&                     work
+	);
+	// ---------------------------------------------------------------------
+	template <typename BoolVector, typename SizeVector>
+	void subgraph_sparsity(
+		const BoolVector&            select_domain    ,
+		const BoolVector&            select_range     ,
+		bool                         transpose        ,
+		sparse_rc<SizeVector>&       pattern_out
+	);
+	template <typename SizeVector>
+	void for_jac_sparsity(
+		const sparse_rc<SizeVector>& pattern_in       ,
+		bool                         transpose        ,
+		bool                         dependency       ,
+		bool                         internal_bool    ,
+		sparse_rc<SizeVector>&       pattern_out
+	);
+	template <typename SizeVector>
+	void rev_jac_sparsity(
+		const sparse_rc<SizeVector>& pattern_in       ,
+		bool                         transpose        ,
+		bool                         dependency       ,
+		bool                         internal_bool    ,
+		sparse_rc<SizeVector>&       pattern_out
+	);
+	template <typename BoolVector, typename SizeVector>
+	void rev_hes_sparsity(
+		const BoolVector&            select_range     ,
+		bool                         transpose        ,
+		bool                         internal_bool    ,
+		sparse_rc<SizeVector>&       pattern_out
+	);
+	template <typename BoolVector, typename SizeVector>
+	void for_hes_sparsity(
+		const BoolVector&            select_domain    ,
+		const BoolVector&            select_range     ,
+		bool                         internal_bool    ,
+		sparse_rc<SizeVector>&       pattern_out
+	);
+	// ---------------------------------------------------------------------
 	// forward mode Hessian sparsity
-	// (see doxygen documentation in rev_sparse_hes.hpp)
+	// (see doxygen documentation in for_sparse_hes.hpp)
 	template <typename VectorSet>
 	VectorSet ForSparseHes(
 		const VectorSet &r, const VectorSet &s
@@ -382,7 +473,7 @@ public:
 	local::sparse_list&                  s
 	);
 
-	/// amount of memory used for Jacobain sparsity pattern
+	/// amount of memory used for boolean Jacobain sparsity pattern
 	size_t size_forward_bool(void) const
 	{	return for_jac_sparse_pack_.memory(); }
 
@@ -395,9 +486,9 @@ public:
 		for_jac_sparse_pack_.resize(0, 0);
 	}
 
-	/// total number of elements used for Jacobian sparsity pattern
+	/// amount of memory used for vector of set Jacobain sparsity pattern
 	size_t size_forward_set(void) const
-	{	return for_jac_sparse_set_.number_elements(); }
+	{	return for_jac_sparse_set_.memory(); }
 
 	/// free memory used for Jacobain sparsity pattern
 	void size_forward_set(size_t zero)
@@ -584,6 +675,9 @@ public:
 	// Optimize the tape
 	// (see doxygen documentation in optimize.hpp)
 	void optimize( const std::string& options = "" );
+
+	// create abs-normal representation of the function f(x)
+	void abs_normal_fun( ADFun& g, ADFun& a ) const;
 	// ------------------- Deprecated -----------------------------
 
 	/// deprecated: assign a new operation sequence
@@ -604,7 +698,8 @@ public:
 	size_t Memory(void) const
 	{	size_t pervar  = cap_order_taylor_ * sizeof(Base)
 		+ for_jac_sparse_pack_.memory()
-		+ 3 * sizeof(size_t) * for_jac_sparse_set_.number_elements();
+		+ for_jac_sparse_set_.memory()
+		+ subgraph_info_.memory();
 		size_t total   = num_var_tape_  * pervar + play_.Memory();
 		return total;
 	}
@@ -653,5 +748,6 @@ public:
 # include <cppad/core/fun_check.hpp>
 # include <cppad/core/omp_max_thread.hpp>
 # include <cppad/core/optimize.hpp>
+# include <cppad/core/abs_normal_fun.hpp>
 
 # endif

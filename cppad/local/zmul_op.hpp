@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_LOCAL_ZMUL_OP_HPP
 # define CPPAD_LOCAL_ZMUL_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -31,7 +30,7 @@ In the documentation below,
 this operations is for the case where both x and y are variables
 and the argument \a parameter is not used.
 
-\copydetails forward_binary_op
+\copydetails CppAD::local::forward_binary_op
 */
 
 template <class Base>
@@ -57,7 +56,7 @@ inline void forward_zmulvv_op(
 
 	size_t k;
 	for(size_t d = p; d <= q; d++)
-	{	z[d] = Base(0);
+	{	z[d] = Base(0.0);
 		for(k = 0; k <= d; k++)
 			z[d] += azmul(x[d-k], y[k]);
 	}
@@ -73,7 +72,7 @@ In the documentation below,
 this operations is for the case where both x and y are variables
 and the argument \a parameter is not used.
 
-\copydetails forward_binary_op_dir
+\copydetails CppAD::local::forward_binary_op_dir
 */
 
 template <class Base>
@@ -118,7 +117,7 @@ In the documentation below,
 this operations is for the case where both x and y are variables
 and the argument \a parameter is not used.
 
-\copydetails forward_binary_op_0
+\copydetails CppAD::local::forward_binary_op_0
 */
 
 template <class Base>
@@ -152,7 +151,7 @@ In the documentation below,
 this operations is for the case where both x and y are variables
 and the argument \a parameter is not used.
 
-\copydetails reverse_binary_op
+\copydetails CppAD::local::reverse_binary_op
 */
 
 template <class Base>
@@ -204,7 +203,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails forward_binary_op
+\copydetails CppAD::local::forward_binary_op
 */
 
 template <class Base>
@@ -243,7 +242,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails forward_binary_op_dir
+\copydetails CppAD::local::forward_binary_op_dir
 */
 
 template <class Base>
@@ -284,7 +283,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails forward_binary_op_0
+\copydetails CppAD::local::forward_binary_op_0
 */
 
 template <class Base>
@@ -319,7 +318,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails reverse_binary_op
+\copydetails CppAD::local::reverse_binary_op
 */
 
 template <class Base>
@@ -364,7 +363,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails forward_binary_op
+\copydetails CppAD::local::forward_binary_op
 */
 
 template <class Base>
@@ -403,7 +402,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails forward_binary_op_dir
+\copydetails CppAD::local::forward_binary_op_dir
 */
 
 template <class Base>
@@ -444,7 +443,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails forward_binary_op_0
+\copydetails CppAD::local::forward_binary_op_0
 */
 
 template <class Base>
@@ -479,7 +478,7 @@ The C++ source code corresponding to this operation is
 In the documentation below,
 this operations is for the case where x is a parameter and y is a variable.
 
-\copydetails reverse_binary_op
+\copydetails CppAD::local::reverse_binary_op
 */
 
 template <class Base>

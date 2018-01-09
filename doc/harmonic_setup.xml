@@ -1,0 +1,192 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Set Up Multi-threading Sum of 1/i</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Set Up Multi-threading Sum of 1/i"/>
+<meta name="keywords" id="keywords" content=" set up multi-threading sum 1/i syntax purpose thread num_sum source "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_harmonic_setup_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="harmonic_common.xml" target="_top">Prev</a>
+</td><td><a href="harmonic_worker.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>multi_thread</option>
+<option>thread_test.cpp</option>
+<option>harmonic.cpp</option>
+<option>harmonic_setup</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>multi_thread-&gt;</option>
+<option>parallel_ad</option>
+<option>thread_test.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>thread_test.cpp-&gt;</option>
+<option>a11c_openmp.cpp</option>
+<option>a11c_bthread.cpp</option>
+<option>a11c_pthread.cpp</option>
+<option>simple_ad_openmp.cpp</option>
+<option>simple_ad_bthread.cpp</option>
+<option>simple_ad_pthread.cpp</option>
+<option>team_example.cpp</option>
+<option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
+<option>multi_newton.cpp</option>
+<option>team_thread.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>harmonic.cpp-&gt;</option>
+<option>harmonic_common</option>
+<option>harmonic_setup</option>
+<option>harmonic_worker</option>
+<option>harmonic_takedown</option>
+<option>harmonic_sum</option>
+<option>harmonic_time</option>
+</select>
+</td>
+<td>harmonic_setup</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Purpose</option>
+<option>Thread</option>
+<option>num_sum</option>
+<option>Source</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Set Up Multi-threading Sum of 1/i</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;harmonic_setup(</span></font><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This routine does the setup for splitting
+the summation that defines the harmonic series
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mn>1</mn>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mn>2</mn>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mn>3</mn>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">.</mo>
+<mo stretchy="false">.</mo>
+<mo stretchy="false">.</mo>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+into separate parts for each thread.
+
+<br/>
+<br/>
+<b><big><a name="Thread" id="Thread">Thread</a></big></b>
+<br/>
+It is assumed that this function is called by thread zero,
+and all the other threads are blocked (waiting).
+
+<br/>
+<br/>
+<b><big><a name="num_sum" id="num_sum">num_sum</a></big></b>
+<br/>
+The argument 
+<code><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i></code>
+ has prototype
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;size_t&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+It specifies the value of 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+ in the summation.
+
+<br/>
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">harmonic_setup</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> num_sum<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// sum = 1/num_sum + 1/(num_sum-1) + ... + 1</span></span>
+     <span style="color: #008080">size_t</span> num_threads  <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+     <span style="color: #009900">bool</span> ok             <span style="color: #990000">=</span> num_threads <span style="color: #990000">==</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">num_threads</span></span><span style="color: #990000">();</span>
+     ok                 <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     ok                 <span style="color: #990000">&amp;=</span> num_sum <span style="color: #990000">&gt;=</span> num_threads<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> thread_num <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread_num <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread_num<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// allocate separate memory for this thread to avoid false sharing</span></span>
+          <span style="color: #008080">size_t</span> <span style="font-weight: bold"><span style="color: #000000">min_bytes</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">sizeof</span></span><span style="color: #990000">(</span>work_one_t<span style="color: #990000">)),</span> cap_bytes<span style="color: #990000">;</span>
+          <span style="color: #009900">void</span><span style="color: #990000">*</span> v_ptr <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">get_memory</span></span><span style="color: #990000">(</span>min_bytes<span style="color: #990000">,</span> cap_bytes<span style="color: #990000">);</span>
+          work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span>work_one_t<span style="color: #990000">*&gt;(</span>v_ptr<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// in case this thread's worker does not get called</span></span>
+          work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// parameters that define the work for this and previous thread</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread_num <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               work_all_<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]-&gt;</span>start <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> index  <span style="color: #990000">=</span> <span style="color: #990000">(</span>num_sum <span style="color: #990000">*</span> thread_num<span style="color: #990000">)</span> <span style="color: #990000">/</span> num_threads<span style="color: #990000">;</span>
+               work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]-&gt;</span>stop <span style="color: #990000">=</span> index<span style="color: #990000">;</span>
+               work_all_<span style="color: #990000">[</span>thread_num<span style="color: #990000">]-&gt;</span>start  <span style="color: #990000">=</span> index<span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     work_all_<span style="color: #990000">[</span>num_threads<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]-&gt;</span>stop <span style="color: #990000">=</span> num_sum <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span></tt></pre>
+
+<hr/>Input File: example/multi_thread/harmonic.cpp
+
+</body>
+</html>

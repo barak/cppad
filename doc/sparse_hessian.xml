@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>Sparse Hessian: Easy Driver</title>
+<title>Sparse Hessian</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="Sparse Hessian: Easy Driver"/>
-<meta name="keywords" id="keywords" content=" sparse hessian: easy driver Sparsehessian syntax purpose f x w p work column subset row col hes color_method n_sweep vectorbase vectorset restrictions vectorsize uses forward example hessian "/>
+<meta name="description" id="description" content="Sparse Hessian"/>
+<meta name="keywords" id="keywords" content=" sparse hessian syntax purpose f x w p work column subset row col hes color_method colpack.star deprecated 2017-06-01 n_sweep vectorbase vectorset restrictions vectorsize uses forward example "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -22,7 +22,7 @@ A:active { color : purple }
 <td>
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
-<td><a href="sparse_jacobian.cpp.xml" target="_top">Prev</a>
+<td><a href="sparse_hes.cpp.xml" target="_top">Prev</a>
 </td><td><a href="sparse_hessian.cpp.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
@@ -39,7 +39,7 @@ A:active { color : purple }
 <option>Up-&gt;</option>
 <option>CppAD</option>
 <option>ADFun</option>
-<option>Drivers</option>
+<option>sparse_derivative</option>
 <option>sparse_hessian</option>
 </select>
 </td>
@@ -62,29 +62,26 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down2(this)'>
 <option>ADFun-&gt;</option>
-<option>Independent</option>
-<option>FunConstruct</option>
-<option>Dependent</option>
-<option>abort_recording</option>
-<option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
 <option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
 <option>check_for_nan</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down1(this)'>
-<option>Drivers-&gt;</option>
-<option>Jacobian</option>
-<option>ForOne</option>
-<option>RevOne</option>
-<option>Hessian</option>
-<option>ForTwo</option>
-<option>RevTwo</option>
+<option>sparse_derivative-&gt;</option>
+<option>sparse_jac</option>
 <option>sparse_jacobian</option>
+<option>sparse_hes</option>
 <option>sparse_hessian</option>
+<option>subgraph_jac_rev</option>
 </select>
 </td>
 <td>
@@ -111,6 +108,7 @@ A:active { color : purple }
 <option>hes</option>
 <option>work</option>
 <option>---..color_method</option>
+<option>---..colpack.star Deprecated 2017-06-01</option>
 <option>---..p</option>
 <option>n_sweep</option>
 <option>VectorBase</option>
@@ -123,7 +121,7 @@ A:active { color : purple }
 </select>
 </td>
 </tr></table><br/>
-<center><b><big><big>Sparse Hessian: Easy Driver</big></big></b></center>
+<center><b><big><big>Sparse Hessian</big></big></b></center>
 <br/>
 <b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
 
@@ -762,7 +760,7 @@ This is the same as the <code><font color="blue">&quot;cppad&quot;</font></code>
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
 <br/>
-&quot;colpack.star&quot;<br/>
+&quot;colpack.symmetric&quot;<br/>
 </span></font></code>
 This method requires that
 <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
@@ -770,6 +768,22 @@ This method requires that
 <a href="cmake.xml#CMake Command" target="_top"><span style='white-space: nowrap'>cmake&#xA0;command</span></a>
  line.
 It also takes advantage of the fact that the Hessian matrix is symmetric.
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+<br/>
+&quot;colpack.general&quot;<br/>
+</span></font></code>
+This is the same as the <code><font color="blue">&quot;colpack&quot;</font></code> method for the
+<a href="sparse_jacobian.xml#work.color_method" target="_top"><span style='white-space: nowrap'>sparse_jacobian</span></a>
+ calculation.
+
+<br/>
+<br/>
+<b><a name="work.colpack.star Deprecated 2017-06-01" id="work.colpack.star Deprecated 2017-06-01">colpack.star Deprecated 2017-06-01</a></b>
+<br/>
+The <code><font color="blue">colpack.star</font></code> method is deprecated.
+It is the same as the <code><font color="blue">colpack.symmetric</font></code>
+which should be used instead.
 
 <br/>
 <br/>
@@ -904,13 +918,12 @@ It return <code><font color="blue">true</font></code>, if it succeeds and <code>
 <br/>
 <b><big><a name="Subset Hessian" id="Subset Hessian">Subset Hessian</a></big></b>
 <br/>
-The routines
+The routine
 <a href="sub_sparse_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>sub_sparse_hes.cpp</span></a>
- and <a href="sparse_sub_hes.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_sub_hes.cpp</span></a>
 
-are examples and tests that compute a sparse Hessian
+is an example and test that compute a sparse Hessian
 for a subset of the variables.
-They return <code><font color="blue">true</font></code>, if they succeed and <code><font color="blue">false</font></code> otherwise.
+It returns <code><font color="blue">true</font></code>, for success, and <code><font color="blue">false</font></code> otherwise.
 
 
 <hr/>Input File: cppad/core/sparse_hessian.hpp

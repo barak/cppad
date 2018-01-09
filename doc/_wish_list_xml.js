@@ -25,6 +25,7 @@ var list_down2 = [
 ];
 var list_down1 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -37,14 +38,23 @@ var list_down1 = [
 'license.xml'
 ];
 var list_current0 = [
+'wish_list.xml#Multi-Threading',
+'wish_list.xml#Atomic',
+'wish_list.xml#Atomic.Subgraph',
+'wish_list.xml#Atomic.New API',
+'wish_list.xml#Atomic.Sparsity',
+'wish_list.xml#Atomic.Element-wise Operations',
+'wish_list.xml#check_finite',
+'wish_list.xml#test_boolofvoid',
+'wish_list.xml#Eigen',
+'wish_list.xml#Example',
 'wish_list.xml#Optimization',
 'wish_list.xml#Optimization.Taping',
 'wish_list.xml#Optimization.Special Operators',
+'wish_list.xml#Optimization.Memory',
 'wish_list.xml#checkpoint',
 'wish_list.xml#checkpoint.Retape',
 'wish_list.xml#checkpoint.Testing',
-'wish_list.xml#Sparsity Patterns',
-'wish_list.xml#check_finite',
 'wish_list.xml#Compilation Speed',
 'wish_list.xml#Base Requirements',
 'wish_list.xml#Adolc',

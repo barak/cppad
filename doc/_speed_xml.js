@@ -33,6 +33,7 @@ var list_down0 = [
 ];
 var list_current0 = [
 'speed.xml#Purpose',
+'speed.xml#debug_which',
 'speed.xml#Contents'
 ];
 function choose_across0(item)

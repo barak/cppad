@@ -1,10 +1,9 @@
-// $Id$
 # ifndef CPPAD_LOCAL_EXPM1_OP_HPP
 # define CPPAD_LOCAL_EXPM1_OP_HPP
 # if CPPAD_USE_CPLUSPLUS_2011
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -30,7 +29,7 @@ The C++ source code corresponding to this operation is
 	z = expm1(x)
 \endverbatim
 
-\copydetails forward_unary1_op
+\copydetails CppAD::local::forward_unary1_op
 */
 template <class Base>
 inline void forward_expm1_op(
@@ -60,8 +59,8 @@ inline void forward_expm1_op(
 	{
 		z[j] = x[1] * z[j-1];
 		for(k = 2; k <= j; k++)
-			z[j] += Base(k) * x[k] * z[j-k];
-		z[j] /= Base(j);
+			z[j] += Base(double(k)) * x[k] * z[j-k];
+		z[j] /= Base(double(j));
 		z[j] += x[j];
 	}
 }
@@ -75,7 +74,7 @@ The C++ source code corresponding to this operation is
 	z = expm1(x)
 \endverbatim
 
-\copydetails forward_unary1_op_dir
+\copydetails CppAD::local::forward_unary1_op_dir
 */
 template <class Base>
 inline void forward_expm1_op_dir(
@@ -99,10 +98,10 @@ inline void forward_expm1_op_dir(
 
 	size_t m = (q-1)*r + 1;
 	for(size_t ell = 0; ell < r; ell++)
-	{	z[m+ell] = Base(q) * x[m+ell] * z[0];
+	{	z[m+ell] = Base(double(q)) * x[m+ell] * z[0];
 		for(size_t k = 1; k < q; k++)
-			z[m+ell] += Base(k) * x[(k-1)*r+ell+1] * z[(q-k-1)*r+ell+1];
-		z[m+ell] /= Base(q);
+			z[m+ell] += Base(double(k)) * x[(k-1)*r+ell+1] * z[(q-k-1)*r+ell+1];
+		z[m+ell] /= Base(double(q));
 		z[m+ell] += x[m+ell];
 	}
 }
@@ -115,7 +114,7 @@ The C++ source code corresponding to this operation is
 	z = expm1(x)
 \endverbatim
 
-\copydetails forward_unary1_op_0
+\copydetails CppAD::local::forward_unary1_op_0
 */
 template <class Base>
 inline void forward_expm1_op_0(
@@ -143,7 +142,7 @@ The C++ source code corresponding to this operation is
 	z = expm1(x)
 \endverbatim
 
-\copydetails reverse_unary1_op
+\copydetails CppAD::local::reverse_unary1_op
 */
 
 template <class Base>
@@ -185,11 +184,11 @@ inline void reverse_expm1_op(
 	{	px[j] += pz[j];
 
 		// scale partial w.r.t z[j]
-		pz[j] /= Base(j);
+		pz[j] /= Base(double(j));
 
 		for(k = 1; k <= j; k++)
-		{	px[k]   += Base(k) * azmul(pz[j], z[j-k]);
-			pz[j-k] += Base(k) * azmul(pz[j], x[k]);
+		{	px[k]   += Base(double(k)) * azmul(pz[j], z[j-k]);
+			pz[j-k] += Base(double(k)) * azmul(pz[j], x[k]);
 		}
 		--j;
 	}

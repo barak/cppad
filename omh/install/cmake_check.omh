@@ -1,6 +1,5 @@
-// $Id: cmake_check.omh 3778 2016-01-01 01:55:33Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -18,6 +17,7 @@ $spell
 	CppAD
 	cmake
 	nmake
+	grep
 $$
 
 $section Checking the CppAD Examples and Tests$$
@@ -48,38 +48,39 @@ $cref/windows file extraction and testing
 	/Windows File Extraction and Testing
 /$$.
 
-$head Subsets$$
-It is possible to build and run the following subsets of the
-examples and tests:
+$head Subsets of make check$$
+In unix, you can determine which subsets of $code make check$$ are available
+by putting the output of the $cref/cmake command/cmake/CMake Command/$$
+in a file (called $icode cmake.out$$ below) and executing:
+$codei%
+	grep 'make check.*available' %cmake.out%
+%$$
+
+$head First Level$$
+The first level of subsets of $code make check$$ are described below:
 $table
 Command $cnext
 	Description
 $rnext
-$code make check_compare_c$$ $cnext
-	$tref compare_c$$
-$rnext
 $code make check_introduction$$   $cnext
-	the programs in the $cref Introduction$$
+	the $cref Introduction$$ functions
 $rnext
 $code make check_example$$   $cnext
-	most of the $cref Example$$ programs
-$rnext
-$code make check_print_for$$ $cnext
-	the $cref PrintFor$$  command
+	the normal $cref/example/listallexamples/$$ functions plus some deprecated
+	examples.
 $rnext
 $code make check_test_more$$ $cnext
 	correctness tests that are not examples
 $rnext
-$code make check_multi_thread$$ $cnext
-	$cref multi_thread$$ tests (run correctness only)
-$rnext
 $code make check_speed$$ $cnext
-	single threading $cref speed$$ tests (run correctness only)
+	correctness for single thread $cref speed$$ tests
 $rnext
 $code make check_cppad_ipopt$$ $cnext
-	the $cref cppad_ipopt_nlp$$ speed and correctness tests
+	the deprecated $cref cppad_ipopt_nlp$$ speed and correctness tests
 $rnext
 $tend
+Note that $code make check_example_multi_thread$$ is used for the
+$cref/multi-threading/multi_thread/$$ speed tests.
 
 
 $end

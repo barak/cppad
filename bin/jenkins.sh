@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: jenkins.sh 3842 2016-10-25 02:39:34Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -86,11 +85,13 @@ log_eval bin/get_eigen.sh
 # where $libdir is 'lib64' if /usr/lib64 exists and 'lib' otherwise.
 log_eval bin/get_ipopt.sh
 # -------------------------------------------------------------------
+# Commented out because autotools build no longer supports sacado.
+#
 # Running bin/get_sacado.sh ensures its include files are in
 #	$trunk_dir/build/prefix/include
 # and library files in
 #	$trunk_dir/build/prefix/$libdir
-log_eval bin/get_sacado.sh
+# log_eval bin/get_sacado.sh
 # -------------------------------------------------------------------
 # Running bin/get_colpack.sh ensures its library files are in
 #	$trunk_dir/build/prefix/$libdir
@@ -124,11 +125,11 @@ else
 	export LD_LIBRARY_PATH="$trunk_dir/build/prefix/$libdir"
 fi
 # -----------------------------------------------------------------------
-# Use trunk_dir/build/auto_tools to build and test CppAD (no reuse)
+# Use trunk_dir/build/autotools to build and test CppAD (no reuse)
 echo_eval cd build
-echo_eval rm -rf auto_tools
-echo_eval mkdir auto_tools
-echo_eval cd auto_tools
+echo_eval rm -rf autotools
+echo_eval mkdir autotools
+echo_eval cd autotools
 #
 # configure cppad to use all the packages above
 if which rpm >& /dev/null
@@ -139,12 +140,14 @@ else
 	build_type=''
 fi
 #
+# Commented out because autotools build no longer supports sacado.
+# SACADO_DIR="$trunk_dir/build/prefix" \\
+#
 cat << EOF
 $trunk_dir/configure \\
 	$build_type \\
 	--disable-silent-rules \\
 	ADOLC_DIR="$trunk_dir/build/prefix" \\
-	SACADO_DIR="$trunk_dir/build/prefix" \\
 	EIGEN_DIR="$trunk_dir/build/prefix" \\
 	IPOPT_DIR="$trunk_dir/build/prefix" \\
 	FADBAD_DIR="$trunk_dir/build/prefix"  \\
@@ -155,7 +158,6 @@ EOF
 if ! $trunk_dir/configure $build_type \
 	--disable-silent-rules \
 	ADOLC_DIR="$trunk_dir/build/prefix" \
-	SACADO_DIR="$trunk_dir/build/prefix" \
 	EIGEN_DIR="$trunk_dir/build/prefix" \
 	IPOPT_DIR="$trunk_dir/build/prefix" \
 	FADBAD_DIR="$trunk_dir/build/prefix" \
@@ -168,6 +170,9 @@ then
 	cat config.log
 	exit 1
 fi
+#
+# copy configure.hpp to source directory
+log_eval cp cppad/configure.hpp $trunk_dir/cppad/configure.hpp
 #
 # compile the tests
 log_eval make check

@@ -1,5 +1,4 @@
 #! /bin/bash -e
-# $Id$
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
@@ -10,15 +9,29 @@
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
+# Plan for batch edit of all files:
+# 1. Do not update copyright date when do this edit
+# 2. Remove an svn Id commands.
+# 3. "included in the COPYING file" -> "included in the epl-v10.txt file"
+# 4. Remove all omhelp index commands.
+# 5. Change: $code $srcfile ...$$ $$ -> $srcfile ... $$
+# 6. Convert tabs to spaces.
+# 7. Change CPPAD_TESTVECTOR to a template type (see Eigen entry in wishlist).
+# 8. Change : B^n to \B{R}^n and other simuilar uses of B as a space.
+# 9. Change Vector<T> -> <T>Vector for T = Base, Size, Bool (T != Set)
+# -----------------------------------------------------------------------------
+spell_list='
+'
 revert_list='
 '
 move_list='
+	cppad/core/reverse_subgraph.hpp
+	example/sparse/reverse_subgraph.cpp
 '
-move_sed='s|/local/|/core/|'
+move_sed='s|reverse_subgraph|subgraph_reverse|'
 #
 cat << EOF > junk.sed
-s|NearEqual(jfac\\*\\([^,]*\\), *value *, *jfac\\*eps99 *, *jfac\\*eps99)|NearEqual(\\1, value/jfac, eps99, eps99)|
-s|NearEqual(jfac\\*\\([^,]*\\), *value *, *eps99 *, *eps99)|NearEqual(\\1, value/jfac, eps99, eps99)|
+s|reverse_subgraph|subgraph_reverse|
 EOF
 # -----------------------------------------------------------------------------
 if [ $0 != "bin/batch_edit.sh" ]
@@ -47,6 +60,7 @@ list_all=`bin/ls_files.sh | sed \
 	-e '/^makefile.in$/d' \
 	-e '/\/makefile.in$/d' \
 	-e '/^missing$/d'`
+edit_list=''
 for file in $list_all
 do
 	if [ "$file" != 'bin/batch_edit.sh' ]
@@ -55,6 +69,7 @@ do
 		if ! diff $file junk.$$ > /dev/null
 		then
 			echo_eval sed -f junk.sed  -i $file
+			edit_list="$edit_list $file"
 		fi
 	fi
 done
@@ -62,6 +77,28 @@ if [ -e junk.$$ ]
 then
 	rm junk.$$
 fi
+# ----------------------------------------------------------------------------
+for word in $spell_list
+do
+#
+cat << EOF > junk.sed
+/\$spell\$/! b skip
+:loop
+/\$\\\$/b check
+N
+b loop
+#
+: check
+/$word/b skip
+s/\$spell/&\\n\\t$word/
+#
+: skip
+EOF
+	for file in $edit_list
+	do
+		echo_eval sed -f junk.sed -i $file
+	done
+done
 # ----------------------------------------------------------------------------
 for old in $move_list
 do

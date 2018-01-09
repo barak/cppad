@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_AD_HPP
 # define CPPAD_CORE_AD_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -165,33 +164,43 @@ public:
 	// implicit default constructor
 	inline AD(void);
 
-	// use default implicit copy constructor and assignment operator
+	// destructor
+	~AD(void) { }
+
+	// use default implicit copy constructor
 	// inline AD(const AD &x);
-	// inline AD& operator=(const AD &x);
 
-	// implicit construction and assingment from base type
-	inline AD(const Base &b);
-	inline AD& operator=(const Base &b);
-
-	// implicit contructor and assignment from VecAD<Base>::reference
-	inline AD(const VecAD_reference<Base> &x);
-	inline AD& operator=(const VecAD_reference<Base> &x);
-
-# if CPPAD_DEPRECATED
-	// implicit construction from some other type (depricated)
-	template <class T> inline AD(const T &t);
+# ifdef CPPAD_FOR_TMB
+	// TMB would rather have implicit construction from double,
+	// CppAD uses default constructor and assignment to double instead.
+	inline AD(const double &d);
 # else
+	// implicit construction from base type
+	inline AD(const Base &b);
+# endif
+
+	// implicit contructor from VecAD<Base>::reference
+	inline AD(const VecAD_reference<Base> &x);
+
 	// explicit construction from some other type (depricated)
 	template <class T> inline explicit AD(const T &t);
-# endif
+
+	// conversion from AD to Base type
+	friend Base Value <Base> (const AD<Base> &x);
+
+	// use default assignment operator
+	// inline AD& operator=(const AD &x);
+
+	// assingment from base type
+	inline AD& operator=(const Base &b);
+
+	// assignment from VecAD<Base>::reference
+	inline AD& operator=(const VecAD_reference<Base> &x);
 
 	// assignment from some other type
 	template <class T> inline AD& operator=(const T &right);
 
-	// base type corresponding to an AD object
-	friend Base Value <Base> (const AD<Base> &x);
-
-	// computed assignment operators
+	// compound assignment operators
 	inline AD& operator += (const AD &right);
 	inline AD& operator -= (const AD &right);
 	inline AD& operator *= (const AD &right);
@@ -200,10 +209,6 @@ public:
 	// unary operators
 	inline AD operator +(void) const;
 	inline AD operator -(void) const;
-
-	// destructor
-	~AD(void)
-	{ }
 
 	// interface so these functions need not be friends
 	inline AD abs_me(void) const;
@@ -263,7 +268,7 @@ private:
 	//
 	// Make this parameter a new variable
 	//
-	void make_variable(size_t id,  size_t taddr)
+	void make_variable(tape_id_t id,  addr_t taddr)
 	{	CPPAD_ASSERT_UNKNOWN( Parameter(*this) ); // currently a par
 		CPPAD_ASSERT_UNKNOWN( taddr > 0 );        // sure valid taddr
 

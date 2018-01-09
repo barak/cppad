@@ -1,9 +1,8 @@
-// $Id: ode_gear_control.hpp 3804 2016-03-20 15:08:46Z bradbell $
 # ifndef CPPAD_UTILITY_ODE_GEAR_CONTROL_HPP
 # define CPPAD_UTILITY_ODE_GEAR_CONTROL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -330,7 +329,7 @@ if this is not the case.
 
 $head Example$$
 $children%
-	example/ode_gear_control.cpp
+	example/utility/ode_gear_control.cpp
 %$$
 The file
 $cref ode_gear_control.cpp$$

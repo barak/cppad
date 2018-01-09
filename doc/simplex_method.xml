@@ -1,0 +1,339 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>abs_normal: Solve a Linear Program Using Simplex Method</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="abs_normal: Solve a Linear Program Using Simplex Method"/>
+<meta name="keywords" id="keywords" content=" abs_normal: solve linear program using simplex method syntax prototype source problem vector level b c maxitr xout ok example "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_simplex_method_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="abs_eval.hpp.xml" target="_top">Prev</a>
+</td><td><a href="simplex_method.cpp.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>abs_normal</option>
+<option>simplex_method</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>utility</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>abs_normal-&gt;</option>
+<option>abs_normal_fun</option>
+<option>abs_print_mat</option>
+<option>abs_eval</option>
+<option>simplex_method</option>
+<option>lp_box</option>
+<option>abs_min_linear</option>
+<option>min_nso_linear</option>
+<option>qp_interior</option>
+<option>qp_box</option>
+<option>abs_min_quad</option>
+<option>min_nso_quad</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down0(this)'>
+<option>simplex_method-&gt;</option>
+<option>simplex_method.cpp</option>
+<option>simplex_method.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Syntax</option>
+<option>Prototype</option>
+<option>Source</option>
+<option>Problem</option>
+<option>Vector</option>
+<option>level</option>
+<option>A</option>
+<option>b</option>
+<option>c</option>
+<option>maxitr</option>
+<option>xout</option>
+<option>ok</option>
+<option>Example</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>abs_normal: Solve a Linear Program Using Simplex Method</big></big></b></center>
+<br/>
+<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+
+<br/>
+
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;simplex_method(</span></font><i><font color="black"><span style='white-space: nowrap'>level</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>b</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>A</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>c</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>maxitr</span></font></i><font color="blue"><span style='white-space: nowrap'>,&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xout</span></font></i><font color="blue"><span style='white-space: nowrap'>)<br/>
+</span></font></code>
+<br/>
+<b><big><a name="Prototype" id="Prototype">Prototype</a></big></b>
+
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">simplex_method</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>        level   <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> Vector<span style="color: #990000">&amp;</span> A       <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> Vector<span style="color: #990000">&amp;</span> b       <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> Vector<span style="color: #990000">&amp;</span> c       <span style="color: #990000">,</span>
+     <span style="color: #008080">size_t</span>        maxitr  <span style="color: #990000">,</span>
+     Vector<span style="color: #990000">&amp;</span>       xout    <span style="color: #990000">)</span></tt></pre>
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+<br/>
+This following is a link to the source code for this example:
+<a href="simplex_method.hpp.xml" target="_top"><span style='white-space: nowrap'>simplex_method.hpp</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="Problem" id="Problem">Problem</a></big></b>
+<br/>
+We are given
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mrow><mi mathvariant='italic'>m</mi>
+<mo stretchy="false">&#x000D7;</mo>
+<mi mathvariant='italic'>n</mi>
+</mrow>
+</msup>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>b</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>m</mi>
+</msup>
+</mrow></math>
+
+,
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>c</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mi mathvariant='italic'>n</mi>
+</msup>
+</mrow></math>
+
+.
+This routine solves the problem
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mtable rowalign="center" ><mtr><mtd columnalign="right" >
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>minimize</mi>
+</mstyle></mrow>
+</mtd><mtd columnalign="left" >
+<msup><mi mathvariant='italic'>g</mi>
+<mi mathvariant='italic'>T</mi>
+</msup>
+<mi mathvariant='italic'>x</mi>
+<mspace width='.3em'/>
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>w</mi>
+<mo stretchy="false">.</mo>
+<mi mathvariant='normal'>r</mi>
+<mo stretchy="false">.</mo>
+<mi mathvariant='normal'>t</mi>
+</mstyle></mrow>
+<mspace width='.3em'/>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">&#x02208;</mo>
+<msubsup><mrow><mstyle mathvariant='bold'><mi mathvariant='bold'>R</mi>
+</mstyle></mrow>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>n</mi>
+</msubsup>
+</mtd></mtr><mtr><mtd columnalign="right" >
+<mrow><mstyle mathvariant='normal'><mi mathvariant='normal'>subject</mi>
+<mspace width='.3em'/>
+<mi mathvariant='normal'>to</mi>
+</mstyle></mrow>
+</mtd><mtd columnalign="left" >
+<mi mathvariant='italic'>A</mi>
+<mi mathvariant='italic'>x</mi>
+<mo stretchy="false">+</mo>
+<mi mathvariant='italic'>b</mi>
+<mo stretchy="false">&#x02264;</mo>
+<mn>0</mn>
+</mtd></mtr></mtable>
+</mrow></math>
+
+<br/>
+<b><big><a name="Vector" id="Vector">Vector</a></big></b>
+<br/>
+The type 
+<code><i><font color="black"><span style='white-space: nowrap'>Vector</span></font></i></code>
+ is a
+simple vector with elements of type <code><font color="blue">double</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="level" id="level">level</a></big></b>
+<br/>
+This value is less than or equal two.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>level</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;0</span></font></code>
+,
+no tracing is printed.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>level</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;=&#xA0;1</span></font></code>
+,
+a trace 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>x</mi>
+</mrow></math>
+
+ and the corresponding objective 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>z</mi>
+</mrow></math>
+
+
+is printed at each iteration.
+If 
+<code><i><font color="black"><span style='white-space: nowrap'>level</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;==&#xA0;2</span></font></code>
+,
+a trace of the simplex Tableau is printed at each iteration.
+
+<br/>
+<br/>
+<b><big><a name="A" id="A">A</a></big></b>
+<br/>
+This is a <a href="glossary.xml#Row-major Representation" target="_top"><span style='white-space: nowrap'>row-major</span></a>
+ representation
+of the matrix 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>A</mi>
+</mrow></math>
+
+ in the problem.
+
+<br/>
+<br/>
+<b><big><a name="b" id="b">b</a></big></b>
+<br/>
+This is the vector 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>b</mi>
+</mrow></math>
+
+ in the problem.
+
+<br/>
+<br/>
+<b><big><a name="c" id="c">c</a></big></b>
+<br/>
+This is the vector 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow>
+<mi mathvariant='italic'>c</mi>
+</mrow></math>
+
+ in the problem.
+
+<br/>
+<br/>
+<b><big><a name="maxitr" id="maxitr">maxitr</a></big></b>
+<br/>
+This is the maximum number of simplex iterations to try before giving up
+on convergence.
+
+<br/>
+<br/>
+<b><big><a name="xout" id="xout">xout</a></big></b>
+<br/>
+This argument has size is 
+<code><i><font color="black"><span style='white-space: nowrap'>n</span></font></i></code>
+ and
+the input value of its elements does no matter.
+Upon return it is the primal variables corresponding to the problem solution.
+
+<br/>
+<br/>
+<b><big><a name="ok" id="ok">ok</a></big></b>
+<br/>
+If the return value 
+<code><i><font color="black"><span style='white-space: nowrap'>ok</span></font></i></code>
+ is true, a solution has been found.
+
+
+<br/>
+<br/>
+<b><big><a name="Example" id="Example">Example</a></big></b>
+<br/>
+The file <a href="simplex_method.cpp.xml" target="_top"><span style='white-space: nowrap'>simplex_method.cpp</span></a>
+ contains an example and test of
+<code><font color="blue">simplex_method</font></code>.
+It returns true if the test passes and false otherwise.
+
+
+<hr/>Input File: example/abs_normal/simplex_method.hpp
+
+</body>
+</html>

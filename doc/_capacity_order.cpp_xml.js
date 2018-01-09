@@ -8,15 +8,21 @@ var list_across0 = [
 var list_up0 = [
 'cppad.xml',
 'adfun.xml',
-'funeval.xml',
 'forward.xml',
 'capacity_order.xml',
 'capacity_order.cpp.xml'
 ];
 var list_down3 = [
+'record_adfun.xml',
+'drivers.xml',
 'forward.xml',
 'reverse.xml',
-'sparse.xml'
+'sparsity_pattern.xml',
+'sparse_derivative.xml',
+'optimize.xml',
+'abs_normal.xml',
+'funcheck.xml',
+'check_for_nan.xml'
 ];
 var list_down2 = [
 'forward_zero.xml',

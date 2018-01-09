@@ -6,7 +6,7 @@
 <title>Frequently Asked Questions and Answers</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Frequently Asked Questions and Answers"/>
-<meta name="keywords" id="keywords" content=" frequently asked questions answers Faq operator reporting Errorhandler avoid record taping mode Cppad_testvector standard math function storage assignment independent bugs comparechange complex types exceptions variables matrix inverse mode: forward reverse namespace test vector preprocessor symbol using speed ndebug optimize memory allocation tape storage: disk "/>
+<meta name="keywords" id="keywords" content=" frequently asked questions answers assignment independent bugs comparechange complex types exceptions variables matrix inverse lusolve atomic operation mode: forward reverse namespace test vector preprocessor symbol speed ndebug optimize memory allocation tape storage: disk "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="appendix.xml" target="_top">Prev</a>
-</td><td><a href="theory.xml" target="_top">Next</a>
+</td><td><a href="directory.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -62,6 +62,7 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -85,10 +86,11 @@ A:active { color : purple }
 <option>Exceptions</option>
 <option>Independent Variables</option>
 <option>Matrix Inverse</option>
+<option>---..LuSolve</option>
+<option>---..Atomic Operation</option>
 <option>Mode: Forward or Reverse</option>
 <option>Namespace</option>
 <option>---..Test Vector Preprocessor Symbol</option>
-<option>---..Using</option>
 <option>Speed</option>
 <option>---..NDEBUG</option>
 <option>---..Optimize</option>
@@ -132,35 +134,30 @@ and in the second case it is a parameter.
 What should I do if I suspect that there is a bug in CppAD ?
 <code><span style='white-space: nowrap'><br/>
 <br/>
-</span></code><ol type="1"><li>The first step is to search this page for mention of
-some feature that perhaps you interpreting as a bug
-(and is not).
-If this does not solve your problem, continue
-to the next step.
+</span></code><ol type="1"><li>The first step is to check currently open
+<a href="https://github.com/coin-or/CppAD/issues" target="_top"><span style='white-space: nowrap'>issues</span></a>
+ on github.
+If it is an open issue, and you want to hurry it along, you can add
+a comment to the effect that it is holding you up.
 </li><li>
 
-The second step is to check the
+The next step is to search the
 <a href="whats_new.xml" target="_top"><span style='white-space: nowrap'>whats_new</span></a>
- messages from the date
-of the release that you are using to the current date.
-If the bug has been mentioned and fixed,
-then <a href="install.xml" target="_top"><span style='white-space: nowrap'>install</span></a>
- the current version of CppAD.
-If this does not solve your problem, continue
-to the next step.
+ sections for mention of a related bug fix
+between the date of the version you are using and the current date.
+It the bug has been fixed, obtain a more recent release that has the fix
+and see if that works for you.
 </li><li>
 
-Create a simple as possible demonstration of the bug;
+The next step is to
+create a simple demonstration of the bug;
 see the file <code><font color="blue">bug/template.sh</font></code> for a template that you can
 edit for that purpose.
 The smaller the program, the better the bug report.
 </li><li>
 
-Send an e-mail message to the mailing list
-<a href="http://list.coin-or.org/mailman/listinfo/cppad" target="_top"><span style='white-space: nowrap'>cppad@list.coin-or.org</span></a>
-
-with a description of the bug.
-Attaching your program that demonstrates the bug.
+The next step is open a new issue on github and provide your simple
+example so that the problem can be reproduced.
 </li></ol>
 
 
@@ -241,9 +238,13 @@ for the independent variables ?
 Is it possible to differentiate (with respect to the matrix elements)
 the computation of the inverse of a matrix
 where the computation of the inverse uses pivoting ?
-<code><span style='white-space: nowrap'><br/>
+
 <br/>
-</span></code>The example routine <a href="lusolve.xml" target="_top"><span style='white-space: nowrap'>LuSolve</span></a>
+<br/>
+<b><a name="Matrix Inverse.LuSolve" id="Matrix Inverse.LuSolve">LuSolve</a></b>
+<br/>
+#
+The example routine <a href="lusolve.xml" target="_top"><span style='white-space: nowrap'>LuSolve</span></a>
  can be used to do this
 because the inverse is a special case of the solution of linear equations.
 The examples
@@ -252,6 +253,14 @@ The examples
 
 use LuSolve to compute derivatives of the
 determinant with respect to the components of the matrix.
+
+<br/>
+<br/>
+<b><a name="Matrix Inverse.Atomic Operation" id="Matrix Inverse.Atomic Operation">Atomic Operation</a></b>
+<br/>
+One can also do this by making the inversion of the matrix an atomic operation;
+e.g., see <a href="atomic_eigen_mat_inv.cpp.xml" target="_top"><span style='white-space: nowrap'>atomic_eigen_mat_inv.cpp</span></a>
+.
 
 <br/>
 <br/>
@@ -310,29 +319,6 @@ by CppAD begin with either <code><font color="blue">CPPAD</font></code>
 
 <br/>
 <br/>
-<b><a name="Namespace.Using" id="Namespace.Using">Using</a></b>
-<br/>
-Why do I have trouble when the following command
-<code><font color='blue'><pre style='display:inline'> 
-     using namespace CppAD
-</pre></font></code>
-is at the global level
-(not within a function or some other limited scope).
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>Some versions of <code><font color="blue"># include &lt;cmath&gt;</font></code> for
-gcc and Visual C++ define the standard math functions,
-(for example 
-<code><font color="blue"><span style='white-space: nowrap'>double&#xA0;sqrt(double&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>x</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
-)
-at the global level.
-It is necessary to put your <code><font color="blue">using</font></code> commands within the scope
-of a function,
-or some other limited scope,
-in order to shadow these improper global definitions.
-
-<br/>
-<br/>
 <b><big><a name="Speed" id="Speed">Speed</a></big></b>
 <br/>
 How do I get the best speed performance out of CppAD ?
@@ -386,7 +372,7 @@ and the calculations may slow down because of necessary disk access.
 
 
 
-<hr/>Input File: omh/faq.omh
+<hr/>Input File: omh/appendix/faq.omh
 
 </body>
 </html>

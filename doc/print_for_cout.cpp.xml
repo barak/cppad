@@ -171,16 +171,8 @@ To build this program and run its correctness test see <a href="cmake_check.xml"
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span>
 <span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
-<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
-     <span style="font-weight: bold"><span style="color: #000000">print_for</span></span><span style="color: #990000">();</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">print_for</span></span><span style="color: #990000">();</span>
 
-     <span style="color: #008080">size_t</span> thread<span style="color: #990000">;</span>
-     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread <span style="color: #990000">&lt;</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> thread<span style="color: #990000">++)</span>
-     <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
-          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span>omp_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
-     <span style="color: #FF0000">}</span>
-     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">)</span>
-          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 <br/>
@@ -195,7 +187,7 @@ Executing the program above generates the following output:
      v[0] + x[0] = 2
 </pre></font></code>
 
-<hr/>Input File: print_for/print_for.cpp
+<hr/>Input File: example/print_for/print_for.cpp
 
 </body>
 </html>

@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_FUN_CONSTRUCT_HPP
 # define CPPAD_CORE_FUN_CONSTRUCT_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -207,7 +206,7 @@ contain an examples and tests using the default constructor.
 They return true if they succeed and false otherwise.
 
 $children%
-	example/fun_assign.cpp
+	example/general/fun_assign.cpp
 %$$
 $subhead Assignment Operator$$
 The file
@@ -302,6 +301,7 @@ void ADFun<Base>::operator=(const ADFun<Base>& f)
 	taylor_                    = f.taylor_;
 	cskip_op_                  = f.cskip_op_;
 	load_op_                   = f.load_op_;
+	subgraph_info_             = f.subgraph_info_;
 	//
 	// player
 	play_                      = f.play_;
@@ -419,7 +419,7 @@ ADFun<Base>::ADFun(const VectorAD &x, const VectorAD &y)
 
 
 	// ad_fun.hpp member values not set by dependent
-	check_for_nan_ = true;
+	check_for_nan_       = true;
 
 	// allocate memory for one zero order taylor_ coefficient
 	CPPAD_ASSERT_UNKNOWN( num_order_taylor_ == 0 );
@@ -441,8 +441,8 @@ ADFun<Base>::ADFun(const VectorAD &x, const VectorAD &y)
 	// use independent variable values to fill in values for others
 	CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
 	CPPAD_ASSERT_UNKNOWN( load_op_.size()  == play_.num_load_op_rec() );
-	local::forward0sweep(std::cout, false,
-		n, num_var_tape_, &play_, cap_order_taylor_, taylor_.data(),
+	local::forward0sweep(&play_, std::cout, false,
+		n, num_var_tape_, cap_order_taylor_, taylor_.data(),
 		cskip_op_.data(), load_op_,
 		compare_change_count_,
 		compare_change_number_,

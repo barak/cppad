@@ -18,6 +18,7 @@ var list_down3 = [
 'speed_test.xml',
 'speedtest.xml',
 'time_test.xml',
+'test_boolofvoid.xml',
 'numerictype.xml',
 'checknumerictype.xml',
 'simplevector.xml',
@@ -37,7 +38,9 @@ var list_down3 = [
 'thread_alloc.xml',
 'index_sort.xml',
 'to_string.xml',
-'set_union.xml'
+'set_union.xml',
+'sparse_rc.xml',
+'sparse_rcv.xml'
 ];
 var list_down2 = [
 'lusolve.xml',

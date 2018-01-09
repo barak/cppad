@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_CAPACITY_ORDER_HPP
 # define CPPAD_CORE_CAPACITY_ORDER_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -40,7 +39,7 @@ For example, a call to $cref/Forward/forward_order/$$ with the syntax
 $codei%
         %yq% = %f%.Forward(%q%, %xq%)
 %$$
-where $icode%q% > 0%$$ and  $code%xq%.size() == %f%.Domain()%$$,
+where $icode%q% > 0%$$ and  $icode%xq%.size() == %f%.Domain()%$$,
 uses the lower order Taylor coefficients and
 computes the $th q$$ order Taylor coefficients for all
 the variables in the operation sequence corresponding to $icode f$$.
@@ -102,7 +101,7 @@ when the AD operation sequence was recorded.
 This corresponds to $icode%c% == 1%$$.
 
 $children%
-	example/capacity_order.cpp
+	example/general/capacity_order.cpp
 %$$
 $head Example$$
 The file
@@ -133,7 +132,7 @@ is the number of orders to allocate memory for.
 If <code>c == 0</code> then \c r must also be zero.
 In this case num_order_taylor_, cap_order_taylor_, and num_direction_taylor_
 are all set to zero.
-In addition, taylor_.free() is called.
+In addition, taylor_.clear() is called.
 
 \param r
 is the number of directions to allocate memory for.
@@ -163,7 +162,7 @@ void ADFun<Base>::capacity_order(size_t c, size_t r)
 
 	if( c == 0 )
 	{	CPPAD_ASSERT_UNKNOWN( r == 0 );
-		taylor_.free();
+		taylor_.clear();
 		num_order_taylor_     = 0;
 		cap_order_taylor_     = 0;
 		num_direction_taylor_ = r;
@@ -173,8 +172,7 @@ void ADFun<Base>::capacity_order(size_t c, size_t r)
 
 	// Allocate new taylor with requested number of orders and directions
 	size_t new_len   = ( (c-1)*r + 1 ) * num_var_tape_;
-	local::pod_vector<Base> new_taylor;
-	new_taylor.extend(new_len);
+	local::pod_vector<Base> new_taylor(new_len);
 
 	// number of orders to copy
 	size_t p = std::min(num_order_taylor_, c);
@@ -226,7 +224,7 @@ is the number of orders to allocate memory for.
 If <code>c == 0</code>,
 num_order_taylor_, cap_order_taylor_, and num_direction_taylor_
 are all set to zero.
-In addition, taylor_.free() is called.
+In addition, taylor_.clear() is called.
 
 \par num_order_taylor_
 The output value of num_order_taylor_ is the mininumum of its input

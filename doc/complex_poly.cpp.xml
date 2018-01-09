@@ -92,7 +92,9 @@ Select this link to view specifications for <a href="poly.xml" target="_top"><sp
 :
 
 <code><font color="blue">
-<pre><tt>
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">// Complex examples should supppress conversion warnings</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/wno_conversion.hpp&gt;</span>
+
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
 
@@ -105,11 +107,11 @@ Select this link to view specifications for <a href="poly.xml" target="_top"><sp
      <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span> Complex<span style="color: #990000">;</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// polynomial coefficients</span></span>
-     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> Complex <span style="color: #990000">)</span>     <span style="font-weight: bold"><span style="color: #000000">a</span></span>   <span style="color: #990000">(</span>deg <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// coefficients for p(z)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span> Complex <span style="color: #990000">)</span>   <span style="font-weight: bold"><span style="color: #000000">a</span></span>   <span style="color: #990000">(</span>deg <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span> <span style="font-style: italic"><span style="color: #9A1900">// coefficients for p(z)</span></span>
      <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">A</span></span>   <span style="color: #990000">(</span>deg <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
      <span style="color: #008080">size_t</span> i<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;=</span> deg<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
-          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span>i<span style="color: #990000">,</span> i<span style="color: #990000">);</span>
+          A<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Complex</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">),</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i<span style="color: #990000">));</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// independent variable vector</span></span>
      <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>AD<span style="color: #990000">&lt;</span>Complex<span style="color: #990000">&gt;)</span> <span style="font-weight: bold"><span style="color: #000000">Z</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
@@ -144,7 +146,7 @@ Select this link to view specifications for <a href="poly.xml" target="_top"><sp
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/complex_poly.cpp
+<hr/>Input File: example/general/complex_poly.cpp
 
 </body>
 </html>

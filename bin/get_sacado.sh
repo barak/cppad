@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: get_sacado.sh 3730 2015-09-23 15:56:53Z bradbell $
+# $Id: get_sacado.sh 3945 2017-06-03 02:07:53Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -64,7 +64,7 @@ echo_eval() {
 }
 # -----------------------------------------------------------------------------
 echo 'Download sacado to build/external and install it to build/prefix'
-version="11.12.1"
+version="11.12.1" # using old version because new version requires c++11
 trilinos_dir="trilinos-$version-Source"
 web_page="http://trilinos.org/oldsite/download/files"
 cppad_dir=`pwd`

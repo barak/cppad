@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_AD_CTOR_HPP
 # define CPPAD_CORE_AD_CTOR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -57,16 +56,6 @@ $codei%
 for any type that has an explicit constructor of the form
 $icode%Base%(%x%)%$$.
 
-$subhead Deprecated 2013-12-31$$
-If you set $cref/cppad_deprecated/cmake/cppad_deprecated/$$
-to be $code YES$$ during the install procedure,
-you will get an implicit constructor with prototype
-$codei%
-	const %Type%&        %x%
-%$$
-for any type that has an explicit constructor of the form
-$icode%Base%(%x%)%$$.
-
 $head y$$
 The target $icode y$$ has prototype
 $codei%
@@ -75,7 +64,7 @@ $codei%
 
 $head Example$$
 $children%
-	example/ad_ctor.cpp
+	example/general/ad_ctor.cpp
 %$$
 The files $cref ad_ctor.cpp$$ contain examples and tests of these operations.
 It test returns true if it succeeds and false otherwise.
@@ -121,7 +110,30 @@ inline AD<Base>::AD(void)
 , taddr_(0)
 { }
 
+// --------------------------------------------------------------------------
+# ifdef CPPAD_FOR_TMB
+/*!
+Constructor from double.
 
+\param d
+is value corresponding to this AD object.
+The tape identifier will be an invalid tape identifier,
+so this object is initially a parameter.
+
+\par CPPAD_FOR_TMB
+This constructor is defined when CPPAD_FOR_TMB is defined.
+*/
+template <class Base>
+inline AD<Base>::AD(const double &d)
+: value_( Base(d) )
+, tape_id_(0)
+, taddr_(0)
+{	// check that this is a parameter
+	CPPAD_ASSERT_UNKNOWN( Parameter(*this) );
+}
+// --------------------------------------------------------------------------
+# else
+// --------------------------------------------------------------------------
 /*!
 Constructor from Base type.
 
@@ -132,6 +144,9 @@ Base type for this AD object.
 is the Base type value corresponding to this AD object.
 The tape identifier will be an invalid tape identifier,
 so this object is initially a parameter.
+
+\par CPPAD_FOR_TMB
+This constructor is defined when CPPAD_FOR_TMB is not defined.
 */
 template <class Base>
 inline AD<Base>::AD(const Base &b)
@@ -141,6 +156,8 @@ inline AD<Base>::AD(const Base &b)
 {	// check that this is a parameter
 	CPPAD_ASSERT_UNKNOWN( Parameter(*this) );
 }
+# endif
+// --------------------------------------------------------------------------
 
 /*!
 Constructor from an ADVec<Base> element drops the vector information.

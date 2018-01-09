@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_PRINT_FOR_HPP
 # define CPPAD_CORE_PRINT_FOR_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -114,8 +113,8 @@ code is executed.
 
 $head Example$$
 $children%
-	print_for/print_for.cpp%
-	example/print_for.cpp
+	example/print_for/print_for.cpp%
+	example/general/print_for.cpp
 %$$
 The program
 $cref print_for_cout.cpp$$
@@ -152,7 +151,7 @@ namespace CppAD {
 			std::strlen(after) <= 1000 ,
 			"PrintFor: length of after is greater than 1000 characters"
 		);
-		size_t ind0, ind1, ind2, ind3, ind4;
+		addr_t ind0, ind1, ind2, ind3, ind4;
 
 		// ind[0] = base 2 representation of the value [Var(pos), Var(var)]
 		ind0 = 0;

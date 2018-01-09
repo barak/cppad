@@ -6,7 +6,7 @@
 <title>CppAD API Preprocessor Symbols</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD API Preprocessor Symbols"/>
-<meta name="keywords" id="keywords" content=" cppad api preprocessor symbols Cppad_ Null pointer purpose documented here cppad_null cppad_package_string cppad_use_cplusplus_2011 elsewhere deprecated "/>
+<meta name="keywords" id="keywords" content=" cppad api preprocessor symbols Cppad_ Null pointer purpose documented here cppad_debug_and_release cppad_null cppad_package_string cppad_use_cplusplus_2011 elsewhere deprecated "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -63,6 +63,7 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Purpose</option>
 <option>Documented Here</option>
+<option>---..CPPAD_DEBUG_AND_RELEASE</option>
 <option>---..CPPAD_NULL</option>
 <option>---..CPPAD_PACKAGE_STRING</option>
 <option>---..CPPAD_USE_CPLUSPLUS_2011</option>
@@ -75,7 +76,7 @@ A:active { color : purple }
 <br/>
 <b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
 <br/>
-The CppAD include files define preprocessor symbols all of which begin
+The CppAD include files defines preprocessor symbols all of which begin
 with <code><font color="blue">CPPAD_</font></code>.
 Note that there are some old, deprecated preprocessor symbols that
 begin with <code><font color="blue">CppAD</font></code>.
@@ -86,6 +87,19 @@ are part of the CppAD Application Interface (API).
 <br/>
 <b><big><a name="Documented Here" id="Documented Here">Documented Here</a></big></b>
 
+
+<br/>
+<br/>
+<b><a name="Documented Here.CPPAD_DEBUG_AND_RELEASE" id="Documented Here.CPPAD_DEBUG_AND_RELEASE">CPPAD_DEBUG_AND_RELEASE</a></b>
+<br/>
+This flag is an exception because it is defined (or not) by the user when
+compiling programs that include CppAD source code.
+If it is defined, less error checking is done and the
+debug and release versions of CppAD can be mixed in the same program.
+Of particular note is that <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>thread_alloc</span></a>
+ does less error checking.
+For programs that do a lot of memory allocation,
+this can be a significant time savings when <code><font color="blue">NDEBUG</font></code> is defined.
 
 <br/>
 <br/>

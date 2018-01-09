@@ -112,7 +112,7 @@ A:active { color : purple }
           <span style="font-style: italic"><span style="color: #9A1900">// tape AD operation sequence that determines the row of A</span></span>
           <span style="font-style: italic"><span style="color: #9A1900">// with maximum absolute element in column zero</span></span>
           <span style="color: #008080">AD&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">zero</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">one</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
-          <span style="color: #008080">AD&lt;double&gt;</span> rmax <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>a<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]),</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>a<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]),</span> zero<span style="color: #990000">,</span> one<span style="color: #990000">);</span>
+          <span style="color: #008080">AD&lt;double&gt;</span> rmax <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">CondExpGt</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>a<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]),</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>a<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]),</span> zero<span style="color: #990000">,</span> one<span style="color: #990000">);</span>
 
           <span style="font-style: italic"><span style="color: #9A1900">// divide row rmax by A(rmax, 0)</span></span>
           A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span>  <span style="color: #990000">=</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> A<span style="color: #990000">[</span>rmax <span style="color: #990000">*</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">0</span><span style="color: #990000">];</span>
@@ -230,7 +230,7 @@ A:active { color : purple }
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/vec_ad.cpp
+<hr/>Input File: example/general/vec_ad.cpp
 
 </body>
 </html>

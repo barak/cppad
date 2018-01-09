@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_POW_HPP
 # define CPPAD_CORE_POW_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -80,7 +79,7 @@ $cref/operation sequence/glossary/Operation/Sequence/$$.
 
 $head Example$$
 $children%
-	example/pow.cpp
+	example/general/pow.cpp
 %$$
 The file
 $cref pow.cpp$$
@@ -243,7 +242,7 @@ pow(const VecAD_reference<double>& x, const double& y)
 
 // =========================================================================
 // Fold operations for the cases where x is an int,
-// but let cppad/pow_int.hpp handle the cases where y is an int.
+// but let cppad/utility/pow_int.hpp handle the cases where y is an int.
 // -------------------------------------------------------------------------
 template <class Base> AD<Base> pow
 (const int& x, const VecAD_reference<Base>& y)

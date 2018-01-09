@@ -1,6 +1,5 @@
-# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -9,12 +8,6 @@
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-
-# Specify build type for this directory and all its subdirectories
-# (subdirectories do not specify build type).
-# Possible values are DEBUG, RELEASE, RelWithDebInfo and MinSizeRel
-# CppAD developers can use DEBUG for debugging speed tests.
-SET(CMAKE_BUILD_TYPE RELEASE)
 
 # Initialize list of tests as empty
 SET(check_speed_depends "")
@@ -30,15 +23,15 @@ IF ( cppad_profile_flag )
 	ADD_SUBDIRECTORY(profile)
 ENDIF ( cppad_profile_flag )
 #
-IF ( adolc_prefix )
+IF( cppad_has_adolc )
 	ADD_SUBDIRECTORY(adolc)
-ENDIF( adolc_prefix )
-IF ( fadbad_prefix )
+ENDIF( cppad_has_adolc )
+IF( cppad_has_fadbad )
 	ADD_SUBDIRECTORY(fadbad)
-ENDIF( fadbad_prefix )
-IF ( sacado_prefix )
+ENDIF( cppad_has_fadbad )
+IF( cppad_has_sacado )
 	ADD_SUBDIRECTORY(sacado)
-ENDIF( sacado_prefix )
+ENDIF( cppad_has_sacado )
 
 # check_speed
 ADD_CUSTOM_TARGET(check_speed DEPENDS ${check_speed_depends} )

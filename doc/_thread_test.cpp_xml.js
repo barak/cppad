@@ -36,14 +36,16 @@ var list_down0 = [
 'simple_ad_pthread.cpp.xml',
 'team_example.cpp.xml',
 'harmonic.cpp.xml',
+'multi_atomic.cpp.xml',
 'multi_newton.cpp.xml',
 'team_thread.hpp.xml'
 ];
 var list_current0 = [
-'thread_test.cpp.xml#Syntax',
-'thread_test.cpp.xml#Running Tests',
-'thread_test.cpp.xml#Running Tests.threading',
 'thread_test.cpp.xml#Purpose',
+'thread_test.cpp.xml#build',
+'thread_test.cpp.xml#threading',
+'thread_test.cpp.xml#program',
+'thread_test.cpp.xml#Running Tests',
 'thread_test.cpp.xml#a11c',
 'thread_test.cpp.xml#simple_ad',
 'thread_test.cpp.xml#team_example',

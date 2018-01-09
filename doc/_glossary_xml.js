@@ -25,6 +25,7 @@ var list_down2 = [
 ];
 var list_down1 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -49,8 +50,10 @@ var list_current0 = [
 'glossary.xml#Operation.Dependent',
 'glossary.xml#Operation.Independent',
 'glossary.xml#Parameter',
+'glossary.xml#Row-major Representation',
 'glossary.xml#Sparsity Pattern',
-'glossary.xml#Sparsity Pattern.Vector of Boolean',
+'glossary.xml#Sparsity Pattern.Row and Column Index Vectors',
+'glossary.xml#Sparsity Pattern.Boolean Vector',
 'glossary.xml#Sparsity Pattern.Vector of Sets',
 'glossary.xml#Tape',
 'glossary.xml#Tape.Active',

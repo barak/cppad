@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_OPTIMIZE_HPP
 # define CPPAD_CORE_OPTIMIZE_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -254,7 +253,7 @@ void ADFun<Base>::optimize(const std::string& options)
 	num_var_tape_  = rec.num_var_rec();
 
 	// now replace the recording
-	play_.get(rec);
+	play_.get(rec, n);
 
 	// set flag so this function knows it has been optimized
 	has_been_optimized_ = true;
@@ -265,14 +264,21 @@ void ADFun<Base>::optimize(const std::string& options)
 	for_jac_sparse_set_.resize(0,0);
 
 	// free old Taylor coefficient memory
-	taylor_.free();
+	taylor_.clear();
 	num_order_taylor_     = 0;
 	cap_order_taylor_     = 0;
 
 	// resize and initilaize conditional skip vector
 	// (must use player size because it now has the recoreder information)
-	cskip_op_.erase();
-	cskip_op_.extend( play_.num_op_rec() );
+	cskip_op_.resize( play_.num_op_rec() );
+
+	// resize subgraph_info_
+	subgraph_info_.resize(
+		ind_taddr_.size(),    // n_ind
+		dep_taddr_.size(),    // n_dep
+		play_.num_op_rec(),   // n_op
+		play_.num_var_rec()   // n_var
+	);
 
 # ifndef NDEBUG
 	if( check_zero_order )
@@ -281,11 +287,18 @@ void ADFun<Base>::optimize(const std::string& options)
 		check = Forward(0, x);
 
 		// check results
-		Base eps = 10. * CppAD::numeric_limits<Base>::epsilon();
-		for(i = 0; i < m; i++) CPPAD_ASSERT_KNOWN(
-			abs_geq( eps * max_taylor , check[i] - y[i] ) ,
-			"Error during check of f.optimize()."
-		);
+		Base eps99 = Base(99) * CppAD::numeric_limits<Base>::epsilon();
+		for(i = 0; i < m; i++)
+		if( ! abs_geq( eps99 * max_taylor , check[i] - y[i] ) )
+		{	std::string msg = "Error during check of f.optimize().";
+			msg += "\neps99 * max_taylor = " + to_string(eps99 * max_taylor);
+			msg += "\ncheck[i] = " + to_string(check[i]);
+			msg += "\ny[i]     = " + to_string(y[i]);
+			CPPAD_ASSERT_KNOWN(
+				abs_geq( eps99 * max_taylor , check[i] - y[i] ) ,
+				msg.c_str()
+			);
+		}
 
 		// Erase memory that this calculation was done so NDEBUG gives
 		// same final state for this object (from users perspective)

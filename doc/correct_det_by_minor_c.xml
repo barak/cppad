@@ -63,6 +63,7 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -140,12 +141,13 @@ It value is <code><font color="blue">1</font></code> if the test passes and <cod
      check <span style="color: #990000">-=</span> a<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">8</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
      check <span style="color: #990000">+=</span> a<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> <span style="color: #990000">(</span> a<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">7</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a<span style="color: #990000">[</span><span style="color: #993399">6</span><span style="color: #990000">]</span> <span style="color: #990000">);</span>
 
-     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>det <span style="color: #990000">/</span> check <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">1e-10</span> <span style="color: #990000">)</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> DBL_EPSILON<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>det <span style="color: #990000">/</span> check <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> eps99 <span style="color: #990000">)</span>
           <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 
-<hr/>Input File: compare_c/det_by_minor.c
+<hr/>Input File: test_more/compare_c/det_by_minor.c
 
 </body>
 </html>

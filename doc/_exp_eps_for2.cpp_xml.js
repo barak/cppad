@@ -13,10 +13,9 @@ var list_up0 = [
 'exp_eps_for2.cpp.xml'
 ];
 var list_down3 = [
-'get_started.cpp.xml',
 'exp_2.xml',
 'exp_eps.xml',
-'exp_apx_main.cpp.xml'
+'exp_apx.cpp.xml'
 ];
 var list_down2 = [
 'exp_eps.hpp.xml',

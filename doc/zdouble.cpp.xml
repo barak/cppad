@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="zdouble.xml" target="_top">Prev</a>
-</td><td><a href="compare_c.xml" target="_top">Next</a>
+</td><td><a href="autotools.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -48,6 +48,7 @@ A:active { color : purple }
 <select onchange='choose_down3(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -75,6 +76,7 @@ A:active { color : purple }
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
 <option>zdouble</option>
+<option>autotools</option>
 </select>
 </td>
 <td>
@@ -93,9 +95,9 @@ A:active { color : purple }
 <code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 
 <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
-     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">test</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span> is_double<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Base</span><span style="color: #990000">&gt;</span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">test_one</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
      <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
-          <span style="color: #008080">Base</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">Base</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
           <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Base&gt;</span>   a1type<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;a1type&gt;</span> a2type<span style="color: #990000">;</span>
@@ -162,9 +164,30 @@ A:active { color : purple }
           x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
           x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
           z    <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
-          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1.0</span><span style="color: #990000">/</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
-          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]/(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> <span style="color: #993399">1.0</span><span style="color: #990000">/</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>z<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span> <span style="color: #990000">-</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]/(</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]*</span>x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]),</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">test_two</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>zdouble<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">zdouble</span> eps <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          ok          <span style="color: #990000">&amp;=</span> eps <span style="color: #990000">==</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">zdouble</span> min <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">min</span></span><span style="color: #990000">();</span>
+          ok          <span style="color: #990000">&amp;=</span> min <span style="color: #990000">==</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">min</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">zdouble</span> max <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">();</span>
+          ok          <span style="color: #990000">&amp;=</span> max <span style="color: #990000">==</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">();</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">zdouble</span> nan <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">quiet_NaN</span></span><span style="color: #990000">();</span>
+          ok          <span style="color: #990000">&amp;=</span> nan <span style="color: #990000">!=</span> nan<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #009900">int</span> digits10 <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;::</span>digits10<span style="color: #990000">;</span>
+          ok          <span style="color: #990000">&amp;=</span> digits10 <span style="color: #990000">==</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span>digits10<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
           <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>
 <span style="color: #FF0000">}</span>
@@ -175,17 +198,15 @@ A:active { color : purple }
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>zdouble<span style="color: #990000">;</span>
      <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
-     <span style="color: #009900">bool</span> is_double <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
-     ok <span style="color: #990000">&amp;=</span> test<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;(</span>is_double<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> test_one<span style="color: #990000">&lt;</span>zdouble<span style="color: #990000">&gt;();</span>
+     ok <span style="color: #990000">&amp;=</span> test_one<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;();</span>
      <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
-     is_double <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
-     ok <span style="color: #990000">&amp;=</span> test<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;(</span>is_double<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">test_two</span></span><span style="color: #990000">();</span>
      <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
-<span style="color: #FF0000">}</span>
-</tt></pre>
+<span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-<hr/>Input File: test_more/zdouble.cpp
+<hr/>Input File: example/deprecated/zdouble.cpp
 
 </body>
 </html>

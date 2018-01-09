@@ -24,10 +24,12 @@ var list_down2 = [
 'appendix.xml'
 ];
 var list_down1 = [
+'get_started.cpp.xml',
 'general.xml',
 'exampleutility.xml',
 'listallexamples.xml',
-'testvector.xml'
+'testvector.xml',
+'wno_conversion.xml'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

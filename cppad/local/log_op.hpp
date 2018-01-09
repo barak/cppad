@@ -1,9 +1,8 @@
-// $Id: log_op.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_LOCAL_LOG_OP_HPP
 # define CPPAD_LOCAL_LOG_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -27,7 +26,7 @@ The C++ source code corresponding to this operation is
 	z = log(x)
 \endverbatim
 
-\copydetails forward_unary1_op
+\copydetails CppAD::local::forward_unary1_op
 */
 template <class Base>
 inline void forward_log_op(
@@ -64,8 +63,8 @@ inline void forward_log_op(
 	{
 		z[j] = -z[1] * x[j-1];
 		for(k = 2; k < j; k++)
-			z[j] -= Base(k) * z[k] * x[j-k];
-		z[j] /= Base(j);
+			z[j] -= Base(double(k)) * z[k] * x[j-k];
+		z[j] /= Base(double(j));
 		z[j] += x[j];
 		z[j] /= x[0];
 	}
@@ -79,7 +78,7 @@ The C++ source code corresponding to this operation is
 	z = log(x)
 \endverbatim
 
-\copydetails forward_unary1_op_dir
+\copydetails CppAD::local::forward_unary1_op_dir
 */
 template <class Base>
 inline void forward_log_op_dir(
@@ -104,10 +103,10 @@ inline void forward_log_op_dir(
 
 	size_t m = (q-1) * r + 1;
 	for(size_t ell = 0; ell < r; ell++)
-	{	z[m+ell] = Base(q) * x[m+ell];
+	{	z[m+ell] = Base(double(q)) * x[m+ell];
 		for(size_t k = 1; k < q; k++)
-			z[m+ell] -= Base(k) * z[(k-1)*r+1+ell] * x[(q-k-1)*r+1+ell];
-		z[m+ell] /= (Base(q) * x[0]);
+			z[m+ell] -= Base(double(k)) * z[(k-1)*r+1+ell] * x[(q-k-1)*r+1+ell];
+		z[m+ell] /= (Base(double(q)) * x[0]);
 	}
 }
 
@@ -119,7 +118,7 @@ The C++ source code corresponding to this operation is
 	z = log(x)
 \endverbatim
 
-\copydetails forward_unary1_op_0
+\copydetails CppAD::local::forward_unary1_op_0
 */
 template <class Base>
 inline void forward_log_op_0(
@@ -149,7 +148,7 @@ The C++ source code corresponding to this operation is
 	z = log(x)
 \endverbatim
 
-\copydetails reverse_unary1_op
+\copydetails CppAD::local::reverse_unary1_op
 */
 
 template <class Base>
@@ -177,7 +176,7 @@ inline void reverse_log_op(
 	const Base* z  = taylor  + i_z * cap_order;
 	Base* pz       = partial + i_z * nc_partial;
 
-	Base inv_x0 = Base(1) / x[0];
+	Base inv_x0 = Base(1.0) / x[0];
 
 	j = d;
 	while(j)
@@ -188,11 +187,11 @@ inline void reverse_log_op(
 		px[j]   += pz[j];
 
 		// further scale partial w.r.t. z[j]
-		pz[j]   /= Base(j);
+		pz[j]   /= Base(double(j));
 
 		for(k = 1; k < j; k++)
-		{	pz[k]   -= Base(k) * azmul(pz[j], x[j-k]);
-			px[j-k] -= Base(k) * azmul(pz[j], z[k]);
+		{	pz[k]   -= Base(double(k)) * azmul(pz[j], x[j-k]);
+			px[j-k] -= Base(double(k)) * azmul(pz[j], z[k]);
 		}
 		--j;
 	}

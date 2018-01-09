@@ -1,8 +1,7 @@
-// $Id: base_adolc.hpp 3804 2016-03-20 15:08:46Z bradbell $
 # ifndef CPPAD_EXAMPLE_BASE_ADOLC_HPP
 # define CPPAD_EXAMPLE_BASE_ADOLC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -71,7 +70,7 @@ $head Syntax$$
 $codei%# include <cppad/example/base_adolc.hpp>
 %$$
 $children%
-	example/mul_level_adolc.cpp
+	example/general/mul_level_adolc.cpp
 %$$
 
 $head Example$$
@@ -319,9 +318,7 @@ namespace CppAD {
 	template <> struct to_string_struct<adouble>
 	{	std::string operator()(const adouble& x)
 		{	std::stringstream os;
-			double epsilon    = std::numeric_limits<double>::epsilon();
-			double log10      = std::log( epsilon ) / std::log(10.);
-			size_t n_digits   = 1 - Integer( log10 );
+			int n_digits = 1 + std::numeric_limits<double>::digits10;
 			os << std::setprecision(n_digits);
 			os << x.value();
 			return os.str();
@@ -343,7 +340,7 @@ namespace CppAD {
 		double value = x.value();
 		if( value == 0.0 )
 			return code;
-		double log_x = std::log( abs( value ) );
+		double log_x = std::log( fabs( value ) );
 		// assume log( std::numeric_limits<double>::max() ) is near 700
 		code = static_cast<unsigned short>(
 			(CPPAD_HASH_TABLE_SIZE / 700 + 1) * log_x

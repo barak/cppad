@@ -1,6 +1,5 @@
-# $Id: CMakeLists.txt 3857 2016-12-23 13:08:43Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -30,7 +29,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
 # add_executable(<name> [WIN32] [MACOSX_BUNDLE] [EXCLUDE_FROM_ALL]
 #                 source1 source2 ... sourceN
 # )
-ADD_EXECUTABLE(speed_sacado EXCLUDE_FROM_ALL ../main.cpp
+SET(source_list ../main.cpp
 	det_lu.cpp
 	det_minor.cpp
 	mat_mul.cpp
@@ -39,39 +38,34 @@ ADD_EXECUTABLE(speed_sacado EXCLUDE_FROM_ALL ../main.cpp
 	sparse_hessian.cpp
 	sparse_jacobian.cpp
 )
+set_compile_flags( speed_sacado "${cppad_debug_which}" "${source_list}" )
+#
+ADD_EXECUTABLE( speed_sacado EXCLUDE_FROM_ALL ${source_list} )
 
-# Compiler flags for cppad source
-add_cppad_cxx_flags( speed_sacado )
-
-# Find name used for teuchos library
-SET(teuchos_lib NOTFOUND)
-FOREACH(dir ${cmake_install_libdirs})
-	FILE(GLOB file_list ${sacado_prefix}/${dir}/libteuchoscore.*)
-	IF(file_list)
-		SET(teuchos_lib teuchoscore)
-	ENDIF(file_list)
-	FILE(GLOB file_list ${sacado_prefix}/${dir}/libteuchos.*)
-	IF(file_list)
-		SET(teuchos_lib teuchos)
-	ENDIF(file_list)
-ENDFOREACH(dir)
-
-# List of libraries to be linked into the specified target
-IF(teuchos_lib)
-	TARGET_LINK_LIBRARIES(speed_sacado speed_src sacado ${teuchos_lib})
-ELSE(teuchos_lib)
-	MESSAGE(FATAT_ERROR
-"
-For all dir in cmake_install_libdirs, cannot find either
-	sacado_prefix/dir/teuchos
-	sacado_prefix/dir/teuchoscore
-where
-	sacado_prefix = ${sacado_prefix}
-	cmake_install_libdirs = ${cmake_install_libdirs}
-	teuchos_lib= ${teuchos_lib}
-"
+# determine libraries necessary to link Sacado
+SET(config_file "${sacado_prefix}/include/Makefile.export.Sacado")
+IF(NOT EXISTS ${config_file})
+	MESSAGE(FATAL_ERROR
+"the file sacado_prefix/include/Makefile.export.Sacado does not exist
+where sacado_prefix=${sacado_prefix}"
 	)
-ENDIF(teuchos_lib)
+ENDIF(NOT EXISTS ${config_file})
+SET(cmd "grep" "Sacado_LIBRARIES=" "${config_file}")
+EXECUTE_PROCESS(
+	COMMAND         ${cmd}
+	OUTPUT_VARIABLE temp1
+)
+STRING(REGEX REPLACE "Sacado_LIBRARIES= *-l" "" temp2  ${temp1})
+STRING(STRIP ${temp2} temp3)
+STRING(REGEX REPLACE " *-l" ";" sacado_lib_list ${temp3})
+#
+# include the dl library if it is in the system path
+CHECK_LIBRARY_EXISTS( dl dlopen "${CMAKE_SYSTEM_LIBRARY_PATH}" dl_found )
+IF( dl_found )
+	TARGET_LINK_LIBRARIES(speed_sacado speed_src ${sacado_lib_list} dl)
+ELSE( dl_found )
+	TARGET_LINK_LIBRARIES(speed_sacado speed_src ${sacado_lib_list})
+ENDIF( dl_found )
 #
 # Add the check_speed_sacado target
 ADD_CUSTOM_TARGET(check_speed_sacado

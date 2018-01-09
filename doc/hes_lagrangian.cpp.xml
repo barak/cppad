@@ -3,10 +3,10 @@
       xmlns:math='http://www.w3.org/1998/Math/MathML'
 >
 <head>
-<title>Hessian of Lagrangian and  ADFun Default Constructor: Example and Test</title>
+<title>Hessian of Lagrangian and ADFun Default Constructor: Example and Test</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
-<meta name="description" id="description" content="Hessian of Lagrangian and  ADFun Default Constructor: Example and Test"/>
-<meta name="keywords" id="keywords" content=" hessian lagrangian adfun default constructor: example test Heslagrangian constructor "/>
+<meta name="description" id="description" content="Hessian of Lagrangian and ADFun Default Constructor: Example and Test"/>
+<meta name="keywords" id="keywords" content=" hessian lagrangian adfun default constructor: example test "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -23,7 +23,7 @@ A:active { color : purple }
 <a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
 </td>
 <td><a href="hessian.cpp.xml" target="_top">Prev</a>
-</td><td><a href="fortwo.xml" target="_top">Next</a>
+</td><td><a href="forone.xml" target="_top">Next</a>
 </td><td>
 <select onchange='choose_across0(this)'>
 <option>Index-&gt;</option>
@@ -39,7 +39,7 @@ A:active { color : purple }
 <option>Up-&gt;</option>
 <option>CppAD</option>
 <option>ADFun</option>
-<option>Drivers</option>
+<option>drivers</option>
 <option>Hessian</option>
 <option>hes_lagrangian.cpp</option>
 </select>
@@ -47,29 +47,27 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down3(this)'>
 <option>ADFun-&gt;</option>
-<option>Independent</option>
-<option>FunConstruct</option>
-<option>Dependent</option>
-<option>abort_recording</option>
-<option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
 <option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
 <option>check_for_nan</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>Drivers-&gt;</option>
+<option>drivers-&gt;</option>
 <option>Jacobian</option>
+<option>Hessian</option>
 <option>ForOne</option>
 <option>RevOne</option>
-<option>Hessian</option>
 <option>ForTwo</option>
 <option>RevTwo</option>
-<option>sparse_jacobian</option>
-<option>sparse_hessian</option>
 </select>
 </td>
 <td>
@@ -82,7 +80,7 @@ A:active { color : purple }
 <td>hes_lagrangian.cpp</td>
 <td>Headings</td>
 </tr></table><br/>
-<center><b><big><big>Hessian of Lagrangian and  ADFun Default Constructor: Example and Test</big></big></b></center>
+<center><b><big><big>Hessian of Lagrangian and ADFun Default Constructor: Example and Test</big></big></b></center>
 <code><font color="blue"><pre><tt>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cassert&gt;</span>
@@ -163,37 +161,39 @@ A:active { color : purple }
      <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>vector<span style="color: #990000">;</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// double values corresponding to XYZ vector</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// double values corresponding to x, y, and z vectors</span></span>
           <span style="color: #009900">double</span> <span style="font-weight: bold"><span style="color: #000000">x0</span></span><span style="color: #990000">(.</span><span style="color: #993399">5</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x1</span></span><span style="color: #990000">(</span><span style="color: #993399">1e3</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">x2</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">y0</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.),</span> <span style="font-weight: bold"><span style="color: #000000">y1</span></span><span style="color: #990000">(</span><span style="color: #993399">3</span><span style="color: #990000">.),</span> <span style="font-weight: bold"><span style="color: #000000">z</span></span><span style="color: #990000">(</span><span style="color: #993399">4</span><span style="color: #990000">.);</span>
 
           <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
           <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
-          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">XYZ</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
-          XYZ<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
-          XYZ<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
-          XYZ<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">a_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+          a_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+          a_x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// declare X as independent variable vector and start recording</span></span>
-          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>XYZ<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// declare a_x as independent variable vector and start recording</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// add the Lagragian multipliers to XYZ</span></span>
-          <span style="font-style: italic"><span style="color: #9A1900">// (note that this modifies the vector XYZ)</span></span>
-          XYZ<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>y0<span style="color: #990000">);</span>
-          XYZ<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>y1<span style="color: #990000">);</span>
-          XYZ<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">push_back</span></span><span style="color: #990000">(</span>z<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// vector including x, y, and z</span></span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span> <span style="font-weight: bold"><span style="color: #000000">a_xyz</span></span><span style="color: #990000">(</span>n <span style="color: #990000">+</span> <span style="color: #993399">2</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
+          a_xyz<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span>
+          a_xyz<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+          a_xyz<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> a_x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+          a_xyz<span style="color: #990000">[</span><span style="color: #993399">3</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> y0<span style="color: #990000">;</span>
+          a_xyz<span style="color: #990000">[</span><span style="color: #993399">4</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> y1<span style="color: #990000">;</span>
+          a_xyz<span style="color: #990000">[</span><span style="color: #993399">5</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> z<span style="color: #990000">;</span>
 
           <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
           <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
-          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">L</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
-          L<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Lagragian</span></span><span style="color: #990000">(</span>XYZ<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">a_L</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          a_L<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">Lagragian</span></span><span style="color: #990000">(</span>a_xyz<span style="color: #990000">);</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// create K: X -&gt; L and stop tape recording</span></span>
-          <span style="font-style: italic"><span style="color: #9A1900">// We cannot use the ADFun sequence constructor because XYZ has</span></span>
-          <span style="font-style: italic"><span style="color: #9A1900">// changed between the call to Independent and here.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// create K: x -&gt; L and stop tape recording.</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Use default ADFun construction for example purposes.</span></span>
           CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> K<span style="color: #990000">;</span>
-          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>L<span style="color: #990000">);</span>
+          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">,</span> a_L<span style="color: #990000">);</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// Operation sequence corresponding to K does depends on</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Operation sequence corresponding to K depends on</span></span>
           <span style="font-style: italic"><span style="color: #9A1900">// value of y0, y1, and z. Must redo calculations above when</span></span>
           <span style="font-style: italic"><span style="color: #9A1900">// y0, y1, or z changes.</span></span>
 
@@ -220,22 +220,22 @@ A:active { color : purple }
 
           <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
           <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
-          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">X</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
-          X<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
-          X<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
-          X<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">a_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          a_x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x0<span style="color: #990000">;</span>
+          a_x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x1<span style="color: #990000">;</span>
+          a_x<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> x2<span style="color: #990000">;</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// declare X as independent variable vector and start recording</span></span>
-          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// declare a_x as independent variable vector and start recording</span></span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
 
           <span style="font-style: italic"><span style="color: #9A1900">// range space vector</span></span>
           <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">3</span><span style="color: #990000">;</span>
-          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">FG</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
-          FG <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">fg</span></span><span style="color: #990000">(</span>X<span style="color: #990000">);</span>
+          <span style="color: #008080">vector&lt; AD&lt;double&gt; &gt;</span>  <span style="font-weight: bold"><span style="color: #000000">a_fg</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+          a_fg <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">fg</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">);</span>
 
-          <span style="font-style: italic"><span style="color: #9A1900">// create K: X -&gt; FG and stop tape recording</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// create K: x -&gt; fg and stop tape recording</span></span>
           CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> K<span style="color: #990000">;</span>
-          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>FG<span style="color: #990000">);</span>
+          K<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a_x<span style="color: #990000">,</span> a_fg<span style="color: #990000">);</span>
 
           <span style="font-style: italic"><span style="color: #9A1900">// Operation sequence corresponding to K does not depend on</span></span>
           <span style="font-style: italic"><span style="color: #9A1900">// value of x0, x1, x2, y0, y1, or z.</span></span>
@@ -291,7 +291,7 @@ A:active { color : purple }
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/hes_lagrangian.cpp
+<hr/>Input File: example/general/hes_lagrangian.cpp
 
 </body>
 </html>
