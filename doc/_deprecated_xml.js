@@ -25,6 +25,7 @@ var list_down2 = [
 ];
 var list_down1 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -48,10 +49,12 @@ var list_down0 = [
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
 'old_atomic.xml',
-'zdouble.xml'
+'zdouble.xml',
+'autotools.xml'
 ];
 var list_current0 = [
 'deprecated.xml#Contents',
+'deprecated.xml#Name Changes',
 'deprecated.xml#Atomic Functions'
 ];
 function choose_across0(item)

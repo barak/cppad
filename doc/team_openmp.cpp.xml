@@ -62,6 +62,7 @@ A:active { color : purple }
 <option>simple_ad_pthread.cpp</option>
 <option>team_example.cpp</option>
 <option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
 <option>multi_newton.cpp</option>
 <option>team_thread.hpp</option>
 </select>
@@ -148,7 +149,7 @@ See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap
      num_threads_ <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// Set the number of OpenMP threads to one</span></span>
-     <span style="font-weight: bold"><span style="color: #000000">omp_set_num_threads</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">omp_set_num_threads</span></span><span style="color: #990000">(</span> <span style="color: #009900">int</span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">)</span> <span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// inform CppAD no longer in multi-threading mode</span></span>
      thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">parallel_setup</span></span><span style="color: #990000">(</span>num_threads_<span style="color: #990000">,</span> CPPAD_NULL<span style="color: #990000">,</span> CPPAD_NULL<span style="color: #990000">);</span>
@@ -161,7 +162,7 @@ See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap
 <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">team_name</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
 <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #FF0000">"openmp"</span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-<hr/>Input File: multi_thread/openmp/team_openmp.cpp
+<hr/>Input File: example/multi_thread/openmp/team_openmp.cpp
 
 </body>
 </html>

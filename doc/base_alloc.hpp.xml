@@ -6,7 +6,7 @@
 <title>Example AD&lt;Base&gt; Where Base Constructor Allocates Memory</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Example AD&lt;Base&gt; Where Base Constructor Allocates Memory"/>
-<meta name="keywords" id="keywords" content=" example ad&lt;base&gt; where base constructor allocates memory purpose include file computed assignment macro binary operator boolean class definition condexpop condexprel equalopseq identical output integer azmul ordered unary standard math erf asinh acosh atanh expm1 log1p sign pow numeric_limits to_string hash_code "/>
+<meta name="keywords" id="keywords" content=" example ad&lt;base&gt; where base constructor allocates memory purpose include file compound assignment macro binary operator boolean class definition condexpop condexprel equalopseq identical output integer azmul ordered unary standard math erf asinh acosh atanh expm1 log1p sign pow numeric_limits to_string hash_code "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -87,7 +87,7 @@ A:active { color : purple }
 <option>Headings-&gt;</option>
 <option>Purpose</option>
 <option>Include File</option>
-<option>Computed Assignment Macro</option>
+<option>Compound Assignment Macro</option>
 <option>Binary Operator Macro</option>
 <option>Boolean Operator Macro</option>
 <option>Class Definition</option>
@@ -138,10 +138,10 @@ and <a href="thread_alloc.xml" target="_top"><span style='white-space: nowrap'>t
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/thread_alloc.hpp&gt;</span>
 </tt></pre>
 <br/>
-<b><big><a name="Computed Assignment Macro" id="Computed Assignment Macro">Computed Assignment Macro</a></big></b>
+<b><big><a name="Compound Assignment Macro" id="Compound Assignment Macro">Compound Assignment Macro</a></big></b>
 <br/>
 This macro is used for the
-<code><font color="blue">base_alloc</font></code> computed assignment operators; to be specific,
+<code><font color="blue">base_alloc</font></code> compound assignment operators; to be specific,
 used with 
 <code><i><font color="black"><span style='white-space: nowrap'>op&#xA0;</span></font></i></code>
  equal to
@@ -378,6 +378,7 @@ The following invocations of the macro above define the
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>cos<span style="color: #990000">)</span>
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>cosh<span style="color: #990000">)</span>
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>exp<span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>fabs<span style="color: #990000">)</span>
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>log<span style="color: #990000">)</span>
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>log10<span style="color: #990000">)</span>
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>sin<span style="color: #990000">)</span>
@@ -386,11 +387,11 @@ The following invocations of the macro above define the
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>tan<span style="color: #990000">)</span>
      <span style="font-weight: bold"><span style="color: #000000">BASE_ALLOC_STD_MATH</span></span><span style="color: #990000">(</span>tanh<span style="color: #990000">)</span>
 <span style="color: #FF0000">}</span></tt></pre>
-The absolute value function is special because its <code><font color="blue">std</font></code> name is
+The absolute value function is special because it <code><font color="blue">std</font></code> name is
 <code><font color="blue">fabs</font></code>
 <pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
      <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #008080">base_alloc</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> base_alloc<span style="color: #990000">&amp;</span> x<span style="color: #990000">)</span>
-     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(*</span>x<span style="color: #990000">.</span>ptrdbl_<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>x<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
 <span style="color: #FF0000">}</span></tt></pre>
 <br/>
 <b><big><a name="erf, asinh, acosh, atanh, expm1, log1p" id="erf, asinh, acosh, atanh, expm1, log1p">erf, asinh, acosh, atanh, expm1, log1p</a></big></b>
@@ -464,7 +465,7 @@ have the same value.
      <span style="color: #FF0000">{</span>     <span style="color: #009900">unsigned</span> <span style="color: #009900">short</span> code <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>x<span style="color: #990000">.</span>ptrdbl_ <span style="color: #990000">==</span> <span style="color: #993399">0.0</span> <span style="color: #990000">)</span>
                <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> code<span style="color: #990000">;</span>
-          <span style="color: #009900">double</span> log_x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>x<span style="color: #990000">.</span>ptrdbl_ <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">double</span> log_x <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> <span style="color: #990000">*</span>x<span style="color: #990000">.</span>ptrdbl_ <span style="color: #990000">)</span> <span style="color: #990000">);</span>
           <span style="font-style: italic"><span style="color: #9A1900">// assume log( std::numeric_limits&lt;double&gt;::max() ) is near 700</span></span>
           code <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">unsigned</span> <span style="color: #009900">short</span><span style="color: #990000">&gt;(</span>
                <span style="color: #990000">(</span>CPPAD_HASH_TABLE_SIZE <span style="color: #990000">/</span> <span style="color: #993399">700</span> <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> log_x
@@ -474,7 +475,7 @@ have the same value.
      <span style="color: #FF0000">}</span>
 <span style="color: #FF0000">}</span></tt></pre>
 
-<hr/>Input File: example/base_alloc.hpp
+<hr/>Input File: example/general/base_alloc.hpp
 
 </body>
 </html>

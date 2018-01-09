@@ -37,28 +37,21 @@ var list_down1 = [
 'simple_ad_pthread.cpp.xml',
 'team_example.cpp.xml',
 'harmonic.cpp.xml',
+'multi_atomic.cpp.xml',
 'multi_newton.cpp.xml',
 'team_thread.hpp.xml'
 ];
 var list_down0 = [
-'multi_newton_time.cpp.xml',
-'multi_newton_work.cpp.xml'
+'multi_newton_common.xml',
+'multi_newton_setup.xml',
+'multi_newton_worker.xml',
+'multi_newton_takedown.xml',
+'multi_newton_run.xml',
+'multi_newton_time.xml'
 ];
 var list_current0 = [
-'multi_newton.cpp.xml#Syntax',
-'multi_newton.cpp.xml#Purpose',
-'multi_newton.cpp.xml#Method',
-'multi_newton.cpp.xml#ok',
-'multi_newton.cpp.xml#xout',
-'multi_newton.cpp.xml#fun',
-'multi_newton.cpp.xml#num_sub',
-'multi_newton.cpp.xml#xlow',
-'multi_newton.cpp.xml#xup',
-'multi_newton.cpp.xml#epsilon',
-'multi_newton.cpp.xml#max_itr',
-'multi_newton.cpp.xml#num_threads',
-'multi_newton.cpp.xml#Contents',
-'multi_newton.cpp.xml#Source'
+'multi_newton.cpp.xml#Source File',
+'multi_newton.cpp.xml#Contents'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

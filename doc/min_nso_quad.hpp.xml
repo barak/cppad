@@ -1,0 +1,298 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>min_nso_quad Source Code</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="min_nso_quad Source Code"/>
+<meta name="keywords" id="keywords" content=" min_nso_quad source code "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_min_nso_quad.hpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="min_nso_quad.cpp.xml" target="_top">Prev</a>
+</td><td><a href="funcheck.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>abs_normal</option>
+<option>min_nso_quad</option>
+<option>min_nso_quad.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>abs_normal-&gt;</option>
+<option>abs_normal_fun</option>
+<option>abs_print_mat</option>
+<option>abs_eval</option>
+<option>simplex_method</option>
+<option>lp_box</option>
+<option>abs_min_linear</option>
+<option>min_nso_linear</option>
+<option>qp_interior</option>
+<option>qp_box</option>
+<option>abs_min_quad</option>
+<option>min_nso_quad</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>min_nso_quad-&gt;</option>
+<option>min_nso_quad.cpp</option>
+<option>min_nso_quad.hpp</option>
+</select>
+</td>
+<td>min_nso_quad.hpp</td>
+<td>Headings</td>
+</tr></table><br/>
+<center><b><big><big>min_nso_quad Source Code</big></big></b></center>
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">min_nso_quad_join</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)&amp;</span> x <span style="color: #990000">,</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)&amp;</span> u <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="color: #008080">size_t</span> s <span style="color: #990000">=</span> u<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">xu</span></span><span style="color: #990000">(</span>n <span style="color: #990000">+</span> s<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               xu<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> s<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               xu<span style="color: #990000">[</span>n <span style="color: #990000">+</span> j<span style="color: #990000">]</span> <span style="color: #990000">=</span> u<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> xu<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// BEGIN C++</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span> <span style="font-style: italic"><span style="color: #9A1900">// BEGIN_CPPAD_NAMESPACE</span></span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// BEGIN PROTOTYPE</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">DblVector</span><span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">SizeVector</span><span style="color: #990000">&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">min_nso_quad</span></span><span style="color: #990000">(</span>
+     <span style="color: #008080">size_t</span>           level     <span style="color: #990000">,</span>
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>   f         <span style="color: #990000">,</span>
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>   g         <span style="color: #990000">,</span>
+     ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;&amp;</span>   a         <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> DblVector<span style="color: #990000">&amp;</span> epsilon   <span style="color: #990000">,</span>
+     <span style="color: #008080">SizeVector</span>       maxitr    <span style="color: #990000">,</span>
+     <span style="color: #009900">double</span>           b_in      <span style="color: #990000">,</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> DblVector<span style="color: #990000">&amp;</span> x_in      <span style="color: #990000">,</span>
+     DblVector<span style="color: #990000">&amp;</span>       x_out     <span style="color: #990000">)</span>
+<span style="font-style: italic"><span style="color: #9A1900">// END PROTOTYPE</span></span>
+<span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> std<span style="color: #990000">::</span>fabs<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// number of absolute value terms</span></span>
+     <span style="color: #008080">size_t</span> s  <span style="color: #990000">=</span> a<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// size of domain for f</span></span>
+     <span style="color: #008080">size_t</span> n  <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Domain</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// size of range space for f</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Domain</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">+</span> s<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: (g, a) is not an abs-normal for for f"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> m <span style="color: #990000">+</span> s<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: (g, a) is not an abs-normal for for f"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          level <span style="color: #990000">&lt;=</span> <span style="color: #993399">5</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: level is not less that or equal 5"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>epsilon<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: size of epsilon not equal to 2"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>maxitr<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> <span style="color: #993399">3</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: size of maxitr not equal to 3"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Domain</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> s <span style="color: #990000">&amp;&amp;</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Range</span></span><span style="color: #990000">()</span> <span style="color: #990000">&gt;</span> s<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: g, a is not an abs-normal representation"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          m <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: m is not equal to 1"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>x_in<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> n<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: size of x_in not equal to n"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span>x_out<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">())</span> <span style="color: #990000">==</span> n<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: size of x_out not equal to n"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_KNOWN</span></span><span style="color: #990000">(</span>
+          epsilon<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">&lt;</span> b_in<span style="color: #990000">,</span>
+          <span style="color: #FF0000">"min_nso_quad: b_in &lt;= epsilon[0]"</span>
+     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"start min_nso_quad</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+          std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"b_in = "</span> <span style="color: #990000">&lt;&lt;</span> b_in <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+          CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">abs_print_mat</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"x_in"</span><span style="color: #990000">,</span> n<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> x_in<span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// level in abs_min_quad sub-problem</span></span>
+     <span style="color: #008080">size_t</span> level_tilde <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          level_tilde <span style="color: #990000">=</span> level <span style="color: #990000">-</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// maxitr in abs_min_quad sub-problem</span></span>
+     <span style="color: #008080">SizeVector</span> <span style="font-weight: bold"><span style="color: #000000">maxitr_tilde</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     maxitr_tilde<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> maxitr<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     maxitr_tilde<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> maxitr<span style="color: #990000">[</span><span style="color: #993399">2</span><span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// epsilon in abs_min_quad sub-problem</span></span>
+     <span style="color: #008080">DblVector</span> <span style="font-weight: bold"><span style="color: #000000">eps_tilde</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
+     eps_tilde<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> epsilon<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">10</span><span style="color: #990000">.;</span>
+     eps_tilde<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> epsilon<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">/</span> <span style="color: #993399">10</span><span style="color: #990000">.;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// current bound</span></span>
+     <span style="color: #009900">double</span> b_cur <span style="color: #990000">=</span> b_in<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// initilaize the current x</span></span>
+     x_out <span style="color: #990000">=</span> x_in<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// value of a(x) at current x</span></span>
+     <span style="color: #008080">DblVector</span> a_cur <span style="color: #990000">=</span> a<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x_out<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (x_out, a_cur)</span></span>
+     <span style="color: #008080">DblVector</span> xu_cur <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">min_nso_quad_join</span></span><span style="color: #990000">(</span>x_out<span style="color: #990000">,</span> a_cur<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// value of g[ x_cur, a_cur ]</span></span>
+     <span style="color: #008080">DblVector</span> g_cur <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> xu_cur<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> itr <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> itr <span style="color: #990000">&lt;</span> maxitr<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">];</span> itr<span style="color: #990000">++)</span>
+     <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Jacobian of g[ x_cur, a_cur ]</span></span>
+          <span style="color: #008080">DblVector</span> g_jac <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Jacobian</span></span><span style="color: #990000">(</span>xu_cur<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// Hessian at x_cur</span></span>
+          <span style="color: #008080">DblVector</span> f_hes <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Hessian</span></span><span style="color: #990000">(</span>x_out<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// bound in abs_min_quad sub-problem</span></span>
+          <span style="color: #008080">DblVector</span> <span style="font-weight: bold"><span style="color: #000000">bound_tilde</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+               bound_tilde<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> b_cur<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #008080">DblVector</span> <span style="font-weight: bold"><span style="color: #000000">delta_x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">abs_min_quad</span></span><span style="color: #990000">(</span>
+               level_tilde<span style="color: #990000">,</span> n<span style="color: #990000">,</span> m<span style="color: #990000">,</span> s<span style="color: #990000">,</span>
+               g_cur<span style="color: #990000">,</span> g_jac<span style="color: #990000">,</span> f_hes<span style="color: #990000">,</span> bound_tilde<span style="color: #990000">,</span> eps_tilde<span style="color: #990000">,</span> maxitr_tilde<span style="color: #990000">,</span> delta_x
+          <span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+                    std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"end min_nso_quad: abs_min_quad failed</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// new candidate value for x</span></span>
+          <span style="color: #008080">DblVector</span> <span style="font-weight: bold"><span style="color: #000000">x_new</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+          <span style="color: #009900">double</span> max_delta_x <span style="color: #990000">=</span> <span style="color: #993399">0.0</span><span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          <span style="color: #FF0000">{</span>     x_new<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> x_out<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">+</span> delta_x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+               max_delta_x <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>max_delta_x<span style="color: #990000">,</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> delta_x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">)</span> <span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> max_delta_x <span style="color: #990000">&lt;</span> <span style="color: #993399">0.75</span> <span style="color: #990000">*</span> b_cur <span style="color: #990000">&amp;&amp;</span> max_delta_x <span style="color: #990000">&lt;</span> epsilon<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+                    std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"end min_nso_quad: delta_x is near zero</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// value of abs-normal approximation at minimizer</span></span>
+          <span style="color: #008080">DblVector</span> g_tilde <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">abs_eval</span></span><span style="color: #990000">(</span>n<span style="color: #990000">,</span> m<span style="color: #990000">,</span> s<span style="color: #990000">,</span> g_cur<span style="color: #990000">,</span> g_jac<span style="color: #990000">,</span> delta_x<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #009900">double</span> derivative <span style="color: #990000">=</span> <span style="color: #990000">(</span>g_tilde<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> g_cur<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> max_delta_x<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #000000">CPPAD_ASSERT_UNKNOWN</span></span><span style="color: #990000">(</span> derivative <span style="color: #990000">&lt;=</span> <span style="color: #993399">0.0</span> <span style="color: #990000">)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">-</span> epsilon<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">&lt;</span> derivative <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+                    std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"end min_nso_quad: derivative near zero</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// value of a(x) at new x</span></span>
+          <span style="color: #008080">DblVector</span> a_new <span style="color: #990000">=</span> a<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x_new<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// (x_new, a_new)</span></span>
+          <span style="color: #008080">DblVector</span> xu_new <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">min_nso_quad_join</span></span><span style="color: #990000">(</span>x_new<span style="color: #990000">,</span> a_new<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// value of g[ x_new, a_new ]</span></span>
+          <span style="color: #008080">DblVector</span> g_new <span style="color: #990000">=</span> g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> xu_new<span style="color: #990000">);</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// check for descent of objective</span></span>
+          <span style="color: #009900">double</span> rate_new <span style="color: #990000">=</span> <span style="color: #990000">(</span>g_new<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> g_cur<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> max_delta_x<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> <span style="color: #990000">-</span> epsilon<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">&lt;</span> rate_new <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// did not get sufficient descent</span></span>
+               b_cur <span style="color: #990000">/=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+                    std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"itr = "</span> <span style="color: #990000">&lt;&lt;</span> itr
+                    <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">", rate_new = "</span> <span style="color: #990000">&lt;&lt;</span> rate_new
+                    <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">", b_cur = "</span> <span style="color: #990000">&lt;&lt;</span> b_cur <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// got sufficient descent so accept candidate for x</span></span>
+               x_out  <span style="color: #990000">=</span> x_new<span style="color: #990000">;</span>
+               a_cur  <span style="color: #990000">=</span> a_new<span style="color: #990000">;</span>
+               g_cur  <span style="color: #990000">=</span> g_new<span style="color: #990000">;</span>
+               xu_cur <span style="color: #990000">=</span> xu_new<span style="color: #990000">;</span>
+               <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span>  <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+               <span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"itr = "</span> <span style="color: #990000">&lt;&lt;</span> itr
+                    <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">", derivative = "</span><span style="color: #990000">&lt;&lt;</span> derivative
+                    <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">", max_delta_x = "</span><span style="color: #990000">&lt;&lt;</span> max_delta_x
+                    <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">", objective = "</span> <span style="color: #990000">&lt;&lt;</span> g_cur<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+                    <span style="font-weight: bold"><span style="color: #000000">abs_print_mat</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"x_out"</span><span style="color: #990000">,</span> n<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span> x_out<span style="color: #990000">);</span>
+               <span style="color: #FF0000">}</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> level <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
+          std<span style="color: #990000">::</span>cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"end min_nso_quad: maximum number of iterations exceeded</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #FF0000">}</span> <span style="font-style: italic"><span style="color: #9A1900">// END_CPPAD_NAMESPACE</span></span></tt></pre>
+
+<hr/>Input File: example/abs_normal/min_nso_quad.omh
+
+</body>
+</html>

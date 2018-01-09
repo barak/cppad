@@ -62,15 +62,15 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down2(this)'>
 <option>ADFun-&gt;</option>
-<option>Independent</option>
-<option>FunConstruct</option>
-<option>Dependent</option>
-<option>abort_recording</option>
-<option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
 <option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
 <option>check_for_nan</option>
 </select>
 </td>
@@ -199,7 +199,7 @@ A:active { color : purple }
           x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0.75</span><span style="color: #990000">;</span>
           y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
           <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">(</span> options <span style="color: #990000">==</span> <span style="color: #FF0000">""</span> <span style="color: #990000">)</span>
-               ok  <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">CompareChange</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+               ok  <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">compare_change_number</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #000000">fun</span></span><span style="color: #990000">(</span>options<span style="color: #990000">,</span> x<span style="color: #990000">,</span> check<span style="color: #990000">,</span> before<span style="color: #990000">,</span> after<span style="color: #990000">);</span>
           ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> check<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span> eps10<span style="color: #990000">,</span> eps10<span style="color: #990000">);</span>
 
@@ -208,7 +208,7 @@ A:active { color : purple }
           x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
           y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
           <span style="font-weight: bold"><span style="color: #0000FF">if</span></span> <span style="color: #990000">(</span> options <span style="color: #990000">==</span> <span style="color: #FF0000">""</span> <span style="color: #990000">)</span>
-               ok  <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">CompareChange</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+               ok  <span style="color: #990000">&amp;=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">compare_change_number</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #000000">fun</span></span><span style="color: #990000">(</span>options<span style="color: #990000">,</span> x<span style="color: #990000">,</span> check<span style="color: #990000">,</span> before<span style="color: #990000">,</span> after<span style="color: #990000">);</span>
           ok  <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">-</span> check<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">])</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">0.5</span><span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>

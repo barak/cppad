@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_REVERSE_HPP
 # define CPPAD_CORE_REVERSE_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -27,19 +26,19 @@ Compute derivatives using reverse mode.
 Use reverse mode to compute derivative of forward mode Taylor coefficients.
 
 The function
-\f$ X : {\rm R} \times {\rm R}^{n \times q} \rightarrow {\rm R} \f$
+\f$ X : {\bf R} \times {\bf R}^{n \times q} \rightarrow {\bf R} \f$
 is defined by
 \f[
 X(t , u) = \sum_{k=0}^{q-1} u^{(k)} t^k
 \f]
 The function
-\f$ Y : {\rm R} \times {\rm R}^{n \times q} \rightarrow {\rm R} \f$
+\f$ Y : {\bf R} \times {\bf R}^{n \times q} \rightarrow {\bf R} \f$
 is defined by
 \f[
 Y(t , u) = F[ X(t, u) ]
 \f]
 The function
-\f$ W : {\rm R}^{n \times q} \rightarrow {\rm R} \f$ is defined by
+\f$ W : {\bf R}^{n \times q} \rightarrow {\bf R} \f$ is defined by
 \f[
 W(u) = \sum_{k=0}^{q-1} ( w^{(k)} )^{\rm T}
 \frac{1}{k !} \frac{ \partial^k } { t^k } Y(0, u)
@@ -102,21 +101,13 @@ VectorBase ADFun<Base>::Reverse(size_t q, const VectorBase &w)
 	// number of dependent variables
 	size_t m = dep_taddr_.size();
 
-	local::pod_vector<Base> Partial;
-	Partial.extend(num_var_tape_  * q);
-
-	// update maximum memory requirement
-	// memoryMax = std::max( memoryMax,
-	//	Memory() + num_var_tape_  * q * sizeof(Base)
-	// );
-
 	// check VectorBase is Simple Vector class with Base type elements
 	CheckSimpleVector<Base, VectorBase>();
 
 	CPPAD_ASSERT_KNOWN(
 		size_t(w.size()) == m || size_t(w.size()) == (m * q),
 		"Argument w to Reverse does not have length equal to\n"
-		"the dimension of the range for the corresponding ADFun."
+		"the dimension of the range or dimension of range times q."
 	);
 	CPPAD_ASSERT_KNOWN(
 		q > 0,
@@ -124,7 +115,7 @@ VectorBase ADFun<Base>::Reverse(size_t q, const VectorBase &w)
 	);
 	CPPAD_ASSERT_KNOWN(
 		num_order_taylor_ >= q,
-		"Less that q taylor_ coefficients are currently stored"
+		"Less than q Taylor coefficients are currently stored"
 		" in this ADFun object."
 	);
 	// special case where multiple forward directions have been computed,
@@ -140,7 +131,9 @@ VectorBase ADFun<Base>::Reverse(size_t q, const VectorBase &w)
 		"Reverse mode for Forward(q, r, xq) with more than one direction"
 		"\n(r > 1) is not yet supported for q > 1."
 	);
+
 	// initialize entire Partial matrix to zero
+	local::pod_vector<Base> Partial(num_var_tape_ * q);
 	for(i = 0; i < num_var_tape_; i++)
 		for(j = 0; j < q; j++)
 			Partial[i * q + j] = zero;
@@ -161,7 +154,7 @@ VectorBase ADFun<Base>::Reverse(size_t q, const VectorBase &w)
 	// evaluate the derivatives
 	CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
 	CPPAD_ASSERT_UNKNOWN( load_op_.size()  == play_.num_load_op_rec() );
-	local::ReverseSweep(
+	local::reverse_sweep(
 		q - 1,
 		n,
 		num_var_tape_,
@@ -171,7 +164,8 @@ VectorBase ADFun<Base>::Reverse(size_t q, const VectorBase &w)
 		q,
 		Partial.data(),
 		cskip_op_.data(),
-		load_op_
+		load_op_,
+		subgraph_info_.entire_graph()
 	);
 
 	// return the derivative values

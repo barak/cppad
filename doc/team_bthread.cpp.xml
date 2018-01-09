@@ -62,6 +62,7 @@ A:active { color : purple }
 <option>simple_ad_pthread.cpp</option>
 <option>team_example.cpp</option>
 <option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
 <option>multi_newton.cpp</option>
 <option>team_thread.hpp</option>
 </select>
@@ -213,8 +214,8 @@ See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap
      num_threads_ <span style="color: #990000">=</span> num_threads<span style="color: #990000">;</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// initialize two barriers, one for work done, one for new job ready</span></span>
-     wait_for_work_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> boost<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">barrier</span></span><span style="color: #990000">(</span>num_threads<span style="color: #990000">);</span>
-     wait_for_job_  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> boost<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">barrier</span></span><span style="color: #990000">(</span>num_threads<span style="color: #990000">);</span>
+     wait_for_work_ <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> boost<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">barrier</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #009900">unsigned</span> <span style="color: #009900">int</span><span style="color: #990000">)</span> num_threads <span style="color: #990000">);</span>
+     wait_for_job_  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">new</span></span> boost<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">barrier</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #009900">unsigned</span> <span style="color: #009900">int</span><span style="color: #990000">)</span> num_threads <span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// initial job for the threads</span></span>
      thread_job_           <span style="color: #990000">=</span> init_enum<span style="color: #990000">;</span>
@@ -321,7 +322,7 @@ See <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap
 <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #009900">char</span><span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">team_name</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
 <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #FF0000">"bthread"</span><span style="color: #990000">;</span> <span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-<hr/>Input File: multi_thread/bthread/team_bthread.cpp
+<hr/>Input File: example/multi_thread/bthread/team_bthread.cpp
 
 </body>
 </html>

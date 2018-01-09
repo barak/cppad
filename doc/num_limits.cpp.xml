@@ -115,10 +115,10 @@ A:active { color : purple }
           <span style="color: #008080">Float</span> eps   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
           <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
           <span style="color: #008080">Float</span> match <span style="color: #990000">=</span> <span style="color: #990000">(</span>min <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
-          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> min <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span>  <span style="color: #990000">&gt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> min <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span>  <span style="color: #990000">&gt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
           <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
           match       <span style="color: #990000">=</span> <span style="color: #990000">(</span>min <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
-          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> min <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span>  <span style="color: #990000">&lt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> min <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span>  <span style="color: #990000">&lt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>
      <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
@@ -128,10 +128,10 @@ A:active { color : purple }
           <span style="color: #008080">Float</span> eps   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
           <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
           <span style="color: #008080">Float</span> match <span style="color: #990000">=</span> <span style="color: #990000">(</span>max <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
-          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> max <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> max <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&gt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
           <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
           match       <span style="color: #990000">=</span> <span style="color: #990000">(</span>max <span style="color: #990000">/</span> <span style="color: #993399">100</span><span style="color: #990000">.)</span> <span style="color: #990000">*</span> <span style="color: #993399">100</span><span style="color: #990000">.;</span>
-          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">abs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> max <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
+          ok         <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span>match <span style="color: #990000">/</span> max <span style="color: #990000">-</span> <span style="color: #993399">1.0</span><span style="color: #990000">)</span> <span style="color: #990000">&lt;</span> <span style="color: #993399">3.0</span> <span style="color: #990000">*</span> eps<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>
      <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
@@ -139,6 +139,16 @@ A:active { color : purple }
      <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
           <span style="color: #008080">Float</span> nan   <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">quiet_NaN</span></span><span style="color: #990000">();</span>
           ok         <span style="color: #990000">&amp;=</span> nan <span style="color: #990000">!=</span> nan<span style="color: #990000">;</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -----------------------------------------------------------------</span></span>
+     <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">check_digits10</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok     <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          <span style="color: #008080">Float</span> neg_log_eps <span style="color: #990000">=</span>
+               <span style="color: #990000">-</span> <span style="font-weight: bold"><span style="color: #000000">log10</span></span><span style="color: #990000">(</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span>
+          <span style="color: #009900">int</span> ceil_neg_log_eps <span style="color: #990000">=</span>
+               <span style="font-weight: bold"><span style="color: #000000">Integer</span></span><span style="color: #990000">(</span> neg_log_eps <span style="color: #990000">);</span>
+          ok <span style="color: #990000">&amp;=</span> ceil_neg_log_eps <span style="color: #990000">==</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span>Float<span style="color: #990000">&gt;::</span>digits10<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>
 <span style="color: #FF0000">}</span>
@@ -150,11 +160,12 @@ A:active { color : purple }
      ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_min</span></span><span style="color: #990000">();</span>
      ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_max</span></span><span style="color: #990000">();</span>
      ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_nan</span></span><span style="color: #990000">();</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">check_digits10</span></span><span style="color: #990000">();</span>
 
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-<hr/>Input File: example/num_limits.cpp
+<hr/>Input File: example/general/num_limits.cpp
 
 </body>
 </html>

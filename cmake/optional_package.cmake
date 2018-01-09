@@ -1,6 +1,5 @@
-# $Id: optional_package.cmake 3803 2016-03-19 05:07:48Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -9,10 +8,14 @@
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-# optional_package(prefix_variable system_include description)
+# optional_package(package system_include description)
 #
-# prefix_variable: (out)
+# ${package}_prefix: (out)
 # is a PATH variable that holds the install prefix for this optional package.
+#
+# cppad_has_${package}: (out)
+# is 1 if ${package}_prefix is set by the cmake command line (or gui),
+# and 0 otherwise.
 #
 # system_include: (in)
 # If this is true, the include files for this package should be treated as
@@ -21,10 +24,10 @@
 # description: (in)
 # is a description for the install prefix for this optional package.
 #
-# If package_variable is not set by the cmake command line (or gui),
+# If ${package}_prefix is not set by the cmake command line (or gui),
 # it is set to the default value NOTFOUND.
 #
-# If package_variable is set by the cmake command line, the following is done:
+# If ${package}_prefix is set by the cmake command line, the following is done:
 # 1. All the valid include subdirectories are added using INCLUDE_DIRECTORIES.
 # 2. All the valid library subdirectories are added using LINK_DIRECTORIES.
 # The set of valid include and library directories are determined by
@@ -32,11 +35,15 @@
 #
 # description: (in)
 #
-MACRO(optional_package prefix_variable system_include description)
+MACRO(optional_package package system_include description)
+	SET(prefix_variable ${package}_prefix)
+	SET(cppad_has_${package} 0)
 	SET(${prefix_variable} NOTFOUND CACHE PATH "${description}")
 	SET(prefix ${${prefix_variable}} )
 	MESSAGE(STATUS "${prefix_variable} = ${prefix}")
 	IF ( prefix )
+		SET(cppad_has_${package} 1)
+		#
 		# List of preprocessor include file search directories
 		FOREACH(dir ${cmake_install_includedirs})
 			IF(IS_DIRECTORY ${prefix}/${dir} )

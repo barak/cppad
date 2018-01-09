@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_SPARSE_JACOBIAN_HPP
 # define CPPAD_CORE_SPARSE_JACOBIAN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -36,8 +35,7 @@ $spell
 	Taylor
 $$
 
-$section Sparse Jacobian: Easy Driver$$
-$mindex SparseJacobian$$
+$section Sparse Jacobian$$
 
 $head Syntax$$
 $icode%jac% = %f%.SparseJacobian(%x%)
@@ -186,7 +184,7 @@ $subhead color_method$$
 The coloring algorithm determines which columns (forward mode)
 or rows (reverse mode) can be computed during the same sweep.
 This field has prototype
-$codep%
+$codei%
 	std::string %work%.color_method
 %$$
 and its default value (after a constructor or $code clear()$$)
@@ -264,7 +262,7 @@ the previous calls to $cref Forward$$ are undefined.
 
 $head Example$$
 $children%
-	example/sparse_jacobian.cpp
+	example/sparse/sparse_jacobian.cpp
 %$$
 The routine
 $cref sparse_jacobian.cpp$$

@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: check_example.sh 3781 2016-01-18 16:16:22Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -19,26 +18,38 @@ fi
 echo "Checking that all examples are in omh/example_list.omh"
 echo "-------------------------------------------------------"
 file_list=`bin/ls_files.sh | sed -n \
-	-e '/cppad_ipopt/d' \
-	-e '/example\//p' \
-	-e '/multi_thread\//p'`
+	-e '/^example\/deprecated\//d' \
+	-e '/^example\//p'`
 #
-sed < omh/example_list.omh > bin/check_example.$$ \
+sed < omh/example_list.omh > check_example.$$ \
 	-n -e '/\$begin ListAllExamples\$\$/,/\$end/p'
+#
+# Make sure all example names are of the form *.cpp or *.hpp
+check=`sed -n -e '/$rref [0-9a-zA-Z_]*\.[hc]pp/d' \
+	-e '/$rref/p' check_example.$$`
+if [ "$check" != '' ]
+then
+	echo $check
+	echo 'Not all examples are for *.hpp or *.cpp files'
+	exit 1
+fi
 ok="yes"
 for file in $file_list
 do
-	name=`grep '$begin' $file | sed -e 's/.*$begin *//' -e 's/ *$$.*//'`
+	# only files in example directory with $begin *.cpp or *.hpp
+	# e.g., example/multi_thread/harmonic.omh has $begin harmonic.cpp$$ in it
+	name=`grep '$begin *[0-9a-zA-Z_]*\.[hc]pp' $file |
+		sed -e 's/.*$begin *//' -e 's/ *$$.*//'`
 	if [ "$name" != "" ]
 	then
-		if ! grep "$name" bin/check_example.$$ > /dev/null
+		if ! grep "$name" check_example.$$ > /dev/null
 		then
 			echo "$name is missing from omh/example_list.omh"
 			ok="no"
 		fi
 	fi
 done
-rm bin/check_example.$$
+rm check_example.$$
 echo "-------------------------------------------------------"
 if [ "$ok" = "yes" ]
 then

@@ -13,26 +13,24 @@ var list_up0 = [
 'hessian.cpp.xml'
 ];
 var list_down3 = [
-'independent.xml',
-'funconstruct.xml',
-'dependent.xml',
-'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
+'record_adfun.xml',
 'drivers.xml',
-'funcheck.xml',
+'forward.xml',
+'reverse.xml',
+'sparsity_pattern.xml',
+'sparse_derivative.xml',
 'optimize.xml',
+'abs_normal.xml',
+'funcheck.xml',
 'check_for_nan.xml'
 ];
 var list_down2 = [
 'jacobian.xml',
+'hessian.xml',
 'forone.xml',
 'revone.xml',
-'hessian.xml',
 'fortwo.xml',
-'revtwo.xml',
-'sparse_jacobian.xml',
-'sparse_hessian.xml'
+'revtwo.xml'
 ];
 var list_down1 = [
 'hessian.cpp.xml',

@@ -1,0 +1,163 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Common Variables Used by Multi-threading Sum of 1/i</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Common Variables Used by Multi-threading Sum of 1/i"/>
+<meta name="keywords" id="keywords" content=" common variables used multi-threading sum 1/i purpose source "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_harmonic_common_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="harmonic.cpp.xml" target="_top">Prev</a>
+</td><td><a href="harmonic_setup.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>multi_thread</option>
+<option>thread_test.cpp</option>
+<option>harmonic.cpp</option>
+<option>harmonic_common</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>multi_thread-&gt;</option>
+<option>parallel_ad</option>
+<option>thread_test.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>thread_test.cpp-&gt;</option>
+<option>a11c_openmp.cpp</option>
+<option>a11c_bthread.cpp</option>
+<option>a11c_pthread.cpp</option>
+<option>simple_ad_openmp.cpp</option>
+<option>simple_ad_bthread.cpp</option>
+<option>simple_ad_pthread.cpp</option>
+<option>team_example.cpp</option>
+<option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
+<option>multi_newton.cpp</option>
+<option>team_thread.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>harmonic.cpp-&gt;</option>
+<option>harmonic_common</option>
+<option>harmonic_setup</option>
+<option>harmonic_worker</option>
+<option>harmonic_takedown</option>
+<option>harmonic_sum</option>
+<option>harmonic_time</option>
+</select>
+</td>
+<td>harmonic_common</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>Source</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Common Variables Used by Multi-threading Sum of 1/i</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This source code defines the common
+include files, defines, and variables that are used by
+the summation that defines the harmonic series
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow>
+<mn>1</mn>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mn>2</mn>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mn>3</mn>
+<mo stretchy="false">+</mo>
+<mo stretchy="false">.</mo>
+<mo stretchy="false">.</mo>
+<mo stretchy="false">.</mo>
+<mo stretchy="false">+</mo>
+<mn>1</mn>
+<mo stretchy="false">/</mo>
+<mi mathvariant='italic'>n</mi>
+</mrow></math>
+
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+
+<pre><tt>
+
+
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_thread.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># define</span></span> MAX_NUMBER_THREADS <span style="color: #993399">48</span>
+
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// fast multi-threadeding memory allocator</span></span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// Number of threads, set by previous call to harmonic_time</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (zero means one thread with no multi-threading setup)</span></span>
+     <span style="color: #008080">size_t</span> num_threads_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// value of mega_sum, set by previous call to harmonic_time.</span></span>
+     <span style="color: #008080">size_t</span> mega_sum_<span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// structure with information for one thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// index to start summation at (worker input)</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// set by previous call to harmonic_setup</span></span>
+          <span style="color: #008080">size_t</span> start<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// index to end summation at (worker input)</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// set by previous call to harmonic_setup</span></span>
+          <span style="color: #008080">size_t</span> stop<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// summation for this thread</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// set by worker</span></span>
+          <span style="color: #009900">double</span> sum<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// false if an error occurs, true otherwise</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// set by worker</span></span>
+          <span style="color: #009900">bool</span>   ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span> work_one_t<span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// vector with information for all threads</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (use pointers instead of values to avoid false sharing)</span></span>
+     work_one_t<span style="color: #990000">*</span> work_all_<span style="color: #990000">[</span>MAX_NUMBER_THREADS<span style="color: #990000">];</span>
+<span style="color: #FF0000">}</span></tt></pre>
+
+<hr/>Input File: example/multi_thread/harmonic.cpp
+
+</body>
+</html>

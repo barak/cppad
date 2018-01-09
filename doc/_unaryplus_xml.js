@@ -34,7 +34,7 @@ var list_down1 = [
 'unaryplus.xml',
 'unaryminus.xml',
 'ad_binary.xml',
-'compute_assign.xml'
+'compound_assign.xml'
 ];
 var list_down0 = [
 'unary_plus.cpp.xml'

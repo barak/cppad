@@ -1,0 +1,144 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Multi-Threaded User Atomic Common Information</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Multi-Threaded User Atomic Common Information"/>
+<meta name="keywords" id="keywords" content=" multi-threaded user atomic common information purpose source "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_multi_atomic_common_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="multi_atomic_user.xml" target="_top">Prev</a>
+</td><td><a href="multi_atomic_setup.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>multi_thread</option>
+<option>thread_test.cpp</option>
+<option>multi_atomic.cpp</option>
+<option>multi_atomic_common</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>multi_thread-&gt;</option>
+<option>parallel_ad</option>
+<option>thread_test.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>thread_test.cpp-&gt;</option>
+<option>a11c_openmp.cpp</option>
+<option>a11c_bthread.cpp</option>
+<option>a11c_pthread.cpp</option>
+<option>simple_ad_openmp.cpp</option>
+<option>simple_ad_bthread.cpp</option>
+<option>simple_ad_pthread.cpp</option>
+<option>team_example.cpp</option>
+<option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
+<option>multi_newton.cpp</option>
+<option>team_thread.hpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>multi_atomic.cpp-&gt;</option>
+<option>multi_atomic_user</option>
+<option>multi_atomic_common</option>
+<option>multi_atomic_setup</option>
+<option>multi_atomic_worker</option>
+<option>multi_atomic_takedown</option>
+<option>multi_atomic_run</option>
+<option>multi_atomic_time</option>
+</select>
+</td>
+<td>multi_atomic_common</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Purpose</option>
+<option>Source</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Multi-Threaded User Atomic Common Information</big></big></b></center>
+<br/>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+This source code defines the common variables that are used by
+the 
+<code><font color="blue"><span style='white-space: nowrap'>multi_atomic_</span></font><i><font color="black"><span style='white-space: nowrap'>name</span></font></i></code>
+ functions.
+
+<br/>
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+
+<pre><tt>
+<span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> <span style="color: #FF0000">{</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Number of threads, set by multi_atomic_time</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (zero means one thread with no multi-threading setup)</span></span>
+     <span style="color: #008080">size_t</span> num_threads_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// Number of Newton iterations, set by multi_atomic_time</span></span>
+     <span style="color: #008080">size_t</span> num_itr_<span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// We can use one atomic_user function for all threads because</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// there is no member data that gets changed during worker call.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// This needs to stay in scope for as long as a recording will use it.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// We cannot be in parallel mode when this object is created or deleted.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// We use a pointer so that there is no left over memory in thread zero.</span></span>
+     atomic_user<span style="color: #990000">*</span> a_square_root_ <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// structure with information for one thread</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #0000FF">struct</span></span> <span style="color: #FF0000">{</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// used by worker to compute the square root, set by multi_atomic_setup</span></span>
+          CppAD<span style="color: #990000">::</span>ADFun<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> fun<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// value we are computing square root of, set by multi_atomic_setup</span></span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> y_squared<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// square root, set by worker</span></span>
+          vector<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;*</span> square_root<span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// false if an error occurs, true otherwise, set by worker</span></span>
+          <span style="color: #009900">bool</span> ok<span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span> work_one_t<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Vector with information for all threads</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (uses pointers instead of values to avoid false sharing)</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// allocated by multi_atomic_setup, freed by multi_atomic_takedown</span></span>
+     work_one_t<span style="color: #990000">*</span> work_all_<span style="color: #990000">[</span>CPPAD_MAX_NUM_THREADS<span style="color: #990000">];</span>
+<span style="color: #FF0000">}</span></tt></pre>
+
+<hr/>Input File: example/multi_thread/multi_atomic.cpp
+
+</body>
+</html>

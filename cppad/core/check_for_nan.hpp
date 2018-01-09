@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_CHECK_FOR_NAN_HPP
 # define CPPAD_CORE_CHECK_FOR_NAN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -122,7 +121,7 @@ in the corresponding error message.
 
 $head Example$$
 $children%
-	example/check_for_nan.cpp
+	example/general/check_for_nan.cpp
 %$$
 The file
 $cref check_for_nan.cpp$$
@@ -150,6 +149,35 @@ $end
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 
+/*!
+Set check_for_nan
+
+\param value
+new value for this flag.
+*/
+template <class Base>
+void ADFun<Base>::check_for_nan(bool value)
+{	check_for_nan_ = value; }
+
+/*!
+Get check_for_nan
+
+\return
+current value of check_for_nan_.
+*/
+template <class Base>
+bool ADFun<Base>::check_for_nan(void) const
+{	return check_for_nan_; }
+
+/*!
+Stores a vector in a file when nans occur.
+
+\param vec [in]
+is the vector that is stored.
+
+\param [out] file_name
+is the file where the vector is stored
+*/
 template <class Base>
 void put_check_for_nan(const CppAD::vector<Base>& vec, std::string& file_name)
 {
@@ -181,6 +209,15 @@ void put_check_for_nan(const CppAD::vector<Base>& vec, std::string& file_name)
 	return;
 }
 
+/*!
+Gets a vector that was stored by put_check_for_nan.
+
+\param vec [out]
+is the vector that is stored.
+
+\param file_name [in]
+is the file where the vector is stored
+*/
 template <class Base>
 void get_check_for_nan(CppAD::vector<Base>& vec, const std::string& file_name)
 {	//

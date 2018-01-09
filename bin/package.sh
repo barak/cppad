@@ -38,8 +38,11 @@ then
 fi
 top_srcdir=`pwd`
 # ----------------------------------------------------------------------------
+# Remove old packages and corresponding directories
+echo_eval rm -rf build/cppad-*
+# ----------------------------------------------------------------------------
 this_license=`\
-	grep '$verbatim%' omh/license.omh | sed -e 's|$verbatim%\(...\).*|\1|'`
+	grep '$verbatim%' omh/appendix/license.omh | sed -e 's|$verbatim%\(...\).*|\1|'`
 if [ "$this_license" == 'epl' ]
 then
 	remove_list='gpl-3.0.txt bin/gpl_license.sh'
@@ -47,18 +50,20 @@ elif [ "$this_license" == 'gpl' ]
 then
 	remove_list='epl-v10.txt epl-v10.html bin/gpl_license.sh'
 else
-	echo 'bin/package.sh: cannot find license in omh/license.omh'
+	echo 'bin/package.sh: cannot find license in omh/appendix/license.omh'
 	exit 1
 fi
 # ----------------------------------------------------------------------------
-# Make sure version is set correctly
+## Version number check has been moved to end of git_commit.sh
+##
+## if this is the master, set version to today
+## (This has been moved to git_commit.sh)
+#branch=`git branch | grep '^\*' | sed -e 's|^\* *||'`
+#if [ "$branch" == 'master' ]
+#then
+#	bin/version.sh set
+#fi
 #
-# if this is the master, set version to today
-branch=`git branch | grep '^\*' | sed -e 's|^\* *||'`
-if [ "$branch" == 'master' ]
-then
-	bin/version.sh set
-fi
 # make sure that version number is the same in all files
 echo_log_eval bin/version.sh check
 #
@@ -67,11 +72,9 @@ version=`bin/version.sh get`
 echo_log_eval bin/version.sh get
 # ----------------------------------------------------------------------------
 # Run automated checks for the form bin/check_*.sh with a few exceptions.
-# New version of doxygen yields errors in 20170000 source (so comment out)
 list=`ls bin/check_* | sed \
 	-e '/check_all.sh/d' \
 	-e '/check_jenkins.sh/d' \
-	-e '/check_doxygen.sh/d' \
 	-e '/check_svn_dist.sh/d'`
 for check in $list
 do
@@ -79,22 +82,10 @@ do
 done
 # ----------------------------------------------------------------------------
 # Check for doxygen errors
-# New version of doxygen yields errors in 20170000 source (so comment out)
-# echo_log_eval bin/run_doxygen.sh
+echo_log_eval bin/run_doxygen.sh
 # ----------------------------------------------------------------------------
 # Create the package directory
 package_dir="build/cppad-$version"
-if [ -e "$package_dir" ]
-then
-	echo_log_eval rm -r $package_dir
-fi
-for lic in epl gpl
-do
-	if [ -e "$package_dir.epl.tgz" ]
-	then
-		echo_log_eval rm $package_dir.$lic.tgz
-	fi
-done
 echo_log_eval mkdir -p $package_dir
 # -----------------------------------------------------------------------------
 # Source file that are coppied to the package directory

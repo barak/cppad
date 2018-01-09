@@ -13,13 +13,15 @@ var list_up0 = [
 'lu_vec_ad_ok.cpp.xml'
 ];
 var list_down3 = [
+'get_started.cpp.xml',
 'general.xml',
 'exampleutility.xml',
 'listallexamples.xml',
-'testvector.xml'
+'testvector.xml',
+'wno_conversion.xml'
 ];
 var list_down2 = [
-'example.cpp.xml',
+'general.cpp.xml',
 'speed_example.cpp.xml',
 'lu_vec_ad.cpp.xml'
 ];

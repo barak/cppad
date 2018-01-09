@@ -62,10 +62,12 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down2(this)'>
 <option>Example-&gt;</option>
+<option>get_started.cpp</option>
 <option>General</option>
 <option>ExampleUtility</option>
 <option>ListAllExamples</option>
 <option>testvector</option>
+<option>wno_conversion</option>
 </select>
 </td>
 <td>
@@ -1010,7 +1012,7 @@ which in turn gives the value for
 
      <span style="font-style: italic"><span style="color: #9A1900">// check function values</span></span>
      <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
-     <span style="color: #009900">double</span> t     <span style="color: #990000">=</span> nstep <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>a1dt<span style="color: #990000">);</span>
+     <span style="color: #009900">double</span> t     <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>nstep<span style="color: #990000">)</span> <span style="color: #990000">*</span> <span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>a1dt<span style="color: #990000">);</span>
      <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
      <span style="color: #FF0000">{</span>     check <span style="color: #990000">*=</span> x<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">*</span> t <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>i <span style="color: #990000">+</span> <span style="color: #993399">1</span><span style="color: #990000">);</span>
           ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">Value</span></span><span style="color: #990000">(</span>a1y_final<span style="color: #990000">[</span>i<span style="color: #990000">]),</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
@@ -1036,7 +1038,7 @@ which in turn gives the value for
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/mul_level_ode.cpp
+<hr/>Input File: example/general/mul_level_ode.cpp
 
 </body>
 </html>

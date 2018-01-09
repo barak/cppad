@@ -1,0 +1,152 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Correctness Tests For Exponential Approximation in Introduction</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Correctness Tests For Exponential Approximation in Introduction"/>
+<meta name="keywords" id="keywords" content=" correctness tests exponential approximation introduction exp_apx main run running source "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_exp_apx.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="exp_eps_cppad.xml" target="_top">Prev</a>
+</td><td><a href="ad.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Introduction</option>
+<option>exp_apx.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>utility</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>Introduction-&gt;</option>
+<option>exp_2</option>
+<option>exp_eps</option>
+<option>exp_apx.cpp</option>
+</select>
+</td>
+<td>exp_apx.cpp</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>Running Tests</option>
+<option>Source</option>
+</select>
+</td>
+</tr></table><br/>
+<center><b><big><big>Correctness Tests For Exponential Approximation in Introduction</big></big></b></center>
+<br/>
+<b><big><a name="Running Tests" id="Running Tests">Running Tests</a></big></b>
+<br/>
+To build this program and run its correctness tests see <a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>cmake_check</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="Source" id="Source">Source</a></big></b>
+
+<code><font color="blue">
+<pre><tt>
+
+<span style="font-style: italic"><span style="color: #9A1900">// system include files used for I/O</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;iostream&gt;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// memory allocation routine</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/thread_alloc.hpp&gt;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// test runner</span></span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/test_boolofvoid.hpp&gt;</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// external complied tests</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_cppad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_rev1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_rev2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_2_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_cppad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_for0</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_rev1</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+<span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">exp_eps_rev2</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
+
+<span style="font-style: italic"><span style="color: #9A1900">// main program that runs all the tests</span></span>
+<span style="color: #009900">int</span> <span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     std<span style="color: #990000">::</span><span style="color: #008080">string</span> group <span style="color: #990000">=</span> <span style="color: #FF0000">"introduction"</span><span style="color: #990000">;</span>
+     <span style="color: #008080">size_t</span>      width <span style="color: #990000">=</span> <span style="color: #993399">20</span><span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">test_boolofvoid</span> <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span>group<span style="color: #990000">,</span> width<span style="color: #990000">);</span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// This comment is used by OneTest</span></span>
+
+     <span style="font-style: italic"><span style="color: #9A1900">// external compiled tests</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2<span style="color: #990000">,</span>           <span style="color: #FF0000">"exp_2"</span>          <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_cppad<span style="color: #990000">,</span>     <span style="color: #FF0000">"exp_2_cppad"</span>    <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_for0<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_for0"</span>     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_for1<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_for1"</span>     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_for2<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_for2"</span>     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_rev1<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_rev1"</span>     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_2_rev2<span style="color: #990000">,</span>      <span style="color: #FF0000">"exp_2_rev2"</span>     <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps<span style="color: #990000">,</span>         <span style="color: #FF0000">"exp_eps"</span>        <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_cppad<span style="color: #990000">,</span>   <span style="color: #FF0000">"exp_eps_cppad"</span>  <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_for0<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_for0"</span>   <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_for1<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_for1"</span>   <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_for2<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_for2"</span>   <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_rev1<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_rev1"</span>   <span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #000000">Run</span></span><span style="color: #990000">(</span> exp_eps_rev2<span style="color: #990000">,</span>    <span style="color: #FF0000">"exp_eps_rev2"</span>   <span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check for memory leak</span></span>
+     <span style="color: #009900">bool</span> memory_ok <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span>thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_all</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// print summary at end</span></span>
+     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> Run<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">summary</span></span><span style="color: #990000">(</span>memory_ok<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="font-weight: bold"><span style="color: #0000FF">static_cast</span></span><span style="color: #990000">&lt;</span><span style="color: #009900">int</span><span style="color: #990000">&gt;(</span> <span style="color: #990000">!</span> ok <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span></tt></pre>
+</font></code>
+<hr/>Input File: introduction/introduction.cpp
+
+</body>
+</html>

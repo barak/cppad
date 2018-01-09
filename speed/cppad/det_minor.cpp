@@ -1,6 +1,5 @@
-// $Id: det_minor.cpp 3853 2016-12-14 14:40:11Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -39,7 +38,7 @@ See $cref link_det_minor$$.
 
 $head Implementation$$
 $srccode%cpp% */
-# include <cppad/utility/vector.hpp>
+# include <cppad/cppad.hpp>
 # include <cppad/speed/det_by_minor.hpp>
 # include <cppad/speed/uniform_01.hpp>
 
@@ -53,9 +52,22 @@ bool link_det_minor(
 	CppAD::vector<double>     &matrix   ,
 	CppAD::vector<double>     &gradient )
 {
-	// speed test global option values
-	if( global_option["atomic"] )
-		return false;
+	// --------------------------------------------------------------------
+	// check global options
+	const char* valid[] = { "memory", "onetape", "optimize"};
+	size_t n_valid = sizeof(valid) / sizeof(valid[0]);
+	typedef std::map<std::string, bool>::iterator iterator;
+	//
+	for(iterator itr=global_option.begin(); itr!=global_option.end(); ++itr)
+	{	if( itr->second )
+		{	bool ok = false;
+			for(size_t i = 0; i < n_valid; i++)
+				ok |= itr->first == valid[i];
+			if( ! ok )
+				return false;
+		}
+	}
+	// --------------------------------------------------------------------
 
 	// optimization options: no conditional skips or compare operators
 	std::string options="no_compare_op";

@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_COND_EXP_HPP
 # define CPPAD_CORE_COND_EXP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -150,7 +149,7 @@ $head Example$$
 
 $head Test$$
 $children%
-	example/cond_exp.cpp
+	example/general/cond_exp.cpp
 %$$
 The file
 $cref cond_exp.cpp$$
@@ -259,8 +258,8 @@ void local::ADTape<Base>::RecordCondExp(
 	const AD<Base> &right       ,
 	const AD<Base> &if_true     ,
 	const AD<Base> &if_false    )
-{	size_t   ind0, ind1, ind2, ind3, ind4, ind5;
-	size_t   returnValue_taddr;
+{	addr_t   ind0, ind1, ind2, ind3, ind4, ind5;
+	addr_t   returnValue_taddr;
 
 	// taddr_ of this variable
 	CPPAD_ASSERT_UNKNOWN( NumRes(CExpOp) == 1 );

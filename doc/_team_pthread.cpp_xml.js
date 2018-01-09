@@ -25,6 +25,7 @@ var list_down2 = [
 'simple_ad_pthread.cpp.xml',
 'team_example.cpp.xml',
 'harmonic.cpp.xml',
+'multi_atomic.cpp.xml',
 'multi_newton.cpp.xml',
 'team_thread.hpp.xml'
 ];

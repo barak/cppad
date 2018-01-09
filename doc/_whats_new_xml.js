@@ -25,6 +25,7 @@ var list_down2 = [
 ];
 var list_down1 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -37,6 +38,7 @@ var list_down1 = [
 'license.xml'
 ];
 var list_down0 = [
+'whats_new_17.xml',
 'whats_new_16.xml',
 'whats_new_15.xml',
 'whats_new_14.xml',

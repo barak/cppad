@@ -67,6 +67,7 @@ A:active { color : purple }
 <option>speed_test</option>
 <option>SpeedTest</option>
 <option>time_test</option>
+<option>test_boolofvoid</option>
 <option>NumericType</option>
 <option>CheckNumericType</option>
 <option>SimpleVector</option>
@@ -87,6 +88,8 @@ A:active { color : purple }
 <option>index_sort</option>
 <option>to_string</option>
 <option>set_union</option>
+<option>sparse_rc</option>
+<option>sparse_rcv</option>
 </select>
 </td>
 <td>
@@ -313,6 +316,7 @@ The example tests OdeGear using the relations above:
 <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeGear</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
 <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// initial return value</span></span>
      <span style="color: #008080">size_t</span> i<span style="color: #990000">,</span> j<span style="color: #990000">;</span>    <span style="font-style: italic"><span style="color: #9A1900">// temporary indices</span></span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
      <span style="color: #008080">size_t</span>  m <span style="color: #990000">=</span> <span style="color: #993399">4</span><span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// index of next value in X</span></span>
      <span style="color: #008080">size_t</span>  n <span style="color: #990000">=</span> m<span style="color: #990000">;</span>  <span style="font-style: italic"><span style="color: #9A1900">// number of components in x(t)</span></span>
@@ -351,11 +355,11 @@ The example tests OdeGear using the relations above:
           <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
           <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// method is exact up to order m and x[i] = t^{i+1}</span></span>
                <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">&lt;=</span> m <span style="color: #990000">)</span> ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>
-                    X<span style="color: #990000">[</span>m <span style="color: #990000">*</span> n <span style="color: #990000">+</span> i<span style="color: #990000">],</span> check<span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span>
+                    X<span style="color: #990000">[</span>m <span style="color: #990000">*</span> n <span style="color: #990000">+</span> i<span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99
                <span style="color: #990000">);</span>
                <span style="font-style: italic"><span style="color: #9A1900">// error bound should be zero up to order m-1</span></span>
                <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">+</span> <span style="color: #993399">1</span> <span style="color: #990000">&lt;</span> m <span style="color: #990000">)</span> ok <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>
-                    e<span style="color: #990000">[</span>i<span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">,</span> <span style="color: #993399">1e-10</span>
+                    e<span style="color: #990000">[</span>i<span style="color: #990000">],</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> eps99<span style="color: #990000">,</span> eps99
                <span style="color: #990000">);</span>
                <span style="font-style: italic"><span style="color: #9A1900">// check value for next i</span></span>
                check <span style="color: #990000">*=</span> T<span style="color: #990000">[</span>m<span style="color: #990000">];</span>
@@ -365,7 +369,7 @@ The example tests OdeGear using the relations above:
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/ode_gear.cpp
+<hr/>Input File: example/utility/ode_gear.cpp
 
 </body>
 </html>

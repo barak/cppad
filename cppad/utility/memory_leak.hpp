@@ -1,9 +1,8 @@
-// $Id: memory_leak.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_UTILITY_MEMORY_LEAK_HPP
 # define CPPAD_UTILITY_MEMORY_LEAK_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -35,7 +34,7 @@ $codei%# include <cppad/utility/memory_leak.hpp>
 %$$
 $icode%flag% = %memory_leak()
 %$$
-$icode%flag% = %memory_leak(%add_static%)%$$
+$icode%flag% = %memory_leak%(%add_static%)%$$
 
 $head Purpose$$
 This routine checks that the are no memory leaks
@@ -176,7 +175,7 @@ inline bool memory_leak(size_t add_static = 0)
 	if( num_bytes != thread_zero_static_inuse )
 	{	leak = true;
 		cout << "thread zero: static inuse = " << thread_zero_static_inuse;
-		cout << "current inuse(thread)     = " << num_bytes << endl;
+		cout << ", current inuse(0)= " << num_bytes << endl;
 	}
 	// check that no memory is currently available for this thread
 	num_bytes = thread_alloc::available(thread);

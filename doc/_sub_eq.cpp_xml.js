@@ -10,7 +10,7 @@ var list_up0 = [
 'ad.xml',
 'advalued.xml',
 'arithmetic.xml',
-'compute_assign.xml',
+'compound_assign.xml',
 'sub_eq.cpp.xml'
 ];
 var list_down3 = [
@@ -26,7 +26,7 @@ var list_down2 = [
 'unaryplus.xml',
 'unaryminus.xml',
 'ad_binary.xml',
-'compute_assign.xml'
+'compound_assign.xml'
 ];
 var list_down1 = [
 'addeq.cpp.xml',

@@ -8,7 +8,7 @@ var list_across0 = [
 var list_up0 = [
 'cppad.xml',
 'adfun.xml',
-'drivers.xml',
+'sparse_derivative.xml',
 'sparse_hessian.xml'
 ];
 var list_down3 = [
@@ -25,26 +25,23 @@ var list_down3 = [
 'appendix.xml'
 ];
 var list_down2 = [
-'independent.xml',
-'funconstruct.xml',
-'dependent.xml',
-'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
+'record_adfun.xml',
 'drivers.xml',
-'funcheck.xml',
+'forward.xml',
+'reverse.xml',
+'sparsity_pattern.xml',
+'sparse_derivative.xml',
 'optimize.xml',
+'abs_normal.xml',
+'funcheck.xml',
 'check_for_nan.xml'
 ];
 var list_down1 = [
-'jacobian.xml',
-'forone.xml',
-'revone.xml',
-'hessian.xml',
-'fortwo.xml',
-'revtwo.xml',
+'sparse_jac.xml',
 'sparse_jacobian.xml',
-'sparse_hessian.xml'
+'sparse_hes.xml',
+'sparse_hessian.xml',
+'subgraph_jac_rev.xml'
 ];
 var list_down0 = [
 'sparse_hessian.cpp.xml',
@@ -65,6 +62,7 @@ var list_current0 = [
 'sparse_hessian.xml#hes',
 'sparse_hessian.xml#work',
 'sparse_hessian.xml#work.color_method',
+'sparse_hessian.xml#work.colpack.star Deprecated 2017-06-01',
 'sparse_hessian.xml#work.p',
 'sparse_hessian.xml#n_sweep',
 'sparse_hessian.xml#VectorBase',

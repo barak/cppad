@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_JACOBIAN_HPP
 # define CPPAD_CORE_JACOBIAN_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -100,7 +99,7 @@ and the other coefficients are unspecified.
 
 $head Example$$
 $children%
-	example/jacobian.cpp
+	example/general/jacobian.cpp
 %$$
 The routine
 $cref/Jacobian/jacobian.cpp/$$ is both an example and test.
@@ -133,18 +132,18 @@ void JacobianFor(ADFun<Base> &f, const Vector &x, Vector &jac)
 
 	// initialize all the components
 	for(j = 0; j < n; j++)
-		u[j] = Base(0);
+		u[j] = Base(0.0);
 
 	// loop through the different coordinate directions
 	for(j = 0; j < n; j++)
 	{	// set u to the j-th coordinate direction
-		u[j] = Base(1);
+		u[j] = Base(1.0);
 
 		// compute the partial of f w.r.t. this coordinate direction
 		v = f.Forward(1, u);
 
 		// reset u to vector of all zeros
-		u[j] = Base(0);
+		u[j] = Base(0.0);
 
 		// return the result
 		for(i = 0; i < m; i++)
@@ -168,25 +167,25 @@ void JacobianRev(ADFun<Base> &f, const Vector &x, Vector &jac)
 
 	// initialize all the components
 	for(i = 0; i < m; i++)
-		v[i] = Base(0);
+		v[i] = Base(0.0);
 
 	// loop through the different coordinate directions
 	for(i = 0; i < m; i++)
 	{	if( f.Parameter(i) )
 		{	// return zero for this component of f
 			for(j = 0; j < n; j++)
-				jac[ i * n + j ] = Base(0);
+				jac[ i * n + j ] = Base(0.0);
 		}
 		else
 		{
 			// set v to the i-th coordinate direction
-			v[i] = Base(1);
+			v[i] = Base(1.0);
 
 			// compute the derivative of this component of f
 			u = f.Reverse(1, v);
 
 			// reset v to vector of all zeros
-			v[i] = Base(0);
+			v[i] = Base(0.0);
 
 			// return the result
 			for(j = 0; j < n; j++)
@@ -222,7 +221,11 @@ Vector ADFun<Base>::Jacobian(const Vector &x)
 
 	// choose the method with the least work
 	Vector jac( n * m );
+# ifdef CPPAD_FOR_TMB
+	if( workForward < workReverse )
+# else
 	if( workForward <= workReverse )
+# endif
 		JacobianFor(*this, x, jac);
 	else	JacobianRev(*this, x, jac);
 

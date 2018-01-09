@@ -39,7 +39,6 @@ A:active { color : purple }
 <option>Up-&gt;</option>
 <option>CppAD</option>
 <option>ADFun</option>
-<option>FunEval</option>
 <option>Forward</option>
 <option>compare_change</option>
 <option>compare_change.cpp</option>
@@ -47,10 +46,17 @@ A:active { color : purple }
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>FunEval-&gt;</option>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
 <option>Forward</option>
 <option>Reverse</option>
-<option>Sparse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
 </select>
 </td>
 <td>
@@ -192,8 +198,15 @@ A:active { color : purple }
                AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">abort_recording</span></span><span style="color: #990000">();</span>
           <span style="color: #FF0000">}</span>
      <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># ifdef</span></span> CPPAD_DEBUG_AND_RELEASE
+     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> missed_error <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// This routine is compiled for debugging, but the routine that checks</span></span>
+          <span style="font-style: italic"><span style="color: #9A1900">// operator indices was compiled for release.</span></span>
+          missed_error <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">false</span></span><span style="color: #990000">;</span>
+          AD<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">abort_recording</span></span><span style="color: #990000">();</span>
+     <span style="color: #FF0000">}</span>
+<span style="font-weight: bold"><span style="color: #000080"># endif</span></span>
      ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">!</span> missed_error<span style="color: #990000">;</span>
-
 
      <span style="font-style: italic"><span style="color: #9A1900">// set count to zero to demonstrate case where comparisons are not checked</span></span>
      f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">compare_change_count</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
@@ -230,7 +243,7 @@ A:active { color : purple }
 
 </tt></pre>
 </font></code>
-<hr/>Input File: example/compare_change.cpp
+<hr/>Input File: example/general/compare_change.cpp
 
 </body>
 </html>

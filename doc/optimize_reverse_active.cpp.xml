@@ -62,15 +62,15 @@ A:active { color : purple }
 <td>
 <select onchange='choose_down2(this)'>
 <option>ADFun-&gt;</option>
-<option>Independent</option>
-<option>FunConstruct</option>
-<option>Dependent</option>
-<option>abort_recording</option>
-<option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
 <option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
 <option>check_for_nan</option>
 </select>
 </td>
@@ -111,7 +111,7 @@ A:active { color : purple }
           after<span style="color: #990000">.</span>n_var  <span style="color: #990000">+=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> after<span style="color: #990000">.</span>n_op   <span style="color: #990000">+=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
           <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
           <span style="font-style: italic"><span style="color: #9A1900">// compute product of even and odd variables</span></span>
-          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">();</span> i<span style="color: #990000">++)</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> i <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> <span style="font-weight: bold"><span style="color: #000000">size_t</span></span><span style="color: #990000">(</span> x<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">size</span></span><span style="color: #990000">()</span> <span style="color: #990000">);</span> i<span style="color: #990000">++)</span>
           <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">%</span> <span style="color: #993399">2</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
                <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// prod_even will affect dependent variable</span></span>
                     prod_even <span style="color: #990000">=</span> prod_even <span style="color: #990000">*</span> x<span style="color: #990000">[</span>i<span style="color: #990000">];</span>

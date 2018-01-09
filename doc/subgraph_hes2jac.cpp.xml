@@ -1,0 +1,186 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Sparse Hessian Using Subgraphs and Jacobian: Example and Test</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Sparse Hessian Using Subgraphs and Jacobian: Example and Test"/>
+<meta name="keywords" id="keywords" content=" sparse hessian using subgraphs jacobian: example test "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_subgraph_hes2jac.cpp_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="subgraph_jac_rev.cpp.xml" target="_top">Prev</a>
+</td><td><a href="optimize.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>ADFun</option>
+<option>sparse_derivative</option>
+<option>subgraph_jac_rev</option>
+<option>subgraph_hes2jac.cpp</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>sparse_derivative-&gt;</option>
+<option>sparse_jac</option>
+<option>sparse_jacobian</option>
+<option>sparse_hes</option>
+<option>sparse_hessian</option>
+<option>subgraph_jac_rev</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>subgraph_jac_rev-&gt;</option>
+<option>subgraph_jac_rev.cpp</option>
+<option>subgraph_hes2jac.cpp</option>
+</select>
+</td>
+<td>subgraph_hes2jac.cpp</td>
+<td>Headings</td>
+</tr></table><br/>
+<center><b><big><big>Sparse Hessian Using Subgraphs and Jacobian: Example and Test</big></big></b></center>
+<code><font color="blue"><pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
+<span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">subgraph_hes2jac</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;double&gt;</span>                      a1double<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;a1double&gt;</span>                    a2double<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span>               d_vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a1double<span style="color: #990000">)</span>             a1vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>a2double<span style="color: #990000">)</span>             a2vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>size_t<span style="color: #990000">)</span>               s_vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">bool</span><span style="color: #990000">)</span>                 b_vector<span style="color: #990000">;</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">sparse_rcv&lt;s_vector, d_vector&gt;</span>  sparse_matrix<span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="color: #009900">double</span> eps <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> CppAD<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// double version of x</span></span>
+     <span style="color: #008080">size_t</span> n <span style="color: #990000">=</span> <span style="color: #993399">12</span><span style="color: #990000">;</span>
+     <span style="color: #008080">d_vector</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>j <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// a1double version of x</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">a1x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a1x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// a2double version of x</span></span>
+     <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">a2x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a2x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> a1x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and starting recording</span></span>
+     CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// a2double version of y = f(x) = 5 * x0 * x1 + sum_j xj^3</span></span>
+     <span style="color: #008080">size_t</span> m <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span>
+     <span style="color: #008080">a2vector</span> <span style="font-weight: bold"><span style="color: #000000">a2y</span></span><span style="color: #990000">(</span>m<span style="color: #990000">);</span>
+     a2y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">5.0</span> <span style="color: #990000">*</span> a2x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">*</span> a2x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">];</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> j<span style="color: #990000">++)</span>
+          a2y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">+=</span> a2x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">*</span> a2x<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">*</span> a2x<span style="color: #990000">[</span>j<span style="color: #990000">];</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// create a1double version of f: x -&gt; y and stop tape recording</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (without executing zero order forward calculation)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;a1double&gt;</span> a1f<span style="color: #990000">;</span>
+     a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a2x<span style="color: #990000">,</span> a2y<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Optimize this function to reduce future computations.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Perhaps only one optimization at the end would be faster.</span></span>
+     a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">optimize</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// declare independent variables and start recording g(x) = f'(x)</span></span>
+     <span style="font-weight: bold"><span style="color: #000000">Independent</span></span><span style="color: #990000">(</span>a1x<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Use one reverse mode pass to compute z = f'(x)</span></span>
+     <span style="color: #008080">a1vector</span> <span style="font-weight: bold"><span style="color: #000000">a1w</span></span><span style="color: #990000">(</span>m<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">a1z</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     a1w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1.0</span><span style="color: #990000">;</span>
+     a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> a1x<span style="color: #990000">);</span>
+     a1z <span style="color: #990000">=</span> a1f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Reverse</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> a1w<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// create double version of g : x -&gt; f'(x)</span></span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> g<span style="color: #990000">;</span>
+     g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Dependent</span></span><span style="color: #990000">(</span>a1x<span style="color: #990000">,</span> a1z<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Optimize this function to reduce future computations.</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// Perhaps no optimization would be faster.</span></span>
+     g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">optimize</span></span><span style="color: #990000">();</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// compute f''(x) = g'(x)</span></span>
+     <span style="color: #008080">b_vector</span> <span style="font-weight: bold"><span style="color: #000000">select_domain</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">select_range</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> j <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> j <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> <span style="color: #990000">++</span>j<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     select_domain<span style="color: #990000">[</span>j<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+          select_range<span style="color: #990000">[</span>j<span style="color: #990000">]</span>  <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
+     <span style="color: #FF0000">}</span>
+     <span style="color: #008080">sparse_matrix</span> hessian<span style="color: #990000">;</span>
+     g<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">subgraph_jac_rev</span></span><span style="color: #990000">(</span>select_domain<span style="color: #990000">,</span> select_range<span style="color: #990000">,</span> x<span style="color: #990000">,</span> hessian<span style="color: #990000">);</span>
+     <span style="font-style: italic"><span style="color: #9A1900">// -------------------------------------------------------------------</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// check number of non-zeros in the Hessian</span></span>
+     <span style="font-style: italic"><span style="color: #9A1900">// (only x0 * x1 generates off diagonal terms)</span></span>
+     ok <span style="color: #990000">&amp;=</span> hessian<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">nnz</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> n <span style="color: #990000">+</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
+     <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> k <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> k <span style="color: #990000">&lt;</span> hessian<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">nnz</span></span><span style="color: #990000">();</span> <span style="color: #990000">++</span>k<span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="color: #008080">size_t</span> r <span style="color: #990000">=</span> hessian<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">row</span></span><span style="color: #990000">()[</span>k<span style="color: #990000">];</span>
+          <span style="color: #008080">size_t</span> c <span style="color: #990000">=</span> hessian<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">col</span></span><span style="color: #990000">()[</span>k<span style="color: #990000">];</span>
+          <span style="color: #009900">double</span> v <span style="color: #990000">=</span> hessian<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">val</span></span><span style="color: #990000">()[</span>k<span style="color: #990000">];</span>
+          <span style="font-style: italic"><span style="color: #9A1900">//</span></span>
+          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> r <span style="color: #990000">==</span> c <span style="color: #990000">)</span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// a diagonal element</span></span>
+               <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">6.0</span> <span style="color: #990000">*</span> x<span style="color: #990000">[</span>r<span style="color: #990000">];</span>
+               ok          <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>v<span style="color: #990000">,</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
+          <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// off diagonal element</span></span>
+               ok   <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>r <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">&amp;&amp;</span> c <span style="color: #990000">==</span> <span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">||</span> <span style="color: #990000">(</span>r <span style="color: #990000">==</span> <span style="color: #993399">1</span> <span style="color: #990000">&amp;&amp;</span> c <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">);</span>
+               <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #993399">5.0</span><span style="color: #990000">;</span>
+               ok          <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>v<span style="color: #990000">,</span> check<span style="color: #990000">,</span> eps<span style="color: #990000">,</span> eps<span style="color: #990000">);</span>
+          <span style="color: #FF0000">}</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre>
+</font></code>
+<hr/>Input File: example/sparse/subgraph_hes2jac.cpp
+
+</body>
+</html>

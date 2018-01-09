@@ -1,3 +1,4 @@
+// $Id$
 # ifndef CPPAD_LOCAL_OPTIMIZE_CEXP_INFO_HPP
 # define CPPAD_LOCAL_OPTIMIZE_CEXP_INFO_HPP
 /* --------------------------------------------------------------------------

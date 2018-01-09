@@ -24,10 +24,9 @@ var list_down2 = [
 'appendix.xml'
 ];
 var list_down1 = [
-'get_started.cpp.xml',
 'exp_2.xml',
 'exp_eps.xml',
-'exp_apx_main.cpp.xml'
+'exp_apx.cpp.xml'
 ];
 var list_down0 = [
 'exp_2.hpp.xml',

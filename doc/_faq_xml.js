@@ -25,6 +25,7 @@ var list_down2 = [
 ];
 var list_down1 = [
 'faq.xml',
+'directory.xml',
 'theory.xml',
 'glossary.xml',
 'bib.xml',
@@ -44,10 +45,11 @@ var list_current0 = [
 'faq.xml#Exceptions',
 'faq.xml#Independent Variables',
 'faq.xml#Matrix Inverse',
+'faq.xml#Matrix Inverse.LuSolve',
+'faq.xml#Matrix Inverse.Atomic Operation',
 'faq.xml#Mode: Forward or Reverse',
 'faq.xml#Namespace',
 'faq.xml#Namespace.Test Vector Preprocessor Symbol',
-'faq.xml#Namespace.Using',
 'faq.xml#Speed',
 'faq.xml#Speed.NDEBUG',
 'faq.xml#Speed.Optimize',

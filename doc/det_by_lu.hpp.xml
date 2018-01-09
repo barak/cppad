@@ -86,27 +86,20 @@ A:active { color : purple }
 <code><span style='white-space: nowrap'><br/>
 </span></code># define CPPAD_DET_BY_LU_HPP
 
-<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/cppad.hpp&gt;</span>
-<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;complex&gt;</span>
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/vector.hpp&gt;</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;cppad/utility/lu_solve.hpp&gt;</span>
 
 <span style="font-style: italic"><span style="color: #9A1900">// BEGIN CppAD namespace</span></span>
 <span style="font-weight: bold"><span style="color: #0000FF">namespace</span></span> CppAD <span style="color: #FF0000">{</span>
-
-<span style="font-style: italic"><span style="color: #9A1900">// The AD complex case is used by examples by not used by speed tests</span></span>
-<span style="font-style: italic"><span style="color: #9A1900">// Must define a specializatgion of LeqZero,AbsGeq for the ADComplex case</span></span>
-<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> std<span style="color: #990000">::</span><span style="color: #008080">complex&lt;double&gt;</span>     Complex<span style="color: #990000">;</span>
-<span style="font-weight: bold"><span style="color: #0000FF">typedef</span></span> CppAD<span style="color: #990000">::</span><span style="color: #008080">AD&lt;Complex&gt;</span>     ADComplex<span style="color: #990000">;</span>
-<span style="font-weight: bold"><span style="color: #000000">CPPAD_BOOL_UNARY</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">,</span>  LeqZero <span style="color: #990000">)</span>
-<span style="font-weight: bold"><span style="color: #000000">CPPAD_BOOL_BINARY</span></span><span style="color: #990000">(</span>Complex<span style="color: #990000">,</span> AbsGeq <span style="color: #990000">)</span>
 
 <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Scalar</span><span style="color: #990000">&gt;</span>
 <span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">det_by_lu</span> <span style="color: #FF0000">{</span>
 <span style="font-weight: bold"><span style="color: #0000FF">private</span></span><span style="color: #990000">:</span>
      <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">size_t</span> m_<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">size_t</span> n_<span style="color: #990000">;</span>
-     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> A_<span style="color: #990000">;</span>
-     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> B_<span style="color: #990000">;</span>
-     <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span>Scalar<span style="color: #990000">)</span> X_<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;Scalar&gt;</span> A_<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;Scalar&gt;</span> B_<span style="color: #990000">;</span>
+     CppAD<span style="color: #990000">::</span><span style="color: #008080">vector&lt;Scalar&gt;</span> X_<span style="color: #990000">;</span>
 <span style="font-weight: bold"><span style="color: #0000FF">public</span></span><span style="color: #990000">:</span>
      <span style="font-weight: bold"><span style="color: #000000">det_by_lu</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">)</span> <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">m_</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">n_</span></span><span style="color: #990000">(</span>n<span style="color: #990000">),</span> <span style="font-weight: bold"><span style="color: #000000">A_</span></span><span style="color: #990000">(</span>n <span style="color: #990000">*</span> n<span style="color: #990000">)</span>
      <span style="color: #FF0000">{</span>     <span style="color: #FF0000">}</span>
@@ -114,7 +107,6 @@ A:active { color : purple }
      <span style="font-weight: bold"><span style="color: #0000FF">template</span></span> <span style="color: #990000">&lt;</span><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> <span style="color: #008080">Vector</span><span style="color: #990000">&gt;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">inline</span></span> <span style="color: #008080">Scalar</span> <span style="font-weight: bold"><span style="color: #0000FF">operator</span></span><span style="color: #990000">()(</span><span style="font-weight: bold"><span style="color: #0000FF">const</span></span> <span style="color: #008080">Vector</span> <span style="color: #990000">&amp;</span>x<span style="color: #990000">)</span>
      <span style="color: #FF0000">{</span>
-          <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>exp<span style="color: #990000">;</span>
 
           <span style="color: #008080">Scalar</span>       logdet<span style="color: #990000">;</span>
           <span style="color: #008080">Scalar</span>       det<span style="color: #990000">;</span>

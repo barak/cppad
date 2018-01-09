@@ -100,8 +100,8 @@ DIST_COMMON = $(srcdir)/makefile.am $(top_srcdir)/configure \
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
-CONFIG_CLEAN_FILES = cppad/configure.hpp pkgconfig/cppad.pc \
-	pkgconfig/cppad-uninstalled.pc
+CONFIG_CLEAN_FILES = cppad/configure.hpp cppad/local/is_pod.hpp \
+	pkgconfig/cppad.pc pkgconfig/cppad-uninstalled.pc
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -193,16 +193,17 @@ CSCOPE = cscope
 DIST_SUBDIRS = cppad_ipopt/src example/ipopt_solve cppad_ipopt/example \
 	cppad_ipopt/speed cppad_ipopt/test speed/src speed/adolc \
 	speed/cppad speed/double speed/example speed/fadbad \
-	speed/profile speed/sacado example example/atomic \
-	example/optimize compare_c introduction/get_started \
-	introduction/exp_apx print_for multi_thread \
-	multi_thread/test_multi test_more
+	speed/profile speed/sacado example/abs_normal example/atomic \
+	example/deprecated example/general example/get_started \
+	example/optimize example/print_for example/sparse \
+	example/utility introduction example/multi_thread \
+	test_more/compare_c test_more/general
 am__DIST_COMMON = $(srcdir)/makefile.in \
 	$(top_srcdir)/cppad/configure.hpp.in \
+	$(top_srcdir)/cppad/local/is_pod.hpp.in \
 	$(top_srcdir)/pkgconfig/cppad-uninstalled.pc.in \
-	$(top_srcdir)/pkgconfig/cppad.pc.in AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README ar-lib compile config.guess config.sub \
-	depcomp install-sh missing
+	$(top_srcdir)/pkgconfig/cppad.pc.in COPYING ar-lib compile \
+	config.guess config.sub depcomp install-sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -279,7 +280,6 @@ DL_LIB = @DL_LIB@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-EGREP = @EGREP@
 EIGEN_DIR = @EIGEN_DIR@
 EIGEN_INCLUDE = @EIGEN_INCLUDE@
 EXEEXT = @EXEEXT@
@@ -287,7 +287,6 @@ FADBAD_DIR = @FADBAD_DIR@
 FC = @FC@
 FCFLAGS = @FCFLAGS@
 FCLIBS = @FCLIBS@
-GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -346,26 +345,28 @@ builddir = @builddir@
 cppad_SOURCE_DIR = @cppad_SOURCE_DIR@
 cppad_abs_includedir = @cppad_abs_includedir@
 cppad_boostvector = @cppad_boostvector@
+cppad_compiler_is_gnucxx = @cppad_compiler_is_gnucxx@
 cppad_cplusplus_201100_ok = @cppad_cplusplus_201100_ok@
 cppad_cppadvector = @cppad_cppadvector@
 cppad_cxx_flags = @cppad_cxx_flags@
-cppad_deprecated = @cppad_deprecated@
+cppad_deprecated_01 = @cppad_deprecated_01@
 cppad_description = @cppad_description@
 cppad_eigenvector = @cppad_eigenvector@
+cppad_has_adolc = @cppad_has_adolc@
+cppad_has_boost = @cppad_has_boost@
 cppad_has_colpack = @cppad_has_colpack@
-cppad_has_cstdint_8_to_64 = @cppad_has_cstdint_8_to_64@
+cppad_has_eigen = @cppad_has_eigen@
+cppad_has_fadbad = @cppad_has_fadbad@
 cppad_has_gettimeofday = @cppad_has_gettimeofday@
+cppad_has_ipopt = @cppad_has_ipopt@
 cppad_has_mkstemp = @cppad_has_mkstemp@
-cppad_has_nullptr = @cppad_has_nullptr@
-cppad_has_rvalue = @cppad_has_rvalue@
-cppad_has_steady_clock = @cppad_has_steady_clock@
+cppad_has_sacado = @cppad_has_sacado@
 cppad_has_tmpnam_s = @cppad_has_tmpnam_s@
 cppad_max_num_threads = @cppad_max_num_threads@
 cppad_pkgconfig_cflags = @cppad_pkgconfig_cflags@
 cppad_pkgconfig_libs = @cppad_pkgconfig_libs@
 cppad_pkgconfig_requires = @cppad_pkgconfig_requires@
 cppad_prefix = @cppad_prefix@
-cppad_size_t_not_unsigned_int = @cppad_size_t_not_unsigned_int@
 cppad_stdvector = @cppad_stdvector@
 cppad_tape_addr_type = @cppad_tape_addr_type@
 cppad_tape_id_type = @cppad_tape_id_type@
@@ -388,6 +389,8 @@ includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 ipopt_prefix = @ipopt_prefix@
+is_pod_specialize_11 = @is_pod_specialize_11@
+is_pod_specialize_98 = @is_pod_specialize_98@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
@@ -419,7 +422,10 @@ top_srcdir = @top_srcdir@
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
 #
-BUILT_SOURCES = $(top_srcdir)/cppad/configure.hpp
+BUILT_SOURCES = \
+	$(top_srcdir)/cppad/configure.hpp \
+	$(top_srcdir)/cppad/local/is_pod.hpp
+
 @CppAD_POSTFIX_FALSE@postfix_dir = .
 #
 @CppAD_POSTFIX_TRUE@postfix_dir = $(POSTFIX_DIR)
@@ -480,9 +486,9 @@ myinclude_HEADERS = \
 #
 nobase_myinclude_HEADERS = \
 	cppad/base_require.hpp \
-	cppad/configure.hpp \
 	cppad/core/abort_recording.hpp \
 	cppad/core/abs.hpp \
+	cppad/core/abs_normal_fun.hpp \
 	cppad/core/acosh.hpp \
 	cppad/core/ad_assign.hpp \
 	cppad/core/ad_binary.hpp \
@@ -515,7 +521,7 @@ nobase_myinclude_HEADERS = \
 	cppad/core/check_for_nan.hpp \
 	cppad/core/checkpoint.hpp \
 	cppad/core/compare.hpp \
-	cppad/core/compute_assign.hpp \
+	cppad/core/compound_assign.hpp \
 	cppad/core/cond_exp.hpp \
 	cppad/core/convert.hpp \
 	cppad/core/cppad_assert.hpp \
@@ -529,6 +535,8 @@ nobase_myinclude_HEADERS = \
 	cppad/core/equal_op_seq.hpp \
 	cppad/core/erf.hpp \
 	cppad/core/expm1.hpp \
+	cppad/core/for_hes_sparsity.hpp \
+	cppad/core/for_jac_sparsity.hpp \
 	cppad/core/for_one.hpp \
 	cppad/core/for_sparse_hes.hpp \
 	cppad/core/for_sparse_jac.hpp \
@@ -560,6 +568,9 @@ nobase_myinclude_HEADERS = \
 	cppad/core/pow.hpp \
 	cppad/core/print_for.hpp \
 	cppad/core/reverse.hpp \
+	cppad/core/subgraph_reverse.hpp \
+	cppad/core/rev_hes_sparsity.hpp \
+	cppad/core/rev_jac_sparsity.hpp \
 	cppad/core/rev_one.hpp \
 	cppad/core/rev_sparse_hes.hpp \
 	cppad/core/rev_sparse_jac.hpp \
@@ -567,11 +578,15 @@ nobase_myinclude_HEADERS = \
 	cppad/core/sign.hpp \
 	cppad/core/sparse_hessian.hpp \
 	cppad/core/sparse.hpp \
+	cppad/core/sparse_hes.hpp \
+	cppad/core/sparse_jac.hpp \
 	cppad/core/sparse_jacobian.hpp \
 	cppad/core/standard_math.hpp \
 	cppad/core/std_math_98.hpp \
 	cppad/core/sub_eq.hpp \
 	cppad/core/sub.hpp \
+	cppad/core/subgraph_jac_rev.hpp \
+	cppad/core/subgraph_sparsity.hpp \
 	cppad/core/tape_link.hpp \
 	cppad/core/test_vector.hpp \
 	cppad/core/testvector.hpp \
@@ -589,8 +604,8 @@ nobase_myinclude_HEADERS = \
 	cppad/example/eigen_cholesky.hpp \
 	cppad/example/eigen_mat_inv.hpp \
 	cppad/example/eigen_mat_mul.hpp \
-	cppad/example/eigen_plugin.hpp \
 	cppad/example/mat_mul.hpp \
+	cppad/example/eigen_plugin.hpp \
 	cppad/ipopt/solve_callback.hpp \
 	cppad/ipopt/solve.hpp \
 	cppad/ipopt/solve_result.hpp \
@@ -635,10 +650,10 @@ nobase_myinclude_HEADERS = \
 	cppad/local/optimize/cexp_info.hpp \
 	cppad/local/optimize/csum_stacks.hpp \
 	cppad/local/optimize/csum_variable.hpp \
-	cppad/local/optimize/get_op_info.hpp \
+	cppad/local/optimize/get_opt_op_info.hpp \
 	cppad/local/optimize/hash_code.hpp \
 	cppad/local/optimize/old2new.hpp \
-	cppad/local/optimize/op_info.hpp \
+	cppad/local/optimize/opt_op_info.hpp \
 	cppad/local/optimize/optimize_run.hpp \
 	cppad/local/optimize/record_csum.hpp \
 	cppad/local/optimize/record_pv.hpp \
@@ -655,15 +670,22 @@ nobase_myinclude_HEADERS = \
 	cppad/local/recorder.hpp \
 	cppad/local/reverse_sweep.hpp \
 	cppad/local/rev_hes_sweep.hpp \
+	cppad/local/subgraph/arg_variable.hpp \
+	cppad/local/subgraph/entire_call.hpp \
+	cppad/local/subgraph/get_rev.hpp \
+	cppad/local/subgraph/info.hpp \
+	cppad/local/subgraph/init_rev.hpp \
+	cppad/local/subgraph/sparsity.hpp \
 	cppad/local/rev_jac_sweep.hpp \
 	cppad/local/set_get_in_parallel.hpp \
 	cppad/local/sign_op.hpp \
 	cppad/local/sinh_op.hpp \
 	cppad/local/sin_op.hpp \
 	cppad/local/sparse_binary_op.hpp \
+	cppad/local/sparse_internal.hpp \
 	cppad/local/sparse_list.hpp \
 	cppad/local/sparse_pack.hpp \
-	cppad/local/sparse_pattern.hpp \
+	cppad/local/sparse_sizevec.hpp \
 	cppad/local/sparse_unary_op.hpp \
 	cppad/local/sqrt_op.hpp \
 	cppad/local/std_set.hpp \
@@ -706,12 +728,16 @@ nobase_myinclude_HEADERS = \
 	cppad/utility/rosen_34.hpp \
 	cppad/utility/runge_45.hpp \
 	cppad/utility/set_union.hpp \
+	cppad/utility/sparse_rc.hpp \
+	cppad/utility/sparse_rcv.hpp \
 	cppad/utility/speed_test.hpp \
+	cppad/utility/test_boolofvoid.hpp \
 	cppad/utility/thread_alloc.hpp \
 	cppad/utility/time_test.hpp \
 	cppad/utility/to_string.hpp \
 	cppad/utility/track_new_del.hpp \
-	cppad/utility/vector.hpp
+	cppad/utility/vector.hpp \
+	cppad/wno_conversion.hpp
 
 # End nobase_myinclude_HEADERS (check_makefile.sh uses this comment)
 # ---------------------------------------------------------------
@@ -721,22 +747,26 @@ nobase_myinclude_HEADERS = \
 SUBDIRS = \
 	$(IPOPT_DIRS) \
 	$(SPEED_DIRS) \
-	example \
+	example/abs_normal \
 	example/atomic \
+	example/deprecated \
+	example/general \
+	example/get_started \
+	example/ipopt_solve \
 	example/optimize \
-	compare_c \
-	introduction/get_started \
-	introduction/exp_apx \
-	print_for \
-	multi_thread \
-	multi_thread/test_multi \
-	test_more
+	example/print_for \
+	example/sparse \
+	example/utility \
+	introduction \
+	example/multi_thread \
+	test_more/compare_c \
+	test_more/general
 
 #
 # note that bin/gpl_license.sh is deleted by dist-hook
 EXTRA_DIST = \
 	bin \
-	build.sh \
+	bin/autotools.sh \
 	doc.omh \
 	doc \
 	gpl-3.0.txt \
@@ -744,14 +774,20 @@ EXTRA_DIST = \
 	omh \
 	uw_copy_040507.html \
 	\
-	compare_c/CMakeLists.txt \
+	test_more/compare_c/CMakeLists.txt \
 	cppad/CMakeLists.txt \
 	pkgconfig/CMakeLists.txt \
 	example/CMakeLists.txt \
 	example/atomic/CMakeLists.txt \
+	example/deprecated/CMakeLists.txt \
+	example/general/CMakeLists.txt \
+	example/get_started/CMakeLists.txt \
 	example/ipopt_solve/CMakeLists.txt \
 	example/optimize/CMakeLists.txt \
-	test_more/CMakeLists.txt \
+	example/print_for/CMakeLists.txt \
+	example/sparse/CMakeLists.txt \
+	example/utility/CMakeLists.txt \
+	test_more/general/CMakeLists.txt \
 	CMakeLists.txt \
 	cppad_ipopt/src/CMakeLists.txt \
 	cppad_ipopt/example/CMakeLists.txt \
@@ -768,25 +804,28 @@ EXTRA_DIST = \
 	speed/double/CMakeLists.txt \
 	speed/profile/CMakeLists.txt \
 	speed/sacado/CMakeLists.txt \
-	multi_thread/bthread/CMakeLists.txt \
-	multi_thread/CMakeLists.txt \
-	multi_thread/openmp/CMakeLists.txt \
-	multi_thread/pthread/CMakeLists.txt \
-	print_for/CMakeLists.txt
+	example/multi_thread/bthread/CMakeLists.txt \
+	example/multi_thread/CMakeLists.txt \
+	example/multi_thread/openmp/CMakeLists.txt \
+	example/multi_thread/pthread/CMakeLists.txt
 
 test_directory_list = \
 	$(IPOPT_TESTS) \
 	$(SPEED_TESTS) \
-	example \
+	example/abs_normal \
 	example/atomic \
+	example/deprecated \
+	example/general \
+	example/get_started \
+	example/ipopt_solve \
+	example/multi_thread \
 	example/optimize \
-	compare_c \
-	introduction/get_started \
-	introduction/exp_apx \
-	multi_thread \
-	multi_thread/test_multi \
-	print_for \
-	test_more
+	example/print_for \
+	example/sparse \
+	example/utility \
+	introduction \
+	test_more/compare_c \
+	test_more/general
 
 #
 doc_postfix = $(DESTDIR)$(datadir)/doc/$(postfix_dir)
@@ -805,15 +844,15 @@ $(srcdir)/makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/makefile.am  $(am__confi
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
-	      echo ' cd $(srcdir) && $(AUTOMAKE) --gnu'; \
-	      $(am__cd) $(srcdir) && $(AUTOMAKE) --gnu \
+	      echo ' cd $(srcdir) && $(AUTOMAKE) --foreign'; \
+	      $(am__cd) $(srcdir) && $(AUTOMAKE) --foreign \
 		&& exit 0; \
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu makefile
+	  $(AUTOMAKE) --foreign makefile
 makefile: $(srcdir)/makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -833,6 +872,8 @@ $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	$(am__cd) $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 $(am__aclocal_m4_deps):
 cppad/configure.hpp: $(top_builddir)/config.status $(top_srcdir)/cppad/configure.hpp.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+cppad/local/is_pod.hpp: $(top_builddir)/config.status $(top_srcdir)/cppad/local/is_pod.hpp.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 pkgconfig/cppad.pc: $(top_builddir)/config.status $(top_srcdir)/pkgconfig/cppad.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
@@ -1341,6 +1382,8 @@ uninstall-am: uninstall-myincludeHEADERS \
 
 $(top_srcdir)/cppad/configure.hpp: cppad/configure.hpp
 	cp cppad/configure.hpp $(top_srcdir)/cppad/configure.hpp
+$(top_srcdir)/cppad/local/is_pod.hpp: cppad/local/is_pod.hpp
+	cp cppad/local/is_pod.hpp $(top_srcdir)/cppad/local/is_pod.hpp
 @CppAD_HAVE_AR_FALSE@	SPEED_TESTS =
 @CppAD_HAVE_AR_FALSE@	SPEED_DIRS =
 

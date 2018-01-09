@@ -33,9 +33,7 @@ ForHesSweep computes the Hessian sparsity pattern for all the independent
 variables.
 
 \tparam Base
-base type for the operator; i.e., this operation sequence was recorded
-using AD< \a Base > and computations by this routine are done using type
-\a Base.
+this operation sequence was recorded using AD<Base>.
 
 \tparam Vector_set
 is the type used for vectors of sets. It can be either
@@ -58,10 +56,6 @@ is a recording of the operations corresponding to a function
 \f]
 where \f$ n \f$ is the number of independent variables
 and \f$ m \f$ is the number of dependent variables.
-The object \a play is effectly constant.
-It is not declared const because while playing back the tape
-the object \a play holds information about the current location
-with in the tape and this changes during playback.
 
 \param for_jac_sparse
 For i = 0 , ... , \a numvar - 1,
@@ -95,13 +89,13 @@ in \a for_hes_sparse.
 */
 
 template <class Base, class Vector_set>
-void ForHesSweep(
-	size_t                n,
-	size_t                numvar,
-	local::player<Base>*         play,
-	const Vector_set&     for_jac_sparse,
-	const Vector_set&     rev_jac_sparse,
-	Vector_set&           for_hes_sparse
+void for_hes_sweep(
+	const local::player<Base>* play,
+	size_t                     n,
+	size_t                     numvar,
+	const Vector_set&          for_jac_sparse,
+	const Vector_set&          rev_jac_sparse,
+	Vector_set&                for_hes_sparse
 )
 {
 	OpCode           op;
@@ -132,11 +126,11 @@ void ForHesSweep(
 	size_t num_vecad_ind   = play->num_vec_ind_rec();
 	size_t num_vecad_vec   = play->num_vecad_vec_rec();
 	Vector_set vecad_sparse;
-	vecad_sparse.resize(num_vecad_vec, limit);
 	pod_vector<size_t> vecad_ind;
 	pod_vector<bool>   vecad_jac;
 	if( num_vecad_vec > 0 )
 	{	size_t length;
+		vecad_sparse.resize(num_vecad_vec, limit);
 		vecad_ind.extend(num_vecad_ind);
 		vecad_jac.extend(num_vecad_vec);
 		j             = 0;
@@ -155,30 +149,20 @@ void ForHesSweep(
 		}
 		CPPAD_ASSERT_UNKNOWN( j == play->num_vec_ind_rec() );
 	}
-
-	// work space used by UserOp.
-	vector<size_t>     user_ix;  // variable indices for argument vector x
-	vector<Base>       user_x;   // parameters in x as integers
-	//
-	//
-	typedef std::set<size_t> size_set;
-	vector< size_set > set_h;    // forward Hessian sparsity
-	vector<bool>       bool_h;   // forward Hessian sparsity
-	vectorBool         pack_h;   // forward Hessian sparstiy
-	//
-	vector<bool>       user_vx;  // which components of x are variables
-	vector<bool>       user_r;   // forward Jacobian sparsity for x
-	vector<bool>       user_s;   // reverse Jacobian sparsity for y
-	//
-	// information defined by forward_user
-	size_t user_old=0, user_m=0, user_n=0, user_i=0, user_j=0;
-	enum_user_state user_state = start_user; // proper initialization
-	//
+	// ------------------------------------------------------------------------
+	// user's atomic op calculator
 	atomic_base<Base>* user_atom = CPPAD_NULL; // user's atomic op calculator
-	bool               user_pack = false;      // sparsity pattern type is pack
-	bool               user_bool = false;      // sparsity pattern type is bool
-	bool               user_set  = false;      // sparsity pattern type is set
-	bool               user_ok   = false;      // atomic op return value
+	//
+	// work space used by UserOp.
+	vector<Base>       user_x;   // value of parameter arguments to function
+	vector<size_t>     user_ix;  // variable index (on tape) for each argument
+	vector<size_t>     user_iy;  // variable index (on tape) for each result
+	//
+	// information set by forward_user (initialization to avoid warnings)
+	size_t user_old=0, user_m=0, user_n=0, user_i=0, user_j=0;
+	// information set by forward_user (necessary initialization)
+	enum_user_state user_state = start_user;
+	// -------------------------------------------------------------------------
 	//
 	// pointer to the beginning of the parameter vector
 	// (used by user atomic functions)
@@ -187,10 +171,12 @@ void ForHesSweep(
 		parameter = play->GetPar();
 
 	// Initialize
-	play->forward_start(op, arg, i_op, i_var);
+	i_op = 0;
+	play->get_op_info(i_op, op, arg, i_var);
 	CPPAD_ASSERT_UNKNOWN( op == BeginOp );
 	bool more_operators = true;
 # if CPPAD_FOR_HES_SWEEP_TRACE
+	vector<size_t> user_usrrp; // parameter index for UsrrpOp operators
 	std::cout << std::endl;
 	CppAD::vectorBool zf_value(limit);
 	CppAD::vectorBool zh_value(limit * limit);
@@ -199,17 +185,13 @@ void ForHesSweep(
 	while(more_operators)
 	{
 		// next op
-		play->forward_next(op, arg, i_op, i_var);
-# ifndef NDEBUG
-		if( i_op <= n )
-		{	CPPAD_ASSERT_UNKNOWN((op == InvOp) | (op == BeginOp));
-		}
-		else	CPPAD_ASSERT_UNKNOWN((op != InvOp) & (op != BeginOp));
-# endif
+		play->get_op_info(++i_op, op, arg, i_var);
 
 		// does the Hessian in question have a non-zero derivative
 		// with respect to this variable
-		bool include = rev_jac_sparse.is_element(i_var, 0);
+		bool include = NumRes(op) > 0;
+		if( include )
+			include = rev_jac_sparse.is_element(i_var, 0);
 		//
 		// operators to include even if derivative is zero
 		include |= op == EndOp;
@@ -280,18 +262,10 @@ void ForHesSweep(
 			// -------------------------------------------------
 
 			case CSkipOp:
-			// CSkipOp has a variable number of arguments and
-			// reverse_next thinks it one has one argument.
-			// We must inform reverse_next of this special case.
-			play->forward_cskip(op, arg, i_op, i_var);
 			break;
 			// -------------------------------------------------
 
 			case CSumOp:
-			// CSumOp has a variable number of arguments and
-			// reverse_next thinks it one has one argument.
-			// We must inform reverse_next of this special case.
-			play->forward_csum(op, arg, i_op, i_var);
 			break;
 			// -------------------------------------------------
 
@@ -376,176 +350,97 @@ void ForHesSweep(
 			// -------------------------------------------------
 
 			case UserOp:
-			// start or end an atomic operation sequence
-			flag = user_state == start_user;
-			user_atom = play->forward_user(op, user_state,
-				user_old, user_m, user_n, user_i, user_j
+			// start or end an atomic function call
+			CPPAD_ASSERT_UNKNOWN(
+				user_state == start_user || user_state == end_user
 			);
+			flag = user_state == start_user;
+			user_atom = play->get_user_info(op, arg, user_old, user_m, user_n);
 			if( flag )
-			{	user_x.resize( user_n );
+			{	user_state = arg_user;
+				user_i     = 0;
+				user_j     = 0;
 				//
-				user_pack  = user_atom->sparsity() ==
-							atomic_base<Base>::pack_sparsity_enum;
-				user_bool  = user_atom->sparsity() ==
-							atomic_base<Base>::bool_sparsity_enum;
-				user_set   = user_atom->sparsity() ==
-							atomic_base<Base>::set_sparsity_enum;
-				CPPAD_ASSERT_UNKNOWN( user_pack || user_bool || user_set );
-				user_ix.resize(user_n);
-				user_vx.resize(user_n);
-				user_r.resize(user_n);
-				user_s.resize(user_m);
-
-				// simpler to initialize sparsity patterns as empty
-				for(i = 0; i < user_m; i++)
-					user_s[i] = false;
-				for(i = 0; i < user_n; i++)
-					user_r[i] = false;
-				if( user_pack )
-				{	pack_h.resize(user_n * user_n);
-					for(i = 0; i < user_n; i++)
-					{	for(j = 0; j < user_n; j++)
-							pack_h[ i * user_n + j] = false;
-					}
-				}
-				if( user_bool )
-				{	bool_h.resize(user_n * user_n);
-					for(i = 0; i < user_n; i++)
-					{	for(j = 0; j < user_n; j++)
-							bool_h[ i * user_n + j] = false;
-					}
-				}
-				if( user_set )
-				{	set_h.resize(user_n);
-					for(i = 0; i < user_n; i++)
-						set_h[i].clear();
-				}
+				user_x.resize( user_n );
+				user_ix.resize( user_n );
+				user_iy.resize( user_m );
+# if CPPAD_FOR_HES_SWEEP_TRACE
+				user_usrrp.resize( user_m );
+# endif
 			}
 			else
-			{	// call users function for this operation
+			{	user_state = start_user;
+				//
 				user_atom->set_old(user_old);
-				if( user_pack )
-				{	user_ok = user_atom->for_sparse_hes(
-						user_vx, user_r, user_s, pack_h, user_x
-					);
-					if( ! user_ok ) user_ok = user_atom->for_sparse_hes(
-						user_vx, user_r, user_s, pack_h
-					);
-				}
-				if( user_bool )
-				{	user_ok = user_atom->for_sparse_hes(
-						user_vx, user_r, user_s, bool_h, user_x
-					);
-					if( ! user_ok ) user_ok = user_atom->for_sparse_hes(
-						user_vx, user_r, user_s, bool_h
-					);
-				}
-				if( user_set )
-				{	user_ok = user_atom->for_sparse_hes(
-						user_vx, user_r, user_s, set_h, user_x
-					);
-					if( ! user_ok ) user_ok = user_atom->for_sparse_hes(
-						user_vx, user_r, user_s, set_h
-					);
-				}
-				if( ! user_ok )
-				{	std::string msg =
-						user_atom->afun_name()
-						+ ": atomic_base.for_sparse_hes: returned false\n";
-					if( user_pack )
-						msg += "sparsity = pack_sparsity_enum";
-					if( user_bool )
-						msg += "sparsity = bool_sparsity_enum";
-					if( user_set )
-						msg += "sparsity = set_sparsity_enum";
-					CPPAD_ASSERT_KNOWN(false, msg.c_str() );
-				}
-				for(i = 0; i < user_n; i++)	for(j = 0; j < user_n; j++)
-				{	if( user_ix[i] > 0 && user_ix[j] > 0 )
-					{	flag = false;
-						if( user_pack )
-							flag = pack_h[i * user_n + j];
-						if( user_bool )
-							flag = bool_h[i * user_n + j];
-						if( user_set )
-							flag = set_h[i].find(j) != set_h[i].end();
-						if( flag )
-						{	size_t i_x = user_ix[i];
-							size_t j_x = user_ix[j];
-							{	typename Vector_set::const_iterator
-									itr_i(for_jac_sparse, i_x);
-								size_t ix = *itr_i;
-								while( ix < for_jac_sparse.end() )
-								{	for_hes_sparse.binary_union(
-										ix, ix, j_x, for_jac_sparse
-									);
-									ix = *(++itr_i);
-								}
-								typename Vector_set::const_iterator
-									itr_j(for_jac_sparse, j_x);
-								size_t jx = *itr_j;
-								while( jx < for_jac_sparse.end() )
-								{	for_hes_sparse.binary_union(
-										jx, jx, i_x, for_jac_sparse
-									);
-									jx = *(++itr_j);
-								}
-							}
-						}
-					}
-				}
+				user_atom->for_sparse_hes(
+					user_x, user_ix, user_iy,
+					for_jac_sparse, rev_jac_sparse, for_hes_sparse
+				);
 			}
 			break;
 
 			case UsrapOp:
-			// parameter argument in an atomic operation sequence
-			CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < num_par );
-			user_ix[user_j] = 0;
-			user_vx[user_j] = false;
+			// parameter argument for a user atomic function
+			CPPAD_ASSERT_UNKNOWN( NumArg(op) == 1 );
+			CPPAD_ASSERT_UNKNOWN( user_state == arg_user );
+			CPPAD_ASSERT_UNKNOWN( user_i == 0 );
+			CPPAD_ASSERT_UNKNOWN( user_j < user_n );
+			CPPAD_ASSERT_UNKNOWN( size_t( arg[0] ) < num_par );
 			//
-			// parameters as integers
 			user_x[user_j] = parameter[arg[0]];
+			user_ix[user_j] = 0; // special variable used for parameters
 			//
-			play->forward_user(op, user_state,
-				user_old, user_m, user_n, user_i, user_j
-			);
+			++user_j;
+			if( user_j == user_n )
+				user_state = ret_user;
 			break;
 
 			case UsravOp:
-			// variable argument in an atomic operation sequence
-			CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) <= i_var );
-			CPPAD_ASSERT_UNKNOWN( 0 < arg[0] );
-			user_ix[user_j] = arg[0];
-			user_vx[user_j] = true;
-			// variables as integers
-			user_x[user_j] = CppAD::numeric_limits<Base>::quiet_NaN();
+			// variable argument for a user atomic function
+			CPPAD_ASSERT_UNKNOWN( NumArg(op) == 1 );
+			CPPAD_ASSERT_UNKNOWN( user_state == arg_user );
+			CPPAD_ASSERT_UNKNOWN( user_i == 0 );
+			CPPAD_ASSERT_UNKNOWN( user_j < user_n );
 			//
-			{	typename Vector_set::const_iterator
-					itr_1(for_jac_sparse, arg[0]);
-				i = *itr_1;
-				if( i < for_jac_sparse.end() )
-					user_r[user_j] = true;
-			}
-			play->forward_user(op, user_state,
-				user_old, user_m, user_n, user_i, user_j
-			);
+			// arguemnt variables not avaialbe during sparisty calculations
+			user_x[user_j] = CppAD::numeric_limits<Base>::quiet_NaN();
+			user_ix[user_j] = arg[0]; // variable for this argument
+			//
+			++user_j;
+			if( user_j == user_n )
+				user_state = ret_user;
 			break;
 
 			case UsrrpOp:
-			// parameter result in an atomic operation sequence
-			CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < num_par );
-			play->forward_user(op, user_state,
-				user_old, user_m, user_n, user_i, user_j
-			);
+			// parameter result for a user atomic function
+			CPPAD_ASSERT_NARG_NRES(op, 1, 0);
+			CPPAD_ASSERT_UNKNOWN( user_state == ret_user );
+			CPPAD_ASSERT_UNKNOWN( user_i < user_m );
+			CPPAD_ASSERT_UNKNOWN( user_j == user_n );
+			CPPAD_ASSERT_UNKNOWN( size_t( arg[0] ) < num_par );
+			//
+			user_iy[user_i] = 0; // special variable used for parameters
+# if CPPAD_FOR_HES_SWEEP_TRACE
+			// remember argument for delayed tracing
+			user_usrrp[user_i] = arg[0];
+# endif
+			++user_i;
+			if( user_i == user_m )
+				user_state = end_user;
 			break;
 
 			case UsrrvOp:
-			// variable result in an atomic operation sequence
-			if( rev_jac_sparse.is_element(i_var, 0) )
-				user_s[user_i] = true;
-			play->forward_user(op, user_state,
-				user_old, user_m, user_n, user_i, user_j
-			);
+			// variable result for a user atomic function
+			CPPAD_ASSERT_NARG_NRES(op, 0, 1);
+			CPPAD_ASSERT_UNKNOWN( user_state == ret_user );
+			CPPAD_ASSERT_UNKNOWN( user_i < user_m );
+			CPPAD_ASSERT_UNKNOWN( user_j == user_n );
+			//
+			user_iy[user_i] = i_var; // variable index for this result
+			//
+			++user_i;
+			if( user_i == user_m )
+				user_state = end_user;
 			break;
 			// -------------------------------------------------
 
@@ -562,27 +457,84 @@ void ForHesSweep(
 			CPPAD_ASSERT_UNKNOWN(0);
 		}
 # if CPPAD_FOR_HES_SWEEP_TRACE
-		if( include )
-		{	for(i = 0; i < limit; i++)
-			{	zf_value[i] = false;
-				for(j = 0; j < limit; j++)
-					zh_value[i * limit + j] = false;
+		typedef typename Vector_set::const_iterator const_iterator;
+		if( op == UserOp && user_state == start_user )
+		{	// print operators that have been delayed
+			CPPAD_ASSERT_UNKNOWN( user_m == user_iy.size() );
+			CPPAD_ASSERT_UNKNOWN( i_op > user_m );
+			CPPAD_ASSERT_NARG_NRES(UsrrpOp, 1, 0);
+			CPPAD_ASSERT_NARG_NRES(UsrrvOp, 0, 1);
+			addr_t arg_tmp[1];
+			for(k = 0; k < user_m; k++)
+			{	size_t k_var = user_iy[k];
+				// value for this variable
+				for(i = 0; i < limit; i++)
+				{	zf_value[i] = false;
+					for(j = 0; j < limit; j++)
+						zh_value[i * limit + j] = false;
+				}
+				const_iterator itr_1(for_jac_sparse, i_var);
+				j = *itr_1;
+				while( j < limit )
+				{	zf_value[j] = true;
+					j = *(++itr_1);
+				}
+				for(i = 0; i < limit; i++)
+				{	const_iterator itr_2(for_hes_sparse, i);
+					j = *itr_2;
+					while( j < limit )
+					{	zh_value[i * limit + j] = true;
+						j = *(++itr_2);
+					}
+				}
+				OpCode op_tmp = UsrrvOp;
+				if( k_var == 0 )
+				{	op_tmp     = UsrrpOp;
+					arg_tmp[0] = user_usrrp[k];
+				}
+				// k_var is zero when there is no result
+				printOp(
+					std::cout,
+					play,
+					i_op - user_m + k,
+					k_var,
+					op_tmp,
+					arg_tmp
+				);
+				if( k_var > 0 ) printOpResult(
+					std::cout,
+					1,
+					&zf_value,
+					1,
+					&zh_value
+				);
+				std::cout << std::endl;
 			}
-			typename Vector_set::const_iterator itr_2(for_jac_sparse, i_var);
+		}
+		for(i = 0; i < limit; i++)
+		{	zf_value[i] = false;
+			for(j = 0; j < limit; j++)
+				zh_value[i * limit + j] = false;
+		}
+		const_iterator itr_1(for_jac_sparse, i_var);
+		j = *itr_1;
+		while( j < limit )
+		{	zf_value[j] = true;
+			j = *(++itr_1);
+		}
+		for(i = 0; i < limit; i++)
+		{	const_iterator itr_2(for_hes_sparse, i);
 			j = *itr_2;
 			while( j < limit )
-			{	zf_value[j] = true;
+			{	zh_value[i * limit + j] = true;
 				j = *(++itr_2);
 			}
-			for(i = 0; i < limit; i++)
-			{	typename Vector_set::const_iterator itr_3(for_hes_sparse, i);
-				j = *itr_3;
-				while( j < limit )
-				{	zh_value[i * limit + j] = true;
-					j = *(++itr_3);
-				}
-			}
-			printOp(
+		}
+		// must delay print for these cases till after atomic user call
+		bool delay_print = op == UsrrpOp;
+		delay_print     |= op == UsrrvOp;
+		if( ! delay_print )
+		{	 printOp(
 				std::cout,
 				play,
 				i_op,
@@ -590,9 +542,7 @@ void ForHesSweep(
 				op,
 				arg
 			);
-			// should also print RevJac[i_var], but printOpResult does not
-			// yet allow for this
-			if( NumRes(op) > 0 && op != BeginOp ) printOpResult(
+			if( NumRes(op) > 0 && (! delay_print) ) printOpResult(
 				std::cout,
 				1,
 				&zf_value,
@@ -606,8 +556,6 @@ void ForHesSweep(
 # else
 	}
 # endif
-	// value corresponding to EndOp
-	CPPAD_ASSERT_UNKNOWN( i_var + 1 == play->num_var_rec() );
 
 	return;
 }

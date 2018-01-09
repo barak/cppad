@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: special_version.sh 3768 2015-12-28 18:58:35Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -56,7 +55,7 @@ case "$1" in
 	list="bthread openmp pthread"
 	for threading in $list
 	do
-		file="multi_thread/$threading/team_$threading.cpp"
+		file="example/multi_thread/$threading/team_$threading.cpp"
 		svn revert $file
 		#
 		echo "sed -e 's|hold_memory(true)|hold_memory(false)|;' -i $file"

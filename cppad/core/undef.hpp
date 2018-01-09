@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_UNDEF_HPP
 # define CPPAD_CORE_UNDEF_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -26,6 +25,7 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 
 # undef CPPAD_BOOL_BINARY         in user api
 # undef CPPAD_BOOL_UNARY          in user api
+# undef CPPAD_DEBUG_AND_RELEASE   in user api
 # undef CPPAD_DISCRETE_FUNCTION   in user api
 # undef CPPAD_EIGENVECTOR         in user api
 # undef CPPAD_MAX_NUM_THREADS     in user api
@@ -79,11 +79,9 @@ Preprecessor definitions that presist after cppad/cppad.hpp is included:
 # undef CPPAD_LIB_EXPORT
 # undef CPPAD_MAX_NUM_CAPACITY
 # undef CPPAD_MIN_DOUBLE_CAPACITY
-# undef CPPAD_OP_CODE_TYPE
 # undef CPPAD_REVERSE_SWEEP_TRACE
 # undef CPPAD_REV_HES_SWEEP_TRACE
 # undef CPPAD_REV_JAC_SWEEP_TRACE
-# undef CPPAD_SIZE_T_NOT_UNSIGNED_INT
 # undef CPPAD_STANDARD_MATH_UNARY_AD
 # undef CPPAD_STDVECTOR
 # undef CPPAD_TRACE_CAPACITY

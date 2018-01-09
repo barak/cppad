@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: new_release.sh 3788 2016-02-09 15:50:06Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -9,6 +8,10 @@
 #
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# -----------------------------------------------------------------------------
+svn_repo="https://projects.coin-or.org/svn/CppAD"
+stable_version="20180000" # start each stable_version at yyyy0000
+release='0'               # first release for each stable version is 0
 # -----------------------------------------------------------------------------
 if [ "$0" != 'bin/new_release.sh' ]
 then
@@ -21,18 +24,48 @@ echo_eval() {
 	eval $*
 }
 # -----------------------------------------------------------------------------
-svn_repo="https://projects.coin-or.org/svn/CppAD"
-stable_version="20160000"
-release='1'
+# master
 # -----------------------------------------------------------------------------
+#
+git checkout master
 branch=`git branch | grep '^\*'`
 if [ "$branch" != '* master' ]
 then
-	echo 'new_release.sh: must use master branch version of new_release.sh'
+	echo 'new_release.sh: cannot checkout master branch'
+	exit 1
+fi
+# Make sure version is up to date
+bin/version.sh date > /dev/null
+bin/version.sh copy > /dev/null
+#
+# Make sure no uncommitted changes
+list=`git status -s`
+if [ "$list" != '' ]
+then
+	echo "new_release.sh: 'git status -s' is not empty (for master branch)"
+	echo 'You must commit or abort changes before proceeding.'
+	exit 1
+fi
+# local hash code for master
+local_hash=`git show-ref master | \
+	grep "refs/heads/$stable_branch" | \
+	sed -e "s| *refs/heads/$stable_branch||"`
+#
+# remote hash code
+remote_hash=`git show-ref master | \
+	grep "refs/remotes/origin/$stable_branch" | \
+	sed -e "s| *refs/remotes/origin/$stable_branch||"`
+#
+if [ "$local_hash" != "$remote_hash" ]
+then
+	echo 'new_release.sh: local and remote for master differ'
+	echo "local  $stable_branch: $local_hash"
+	echo "remote $stable_branch: $remote_hash"
+	echo 'try:   git push'
 	exit 1
 fi
 # =============================================================================
-# master branch
+# stable branch
 # =============================================================================
 # Make sure local, remote and svn hash codes agree for this stable branch
 stable_branch=stable/$stable_version
@@ -58,8 +91,7 @@ fi
 if [ "$local_hash" == '' ] && [ "$remote_hash" == '' ]
 then
 	echo "new_release.sh: $stable_branch does not exist"
-	echo "Check that master local and remote are the same and then ?"
-	echo "	git checkout master"
+	echo "Use following command to create it ?"
 	echo "	git checkout -b $stable_branch master"
 	exit 1
 fi
@@ -72,7 +104,7 @@ fi
 #
 if [ "$remote_hash" == '' ]
 then
-	echo "new_release.sh: $stable_branch does not exist ?"
+	echo "new_release.sh: remote $stable_branch does not exist ?"
 	echo "	git push origin $stable_branch"
 	exit 1
 fi
@@ -94,6 +126,8 @@ then
 	echo 'new_release.sh: local and remote differ for this branch'
 	echo "local  $stable_branch: $local_hash"
 	echo "remote $stable_branch: $remote_hash"
+	echo "try: git checkout $stable_branch"
+	echo '     git push'
 	exit 1
 fi
 #
@@ -126,15 +160,6 @@ then
 	echo "	git push --delete origin $stable_version.$release"
 	exit 1
 fi
-# -----------------------------------------------------------------------------
-# Make sure master branch does not have uncomitted changes
-# before checking out stable branch
-list=`git status -s`
-if [ "$list" != '' ]
-then
-	echo "new_release.sh: 'git status -s' is not empty (for master branch)"
-	exit 1
-fi
 # =============================================================================
 # stable branch
 # =============================================================================
@@ -143,6 +168,15 @@ branch=`git branch | grep '^\*' | sed -e 's|^\* *||'`
 if [ "$branch" != "$stable_branch" ]
 then
 	echo_eval git checkout $stable_branch
+fi
+# -----------------------------------------------------------------------------
+# make sure check_copyright.sh changes date to current, not previous, year
+yy=`date +%y`
+if ! grep "\\\\1-$yy *Bradley M. Bell" bin/check_copyright.sh > /dev/null
+then
+	echo "new_release.sh: bin/check_copyright end date is not $yy"
+	echo "Fix it and then commit changes in $stable_version"
+	exit 1
 fi
 # -----------------------------------------------------------------------------
 check_one=`bin/version.sh get`
@@ -157,13 +191,14 @@ then
 	exit 1
 fi
 # -----------------------------------------------------------------------------
-# make sure that autotools version of makfiles is up to current version
-echo_eval "./build.sh automake"
+# Make sure that autotools version of makfiles is up to current version.
+# Starting with 2018 will need to change command to bin/autotools.sh automake.
+./build.sh automake
 list=`git status -s`
 if [ "$list" != '' ]
 then
 	echo "new_release.sh: 'git status -s' is not empty"
-	echo 'stable branch auto-tools install not up to current version'
+	echo 'stable branch autotools install not up to current version'
 	echo 'commit the local changes.'
 	exit 1
 fi

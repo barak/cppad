@@ -60,6 +60,7 @@ A:active { color : purple }
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
 <option>zdouble</option>
+<option>autotools</option>
 </select>
 </td>
 <td>
@@ -97,10 +98,10 @@ A:active { color : purple }
      <span style="font-style: italic"><span style="color: #9A1900">// and the maximum step size for the trapezoidal approximation</span></span>
      <span style="color: #008080">SizeVector</span> <span style="font-weight: bold"><span style="color: #000000">S</span></span><span style="color: #990000">(</span>Nz<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
      S<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
-     <span style="color: #009900">double</span> max_step <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
+     <span style="color: #008080">Number</span> max_step <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;=</span> Nz<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
      <span style="color: #FF0000">{</span>     S<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> S<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">+</span> N<span style="color: #990000">[</span>i<span style="color: #990000">];</span>
-          max_step <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>max_step<span style="color: #990000">,</span> <span style="color: #990000">(</span>s<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> s<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> N<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">);</span>
+          max_step <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">max</span></span><span style="color: #990000">(</span>max_step<span style="color: #990000">,</span> <span style="font-weight: bold"><span style="color: #000000">Number</span></span><span style="color: #990000">(</span>s<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> s<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #000000">Number</span></span><span style="color: #990000">(</span>N<span style="color: #990000">[</span>i<span style="color: #990000">])</span> <span style="color: #990000">);</span>
      <span style="color: #FF0000">}</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// split out return values</span></span>

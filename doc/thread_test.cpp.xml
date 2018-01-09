@@ -6,7 +6,7 @@
 <title>Run Multi-Threading Examples and Speed Tests</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="Run Multi-Threading Examples and Speed Tests"/>
-<meta name="keywords" id="keywords" content=" run multi-threading examples speed tests thread_test multi openmp pthread bthread syntax running threading purpose a11c simple_ad team_example harmonic test_time max_threads mega_sum multi_newton num_zero num_sub num_sum use_ad team implementations source "/>
+<meta name="keywords" id="keywords" content=" run multi-threading examples speed tests purpose build threading program running a11c simple_ad team_example harmonic test_time max_threads mega_sum multi_newton num_zero num_sub num_sum use_ad team implementations source "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -76,6 +76,7 @@ A:active { color : purple }
 <option>simple_ad_pthread.cpp</option>
 <option>team_example.cpp</option>
 <option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
 <option>multi_newton.cpp</option>
 <option>team_thread.hpp</option>
 </select>
@@ -83,10 +84,11 @@ A:active { color : purple }
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
-<option>Syntax</option>
-<option>Running Tests</option>
-<option>---..threading</option>
 <option>Purpose</option>
+<option>build</option>
+<option>threading</option>
+<option>program</option>
+<option>Running Tests</option>
 <option>a11c</option>
 <option>simple_ad</option>
 <option>team_example</option>
@@ -113,17 +115,43 @@ A:active { color : purple }
 
 <center><b><big><big>Run Multi-Threading Examples and Speed Tests</big></big></b></center>
 <br/>
-<b><big><a name="Syntax" id="Syntax">Syntax</a></big></b>
+<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
+<br/>
+Runs the CppAD multi-threading examples and timing tests:
 
 <br/>
+<br/>
+<b><big><a name="build" id="build">build</a></big></b>
+<br/>
+We use 
+<code><i><font color="black"><span style='white-space: nowrap'>build</span></font></i></code>
+ for the directory where you run the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
 
-<code><font color="blue"><span style='white-space: nowrap'>./multi_thread_</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;a11c<br/>
-./multi_thread_</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;simple_ad<br/>
-./multi_thread_</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;team_example<br/>
-./multi_thread_</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;harmonic&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>test_time</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>max_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>mega_sum</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-./multi_thread_</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;multi_newton&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>test_time</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>max_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;\<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_zero</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sub</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
-</span></font></code>
+command.
+
+<br/>
+<br/>
+<b><big><a name="threading" id="threading">threading</a></big></b>
+<br/>
+If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command output indicates that
+<code><font color="blue">bthread</font></code>, <code><font color="blue">pthread</font></code>, or <code><font color="blue">openmp</font></code> is available,
+you can run the program below with 
+<code><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
+ equal to
+<code><font color="blue">bthread</font></code>, <code><font color="blue">pthread</font></code>, or <code><font color="blue">openmp</font></code> respectively.
+
+<br/>
+<br/>
+<b><big><a name="program" id="program">program</a></big></b>
+<br/>
+We use the notation 
+<code><i><font color="black"><span style='white-space: nowrap'>program</span></font></i></code>
+ for
+
+<code><i><font color="black"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;example_multi_thread_</span></font></i><font color="blue"><span style='white-space: nowrap'>threading</span></font><i><font color="black"><span style='white-space: nowrap'><br/>
+</span></font></i></code>
 <br/>
 <b><big><a name="Running Tests" id="Running Tests">Running Tests</a></big></b>
 <br/>
@@ -131,54 +159,24 @@ You can build this program and run the default version of its test
 parameters by executing the following commands:
 
 <code><font color="blue"><span style='white-space: nowrap'><br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cd&#xA0;multi_thread<br/>
-&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;make&#xA0;test<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;cd&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>build</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;make&#xA0;check_</span></font><i><font color="black"><span style='white-space: nowrap'>program</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
 </span></font></code>
-After this operation you can run the syntax above
-for the different valid values of 
-<code><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
-:
+After this operation, in the directory
 
-<br/>
-<br/>
-<b><a name="Running Tests.threading" id="Running Tests.threading">threading</a></b>
-<br/>
-If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command output indicates that
-<code><font color="blue">openmp</font></code> is supported by your system,
-you can execute the syntax above with
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>build</span></font></i><font color="blue"><span style='white-space: nowrap'>/example/multi_thread/</span></font><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+you can execute the following commands:
 
-<code><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
- equal to <code><font color="blue">openmp</font></code>.
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command output indicates that
-<code><font color="blue">pthreads</font></code> with barriers is supported by your system,
-you can execute the syntax above with
-
-<code><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
- equal to <code><font color="blue">pthread</font></code>.
-<code><span style='white-space: nowrap'><br/>
-<br/>
-</span></code>If the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
- command output indicates that
-<code><font color="blue">boost</font></code> threads is supported is by your system,
-you can execute the syntax above with
-
-<code><i><font color="black"><span style='white-space: nowrap'>threading</span></font></i></code>
- equal to <code><font color="blue">bthread</font></code>.
-
-
-<br/>
-<br/>
-<b><big><a name="Purpose" id="Purpose">Purpose</a></big></b>
-<br/>
-Runs the CppAD multi-threading examples and timing tests:
-
-
-
-<br/>
+<code><font color="blue"><span style='white-space: nowrap'>.<br/>
+./</span></font><i><font color="black"><span style='white-space: nowrap'>program</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;a11c<br/>
+./</span></font><i><font color="black"><span style='white-space: nowrap'>program</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;simple_ad<br/>
+./</span></font><i><font color="black"><span style='white-space: nowrap'>program</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;team_example<br/>
+./</span></font><i><font color="black"><span style='white-space: nowrap'>program</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;harmonic&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>test_time</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>max_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>mega_sum</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+./</span></font><i><font color="black"><span style='white-space: nowrap'>program</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;multi_newton&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>test_time</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>max_threads</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;\<br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_zero</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sub</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
 <br/>
 <b><big><a name="a11c" id="a11c">a11c</a></big></b>
 <br/>
@@ -218,11 +216,13 @@ demonstrates simple multi-threading with algorithmic differentiation
 and using a <a href="team_thread.hpp.xml" target="_top"><span style='white-space: nowrap'>team&#xA0;of&#xA0;threads</span></a>
 .
 
+
+
 <br/>
 <br/>
 <b><big><a name="harmonic" id="harmonic">harmonic</a></big></b>
 <br/>
-The <a href="harmonic_time.cpp.xml" target="_top"><span style='white-space: nowrap'>harmonic_time.cpp</span></a>
+The <a href="harmonic_time.xml" target="_top"><span style='white-space: nowrap'>harmonic_time</span></a>
  routine
 preforms a timing test for a multi-threading
 example without algorithmic differentiation using a team of threads.
@@ -260,14 +260,16 @@ The command line argument
 <code><i><font color="black"><span style='white-space: nowrap'>mega_sum</span></font></i></code>
 
 is an integer greater than or equal one and has the same meaning as in
-<a href="harmonic_time.cpp.xml#mega_sum" target="_top"><span style='white-space: nowrap'>harmonic_time.cpp</span></a>
+<a href="harmonic_time.xml#mega_sum" target="_top"><span style='white-space: nowrap'>harmonic_time</span></a>
 .
+
+
 
 <br/>
 <br/>
 <b><big><a name="multi_newton" id="multi_newton">multi_newton</a></big></b>
 <br/>
-The <a href="multi_newton_time.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
+The <a href="multi_newton_time.xml" target="_top"><span style='white-space: nowrap'>multi_newton_time</span></a>
  routine
 preforms a timing test for a multi-threading
 example with algorithmic differentiation using a team of threads.
@@ -305,7 +307,7 @@ The command line argument
 <code><i><font color="black"><span style='white-space: nowrap'>num_zero</span></font></i></code>
 
 is an integer greater than or equal two and has the same meaning as in
-<a href="multi_newton_time.cpp.xml#num_zero" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
+<a href="multi_newton_time.xml#num_zero" target="_top"><span style='white-space: nowrap'>multi_newton_time</span></a>
 .
 
 <br/>
@@ -316,7 +318,7 @@ The command line argument
 <code><i><font color="black"><span style='white-space: nowrap'>num_sub</span></font></i></code>
 
 is an integer greater than or equal one and has the same meaning as in
-<a href="multi_newton_time.cpp.xml#num_sub" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
+<a href="multi_newton_time.xml#num_sub" target="_top"><span style='white-space: nowrap'>multi_newton_time</span></a>
 .
 
 <br/>
@@ -327,7 +329,7 @@ The command line argument
 <code><i><font color="black"><span style='white-space: nowrap'>num_sum</span></font></i></code>
 
 is an integer greater than or equal one and has the same meaning as in
-<a href="multi_newton_time.cpp.xml#num_sum" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
+<a href="multi_newton_time.xml#num_sum" target="_top"><span style='white-space: nowrap'>multi_newton_time</span></a>
 .
 
 <br/>
@@ -338,8 +340,10 @@ The command line argument
 <code><i><font color="black"><span style='white-space: nowrap'>use_ad</span></font></i></code>
  is either
 <code><font color="blue">true</font></code> or <code><font color="blue">false</font></code> and has the same meaning as in
-<a href="multi_newton_time.cpp.xml#use_ad" target="_top"><span style='white-space: nowrap'>multi_newton_time.cpp</span></a>
+<a href="multi_newton_time.xml#use_ad" target="_top"><span style='white-space: nowrap'>multi_newton_time</span></a>
 .
+
+
 
 <br/>
 <br/>
@@ -376,8 +380,9 @@ Pthread Implementation of a Team of AD Threads</td></tr>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">&lt;ctime&gt;</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_thread.hpp"</span>
 <span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"team_example.hpp"</span>
-<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic_time.hpp"</span>
-<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"multi_newton_time.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"harmonic.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"multi_atomic.hpp"</span>
+<span style="font-weight: bold"><span style="color: #000080"># include</span></span> <span style="color: #FF0000">"multi_newton.hpp"</span>
 
 <span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">a11c</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
 <span style="font-weight: bold"><span style="color: #0000FF">extern</span></span> <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">simple_ad</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">);</span>
@@ -418,8 +423,9 @@ Pthread Implementation of a Team of AD Threads</td></tr>
      <span style="color: #FF0000">"./&lt;thread&gt;_test a11c</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
      <span style="color: #FF0000">"./&lt;thread&gt;_test simple_ad</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
      <span style="color: #FF0000">"./&lt;thread&gt;_test team_example</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
-     <span style="color: #FF0000">"./&lt;thread&gt;_test harmonic    test_time max_threads mega_sum</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
-     <span style="color: #FF0000">"./&lt;thread&gt;_test multi_newton test_time max_threads</span><span style="color: #CC33CC">\\\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test harmonic     test_time max_threads mega_sum</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test multi_atomic test_time max_threads num_solve</span><span style="color: #CC33CC">\n</span><span style="color: #FF0000">"</span>
+     <span style="color: #FF0000">"./&lt;thread&gt;_test multi_newton test_time max_threads </span><span style="color: #CC33CC">\\\n</span><span style="color: #FF0000">"</span>
      <span style="color: #FF0000">"     num_zero num_sub num_sum use_ad</span><span style="color: #CC33CC">\\\n</span><span style="color: #FF0000">"</span>
      <span style="color: #FF0000">"where &lt;thread&gt; is bthread, openmp, or pthread"</span><span style="color: #990000">;</span>
 
@@ -457,10 +463,11 @@ Pthread Implementation of a Team of AD Threads</td></tr>
      <span style="color: #009900">bool</span> run_simple_ad    <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"simple_ad"</span><span style="color: #990000">)</span>    <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
      <span style="color: #009900">bool</span> run_team_example <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"team_example"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
      <span style="color: #009900">bool</span> run_harmonic     <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"harmonic"</span><span style="color: #990000">)</span>     <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
+     <span style="color: #009900">bool</span> run_multi_atomic <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"multi_atomic"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
      <span style="color: #009900">bool</span> run_multi_newton <span style="color: #990000">=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">strcmp</span></span><span style="color: #990000">(</span>test_name<span style="color: #990000">,</span> <span style="color: #FF0000">"multi_newton"</span><span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_a11c <span style="color: #990000">||</span> run_simple_ad <span style="color: #990000">||</span> run_team_example <span style="color: #990000">)</span>
           ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>argc <span style="color: #990000">==</span> <span style="color: #993399">2</span><span style="color: #990000">);</span>
-     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">)</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">||</span> run_multi_atomic <span style="color: #990000">)</span>
           ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>argc <span style="color: #990000">==</span> <span style="color: #993399">5</span><span style="color: #990000">);</span>
      <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_multi_newton <span style="color: #990000">)</span>
           ok <span style="color: #990000">=</span> <span style="color: #990000">(</span>argc <span style="color: #990000">==</span> <span style="color: #993399">8</span><span style="color: #990000">);</span>
@@ -498,11 +505,18 @@ Pthread Implementation of a Team of AD Threads</td></tr>
           <span style="color: #FF0000">"run: max_threads is less than zero"</span>
      <span style="color: #990000">);</span>
 
-     <span style="color: #008080">size_t</span> mega_sum <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// assignment to avoid compiler warning</span></span>
+     <span style="color: #008080">size_t</span> mega_sum  <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> <span style="font-style: italic"><span style="color: #9A1900">// assignment to avoid compiler warning</span></span>
+     <span style="color: #008080">size_t</span> num_solve <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">)</span>
      <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// mega_sum</span></span>
           mega_sum <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
                <span style="color: #FF0000">"run: mega_sum is less than one"</span>
+          <span style="color: #990000">);</span>
+     <span style="color: #FF0000">}</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_multi_atomic <span style="color: #990000">)</span>
+     <span style="color: #FF0000">{</span>     <span style="font-style: italic"><span style="color: #9A1900">// num_solve</span></span>
+          num_solve <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">arg2size_t</span></span><span style="color: #990000">(</span> <span style="color: #990000">*++</span>argv<span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">,</span>
+               <span style="color: #FF0000">"run: num_solve is less than one"</span>
           <span style="color: #990000">);</span>
      <span style="color: #FF0000">}</span>
      <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
@@ -537,22 +551,15 @@ Pthread Implementation of a Team of AD Threads</td></tr>
      <span style="color: #FF0000">}</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// run the test for each number of threads</span></span>
-     <span style="color: #008080">size_t</span> num_threads<span style="color: #990000">,</span> inuse_this_thread <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
      cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"time_all  = ["</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
-     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>num_threads <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> num_threads <span style="color: #990000">&lt;=</span> max_threads<span style="color: #990000">;</span> num_threads<span style="color: #990000">++)</span>
+     <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> num_threads <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> num_threads <span style="color: #990000">&lt;=</span> max_threads<span style="color: #990000">;</span> num_threads<span style="color: #990000">++)</span>
      <span style="color: #FF0000">{</span>     <span style="color: #009900">double</span> time_out<span style="color: #990000">;</span>
-
-          <span style="font-style: italic"><span style="color: #9A1900">// set the number of threads</span></span>
-          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
-               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">team_create</span></span><span style="color: #990000">(</span>num_threads<span style="color: #990000">);</span>
-
-          <span style="font-style: italic"><span style="color: #9A1900">// ammount of memory initialy inuse by thread zero</span></span>
-          ok <span style="color: #990000">&amp;=</span> <span style="color: #993399">0</span> <span style="color: #990000">==</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">thread_num</span></span><span style="color: #990000">();</span>
-          inuse_this_thread <span style="color: #990000">=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">);</span>
 
           <span style="font-style: italic"><span style="color: #9A1900">// run the requested test</span></span>
           <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_harmonic <span style="color: #990000">)</span> ok <span style="color: #990000">&amp;=</span>
                <span style="font-weight: bold"><span style="color: #000000">harmonic_time</span></span><span style="color: #990000">(</span>time_out<span style="color: #990000">,</span> test_time<span style="color: #990000">,</span> num_threads<span style="color: #990000">,</span> mega_sum<span style="color: #990000">);</span>
+          <span style="font-weight: bold"><span style="color: #0000FF">else</span></span> <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> run_multi_atomic <span style="color: #990000">)</span> ok <span style="color: #990000">&amp;=</span>
+               <span style="font-weight: bold"><span style="color: #000000">multi_atomic_time</span></span><span style="color: #990000">(</span>time_out<span style="color: #990000">,</span> test_time<span style="color: #990000">,</span> num_threads<span style="color: #990000">,</span> num_solve<span style="color: #990000">);</span>
           <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>
           <span style="color: #FF0000">{</span>     ok <span style="color: #990000">&amp;=</span> run_multi_newton<span style="color: #990000">;</span>
                ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">multi_newton_time</span></span><span style="color: #990000">(</span>
@@ -565,18 +572,9 @@ Pthread Implementation of a Team of AD Threads</td></tr>
                     use_ad
                <span style="color: #990000">);</span>
           <span style="color: #FF0000">}</span>
-
-          <span style="font-style: italic"><span style="color: #9A1900">// set back to one thread and fee all avaialable memory</span></span>
-          <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">&gt;</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
-               ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">team_destroy</span></span><span style="color: #990000">();</span>
-          <span style="color: #008080">size_t</span> thread<span style="color: #990000">;</span>
-          <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>thread <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">;</span> thread <span style="color: #990000">&lt;</span> num_threads<span style="color: #990000">;</span> thread<span style="color: #990000">++)</span>
-          <span style="color: #FF0000">{</span>     thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">free_available</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">);</span>
-               <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> thread <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
-                    ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> inuse_this_thread<span style="color: #990000">;</span>
-               <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     ok <span style="color: #990000">&amp;=</span> thread_alloc<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">inuse</span></span><span style="color: #990000">(</span>thread<span style="color: #990000">)</span> <span style="color: #990000">==</span> <span style="color: #993399">0</span><span style="color: #990000">;</span>
-          <span style="color: #FF0000">}</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// time_out</span></span>
           cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"</span><span style="color: #CC33CC">\t</span><span style="color: #FF0000">"</span> <span style="color: #990000">&lt;&lt;</span> time_out <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" % "</span><span style="color: #990000">;</span>
+          <span style="font-style: italic"><span style="color: #9A1900">// num_threads</span></span>
           <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> num_threads <span style="color: #990000">==</span> <span style="color: #993399">0</span> <span style="color: #990000">)</span>
                cout <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">"no threading"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">else</span></span>     cout <span style="color: #990000">&lt;&lt;</span> num_threads <span style="color: #990000">&lt;&lt;</span> <span style="color: #FF0000">" threads"</span> <span style="color: #990000">&lt;&lt;</span> endl<span style="color: #990000">;</span>
@@ -597,7 +595,7 @@ Pthread Implementation of a Team of AD Threads</td></tr>
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: multi_thread/thread_test.cpp
+<hr/>Input File: example/multi_thread/thread_test.cpp
 
 </body>
 </html>

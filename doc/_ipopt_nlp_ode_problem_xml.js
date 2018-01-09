@@ -25,7 +25,8 @@ var list_down3 = [
 'test_vector.xml',
 'cppad_ipopt_nlp.xml',
 'old_atomic.xml',
-'zdouble.xml'
+'zdouble.xml',
+'autotools.xml'
 ];
 var list_down2 = [
 'ipopt_nlp_get_started.cpp.xml',

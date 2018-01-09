@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_REV_TWO_HPP
 # define CPPAD_CORE_REV_TWO_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -129,7 +128,7 @@ and the other coefficients are unspecified.
 
 $head Examples$$
 $children%
-	example/rev_two.cpp
+	example/general/rev_two.cpp
 %$$
 The routine
 $cref/RevTwo/rev_two.cpp/$$ is both an example and test.
@@ -180,12 +179,12 @@ VectorBase ADFun<Base>::RevTwo(
 	// direction vector in argument space
 	VectorBase dx(n);
 	for(j1 = 0; j1 < n; j1++)
-		dx[j1] = Base(0);
+		dx[j1] = Base(0.0);
 
 	// direction vector in range space
 	VectorBase w(m);
 	for(i1 = 0; i1 < m; i1++)
-		w[i1] = Base(0);
+		w[i1] = Base(0.0);
 
 	// place to hold the results of a reverse calculation
 	VectorBase r(n * 2);
@@ -213,15 +212,15 @@ VectorBase ADFun<Base>::RevTwo(
 			{	first_done = true;
 
 				// first order forward mode in j1 direction
-				dx[j1] = Base(1);
+				dx[j1] = Base(1.0);
 				Forward(1, dx);
-				dx[j1] = Base(0);
+				dx[j1] = Base(0.0);
 			}
 			// execute a reverse in this component direction
 			i1    = i[l];
-			w[i1] = Base(1);
+			w[i1] = Base(1.0);
 			r     = Reverse(2, w);
-			w[i1] = Base(0);
+			w[i1] = Base(0.0);
 
 			// place the reverse result in return value
 			for(k = 0; k < n; k++)

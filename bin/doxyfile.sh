@@ -1,7 +1,7 @@
 #! /bin/bash -e
-# $Id: doxyfile.sh 3845 2016-11-19 01:50:47Z bradbell $
+# $Id: doxyfile.sh 3991 2017-12-08 14:50:56Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -25,6 +25,24 @@ fi
 version="$1"
 error_file="$2"
 output_directory="$3"
+# -----------------------------------------------------------------------------
+# convert multi-line assignments to single line assignments.
+echo "doxygen -g doxyfile > /dev/null"
+doxygen -g doxyfile > /dev/null
+cat << EOF > bin/doxyfile.$$
+/^[A-Z_]* *=.*\\\\$/! b end
+: loop
+N
+/\\\\$/b loop
+s|\\\\\\n| |g
+s|  *| |g
+#
+:end
+EOF
+sed -i doxyfile -f bin/doxyfile.$$
+# -----------------------------------------------------------------------------
+include_directory_list=`find cppad -type d | tr '\n' ' ' `
+# -----------------------------------------------------------------------------
 # PREDEFINED:see http://www.stack.nl/~dimitri/doxygen/manual/preprocessing.html
 # 2DO: change EXTRACT_ALL to NO so get warnings for undocumented functions.
 echo "create bin/doxyfile.$$"
@@ -45,16 +63,7 @@ GENERATE_LATEX          = NO
 GENERATE_TREEVIEW       = YES
 INHERIT_DOCS            = NO
 INLINE_INHERITED_MEMB   = YES
-INPUT                   = \
-	./cppad \
-	./cppad/core \
-	./cppad/local \
-	./cppad/local/optimize \
-	./cppad/ipopt \
-	./cppad_ipopt/src \
-	./cppad_lib \
-	./cppad/utility \
-	./speed/src
+INPUT                   = $include_directory_list
 LATEX_BATCHMODE         = YES
 MACRO_EXPANSION         = YES
 MULTILINE_CPP_IS_BRIEF  = YES
@@ -86,8 +95,6 @@ sed \
 	-e 's/$/|/' \
 	-i bin/doxyfile.$$
 #
-echo "doxygen -g doxyfile > /dev/null"
-doxygen -g doxyfile > /dev/null
 #
 echo "sed -f bin/doxyfile.$$ -i doxyfile"
 sed -f bin/doxyfile.$$ -i doxyfile

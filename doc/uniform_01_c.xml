@@ -63,6 +63,7 @@ A:active { color : purple }
 <select onchange='choose_down2(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -176,14 +177,15 @@ randomly sampled over the interval [0,1].
 <b><big><a name="Source Code" id="Source Code">Source Code</a></big></b>
 
 <pre><tt><span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">random_seed</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> seed<span style="color: #990000">)</span>
-<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">srand</span></span><span style="color: #990000">(</span>seed<span style="color: #990000">);</span> <span style="color: #FF0000">}</span>
-<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #009900">unsigned</span> n<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> a<span style="color: #990000">)</span>
+<span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #000000">srand</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #009900">unsigned</span> <span style="color: #009900">int</span><span style="color: #990000">)</span> seed <span style="color: #990000">);</span>
+<span style="color: #FF0000">}</span>
+<span style="color: #009900">void</span> <span style="font-weight: bold"><span style="color: #000000">uniform_01</span></span><span style="color: #990000">(</span><span style="color: #008080">size_t</span> n<span style="color: #990000">,</span> <span style="color: #009900">double</span><span style="color: #990000">*</span> a<span style="color: #990000">)</span>
 <span style="color: #FF0000">{</span>     <span style="font-weight: bold"><span style="color: #0000FF">static</span></span> <span style="color: #009900">double</span> factor <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> RAND_MAX<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span>n<span style="color: #990000">--)</span>
           a<span style="color: #990000">[</span>n<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">rand</span></span><span style="color: #990000">()</span> <span style="color: #990000">*</span> factor<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 
-<hr/>Input File: compare_c/det_by_minor.c
+<hr/>Input File: test_more/compare_c/det_by_minor.c
 
 </body>
 </html>

@@ -28,6 +28,7 @@ var list_down0 = [
 'speed_test.xml',
 'speedtest.xml',
 'time_test.xml',
+'test_boolofvoid.xml',
 'numerictype.xml',
 'checknumerictype.xml',
 'simplevector.xml',
@@ -47,7 +48,9 @@ var list_down0 = [
 'thread_alloc.xml',
 'index_sort.xml',
 'to_string.xml',
-'set_union.xml'
+'set_union.xml',
+'sparse_rc.xml',
+'sparse_rcv.xml'
 ];
 var list_current0 = [
 'utility.xml#Testing',
@@ -55,11 +58,12 @@ var list_current0 = [
 'utility.xml#General Numerical Routines',
 'utility.xml#Miscellaneous',
 'utility.xml#Miscellaneous.Error Handler',
-'utility.xml#Miscellaneous.Simple Vector Template Class',
+'utility.xml#Miscellaneous.The CppAD Vector Template Class',
 'utility.xml#Miscellaneous.Multi-Threading Memory Allocation',
 'utility.xml#Miscellaneous.Sorting Indices',
 'utility.xml#Miscellaneous.to_string',
-'utility.xml#Miscellaneous.set_union'
+'utility.xml#Miscellaneous.set_union',
+'utility.xml#Miscellaneous.Sparse Matrices'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

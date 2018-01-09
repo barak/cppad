@@ -1,10 +1,9 @@
-// $Id$
 # ifndef CPPAD_LOCAL_ERF_OP_HPP
 # define CPPAD_LOCAL_ERF_OP_HPP
 # if CPPAD_USE_CPLUSPLUS_2011
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -91,6 +90,7 @@ is the k-th order Taylor coefficient corresponding to the j-th result for z.
 \li NumRes(op) == 5
 \li q < cap_order
 \li p <= q
+\li std::numeric_limits<addr_t>::max() >= i_z + 2
 */
 template <class Base>
 inline void forward_erf_op(
@@ -107,6 +107,7 @@ inline void forward_erf_op(
 	CPPAD_ASSERT_UNKNOWN( NumRes(ErfOp) == 5 );
 	CPPAD_ASSERT_UNKNOWN( q < cap_order );
 	CPPAD_ASSERT_UNKNOWN( p <= q );
+	CPPAD_ASSERT_UNKNOWN( std::numeric_limits<addr_t>::max() >= i_z + 2 );
 
 	// array used to pass parameter values for sub-operations
 	addr_t addr[2];
@@ -120,16 +121,16 @@ inline void forward_erf_op(
 	forward_mulvv_op(p, q, i_z+0, addr, parameter, cap_order, taylor);
 
 	// z_1 = - x * x
-	addr[0] = arg[1]; // zero
-	addr[1] = i_z;    // z_0
+	addr[0] = arg[1];           // zero
+	addr[1] = addr_t( i_z );    // z_0
 	forward_subpv_op(p, q, i_z+1, addr, parameter, cap_order, taylor);
 
 	// z_2 = exp( - x * x )
 	forward_exp_op(p, q, i_z+2, i_z+1, cap_order, taylor);
 
 	// z_3 = (2 / sqrt(pi)) * exp( - x * x )
-	addr[0] = arg[2];  // 2 / sqrt(pi)
-	addr[1] = i_z + 2; // z_2
+	addr[0] = arg[2];            // 2 / sqrt(pi)
+	addr[1] = addr_t( i_z + 2 ); // z_2
 	forward_mulpv_op(p, q, i_z+3, addr, parameter, cap_order, taylor);
 
 	// pointers to taylor coefficients for x , z_3, and z_4
@@ -147,10 +148,10 @@ inline void forward_erf_op(
 	{	// z_4' (t) = erf'[x(t)] * x'(t) = z3(t) * x'(t)
 		// z_4[1] + 2 * z_4[2] * t +  ... =
 		// (z_3[0] + z_3[1] * t +  ...) * (x[1] + 2 * x[2] * t +  ...)
-		Base base_j = static_cast<Base>(j);
+		Base base_j = static_cast<Base>(double(j));
 		z_4[j]      = static_cast<Base>(0);
 		for(size_t k = 1; k <= j; k++)
-			z_4[j] += (Base(k) / base_j) * x[k] * z_3[j-k];
+			z_4[j] += (Base(double(k)) / base_j) * x[k] * z_3[j-k];
 	}
 }
 
@@ -205,6 +206,7 @@ is the zero order Taylor coefficient for j-th result corresponding to z.
 \li NumRes(op) == 5
 \li q < cap_order
 \li p <= q
+\li std::numeric_limits<addr_t>::max() >= i_z + 2
 */
 template <class Base>
 inline void forward_erf_op_0(
@@ -218,6 +220,7 @@ inline void forward_erf_op_0(
 	CPPAD_ASSERT_UNKNOWN( NumArg(ErfOp) == 3 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(ErfOp) == 5 );
 	CPPAD_ASSERT_UNKNOWN( 0 < cap_order );
+	CPPAD_ASSERT_UNKNOWN( std::numeric_limits<addr_t>::max() >= i_z + 2 );
 
 	// array used to pass parameter values for sub-operations
 	addr_t addr[2];
@@ -231,16 +234,16 @@ inline void forward_erf_op_0(
 	forward_mulvv_op_0(i_z+0, addr, parameter, cap_order, taylor);
 
 	// z_1 = - x * x
-	addr[0] = arg[1]; // zero
-	addr[1] = i_z;    // z_0
+	addr[0] = arg[1];       // zero
+	addr[1] = addr_t(i_z);  // z_0
 	forward_subpv_op_0(i_z+1, addr, parameter, cap_order, taylor);
 
 	// z_2 = exp( - x * x )
 	forward_exp_op_0(i_z+2, i_z+1, cap_order, taylor);
 
 	// z_3 = (2 / sqrt(pi)) * exp( - x * x )
-	addr[0] = arg[2];  // 2 / sqrt(pi)
-	addr[1] = i_z + 2; // z_2
+	addr[0] = arg[2];          // 2 / sqrt(pi)
+	addr[1] = addr_t(i_z + 2); // z_2
 	forward_mulpv_op_0(i_z+3, addr, parameter, cap_order, taylor);
 
 	// zero order Taylor coefficient for z_4
@@ -340,6 +343,7 @@ inline void forward_erf_op_dir(
 	CPPAD_ASSERT_UNKNOWN( NumRes(ErfOp) == 5 );
 	CPPAD_ASSERT_UNKNOWN( q < cap_order );
 	CPPAD_ASSERT_UNKNOWN( 0 < q );
+	CPPAD_ASSERT_UNKNOWN( std::numeric_limits<addr_t>::max() >= i_z + 2 );
 
 	// array used to pass parameter values for sub-operations
 	addr_t addr[2];
@@ -353,16 +357,16 @@ inline void forward_erf_op_dir(
 	forward_mulvv_op_dir(q, r, i_z+0, addr, parameter, cap_order, taylor);
 
 	// z_1 = - x * x
-	addr[0] = arg[1]; // zero
-	addr[1] = i_z;    // z_0
+	addr[0] = arg[1];         // zero
+	addr[1] = addr_t( i_z );  // z_0
 	forward_subpv_op_dir(q, r, i_z+1, addr, parameter, cap_order, taylor);
 
 	// z_2 = exp( - x * x )
 	forward_exp_op_dir(q, r, i_z+2, i_z+1, cap_order, taylor);
 
 	// z_3 = (2 / sqrt(pi)) * exp( - x * x )
-	addr[0] = arg[2];  // 2 / sqrt(pi)
-	addr[1] = i_z + 2; // z_2
+	addr[0] = arg[2];            // 2 / sqrt(pi)
+	addr[1] = addr_t( i_z + 2 ); // z_2
 	forward_mulpv_op_dir(q, r, i_z+3, addr, parameter, cap_order, taylor);
 
 	// pointers to taylor coefficients for x , z_3, and z_4
@@ -374,7 +378,7 @@ inline void forward_erf_op_dir(
 	// z_4' (t) = erf'[x(t)] * x'(t) = z3(t) * x'(t)
 	// z_4[1] + 2 * z_4[2] * t +  ... =
 	// (z_3[0] + z_3[1] * t +  ...) * (x[1] + 2 * x[2] * t +  ...)
-	Base base_q = static_cast<Base>(q);
+	Base base_q = static_cast<Base>(double(q));
 	for(size_t ell = 0; ell < r; ell++)
 	{	// index in z_4 and x for q-th order term
 		size_t m = (q-1)*r + ell + 1;
@@ -383,7 +387,7 @@ inline void forward_erf_op_dir(
 		for(size_t k = 1; k < q; k++)
 		{	size_t x_index  = (k-1)*r + ell + 1;
 			size_t z3_index = (q-k-1)*r + ell + 1;
-			z_4[m]         += (Base(k) / base_q) * x[x_index] * z_3[z3_index];
+			z_4[m]         += (Base(double(k)) / base_q) * x[x_index] * z_3[z3_index];
 		}
 	}
 }
@@ -486,6 +490,7 @@ inline void reverse_erf_op(
 	CPPAD_ASSERT_UNKNOWN( NumArg(ErfOp) == 3 );
 	CPPAD_ASSERT_UNKNOWN( NumRes(ErfOp) == 5 );
 	CPPAD_ASSERT_UNKNOWN( d < cap_order );
+	CPPAD_ASSERT_UNKNOWN( std::numeric_limits<addr_t>::max() >= i_z + 2 );
 
 	// array used to pass parameter values for sub-operations
 	addr_t addr[2];
@@ -516,18 +521,18 @@ inline void reverse_erf_op(
 	// Reverse z_4
 	size_t j = d;
 	while(j)
-	{	pz_4[j] /= Base(j);
+	{	pz_4[j] /= Base(double(j));
 		for(size_t k = 1; k <= j; k++)
-		{	px[k]     += azmul(pz_4[j], z_3[j-k]) * Base(k);
-			pz_3[j-k] += azmul(pz_4[j], x[k]) * Base(k);
+		{	px[k]     += azmul(pz_4[j], z_3[j-k]) * Base(double(k));
+			pz_3[j-k] += azmul(pz_4[j], x[k]) * Base(double(k));
 		}
 		j--;
 	}
 	px[0] += azmul(pz_4[0], z_3[0]);
 
 	// z_3 = (2 / sqrt(pi)) * exp( - x * x )
-	addr[0] = arg[2];  // 2 / sqrt(pi)
-	addr[1] = i_z + 2; // z_2
+	addr[0] = arg[2];            // 2 / sqrt(pi)
+	addr[1] = addr_t( i_z + 2 ); // z_2
 	reverse_mulpv_op(
 		d, i_z+3, addr, parameter, cap_order, taylor, nc_partial, partial
 	);
@@ -538,8 +543,8 @@ inline void reverse_erf_op(
 	);
 
 	// z_1 = - x * x
-	addr[0] = arg[1]; // zero
-	addr[1] = i_z;    // z_0
+	addr[0] = arg[1];           // zero
+	addr[1] = addr_t( i_z );    // z_0
 	reverse_subpv_op(
 		d, i_z+1, addr, parameter, cap_order, taylor, nc_partial, partial
 	);

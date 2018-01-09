@@ -1,4 +1,3 @@
-// $Id$
 # ifndef CPPAD_CORE_ZDOUBLE_HPP
 # define CPPAD_CORE_ZDOUBLE_HPP
 /* --------------------------------------------------------------------------
@@ -122,7 +121,7 @@ The type $code zdouble$$ satisfies all of the CppAD
 $cref/base type requirements/base_require/$$.
 
 $children%
-	test_more/zdouble.cpp
+	example/deprecated/zdouble.cpp
 %$$
 $head Example$$
 The file $cref zdouble.cpp$$
@@ -141,7 +140,7 @@ Define a class like double but with an absolute zero.
 
 /*!
 \def CPPAD_ZDOUBLE_NORMAL_ASSIGN_OPERATOR(op)
-Define a computed assignment member operator that functions the same
+Define a compound assignment member operator that functions the same
 as corresponding double operator.
 */
 # define CPPAD_ZDOUBLE_NORMAL_ASSIGN_OPERATOR(op) \
@@ -156,7 +155,7 @@ as corresponding double operator.
 
 /*!
 \def CPPAD_ZDOUBLE_UNARY_OPERATOR(op)
-Define a unary computed assignment member operator.
+Define a unary compound assignment member operator.
 */
 # define CPPAD_ZDOUBLE_UNARY_OPERATOR(op) \
 	zdouble operator op (void) const      \
@@ -230,16 +229,15 @@ class zdouble {
 	\code
 		os << z1
 		Integer(z1)
-		abs(z1)
+		fabs(z1)
 		pow(z1, z2)
-		abs_geq(z1, z2)
+		fabs_geq(z1, z2)
 		fun(z1)
 	\endcode
 	where fun is any of the standard math unary functions.
 	*/
 	friend std::ostream& operator << (std::ostream &os, const zdouble& z);
 	friend int Integer(const zdouble& z);
-	friend zdouble abs(const zdouble& x);
 	friend zdouble pow(const zdouble& x, const zdouble& y);
 	friend bool abs_geq(const zdouble& x, const zdouble& y);
 	//
@@ -299,9 +297,9 @@ public:
 		return *this;
 	}
 	//
-	/// Normal computed assignment
+	/// Normal compound assignment
 	CPPAD_ZDOUBLE_NORMAL_ASSIGN_OPERATOR(+=)
-	/// Normal computed assignment
+	/// Normal compound assignment
 	CPPAD_ZDOUBLE_NORMAL_ASSIGN_OPERATOR(-=)
 	/// Normal unary operator
 	CPPAD_ZDOUBLE_UNARY_OPERATOR(+)
@@ -505,7 +503,7 @@ CPPAD_ZDOUBLE_STD_MATH(log1p)
 
 /// Base type requirement: abs
 inline zdouble abs(const zdouble& x)
-{	return std::fabs(x.dbl_); }
+{	return fabs(x); }
 
 /// Base type requirement: sign
 inline zdouble sign(const zdouble& x)
@@ -521,24 +519,7 @@ inline zdouble pow(const zdouble& x, const zdouble& y)
 { return std::pow(x.dbl_, y.dbl_); }
 
 /// Base type requirement: limits
-template <>
-class numeric_limits<zdouble> {
-public:
-	// machine epsilon
-	static zdouble epsilon(void)
-	{	return std::numeric_limits<double>::epsilon(); }
-	// minimum positive normalized value
-	static zdouble min(void)
-	{	return std::numeric_limits<double>::min(); }
-	// maximum finite value
-	static zdouble max(void)
-	{	return std::numeric_limits<double>::max(); }
-	// quiet_NaN
-	static zdouble quiet_NaN(void)
-	{
-		return zdouble( std::numeric_limits<double>::quiet_NaN() );
-	}
-};
+CPPAD_NUMERIC_LIMITS(double, zdouble)
 
 } // CPPAD_END_NAMESPACE
 

@@ -37,22 +37,21 @@ var list_down1 = [
 'simple_ad_pthread.cpp.xml',
 'team_example.cpp.xml',
 'harmonic.cpp.xml',
+'multi_atomic.cpp.xml',
 'multi_newton.cpp.xml',
 'team_thread.hpp.xml'
 ];
 var list_down0 = [
-'harmonic_time.cpp.xml',
-'harmonic_work.cpp.xml'
+'harmonic_common.xml',
+'harmonic_setup.xml',
+'harmonic_worker.xml',
+'harmonic_takedown.xml',
+'harmonic_sum.xml',
+'harmonic_time.xml'
 ];
 var list_current0 = [
-'harmonic.cpp.xml#Syntax',
-'harmonic.cpp.xml#Summation',
-'harmonic.cpp.xml#ok',
-'harmonic.cpp.xml#sum',
-'harmonic.cpp.xml#num_sum',
-'harmonic.cpp.xml#num_threads',
-'harmonic.cpp.xml#Contents',
-'harmonic.cpp.xml#Source'
+'harmonic.cpp.xml#Source File',
+'harmonic.cpp.xml#Contents'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

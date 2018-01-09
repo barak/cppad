@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id$
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -31,9 +30,9 @@ special_case='
 bin/check_srcfile.sh
 bin/package.sh
 cppad/core/cond_exp.hpp
-introduction/exp_apx/exp_2.omh
-introduction/exp_apx/exp_eps.omh
-omh/license.omh
+introduction/exp_2.omh
+introduction/exp_eps.omh
+omh/appendix/license.omh
 bin/batch_edit.sh
 '
 # -----------------------------------------------------------------------------
@@ -44,40 +43,48 @@ list=`bin/ls_files.sh`
 different="no"
 for file in $list
 do
-	ok='no'
+	special='no'
 	for name in $special_case
 	do
 		if [ "$file" == "$name" ]
 		then
-			ok='yes'
+			special='yes'
 		fi
 	done
 	#
-	reference=`sed -n -f junk.sed $file`
-	if [ "$reference" == '' ] || [ "$reference" == "$file" ]
+	bad_reference=''
+	reference_list=`sed -n -f junk.sed $file`
+	if [ "$special" == 'no' ] && [ "$reference_list" != '' ]
 	then
-		ok='yes'
+		for reference in $reference_list
+		do
+			if [ "$reference" != "$file" ]
+			then
+				bad_reference="$reference"
+			fi
+		done
 	fi
 	#
 	ext=`echo $file | sed -e 's|.*\.||'`
-	if [ "$ext" == 'omh' ]
+	if [ "$bad_reference" != '' ] && [ "$ext" == 'omh' ]
 	then
 		file_root=`echo $file | sed -e 's|.*/||' -e 's|_hpp\.omh|.hpp|'`
 		ref_root=`echo $reference | sed -e 's|.*/||'`
 		if [ "$file_root" == "$ref_root" ]
 		then
-			ok='yes'
+			bad_reference=''
 		fi
 		file_root=`echo $file | sed -e 's|.*/||' -e 's|\.omh|.hpp|'`
 		if [ "$file_root" == "$ref_root" ]
 		then
-			ok='yes'
+			bad_reference=''
 		fi
 	fi
 	#
-	if [ "$ok" == 'no' ]
+	if [ "$bad_reference" != '' ]
 	then
-		echo "\$srcfile in $file references $reference"
+		echo "\$srcfile in $file references"
+		echo "$bad_reference"
 		different="yes"
 	fi
 done

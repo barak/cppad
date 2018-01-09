@@ -1,6 +1,5 @@
-// $Id: link_sparse_hessian.cpp 3855 2016-12-19 00:30:54Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -101,6 +100,11 @@ if $icode%k1% != %k2%$$ then
 $codei%
 	( %row%[%k1%] , %col%[%k1%] ) != ( %row%[%k2%] , %col%[%k2%] )
 %$$
+Furthermore, the entries are lower triangular; i.e.,
+$codei%
+	%col%[%k%] <= %row%[%k%]
+%$$.
+
 
 $head hessian$$
 The argument $icode hessian$$ has prototype
@@ -217,7 +221,8 @@ namespace {
 			// set the indices for this row
 			size_t k_start = col.size();
 			for(ell = 0; ell < max_per_row; ell++)
-			{	j = std::min(i, size_t(random[ell] * i) );
+			{	// avoid warning when converting double to size_t
+				j = std::min(i, size_t( float(random[ell]) * double(i) ) );
 				bool ok = true;
 				for(k = k_start; k < col.size(); k++)
 					ok &= j != col[k];
@@ -304,6 +309,7 @@ true, if correctness test passes, and false otherwise.
 */
 bool correct_sparse_hessian(bool is_package_double)
 {
+	double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
 	size_t n      = 10;
 	size_t repeat = 1;
 	vector<double> x(n);
@@ -311,6 +317,10 @@ bool correct_sparse_hessian(bool is_package_double)
 	choose_row_col(n, row, col);
 	size_t K = row.size();
 	vector<double> hessian(K);
+# ifndef NDEBUG
+	for(size_t k = 0; k < K; k++)
+		CPPAD_ASSERT_UNKNOWN( col[k] <= row[k] );
+# endif
 
 	// The double package assumes hessian.size() >= 1
 	CPPAD_ASSERT_UNKNOWN( K >= 1 );
@@ -331,7 +341,7 @@ bool correct_sparse_hessian(bool is_package_double)
 	bool ok = true;
 	size_t k;
 	for(k = 0; k < size; k++)
-		ok &= CppAD::NearEqual(check[k], hessian[k], 1e-10, 1e-10);
+		ok &= CppAD::NearEqual(check[k], hessian[k], eps99, eps99);
 
 	return ok;
 }
@@ -366,6 +376,10 @@ void speed_sparse_hessian(size_t size, size_t repeat)
 	}
 	size_t K = row.size();
 	vector<double> hessian(K);
+# ifndef NDEBUG
+	for(size_t k = 0; k < K; k++)
+		CPPAD_ASSERT_UNKNOWN( col[k] <= row[k] );
+# endif
 
 	// note that cppad/sparse_hessian.cpp assumes that x.size() == size
 	size_t n_sweep;

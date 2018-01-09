@@ -77,6 +77,7 @@ A:active { color : purple }
 <option>simple_ad_pthread.cpp</option>
 <option>team_example.cpp</option>
 <option>harmonic.cpp</option>
+<option>multi_atomic.cpp</option>
 <option>multi_newton.cpp</option>
 <option>team_thread.hpp</option>
 </select>
@@ -129,7 +130,7 @@ This example just demonstrates pthreads and does not use CppAD at all.
           <span style="font-style: italic"><span style="color: #9A1900">// for some reason this function is missing on some systems</span></span>
           <span style="font-style: italic"><span style="color: #9A1900">// assert( pthread_is_multithreaded_np() &gt; 0 );</span></span>
           <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n<span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
-               b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> <span style="color: #993399">2.0</span><span style="color: #990000">;</span>
+               b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #990000">(</span>a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">+</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> <span style="color: #993399">2</span><span style="color: #990000">.</span>0f<span style="color: #990000">;</span>
           <span style="font-weight: bold"><span style="color: #0000FF">return</span></span><span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>
      <span style="font-style: italic"><span style="color: #9A1900">// End of Example A.1.1.1c of OpenMP 2.5 standard document ---------------</span></span>
@@ -191,7 +192,7 @@ This example just demonstrates pthreads and does not use CppAD at all.
      <span style="color: #FF0000">}</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// check the result</span></span>
-     <span style="color: #009900">float</span> eps <span style="color: #990000">=</span> <span style="color: #993399">100</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
+     <span style="color: #009900">float</span> eps <span style="color: #990000">=</span> <span style="color: #993399">100</span><span style="color: #990000">.</span>0f <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">float</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
      <span style="font-weight: bold"><span style="color: #0000FF">for</span></span><span style="color: #990000">(</span>i <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">;</span> i <span style="color: #990000">&lt;</span> n <span style="color: #990000">;</span> i<span style="color: #990000">++)</span>
           ok <span style="color: #990000">&amp;=</span> std<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">fabs</span></span><span style="color: #990000">(</span> <span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.</span> <span style="color: #990000">*</span> b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">-</span> a<span style="color: #990000">[</span>i<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">])</span> <span style="color: #990000">/</span> b<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">)</span> <span style="color: #990000">&lt;=</span> eps<span style="color: #990000">;</span>
 
@@ -201,7 +202,7 @@ This example just demonstrates pthreads and does not use CppAD at all.
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span></tt></pre>
 </font></code>
-<hr/>Input File: multi_thread/pthread/a11c_pthread.cpp
+<hr/>Input File: example/multi_thread/pthread/a11c_pthread.cpp
 
 </body>
 </html>

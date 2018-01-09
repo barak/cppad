@@ -1,9 +1,8 @@
-// $Id: sqrt_op.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_LOCAL_SQRT_OP_HPP
 # define CPPAD_LOCAL_SQRT_OP_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -29,7 +28,7 @@ The C++ source code corresponding to this operation is
 	z = sqrt(x)
 \endverbatim
 
-\copydetails forward_unary1_op
+\copydetails CppAD::local::forward_unary1_op
 */
 template <class Base>
 inline void forward_sqrt_op(
@@ -57,11 +56,11 @@ inline void forward_sqrt_op(
 	}
 	for(size_t j = p; j <= q; j++)
 	{
-		z[j] = Base(0);
+		z[j] = Base(0.0);
 		for(k = 1; k < j; k++)
-			z[j] -= Base(k) * z[k] * z[j-k];
-		z[j] /= Base(j);
-		z[j] += x[j] / Base(2);
+			z[j] -= Base(double(k)) * z[k] * z[j-k];
+		z[j] /= Base(double(j));
+		z[j] += x[j] / Base(2.0);
 		z[j] /= z[0];
 	}
 }
@@ -74,7 +73,7 @@ The C++ source code corresponding to this operation is
 	z = sqrt(x)
 \endverbatim
 
-\copydetails forward_unary1_op_dir
+\copydetails CppAD::local::forward_unary1_op_dir
 */
 template <class Base>
 inline void forward_sqrt_op_dir(
@@ -98,11 +97,11 @@ inline void forward_sqrt_op_dir(
 
 	size_t m = (q-1) * r + 1;
 	for(size_t ell = 0; ell < r; ell++)
-	{	z[m+ell] = Base(0);
+	{	z[m+ell] = Base(0.0);
 		for(size_t k = 1; k < q; k++)
-			z[m+ell] -= Base(k) * z[(k-1)*r+1+ell] * z[(q-k-1)*r+1+ell];
-		z[m+ell] /= Base(q);
-		z[m+ell] += x[m+ell] / Base(2);
+			z[m+ell] -= Base(double(k)) * z[(k-1)*r+1+ell] * z[(q-k-1)*r+1+ell];
+		z[m+ell] /= Base(double(q));
+		z[m+ell] += x[m+ell] / Base(2.0);
 		z[m+ell] /= z[0];
 	}
 }
@@ -115,7 +114,7 @@ The C++ source code corresponding to this operation is
 	z = sqrt(x)
 \endverbatim
 
-\copydetails forward_unary1_op_0
+\copydetails CppAD::local::forward_unary1_op_0
 */
 template <class Base>
 inline void forward_sqrt_op_0(
@@ -143,7 +142,7 @@ The C++ source code corresponding to this operation is
 	z = sqrt(x)
 \endverbatim
 
-\copydetails reverse_unary1_op
+\copydetails CppAD::local::reverse_unary1_op
 */
 
 template <class Base>
@@ -170,7 +169,7 @@ inline void reverse_sqrt_op(
 	Base* pz       = partial + i_z * nc_partial;
 
 
-	Base inv_z0 = Base(1) / z[0];
+	Base inv_z0 = Base(1.0) / z[0];
 
 	// number of indices to access
 	size_t j = d;
@@ -182,12 +181,12 @@ inline void reverse_sqrt_op(
 		pz[j]    = azmul(pz[j], inv_z0);
 
 		pz[0]   -= azmul(pz[j], z[j]);
-		px[j]   += pz[j] / Base(2);
+		px[j]   += pz[j] / Base(2.0);
 		for(k = 1; k < j; k++)
 			pz[k]   -= azmul(pz[j], z[j-k]);
 		--j;
 	}
-	px[0] += azmul(pz[0], inv_z0) / Base(2);
+	px[0] += azmul(pz[0], inv_z0) / Base(2.0);
 }
 
 } } // END_CPPAD_LOCAL_NAMESPACE

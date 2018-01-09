@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_EXAMPLE_EIGEN_MAT_MUL_HPP
 # define CPPAD_EXAMPLE_EIGEN_MAT_MUL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -152,10 +151,8 @@ $srccode%cpp% */
 		size_t  n_middle  = size_t( left.cols() );
 		size_t  nc_right  = size_t( right.cols() );
 		assert( n_middle  == size_t( right.rows() )  );
-# ifndef NDEBUG
-		size_t  nx        = 3 + (nr_left + nc_right) * n_middle;
-		size_t  ny        = nr_left * nc_right;
-# endif
+		size_t  nx      = 3 + (nr_left + nc_right) * n_middle;
+		size_t  ny      = nr_left * nc_right;
 		size_t n_left   = nr_left * n_middle;
 		size_t n_right  = n_middle * nc_right;
 		size_t n_result = nr_left * nc_right;
@@ -453,9 +450,15 @@ $srccode%cpp% */
 					size_t i_left  = 3 + i * n_middle + ell;
 					// pack index for entry (ell, j) in right
 					size_t i_right = 3 + n_left + ell * nc_right + j;
-					//
-					s[i_result] = CppAD::set_union(s[i_result], r[i_left] );
-					s[i_result] = CppAD::set_union(s[i_result], r[i_right] );
+					// check if result of for this product is alwasy zero
+					// note that x is nan for commponents that are variables
+					bool zero = x[i_left] == Base(0.0) || x[i_right] == Base(0);
+					if( ! zero )
+					{	s[i_result] =
+							CppAD::set_union(s[i_result], r[i_left] );
+						s[i_result] =
+							CppAD::set_union(s[i_result], r[i_right] );
+					}
 				}
 			}
 		}

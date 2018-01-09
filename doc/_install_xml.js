@@ -26,8 +26,7 @@ var list_down0 = [
 'download.xml',
 'cmake.xml',
 'cmake_check.xml',
-'pkgconfig.xml',
-'auto_tools.xml'
+'pkgconfig.xml'
 ];
 var list_current0 = [
 'install.xml#Instructions',
@@ -35,7 +34,8 @@ var list_current0 = [
 'install.xml#Instructions.Step 2: Cmake',
 'install.xml#Instructions.Step 3: Check',
 'install.xml#Instructions.Step 4: Installation',
-'install.xml#Contents'
+'install.xml#Contents',
+'install.xml#Deprecated'
 ];
 function choose_across0(item)
 {	var index          = item.selectedIndex;

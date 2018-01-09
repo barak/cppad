@@ -54,6 +54,7 @@ var list_current0 = [
 'numeric_limits.xml#min',
 'numeric_limits.xml#max',
 'numeric_limits.xml#quiet_NaN',
+'numeric_limits.xml#digits10',
 'numeric_limits.xml#Example'
 ];
 function choose_across0(item)

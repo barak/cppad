@@ -41,7 +41,6 @@ var list_current0 = [
 'ad_ctor.xml#x',
 'ad_ctor.xml#x.implicit',
 'ad_ctor.xml#x.explicit',
-'ad_ctor.xml#x.Deprecated 2013-12-31',
 'ad_ctor.xml#y',
 'ad_ctor.xml#Example'
 ];

@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_DEPENDENT_HPP
 # define CPPAD_CORE_DEPENDENT_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -284,21 +283,19 @@ void ADFun<Base>::Dependent(local::ADTape<Base> *tape, const ADvector &y)
 	num_var_tape_       = tape->Rec_.num_var_rec();
 
 	// taylor_
-	taylor_.erase();
+	taylor_.resize(0);
 
 	// cskip_op_
-	cskip_op_.erase();
-	cskip_op_.extend( tape->Rec_.num_op_rec() );
+	cskip_op_.resize( tape->Rec_.num_op_rec() );
 
 	// load_op_
-	load_op_.erase();
-	load_op_.extend( tape->Rec_.num_load_op_rec() );
+	load_op_.resize( tape->Rec_.num_load_op_rec() );
 
 	// play_
 	// Now that each dependent variable has a place in the tape,
 	// and there is a EndOp at the end of the tape, we can transfer the
-	// recording to the player and and erase the tape.
-	play_.get(tape->Rec_);
+	// recording to the player and and erase the recording; i.e. ERASE Rec_.
+	play_.get(tape->Rec_, n);
 
 	// ind_taddr_
 	// Note that play_ has been set, we can use it to check operators
@@ -312,6 +309,14 @@ void ADFun<Base>::Dependent(local::ADTape<Base> *tape, const ADvector &y)
 	// for_jac_sparse_pack_, for_jac_sparse_set_
 	for_jac_sparse_pack_.resize(0, 0);
 	for_jac_sparse_set_.resize(0,0);
+
+	// resize subgraph_info_
+	subgraph_info_.resize(
+		ind_taddr_.size(),   // n_dep
+		dep_taddr_.size(),   // n_ind
+		play_.num_op_rec(),  // n_op
+		play_.num_var_rec()  // n_var
+	);
 	// ---------------------------------------------------------------------
 	// End set ad_fun.hpp private member data
 	// ---------------------------------------------------------------------

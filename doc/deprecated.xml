@@ -6,7 +6,7 @@
 <title>CppAD Deprecated API Features</title>
 <meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
 <meta name="description" id="description" content="CppAD Deprecated API Features"/>
-<meta name="keywords" id="keywords" content=" cppad deprecated api features atomic functions "/>
+<meta name="keywords" id="keywords" content=" cppad deprecated api features name changes atomic functions "/>
 <style type='text/css'>
 body { color : black }
 body { background-color : white }
@@ -62,6 +62,7 @@ A:active { color : purple }
 <select onchange='choose_down1(this)'>
 <option>Appendix-&gt;</option>
 <option>Faq</option>
+<option>directory</option>
 <option>Theory</option>
 <option>glossary</option>
 <option>Bib</option>
@@ -89,12 +90,14 @@ A:active { color : purple }
 <option>cppad_ipopt_nlp</option>
 <option>old_atomic</option>
 <option>zdouble</option>
+<option>autotools</option>
 </select>
 </td>
 <td>
 <select onchange='choose_current0(this)'>
 <option>Headings-&gt;</option>
 <option>Contents</option>
+<option>Name Changes</option>
 <option>Atomic Functions</option>
 </select>
 </td>
@@ -107,7 +110,11 @@ A:active { color : purple }
 <b><big><a name="Contents" id="Contents">Contents</a></big></b>
 <br/>
 <table>
-<tr><td><a href="include_deprecated.xml" target="_top">include_deprecated</a></td><td>Deprecated&#xA0;Include&#xA0;Files</td></tr><tr><td><a href="fundeprecated.xml" target="_top">FunDeprecated</a></td><td>ADFun&#xA0;Object&#xA0;Deprecated&#xA0;Member&#xA0;Functions</td></tr><tr><td><a href="comparechange.xml" target="_top">CompareChange</a></td><td>Comparison&#xA0;Changes&#xA0;During&#xA0;Zero&#xA0;Order&#xA0;Forward&#xA0;Mode</td></tr><tr><td><a href="omp_max_thread.xml" target="_top">omp_max_thread</a></td><td>OpenMP&#xA0;Parallel&#xA0;Setup</td></tr><tr><td><a href="tracknewdel.xml" target="_top">TrackNewDel</a></td><td>Routines&#xA0;That&#xA0;Track&#xA0;Use&#xA0;of&#xA0;New&#xA0;and&#xA0;Delete</td></tr><tr><td><a href="omp_alloc.xml" target="_top">omp_alloc</a></td><td>A&#xA0;Quick&#xA0;OpenMP&#xA0;Memory&#xA0;Allocator&#xA0;Used&#xA0;by&#xA0;CppAD</td></tr><tr><td><a href="memory_leak.xml" target="_top">memory_leak</a></td><td>Memory&#xA0;Leak&#xA0;Detection</td></tr><tr><td><a href="epsilon.xml" target="_top">epsilon</a></td><td>Machine&#xA0;Epsilon&#xA0;For&#xA0;AD&#xA0;Types</td></tr><tr><td><a href="test_vector.xml" target="_top">test_vector</a></td><td>Choosing&#xA0;The&#xA0;Vector&#xA0;Testing&#xA0;Template&#xA0;Class</td></tr><tr><td><a href="cppad_ipopt_nlp.xml" target="_top">cppad_ipopt_nlp</a></td><td>Nonlinear&#xA0;Programming&#xA0;Using&#xA0;the&#xA0;CppAD&#xA0;Interface&#xA0;to&#xA0;Ipopt</td></tr><tr><td><a href="old_atomic.xml" target="_top">old_atomic</a></td><td>User&#xA0;Defined&#xA0;Atomic&#xA0;AD&#xA0;Functions</td></tr><tr><td><a href="zdouble.xml" target="_top">zdouble</a></td><td>zdouble:&#xA0;An&#xA0;AD&#xA0;Base&#xA0;Type&#xA0;With&#xA0;Absolute&#xA0;Zero</td></tr></table><table><tr><td align='left'  valign='top'>
+<tr><td><a href="include_deprecated.xml" target="_top">include_deprecated</a></td><td>Deprecated&#xA0;Include&#xA0;Files</td></tr><tr><td><a href="fundeprecated.xml" target="_top">FunDeprecated</a></td><td>ADFun&#xA0;Object&#xA0;Deprecated&#xA0;Member&#xA0;Functions</td></tr><tr><td><a href="comparechange.xml" target="_top">CompareChange</a></td><td>Comparison&#xA0;Changes&#xA0;During&#xA0;Zero&#xA0;Order&#xA0;Forward&#xA0;Mode</td></tr><tr><td><a href="omp_max_thread.xml" target="_top">omp_max_thread</a></td><td>OpenMP&#xA0;Parallel&#xA0;Setup</td></tr><tr><td><a href="tracknewdel.xml" target="_top">TrackNewDel</a></td><td>Routines&#xA0;That&#xA0;Track&#xA0;Use&#xA0;of&#xA0;New&#xA0;and&#xA0;Delete</td></tr><tr><td><a href="omp_alloc.xml" target="_top">omp_alloc</a></td><td>A&#xA0;Quick&#xA0;OpenMP&#xA0;Memory&#xA0;Allocator&#xA0;Used&#xA0;by&#xA0;CppAD</td></tr><tr><td><a href="memory_leak.xml" target="_top">memory_leak</a></td><td>Memory&#xA0;Leak&#xA0;Detection</td></tr><tr><td><a href="epsilon.xml" target="_top">epsilon</a></td><td>Machine&#xA0;Epsilon&#xA0;For&#xA0;AD&#xA0;Types</td></tr><tr><td><a href="test_vector.xml" target="_top">test_vector</a></td><td>Choosing&#xA0;The&#xA0;Vector&#xA0;Testing&#xA0;Template&#xA0;Class</td></tr><tr><td><a href="cppad_ipopt_nlp.xml" target="_top">cppad_ipopt_nlp</a></td><td>Nonlinear&#xA0;Programming&#xA0;Using&#xA0;the&#xA0;CppAD&#xA0;Interface&#xA0;to&#xA0;Ipopt</td></tr><tr><td><a href="old_atomic.xml" target="_top">old_atomic</a></td><td>User&#xA0;Defined&#xA0;Atomic&#xA0;AD&#xA0;Functions</td></tr><tr><td><a href="zdouble.xml" target="_top">zdouble</a></td><td>zdouble:&#xA0;An&#xA0;AD&#xA0;Base&#xA0;Type&#xA0;With&#xA0;Absolute&#xA0;Zero</td></tr><tr><td><a href="autotools.xml" target="_top">autotools</a></td><td>Autotools&#xA0;Unix&#xA0;Test&#xA0;and&#xA0;Installation</td></tr></table><br/>
+<b><big><a name="Name Changes" id="Name Changes">Name Changes</a></big></b>
+
+<table><tr><td align='left'  valign='top'>
+
 <a href="boolfun.xml#Deprecated 2007-07-31" target="_top"><span style='white-space: nowrap'>CppADCreateUnaryBool</span></a>
   </td><td align='left'  valign='top'>
 
@@ -120,15 +127,20 @@ A:active { color : purple }
 	Discrete AD Functions
 </td></tr><tr><td align='left'  valign='top'>
 
-<a href="auto_tools.xml" target="_top"><span style='white-space: nowrap'>auto_tools</span></a>
-   </td><td align='left'  valign='top'>
- Auto Tools Unix Test and Installation
-</td></tr><tr><td align='left'  valign='top'>
-
 <a href="nan.xml#nan(zero)" target="_top"><span style='white-space: nowrap'>nan(zero)</span></a>
  </td><td align='left'  valign='top'>
  
 <code><font color="blue"><span style='white-space: nowrap'>nan(</span></font><i><font color="black"><span style='white-space: nowrap'>zero</span></font></i><font color="blue"><span style='white-space: nowrap'>)</span></font></code>
+
+</td></tr><tr><td align='left'  valign='top'>
+
+<code><font color="blue">colpack.star</font></code> coloring </td><td align='left'  valign='top'>
+ see
+<a href="sparse_hes.xml#coloring.colpack.star Deprecated 2017-06-01" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+
+and
+<a href="sparse_hessian.xml#work.colpack.star Deprecated 2017-06-01" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
+
 
 </td></tr>
 </table>
@@ -148,7 +160,7 @@ The following are links to deprecated <a href="atomic_base.xml" target="_top"><s
 
 
 
-<hr/>Input File: omh/deprecated/deprecated.omh
+<hr/>Input File: omh/appendix/deprecated/deprecated.omh
 
 </body>
 </html>

@@ -8,26 +8,33 @@ var list_across0 = [
 var list_up0 = [
 'cppad.xml',
 'adfun.xml',
-'funeval.xml',
 'forward.xml',
 'forward_zero.xml'
 ];
 var list_down3 = [
-'independent.xml',
-'funconstruct.xml',
-'dependent.xml',
-'abort_recording.xml',
-'seq_property.xml',
-'funeval.xml',
-'drivers.xml',
-'funcheck.xml',
-'optimize.xml',
-'check_for_nan.xml'
+'install.xml',
+'introduction.xml',
+'ad.xml',
+'adfun.xml',
+'preprocessor.xml',
+'multi_thread.xml',
+'utility.xml',
+'ipopt_solve.xml',
+'example.xml',
+'speed.xml',
+'appendix.xml'
 ];
 var list_down2 = [
+'record_adfun.xml',
+'drivers.xml',
 'forward.xml',
 'reverse.xml',
-'sparse.xml'
+'sparsity_pattern.xml',
+'sparse_derivative.xml',
+'optimize.xml',
+'abs_normal.xml',
+'funcheck.xml',
+'check_for_nan.xml'
 ];
 var list_down1 = [
 'forward_zero.xml',

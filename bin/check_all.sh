@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: check_all.sh 3781 2016-01-18 16:16:22Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -10,24 +9,35 @@
 # A copy of this license is included in the COPYING file of this distribution.
 # Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
 # -----------------------------------------------------------------------------
-if [ ! -e "bin/check_all.sh" ]
+if [ "$0" != 'bin/check_all.sh' ]
 then
 	echo "bin/check_all.sh: must be executed from its parent directory"
 	exit 1
 fi
+debug_all='no'
+if [ "$1" != '' ]
+then
+	debug_all='yes'
+	if [ "$1" != 'debug_all' ]
+	then
+		echo 'usage: bin/check_all.sh [debug_all]'
+		exit 1
+	fi
+fi
 echo_log_eval() {
 	echo $*
 	echo $* >> $top_srcdir/check_all.log
-	if ! eval $* >> $top_srcdir/check_all.log 2> $top_srcdir/check_all.err
+	echo $* >  $top_srcdir/check_all.err
+	if ! eval $* >> $top_srcdir/check_all.log 2>> $top_srcdir/check_all.err
 	then
 		cat $top_srcdir/check_all.err
 		echo 'Error: see check_all.log'
 		exit 1
 	fi
-	msg=`cat $top_srcdir/check_all.err`
-	if [ "$msg" != '' ]
+	count=`wc -l $top_srcdir/check_all.err | sed -e 's|\([0-9]*\) .*|\1|'`
+	if [ "$count" != '1' ]
 	then
-		echo "$msg"
+		cat "$top_srcdir/check_all.err"
 		echo 'Warning: see check_all.err'
 		exit 1
 	fi
@@ -88,11 +98,14 @@ echo_log_eval rm -rf cppad-$version
 echo_log_eval tar -xzf $tarball
 echo_log_eval cd cppad-$version
 # -----------------------------------------------------------------------------
-if [ "$random_zero_one" == '0' ]
+if [ "$debug_all" == 'yes' ]
 then
-	echo_log_eval bin/run_cmake.sh --boost_vector
+	echo_log_eval bin/run_cmake.sh --cppad_vector --debug_all
+elif [ "$random_zero_one" == '0' ]
+then
+	echo_log_eval bin/run_cmake.sh --boost_vector --debug_odd
 else
-	echo_log_eval bin/run_cmake.sh --deprecated
+	echo_log_eval bin/run_cmake.sh --eigen_vector --debug_even
 fi
 echo_log_eval cd build
 # -----------------------------------------------------------------------------
@@ -121,7 +134,8 @@ echo_eval speed/adolc/speed_adolc sparse_hessian  432 onetape colpack
 program_list=''
 for threading in bthread openmp pthread
 do
-	program="multi_thread/${threading}/multi_thread_${threading}"
+	program="example/multi_thread/${threading}"
+	program="$program/example_multi_thread_${threading}"
 	if [ ! -e $program ]
 	then
 		skip="$skip $program"
@@ -140,27 +154,25 @@ then
 	next_program
 	echo_log_eval ./$program harmonic 1 4 1
 	#
-	# test_time=2,max_thread=4,num_zero=20,num_sub=30,num_sum=500,use_ad=true
+	# test_time=1,max_thread=4,num_solve=100
 	next_program
-	echo_log_eval ./$program multi_newton 2 4 20 30 500 true
+	echo_log_eval ./$program multi_atomic 1 4 100
 	#
-	# case that failed in the past
+	# test_time=2,max_thread=4,num_zero=20,num_sub=30,num_sum=50,use_ad=true
 	next_program
-	echo_log_eval ./$program multi_newton 1 1 100 700 1 true
+	echo_log_eval ./$program multi_newton 2 4 20 30 50 true
 	#
-	# case that failed in the past
-	next_program
-	echo_log_eval ./$program multi_newton 1 2 3 12 1 true
 fi
 #
 # print_for test
-if [ ! -e 'print_for/print_for' ]
+program='example/print_for/example_print_for'
+if [ ! -e "$program" ]
 then
-	skip="$skip print_for/print_for"
+	skip="$skip $program"
 else
-	echo_log_eval print_for/print_for
-	print_for/print_for | sed -e '/^Test passes/,$d' > junk.1.$$
-	print_for/print_for | sed -e '1,/^Test passes/d' > junk.2.$$
+	echo_log_eval $program
+	$program | sed -e '/^Test passes/,$d' > junk.1.$$
+	$program | sed -e '1,/^Test passes/d' > junk.2.$$
 	if diff junk.1.$$ junk.2.$$
 	then
 		rm junk.1.$$ junk.2.$$
@@ -179,5 +191,6 @@ then
 	exit 1
 fi
 # ----------------------------------------------------------------------------
+echo "$0: OK" >> $top_srcdir/check_all.log
 echo "$0: OK"
 exit 0

@@ -1,0 +1,1193 @@
+<?xml version='1.0'?>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:math='http://www.w3.org/1998/Math/MathML'
+>
+<head>
+<title>Changes and Additions to CppAD During 2017</title>
+<meta http-equiv='Content-Type' content='text/html' charset='utf-8'/>
+<meta name="description" id="description" content="Changes and Additions to CppAD During 2017"/>
+<meta name="keywords" id="keywords" content=" changes additions to cppad during 2017 api 12-14 12-08 12-06 12-05 12-04 12-01 11-30 11-23 11-20 11-19 11-15 11-13 11-12 11-08 11-06 11-04 10-23 09-16 08-30 08-29 08-09 08-08 07-25 07-03 07-01 06-28 06-11 06-10 06-07 06-04 06-03 06-01 05-29 05-19 05-14 05-12 04-08 04-02 03-31 03-29 03-25 03-20 03-13 03-11 03-10 03-06 03-04 02-26 02-21 02-19 02-15 02-13 02-11 02-10 02-09 02-08 02-05 02-03 02-02 02-01 01-30 01-29 01-27 01-19 01-18 01-17 "/>
+<style type='text/css'>
+body { color : black }
+body { background-color : white }
+A:link { color : blue }
+A:visited { color : purple }
+A:active { color : purple }
+</style>
+<script type='text/javascript' language='JavaScript' src='_whats_new_17_xml.js'>
+</script>
+</head>
+<body>
+<table><tr>
+<td>
+<a href="http://www.coin-or.org/CppAD/" target="_top"><img border="0" src="_image.gif"/></a>
+</td>
+<td><a href="whats_new.xml" target="_top">Prev</a>
+</td><td><a href="whats_new_16.xml" target="_top">Next</a>
+</td><td>
+<select onchange='choose_across0(this)'>
+<option>Index-&gt;</option>
+<option>contents</option>
+<option>reference</option>
+<option>index</option>
+<option>search</option>
+<option>external</option>
+</select>
+</td>
+<td>
+<select onchange='choose_up0(this)'>
+<option>Up-&gt;</option>
+<option>CppAD</option>
+<option>Appendix</option>
+<option>whats_new</option>
+<option>whats_new_17</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down3(this)'>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>utility</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down2(this)'>
+<option>Appendix-&gt;</option>
+<option>Faq</option>
+<option>directory</option>
+<option>Theory</option>
+<option>glossary</option>
+<option>Bib</option>
+<option>wish_list</option>
+<option>whats_new</option>
+<option>deprecated</option>
+<option>compare_c</option>
+<option>numeric_ad</option>
+<option>addon</option>
+<option>License</option>
+</select>
+</td>
+<td>
+<select onchange='choose_down1(this)'>
+<option>whats_new-&gt;</option>
+<option>whats_new_17</option>
+<option>whats_new_16</option>
+<option>whats_new_15</option>
+<option>whats_new_14</option>
+<option>whats_new_13</option>
+<option>whats_new_12</option>
+<option>whats_new_11</option>
+<option>whats_new_10</option>
+<option>whats_new_09</option>
+<option>whats_new_08</option>
+<option>whats_new_07</option>
+<option>whats_new_06</option>
+<option>whats_new_05</option>
+<option>whats_new_04</option>
+<option>whats_new_03</option>
+</select>
+</td>
+<td>whats_new_17</td>
+<td>
+<select onchange='choose_current0(this)'>
+<option>Headings-&gt;</option>
+<option>API Changes</option>
+<option>12-14</option>
+<option>12-08</option>
+<option>12-06</option>
+<option>12-05</option>
+<option>12-04</option>
+<option>12-01</option>
+<option>11-30</option>
+<option>11-23</option>
+<option>11-20</option>
+<option>11-19</option>
+<option>11-15</option>
+<option>11-13</option>
+<option>11-12</option>
+<option>11-08</option>
+<option>11-06</option>
+<option>11-04</option>
+<option>10-23</option>
+<option>09-16</option>
+<option>08-30</option>
+<option>08-29</option>
+<option>08-09</option>
+<option>08-08</option>
+<option>07-25</option>
+<option>07-03</option>
+<option>07-01</option>
+<option>06-28</option>
+<option>06-11</option>
+<option>06-10</option>
+<option>06-07</option>
+<option>06-04</option>
+<option>06-03</option>
+<option>06-01</option>
+<option>05-29</option>
+<option>05-19</option>
+<option>05-14</option>
+<option>05-12</option>
+<option>04-08</option>
+<option>04-02</option>
+<option>03-31</option>
+<option>03-29</option>
+<option>03-25</option>
+<option>03-20</option>
+<option>03-13</option>
+<option>03-11</option>
+<option>03-10</option>
+<option>03-06</option>
+<option>03-04</option>
+<option>02-26</option>
+<option>02-21</option>
+<option>02-19</option>
+<option>02-15</option>
+<option>02-13</option>
+<option>02-11</option>
+<option>02-10</option>
+<option>02-09</option>
+<option>02-08</option>
+<option>02-05</option>
+<option>02-03</option>
+<option>02-02</option>
+<option>02-01</option>
+<option>01-30</option>
+<option>01-29</option>
+<option>01-27</option>
+<option>01-19</option>
+<option>01-18</option>
+<option>01-17</option>
+</select>
+</td>
+</tr></table><br/>
+
+
+
+<center><b><big><big>Changes and Additions to CppAD During 2017</big></big></b></center>
+<br/>
+<b><big><a name="API Changes" id="API Changes">API Changes</a></big></b>
+<br/>
+Speed tests no longer automatically compile in release mode; see
+<a href="speed.xml#debug_which" target="_top"><span style='white-space: nowrap'>debug_which</span></a>
+
+
+<br/>
+<br/>
+<b><big><a name="12-14" id="12-14">12-14</a></big></b>
+<br/>
+Add the <a href="subgraph_hes2jac.cpp.xml" target="_top"><span style='white-space: nowrap'>subgraph_hes2jac.cpp</span></a>
+ example
+which computes sparse Hessians using subgraphs and Jacobians.
+
+<br/>
+<br/>
+<b><big><a name="12-08" id="12-08">12-08</a></big></b>
+
+<ol type="1"><li>
+A wish list item for a
+<a href="wish_list.xml#Atomic.New API" target="_top"><span style='white-space: nowrap'>new&#xA0;API</span></a>
+ for
+user defined <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic</span></a>
+ functions.
+</li><li>
+
+A <a href="wish_list.xml#Multi-Threading" target="_top"><span style='white-space: nowrap'>multi-threading</span></a>
+
+wish list item was added.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="12-06" id="12-06">12-06</a></big></b>
+<br/>
+A <a href="wish_list.xml" target="_top"><span style='white-space: nowrap'>wish_list</span></a>
+ item to enable one to iterate through a
+<code><font color="blue">const</font></code> <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ operation sequence was completed.
+In addition, the <a href="abs_normal_fun.xml#f" target="_top"><span style='white-space: nowrap'>f</span></a>
+ argument to the
+<code><font color="blue">abs_normal</font></code> operation was converted to be <code><font color="blue">const</font></code>.
+
+
+<br/>
+<br/>
+<b><big><a name="12-05" id="12-05">12-05</a></big></b>
+<br/>
+The internal data object used to represent sparsity patterns as
+vectors of integers was improved;
+see <a href="for_jac_sparsity.xml#internal_bool" target="_top"><span style='white-space: nowrap'>internal_bool</span></a>
+
+in <code><font color="blue">for_jac_sparsity</font></code> and other
+<a href="sparsity_pattern.xml#Preferred Sparsity Patterns" target="_top"><span style='white-space: nowrap'>preferred&#xA0;sparsity&#xA0;pattern</span></a>
+
+routines.
+
+<br/>
+<br/>
+<b><big><a name="12-04" id="12-04">12-04</a></big></b>
+<br/>
+Back out the <code><font color="blue">hold_reverse_memory</font></code> option.
+
+<br/>
+<br/>
+<b><big><a name="12-01" id="12-01">12-01</a></big></b>
+<br/>
+The <code><font color="blue">hold_reverse_memory</font></code> option was added.
+
+<br/>
+<br/>
+<b><big><a name="11-30" id="11-30">11-30</a></big></b>
+<br/>
+Edit the <a href="download.xml" target="_top"><span style='white-space: nowrap'>download</span></a>
+ instructions.
+
+<br/>
+<br/>
+<b><big><a name="11-23" id="11-23">11-23</a></big></b>
+<br/>
+The <code><font color="blue">ADFun</font></code> function <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimizer</span></a>
+
+was not handling hash code collisions properly.
+To be specific, only the arguments
+that were variables where checked for a complete match.
+The arguments that are constants need to also be checked.
+This has been fixed.
+
+<br/>
+<br/>
+<b><big><a name="11-20" id="11-20">11-20</a></big></b>
+
+<ol type="1"><li>
+Add the <a href="subgraph_jac_rev.xml" target="_top"><span style='white-space: nowrap'>subgraph_jac_rev</span></a>
+ method for computing
+sparse Jacobians.
+</li><li>
+
+Add the <a href="speed_main.xml#Global Options.subgraph" target="_top"><span style='white-space: nowrap'>subgraph</span></a>
+ option
+to the CppAD speed tests.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="11-19" id="11-19">11-19</a></big></b>
+<br/>
+Add the <a href="subgraph_reverse.xml" target="_top"><span style='white-space: nowrap'>subgraph_reverse</span></a>
+ method for computing
+sparse derivatives.
+This was inspired by the
+<a href="https://cran.r-project.org/web/packages/TMB/index.html" target="_top"><span style='white-space: nowrap'>TMB</span></a>
+ package.
+
+
+<br/>
+<br/>
+<b><big><a name="11-15" id="11-15">11-15</a></big></b>
+
+<ol type="1"><li>
+Add wish list item for <a href="subgraph_sparsity.xml" target="_top"><span style='white-space: nowrap'>subgraph_sparsity</span></a>
+ when
+<a href="wish_list.xml#Atomic.Subgraph" target="_top"><span style='white-space: nowrap'>atomic&#xA0;functions</span></a>
+
+are present.
+</li><li>
+
+Fix <a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>cmake_check</span></a>
+ when <a href="ipopt_prefix.xml" target="_top"><span style='white-space: nowrap'>ipopt_prefix</span></a>
+ is not present on the
+<a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command line
+(make was trying to build some of the ipopt tests).
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="11-13" id="11-13">11-13</a></big></b>
+
+<ol type="1"><li>
+Add the <a href="speed_main.xml#Global Options.hes2jac" target="_top"><span style='white-space: nowrap'>hes2jac</span></a>
+ option
+to the CppAD speed tests.
+</li><li>
+
+Implement the
+<a href="speed_main.xml#Sparsity Options.subsparsity" target="_top"><span style='white-space: nowrap'>subsparsity</span></a>
+ option
+for the CppAD <a href="link_sparse_hessian.xml" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
+ test.
+</li><li>
+
+Fix detection of invalid options in the speed test programs; see the
+<a href="speed_main.xml#Global Options" target="_top"><span style='white-space: nowrap'>global</span></a>
+ and
+<a href="speed_main.xml#Sparsity Options" target="_top"><span style='white-space: nowrap'>sparsity</span></a>
+ options.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="11-12" id="11-12">11-12</a></big></b>
+<br/>
+Add the <a href="speed_main.xml#Sparsity Options.subsparsity" target="_top"><span style='white-space: nowrap'>subsparsity</span></a>
+ option
+to the CppAD speed tests.
+
+<br/>
+<br/>
+<b><big><a name="11-08" id="11-08">11-08</a></big></b>
+<br/>
+Add the <a href="subgraph_sparsity.xml" target="_top"><span style='white-space: nowrap'>subgraph_sparsity</span></a>
+ method for computing
+dependency and sparsity.
+This was inspired by the
+<a href="https://cran.r-project.org/web/packages/TMB/index.html" target="_top"><span style='white-space: nowrap'>TMB</span></a>
+ package.
+
+
+<br/>
+<br/>
+<b><big><a name="11-06" id="11-06">11-06</a></big></b>
+<br/>
+More information has been added to the operation sequence.
+To be specific, the extra amount of
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_op()&#xA0;*&#xA0;sizeof(</span></font><i><font color="black"><span style='white-space: nowrap'>tape_addr_type)<br/>
+</span></font></i></code>
+was added to the value returned by
+<a href="seq_property.xml#size_op_seq" target="_top"><span style='white-space: nowrap'>size_op_seq</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="11-04" id="11-04">11-04</a></big></b>
+<br/>
+The method for iterating through the tape has been changed.
+It now includes an extra data structure that makes it faster,
+but also requires slightly more memory. To be specific, the term
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.size_op()&#xA0;*&#xA0;sizeof(</span></font><i><font color="black"><span style='white-space: nowrap'>tape_addr_type)&#xA0;*&#xA0;2<br/>
+</span></font></i></code>
+was added to the value returned by
+<a href="seq_property.xml#size_op_seq" target="_top"><span style='white-space: nowrap'>size_op_seq</span></a>
+.
+In addition, some minor corrections were made to the
+<a href="cmake.xml#cppad_tape_addr_type" target="_top"><span style='white-space: nowrap'>tape_addr_type</span></a>
+
+requirements.
+
+<br/>
+<br/>
+<b><big><a name="10-23" id="10-23">10-23</a></big></b>
+
+<ol type="1"><li>
+Require <code><font color="blue">cmake.3.1</font></code> or greater and fix
+a cmake warning by always using the new <code><font color="blue">CMP0054</font></code> policy.
+</li><li>
+
+Fix a <code><font color="blue">g++ 7.2.1</font></code> warning about a possibly uninitialized value
+in the file <code><font color="blue">cppad/local/optimize/hash_code.hpp</font></code>.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="09-16" id="09-16">09-16</a></big></b>
+<br/>
+An <a href="wish_list.xml#Optimization.Memory" target="_top"><span style='white-space: nowrap'>optimization&#xA0;memory</span></a>
+ entry
+was added to the wish list
+and the <a href="wish_list.xml#check_finite" target="_top"><span style='white-space: nowrap'>check_finite</span></a>
+ entry was modified.
+
+<br/>
+<br/>
+<b><big><a name="08-30" id="08-30">08-30</a></big></b>
+
+<ol type="1"><li>
+If <a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack_prefix</span></a>
+ was not specified, one would get the following
+waring during the <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Policy&#xA0;CMP0046&#xA0;is&#xA0;not&#xA0;set:&#xA0;Error&#xA0;on&#xA0;non-existent&#xA0;dependency&#xA0;in<br/>
+</span></font></code>
+This has been fixed by not adding the dependency when it is not needed.
+</li><li>
+
+There was a problem running <a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>make&#xA0;check</span></a>
+
+when <a href="cmake.xml#cppad_cxx_flags" target="_top"><span style='white-space: nowrap'>cppad_cxx_flags</span></a>
+ was not specified.
+This has been fixed.
+This was probably introduced on <a href="whats_new_17.xml#05-29" target="_top"><span style='white-space: nowrap'>05-29</span></a>
+.
+</li></ol>
+
+
+
+<br/>
+<br/>
+<b><big><a name="08-29" id="08-29">08-29</a></big></b>
+<br/>
+There was a problem on some systems that created an error when
+specializing the <code><font color="blue">is_pod</font></code> template function in the
+<code><font color="blue">CppAD::local</font></code> namespace.
+This has been fixed by testing for compatibility at during the
+<a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command and creating the file <code><font color="blue">cppad/local/is_pod.hpp</font></code>.
+
+
+<br/>
+<br/>
+<b><big><a name="08-09" id="08-09">08-09</a></big></b>
+<br/>
+Add the <a href="wish_list.xml#test_boolofvoid" target="_top"><span style='white-space: nowrap'>test_boolofvoid</span></a>
+
+wish list item.
+
+<br/>
+<br/>
+<b><big><a name="08-08" id="08-08">08-08</a></big></b>
+
+<ol type="1"><li>
+The <a href="eigen_plugin.hpp.xml" target="_top"><span style='white-space: nowrap'>eigen_plugin.hpp</span></a>
+ was put back in the
+<a href="cppad_eigen.hpp.xml" target="_top"><span style='white-space: nowrap'>cppad_eigen.hpp</span></a>
+ definitions.
+This makes CppAD incompatible with older versions of eigen; e.g., eigen-3.2.9.
+The plugin was removed on <a href="whats_new_17.xml#05-12" target="_top"><span style='white-space: nowrap'>05-12</span></a>
+.
+</li><li>
+
+Fix some minor typos in the documentation.
+To be specific:
+The font, in the <a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ and <a href="sparse_rcv.xml" target="_top"><span style='white-space: nowrap'>sparse_rcv</span></a>
+ syntax,
+for the text
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>target</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;=&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>pattern</span></font></i><font color="blue"><span style='white-space: nowrap'><br/>
+</span></font></code>
+The font, in <a href="capacity_order.xml" target="_top"><span style='white-space: nowrap'>capacity_order</span></a>
+, for the text
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Domain()<br/>
+</span></font></code>
+Remove a percent sign <code><font color="blue">%</font></code>, in <a href="cppad_vector.xml" target="_top"><span style='white-space: nowrap'>CppAD_vector</span></a>
+, in the text
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;#&#xA0;include&#xA0;&lt;cppad/utility/vector.hpp&gt;<br/>
+</span></font></code>
+</li></ol>
+<br/>
+<b><big><a name="07-25" id="07-25">07-25</a></big></b>
+
+<ol type="1"><li>
+Fix warnings related to type conversions that
+occurred when one used <code><font color="blue">-Wconversion</font></code> with
+<code><font color="blue">g++</font></code> version 6.3.1.
+</li><li>
+
+The warning were not fixed for complex AD types; e.g.,
+<a href="complex_poly.cpp.xml" target="_top"><span style='white-space: nowrap'>complex_poly.cpp</span></a>
+.
+The <a href="wno_conversion.xml" target="_top"><span style='white-space: nowrap'>wno_conversion</span></a>
+ include file was added to deal with
+cases like this.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="07-03" id="07-03">07-03</a></big></b>
+
+<ol type="1"><li>
+The <a href="min_nso_linear.xml" target="_top"><span style='white-space: nowrap'>min_nso_linear</span></a>
+ abs-normal example was added.
+</li><li>
+
+Fix bug in <a href="abs_normal_fun.xml" target="_top"><span style='white-space: nowrap'>abs_normal_fun</span></a>
+, to be specific, the multiplication
+of a variable on the left by a parameter was not handled.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="07-01" id="07-01">07-01</a></big></b>
+<br/>
+the <a href="abs_normal.xml" target="_top"><span style='white-space: nowrap'>abs_normal</span></a>
+ examples were converted from using
+quadratic programming problems to using linear programming problems.
+
+<br/>
+<br/>
+<b><big><a name="06-28" id="06-28">06-28</a></big></b>
+<br/>
+The <a href="abs_normal_fun.xml" target="_top"><span style='white-space: nowrap'>abs-normal</span></a>
+
+representation of non-smooth functions has been added.
+Examples and utilities that use this representation have also been included,
+see <a href="abs_normal.xml" target="_top"><span style='white-space: nowrap'>abs_normal</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="06-11" id="06-11">06-11</a></big></b>
+<br/>
+The user atomic functions base class <a href="atomic_base.xml" target="_top"><span style='white-space: nowrap'>atomic_base</span></a>
+
+makes more of an effort to avoid false sharing cache misses.
+This may the speed of multi-threaded applications with user atomic functions;
+e.g., see <a href="multi_atomic.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_atomic.cpp</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="06-10" id="06-10">06-10</a></big></b>
+
+<ol type="1"><li>
+Add the multi-threading user atomic function example
+<a href="multi_atomic.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_atomic.cpp</span></a>
+.
+</li><li>
+
+The <code><font color="blue">example/multi_thread/test_multi</font></code> directory used
+to have an example using the deprecated
+<a href="old_atomic.xml" target="_top"><span style='white-space: nowrap'>old_atomic</span></a>
+ functions in a multi-threading setting
+(that only built with the deprecated <a href="autotools.xml" target="_top"><span style='white-space: nowrap'>autotools</span></a>
+).
+This have been removed.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="06-07" id="06-07">06-07</a></big></b>
+<br/>
+The multi-threading examples
+<a href="harmonic.cpp.xml" target="_top"><span style='white-space: nowrap'>harmonic.cpp</span></a>
+ and <a href="multi_newton.cpp.xml" target="_top"><span style='white-space: nowrap'>multi_newton.cpp</span></a>
+ were re-organized.
+To be specific, the source code for each example was moved to one file.
+In addition, for each example,
+the documentation for each of the routines has been separated
+and placed next to its source code.
+
+<br/>
+<br/>
+<b><big><a name="06-04" id="06-04">06-04</a></big></b>
+<br/>
+Most all the <a href="deprecated.xml" target="_top"><span style='white-space: nowrap'>deprecated</span></a>
+ features have been removed
+from the examples with the exception of those in the
+<code><font color="blue">example/deprecated</font></code> directory.
+
+<br/>
+<br/>
+<b><big><a name="06-03" id="06-03">06-03</a></big></b>
+<br/>
+Add the fact that the pair
+(
+<code><i><font color="black"><span style='white-space: nowrap'>row</span></font></i></code>
+, <a href="link_sparse_hessian.xml#col" target="_top"><span style='white-space: nowrap'>col</span></a>
+)
+is lower triangular to the speed test
+<code><font color="blue">link_sparse_hessian</font></code> routine.
+
+
+<br/>
+<br/>
+<b><big><a name="06-01" id="06-01">06-01</a></big></b>
+
+<ol type="1"><li>
+There was a bug in the
+<a href="sparse_hes.xml" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+ routine and it was using the general coloring algorithm when
+<a href="sparse_hes.xml#coloring.cppad.symmetric" target="_top"><span style='white-space: nowrap'>cppad.symmetric</span></a>
+ was specified.
+This has been fixed and improves the efficiency in this case.
+</li><li>
+
+Some bugs were fixed in the use of
+<a href="colpack_prefix.xml" target="_top"><span style='white-space: nowrap'>colpack</span></a>
+ as the coloring algorithm for
+sparse Jacobian and Hessian calculations.
+This has improved the efficiency of Colpack colorings for computing Hessians
+(when <code><font color="blue">colpack.symmetric</font></code> is used).
+</li><li>
+
+The <code><font color="blue">colpack.star</font></code> coloring method for sparse Hessians has
+been deprecated; see
+<a href="sparse_hes.xml#coloring.colpack.star Deprecated 2017-06-01" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+
+and
+<a href="sparse_hessian.xml#work.colpack.star Deprecated 2017-06-01" target="_top"><span style='white-space: nowrap'>sparse_hessian</span></a>
+.
+Use the <code><font color="blue">colpack.symmetric</font></code> method instead; see
+<a href="sparse_hes.xml#coloring.colpack.symmetric" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+ and
+<a href="sparse_hes.xml#coloring.colpack.general" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="05-29" id="05-29">05-29</a></big></b>
+
+<ol type="1"><li>
+Add the capability to compile so that CppAD debug and release mode
+can be mixed; see
+<a href="preprocessor.xml#Documented Here.CPPAD_DEBUG_AND_RELEASE" target="_top"><span style='white-space: nowrap'>CPPAD_DEBUG_AND_RELEASE</span></a>
+.
+</li><li>
+
+Add the <a href="cmake.xml#cppad_debug_which" target="_top"><span style='white-space: nowrap'>cppad_debug_which</span></a>
+ flags
+that determines which files are compiled for debugging versus release
+during the CppAD testing; see <a href="cmake_check.xml" target="_top"><span style='white-space: nowrap'>cmake_check</span></a>
+.
+</li><li>
+
+There was a problem linking the proper libraries for using newer versions of
+<a href="sacado_prefix.xml" target="_top"><span style='white-space: nowrap'>sacado</span></a>
+.
+This has been fixed.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="05-19" id="05-19">05-19</a></big></b>
+<br/>
+Most all the examples have been moved to <code><font color="blue">example</font></code> directory
+and grouped as sub-directories; e.g., the <a href="ipopt_solve.xml" target="_top"><span style='white-space: nowrap'>ipopt_solve</span></a>
+ examples
+are in the <code><font color="blue">example/ipopt_solve</font></code> directory.
+
+<br/>
+<br/>
+<b><big><a name="05-14" id="05-14">05-14</a></big></b>
+
+<ol type="1"><li>
+The file <code><font color="blue">build.sh</font></code> was moved to <code><font color="blue">bin/autotools.sh</font></code>,
+and `auto tools' has been changed to <a href="autotools.xml" target="_top"><span style='white-space: nowrap'>autotools</span></a>
+.
+</li><li>
+
+The README file was replace by readme.md
+and AUTHORS was moved to authors.
+</li><li>
+
+The NEWS, INSALL, and ChangeLog files
+are no longer necessary for autotools build and have been removed.
+</li><li>
+
+The file test_more/sparse_jacobian.cpp generated a warning
+under some gcc compiler options.
+This has been fixed.
+</li><li>
+
+Specifications were added so that <a href="to_string.xml" target="_top"><span style='white-space: nowrap'>to_string</span></a>
+ yields exact results
+for integer types and machine precision for floating point types.
+</li><li>
+
+Some editing was done to the <a href="autotools.xml" target="_top"><span style='white-space: nowrap'>autotools</span></a>
+ instructions.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="05-12" id="05-12">05-12</a></big></b>
+
+<ol type="1"><li>
+The <a href="faq.xml" target="_top"><span style='white-space: nowrap'>Faq</span></a>
+ has been updated.
+</li><li>
+
+Remove includes of <code><font color="blue">cppad/cppad.hpp</font></code> from the
+
+<code><font color="blue"><span style='white-space: nowrap'>cppad/speed/</span></font><i><font color="black"><span style='white-space: nowrap'>*</span></font></i><font color="blue"><span style='white-space: nowrap'>.hpp</span></font></code>
+ files.
+This avoids an incompatibility between sacado and newer versions of eigen,
+when eigen is used for the
+<a href="testvector.xml#Eigen Vectors" target="_top"><span style='white-space: nowrap'>test&#xA0;vector</span></a>
+.
+</li><li>
+
+The <a href="eigen_prefix.xml" target="_top"><span style='white-space: nowrap'>eigen</span></a>
+ package changed its requirements for
+defining Scalar types
+(some where between eigen-3.2.9 and eigen-3.3.3).
+The member variable
+<a href="numeric_limits.xml#digits10" target="_top"><span style='white-space: nowrap'>digit10</span></a>
+ was added to the
+<code><font color="blue">numeric_limits</font></code> to accommodate this change.
+</li><li>
+
+Note that this fix required adding <code><font color="blue">digits10</font></code> to the
+user defined 
+<code><i><font color="black"><span style='white-space: nowrap'>Base</span></font></i></code>
+ type
+<a href="base_require.xml" target="_top"><span style='white-space: nowrap'>requirements</span></a>
+; see
+<a href="base_limits.xml" target="_top"><span style='white-space: nowrap'>base_limits</span></a>
+.
+</li><li>
+
+In addition, it is no longer necessary to add the typedef
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;typedef&#xA0;Scalar&#xA0;value_type;<br/>
+</span></font></code>
+so the file <code><font color="blue">cppad/example/eigen_plugin.hpp</font></code> has been removed.
+(This type definition was previously necessary for eigen vectors
+to be <a href="simplevector.xml" target="_top"><span style='white-space: nowrap'>simple&#xA0;vectors</span></a>
+.)
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="04-08" id="04-08">04-08</a></big></b>
+<br/>
+The <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimization</span></a>
+, with a large number of
+<a href="condexp.xml" target="_top"><span style='white-space: nowrap'>conditional&#xA0;expressions</span></a>
+, was performing many
+memory allocations and deallocations. This has been reduced.
+
+
+<br/>
+<br/>
+<b><big><a name="04-02" id="04-02">04-02</a></big></b>
+<br/>
+Fix a bug in the optimization of conditional expressions; see,
+<a href="optimize.xml#options.no_conditional_skip" target="_top"><span style='white-space: nowrap'>no_conditional_skip</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="03-31" id="03-31">03-31</a></big></b>
+<br/>
+Fix some <code><font color="blue">valgrind</font></code> errors that occurred while running the CppAD
+test set.
+
+<br/>
+<br/>
+<b><big><a name="03-29" id="03-29">03-29</a></big></b>
+<br/>
+The following valgrind error might occur when the optimize skipped
+setting values that did not affect the dependent variables:
+
+<code><font color="blue"><span style='white-space: nowrap'><br/>
+&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;Conditional&#xA0;jump&#xA0;or&#xA0;move&#xA0;depends&#xA0;on&#xA0;uninitialised&#xA0;value(s)<br/>
+</span></font></code>
+This was not a bug, the code has been changed to avoid this error
+in order to make it easier to use valgrind with CppAD.
+
+<br/>
+<br/>
+<b><big><a name="03-25" id="03-25">03-25</a></big></b>
+
+<ol type="1"><li>
+The <a href="sparse_hes.xml" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+ function was more efficient if
+there were more entries in each row of the requested
+<a href="sparse_hes.xml#subset" target="_top"><span style='white-space: nowrap'>subset</span></a>
+. This has been changed
+to more entries in each column, and documentation to this effect
+was included.
+</li><li>
+
+The <a href="optimize.xml" target="_top"><span style='white-space: nowrap'>optimize</span></a>
+ routine was using to much memory when
+it was optimizing conditional skip operations; see
+<a href="optimize.xml#options.no_conditional_skip" target="_top"><span style='white-space: nowrap'>no_conditional_skip</span></a>
+.
+This has been fixed.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="03-20" id="03-20">03-20</a></big></b>
+<br/>
+There was a mistake in <a href="sparse_jac.xml" target="_top"><span style='white-space: nowrap'>sparse_jac</span></a>
+ that caused the
+following assert to mistakenly occur:
+<code><font color='blue'><pre style='display:inline'> 
+sparse_jac_rev: work is non-empty and conditions have changed
+Error detected by false result for
+    color.size() == 0 || color.size() == n
+</pre></font></code>
+A test that using a previously stores work vector
+has been added to <a href="sparse_jac_rev.cpp.xml" target="_top"><span style='white-space: nowrap'>sparse_jac_rev.cpp</span></a>
+
+and this bug has been fixed.
+
+<br/>
+<br/>
+<b><big><a name="03-13" id="03-13">03-13</a></big></b>
+<br/>
+The documentation for the Hessian in <a href="rev_hes_sparsity.xml" target="_top"><span style='white-space: nowrap'>rev_hes_sparsity</span></a>
+ was
+transposed; i.e., the sense of
+<a href="rev_hes_sparsity.xml#transpose" target="_top"><span style='white-space: nowrap'>transpose</span></a>
+ was reversed.
+
+<br/>
+<br/>
+<b><big><a name="03-11" id="03-11">03-11</a></big></b>
+<br/>
+Add sparse assignment statements; see 
+<code><i><font color="black"><span style='white-space: nowrap'>target</span></font></i></code>
+ for
+<a href="sparse_rc.xml#target" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ and
+<a href="sparse_rcv.xml#target" target="_top"><span style='white-space: nowrap'>sparse_rcv</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="03-10" id="03-10">03-10</a></big></b>
+<br/>
+Add the a sizing constructor to the
+<a href="sparse_rc.xml#Syntax" target="_top"><span style='white-space: nowrap'>sparse_rc&#xA0;syntax</span></a>
+; i.e.,
+a constructor that sets the number of row, number of columns,
+and number of possibly non-zero values in the sparsity pattern.
+
+<br/>
+<br/>
+<b><big><a name="03-06" id="03-06">03-06</a></big></b>
+<br/>
+Fix a bug in the sparsity computation using the
+internal representation for
+<a href="glossary.xml#Sparsity Pattern.Vector of Sets" target="_top"><span style='white-space: nowrap'>vectors&#xA0;of&#xA0;sets</span></a>
+;
+i.e., when 
+<code><i><font color="black"><span style='white-space: nowrap'>internal_bool</span></font></i></code>
+ was false in
+any of the <a href="sparsity_pattern.xml" target="_top"><span style='white-space: nowrap'>sparsity_pattern</span></a>
+ calculations; e.g.,
+<a href="for_jac_sparsity.xml#internal_bool" target="_top"><span style='white-space: nowrap'>for_jac_sparsity</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="03-04" id="03-04">03-04</a></big></b>
+<br/>
+Fix a bug in the optimization of conditional expressions;
+see <a href="optimize.xml#options.no_conditional_skip" target="_top"><span style='white-space: nowrap'>no_conditional_skip</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="02-26" id="02-26">02-26</a></big></b>
+
+<ol type="1"><li>
+Fix warning during <a href="cmake.xml" target="_top"><span style='white-space: nowrap'>cmake</span></a>
+ command,
+on <a href="https://www.cygwin.com/" target="_top"><span style='white-space: nowrap'>cygwin</span></a>
+ systems,
+about <code><font color="blue">WIN32</font></code> not being defined.
+</li><li>
+
+Add <a href="wish_list.xml#Atomic.Element-wise Operations" target="_top"><span style='white-space: nowrap'>element-wise&#xA0;operations</span></a>
+
+to the wish list.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-21" id="02-21">02-21</a></big></b>
+
+<ol type="1"><li>
+Minor improvements to syntax and documentation for
+<a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ and <a href="sparse_rcv.xml" target="_top"><span style='white-space: nowrap'>sparse_rcv</span></a>
+.
+</li><li>
+
+Separate preferred sparsity versions in
+<a href="sparsity_pattern.xml" target="_top"><span style='white-space: nowrap'>sparsity_pattern</span></a>
+ and <a href="sparse_derivative.xml" target="_top"><span style='white-space: nowrap'>sparse_derivative</span></a>
+.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-19" id="02-19">02-19</a></big></b>
+
+<ol type="1"><li>
+Remove the <code><font color="blue">bool_sparsity.cpp</font></code> example and
+add the <a href="rc_sparsity.cpp.xml" target="_top"><span style='white-space: nowrap'>rc_sparsity.cpp</span></a>
+ example.
+</li><li>
+
+Check for duplicate entries during
+<a href="sparse_rc.xml#row_major" target="_top"><span style='white-space: nowrap'>row_major</span></a>
+ and <code><font color="blue">col_major</font></code> in
+<code><font color="blue">sparse_rc</font></code>.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-15" id="02-15">02-15</a></big></b>
+<br/>
+Fix bug when using <a href="forsparsehes.xml" target="_top"><span style='white-space: nowrap'>ForSparseHes</span></a>
+ with atomic functions; i.e.,
+<a href="atomic_for_sparse_hes.xml" target="_top"><span style='white-space: nowrap'>atomic_for_sparse_hes</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="02-13" id="02-13">02-13</a></big></b>
+<br/>
+Improve <a href="atomic_eigen_mat_mul.hpp.xml#Private.for_sparse_jac" target="_top"><span style='white-space: nowrap'>for_sparse_jac</span></a>
+
+calculation in <code><font color="blue">eigen_mat_mul.hpp</font></code> example.
+It now checks for the parameter zero and does not propagate any sparsity
+in this case (because the result is always zero).
+
+<br/>
+<br/>
+<b><big><a name="02-11" id="02-11">02-11</a></big></b>
+
+<ol type="1"><li>
+Remove the 'Under Construction' heading from the
+<a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ and <a href="sparse_rcv.xml" target="_top"><span style='white-space: nowrap'>sparse_rcv</span></a>
+ documentation; i.e.,
+they are ready for public use (part of the CppAD API).
+</li><li>
+
+Fix some warning that occur when using
+<a href="cppad_testvector.xml#eigen" target="_top"><span style='white-space: nowrap'>eigen</span></a>
+ for the CppAD test vector.
+(The Eigen vector <code><font color="blue">size()</font></code> function
+returns an <code><font color="blue">int</font></code> instead of <code><font color="blue">size_t</font></code>.)
+</li><li>
+
+Fix a bug in <a href="sparse_jac.xml" target="_top"><span style='white-space: nowrap'>sparse_jac_rev</span></a>
+.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-10" id="02-10">02-10</a></big></b>
+
+<ol type="1"><li>
+The subset of deprecated features corresponding to
+<a href="cmake.xml#cppad_deprecated" target="_top"><span style='white-space: nowrap'>cppad_deprecated=YES</span></a>
+
+have been completely removed.
+</li><li>
+
+Fix problems with <a href="autotools.xml" target="_top"><span style='white-space: nowrap'>autotools</span></a>
+ build
+(started near 02-01 while working on sparsity branch).
+</li><li>
+
+Reorder (better organize) the <a href="adfun.xml" target="_top"><span style='white-space: nowrap'>ADFun</span></a>
+ documentation section.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-09" id="02-09">02-09</a></big></b>
+
+<ol type="1"><li>
+Remove the sparsity pattern wish list item.
+For sparsity patterns, this was completed by
+<a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ and the sparsity pattern routines that used it;
+e.g., <a href="for_jac_sparsity.xml" target="_top"><span style='white-space: nowrap'>for_jac_sparsity</span></a>
+.
+For sparse matrices, it was completed by
+<a href="sparse_rcv.xml" target="_top"><span style='white-space: nowrap'>sparse_rcv</span></a>
+ and the sparse matrix routines that use it; e.g.,
+<a href="sparse_jac.xml" target="_top"><span style='white-space: nowrap'>sparse_jac</span></a>
+.
+</li><li>
+
+Add the Deprecated and
+<a href="wish_list.xml#Example" target="_top"><span style='white-space: nowrap'>example</span></a>
+ items to the wish list.
+(The Deprecated item was partially completed and partially removed.)
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-08" id="02-08">02-08</a></big></b>
+
+<ol type="1"><li>
+Make coloring a separate argument to
+<a href="sparse_jac.xml#coloring" target="_top"><span style='white-space: nowrap'>sparse_jac</span></a>
+ and
+<a href="sparse_hes.xml#coloring" target="_top"><span style='white-space: nowrap'>sparse_hes</span></a>
+.
+</li><li>
+
+Add the
+<a href="sparse_jac.xml#group_max" target="_top"><span style='white-space: nowrap'>group_max</span></a>
+
+argument to the <code><font color="blue">sparse_jac_for</font></code> function.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-05" id="02-05">02-05</a></big></b>
+
+<ol type="1"><li>
+Add the <a href="sparse_jac.xml" target="_top"><span style='white-space: nowrap'>sparse_jac_for</span></a>
+ routine
+which uses <a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ sparsity patterns
+and <a href="sparse_rcv.xml" target="_top"><span style='white-space: nowrap'>sparse_rcv</span></a>
+ matrix subsets.
+</li><li>
+
+Order for <a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ row-major and column-major was switched.
+This has been fixed.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="02-03" id="02-03">02-03</a></big></b>
+<br/>
+Add the
+<a href="rev_jac_sparsity.xml" target="_top"><span style='white-space: nowrap'>rev_jac_sparsity</span></a>
+
+<a href="rev_hes_sparsity.xml" target="_top"><span style='white-space: nowrap'>rev_hes_sparsity</span></a>
+, and
+<a href="for_hes_sparsity.xml" target="_top"><span style='white-space: nowrap'>for_hes_sparsity</span></a>
+ interfaces to sparsity calculations.
+These use <a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+ sparsity patterns.
+
+<br/>
+<br/>
+<b><big><a name="02-02" id="02-02">02-02</a></big></b>
+<br/>
+Change <a href="for_jac_sparsity.xml#f.size_forward_bool" target="_top"><span style='white-space: nowrap'>size_forward_bool</span></a>
+ and
+Change <a href="for_jac_sparsity.xml#f.size_forward_set" target="_top"><span style='white-space: nowrap'>size_forward_set</span></a>
+
+so that they are a better approximation of the number of bytes
+(unsigned characters) being used.
+The exact same sparsity pattern might use different memory
+in two different function objects (because memory is allocated in chunks).
+The <a href="fun_assign.cpp.xml" target="_top"><span style='white-space: nowrap'>fun_assign.cpp</span></a>
+ example has been changed to reflect this fact.
+
+<br/>
+<br/>
+<b><big><a name="02-01" id="02-01">02-01</a></big></b>
+<br/>
+Add the <a href="for_jac_sparsity.xml" target="_top"><span style='white-space: nowrap'>for_jac_sparsity</span></a>
+ interface for the sparse Jacobian calculations.
+This is the first use of <a href="sparse_rc.xml" target="_top"><span style='white-space: nowrap'>sparse_rc</span></a>
+,
+a sparsity pattern class that uses row and column
+<a href="glossary.xml#Sparsity Pattern.Row and Column Index Vectors" target="_top"><span style='white-space: nowrap'>index&#xA0;vectors</span></a>
+.
+
+<br/>
+<br/>
+<b><big><a name="01-30" id="01-30">01-30</a></big></b>
+<br/>
+Move the <a href="sparsity_pattern.xml" target="_top"><span style='white-space: nowrap'>sparsity_pattern</span></a>
+ examples from <code><font color="blue">example</font></code>
+to <code><font color="blue">example/sparse</font></code> subdirectory.
+This included the sparse <a href="drivers.xml" target="_top"><span style='white-space: nowrap'>driver</span></a>
+ examples.
+
+<br/>
+<br/>
+<b><big><a name="01-29" id="01-29">01-29</a></big></b>
+<br/>
+Move the <a href="utility.xml" target="_top"><span style='white-space: nowrap'>utility</span></a>
+ examples from <code><font color="blue">example</font></code>
+to <code><font color="blue">example/utility</font></code> subdirectory.
+
+<br/>
+<br/>
+<b><big><a name="01-27" id="01-27">01-27</a></big></b>
+<br/>
+Add a <a href="addon.xml" target="_top"><span style='white-space: nowrap'>addon</span></a>
+ link to
+<a href="http://www.seanet.com/~bradbell/cppad_swig" target="_top"><span style='white-space: nowrap'>cppad_swig</span></a>
+,
+a C++ AD object library and swig interface to Perl, Octave, and Python.
+
+<br/>
+<br/>
+<b><big><a name="01-19" id="01-19">01-19</a></big></b>
+<br/>
+Convert more examples / tests to use a multiple of machine epsilon
+instead of <code><font color="blue">1e-10</font></code>.
+
+<br/>
+<br/>
+<b><big><a name="01-18" id="01-18">01-18</a></big></b>
+
+<ol type="1"><li>
+Fix developer
+<a href="https://www.coin-or.org/CppAD/Doc/doxydoc/html/" target="_top"><span style='white-space: nowrap'>doxydoc</span></a>
+
+documentation so that it works with newer version of doxygen.
+</li><li>
+
+Fix a Visual C++ 2015 compilation problem in friend declarations
+in the file <code><font color="blue">cppad/local/ad_tape.hpp</font></code>.
+</li></ol>
+
+
+<br/>
+<br/>
+<b><big><a name="01-17" id="01-17">01-17</a></big></b>
+<br/>
+Change computed assignment to
+<a href="compound_assign.xml" target="_top"><span style='white-space: nowrap'>compound&#xA0;assignment</span></a>
+.
+
+
+<hr/>Input File: omh/appendix/whats_new/whats_new_17.omh
+
+</body>
+</html>

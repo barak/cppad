@@ -67,6 +67,7 @@ A:active { color : purple }
 <option>speed_test</option>
 <option>SpeedTest</option>
 <option>time_test</option>
+<option>test_boolofvoid</option>
 <option>NumericType</option>
 <option>CheckNumericType</option>
 <option>SimpleVector</option>
@@ -87,6 +88,8 @@ A:active { color : purple }
 <option>index_sort</option>
 <option>to_string</option>
 <option>set_union</option>
+<option>sparse_rc</option>
+<option>sparse_rcv</option>
 </select>
 </td>
 <td>
@@ -343,6 +346,7 @@ The example tests OdeGearControl using the relations above:
 <span style="color: #009900">bool</span> <span style="font-weight: bold"><span style="color: #000000">OdeGearControl</span></span><span style="color: #990000">(</span><span style="color: #009900">void</span><span style="color: #990000">)</span>
 <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>     <span style="font-style: italic"><span style="color: #9A1900">// initial return value</span></span>
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
      <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">w</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">);</span>
      w<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">10</span><span style="color: #990000">.;</span>
@@ -369,7 +373,7 @@ The example tests OdeGearControl using the relations above:
      <span style="color: #009900">double</span> tf   <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
      <span style="color: #009900">double</span> smin <span style="color: #990000">=</span> <span style="color: #993399">1e-8</span><span style="color: #990000">;</span>
      <span style="color: #009900">double</span> smax <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
-     <span style="color: #009900">double</span> sini <span style="color: #990000">=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> sini <span style="color: #990000">=</span> eps99<span style="color: #990000">;</span>
      <span style="color: #009900">double</span> erel <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
 
      xf <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">OdeGearControl</span></span><span style="color: #990000">(</span>F<span style="color: #990000">,</span> M<span style="color: #990000">,</span>
@@ -387,7 +391,7 @@ The example tests OdeGearControl using the relations above:
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/ode_gear_control.cpp
+<hr/>Input File: example/utility/ode_gear_control.cpp
 
 </body>
 </html>

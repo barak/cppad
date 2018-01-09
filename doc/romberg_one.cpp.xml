@@ -67,6 +67,7 @@ A:active { color : purple }
 <option>speed_test</option>
 <option>SpeedTest</option>
 <option>time_test</option>
+<option>test_boolofvoid</option>
 <option>NumericType</option>
 <option>CheckNumericType</option>
 <option>SimpleVector</option>
@@ -87,6 +88,8 @@ A:active { color : purple }
 <option>index_sort</option>
 <option>to_string</option>
 <option>set_union</option>
+<option>sparse_rc</option>
+<option>sparse_rcv</option>
 </select>
 </td>
 <td>
@@ -149,10 +152,10 @@ A:active { color : purple }
      <span style="color: #FF0000">{</span>     bpow <span style="color: #990000">*=</span> b<span style="color: #990000">;</span>
           apow <span style="color: #990000">*=</span> a<span style="color: #990000">;</span>
      <span style="color: #FF0000">}</span>
-     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #990000">(</span>bpow <span style="color: #990000">-</span> apow<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="color: #990000">(</span>degree<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
+     <span style="color: #009900">double</span> check <span style="color: #990000">=</span> <span style="color: #990000">(</span>bpow <span style="color: #990000">-</span> apow<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>degree<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// step size corresponding to r</span></span>
-     <span style="color: #009900">double</span> step <span style="color: #990000">=</span> <span style="color: #990000">(</span>b <span style="color: #990000">-</span> a<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.)*(</span>n<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
+     <span style="color: #009900">double</span> step <span style="color: #990000">=</span> <span style="color: #990000">(</span>b <span style="color: #990000">-</span> a<span style="color: #990000">)</span> <span style="color: #990000">/</span> <span style="font-weight: bold"><span style="color: #000000">exp</span></span><span style="color: #990000">(</span><span style="font-weight: bold"><span style="color: #000000">log</span></span><span style="color: #990000">(</span><span style="color: #993399">2</span><span style="color: #990000">.)*</span><span style="color: #009900">double</span><span style="color: #990000">(</span>n<span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">));</span>
      <span style="font-style: italic"><span style="color: #9A1900">// step size corresponding to error estimate</span></span>
      step <span style="color: #990000">*=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
      <span style="font-style: italic"><span style="color: #9A1900">// step size raised to a power</span></span>
@@ -163,7 +166,7 @@ A:active { color : purple }
 
           r <span style="color: #990000">=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">RombergOne</span></span><span style="color: #990000">(</span>F<span style="color: #990000">,</span> a<span style="color: #990000">,</span> b<span style="color: #990000">,</span> n<span style="color: #990000">,</span> p<span style="color: #990000">,</span> e<span style="color: #990000">);</span>
 
-          ok  <span style="color: #990000">&amp;=</span> e <span style="color: #990000">&lt;</span> <span style="color: #990000">(</span>degree<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> spow<span style="color: #990000">;</span>
+          ok  <span style="color: #990000">&amp;=</span> e <span style="color: #990000">&lt;</span> <span style="color: #009900">double</span><span style="color: #990000">(</span>degree<span style="color: #990000">+</span><span style="color: #993399">1</span><span style="color: #990000">)</span> <span style="color: #990000">*</span> spow<span style="color: #990000">;</span>
           ok  <span style="color: #990000">&amp;=</span> CppAD<span style="color: #990000">::</span><span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>check<span style="color: #990000">,</span> r<span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span> e<span style="color: #990000">);</span>
      <span style="color: #FF0000">}</span>
 
@@ -171,7 +174,7 @@ A:active { color : purple }
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/romberg_one.cpp
+<hr/>Input File: example/utility/romberg_one.cpp
 
 </body>
 </html>

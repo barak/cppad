@@ -1,7 +1,6 @@
 #! /bin/bash -e
-# $Id: check_makefile.sh 3845 2016-11-19 01:50:47Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
 # CppAD is distributed under multiple licenses. This distribution is under
 # the terms of the
@@ -16,14 +15,30 @@ then
 	exit 1
 fi
 # -----------------------------------------------------------------------------
+echo 'Checking if any makfile.in has changed'
+bin/autotools.sh automake >& /dev/null
+list=`git ls-files '*/makefile.in'`
+ok='yes'
+for file in $list
+do
+	diff=`git diff -- $file`
+	if [ "$diff" != '' ]
+	then
+		echo "git add $file"
+		git add $file
+		ok='no'
+	fi
+done
+if [ "$ok" == 'no' ]
+then
+	echo '*/makefile.in has changed.'
+	exit 1
+fi
+# -----------------------------------------------------------------------------
 echo "Checking include files listed in makefile.am"
 echo "-------------------------------------------------------"
-bin/ls_files.sh .h .hpp | sed -n \
-	-e '/^cppad\/deprecated\//d' \
-	-e '/cppad\/.*\.h$/p' \
-	-e '/cppad\/.*\.hpp$/p' \
+bin/ls_files.sh | sed -n -e '/cppad\/.*\.hpp$/p' \
 	> check_makefile.1.$$
-echo 'cppad/configure.hpp' >> check_makefile.1.$$
 sort -u check_makefile.1.$$ > check_makefile.2.$$
 #
 sed < makefile.am -n \
@@ -60,7 +75,7 @@ do
 		( makefile.am | work/* | svn_dist/* )
 		;;
 
-		(multi_thread/makefile.am)
+		(example/multi_thread/makefile.am)
 		;;
 
 		(speed/example/makefile.am)
@@ -104,7 +119,7 @@ do
 		fi
 		;;
 
-		(compare_c/makefile.am)
+		(test_more/compare_c/makefile.am)
 		if ! grep '^[^#]*-DNDEBUG' $file > /dev/null
 		then
 			echo "Optimization flag is not defined in $file"

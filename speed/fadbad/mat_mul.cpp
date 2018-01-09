@@ -1,6 +1,5 @@
-// $Id: mat_mul.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -36,6 +35,9 @@ See $cref link_mat_mul$$.
 $head Implementation$$
 
 $srccode%cpp% */
+// suppress conversion warnings before other includes
+# include <cppad/wno_conversion.hpp>
+//
 # include <FADBAD++/badiff.h>
 # include <cppad/speed/mat_sum_sq.hpp>
 # include <cppad/speed/uniform_01.hpp>

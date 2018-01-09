@@ -39,32 +39,39 @@ A:active { color : purple }
 <option>Up-&gt;</option>
 <option>CppAD</option>
 <option>ADFun</option>
-<option>FunEval</option>
 <option>Forward</option>
 <option>capacity_order</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>ADFun-&gt;</option>
-<option>Independent</option>
-<option>FunConstruct</option>
-<option>Dependent</option>
-<option>abort_recording</option>
-<option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
-<option>optimize</option>
-<option>check_for_nan</option>
+<option>CppAD-&gt;</option>
+<option>Install</option>
+<option>Introduction</option>
+<option>AD</option>
+<option>ADFun</option>
+<option>preprocessor</option>
+<option>multi_thread</option>
+<option>utility</option>
+<option>ipopt_solve</option>
+<option>Example</option>
+<option>speed</option>
+<option>Appendix</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>FunEval-&gt;</option>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
 <option>Forward</option>
 <option>Reverse</option>
-<option>Sparse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
 </select>
 </td>
 <td>
@@ -137,7 +144,9 @@ For example, a call to <a href="forward_order.xml" target="_top"><span style='wh
 </span></font></code>
 where 
 <code><i><font color="black"><span style='white-space: nowrap'>q</span></font></i><font color="blue"><span style='white-space: nowrap'>&#xA0;&gt;&#xA0;0</span></font></code>
- and  <code><font color="blue">%xq%.size() == %f%.Domain()%</font></code>,
+ and  
+<code><i><font color="black"><span style='white-space: nowrap'>xq</span></font></i><font color="blue"><span style='white-space: nowrap'>.size()&#xA0;==&#xA0;</span></font><i><font color="black"><span style='white-space: nowrap'>f</span></font></i><font color="blue"><span style='white-space: nowrap'>.Domain()</span></font></code>
+,
 uses the lower order Taylor coefficients and
 computes the <code><i>q</i></code>-th order Taylor coefficients for all
 the variables in the operation sequence corresponding to 

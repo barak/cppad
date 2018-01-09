@@ -1,9 +1,8 @@
-// $Id: track_new_del.hpp 3845 2016-11-19 01:50:47Z bradbell $
 # ifndef CPPAD_UTILITY_TRACK_NEW_DEL_HPP
 # define CPPAD_UTILITY_TRACK_NEW_DEL_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -227,7 +226,7 @@ Use the $cref thread_alloc$$ routines instead.
 
 $head Example$$
 $children%
-	test_more/track_new_del.cpp
+	example/deprecated/track_new_del.cpp
 %$$
 The file $cref TrackNewDel.cpp$$
 contains an example and test of these functions.

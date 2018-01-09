@@ -14,18 +14,15 @@ then
 	echo "bin/run_cmake.sh: must be executed from its parent directory"
 	exit 1
 fi
-# -----------------------------------------------
+# -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
 	echo $*
 	eval $*
 }
-# -----------------------------------------------
+# -----------------------------------------------------------------------------
 verbose='no'
 standard='c++11'
-debug_speed='no'
-release_example='no'
-deprecated='no'
 profile_speed='no'
 clang='no'
 no_colpack='no'
@@ -33,6 +30,7 @@ no_eigen='no'
 no_ipopt='no'
 no_documentation='no'
 testvector='boost'
+debug_which='debug_all'
 while [ "$1" != "" ]
 do
 	if [ "$1" == '--help' ]
@@ -42,89 +40,94 @@ usage: bin/run_cmake.sh: \\
 	[--help] \\
 	[--verbose] \\
 	[--c++98] \\
-	[--debug_speed] \\
-	[--release_example] \\
-	[--deprecated] \\
 	[--profile_speed] \\
+	[--callgrind] \\
 	[--clang ] \\
 	[--no_colpack] \\
 	[--no_eigen] \\
 	[--no_ipopt] \\
 	[--no_documentation] \\
-	[--<package>_vector]
+	[--<package>_vector] \\
+	[--debug_<which>]
 The --help option just prints this message and exits.
 The value <package> above must be one of: cppad, boost, or eigen.
+The value <which> must be one of: odd, even, all, none.
 
 EOF
 		exit 0
-	elif [ "$1" == '--verbose' ]
-	then
+	fi
+	case "$1" in
+
+		--verbose)
 		verbose='yes'
-	elif [ "$1" == '--c++98' ]
-	then
+		;;
+
+		--c++98)
 		standard='c++98'
-	elif [ "$1" == '--debug_speed' ]
-	then
-		debug_speed='yes'
-		profile_speed='no'
-	elif [ "$1" == '--release_example' ]
-	then
-		release_example='yes'
-	elif [ "$1" == '--deprecated' ]
-	then
-		deprecated='yes'
-	elif [ "$1" == '--profile_speed' ]
-	then
+		;;
+
+		--profile_speed)
 		profile_speed='yes'
-		debug_speed='no'
-	elif [ "$1" == '--clang' ]
-	then
+		;;
+
+		--callgrind)
+		callgrind='yes'
+		;;
+
+		--clang)
 		clang='yes'
-	elif [ "$1" == '--no_colpack' ]
-	then
+		;;
+
+		--no_colpack)
 		no_colpack='yes'
-	elif [ "$1" == '--no_eigen' ]
-	then
+		;;
+
+		--no_eigen)
 		no_eigen='yes'
-	elif [ "$1" == '--no_ipopt' ]
-	then
+		;;
+
+		--no_ipopt)
 		no_ipopt='yes'
-	elif [ "$1" == '--no_documentation' ]
-	then
+		;;
+
+		--no_documentation)
 		no_documentation='yes'
-	elif [ "$1" == '--cppad_vector' ]
-	then
+		;;
+
+		--cppad_vector)
 		testvector='cppad'
-	elif [ "$1" == '--boost_vector' ]
-	then
+		;;
+
+		--boost_vector)
 		testvector='boost'
-	elif [ "$1" == '--eigen_vector' ]
-	then
+		;;
+
+		--eigen_vector)
 		testvector='eigen'
-	else
+		;;
+
+		--debug_odd)
+		debug_which='debug_odd'
+		;;
+
+		--debug_even)
+		debug_which='debug_even'
+		;;
+
+		--debug_all)
+		debug_which='debug_all'
+		;;
+
+		--debug_none)
+		debug_which='debug_none'
+		;;
+
+		*)
 		echo "$1 is an invalid option, try bin/run_cmake.sh --help"
 		exit 1
-	fi
+	esac
 	shift
 done
-# ---------------------------------------------------------------------------
-if [ "$debug_speed" == 'yes' ]
-then
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE DEBUG)|' \
-		-i  speed/CMakeLists.txt
-else
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE RELEASE)|' \
-		-i speed/CMakeLists.txt
-fi
-# ---------------------------------------------------------------------------
-if [ "$release_example" == 'yes' ]
-then
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE RELEASE)|' \
-		-i  example/CMakeLists.txt
-else
-	sed -e 's|^SET(CMAKE_BUILD_TYPE .*|SET(CMAKE_BUILD_TYPE DEBUG)|' \
-		-i example/CMakeLists.txt
-fi
 # ---------------------------------------------------------------------------
 if [ ! -e build ]
 then
@@ -203,10 +206,15 @@ do
 done
 #
 # cppad_cxx_flags
-cppad_cxx_flags="-Wall -pedantic-errors -std=$standard -Wno-conversion -Wno-maybe-uninitialized -Wno-unused-variable -Wno-expansion-to-defined"
-if [ "$testvector" != 'eigen' ]
+cppad_cxx_flags="-Wall -pedantic-errors -std=$standard -Wshadow -Wconversion"
+if [ "$callgrind" == 'yes' ]
 then
-	cppad_cxx_flags="$cppad_cxx_flags -Wshadow"
+	if [ "$debug_which" != 'debug_none' ]
+	then
+		echo 'run_cmake.sh: --callgrind requires --debug_none'
+		exit 1
+	fi
+	cppad_cxx_flags="$cppad_cxx_flags -g"
 fi
 cmake_args="$cmake_args -D cppad_cxx_flags='$cppad_cxx_flags'"
 #
@@ -223,16 +231,9 @@ then
 	cmake_args="$cmake_args -D cppad_profile_flag=-pg"
 fi
 #
-# deprecated
-if [ "$deprecated" == 'yes' ]
-then
-	cmake_args="$cmake_args -D cppad_deprecated=YES"
-else
-	cmake_args="$cmake_args -D cppad_deprecated=NO"
-fi
-#
 # simple options
 cmake_args="$cmake_args -D cppad_testvector=$testvector"
+cmake_args="$cmake_args -D cppad_debug_which=$debug_which"
 cmake_args="$cmake_args -D cppad_tape_id_type='int32_t'"
 cmake_args="$cmake_args -D cppad_tape_addr_type=int32_t"
 cmake_args="$cmake_args -D cppad_max_num_threads=48"

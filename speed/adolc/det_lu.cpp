@@ -1,6 +1,5 @@
-// $Id: det_lu.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -38,6 +37,9 @@ See $cref link_det_lu$$.
 
 $head Implementation$$
 $srccode%cpp% */
+// suppress conversion warnings before other includes
+# include <cppad/wno_conversion.hpp>
+//
 # include <adolc/adolc.h>
 
 # include <cppad/speed/det_by_lu.hpp>

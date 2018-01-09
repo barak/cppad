@@ -39,39 +39,34 @@ A:active { color : purple }
 <option>Up-&gt;</option>
 <option>CppAD</option>
 <option>ADFun</option>
+<option>record_adfun</option>
 <option>Independent</option>
 <option>independent.cpp</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down3(this)'>
-<option>CppAD-&gt;</option>
-<option>Install</option>
-<option>Introduction</option>
-<option>AD</option>
-<option>ADFun</option>
-<option>preprocessor</option>
-<option>multi_thread</option>
-<option>utility</option>
-<option>ipopt_solve</option>
-<option>Example</option>
-<option>speed</option>
-<option>Appendix</option>
+<option>ADFun-&gt;</option>
+<option>record_adfun</option>
+<option>drivers</option>
+<option>Forward</option>
+<option>Reverse</option>
+<option>sparsity_pattern</option>
+<option>sparse_derivative</option>
+<option>optimize</option>
+<option>abs_normal</option>
+<option>FunCheck</option>
+<option>check_for_nan</option>
 </select>
 </td>
 <td>
 <select onchange='choose_down2(this)'>
-<option>ADFun-&gt;</option>
+<option>record_adfun-&gt;</option>
 <option>Independent</option>
 <option>FunConstruct</option>
 <option>Dependent</option>
 <option>abort_recording</option>
 <option>seq_property</option>
-<option>FunEval</option>
-<option>Drivers</option>
-<option>FunCheck</option>
-<option>optimize</option>
-<option>check_for_nan</option>
 </select>
 </td>
 <td>
@@ -96,6 +91,7 @@ A:active { color : purple }
 <span style="color: #FF0000">{</span>     <span style="color: #009900">bool</span> ok <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #0000FF">true</span></span><span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>AD<span style="color: #990000">;</span>
      <span style="font-weight: bold"><span style="color: #0000FF">using</span></span> CppAD<span style="color: #990000">::</span>NearEqual<span style="color: #990000">;</span>
+     <span style="color: #009900">double</span> eps99 <span style="color: #990000">=</span> <span style="color: #993399">99.0</span> <span style="color: #990000">*</span> std<span style="color: #990000">::</span>numeric_limits<span style="color: #990000">&lt;</span><span style="color: #009900">double</span><span style="color: #990000">&gt;::</span><span style="font-weight: bold"><span style="color: #000000">epsilon</span></span><span style="color: #990000">();</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// domain space vector</span></span>
      <span style="color: #008080">size_t</span>  n  <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">;</span>
@@ -121,8 +117,8 @@ A:active { color : purple }
      CppAD<span style="color: #990000">::</span><span style="color: #008080">ADFun&lt;double&gt;</span> <span style="font-weight: bold"><span style="color: #000000">f</span></span><span style="color: #990000">(</span>X<span style="color: #990000">,</span> Y<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// check value</span></span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">1</span><span style="color: #990000">.,</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>Y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">0</span><span style="color: #990000">.,</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// compute f(1, 2)</span></span>
      <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">x</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
@@ -130,8 +126,8 @@ A:active { color : purple }
      x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
      x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">2</span><span style="color: #990000">.;</span>
      y    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">,</span> x<span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">3</span><span style="color: #990000">.,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">3</span><span style="color: #990000">.,</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>y<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> <span style="color: #993399">2</span><span style="color: #990000">.,</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// compute partial of f w.r.t x[0] at (1, 2)</span></span>
      <span style="font-weight: bold"><span style="color: #000000">CPPAD_TESTVECTOR</span></span><span style="color: #990000">(</span><span style="color: #009900">double</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #000000">dx</span></span><span style="color: #990000">(</span>n<span style="color: #990000">);</span>
@@ -139,15 +135,15 @@ A:active { color : purple }
      dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
      dx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
      dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>   <span style="color: #993399">1</span><span style="color: #990000">.,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>   <span style="color: #993399">1</span><span style="color: #990000">.,</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">],</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
      <span style="font-style: italic"><span style="color: #9A1900">// compute partial of f w.r.t x[1] at (1, 2)</span></span>
      dx<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">0</span><span style="color: #990000">.;</span>
      dx<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">=</span> <span style="color: #993399">1</span><span style="color: #990000">.;</span>
      dy    <span style="color: #990000">=</span> f<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">Forward</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> dx<span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>   <span style="color: #993399">1</span><span style="color: #990000">.,</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
-     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span>  <span style="color: #993399">1e-10</span> <span style="color: #990000">,</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">]</span> <span style="color: #990000">,</span>   <span style="color: #993399">1</span><span style="color: #990000">.,</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
+     ok <span style="color: #990000">&amp;=</span> <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>dy<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span> <span style="color: #990000">,</span> x<span style="color: #990000">[</span><span style="color: #993399">0</span><span style="color: #990000">],</span>  eps99 <span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
 
      <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> ok<span style="color: #990000">;</span>
 <span style="color: #FF0000">}</span>
@@ -167,7 +163,7 @@ A:active { color : purple }
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/independent.cpp
+<hr/>Input File: example/general/independent.cpp
 
 </body>
 </html>

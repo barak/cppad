@@ -67,6 +67,7 @@ A:active { color : purple }
 <option>speed_test</option>
 <option>SpeedTest</option>
 <option>time_test</option>
+<option>test_boolofvoid</option>
 <option>NumericType</option>
 <option>CheckNumericType</option>
 <option>SimpleVector</option>
@@ -87,6 +88,8 @@ A:active { color : purple }
 <option>index_sort</option>
 <option>to_string</option>
 <option>set_union</option>
+<option>sparse_rc</option>
+<option>sparse_rcv</option>
 </select>
 </td>
 <td>
@@ -378,7 +381,7 @@ The example tests Rosen34 using the relations above:
                     <span style="font-weight: bold"><span style="color: #000000">NearEqual</span></span><span style="color: #990000">(</span>xf<span style="color: #990000">[</span>i<span style="color: #990000">],</span> check<span style="color: #990000">,</span> eps99<span style="color: #990000">,</span> eps99<span style="color: #990000">);</span>
                <span style="font-style: italic"><span style="color: #9A1900">// 3rd order method is exact for i &lt; 3</span></span>
                <span style="font-weight: bold"><span style="color: #0000FF">if</span></span><span style="color: #990000">(</span> i <span style="color: #990000">&lt;</span> <span style="color: #993399">3</span> <span style="color: #990000">)</span>
-                    ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>e<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">&lt;=</span> <span style="color: #993399">1e-10</span><span style="color: #990000">);</span>
+                    ok <span style="color: #990000">&amp;=</span> <span style="color: #990000">(</span>e<span style="color: #990000">[</span>i<span style="color: #990000">]</span> <span style="color: #990000">&lt;=</span> eps99<span style="color: #990000">);</span>
 
                <span style="font-style: italic"><span style="color: #9A1900">// check value for next i</span></span>
                check <span style="color: #990000">*=</span> tf<span style="color: #990000">;</span>
@@ -388,7 +391,7 @@ The example tests Rosen34 using the relations above:
 <span style="color: #FF0000">}</span>
 </tt></pre>
 </font></code>
-<hr/>Input File: example/rosen_34.cpp
+<hr/>Input File: example/general/rosen_34.cpp
 
 </body>
 </html>

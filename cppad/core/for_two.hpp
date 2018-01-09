@@ -1,9 +1,8 @@
-// $Id$
 # ifndef CPPAD_CORE_FOR_TWO_HPP
 # define CPPAD_CORE_FOR_TWO_HPP
 
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
 CppAD is distributed under multiple licenses. This distribution is under
 the terms of the
@@ -128,7 +127,7 @@ and the other coefficients are unspecified.
 
 $head Examples$$
 $children%
-	example/for_two.cpp
+	example/general/for_two.cpp
 %$$
 The routine
 $cref/ForTwo/for_two.cpp/$$ is both an example and test.
@@ -189,7 +188,7 @@ VectorBase ADFun<Base>::ForTwo(
 	// direction vector in argument space
 	VectorBase dx(n);
 	for(j1 = 0; j1 < n; j1++)
-		dx[j1] = Base(0);
+		dx[j1] = Base(0.0);
 
 	// result vector in range space
 	VectorBase dy(m);
@@ -212,10 +211,10 @@ VectorBase ADFun<Base>::ForTwo(
 			if( ! c[j1] )
 			{	// diagonal term in j1 direction
 				c[j1]  = true;
-				dx[j1] = Base(1);
+				dx[j1] = Base(1.0);
 				Forward(1, dx);
 
-				dx[j1] = Base(0);
+				dx[j1] = Base(0.0);
 				dy     = Forward(2, dx);
 				for(i = 0; i < m; i++)
 					D[i * n + j1 ] = dy[i];
@@ -229,17 +228,17 @@ VectorBase ADFun<Base>::ForTwo(
 		k1 = k[l];
 		if( j1 == k1 )
 		{	for(i = 0; i < m; i++)
-				ddy[i * p + l] = Base(2) * D[i * n + j1];
+				ddy[i * p + l] = Base(2.0) * D[i * n + j1];
 		}
 		else
 		{
 			// cross term in j1 and k1 directions
-			dx[j1] = Base(1);
-			dx[k1] = Base(1);
+			dx[j1] = Base(1.0);
+			dx[k1] = Base(1.0);
 			Forward(1, dx);
 
-			dx[j1] = Base(0);
-			dx[k1] = Base(0);
+			dx[j1] = Base(0.0);
+			dx[k1] = Base(0.0);
 			dy = Forward(2, dx);
 
 			// place result in return value
