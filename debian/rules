@@ -3,24 +3,19 @@
 %:
 	dh $@ --buildsystem=cmake
 
-override_dh_autoreconf:
-	@echo "Hey, debhelper 10, what the heck are you doing?"
-	@echo "Stop!"
-	@echo "Stop it!!"
-	@echo "THE BUILD SYSTEM IS CMAKE!!!"
+# override_dh_autoreconf:
+# 	@echo "Hey debhelper, what are you doing?"
+# 	@echo "THE BUILD SYSTEM IS CMAKE!!!"
+# 	@echo "But maybe you do not care, maybe you just like to watch the world burn."
+# 	dh_autoreconf
 
-# web documentation uses .xml extension
-override_dh_compress:
-	dh_compress -X.xml
-
-override_dh_installchangelogs:
-	dh_installchangelogs debian/changelog-upstream
-
-override_dh_link:
-	cd debian/cppad/usr/share/doc/cppad/doc && \
-	if test -e cppad.xml -a \! -e index.xml \
-	   || cmp cppad.xml index.xml ; then \
-	  echo index.xml missing or identical to cppad.xml && \
-	  ln --verbose --symbolic --force cppad.xml index.xml ; \
-	fi
-	dh_link
+override_dh_auto_install:
+	dh_auto_install
+	@echo "File cppad.pc should be installed only once, in the right place."
+	@echo "See lintian-info -t pkg-config-unavailable-for-cross-compilation"
+	if [ -e debian/cppad/usr/share/pkgconfig/cppad.pc \
+	     -a -e debian/cppad/usr/lib/pkgconfig/cppad.pc ]; then \
+	  rm --verbose debian/cppad/usr/lib/pkgconfig/cppad.pc; \
+	  rmdir --ignore-fail-on-non-empty --verbose debian/cppad/usr/lib/pkgconfig; \
+	  rmdir --ignore-fail-on-non-empty --verbose debian/cppad/usr/lib; \
+	fi;
