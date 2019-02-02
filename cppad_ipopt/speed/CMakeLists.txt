@@ -1,12 +1,13 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Build the cppad_ipopt/speed directory tests
 # Inherit build type from ../CMakeList.txt
@@ -23,32 +24,32 @@ LINK_DIRECTORIES( ${ipopt_LIBRARY_DIRS} )
 # )
 # Include source for cppad_ipopt library so we build it without debugging
 SET(source_list
-	speed.cpp
-	../src/cppad_ipopt_nlp.cpp
-	../src/fun_record.hpp
-	../src/hes_fg_map.cpp
-	../src/jac_g_map.cpp
-	../src/sparse_map2vec.cpp
-	../src/vec_fun_pattern.cpp
-	ode_speed.cpp
+    speed.cpp
+    ../src/cppad_ipopt_nlp.cpp
+    ../src/fun_record.hpp
+    ../src/hes_fg_map.cpp
+    ../src/jac_g_map.cpp
+    ../src/sparse_map2vec.cpp
+    ../src/vec_fun_pattern.cpp
+    ode_speed.cpp
 )
-set_compile_flags( cppad_ipopt_speed "debug_none" "${source_list}" )
+set_compile_flags( cppad_ipopt_example "${cppad_debug_which}" "${source_list}" )
 #
 ADD_EXECUTABLE( cppad_ipopt_speed EXCLUDE_FROM_ALL ${source_list} )
 
 # List of libraries to be linked into the specified target
 TARGET_LINK_LIBRARIES(
-	cppad_ipopt_speed
-	cppad_ipopt
-	${cppad_lib}
-	${ipopt_LIBRARIES}
-	${colpack_libs}
+    cppad_ipopt_speed
+    cppad_ipopt
+    ${cppad_lib}
+    ${ipopt_LIBRARIES}
+    ${colpack_libs}
 )
 
 # Add the check_cppad_ipopt_speed target
 ADD_CUSTOM_TARGET(check_cppad_ipopt_speed
-	cppad_ipopt_speed
-	DEPENDS cppad_ipopt_speed cppad_ipopt
+    cppad_ipopt_speed
+    DEPENDS cppad_ipopt_speed cppad_ipopt
 )
 MESSAGE(STATUS "make check_cppad_ipopt_speed: available")
 

@@ -1,32 +1,34 @@
-// $Id: pkgconfig.omh 3760 2015-12-01 04:12:28Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+  CppAD is distributed under the terms of the
+               Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+  This Source Code may also be made available under the following
+  Secondary License when the conditions for such availability set forth
+  in the Eclipse Public License, Version 2.0 are satisfied:
+        GNU General Public License, Version 2.0 or later.
 -------------------------------------------------------------------------- */
 $begin pkgconfig$$
 $spell
-	cmake
-	datadir
-	ipopt
-	CppAD
-	pkg-config
-	Cflags
-	Dir
-	builddir
-	prefixdir
-	cppad
-	pkgconfig
-	uninstalled
+    cmake
+    datadir
+    ipopt
+    CppAD
+    pkg-config
+    Cflags
+    Dir
+    builddir
+    libdir
+    libdirs
+    prefixdir
+    cppad
+    pkgconfig
+    uninstalled
+    colpack
 $$
 
 $section CppAD pkg-config Files$$
-$mindex pc$$
 
 $head Purpose$$
 The $code pkg-config$$ package helps with the use of installed libraries;
@@ -38,66 +40,72 @@ $head Usage$$
 The necessary flags for compiling code that includes CppAD can
 be obtained with the command
 $codep
-	pkg-config --cflags cppad
+    pkg-config --cflags cppad
+$$
+The flags for linking can be obtains with the command
+$codep
+    pkg-config --libs cppad
 $$
 Note that this command assumes $cref/cppad.pc/pkgconfig/$$ is in
 the search path $code PKG_CONFIG_PATH$$.
-If $cref ipopt_prefix$$ is specified,
-the necessary flags for linking $cref/cppad_ipopt/cppad_ipopt_nlp/$$
-can be obtained with the commands
-$codep
-	pkg-config --libs cppad
-$$
-Note that this command assumes $code ipopt.pc$$ is in
-the search path $code PKG_CONFIG_PATH$$.
 
 $head Defined Fields$$
+The $code pkg-config$$ files $code cppad.pc$$ and
+$code cppad-uninstalled.pc$$ contain the following information:
 $table
 $icode Name$$ $cnext
-	A human-readable name for the CppAD package.
+    A human-readable name for the CppAD package.
 $rnext
 $icode Description$$ $cnext
-	A brief description of the CppAD package.
+    A brief description of the CppAD package.
 $rnext
 $icode URL$$ $cnext
-	A URL where people can get more information about the CppAD package.
+    A URL where people can get more information about the CppAD package.
 $rnext
 $icode Version$$ $cnext
-	A string specifically defining the version of the CppAD package.
+    A string specifically defining the version of the CppAD package.
 $rnext
 $icode Cflags$$ $cnext
-	The necessary flags for using any of the CppAD include files.
+    The necessary flags for using any of the CppAD include files.
 $rnext
 $icode Libs$$ $cnext
-	If $cref ipopt_prefix$$ is specified,
-	the necessary flags for using the $cref/cppad_ipopt/cppad_ipopt_nlp/$$
-	library
+    The flags necessary for linking programs that use CppAD include files.
 $rnext
 $icode Requires$$ $cnext
-	If $cref ipopt_prefix$$ is specified,
-	the packages required to use the $cref/cppad_ipopt/cppad_ipopt_nlp/$$
-	library
+    If $cref ipopt_prefix$$ is specified,
+    the packages required to use the $cref/cppad_ipopt/cppad_ipopt_nlp/$$
+    library.
 $tend
 
-$head CppAD Configuration Files$$
-In the table below,
-$icode builddir$$ is the build directory; i.e., the directory where
-the CppAD
-$cref/cmake command/cmake/CMake Command/$$ is executed.
-The directory $icode prefix$$ is the value of
-$cref/cppad_prefix/cmake/cppad_prefix/$$ during configuration.
-The directory $icode datadir$$ is the value of
-$cref/cmake_install_datadir/cmake/cmake_install_datadir/$$.
-The following configuration files contain the information above
+$head CppAD Configuration Paths$$
+The location of $code cppad.pc$$ and $code cppad-uninstalled.pc$$
+are given below.
+Note that $code cppad.pc$$ is placed in two locations.
 $table
-$icode File$$             $cnext
-	$icode Description$$ $rnext
-$icode%prefix%/%datadir%/pkgconfig/cppad.pc%$$              $cnext
-	for use after
-	$cref/make install/install/Instructions/Step 4: Installation/$$
+$bold Path$$ $cnext $bold Description$$
 $rnext
-$icode%builddir%/pkgconfig/cppad-uninstalled.pc%$$       $cnext
-	for testing before $code make install$$
+$icode builddir$$  $cnext
+    directory where the
+    $cref/cmake command/cmake/CMake Command/$$ is executed.
+$rnext
+$icode prefix$$ $cnext
+    value of $cref/cppad_prefix/cmake/cppad_prefix/$$ during configuration.
+$rnext
+$icode datadir$$ $cnext
+    value of $cref/cmake_install_datadir/cmake/cmake_install_datadir/$$.
+$rnext
+$icode libdir$$ $cnext
+    first directory in
+    $cref/cmake_install_libdirs/cmake/cmake_install_libdirs/$$.
+$rnext
+$icode%builddir%/pkgconfig/cppad-uninstalled.pc%$$ $cnext
+    for testing before $code make install$$
+$rnext
+$icode%prefix%/%datadir%/pkgconfig/cppad.pc%$$ $cnext
+    for use after
+    $cref/make install/install/Instructions/Step 4: Installation/$$
+$rnext
+$icode%prefix%/%libdir%/pkgconfig/cppad.pc%$$ $cnext
 $tend
 
 $end

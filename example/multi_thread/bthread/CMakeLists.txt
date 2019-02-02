@@ -1,12 +1,13 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Build the example/multi_thread/bthread directory tests
 # Inherit build type from ../CMakeList.txt
@@ -18,14 +19,15 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/.. )
 #                 source1 source2 ... sourceN
 # )
 SET(source_list ../thread_test.cpp
-	${CMAKE_SOURCE_DIR}/speed/src/microsoft_timer.cpp
-	../team_example.cpp
-	../harmonic.cpp
-	../multi_atomic.cpp
-	../multi_newton.cpp
-	a11c_bthread.cpp
-	simple_ad_bthread.cpp
-	team_bthread.cpp
+    ${CMAKE_SOURCE_DIR}/speed/src/microsoft_timer.cpp
+    ../team_example.cpp
+    ../harmonic.cpp
+    ../multi_atomic.cpp
+    ../multi_checkpoint.cpp
+    ../multi_newton.cpp
+    a11c_bthread.cpp
+    simple_ad_bthread.cpp
+    team_bthread.cpp
 )
 set_compile_flags( example_multi_thread_bthread "${cppad_debug_which}" "${source_list}" )
 #
@@ -40,8 +42,8 @@ TARGET_LINK_LIBRARIES(example_multi_thread_bthread ${bthread_lib})
 
 # Add the check_example_multi_thread_bthread target
 ADD_CUSTOM_TARGET(check_example_multi_thread_bthread
-	example_multi_thread_bthread simple_ad
-	DEPENDS example_multi_thread_bthread
+    example_multi_thread_bthread simple_ad
+    DEPENDS example_multi_thread_bthread
 )
 MESSAGE(STATUS "make check_example_multi_thread_bthread: available")
 

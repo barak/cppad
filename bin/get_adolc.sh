@@ -1,21 +1,21 @@
 #! /bin/bash -e
-# $Id: get_adolc.sh 3730 2015-09-23 15:56:53Z bradbell $
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # $begin get_adolc.sh$$ $newlinech #$$
 # $spell
-#	tgz
-#	Adolc
-#	gz
-#	CppAD
+#   tgz
+#   Adolc
+#   gz
+#   CppAD
 # $$
 #
 # $section Download and Install Adolc in Build Directory$$
@@ -54,58 +54,54 @@
 # -----------------------------------------------------------------------------
 if [ $0 != "bin/get_adolc.sh" ]
 then
-	echo "bin/get_adolc.sh: must be executed from its parent directory"
-	exit 1
+    echo "bin/get_adolc.sh: must be executed from its parent directory"
+    exit 1
 fi
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
-	echo $*
-	eval $*
+    echo $*
+    eval $*
 }
 # -----------------------------------------------------------------------------
 echo 'Download adolc to build/external and install it to build/prefix'
-# ADOL-C verison 2.5.2 results in:
-#	adouble.h:74: error: 'badouble::badouble()' is protected
-# It apprears that newer versions of adolc assume some c++11 features; see
-#	http://list.coin-or.org/pipermail/adol-c/2014-December/001023.html
-version='2.4.1'
+version='2.6.3' # assumes c++11 or higher
 web_page="http://www.coin-or.org/download/source/ADOL-C"
 cppad_dir=`pwd`
 prefix="$cppad_dir/build/prefix"
 installed_flag="build/external/adolc-${version}.installed"
 if [ -e "$installed_flag" ]
 then
-	echo "$installed_flag exists: Skipping get_adolc.sh"
-	exit 0
+    echo "$installed_flag exists: Skipping get_adolc.sh"
+    exit 0
 fi
 # --------------------------------------------------------------------------
 if [ -e /usr/lib64 ]
 then
-	libdir='lib64'
+    libdir='lib64'
 else
-	libdir='lib'
+    libdir='lib'
 fi
 # -----------------------------------------------------------------------------
 if [ ! -d build/external ]
 then
-	echo_eval mkdir -p build/external
+    echo_eval mkdir -p build/external
 fi
 echo_eval cd build/external
 # -----------------------------------------------------------------------------
 if [ ! -e "ADOL-C-$version.tgz" ]
 then
-	echo_eval wget --no-check-certificate $web_page/ADOL-C-$version.tgz
+    echo_eval wget --no-check-certificate $web_page/ADOL-C-$version.tgz
 fi
 # -----------------------------------------------------------------------------
 if [ -e "$prefix/include/adolc" ]
 then
-	echo_eval rm -r "$prefix/include/adolc"
+    echo_eval rm -r "$prefix/include/adolc"
 fi
 # -----------------------------------------------------------------------------
 if [ ! -e ADOL-C-$version ]
 then
-	echo_eval tar -xzf ADOL-C-$version.tgz
+    echo_eval tar -xzf ADOL-C-$version.tgz
 fi
 echo_eval cd ADOL-C-$version
 # -----------------------------------------------------------------------------
@@ -113,21 +109,21 @@ system=`uname | tr [A-Z] [a-z] | sed -e 's|\([a-z][a-z]*\).*|\1|'`
 # -----------------------------------------------------------------------------
 if which autoconf >& /dev/null
 then
-	echo_eval autoreconf --install --force
+    echo_eval autoreconf --install --force
 fi
 # -----------------------------------------------------------------------------
 if [ ! -e build ]
 then
-	echo_eval mkdir build
+    echo_eval mkdir build
 fi
 echo_eval cd build
 # -----------------------------------------------------------------------------
 flags="--prefix=$prefix --with-colpack=$prefix --libdir=$prefix/$libdir"
 if [ "$system" == 'cygwin' ]
 then
-	flags="$flags --enable-static --disable-shared"
+    flags="$flags --enable-static --disable-shared"
 else
-	flags="$flags --enable-static --enable-shared"
+    flags="$flags --enable-static --enable-shared"
 fi
 #
 echo_eval ../configure $flags

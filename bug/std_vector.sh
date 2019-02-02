@@ -1,14 +1,14 @@
 #! /bin/bash -e
-# $Id: std_vector.sh 2935 2013-10-12 19:40:01Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Using g++ 4.8.1 results in the following error message:
 #
@@ -19,7 +19,7 @@
 # -----------------------------------------------------------------------------
 if [ ! -e build ]
 then
-	mkdir build
+    mkdir build
 fi
 cd build
 echo "$0"
@@ -27,13 +27,13 @@ name=`echo $0 | sed -e 's|.*/||' -e 's|\..*||'`
 cat << EOF > $name.cpp
 # include <vector>
 int main(void)
-{	int N = 1;
-	std::vector<bool> y(N);
-	for(int i = 0; i < N; i++ )
-		y[i] = false;
-	y[0]  = y[0] | true;
-	y[1] |= true;
-	return 0;
+{   int N = 1;
+    std::vector<bool> y(N);
+    for(int i = 0; i < N; i++ )
+        y[i] = false;
+    y[0]  = y[0] | true;
+    y[1] |= true;
+    return 0;
 }
 EOF
 echo "g++ -g $name.cpp -o $name"

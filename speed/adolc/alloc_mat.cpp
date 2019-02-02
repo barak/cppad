@@ -1,23 +1,22 @@
-// $Id: alloc_mat.cpp 3757 2015-11-30 12:03:07Z bradbell $
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin adolc_alloc_mat$$
 $spell
-	adolc
-	alloc
+    adolc
+    alloc
 $$
 
 $section Adolc Test Utility: Allocate and Free Memory For a Matrix$$
-$mindex adolc_alloc_mat alloc$$
 
 $head Syntax$$
 $codei%mat% = adolc_alloc_mat(%m%, %n%)
@@ -50,19 +49,19 @@ $end
 # include <cppad/utility/thread_alloc.hpp>
 
 double** adolc_alloc_mat(size_t m, size_t n)
-{	using CppAD::thread_alloc;
-	size_t size_min = m * n, size_out;
-	double*  vec = thread_alloc::create_array<double>(size_min, size_out);
-	double** mat = thread_alloc::create_array<double*>(size_min, size_out);
+{   using CppAD::thread_alloc;
+    size_t size_min = m * n, size_out;
+    double*  vec = thread_alloc::create_array<double>(size_min, size_out);
+    double** mat = thread_alloc::create_array<double*>(size_min, size_out);
 
-	for(size_t i = 0; i < m; i++)
-		mat[i] = vec + i * n;
+    for(size_t i = 0; i < m; i++)
+        mat[i] = vec + i * n;
 
-	return mat;
+    return mat;
 }
 void adolc_free_mat(double** mat)
-{	using CppAD::thread_alloc;
-	thread_alloc::delete_array(mat[0]);
-	thread_alloc::delete_array(mat);
-	return;
+{   using CppAD::thread_alloc;
+    thread_alloc::delete_array(mat[0]);
+    thread_alloc::delete_array(mat);
+    return;
 }

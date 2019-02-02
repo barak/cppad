@@ -1,161 +1,158 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
-if [ $0 != "bin/package.sh" ]
+# Bradley M. Bell has given permission to use this script to generate
+# a distribution of CppAD that has "GNU General Public License Version 3"
+# in place of "Eclipse Public License Version 1.0.". Other's are free to
+# keep or change this premission in their versions of the source code.
+# -----------------------------------------------------------------------------
+if [ "$0" != "bin/package.sh" ]
 then
-	echo "bin/package.sh: must be executed from its parent directory"
-	exit 1
+    echo "bin/package.sh: must be executed from its parent directory"
+    exit 1
 fi
-echo_log_eval() {
-	echo $*
-	echo $* >> $top_srcdir/package.log
-	if ! eval $* >> $top_srcdir/package.log
-	then
-		echo "Error: check package.log"
-		exit 1
-	fi
-}
-log_eval() {
-	echo $* >> $top_srcdir/package.log
-	if ! eval $* >> $top_srcdir/package.log
-	then
-		echo "Error: check package.log"
-		exit 1
-	fi
-}
-if [ -e package.log ]
+include_doc='yes'
+if [ "$1" != '' ]
 then
-	echo "rm package.log"
-	rm package.log
+    if [ "$1" == '--no_doc' ]
+    then
+        include_doc='no'
+    else
+        echo 'usage: bin/package.sh [--no_doc]'
+        exit 1
+    fi
 fi
-top_srcdir=`pwd`
+if [ "$include_doc" == 'yes' ]
+then
+    if ! git show-ref origin/gh-pages >& /dev/null
+    then
+        echo 'bin/package.sh: git cannot find origin/gh-pages branch'
+        echo 'use the following command to fetch it:'
+        echo '    git fetch origin gh-pages'
+        exit 1
+    fi
+fi
+echo_eval() {
+     echo $*
+     eval $*
+}
+# -----------------------------------------------------------------------------
+src_dir=`pwd`
+version=`sed -n -e '/^SET( *cppad_version *"[0-9.]*"/p' CMakeLists.txt | \
+    sed -e 's|.*"\([^"]*\)".*|\1|'`
+date=`echo $version | sed -e 's|\.[0-9]*$||'`
+# -----------------------------------------------------------------------------
+# doc
+if [ -e 'doc' ]
+then
+    echo_eval rm -r doc
+fi
+cat << EOF > $src_dir/package.$$
+/^commit/! b end
+N
+N
+N
+N
+/version $date/! b end
+s|\\nAuthor:.*||
+s|commit *||
+p
+: end
+EOF
+# -----------------------------------------------------------------------------
+if [ "$include_doc" == 'yes' ]
+then
+    #
+    # use gh-pages if they exist for this version
+    git_hash=`git log origin/gh-pages | sed -n -f $src_dir/package.$$ | head -1`
+    if [ "$git_hash" != '' ]
+    then
+        echo 'create ./doc'
+        mkdir doc
+        list=`git ls-tree --name-only $git_hash:doc`
+        for file in $list
+        do
+            git show $git_hash:doc/$file > doc/$file
+        done
+    elif which run_omhelp.sh > /dev/null
+    then
+        # omhelp is available, so build documentation for this version
+        echo_eval run_omhelp.sh doc
+    else
+cat << EOF
+Cannot find gh-pages documentation for this version: $version
+and cannot find run_omhelp.sh on this system.
+
+If you wish to skip the documentation for this system use
+bin/package.sh --no_doc. Otherwise, use the following steps:
+
+1. Use 'git log origin/gh-pages' to see which versions have docuimentation.
+
+2. Pick a version number and search for 'Advance to' for that version number
+in output of 'git log master' and note the <hash_code> for that commit.
+
+3. Use 'git checkout <hash_code>' to check the source code for that version.
+
+4. Use 'git show master:bin/package.sh > bin/package.sh' to get the most
+recent version of bin/package.sh
+
+5. Re-run  bin/package.sh"
+EOF
+        rm package.$$
+        exit 1
+    fi
+fi
+# -----------------------------------------------------------------------------
+# change_list
+cat << EOF > $src_dir/package.$$
+/^.gitignore\$/d
+/^authors\$/d
+/^bin\\/colpack.sh\$/d
+/^coin.png\$/d
+/^compile\$/d
+/^config.guess\$/d
+/^config.sub\$/d
+/^configure\$/d
+/^depcomp\$/d
+/^install-sh\$/d
+/^missing\$/d
+/^uw_copy_040507.html\$/d
+EOF
+change_list=`git ls-files | sed -f $src_dir/package.$$`
+rm $src_dir/package.$$
 # ----------------------------------------------------------------------------
-# Remove old packages and corresponding directories
+# clean up old results
+if [ ! -e 'build' ]
+then
+    echo_eval mkdir build
+fi
 echo_eval rm -rf build/cppad-*
-# ----------------------------------------------------------------------------
-this_license=`\
-	grep '$verbatim%' omh/appendix/license.omh | sed -e 's|$verbatim%\(...\).*|\1|'`
-if [ "$this_license" == 'epl' ]
-then
-	remove_list='gpl-3.0.txt bin/gpl_license.sh'
-elif [ "$this_license" == 'gpl' ]
-then
-	remove_list='epl-v10.txt epl-v10.html bin/gpl_license.sh'
-else
-	echo 'bin/package.sh: cannot find license in omh/appendix/license.omh'
-	exit 1
-fi
-# ----------------------------------------------------------------------------
-## Version number check has been moved to end of git_commit.sh
-##
-## if this is the master, set version to today
-## (This has been moved to git_commit.sh)
-#branch=`git branch | grep '^\*' | sed -e 's|^\* *||'`
-#if [ "$branch" == 'master' ]
-#then
-#	bin/version.sh set
-#fi
-#
-# make sure that version number is the same in all files
-echo_log_eval bin/version.sh check
-#
-# Get version number and make sure all copies agree
-version=`bin/version.sh get`
-echo_log_eval bin/version.sh get
-# ----------------------------------------------------------------------------
-# Run automated checks for the form bin/check_*.sh with a few exceptions.
-list=`ls bin/check_* | sed \
-	-e '/check_all.sh/d' \
-	-e '/check_jenkins.sh/d' \
-	-e '/check_svn_dist.sh/d'`
-for check in $list
-do
-	echo_log_eval $check
-done
-# ----------------------------------------------------------------------------
-# Check for doxygen errors
-echo_log_eval bin/run_doxygen.sh
-# ----------------------------------------------------------------------------
-# Create the package directory
-package_dir="build/cppad-$version"
-echo_log_eval mkdir -p $package_dir
+echo_eval mkdir build/cppad-$version
 # -----------------------------------------------------------------------------
-# Source file that are coppied to the package directory
-file_list=`bin/ls_files.sh`
-#
-# Copy the files, creating sub-directories when necessary
-echo_log_eval echo "copy files to $package_dir"
-for file in $file_list $other_files
-do
-	sub_dir=`echo $file | sed -e 's|\(.*\)/[^/]*$|\1|'`
-	if [ "$sub_dir" != "$file" ]
-	then
-		if [ ! -e "$package_dir/$sub_dir" ]
-		then
-			log_eval mkdir -p $package_dir/$sub_dir
-		fi
-	fi
-	log_eval cp $file $package_dir/$file
-done
-echo_log_eval echo "remove certain files from $package_dir"
-for file in $remove_list
-do
-	if [ -e $package_dir/$file ]
-	then
-		echo_log_eval rm $package_dir/$file
-	fi
-done
-# ----------------------------------------------------------------------------
-# build the xml version of documentation for this distribution
-echo_log_eval cd $package_dir
-#
-# Only include the *.xml verison of the documentation in distribution
-# So remove the table at the top (but save the original doc.omh file).
-if ! grep < doc.omh > /dev/null \
-	'This comment is used to remove the table below'
+# cppad-$version.tgz
+git ls-files -z | xargs -0 tar -czf build/cppad-$version/tar.tgz
+# -----------------------------------------------------------------------------
+# cppad-$version.tgz
+echo "create build/cppad-$version.tgz"
+cd build/cppad-$version
+tar -xzf tar.tgz
+rm tar.tgz
+if [ "$include_doc" == 'yes' ]
 then
-	echo "Missing comment expected in doc.omh"
-	exit 1
+    cp -r ../../doc doc
 fi
-echo_log_eval echo "sed -i.save doc.omh ..."
-sed -i.save doc.omh \
-	-e '/This comment is used to remove the table below/,/$tend/d'
-#
-# This command creates omhelp.xml.log in current directory (and says so)
-echo_log_eval echo "bin/run_omhelp.sh xml"
-if ! bin/run_omhelp.sh xml
-then
-	echo_log_eval cp omhelp.xml.log $top_srcdir/omhelp.xml.log
-	exit 1
-fi
-# Copy the log to the directory where the package.sh command was executed
-echo_log_eval cp omhelp.xml.log $top_srcdir/omhelp.xml.log
-# Restore the original doc.omh
-echo_log_eval mv doc.omh.save doc.omh
-# ----------------------------------------------------------------------------
-# change back to the package parent directory and create the tarball
-echo_log_eval cd ..
-echo_log_eval tar -czf cppad-$version.$this_license.tgz cppad-$version
-# ----------------------------------------------------------------------------
-# create gpl version of package
-echo_log_eval cd $top_srcdir
-if [ -e 'bin/gpl_license.sh' ]
-then
-	if [ "$this_license" != 'epl' ]
-	then
-		echo 'package.sh: bin/gpl_license.sh found in gpl verison of source.'
-		exit 1
-	fi
-	echo_log_eval bin/gpl_license.sh cppad-$version build build
-fi
-# ----------------------------------------------------------------------------
-echo "$0: OK"
+cd ..
+tar --create cppad-$version --gzip --file=cppad-$version.tgz
+rm -r cppad-$version
+# ---------------------------------------------------------------------------
+echo 'package.sh: OK'
 exit 0

@@ -1,34 +1,34 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin cppad_ode.cpp$$
 $spell
-	jacobian jacobian
-	endif
-	var
-	Jacobian
-	std
-	cout
-	endl
-	CppAD
-	cppad
-	hpp
-	bool
-	onetape
-	typedef
-	cassert
+    jacobian jacobian
+    endif
+    var
+    Jacobian
+    std
+    cout
+    endl
+    CppAD
+    cppad
+    hpp
+    bool
+    onetape
+    typedef
+    cassert
 $$
 
 $section CppAD Speed: Gradient of Ode Solution$$
-$mindex link_ode speed$$
 
 
 $head Specifications$$
@@ -45,101 +45,111 @@ $srccode%cpp% */
 // Note that CppAD uses global_option["memory"] at the main program level
 # include <map>
 extern std::map<std::string, bool> global_option;
+// see comments in main program for this external
+extern size_t global_cppad_thread_alloc_inuse;
 
 bool link_ode(
-	size_t                     size       ,
-	size_t                     repeat     ,
-	CppAD::vector<double>      &x         ,
-	CppAD::vector<double>      &jacobian
+    size_t                     size       ,
+    size_t                     repeat     ,
+    CppAD::vector<double>      &x         ,
+    CppAD::vector<double>      &jacobian
 )
-{
-	// --------------------------------------------------------------------
-	// check global options
-	const char* valid[] = { "memory", "onetape", "optimize"};
-	size_t n_valid = sizeof(valid) / sizeof(valid[0]);
-	typedef std::map<std::string, bool>::iterator iterator;
-	//
-	for(iterator itr=global_option.begin(); itr!=global_option.end(); ++itr)
-	{	if( itr->second )
-		{	bool ok = false;
-			for(size_t i = 0; i < n_valid; i++)
-				ok |= itr->first == valid[i];
-			if( ! ok )
-				return false;
-		}
-	}
-	// --------------------------------------------------------------------
-	// optimization options: no conditional skips or compare operators
-	std::string options="no_compare_op";
-	// --------------------------------------------------------------------
-	// setup
-	assert( x.size() == size );
-	assert( jacobian.size() == size * size );
+{   global_cppad_thread_alloc_inuse = 0;
 
-	typedef CppAD::AD<double>       ADScalar;
-	typedef CppAD::vector<ADScalar> ADVector;
+    // --------------------------------------------------------------------
+    // check global options
+    const char* valid[] = { "memory", "onetape", "optimize"};
+    size_t n_valid = sizeof(valid) / sizeof(valid[0]);
+    typedef std::map<std::string, bool>::iterator iterator;
+    //
+    for(iterator itr=global_option.begin(); itr!=global_option.end(); ++itr)
+    {   if( itr->second )
+        {   bool ok = false;
+            for(size_t i = 0; i < n_valid; i++)
+                ok |= itr->first == valid[i];
+            if( ! ok )
+                return false;
+        }
+    }
+    // --------------------------------------------------------------------
+    // optimization options: no conditional skips or compare operators
+    std::string optimize_options =
+        "no_conditional_skip no_compare_op no_print_for_op";
+    // --------------------------------------------------------------------
+    // setup
+    assert( x.size() == size );
+    assert( jacobian.size() == size * size );
 
-	size_t j;
-	size_t p = 0;              // use ode to calculate function values
-	size_t n = size;           // number of independent variables
-	size_t m = n;              // number of dependent variables
-	ADVector  X(n), Y(m);      // independent and dependent variables
-	CppAD::ADFun<double>  f;   // AD function
+    typedef CppAD::AD<double>       ADScalar;
+    typedef CppAD::vector<ADScalar> ADVector;
 
-	// -------------------------------------------------------------
-	if( ! global_option["onetape"] ) while(repeat--)
-	{	// choose next x value
-		uniform_01(n, x);
-		for(j = 0; j < n; j++)
-			X[j] = x[j];
+    size_t j;
+    size_t p = 0;              // use ode to calculate function values
+    size_t n = size;           // number of independent variables
+    size_t m = n;              // number of dependent variables
+    ADVector  X(n), Y(m);      // independent and dependent variables
+    CppAD::ADFun<double>  f;   // AD function
 
-		// declare the independent variable vector
-		Independent(X);
+    // do not even record comparison operators
+    size_t abort_op_index = 0;
+    bool record_compare   = false;
 
-		// evaluate function
-		CppAD::ode_evaluate(X, p, Y);
+    // -------------------------------------------------------------
+    if( ! global_option["onetape"] ) while(repeat--)
+    {   // choose next x value
+        uniform_01(n, x);
+        for(j = 0; j < n; j++)
+            X[j] = x[j];
 
-		// create function object f : X -> Y
-		f.Dependent(X, Y);
+        // declare independent variables
+        Independent(X, abort_op_index, record_compare);
 
-		if( global_option["optimize"] )
-			f.optimize(options);
+        // evaluate function
+        CppAD::ode_evaluate(X, p, Y);
 
-		// skip comparison operators
-		f.compare_change_count(0);
+        // create function object f : X -> Y
+        f.Dependent(X, Y);
 
-		jacobian = f.Jacobian(x);
-	}
-	else
-	{	// an x value
-		uniform_01(n, x);
-		for(j = 0; j < n; j++)
-			X[j] = x[j];
+        if( global_option["optimize"] )
+            f.optimize(optimize_options);
 
-		// declare the independent variable vector
-		Independent(X);
+        // skip comparison operators
+        f.compare_change_count(0);
 
-		// evaluate function
-		CppAD::ode_evaluate(X, p, Y);
+        jacobian = f.Jacobian(x);
+    }
+    else
+    {   // an x value
+        uniform_01(n, x);
+        for(j = 0; j < n; j++)
+            X[j] = x[j];
 
-		// create function object f : X -> Y
-		f.Dependent(X, Y);
+        // declare the independent variable vector
+        Independent(X, abort_op_index, record_compare);
 
-		if( global_option["optimize"] )
-			f.optimize(options);
+        // evaluate function
+        CppAD::ode_evaluate(X, p, Y);
 
-		// skip comparison operators
-		f.compare_change_count(0);
+        // create function object f : X -> Y
+        f.Dependent(X, Y);
 
-		while(repeat--)
-		{	// get next argument value
-			uniform_01(n, x);
+        if( global_option["optimize"] )
+            f.optimize(optimize_options);
 
-			// evaluate jacobian
-			jacobian = f.Jacobian(x);
-		}
-	}
-	return true;
+        // skip comparison operators
+        f.compare_change_count(0);
+
+        while(repeat--)
+        {   // get next argument value
+            uniform_01(n, x);
+
+            // evaluate jacobian
+            jacobian = f.Jacobian(x);
+        }
+    }
+    size_t thread                   = CppAD::thread_alloc::thread_num();
+    global_cppad_thread_alloc_inuse = CppAD::thread_alloc::inuse(thread);
+    return true;
 }
 /* %$$
 $end

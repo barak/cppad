@@ -1,12 +1,13 @@
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Build the cppad_ipopt/test directory tests
 # Inherit build tyope from ../CMakeList.txt
@@ -21,10 +22,10 @@ LINK_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR}/../src ${ipopt_LIBRARY_DIRS} )
 #                 source1 source2 ... sourceN
 # )
 SET(source_list test_more.cpp
-	k_gt_one.cpp
-	multiple_solution.cpp
-	retape_k1_l1.cpp
-	retape_k1_l2.cpp
+    k_gt_one.cpp
+    multiple_solution.cpp
+    retape_k1_l1.cpp
+    retape_k1_l2.cpp
 )
 set_compile_flags( cppad_ipopt_test "${cppad_debug_which}" "${source_list}" )
 #
@@ -32,16 +33,16 @@ ADD_EXECUTABLE( cppad_ipopt_test EXCLUDE_FROM_ALL ${source_list} )
 
 # List of libraries to be linked into the specified target
 TARGET_LINK_LIBRARIES(cppad_ipopt_test
-	cppad_ipopt
-	${cppad_lib}
-	${ipopt_LIBRARIES}
-	${colpack_libs}
+    cppad_ipopt
+    ${cppad_lib}
+    ${ipopt_LIBRARIES}
+    ${colpack_libs}
 )
 
 # Add the check_cppad_ipopt_test target
 ADD_CUSTOM_TARGET(check_cppad_ipopt_test
-	cppad_ipopt_test
-	DEPENDS cppad_ipopt_test cppad_ipopt
+    cppad_ipopt_test
+    DEPENDS cppad_ipopt_test cppad_ipopt
 )
 MESSAGE(STATUS "make check_cppad_ipopt_test: available")
 

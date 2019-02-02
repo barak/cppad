@@ -1,13 +1,14 @@
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 
 /*
 Check the value of machine epsilon is accurate enough for the correctness tests
@@ -17,11 +18,11 @@ Check the value of machine epsilon is accurate enough for the correctness tests
 # include <limits>
 
 bool dbl_epsilon(void)
-{	bool ok = true;
+{   bool ok = true;
 
-	// CppAD correctness tests assume machine epsilon is less than 1e-13
-	ok &= DBL_EPSILON < 1e-13;
-	ok &= std::numeric_limits<double>::digits10 >= 13;
+    // CppAD correctness tests assume machine epsilon is less than 1e-13
+    ok &= DBL_EPSILON < 1e-13;
+    ok &= std::numeric_limits<double>::digits10 >= 13;
 
-	return ok;
+    return ok;
 }

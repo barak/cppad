@@ -1,22 +1,20 @@
-// $Id: ode_speed.cpp 3788 2016-02-09 15:50:06Z bradbell $
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin ipopt_ode_speed.cpp$$
 
 $section Speed Test for Both Simple and Fast Representations$$
 
-$code
 $srcfile%cppad_ipopt/speed/ode_speed.cpp%0%// BEGIN C++%// END C++%1%$$
-$$
 
 $end
 */
@@ -35,56 +33,58 @@ $end
 # endif
 
 namespace {
-	double current_second(void)
-	{
+    double current_second(void)
+    {
 # if CPPAD_HAS_GETTIMEOFDAY & CPPAD_NOT_MICOROSOFT
-		struct timeval value;
-		gettimeofday(&value, 0);
-		return double(value.tv_sec) + double(value.tv_usec) * 1e-6;
+        struct timeval value;
+        gettimeofday(&value, 0);
+        return double(value.tv_sec) + double(value.tv_usec) * 1e-6;
 # else
-		return (double) clock() / (double) CLOCKS_PER_SEC;
+        return (double) clock() / (double) CLOCKS_PER_SEC;
 # endif
-	}
+    }
 }
 
 double ode_speed(const char* name, size_t& count)
 {
-	// determine simple and retape flags
-	bool simple = true, retape = true;
-	if( std::strcmp(name, "simple_retape_no") == 0 )
-	{	simple = true; retape = false; }
-	else if( std::strcmp(name, "simple_retape_yes") == 0 )
-	{	simple = true; retape = true; }
-	else if( std::strcmp(name, "fast_retape_no") == 0 )
-	{	simple = false; retape = false; }
-	else if( std::strcmp(name, "fast_retape_yes") == 0 )
-	{	simple = false; retape = true; }
-	else	assert(false);
+    // determine simple and retape flags
+    bool simple = true, retape = true;
+    if( std::strcmp(name, "simple_retape_no") == 0 )
+    {   simple = true; retape = false; }
+    else if( std::strcmp(name, "simple_retape_yes") == 0 )
+    {   simple = true; retape = true; }
+    else if( std::strcmp(name, "fast_retape_no") == 0 )
+    {   simple = false; retape = false; }
+    else if( std::strcmp(name, "fast_retape_yes") == 0 )
+    {   simple = false; retape = true; }
+    else
+        assert(false);
 
-	size_t i;
-        double s0, s1;
-	size_t  c0, c1;
+    size_t i;
+    double s0, s1;
+    size_t  c0, c1;
 
-	// solution vector
-	NumberVector x;
+    // solution vector
+    NumberVector x;
 
-	// number of time grid intervals between measurement values
-	SizeVector N(Nz + 1);
-	N[0] = 0;
-	for(i = 1; i <= Nz; i++)
-	{	N[i] = 10;
-		// n   += N[i] * Ny;
-	}
-	// n += Na;
+    // number of time grid intervals between measurement values
+    SizeVector N(Nz + 1);
+    N[0] = 0;
+    for(i = 1; i <= Nz; i++)
+    {   N[i] = 10;
+        // n   += N[i] * Ny;
+    }
+    // n += Na;
 
-	s0              = current_second();
-	c0              = count_eval_r();
-	if( simple )
-		ipopt_ode_case<FG_simple>(retape, N, x);
-	else	ipopt_ode_case<FG_fast>(retape, N, x);
-	s1              = current_second();
-	c1              = count_eval_r();
-	count           = c1 - c0 - 1;
-	return s1 - s0;
+    s0              = current_second();
+    c0              = count_eval_r();
+    if( simple )
+        ipopt_ode_case<FG_simple>(retape, N, x);
+    else
+        ipopt_ode_case<FG_fast>(retape, N, x);
+    s1              = current_second();
+    c1              = count_eval_r();
+    count           = c1 - c0 - 1;
+    return s1 - s0;
 }
 // END C++

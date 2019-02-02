@@ -1,13 +1,13 @@
-# $Id: dos_path_to_unix.cmake 2770 2013-03-08 13:42:40Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
-#                     Eclipse Public License Version 1.0.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # dos_path_to_unix(dos_path unix_path)
 #
@@ -19,5 +19,5 @@
 # is the variable where the result of the conversion is placed.
 # 
 MACRO(dos_path_to_unix dos_path unix_path)
-	STRING(REGEX REPLACE "[\\]" "/" ${unix_path} "${dos_path}" )
+    STRING(REGEX REPLACE "[\\]" "/" ${unix_path} "${dos_path}" )
 ENDMACRO(dos_path_to_unix dos_path unix_path)

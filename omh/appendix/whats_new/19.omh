@@ -1,0 +1,115 @@
+/* --------------------------------------------------------------------------
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+
+  CppAD is distributed under the terms of the
+               Eclipse Public License Version 2.0.
+
+  This Source Code may also be made available under the following
+  Secondary License when the conditions for such availability set forth
+  in the Eclipse Public License, Version 2.0 are satisfied:
+        GNU General Public License, Version 2.0 or later.
+-------------------------------------------------------------------------- */
+
+$begin whats_new_19$$
+$spell
+    CppAD
+    LeppOp
+    dag
+    mul
+    jac
+    hes
+    chkpoint
+    var
+$$
+
+$section Changes and Additions to CppAD During 2019$$
+
+$head 01-18$$
+The documentation for $cref atomic_three$$,
+and its subsections, was improved.
+
+$head 01-17$$
+The arguments
+$cref/parameter_x/atomic_three/parameter_x/$$ and
+$cref/type_x/atomic_three/type_x/$$ were included
+for all the $code atomic_three$$ virtual functions.
+
+$head 01-16$$
+More improvements, and bug fixes, in the optimization of $cref atomic$$
+operations.
+This results in a reduction in the number of parameters
+$cref/size_par/seq_property/size_par/$$
+and the number of variables
+$cref/size_var/seq_property/size_var/$$.
+
+$head 01-15$$
+Fix a bug in the optimization of $cref atomic_three$$
+operations with $cref/dynamic/Independent/dynamic/$$ parameters.
+
+$head 01-14$$
+$list number$$
+The $cref/rev_depend/atomic_three_rev_depend/$$ call back function
+was added to $code atomic_three$$ class.
+This enables one to $cref optimize$$ functions that use
+$code atomic_three$$ operations; see
+the $cref/rev_depend.cpp/atomic_three_rev_depend.cpp/$$ example.
+$lnext
+The ability to $cref optimize$$ functions was extended to
+$cref chkpoint_two$$ operations; e.g., a call to optimize was added
+at the end of the
+$cref/get_started.cpp/chkpoint_two_get_started.cpp/$$ example.
+$lnext
+The $cref chkpoint_one$$ class was deprecated,
+use $cref chkpoint_two$$ instead.
+$lend
+
+$head 01-06$$
+One of the two atomic matrix multiply examples was converted
+from using $cref atomic_two$$ to $cref atomic_three_mat_mul.cpp$$.
+This conversion made it clear that the $icode type_x$$ argument
+needed to be included in the
+$cref/jac_sparsity/atomic_three_jac_sparsity/type_x/$$ and
+$cref/hes_sparsity/atomic_three_hes_sparsity/type_x/$$ functions.
+
+$head 01-05$$
+Merge in the $code atomic branch$$.
+This completed $cref wish_list$$ item for the new atomic function API;
+see $cref atomic_three$$.
+This is an improvement over the $cref atomic_two$$ interface,
+which used the $code atomic_base$$ class and has been deprecated.
+In addition the following changes were included:
+$list number$$
+Move the checkpoint examples below the
+$cref/checkpoint/chkpoint_one/$$ documentation.
+$lnext
+A phantom parameter, at index zero, was added; see
+$cref/size_par/seq_property/size_par/$$.
+$lnext
+There appears to have been a bug in $code put_con_par$$ (not tested for)
+whereby a constant parameter might match a dynamic parameter
+(and get changed). This has been fixed.
+$lnext
+There was a mistake in the $code check_variable_dag$$ routine whereby
+the operator $code LeppOp$$ checked a parameter index as if it were
+a variable index. This has been fixed.
+$lend
+
+$head 01-11$$
+Merge in the $code chkpoint$$ branch.
+$list number$$
+This created the $cref chkpoint_two$$ class as a replacement
+for the $cref chkpoint_one$$ class.
+This new checkpoint class takes advantage
+of $cref/dynamic parameters/glossary/Parameter/Dynamic/$$
+and can be used with $cref base2ad$$.
+$lnext
+While creating the $code chkpoint_two$$ class,
+a problem was discovered in the $cref atomic_three$$ class.
+To be specific, it does not yet work with $cref optimize$$.
+A reverse dependency analysis is the proper way to fix this.
+The $code atomic_three$$ $code type$$ member function does a forward
+$cref/dependency analysis/atomic_three_for_type/Dependency Analysis/$$
+and so its name was changed from $code type$$ to $code for_type$$.
+$lend
+
+$end

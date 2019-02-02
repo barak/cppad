@@ -1,17 +1,21 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Build the test_more directory tests
 
 # initialize check_depends
 SET(check_test_more_depends "")
+
+# deprecated tests
+ADD_SUBDIRECTORY(deprecated)
 
 # compare_c tests
 ADD_SUBDIRECTORY(compare_c)
@@ -20,7 +24,9 @@ ADD_SUBDIRECTORY(compare_c)
 ADD_SUBDIRECTORY(debug_rel)
 
 # cppad_for_tmb tests
-ADD_SUBDIRECTORY(cppad_for_tmb)
+IF( OPENMP_FOUND )
+    ADD_SUBDIRECTORY(cppad_for_tmb)
+ENDIF( OPENMP_FOUND )
 
 # general tests
 ADD_SUBDIRECTORY(general)

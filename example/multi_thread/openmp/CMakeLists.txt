@@ -1,12 +1,13 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Build the example/multi_thread/openmp directory tests
 # Inherit build type from ../CMakeList.txt
@@ -22,14 +23,15 @@ ADD_DEFINITIONS( ${OpenMP_CXX_FLAGS} )
 #                 source1 source2 ... sourceN
 # )
 SET(source_list ../thread_test.cpp
-	${CMAKE_SOURCE_DIR}/speed/src/microsoft_timer.cpp
-	../team_example.cpp
-	../harmonic.cpp
-	../multi_atomic.cpp
-	../multi_newton.cpp
-	a11c_openmp.cpp
-	simple_ad_openmp.cpp
-	team_openmp.cpp
+    ${CMAKE_SOURCE_DIR}/speed/src/microsoft_timer.cpp
+    ../team_example.cpp
+    ../harmonic.cpp
+    ../multi_atomic.cpp
+    ../multi_checkpoint.cpp
+    ../multi_newton.cpp
+    a11c_openmp.cpp
+    simple_ad_openmp.cpp
+    team_openmp.cpp
 )
 set_compile_flags( example_multi_thread_openmp "${cppad_debug_which}" "${source_list}" )
 #
@@ -40,8 +42,8 @@ SET(CMAKE_EXE_LINKER_FLAGS ${OpenMP_CXX_FLAGS} )
 
 # Add the check_example_multi_thread_openmp target
 ADD_CUSTOM_TARGET(check_example_multi_thread_openmp
-	example_multi_thread_openmp simple_ad
-	DEPENDS example_multi_thread_openmp
+    example_multi_thread_openmp simple_ad
+    DEPENDS example_multi_thread_openmp
 )
 MESSAGE(STATUS "make check_example_multi_thread_openmp: available")
 

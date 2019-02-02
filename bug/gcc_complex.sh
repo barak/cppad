@@ -1,18 +1,18 @@
 #! /bin/bash -e
-# $Id: gcc_complex.sh 2886 2013-08-06 15:54:58Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-13 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 echo_eval() {
-	echo $*
-	eval $*
+    echo $*
+    eval $*
 }
 # -----------------------------------------------
 echo "create gcc_complex.cpp"
@@ -22,15 +22,15 @@ cat << EOF > gcc_complex.cpp
 # include <limits>
 
 int main(void)
-{	double inf = std::numeric_limits<double>::infinity();
-	std::complex<double> c_inf( inf );
-	std::complex<double> c_1( 1. );
+{   double inf = std::numeric_limits<double>::infinity();
+    std::complex<double> c_inf( inf );
+    std::complex<double> c_1( 1. );
 
-	std::cout << "c_inf      = " << c_inf << std::endl;
-	std::cout << "c_1        = "   << c_1 << std::endl;
-	std::cout << "c_inf / c1 = " << c_inf / c_1 << std::endl;
+    std::cout << "c_inf      = " << c_inf << std::endl;
+    std::cout << "c_1        = "   << c_1 << std::endl;
+    std::cout << "c_inf / c1 = " << c_inf / c_1 << std::endl;
 
-	return 0;
+    return 0;
 }
 EOF
 echo_eval g++ gcc_complex.cpp -o gcc_complex
