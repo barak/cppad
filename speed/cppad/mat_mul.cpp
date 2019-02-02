@@ -1,37 +1,36 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin cppad_mat_mul.cpp$$
 $spell
-	resize
-	nr
-	nc
-	cppad
-	mul
-	hpp
-	bool
-	onetape
-	sq
-	var
-	std::cout
-	endl
-	CppAD
-	dz
-	typedef
-	boolsparsity
-	enum
+    resize
+    nr
+    nc
+    cppad
+    mul
+    hpp
+    bool
+    onetape
+    sq
+    var
+    std::cout
+    endl
+    CppAD
+    dz
+    typedef
+    enum
 $$
 
 $section CppAD Speed, Matrix Multiplication$$
-$mindex link_mat_mul multiply$$
 
 
 $head Specifications$$
@@ -48,146 +47,153 @@ $srccode%cpp% */
 // Note that CppAD uses global_option["memory"] at the main program level
 # include <map>
 extern std::map<std::string, bool> global_option;
+// see comments in main program for this external
+extern size_t global_cppad_thread_alloc_inuse;
 
 bool link_mat_mul(
-	size_t                           size     ,
-	size_t                           repeat   ,
-	CppAD::vector<double>&           x        ,
-	CppAD::vector<double>&           z        ,
-	CppAD::vector<double>&           dz
+    size_t                           size     ,
+    size_t                           repeat   ,
+    CppAD::vector<double>&           x        ,
+    CppAD::vector<double>&           z        ,
+    CppAD::vector<double>&           dz
 )
-{
-	// --------------------------------------------------------------------
-	// check global options
-	const char* valid[] = { "memory", "onetape", "optimize", "atomic"};
-	size_t n_valid = sizeof(valid) / sizeof(valid[0]);
-	typedef std::map<std::string, bool>::iterator iterator;
-	//
-	for(iterator itr=global_option.begin(); itr!=global_option.end(); ++itr)
-	{	if( itr->second )
-		{	bool ok = false;
-			for(size_t i = 0; i < n_valid; i++)
-				ok |= itr->first == valid[i];
-			if( ! ok )
-				return false;
-		}
-	}
-	// --------------------------------------------------------------------
-	// optimization options: no conditional skips or compare operators
-	std::string options="no_compare_op";
-	// -----------------------------------------------------
-	// setup
-	typedef CppAD::AD<double>           ADScalar;
-	typedef CppAD::vector<ADScalar>     ADVector;
+{   global_cppad_thread_alloc_inuse = 0;
 
-	size_t j;               // temporary index
-	size_t m = 1;           // number of dependent variables
-	size_t n = size * size; // number of independent variables
-	ADVector   X(n);        // AD domain space vector
-	ADVector   Y(n);        // Store product matrix
-	ADVector   Z(m);        // AD range space vector
-	CppAD::ADFun<double> f; // AD function object
+    // --------------------------------------------------------------------
+    // check global options
+    const char* valid[] = { "memory", "onetape", "optimize", "atomic"};
+    size_t n_valid = sizeof(valid) / sizeof(valid[0]);
+    typedef std::map<std::string, bool>::iterator iterator;
+    //
+    for(iterator itr=global_option.begin(); itr!=global_option.end(); ++itr)
+    {   if( itr->second )
+        {   bool ok = false;
+            for(size_t i = 0; i < n_valid; i++)
+                ok |= itr->first == valid[i];
+            if( ! ok )
+                return false;
+        }
+    }
+    // --------------------------------------------------------------------
+    // optimization options: no conditional skips or compare operators
+    std::string optimize_options =
+        "no_conditional_skip no_compare_op no_print_for_op";
+    // -----------------------------------------------------
+    // setup
+    typedef CppAD::AD<double>           ADScalar;
+    typedef CppAD::vector<ADScalar>     ADVector;
 
-	// vectors of reverse mode weights
-	CppAD::vector<double> w(1);
-	w[0] = 1.;
+    size_t j;               // temporary index
+    size_t m = 1;           // number of dependent variables
+    size_t n = size * size; // number of independent variables
+    ADVector   X(n);        // AD domain space vector
+    ADVector   Y(n);        // Store product matrix
+    ADVector   Z(m);        // AD range space vector
+    CppAD::ADFun<double> f; // AD function object
 
-	// user atomic information
-	CppAD::vector<ADScalar> ax(3 + 2 * n), ay(n);
-	atomic_mat_mul atom_mul;
-	//
-	if( global_option["boolsparsity"] )
-		atom_mul.option( CppAD::atomic_base<double>::pack_sparsity_enum );
-	else
-		atom_mul.option( CppAD::atomic_base<double>::set_sparsity_enum );
-	// ------------------------------------------------------
-	if( ! global_option["onetape"] ) while(repeat--)
-	{	// get the next matrix
-		CppAD::uniform_01(n, x);
-		for( j = 0; j < n; j++)
-			X[j] = x[j];
+    // vectors of reverse mode weights
+    CppAD::vector<double> w(1);
+    w[0] = 1.;
 
-		// declare independent variables
-		Independent(X);
+    // atomic function information
+    CppAD::vector<ADScalar> ax(3 + 2 * n), ay(n);
+    atomic_mat_mul atom_mul;
+    //
+    // do not even record comparison operators
+    size_t abort_op_index = 0;
+    bool record_compare   = false;
 
-		// do computations
-		if( ! global_option["atomic"] )
-			mat_sum_sq(size, X, Y, Z);
-		else
-		{	ax[0] = ADScalar( size ); // number of rows in left matrix
-			ax[1] = ADScalar( size ); // rows in left and columns in right
-			ax[2] = ADScalar( size ); // number of columns in right matrix
-			for(j = 0; j < n; j++)
-			{	ax[3 + j]     = X[j];
-				ax[3 + n + j] = X[j];
-			}
-			// Y = X * X
-			atom_mul(ax, ay);
-			Z[0] = 0.;
-			for(j = 0; j < n; j++)
-				Z[0] += ay[j];
-		}
-		// create function object f : X -> Z
-		f.Dependent(X, Z);
+    // ------------------------------------------------------
+    if( ! global_option["onetape"] ) while(repeat--)
+    {   // get the next matrix
+        CppAD::uniform_01(n, x);
+        for( j = 0; j < n; j++)
+            X[j] = x[j];
 
-		if( global_option["optimize"] )
-			f.optimize(options);
+        // declare independent variables
+        Independent(X, abort_op_index, record_compare);
 
-		// skip comparison operators
-		f.compare_change_count(0);
+        // do computations
+        if( ! global_option["atomic"] )
+            mat_sum_sq(size, X, Y, Z);
+        else
+        {   ax[0] = ADScalar( size ); // number of rows in left matrix
+            ax[1] = ADScalar( size ); // rows in left and columns in right
+            ax[2] = ADScalar( size ); // number of columns in right matrix
+            for(j = 0; j < n; j++)
+            {   ax[3 + j]     = X[j];
+                ax[3 + n + j] = X[j];
+            }
+            // Y = X * X
+            atom_mul(ax, ay);
+            Z[0] = 0.;
+            for(j = 0; j < n; j++)
+                Z[0] += ay[j];
+        }
+        // create function object f : X -> Z
+        f.Dependent(X, Z);
 
-		// evaluate and return gradient using reverse mode
-		z  = f.Forward(0, x);
-		dz = f.Reverse(1, w);
-	}
-	else
-	{	// get a next matrix
-		CppAD::uniform_01(n, x);
-		for(j = 0; j < n; j++)
-			X[j] = x[j];
+        if( global_option["optimize"] )
+            f.optimize(optimize_options);
 
-		// declare independent variables
-		Independent(X);
+        // skip comparison operators
+        f.compare_change_count(0);
 
-		// do computations
-		if( ! global_option["atomic"] )
-			mat_sum_sq(size, X, Y, Z);
-		else
-		{	for(j = 0; j < n; j++)
-			{	ax[j]   = X[j];
-				ax[j+n] = X[j];
-			}
-			// Y = X * X
-			atom_mul(ax, ay);
-			Z[0] = 0.;
-			for(j = 0; j < n; j++)
-				Z[0] += ay[j];
-		}
+        // evaluate and return gradient using reverse mode
+        z  = f.Forward(0, x);
+        dz = f.Reverse(1, w);
+    }
+    else
+    {   // get a next matrix
+        CppAD::uniform_01(n, x);
+        for(j = 0; j < n; j++)
+            X[j] = x[j];
 
-		// create function object f : X -> Z
-		f.Dependent(X, Z);
+        // declare independent variables
+        Independent(X, abort_op_index, record_compare);
 
-		if( global_option["optimize"] )
-			f.optimize(options);
+        // do computations
+        if( ! global_option["atomic"] )
+            mat_sum_sq(size, X, Y, Z);
+        else
+        {   for(j = 0; j < n; j++)
+            {   ax[j]   = X[j];
+                ax[j+n] = X[j];
+            }
+            // Y = X * X
+            atom_mul(ax, ay);
+            Z[0] = 0.;
+            for(j = 0; j < n; j++)
+                Z[0] += ay[j];
+        }
 
-		// skip comparison operators
-		f.compare_change_count(0);
+        // create function object f : X -> Z
+        f.Dependent(X, Z);
 
-		while(repeat--)
-		{	// get a next matrix
-			CppAD::uniform_01(n, x);
+        if( global_option["optimize"] )
+            f.optimize(optimize_options);
 
-			// evaluate and return gradient using reverse mode
-			z  = f.Forward(0, x);
-			dz = f.Reverse(1, w);
-		}
-	}
-	// --------------------------------------------------------------------
-	// Free temporary work space (any future atomic_mat_mul constructors
-	// would create new temporary work space.)
-	CppAD::user_atomic<double>::clear();
+        // skip comparison operators
+        f.compare_change_count(0);
 
-	return true;
+        while(repeat--)
+        {   // get a next matrix
+            CppAD::uniform_01(n, x);
+
+            // evaluate and return gradient using reverse mode
+            z  = f.Forward(0, x);
+            dz = f.Reverse(1, w);
+        }
+    }
+    size_t thread                   = CppAD::thread_alloc::thread_num();
+    global_cppad_thread_alloc_inuse = CppAD::thread_alloc::inuse(thread);
+    // --------------------------------------------------------------------
+    // Free temporary work space (any future atomic_mat_mul constructors
+    // would create new temporary work space.)
+    CppAD::user_atomic<double>::clear();
+    // --------------------------------------------------------------------
+
+    return true;
 }
 /* %$$
 $end

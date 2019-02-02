@@ -1,12 +1,13 @@
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     Eclipse Public License Version 1.0.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # optional_package(package system_include description)
 #
@@ -36,33 +37,33 @@
 # description: (in)
 #
 MACRO(optional_package package system_include description)
-	SET(prefix_variable ${package}_prefix)
-	SET(cppad_has_${package} 0)
-	SET(${prefix_variable} NOTFOUND CACHE PATH "${description}")
-	SET(prefix ${${prefix_variable}} )
-	MESSAGE(STATUS "${prefix_variable} = ${prefix}")
-	IF ( prefix )
-		SET(cppad_has_${package} 1)
-		#
-		# List of preprocessor include file search directories
-		FOREACH(dir ${cmake_install_includedirs})
-			IF(IS_DIRECTORY ${prefix}/${dir} )
-				IF( ${system_include} )
-					INCLUDE_DIRECTORIES( SYSTEM ${prefix}/${dir} )
-					MESSAGE(STATUS "    Found SYSTEM ${prefix}/${dir}")
-				ELSE( ${system_include} )
-					INCLUDE_DIRECTORIES( ${prefix}/${dir} )
-					MESSAGE(STATUS "    Found ${prefix}/${dir}")
-				ENDIF( ${system_include} )
-			ENDIF(IS_DIRECTORY ${prefix}/${dir} )
-		ENDFOREACH(dir)
-		# Paths in which the linker will search for libraries,
-		# only applies to targets created after it is called
-		FOREACH(dir ${cmake_install_libdirs})
-			IF(IS_DIRECTORY ${prefix}/${dir} )
-				LINK_DIRECTORIES( ${prefix}/${dir} )
-				MESSAGE(STATUS "    Found ${prefix}/${dir}")
-			ENDIF(IS_DIRECTORY ${prefix}/${dir} )
-		ENDFOREACH(dir)
-	ENDIF ( prefix )
+    SET(prefix_variable ${package}_prefix)
+    SET(cppad_has_${package} 0)
+    SET(${prefix_variable} NOTFOUND CACHE PATH "${description}")
+    SET(prefix ${${prefix_variable}} )
+    MESSAGE(STATUS "${prefix_variable} = ${prefix}")
+    IF ( prefix )
+        SET(cppad_has_${package} 1)
+        #
+        # List of preprocessor include file search directories
+        FOREACH(dir ${cmake_install_includedirs})
+            IF(IS_DIRECTORY ${prefix}/${dir} )
+                IF( ${system_include} )
+                    INCLUDE_DIRECTORIES( SYSTEM ${prefix}/${dir} )
+                    MESSAGE(STATUS "    Found SYSTEM ${prefix}/${dir}")
+                ELSE( ${system_include} )
+                    INCLUDE_DIRECTORIES( ${prefix}/${dir} )
+                    MESSAGE(STATUS "    Found ${prefix}/${dir}")
+                ENDIF( ${system_include} )
+            ENDIF(IS_DIRECTORY ${prefix}/${dir} )
+        ENDFOREACH(dir)
+        # Paths in which the linker will search for libraries,
+        # only applies to targets created after it is called
+        FOREACH(dir ${cmake_install_libdirs})
+            IF(IS_DIRECTORY ${prefix}/${dir} )
+                LINK_DIRECTORIES( ${prefix}/${dir} )
+                MESSAGE(STATUS "    Found ${prefix}/${dir}")
+            ENDIF(IS_DIRECTORY ${prefix}/${dir} )
+        ENDFOREACH(dir)
+    ENDIF ( prefix )
 ENDMACRO(optional_package)

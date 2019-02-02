@@ -1,25 +1,24 @@
-/* $Id: omp_alloc_dep.omh 3740 2015-10-07 03:47:28Z bradbell $ */
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+  CppAD is distributed under the terms of the
+               Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+  This Source Code may also be made available under the following
+  Secondary License when the conditions for such availability set forth
+  in the Eclipse Public License, Version 2.0 are satisfied:
+        GNU General Public License, Version 2.0 or later.
 -------------------------------------------------------------------------- */
 $begin efficient$$
 $spell
-	omp_alloc
-	ptr
-	num
-	bool
-	const
+    omp_alloc
+    ptr
+    num
+    bool
+    const
 $$
 
 $section Check If A Memory Allocation is Efficient for Another Use$$
-$mindex omp_alloc reuse$$
 
 $head Deprecated 2011-07-29$$
 This function has been deprecated because speed tests seem to indicate
@@ -35,7 +34,7 @@ allocation for a specified number of bytes.
 $head v_ptr$$
 This argument has prototype
 $codei%
-	const void* %v_ptr%
+    const void* %v_ptr%
 %$$.
 It must be a pointer to memory that is currently in use; i.e.
 obtained by a previous call to $cref get_memory$$ and not yet returned.
@@ -43,7 +42,7 @@ obtained by a previous call to $cref get_memory$$ and not yet returned.
 $head num_bytes$$
 This argument has prototype
 $codei%
-	size_t %num_bytes%
+    size_t %num_bytes%
 %$$
 It specifies the number of bytes of the memory allocated by $icode v_ptr$$
 that we want to use.
@@ -51,7 +50,7 @@ that we want to use.
 $head flag$$
 The return value has prototype
 $codei%
-	bool %flag%
+    bool %flag%
 %$$
 It is true,
 a call to $code get_memory$$ with
@@ -77,13 +76,12 @@ $end
 -------------------------------------------------------------------------------
 $begin old_max_num_threads$$
 $spell
-	inv
-	CppAD
-	num
-	omp_alloc
+    inv
+    CppAD
+    num
+    omp_alloc
 $$
 $section Set Maximum Number of Threads for omp_alloc Allocator$$
-$mindex max_num_threads parallel OpenMP initialize$$
 
 
 
@@ -102,7 +100,7 @@ By default there is only one thread and all execution is in sequential mode
 $head number$$
 The argument $icode number$$ has prototype
 $codei%
-	size_t %number%
+    size_t %number%
 %$$
 It must be greater than zero and specifies the maximum number of
 OpenMP threads that will be active at one time.

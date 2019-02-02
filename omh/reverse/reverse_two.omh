@@ -1,21 +1,21 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+  CppAD is distributed under the terms of the
+               Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+  This Source Code may also be made available under the following
+  Secondary License when the conditions for such availability set forth
+  in the Eclipse Public License, Version 2.0 are satisfied:
+        GNU General Public License, Version 2.0 or later.
 -------------------------------------------------------------------------- */
 $begin reverse_two$$
 
 $section Second Order Reverse Mode$$
-$mindex derivative$$
 $spell
-	taylor
-	const
-	dw
+    taylor
+    const
+    dw
 $$
 
 
@@ -23,7 +23,7 @@ $head Syntax$$
 $icode%dw% = %f%.Reverse(2, %w%)%$$
 
 $head Purpose$$
-We use $latex F : B^n \rightarrow B^m$$ to denote the
+We use $latex F : \B{R}^n \rightarrow \B{R}^m$$ to denote the
 $cref/AD function/glossary/AD Function/$$ corresponding to $icode f$$.
 Reverse mode computes the derivative of the $cref Forward$$ mode
 $cref/Taylor coefficients/glossary/Taylor Coefficient/$$
@@ -31,10 +31,10 @@ with respect to the domain variable $latex x$$.
 
 $head x^(k)$$
 For $latex k = 0, 1$$,
-the vector $latex x^{(k)} \in B^n$$ is defined as the value of
+the vector $latex x^{(k)} \in \B{R}^n$$ is defined as the value of
 $icode x_k$$ in the previous call (counting this call) of the form
 $codei%
-	%f%.Forward(%k%, %x_k%)
+    %f%.Forward(%k%, %x_k%)
 %$$
 If there is no previous call with $latex k = 0$$,
 $latex x^{(0)}$$ is the value of the independent variables when the
@@ -45,8 +45,8 @@ $cref/operation sequence/glossary/Operation/Sequence/$$ was recorded.
 
 $head W$$
 The functions
-$latex W_0 : B^n \rightarrow B$$ and
-$latex W_1 : B^n \rightarrow B$$
+$latex W_0 : \B{R}^n \rightarrow \B{R}$$ and
+$latex W_1 : \B{R}^n \rightarrow \B{R}$$
 are defined by
 $latex \[
 \begin{array}{rcl}
@@ -54,19 +54,19 @@ W_0 ( u ) & = & w_0 * F_0 ( u ) + \cdots + w_{m-1} * F_{m-1} (u)
 \\
 W_1 ( u ) & = &
 w_0 * F_0^{(1)} ( u ) * x^{(1)}
-	+ \cdots + w_{m-1} * F_{m-1}^{(1)} (u) * x^{(1)}
+    + \cdots + w_{m-1} * F_{m-1}^{(1)} (u) * x^{(1)}
 \end{array}
 \] $$
 This operation computes the derivatives
 $latex \[
 \begin{array}{rcl}
 W_0^{(1)} (u) & = &
-	w_0 * F_0^{(1)} ( u ) + \cdots + w_{m-1} * F_{m-1}^{(1)} (u)
+    w_0 * F_0^{(1)} ( u ) + \cdots + w_{m-1} * F_{m-1}^{(1)} (u)
 \\
 W_1^{(1)} (u) & = &
-	w_0 * \left( x^{(1)} \right)^\R{T} * F_0^{(2)} ( u )
-	+ \cdots +
-	w_{m-1} * \left( x^{(1)} \right)^\R{T} F_{m-1}^{(2)} (u)
+    w_0 * \left( x^{(1)} \right)^\R{T} * F_0^{(2)} ( u )
+    + \cdots +
+    w_{m-1} * \left( x^{(1)} \right)^\R{T} F_{m-1}^{(2)} (u)
 \end{array}
 \] $$
 at $latex u = x^{(0)}$$.
@@ -74,18 +74,18 @@ at $latex u = x^{(0)}$$.
 $head f$$
 The object $icode f$$ has prototype
 $codei%
-	const ADFun<%Base%> %f%
+    const ADFun<%Base%> %f%
 %$$
 Before this call to $code Reverse$$, the value returned by
 $codei%
-	%f%.size_order()
+    %f%.size_order()
 %$$
 must be greater than or equal two (see $cref size_order$$).
 
 $head w$$
 The argument $icode w$$ has prototype
 $codei%
-	const %Vector% &%w%
+    const %Vector% &%w%
 %$$
 (see $cref/Vector/reverse_two/Vector/$$ below)
 and its size
@@ -95,7 +95,7 @@ $cref/range/seq_property/Range/$$ space for $icode f$$.
 $head dw$$
 The result $icode dw$$ has prototype
 $codei%
-	%Vector% %dw%
+    %Vector% %dw%
 %$$
 (see $cref/Vector/reverse_two/Vector/$$ below).
 It contains both the derivative
@@ -168,8 +168,8 @@ dw[ j * 2 + 1 ] = \DD{ F_i }{ x_j }{ x_\ell } \left( x^{(0)} \right)
 
 $head Example$$
 $children%
-	example/general/reverse_two.cpp%
-	example/general/hes_times_dir.cpp
+    example/general/reverse_two.cpp%
+    example/general/hes_times_dir.cpp
 %$$
 The files
 $cref reverse_two.cpp$$

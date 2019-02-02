@@ -1,27 +1,34 @@
-# CppAD: A Package for Differentiation of C++ Algorithms
+# Title
+CppAD: A Package for Differentiation of C++ Algorithms
 
-[gh-pages](https://coin-or.github.io/CppAD/doc)
+# Links
 
-## Links
+- [docmentation](https://coin-or.github.io/CppAD/doc)
 
-- [Homepage](http://www.coin-or.org/CppAD/)
+- [News](https://coin-or.github.io/CppAD/doc/whats_new.htm)
 
-- [Directories](http://www.coin-or.org/CppAD/directory.htm)
+- [Install](https://coin-or.github.io/CppAD/doc/install.htm)
 
-- [News](https://www.coin-or.org/CppAD/Doc/whats_new.htm)
-
-- [Versions](http://www.coin-or.org/CppAD/Doc/download.htm)
-
-- [Install](https://www.coin-or.org/CppAD/Doc/install.htm)
-
-- [Web Documentation](https://www.coin-or.org/CppAD/Doc/cppad.htm)
+- [Directories](https://coin-or.github.io/CppAD/doc/directory.htm)
 
 - [Coin-OR Download](https://www.coin-or.org/download/source/CppAD/)
 
-- [Deprecated](https://www.coin-or.org/CppAD/Doc/deprecated.htm)
+
+# License
+<pre>
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
+
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+</pre>
 
 
-## Autotools
+# Autotools
 The preferred method to test and install CppAD uses cmake.
 The deprecated autotools procedure can be used for this purpose,
 but it will eventually be removed.
@@ -39,17 +46,5 @@ the following files, in this directory, are also for this purpose:
 `missing`.
 
 
-## Tarballs
-CppAD is available from Coin-OR with both the EPL and GPL licenses; see
-the versions link above. There is a separate tarball on the
-Coin-OR download page
-for each version and each license.
-
-## Documentation
-The web documentaition (linked above) is for the most recent version of CppAD.
-The tarballs mentioned above include documention for the corresponding version
-in a `doc` subdirectory.
-
-## Copyright:
+# Copyright:
 See the file `authors` in this directory.
-

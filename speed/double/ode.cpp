@@ -1,31 +1,30 @@
-// $Id: ode.cpp 3794 2016-02-29 20:42:44Z bradbell $
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin double_ode.cpp$$
 $spell
-	onetape
-	Jacobian
-	CppAD
-	cppad
-	hpp
-	bool
-	cstring
-	retape
-	resize
-	endif
+    onetape
+    Jacobian
+    CppAD
+    cppad
+    hpp
+    bool
+    cstring
+    retape
+    resize
+    endif
 $$
 
 $section Double Speed: Ode Solution$$
-$mindex link_ode speed$$
 
 
 $head Specifications$$
@@ -44,35 +43,35 @@ $srccode%cpp% */
 extern std::map<std::string, bool> global_option;
 
 bool link_ode(
-	size_t                     size       ,
-	size_t                     repeat     ,
-	CppAD::vector<double>      &x         ,
-	CppAD::vector<double>      &jacobian
+    size_t                     size       ,
+    size_t                     repeat     ,
+    CppAD::vector<double>      &x         ,
+    CppAD::vector<double>      &jacobian
 )
 {
-	if(global_option["onetape"]||global_option["atomic"]||global_option["optimize"])
-		return false;
-	// -------------------------------------------------------------
-	// setup
-	assert( x.size() == size );
+    if(global_option["onetape"]||global_option["atomic"]||global_option["optimize"])
+        return false;
+    // -------------------------------------------------------------
+    // setup
+    assert( x.size() == size );
 
-	size_t n = size;
+    size_t n = size;
 
-	size_t m = 0;
-	CppAD::vector<double> f(n);
+    size_t m = 0;
+    CppAD::vector<double> f(n);
 
-	while(repeat--)
-	{	// choose next x value
-		uniform_01(n, x);
+    while(repeat--)
+    {   // choose next x value
+        uniform_01(n, x);
 
-		// evaluate function
-		CppAD::ode_evaluate(x, m, f);
+        // evaluate function
+        CppAD::ode_evaluate(x, m, f);
 
-	}
-	size_t i;
-	for(i = 0; i < n; i++)
-		jacobian[i] = f[i];
-	return true;
+    }
+    size_t i;
+    for(i = 0; i < n; i++)
+        jacobian[i] = f[i];
+    return true;
 }
 /* %$$
 $end

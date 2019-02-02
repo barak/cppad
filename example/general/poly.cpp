@@ -1,13 +1,14 @@
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 
 /*
 $begin poly.cpp$$
@@ -15,9 +16,7 @@ $begin poly.cpp$$
 $section Polynomial Evaluation: Example and Test$$
 
 
-$code
 $srcfile%example/general/poly.cpp%0%// BEGIN C++%// END C++%1%$$
-$$
 
 $end
 */
@@ -27,29 +26,29 @@ $end
 # include <cmath>
 
 bool Poly(void)
-{	bool ok = true;
+{   bool ok = true;
 
-	// degree of the polynomial
-	size_t deg = 3;
+    // degree of the polynomial
+    size_t deg = 3;
 
-	// set the polynomial coefficients
-	CPPAD_TESTVECTOR(double)   a(deg + 1);
-	size_t i;
-	for(i = 0; i <= deg; i++)
-		a[i] = 1.;
+    // set the polynomial coefficients
+    CPPAD_TESTVECTOR(double)   a(deg + 1);
+    size_t i;
+    for(i = 0; i <= deg; i++)
+        a[i] = 1.;
 
-	// evaluate this polynomial
-	size_t k = 0;
-	double z = 2.;
-	double p = CppAD::Poly(k, a, z);
-	ok      &= (p == 1. + z + z*z + z*z*z);
+    // evaluate this polynomial
+    size_t k = 0;
+    double z = 2.;
+    double p = CppAD::Poly(k, a, z);
+    ok      &= (p == 1. + z + z*z + z*z*z);
 
-	// evaluate derivative
-	k = 1;
-	p = CppAD::Poly(k, a, z);
-	ok &= (p == 1 + 2.*z + 3.*z*z);
+    // evaluate derivative
+    k = 1;
+    p = CppAD::Poly(k, a, z);
+    ok &= (p == 1 + 2.*z + 3.*z*z);
 
-	return ok;
+    return ok;
 }
 
 // END C++

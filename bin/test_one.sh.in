@@ -1,15 +1,29 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
-# Run one of the tests
+set_libdir() {
+    if [ -e $1/lib ]
+    then
+        libdir='lib'
+    elif [ -e $1/lib64 ]
+    then
+        libdir='lib64'
+    else
+        echo "bin/test_one.sh: cannot file $1/lib or $1/lib64"
+        exit 1
+    fi
+}
+# -----------------------------------------------------------------------------
+# Command line arguments
 if [ "$0" != 'bin/test_one.sh' ]
 then
 cat << EOF
@@ -17,123 +31,178 @@ usage: bin/test_one.sh dir/file [extra]
 
 dir:   directory in front of file name
 file:  name of *.cpp file, with extension, that contains the test
-extra: extra source files and/or options for the g++ command
+extra: extra source files and/or options for the compile command
 EOF
-	exit 1
+    exit 1
 fi
 dir=`echo $1 | sed -e 's|/[^/]*$||'`
 file=`echo $1 | sed -e 's|.*/||'`
 extra="$2"
 if [ "$dir" == 'test_more/general/local' ]
 then
-	dir='test_more/general'
-	file="local/$file"
+    dir='test_more/general'
+    file="local/$file"
 fi
 # ---------------------------------------------------------------------------
+# Check command line arguments
 if [ "$dir" == '' ]
 then
-	echo "test_one.sh: cannot find dir before front of file"
-	exit 1
+    echo "test_one.sh: cannot find dir before front of file"
+    exit 1
 fi
 if [ ! -e "$dir/$file" ]
 then
-	echo "test_one.sh: Cannot find the file $dir/$file"
-	exit 1
+    echo "test_one.sh: Cannot find the file $dir/$file"
+    exit 1
 fi
 if [ ! -e 'build/CMakeFiles' ]
 then
-	echo 'test_one.sh: Must first execute bin/run_cmake.sh'
-	exit 1
+    echo 'test_one.sh: Must first execute bin/run_cmake.sh'
+    exit 1
 fi
+# ---------------------------------------------------------------------------
+# Clean out old output files
 if [ -e test_one.exe ]
 then
-	rm test_one.exe
+    rm test_one.exe
 fi
 if [ -e test_one.cpp ]
 then
-	rm test_one.cpp
+    rm test_one.cpp
 fi
 original_dir=`pwd`
 # ---------------------------------------------------------------------------
-# check for cppad_lib
-count=`ls build/cppad_lib/libcppad_lib.* | wc -l`
-if [ "$count" == '0' ]
+# initialize
+include_flags="-I $original_dir/include"
+library_flags="-lpthread"
+#
+# adolc
+if [ @cppad_has_adolc@ == 1 ]
 then
-	cd build
-	make cppad_lib
-	cd ..
+    include_flags="$include_flags -I @adolc_prefix@/include"
+    #
+    set_libdir @adolc_prefix@
+    library_flags="$library_flags -L@adolc_prefix@/$libdir -ladolc"
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@adolc_prefix@/$libdir"
 fi
-# ---------------------------------------------------------------------------
-# include_flags
-include_flags="-I $original_dir"
-if [ -e @adolc_prefix@/include ]
+#
+if [ @cppad_has_boost@ == 1 ]
 then
-	include_flags="$include_flags -I @adolc_prefix@/include"
+    library_flags="$library_flags -lboost_thread"
 fi
-if [ -e @colpack_prefix@/include ]
+#
+# colpack
+if [ @cppad_has_colpack@ == 1 ]
 then
-	include_flags="$include_flags -I @colpack_prefix@/include"
+    include_flags="$include_flags -I @colpack_prefix@/include"
+    #
+    set_libdir @colpack_prefix@
+    library_flags="$library_flags -L@colpack_prefix@/$libdir -lColPack"
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@colpack_prefix@/$libdir"
+    cppad_lib_path="@PROJECT_BINARY_DIR@/cppad_lib/libcppad_lib.so"
+    library_flags="$library_flags $cppad_lib_path"
+    #
+    if ! ls build/cppad_lib/libcppad_lib.* > /dev/null
+    then
+        cd build
+        make cppad_lib
+        cd ..
+    fi
 fi
-if [ -e @ipopt_prefix@/include ]
+#
+# ipopt
+if [ @cppad_has_ipopt@ == 1 ]
 then
-	include_flags="$include_flags -I @ipopt_prefix@/include"
+    include_flags="$include_flags -I @ipopt_prefix@/include"
+    #
+    ipopt_flags=`pkg-config --libs ipopt`
+    library_flags="$library_flags $ipopt_flags"
 fi
-if [ -e @eigen_prefix@/include ]
+#
+# eigen
+if [ @cppad_has_eigen@ == 1 ]
 then
-	include_flags="$include_flags -isystem @eigen_prefix@/include"
+    include_flags="$include_flags -isystem @eigen_prefix@/include"
 fi
 # --------------------------------------------------------------------------
+# Create test_one.exe
+#
 # determine the function name
 fun=`grep "^bool *[a-zA-Z0-9_]* *( *void *)" $dir/$file | tail -1 | \
-	sed -e "s/^bool *\([a-zA-Z0-9_]*\) *( *void *)/\1/"`
+    sed -e "s/^bool *\([a-zA-Z0-9_]*\) *( *void *)/\1/"`
 #
 # determine the main program main
 main=`echo *$dir | sed -e 's|.*/||' -e 's|$|.cpp|'`
 #
-# create test_one.cpp
 sed < $dir/$main > test_one.cpp \
--e '/^\tRun( /d' \
--e "s/.*This line is used by test_one.sh.*/\tRun( $fun, \"$fun\");/"
+-e '/^    Run( /d' \
+-e "s/.*This line is used by test_one.sh.*/    Run( $fun, \"$fun\");/"
+# --------------------------------------------------------------------------
+# Create test_one.exe
 #
 # compiler flags
 cxx_flags='@cppad_cxx_flags@'
-#
-# library flags
-library_flags=`pkg-config --libs ipopt`
-library_flags="$library_flags @PROJECT_BINARY_DIR@/cppad_lib/libcppad_lib.so"
-library_flags="$library_flags -lboost_thread -lpthread"
-for lib in lib lib64
-do
-	if [ -e @colpack_prefix@/$lib ]
-	then
-		library_flags="$library_flags -L@colpack_prefix@/$lib -lColPack"
-		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@colpack_prefix@/$lib"
-	fi
-	if [ -e @adolc_prefix@/$lib ]
-	then
-		library_flags="$library_flags -L@adolc_prefix@/$lib -ladolc"
-		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@adolc_prefix@/$lib"
-	fi
-done
+if [ "$dir" == 'test_more/cppad_for_tmb' ]
+then
+    cxx_flags="$cxx_flags @OpenMP_CXX_FLAGS@ -DCPPAD_FOR_TMB"
+fi
 #
 # compile command
-compile_command="g++ test_one.cpp -o test_one.exe
-	$dir/$file $extra
-	-g
-	$cxx_flags
-	$include_flags
-	$library_flags
+compile_command="@CMAKE_CXX_COMPILER@ test_one.cpp -o test_one.exe
+    $dir/$file $extra
+    -g
+    $cxx_flags
+    $include_flags
+    $library_flags
 "
-echo "$compile_command"
-$compile_command
+echo "$compile_command 2> test_one.err"
+if ! $compile_command 2> test_one.err
+then
+    tail test_one.err
+    echo 'test_one.sh: see test_one.err'
+    exit 1
+fi
 # --------------------------------------------------------------------------
+# LD_LIBRARY_PATH
 library_path='@PROJECT_BINARY_DIR@/cppad_lib'
 if ! echo $LD_LIBRARY_PATH | grep "$library_path"
 then
-	echo 'LD_LIBRARY_PATH=\'
-	echo "$library_path:\$LD_LIBRARY_PATH"
-	export LD_LIBRARY_PATH="$library_path:$LD_LIBRARY_PATH"
+    echo 'LD_LIBRARY_PATH=\'
+    echo "$library_path:\$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="$library_path:$LD_LIBRARY_PATH"
 fi
 # --------------------------------------------------------------------------
-echo_eval ./test_one.exe
+# Execute the test
+echo "./test_one.exe"
+./test_one.exe
+# --------------------------------------------------------------------------
+# Check for compiler warnings
+cat << EOF > test_one.sed
+# Lines that describe where error is
+/^In file included from/d
+/: note:/d
+#
+# Ipopt has sign conversion warnings
+/\/coin\/.*-Wsign-conversion/d
+#
+# Adolc has multiple types of conversion warnings
+/\/adolc\/.*-W[a-z-]*conversion/d
+/\/adolc\/.*-Wshorten-64-to-32/d
+#
+# Lines describing the error begin with space
+/^ /d
+#
+# Lines summarizing results
+/^[0-9]* warnings generated/d
+EOF
+sed -f test_one.sed < test_one.err > test_one.warn
+rm test_one.sed
+if [ -s test_one.warn ]
+then
+    cat test_one.warn
+    echo 'test_one.sh: unexpected warnings: see  test_one.warn, test_one.err'
+    exit 1
+fi
+# --------------------------------------------------------------------------
+echo 'test_one.sh: OK'
 exit 0

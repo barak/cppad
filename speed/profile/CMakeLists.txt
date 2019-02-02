@@ -1,12 +1,13 @@
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 # Build the speed/profile directory tests
 # Inherit build type from ../CMakeList.txt
@@ -26,21 +27,21 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR}/../src )
 #                 source1 source2 ... sourceN
 # )
 SET(source_list ../main.cpp
-	../cppad/ode.cpp
-	../cppad/det_lu.cpp
-	../cppad/det_minor.cpp
-	../cppad/mat_mul.cpp
-	../cppad/poly.cpp
-	../cppad/sparse_hessian.cpp
-	../cppad/sparse_jacobian.cpp
-	../src/link_det_lu.cpp
-	../src/link_det_minor.cpp
-	../src/link_mat_mul.cpp
-	../src/link_ode.cpp
-	../src/link_poly.cpp
-	../src/link_sparse_hessian.cpp
-	../src/link_sparse_jacobian.cpp
-	../src/microsoft_timer.cpp
+    ../include/cppad/ode.cpp
+    ../include/cppad/det_lu.cpp
+    ../include/cppad/det_minor.cpp
+    ../include/cppad/mat_mul.cpp
+    ../include/cppad/poly.cpp
+    ../include/cppad/sparse_hessian.cpp
+    ../include/cppad/sparse_jacobian.cpp
+    ../src/link_det_lu.cpp
+    ../src/link_det_minor.cpp
+    ../src/link_mat_mul.cpp
+    ../src/link_ode.cpp
+    ../src/link_poly.cpp
+    ../src/link_sparse_hessian.cpp
+    ../src/link_sparse_jacobian.cpp
+    ../src/microsoft_timer.cpp
 )
 set_compile_flags( speed_profile "${cppad_debug_which}" "${source_list}" )
 #
@@ -49,26 +50,26 @@ ADD_EXECUTABLE( speed_profile EXCLUDE_FROM_ALL ${source_list} )
 # profile builds it own copy of src/speed library (see ADD_EXECUTABLE above)
 # TARGET_LINK_LIBRARIES(speed_profile speed_src )
 TARGET_LINK_LIBRARIES(speed_profile
-	${cppad_lib}
-	${colpack_libs}
+    ${cppad_lib}
+    ${colpack_libs}
 )
 
 # Add the check_speed_profile target
 ADD_CUSTOM_TARGET(check_speed_profile
-	speed_profile correct 54321
-	DEPENDS speed_profile
+    speed_profile correct 54321
+    DEPENDS speed_profile
 )
 MESSAGE(STATUS "make check_speed_profile: available")
 
 # Sed script to make gprof output more readable, use:
-#	./speed_profile speed 54321
-#	gprof speed_profile gmon.out | sed -f 'gprof.sed' > gprof.out
+#   ./speed_profile speed 54321
+#   gprof speed_profile gmon.out | sed -f 'gprof.sed' > gprof.out
 #
 # configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])
 CONFIGURE_FILE(
-	${CMAKE_CURRENT_SOURCE_DIR}/gprof.sed.in
-	${CMAKE_CURRENT_BINARY_DIR}/gprof.sed
-	COPYONLY
+    ${CMAKE_CURRENT_SOURCE_DIR}/gprof.sed.in
+    ${CMAKE_CURRENT_BINARY_DIR}/gprof.sed
+    COPYONLY
 )
 
 # Change check depends in parent environment

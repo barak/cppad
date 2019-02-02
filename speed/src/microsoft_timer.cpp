@@ -1,20 +1,20 @@
-/* $Id: microsoft_timer.cpp 3724 2015-09-21 05:04:18Z bradbell $ */
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin microsoft_timer$$
 $spell
-	Microsoft
-	cpp
-	src
+    Microsoft
+    cpp
+    src
 $$
 
 $section Microsoft Version of Elapsed Number of Seconds$$
@@ -43,7 +43,7 @@ be defined, or this routine is not compiled.
 $end
 -----------------------------------------------------------------------
 */
-# if _MSC_VER
+# ifdef _MSC_VER
 # include <windows.h>
 # include <cassert>
 
@@ -62,28 +62,28 @@ Microsoft version of elapsed number of seconds since frist call.
 \copydetails elapsed_seconds
 */
 double microsoft_timer(void)
-{	static bool       first_  = true;
-	static SYSTEMTIME st_;
-	SYSTEMTIME st;
+{   static bool       first_  = true;
+    static SYSTEMTIME st_;
+    SYSTEMTIME st;
 
-	if( first_ )
-	{	::GetSystemTime(&st_);
-		first_ = false;
-		return 0.;
-	}
-	::GetSystemTime(&st);
+    if( first_ )
+    {   ::GetSystemTime(&st_);
+        first_ = false;
+        return 0.;
+    }
+    ::GetSystemTime(&st);
 
-	double hour   = double(st.wHour)         - double(st_.wHour);
-	double minute = double(st.wMinute)       - double(st_.wMinute);
-	double second = double(st.wSecond)       - double(st_.wSecond);
-	double milli  = double(st.wMilliseconds) - double(st_.wMilliseconds);
+    double hour   = double(st.wHour)         - double(st_.wHour);
+    double minute = double(st.wMinute)       - double(st_.wMinute);
+    double second = double(st.wSecond)       - double(st_.wSecond);
+    double milli  = double(st.wMilliseconds) - double(st_.wMilliseconds);
 
-	double diff   = 1e-3*milli + second + 60.*minute + 3600.*hour;
-	if( diff < 0. )
-		diff += 3600.*24.;
-	assert( 0 <= diff && diff < 3600.*24. );
+    double diff   = 1e-3*milli + second + 60.*minute + 3600.*hour;
+    if( diff < 0. )
+        diff += 3600.*24.;
+    assert( 0 <= diff && diff < 3600.*24. );
 
-	return diff;
+    return diff;
 }
 
 # endif

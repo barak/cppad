@@ -1,14 +1,14 @@
 #! /bin/bash -e
-# $Id: adolc_usrparms.sh 3217 2014-03-19 05:09:01Z bradbell $
 # -----------------------------------------------------------------------------
 # CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-14 Bradley M. Bell
 #
-# CppAD is distributed under multiple licenses. This distribution is under
-# the terms of the 
-#                     GNU General Public License Version 3.
+# CppAD is distributed under the terms of the
+#              Eclipse Public License Version 2.0.
 #
-# A copy of this license is included in the COPYING file of this distribution.
-# Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
+# This Source Code may also be made available under the following
+# Secondary License when the conditions for such availability set forth
+# in the Eclipse Public License, Version 2.0 are satisfied:
+#       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 #! /bin/bash 
 #
@@ -39,43 +39,43 @@ the value we are changing the Adolc TBUFSIZE parameter to.
 "
 if [ "$1" == "" ]
 then
-	echo "$message"
-	exit 1
+    echo "$message"
+    exit 1
 fi
 file="$1/adolc/usrparms.h"
 if [ ! -e $file ]
 then
-	echo "adolc_usrparms.sh: cannot find the file $file"
-	exit 1
+    echo "adolc_usrparms.sh: cannot find the file $file"
+    exit 1
 fi 
 #
 # case where we print the value of BUFSIZE and  TBUFSIZE
 if [ "$2" == "" ]
 then
-	grep "^#define T*BUFSIZE" < $file  
-	exit 0
+    grep "^#define T*BUFSIZE" < $file  
+    exit 0
 fi
 same="/* Previous: \1\2 */ \3\n#define"
 cmd_one="s|^\(#define BUFSIZE *\)\([0-9]*\)\(.*\)|$same BUFSIZE    $2|"
 cmd_two="s|^\(#define TBUFSIZE *\)\([0-9]*\)\(.*\)|$same TBUFSIZE   $3|"
 if [ "$4" == "show" ]
 then
-	sed < $file > adolc_usrparms.tmp \
-		-e "$cmd_one" -e "$cmd_two"
-	diff $file adolc_usrparms.tmp
-	exit 0
+    sed < $file > adolc_usrparms.tmp \
+        -e "$cmd_one" -e "$cmd_two"
+    diff $file adolc_usrparms.tmp
+    exit 0
 fi
 if [ "$4" == "modify" ]
 then
-	sed < $file > adolc_usrparms.tmp \
-		-e "$cmd_one" -e "$cmd_two"
-	diff $file adolc_usrparms.tmp
-	mv adolc_usrparms.tmp $file
-	echo "Execute the following commands for the change to take effect:"
-	echo "cd $1"
-	echo "make"
-	echo "make install"
-	exit 0
+    sed < $file > adolc_usrparms.tmp \
+        -e "$cmd_one" -e "$cmd_two"
+    diff $file adolc_usrparms.tmp
+    mv adolc_usrparms.tmp $file
+    echo "Execute the following commands for the change to take effect:"
+    echo "cd $1"
+    echo "make"
+    echo "make install"
+    exit 0
 fi
 echo "$message"
 exit 1

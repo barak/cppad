@@ -1,13 +1,14 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 
 // CPPAD_HAS_* defines
 # include <cppad/configure.hpp>
@@ -41,6 +42,7 @@ extern bool rev_hes_sparsity(void);
 extern bool rev_jac_sparsity(void);
 extern bool rev_sparse_hes(void);
 extern bool RevSparseJac(void);
+extern bool sparse2eigen(void);
 extern bool sparse_hessian(void);
 extern bool sparse_hes(void);
 extern bool sparse_jac_for(void);
@@ -57,50 +59,53 @@ extern bool sub_sparse_hes(void);
 
 // main program that runs all the tests
 int main(void)
-{	std::string group = "example/sparse";
-	size_t      width = 20;
-	CppAD::test_boolofvoid Run(group, width);
+{   std::string group = "example/sparse";
+    size_t      width = 20;
+    CppAD::test_boolofvoid Run(group, width);
 
-	// This line is used by test_one.sh
+    // This line is used by test_one.sh
 
-	// BEGIN_SORT_THIS_LINE_PLUS_2
-	// external compiled tests
-	Run( conj_grad,                 "conj_grad" );
-	Run( dependency,                "dependency" );
-	Run( for_hes_sparsity,          "for_hes_sparsity" );
-	Run( for_jac_sparsity,          "for_jac_sparsity" );
-	Run( for_sparse_hes,            "for_sparse_hes" );
-	Run( ForSparseJac,              "ForSparseJac" );
-	Run( rc_sparsity,               "rc_sparsity" );
-	Run( rev_hes_sparsity,          "rev_hes_sparsity" );
-	Run( rev_jac_sparsity,          "rev_jac_sparsity" );
-	Run( rev_sparse_hes,            "rev_sparse_hes" );
-	Run( RevSparseJac,              "RevSparseJac" );
-	Run( sparse_hessian,            "sparse_hessian" );
-	Run( sparse_hes,                "sparse_hes" );
-	Run( sparse_jac_for,            "sparse_jac_for" );
-	Run( sparse_jacobian,           "sparse_jacobian" );
-	Run( sparse_jac_rev,            "sparse_jac_rev" );
-	Run( sparse_sub_hes,            "sparse_sub_hes" );
-	Run( sparsity_sub,              "sparsity_sub" );
-	Run( subgraph_hes2jac,          "subgraph_hes2jac" );
-	Run( subgraph_jac_rev,          "subgraph_jac_rev" );
-	Run( subgraph_reverse,          "reverse_subgraph");
-	Run( subgraph_sparsity,         "subgraph_sparsity" );
-	Run( sub_sparse_hes,            "sub_sparse_hes" );
-	// END_SORT_THIS_LINE_MINUS_1
-	//
+    // BEGIN_SORT_THIS_LINE_PLUS_2
+    // external compiled tests
+    Run( conj_grad,                 "conj_grad" );
+    Run( dependency,                "dependency" );
+    Run( for_hes_sparsity,          "for_hes_sparsity" );
+    Run( for_jac_sparsity,          "for_jac_sparsity" );
+    Run( for_sparse_hes,            "for_sparse_hes" );
+    Run( ForSparseJac,              "ForSparseJac" );
+    Run( rc_sparsity,               "rc_sparsity" );
+    Run( rev_hes_sparsity,          "rev_hes_sparsity" );
+    Run( rev_jac_sparsity,          "rev_jac_sparsity" );
+    Run( rev_sparse_hes,            "rev_sparse_hes" );
+    Run( RevSparseJac,              "RevSparseJac" );
+    Run( sparse_hessian,            "sparse_hessian" );
+    Run( sparse_hes,                "sparse_hes" );
+    Run( sparse_jac_for,            "sparse_jac_for" );
+    Run( sparse_jacobian,           "sparse_jacobian" );
+    Run( sparse_jac_rev,            "sparse_jac_rev" );
+    Run( sparse_sub_hes,            "sparse_sub_hes" );
+    Run( sparsity_sub,              "sparsity_sub" );
+    Run( subgraph_hes2jac,          "subgraph_hes2jac" );
+    Run( subgraph_jac_rev,          "subgraph_jac_rev" );
+    Run( subgraph_reverse,          "reverse_subgraph");
+    Run( subgraph_sparsity,         "subgraph_sparsity" );
+    Run( sub_sparse_hes,            "sub_sparse_hes" );
+    // END_SORT_THIS_LINE_MINUS_1
+    //
 # if CPPAD_HAS_COLPACK
-	Run( colpack_jac,               "colpack_jac" );
-	Run( colpack_jacobian,          "colpack_jacobian" );
-	Run( colpack_hes,               "colpack_hes" );
-	Run( colpack_hessian,           "colpack_hessian" );
+    Run( colpack_jac,               "colpack_jac" );
+    Run( colpack_jacobian,          "colpack_jacobian" );
+    Run( colpack_hes,               "colpack_hes" );
+    Run( colpack_hessian,           "colpack_hessian" );
 # endif
-	//
-	// check for memory leak
-	bool memory_ok = CppAD::thread_alloc::free_all();
-	// print summary at end
-	bool ok = Run.summary(memory_ok);
-	//
-	return static_cast<int>( ! ok );
+# if CPPAD_HAS_EIGEN
+    Run( sparse2eigen,              "sparse2eigen" );
+# endif
+    //
+    // check for memory leak
+    bool memory_ok = CppAD::thread_alloc::free_all();
+    // print summary at end
+    bool ok = Run.summary(memory_ok);
+    //
+    return static_cast<int>( ! ok );
 }

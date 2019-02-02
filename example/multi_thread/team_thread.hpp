@@ -3,26 +3,27 @@
 /* --------------------------------------------------------------------------
 CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
 
-CppAD is distributed under multiple licenses. This distribution is under
-the terms of the
-                    GNU General Public License Version 3.
+CppAD is distributed under the terms of the
+             Eclipse Public License Version 2.0.
 
-A copy of this license is included in the COPYING file of this distribution.
-Please visit http://www.coin-or.org/CppAD/ for information on other licenses.
--------------------------------------------------------------------------- */
+This Source Code may also be made available under the following
+Secondary License when the conditions for such availability set forth
+in the Eclipse Public License, Version 2.0 are satisfied:
+      GNU General Public License, Version 2.0 or later.
+---------------------------------------------------------------------------- */
 /*
 $begin team_thread.hpp$$
 $spell
-	pthreads
-	const
-	cstddef
-	bool
-	pthread
-	initializes
-	hpp
-	num
-	CppAD
-	ta
+    pthreads
+    const
+    cstddef
+    bool
+    pthread
+    initializes
+    hpp
+    num
+    CppAD
+    ta
 $$
 $section Specifications for A Team of AD Threads$$
 
@@ -76,14 +77,14 @@ $head team_destroy$$
 This routine terminates all the other threads except for
 thread number zero; i.e., it terminates the threads corresponding to
 $codei%
-	%thread_num% = 1 , ... , %num_threads%-1
+    %thread_num% = 1 , ... , %num_threads%-1
 %$$
 
 $head team_name$$
 This routines returns a name that identifies this thread_team.
 The return value has prototype
 $codei%
-	const char* %name%
+    const char* %name%
 %$$
 and is a statically allocated $code '\0'$$ terminated C string.
 
@@ -94,9 +95,9 @@ corresponding call.
 Otherwise it is $code true$$.
 
 $children%
-	example/multi_thread/openmp/team_openmp.cpp%
-	example/multi_thread/bthread/team_bthread.cpp%
-	example/multi_thread/pthread/team_pthread.cpp
+    example/multi_thread/openmp/team_openmp.cpp%
+    example/multi_thread/bthread/team_bthread.cpp%
+    example/multi_thread/pthread/team_pthread.cpp
 %$$
 
 $head Example Use$$
