@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -18,6 +18,10 @@ $$
 
 $section CppAD::vector Template Class: Example and Test$$
 
+$head Purpose$$
+This is an example and test of the features of the
+$cref CppAD_vector$$ class that are not included in the
+$cref SimpleVector$$ concept.
 
 $srcfile%example/utility/cppad_vector.cpp%0%// BEGIN C++%// END C++%1%$$
 
@@ -26,88 +30,148 @@ $end
 // BEGIN C++
 
 # include <cppad/utility/vector.hpp>
+# include <cppad/utility/error_handler.hpp>
 # include <cppad/utility/check_simple_vector.hpp>
 # include <sstream> // sstream and string are used to test output operation
 # include <string>
+# include <algorithm>
+
+namespace {
+    void myhandler(
+        bool known       ,
+        int  line        ,
+        const char *file ,
+        const char *exp  ,
+        const char *msg  )
+    {   // error handler must not return, so throw an exception
+        throw line;
+    }
+}
 
 bool CppAD_vector(void)
 {   bool ok = true;
     using CppAD::vector;     // so can use vector instead of CppAD::vector
-    typedef double Type;     // change double to test other types
+    typedef double Scalar;   // change double to test other types
 
     // check Simple Vector specifications
-    CppAD::CheckSimpleVector< Type, vector<Type> >();
+    CppAD::CheckSimpleVector< Scalar, vector<Scalar> >();
 
-    vector<Type> x;          // default constructor
-    ok &= (x.size() == 0);
-
-    x.resize(2);             // resize and set element assignment
-    ok &= (x.size() == 2);
-    x[0] = Type(1);
-    x[1] = Type(2);
-
-    vector<Type> y(2);       // sizing constructor
-    ok &= (y.size() == 2);
-
-    const vector<Type> z(x); // copy constructor and const element access
-    ok &= (z.size() == 2);
-    ok &= ( (z[0] == Type(1)) && (z[1] == Type(2)) );
-
-    x[0] = Type(2);          // modify, assignment changes x
-    ok &= (x[0] == Type(2));
-
-    x = y = z;               // vector assignment
-    ok &= ( (x[0] == Type(1)) && (x[1] == Type(2)) );
-    ok &= ( (y[0] == Type(1)) && (y[1] == Type(2)) );
-    ok &= ( (z[0] == Type(1)) && (z[1] == Type(2)) );
+    // assignment returns reference for use in other assignments
+    vector<Scalar> vec(2), other(2), another(2);
+    another[0] = Scalar(1);
+    another[1] = Scalar(2);
+    vec = other = another;
+    for(size_t i = 0; i < 2; ++i)
+    {   ok &= vec[i] == other[i];
+        ok &= vec[i] == another[i];
+    }
 
     // test of output
     std::string        correct= "{ 1, 2 }";
     std::string        str;
     std::ostringstream buf;
-    buf << z;
+    buf << vec;
     str = buf.str();
     ok &= (str == correct);
 
-    // test resize(1), resize(0), capacity, and clear
-    size_t i = x.capacity();
-    ok      &= i >= 2;
-    x.resize(1);
-    ok      &= x[0] == Type(1);
-    ok      &= i == x.capacity();
-    x.resize(0);
-    ok      &= i == x.capacity();
-    x.clear();
-    ok      &= 0 == x.capacity();
+    // swap
+    other[0] = vec[0] + 1;
+    vec.swap(other);
+    ok  &= vec[0] == other[0] + 1;
 
-    // test of push_back scalar and capacity
-    size_t N = 100;
-    for(i = 0; i < N; i++)
-    {   size_t old_capacity = x.capacity();
-        x.push_back( Type(i) );
-        ok &= (i+1) == x.size();
-        ok &= i < x.capacity();
-        ok &= (i == old_capacity) || old_capacity == x.capacity();
-    }
-    for(i = 0; i < N; i++)
-        ok &= ( x[i] == Type(i) );
+    // clear
+    vec.clear();
+    ok &= vec.size() == 0;
+    ok &= vec.capacity() == 0;
 
-    // test of data
-    Type* data = x.data();
-    for(i = 0; i < N; i++)
-    {   ok &= data[i] == Type(i);
-        data[i] = Type(N - i);
-        ok &= x[i] == Type(N - i);
+    // push_back scalar and changes in capacity
+    size_t n = 100;
+    size_t old_capacity = vec.capacity();
+    for(size_t i = 0; i < n; i++)
+    {   vec.push_back( Scalar(n - i) );
+        ok &= (i+1) == vec.size();
+        ok &= i < vec.capacity();
+        ok &= old_capacity == vec.capacity() || i == old_capacity;
+        old_capacity = vec.capacity();
     }
+    for(size_t i = 0; i < n; i++)
+        ok &= ( vec[i] == Scalar(n - i) );
 
     // test of push_vector
-    x.push_vector(x);
-    ok &= (x.size() == 2 * N);
-    for(i = 0; i < N; i++)
-    {   ok &= x[i] == Type(N - i);
-        ok &= x[i+N] == Type(N - i);
+    vec.push_vector(vec);
+    ok &= (vec.size() == 2 * n);
+    for(size_t i = 0; i < n; i++)
+    {   ok &= vec[i]      == Scalar(n - i);
+        ok &= vec[i + n]  == Scalar(n - i);
     }
 
+    // resize perserves elements when new size less than capacity
+    ok &= n < vec.capacity();
+    vec.resize(n);
+    for(size_t i = 0; i < n; i++)
+        ok &= vec[i] == Scalar(n - i);
+
+    // vector assignment OK when target has size zero
+    other.resize(0);
+    other = vec;
+
+    // create a const vector equal to vec
+    const vector<Scalar> cvec = vec;
+
+    // sort of vec (will reverse order of elements for this case)
+    std::sort(vec.begin(), vec.end());
+    for(size_t i = 0; i < n ; ++i)
+        ok &= vec[i] == Scalar(i + 1);
+
+    // use data pointer to sort using pointers instead of iterators
+    std::sort(other.data(), other.data() + other.size());
+    for(size_t i = 0; i < n ; ++i)
+        ok &= other[i] == Scalar(i + 1);
+
+    // test direct use of iterator and const_iterator
+    typedef vector<Scalar>::iterator       iterator;
+    typedef vector<Scalar>::const_iterator const_iterator;
+    iterator        itr = vec.begin(); // increasing order
+    const_iterator citr = cvec.end();  // decreasing order
+    while( itr != vec.end() )
+    {   --citr;
+        ok &= *itr == *citr;
+        ++itr;
+    }
+    // conversion from iterator to const_iterator
+    citr = vec.begin();
+    ok  &= *citr == vec[0];
+
+    // Replace the default CppAD error handler with myhandler (defined above).
+    // This replacement is in effect until info drops out of scope.
+    CppAD::ErrorHandler info(myhandler);
+
+# ifndef NDEBUG
+    // -----------------------------------------------------------------------
+    // check that size mismatch throws an exception when NDEBUG not defined
+    other.resize(0);
+    bool detected_error = false;
+    try
+    {   another = other; }
+    catch(int line)
+    {   detected_error = true; }
+    ok &= detected_error;
+    // -----------------------------------------------------------------------
+    // check that iterator access out of range generates an error
+    itr = vec.begin();
+    ok  &= *itr == Scalar(1);  // this access OK
+    detected_error = false;
+    try
+    {   vec.clear();
+        // The iterator knows that the vector has changed and that
+        // this access is no longer valid
+        *itr;
+    }
+    catch(int line)
+    {   detected_error = true; }
+    ok &= detected_error;
+    // -----------------------------------------------------------------------
+# endif
 
     return ok;
 }

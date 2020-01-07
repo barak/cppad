@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -18,7 +18,14 @@ fi
 # ---------------------------------------------------------------------------
 echo 'Check user API preprocessor define symbols'
 echo '-----------------------------------------------------------------------'
-file_list=`git grep -l 'head CPPAD' | sed -e '/bin\/check_user_def.sh/d'`
+# The following files are in developer (not user) documentation:
+# include/cppad/configure.hpp.in
+# include/cppad/core/vec_ad/vec_ad.hpp
+file_list=`git grep -l 'head CPPAD' | sed \
+    -e '/bin\/check_user_def.sh/d' \
+    -e '/include\/cppad\/configure.hpp.in/d' \
+    -e '/include\/cppad\/core\/vec_ad\/vec_ad.hpp/d' \
+    `
 symbol_list=''
 for file in $file_list
 do
@@ -62,4 +69,3 @@ do
 done
 echo '-----------------------------------------------------------------------'
 echo "check_user_def.sh: OK"
-

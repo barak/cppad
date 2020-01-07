@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -41,9 +41,9 @@ extern bool azmul(void);
 extern bool base_adolc(void);
 extern bool base_alloc_test(void);
 extern bool bool_sparsity(void);
+extern bool check_simple_vector(void);
 extern bool chkpoint_one(void);
 extern bool chkpoint_two(void);
-extern bool check_simple_vector(void);
 extern bool compare_change(void);
 extern bool Compare(void);
 extern bool CondExpAD(void);
@@ -53,6 +53,7 @@ extern bool copy(void);
 extern bool Cosh(void);
 extern bool Cos(void);
 extern bool cppad_eigen(void);
+extern bool cppad_vector(void);
 extern bool dbl_epsilon(void);
 extern bool dependency(void);
 extern bool DivEq(void);
@@ -74,6 +75,7 @@ extern bool FunCheck(void);
 extern bool hes_sparsity(void);
 extern bool ipopt_solve(void);
 extern bool jacobian(void);
+extern bool json_graph(void);
 extern bool log10(void);
 extern bool log1p(void);
 extern bool log(void);
@@ -113,7 +115,9 @@ extern bool sparse_vec_ad(void);
 extern bool Sqrt(void);
 extern bool std_math(void);
 extern bool SubEq(void);
-extern bool subgraph(void);
+extern bool subgraph_1(void);
+extern bool subgraph_2(void);
+extern bool subgraph_hes2jac(void);
 extern bool Sub(void);
 extern bool SubZero(void);
 extern bool tan(void);
@@ -126,6 +130,8 @@ extern bool VecUnary(void);
 // END_SORT_THIS_LINE_MINUS_1
 
 // tests in local subdirectory
+extern bool json_lexer(void);
+extern bool json_parser(void);
 extern bool vector_set(void);
 
 // main program that runs all the tests
@@ -152,9 +158,9 @@ int main(void)
     Run( atomic_three,    "atomic_three"   );
     Run( azmul,           "azmul"          );
     Run( bool_sparsity,   "bool_sparsity"  );
+    Run( check_simple_vector, "check_simple_vector" );
     Run( chkpoint_one,    "chkpoint_one"   );
     Run( chkpoint_two,    "chkpoint_two"   );
-    Run( check_simple_vector, "check_simple_vector" );
     Run( compare_change,  "compare_change" );
     Run( Compare,         "Compare"        );
     Run( CondExpAD,       "CondExpAD"      );
@@ -163,6 +169,7 @@ int main(void)
     Run( copy,            "copy"           );
     Run( Cos,             "Cos"            );
     Run( Cosh,            "Cosh"           );
+    Run( cppad_vector,    "cppad_vector"   );
     Run( dbl_epsilon,     "dbl_epsilon"    );
     Run( dependency,      "dependency"     );
     Run( Div,             "Div"            );
@@ -182,6 +189,7 @@ int main(void)
     Run( FunCheck,        "FunCheck"       );
     Run( hes_sparsity,    "hes_sparsity"   );
     Run( jacobian,        "jacobian"       );
+    Run( json_graph,      "json_graph"     );
     Run( log10,           "log10"          );
     Run( log1p,           "log1p"          );
     Run( log,             "log"            );
@@ -221,7 +229,9 @@ int main(void)
     Run( Sqrt,            "Sqrt"           );
     Run( std_math,        "std_math"       );
     Run( SubEq,           "SubEq"          );
-    Run( subgraph,        "subgraph"       );
+    Run( subgraph_1,      "subgraph_1"     );
+    Run( subgraph_2,      "subgraph_2"     );
+    Run( subgraph_hes2jac, "subgraph_hes2jac" );
     Run( Sub,             "Sub"            );
     Run( SubZero,         "SubZero"        );
     Run( tan,             "tan"            );
@@ -245,10 +255,12 @@ int main(void)
     Run( eigen_mat_inv,   "eigen_mat_inv"  );
 # endif
 # if ! CPPAD_EIGENVECTOR
-    Run( test_vector, "test_vector" );
+    Run( test_vector,     "test_vector"    );
 # endif
     // local sub-directory
-    Run( test_vector,      "test_vector"   );
+    Run( json_lexer,     "json_lexer"     );
+    Run( json_parser,    "json_parser"    );
+    Run( vector_set,      "vector_set"     );
     //
     // check for memory leak
     bool memory_ok = CppAD::thread_alloc::free_all();

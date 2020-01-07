@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -9,281 +9,135 @@ Secondary License when the conditions for such availability set forth
 in the Eclipse Public License, Version 2.0 are satisfied:
       GNU General Public License, Version 2.0 or later.
 ---------------------------------------------------------------------------- */
-
-/*
-$begin link_sparse_hessian$$
-$spell
-    const
-    bool
-    CppAD
-    cppad
-    colpack
-$$
-
-
-$section Speed Testing Sparse Hessian$$
-
-$head Prototype$$
-$codei%extern bool link_sparse_hessian(
-    size_t                        %size%      ,
-    size_t                        %repeat%    ,
-    CppAD::vector<double>&        %x%         ,
-    const CppAD::vector<size_t>&  %row%       ,
-    const CppAD::vector<size_t>&  %col%       ,
-    CppAD::vector<double>&        %hessian%   ,
-    size_t                        %n_sweep%
-);
-%$$
-
-$head Method$$
-Given a row index vector $latex row$$
-and a second column vector $latex col$$,
-the corresponding function
-$latex f : \B{R}^n \rightarrow \B{R} $$
-is defined by $cref sparse_hes_fun$$.
-The non-zero entries in the Hessian of this function have
-one of the following forms:
-$latex \[
-    \DD{f}{x[row[k]]}{x[row[k]]}
-    \; , \;
-    \DD{f}{x[row[k]]}{x[col[k]]}
-    \; , \;
-    \DD{f}{x[col[k]]}{x[row[k]]}
-    \; , \;
-    \DD{f}{x[col[k]]}{x[col[k]]}
-\] $$
-for some $latex k $$ between zero and $latex K-1 $$.
-All the other terms of the Hessian are zero.
-
-$head size$$
-The argument $icode size$$, referred to as $latex n$$ below,
-is the dimension of the domain space for $latex f(x)$$.
-
-$head repeat$$
-The argument $icode repeat$$ is the number of times
-to repeat the test
-(with a different value for $icode x$$ corresponding to
-each repetition).
-
-$head x$$
-The argument $icode x$$ has prototype
-$codei%
-   CppAD::vector<double>& %x%
-%$$
-and its size is $latex n$$; i.e., $icode%x%.size() == %size%$$.
-The input value of the elements of $icode x$$ does not matter.
-On output, it has been set to the
-argument value for which the function,
-or its derivative, is being evaluated.
-The value of this vector need not change with each repetition.
-
-$head row$$
-The argument $icode row$$ has prototype
-$codei%
-    const CppAD::vector<size_t> %row%
-%$$
-Its size defines the value $latex K$$.
-It contains the row indices for the corresponding function $latex f(x)$$.
-All the elements of $icode row$$ are between zero and $latex n-1$$.
-
-$head col$$
-The argument $icode col$$ has prototype
-$codei%
-    const CppAD::vector<size_t> %col%
-%$$
-Its size must be the same as $icode row$$; i.e., $latex K$$.
-It contains the column indices for the corresponding function
-$latex f(x)$$.
-All the elements of $icode col$$ are between zero and $latex n-1$$.
-There are no duplicated entries requested, to be specific,
-if $icode%k1% != %k2%$$ then
-$codei%
-    ( %row%[%k1%] , %col%[%k1%] ) != ( %row%[%k2%] , %col%[%k2%] )
-%$$
-Furthermore, the entries are lower triangular; i.e.,
-$codei%
-    %col%[%k%] <= %row%[%k%]
-%$$.
-
-
-$head hessian$$
-The argument $icode hessian$$ has prototype
-$codei%
-    CppAD::vector<double>&  hessian
-%$$
-and its size is $icode K$$.
-The input value of its elements does not matter.
-The output value of its elements is the Hessian of the function $latex f(x)$$.
-To be more specific, for
-$latex k = 0 , \ldots , K-1$$,
-$latex \[
-    \DD{f}{ x[ \R{row}[k] ] }{ x[ \R{col}[k] ]} = \R{hessian} [k]
-\] $$
-
-$head n_sweep$$
-The input value of $icode n_sweep$$ does not matter. On output,
-it is the value $cref/n_sweep/sparse_hessian/n_sweep/$$ corresponding
-to the evaluation of $icode hessian$$.
-This is also the number of colors corresponding to the
-$cref/coloring method/sparse_hessian/work/color_method/$$,
-which can be set to $cref/colpack/speed_main/Sparsity Options/colpack/$$,
-and is otherwise $code cppad$$.
-
-
-$subhead double$$
-In the case where $icode package$$ is $code double$$,
-only the first element of $icode hessian$$ is used and it is actually
-the value of $latex f(x)$$ (derivatives are not computed).
-
-$end
------------------------------------------------------------------------------
-*/
-# include <cppad/utility/vector.hpp>
 # include <cppad/utility/near_equal.hpp>
 # include <cppad/speed/sparse_hes_fun.hpp>
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/utility/index_sort.hpp>
+
+# include "link_sparse_hessian.hpp"
 
 /*!
 \{
 \file link_sparse_hessian.cpp
 Defines and implement sparse Hessian speed link to package specific code.
 */
-namespace {
-    using CppAD::vector;
+namespace { // BEGIN_EMPTY_NAMESPACE
 
-    /*!
-    Class used by choose_row_col to determin order of row and column indices
-    */
-    class Key {
-    public:
-        /// row index
-        size_t row_;
-        /// column index
-        size_t col_;
-        /// default constructor
-        Key(void)
-        { }
-        /*!
-        Construct from a value for row and col
+using CppAD::vector;
 
-        \param row
-        row value for this key
+/*
+$begin choose_row_col$$
+$spell
+    Namespace
+$$
 
-        \param col
-        column value for this key
-        */
-        Key(size_t row, size_t col)
-        : row_(row), col_(col)
-        { }
-        /*!
-        Compare this key with another key using < operator
+$section Randomly choose Hessian row and column indices$$
 
-        \param other
-        the other key.
-        */
-        bool operator<(const Key& other) const
-        {   if( row_ == other.row_ )
-                return col_ < other.col_;
-            return row_ < other.row_;
+$head Namespace$$
+This function is in the empty namespace; i.e., it can only be accessed
+by functions in this file.
+
+$head Prototype$$
+$srcfile%speed/src/link_sparse_hessian.cpp%
+    0%// BEGIN_choose_row_col%// END_choose_row_col%1
+%$$
+
+$head n$$
+is number of rows and columns in the Hessian.
+
+$head row$$
+The input size and elements of row do not matter.
+Upon return it is the chosen row indices.
+
+$head col$$
+The input size and elements of col do not matter.
+Upon return it is the chosen column indices.
+
+$head Order$$
+The return row and column values are in row major order.
+
+$head Diagonal$$
+The diagonal is included in the result; i.e., for each $icode i$$
+between zero and $icode%n%-1%$$, there is a $icode k$$ such that
+$codei%
+    %row%[%k%] == %col%[%k%] == %i%
+%$$.
+
+$end
+*/
+// BEGIN_choose_row_col
+void choose_row_col(
+    size_t                 n   ,
+    CppAD::vector<size_t>& row ,
+    CppAD::vector<size_t>& col )
+// END_choose_row_col
+{   using CppAD::vector;
+
+    // maximum number of entries per row
+    size_t max_per_row = 5;
+
+    // random choices for each row, and correspond sort order
+    vector<double> random_01(max_per_row);
+    vector<size_t> random_index(max_per_row), order(max_per_row);
+
+    // generate the row and column indices
+    row.resize(0);
+    col.resize(0);
+    for(size_t i = 0; i < n; i++)
+    {   // generate max_per_row random values between 0 and 1
+        CppAD::uniform_01(max_per_row, random_01);
+
+        // make sure the diagnoal is in the result because
+        // sparse_hes_fun requires it
+        random_index[0] = i;
+
+        // convert to column indices between 0 and i
+        for(size_t k = 1; k < max_per_row; ++k)
+        {   random_index[k] = size_t( random_01[k] * double(i) );
+            random_index[k] = std::min(random_index[k], i);
         }
-    };
 
-    /*!
-    Function that randomly choose the row and column indices
+        // determine the sort order for the indices
+        CppAD::index_sort(random_index, order);
 
-    \param n [in]
-    is the dimension of the argument space for the function f(x).
-
-    \param row [out]
-    the input size and elements of row do not matter.
-    Upon return it is the chosen row indices.
-
-    \param col [out]
-    the input size and elements of col do not matter.
-    Upon return it is the chosen column indices.
-    */
-    void choose_row_col(
-        size_t          n   ,
-        vector<size_t>& row ,
-        vector<size_t>& col )
-    {   size_t i, j, k, ell;
-        size_t max_per_row = 5;
-
-        // generate the row and column indices
-        row.resize(0);
-        col.resize(0);
-        for(i = 0; i < n; i++)
-        {   // generate max_per_row random column indices between 0 and i
-            vector<double> random(max_per_row);
-            CppAD::uniform_01(max_per_row, random);
-
-            // set the indices for this row
-            size_t k_start = col.size();
-            for(ell = 0; ell < max_per_row; ell++)
-            {   // avoid warning when converting double to size_t
-                j = std::min(i, size_t( float(random[ell]) * double(i) ) );
-                bool ok = true;
-                for(k = k_start; k < col.size(); k++)
-                    ok &= j != col[k];
-                if( ok )
-                {   row.push_back(i);
-                    col.push_back(j);
-                }
+        // set the indices for this row
+        for(size_t k = 0; k < max_per_row; k++)
+        {   size_t j = random_index[ order[k] ];
+            bool ok = k == 0;
+            if( ! ok )
+                ok = random_index[ order[k-1] ] < j;
+            if( ok )
+            {   row.push_back(i);
+                col.push_back(j);
             }
         }
     }
 }
+} // END_EMPTY_NAMESPACE
 
-/*!
-Package specific implementation of a sparse Hessian claculation.
 
-\param size [in]
-is the size of the domain space; i.e. specifies n.
+/*
+$begin available_sparse_hessian$$
+$spell
+    Namespace
+    CppAD
+    bool
+$$
 
-\param repeat [in]
-number of times tha the test is repeated.
+$section Is Sparse Hessian Speed Test Available$$
 
-\param x [out]
-is a vector of size n containing
-the argument at which the Hessian was evaluated during the last repetition.
+$head Namespace$$
+This function is in the global namespace, not the CppAD namespace.
 
-\param row [in]
-is the row indices correpsonding to non-zero Hessian entries.
+$head Syntax$$
+$icode%available% = available_sparse_hessian()%$$
 
-\param col [in]
-is the column indices corresponding to non-zero Hessian entries;
-col.size() == row.size().
+$head available$$
+If the spare Hessian speed test is available for this package,
+the $code bool$$ value $icode available$$ is true.
+Otherwise it is false.
 
-\param hessian [out]
-is a vector, with hessian.size() == row.size(),
-containing the value of the Hessian of f(x)
-corresponding to the last repetition.
-
-\param n_sweep [out]
-The input value of this parameter does not matter.
-Upon return, it is the number of sweeps (colors) corresponding
-to the sparse hessian claculation.
-
-\return
-is true, if the sparse Hessian speed test is implemented for this package,
-and false otherwise.
-*/
-extern bool link_sparse_hessian(
-    size_t                           size      ,
-    size_t                           repeat    ,
-    const CppAD::vector<size_t>&     row       ,
-    const CppAD::vector<size_t>&     col       ,
-    CppAD::vector<double>&           x         ,
-    CppAD::vector<double>&           hessian   ,
-    size_t&                          n_sweep
-);
-
-/*!
-Is sparse Hessian test avaialable.
-
-\return
-true, if spare Hessian available for this package, and false otherwise.
+$end
 */
 bool available_sparse_hessian(void)
 {
@@ -295,17 +149,36 @@ bool available_sparse_hessian(void)
     size_t K = row.size();
     vector<double> hessian(K);
 
-    size_t n_sweep;
-    return link_sparse_hessian(n, repeat, row, col, x, hessian, n_sweep);
+    size_t n_color;
+    return link_sparse_hessian(n, repeat, row, col, x, hessian, n_color);
 }
-/*!
-Does final sparse Hessian value pass correctness test.
+/*
+$begin correct_sparse_hessian$$
+$spell
+    Namespace
+    CppAD
+    bool
+$$
 
-\param is_package_double
-if true, we are checking function values instead of derivatives.
+$section Does Sparse Hessian Pass Correctness Test$$
 
-\return
-true, if correctness test passes, and false otherwise.
+$head Namespace$$
+This function is in the global namespace, not the CppAD namespace.
+
+$head Syntax$$
+$icode%ok% = correct_sparse_hessian(%is_package_double%)%$$
+
+$head is_package_double$$
+If the $code bool$$ value $code is_package_double$$ is true,
+we are checking function values.
+Otherwise, we are checking derivative values.
+
+$head ok$$
+If the spare Hessian correctness test passed,
+the $code bool$$ value $icode ok$$ is true.
+Otherwise it is false.
+
+$end
 */
 bool correct_sparse_hessian(bool is_package_double)
 {
@@ -324,8 +197,8 @@ bool correct_sparse_hessian(bool is_package_double)
 
     // The double package assumes hessian.size() >= 1
     CPPAD_ASSERT_UNKNOWN( K >= 1 );
-    size_t n_sweep;
-    link_sparse_hessian(n, repeat, row, col, x, hessian, n_sweep);
+    size_t n_color;
+    link_sparse_hessian(n, repeat, row, col, x, hessian, n_color);
 
     size_t order, size;
     if( is_package_double)
@@ -345,15 +218,31 @@ bool correct_sparse_hessian(bool is_package_double)
 
     return ok;
 }
+/*
+$begin speed_sparse_hessian$$
+$spell
+    Namespace
+    CppAD
+$$
 
-/*!
-Sparse Hessian speed test.
+$section Drive Sparse Hessian for Speed Testing$$
 
-\param size
-is the dimension of the argument space for this speed test.
+$head Namespace$$
+This function is in the global namespace, not the CppAD namespace.
 
-\param repeat
-is the number of times to repeate the speed test.
+$head Syntax$$
+$codei%speed_sparse_hessian(%size%, %repeat%)%$$
+
+$head size$$
+This $code size_t$$ value
+is the dimension of the argument space for function we are taking
+the Hessian of.
+
+$head repeat$$
+This $code size_t$$ value
+is the number of times to repeat the speed test.
+
+$end
 */
 void speed_sparse_hessian(size_t size, size_t repeat)
 {
@@ -382,23 +271,38 @@ void speed_sparse_hessian(size_t size, size_t repeat)
 # endif
 
     // note that cppad/sparse_hessian.cpp assumes that x.size() == size
-    size_t n_sweep;
-    link_sparse_hessian(n, repeat, row, col, x, hessian, n_sweep);
+    size_t n_color;
+    link_sparse_hessian(n, repeat, row, col, x, hessian, n_color);
     return;
 }
+/*
+$begin info_sparse_hessian$$
+$spell
+    Namespace
+    CppAD
+$$
 
-/*!
-Sparse Hessian speed test information.
+$section Sparse Hessian Speed Test Information$$
 
-\param size [in]
-is the size parameter in the corresponding call to speed_sparse_hessian.
+$head Namespace$$
+This function is in the global namespace, not the CppAD namespace.
 
-\param n_sweep [out]
-The input value of this parameter does not matter.
-Upon return, it is the value n_sweep retruned by the corresponding
-call to link_sparse_hessian.
+$head Syntax$$
+$codei%info_spares_hessian(%size%, %n_color%)%$$
+
+$head size$$
+This $code size_t$$ value is equal to
+$cref/size/speed_sparse_hessian/size/$$
+in the corresponding call to $code speed_sparse_hessian$$.
+
+$head n_color$$
+The input value of this $icode size_t$$ does not matter.
+Upon return, it is the value $cref/n_color/link_sparse_hessian/n_color/$$
+returned by the corresponding call to $code link_sparse_hessian$$.
+
+$end
 */
-void info_sparse_hessian(size_t size, size_t& n_sweep)
+void info_sparse_hessian(size_t size, size_t& n_color)
 {   size_t n      = size;
     size_t repeat = 1;
     vector<size_t> row, col;
@@ -409,6 +313,6 @@ void info_sparse_hessian(size_t size, size_t& n_sweep)
     vector<double> x(n);
     size_t K = row.size();
     vector<double> hessian(K);
-    link_sparse_hessian(n, repeat, row, col, x, hessian, n_sweep);
+    link_sparse_hessian(n, repeat, row, col, x, hessian, n_color);
     return;
 }

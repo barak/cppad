@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_REVERSE_HPP
 # define CPPAD_LOCAL_SWEEP_REVERSE_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -192,9 +192,8 @@ void reverse(
     const size_t num_par = play->num_par_rec();
 
     // pointer to the beginning of the parameter vector
-    const Base* parameter = CPPAD_NULL;
-    if( num_par > 0 )
-        parameter = play->GetPar();
+    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
+    const Base* parameter = play->GetPar();
 
     // work space used by AFunOp.
     const size_t         atom_k  = d;   // highest order we are differentiating
@@ -450,8 +449,9 @@ void reverse(
 
 # if CPPAD_USE_CPLUSPLUS_2011
             case ErfOp:
+            case ErfcOp:
             reverse_erf_op(
-                d, i_var, arg, parameter, J, Taylor, K, Partial
+                op, d, i_var, arg, parameter, J, Taylor, K, Partial
             );
             break;
 # endif

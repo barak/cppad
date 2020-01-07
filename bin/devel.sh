@@ -12,7 +12,7 @@ image_link='https://coin-or.github.io/CppAD'
 # List of files, besides CMakeLists.txt, that have have a copy of the
 # version number (can be empty).
 version_files='
-    doc.omh
+    omh/cppad.omh
     configure.ac
 '
 #
@@ -21,17 +21,24 @@ version_files='
 ignore_files='
     .gitignore
     .coin-or/projDesc.xml
-    ad_graph.json
 
     authors
     batch_edit.sed
     bin/devel.sh
+    bin/get_highlight.sh
+    bin/get_omhelp.sh
+    bin/run_omhelp.sh
+    cmake/cppad_uninstall.cmake
     coin.png
     COPYING
     compile
+    configure
     config.guess
     config.sub
     configure
+    depcomp
+    install-sh
+    missing
     makefile.in
 '
 # ----------------------------------------------------------------------------

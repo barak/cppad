@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_DYNAMIC_HPP
 # define CPPAD_LOCAL_SWEEP_DYNAMIC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -132,7 +132,7 @@ void dynamic(
     {   // number of dynamic parameters created by this operator
         size_t n_dyn = 1;
         //
-        // parametere index for this dynamic parameter
+        // parameter index for this dynamic parameter
         size_t i_par = size_t( dyn_ind2par_ind[i_dyn] );
         //
 # if CPPAD_DYNAMIC_TRACE
@@ -143,13 +143,18 @@ void dynamic(
         op_code_dyn op = op_code_dyn( dyn_par_op[i_dyn] );
         //
         // number of arguments for this operator
-        size_t n_arg   = num_arg_dyn(op);
+        size_t n_arg       = num_arg_dyn(op);
         //
-        if( (op != cond_exp_dyn) & (op != dis_dyn ) )
-        {   // all arguments are parameters
-            // except for call_dyn and result_dyn which has n_arg = 0
-            CPPAD_ASSERT_UNKNOWN( n_arg <= 2 );
-            for(size_t j = 0; j < n_arg; ++j)
+        // for unary or binary operators
+        bool unary_or_binary = true;
+        unary_or_binary &= op != atom_dyn;
+        unary_or_binary &= op != cond_exp_dyn;
+        unary_or_binary &= op != dis_dyn;
+        unary_or_binary &= op != ind_dyn;
+        unary_or_binary &= op != result_dyn;
+        if( unary_or_binary )
+        {   CPPAD_ASSERT_UNKNOWN( n_arg == 1 || n_arg == 2 );
+           for(size_t j = 0; j < n_arg; ++j)
                 par[j] = & all_par_vec[ dyn_par_arg[i_arg + j] ];
         }
         //
@@ -272,6 +277,12 @@ void dynamic(
             case erf_dyn:
             CPPAD_ASSERT_UNKNOWN( n_arg == 1 );
             all_par_vec[i_par] = erf( *par[0] );
+            break;
+
+            // erfc
+            case erfc_dyn:
+            CPPAD_ASSERT_UNKNOWN( n_arg == 1 );
+            all_par_vec[i_par] = erfc( *par[0] );
             break;
 
             // log1p
@@ -401,7 +412,7 @@ void dynamic(
             break;
 
             // atomic function call
-            case call_dyn:
+            case atom_dyn:
             {   size_t atom_index = size_t( dyn_par_arg[i_arg + 0] );
                 size_t n          = size_t( dyn_par_arg[i_arg + 1] );
                 size_t m          = size_t( dyn_par_arg[i_arg + 2] );
@@ -448,12 +459,12 @@ void dynamic(
                 atomic_index<RecBase>(
                     set_null, atom_index, type, &name, v_ptr
                 );
-                std::cout << "call_dyn " << name << " arguments\n";
+                std::cout << "atom_dyn " << name << " arguments\n";
                 for(size_t j = 0; j < n; ++j)
                 {   std::cout << "index = " << j
                     << ", value = " << taylor_x[j] << std::endl;
                 }
-                std::cout << "call_dyn " << name << " results\n";
+                std::cout << "atom_dyn " << name << " results\n";
 # endif
 # ifndef NDEBUG
                 size_t count_dyn = 0;
@@ -492,7 +503,7 @@ void dynamic(
         if(
             (op != cond_exp_dyn) &
             (op != dis_dyn )     &
-            (op != call_dyn )    &
+            (op != atom_dyn )    &
             (op != result_dyn )  )
         {
             std::cout

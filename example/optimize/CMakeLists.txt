@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -12,16 +12,20 @@
 # Build the example/optimize directory tests
 #
 #
+# BEGIN_SORT_THIS_LINE_PLUS_2
 SET(source_list
-    conditional_skip.cpp
     compare_op.cpp
+    conditional_skip.cpp
     cumulative_sum.cpp
     forward_active.cpp
     nest_conditional.cpp
-    print_for.cpp
     optimize.cpp
+    optimize_twice.cpp
+    print_for.cpp
     reverse_active.cpp
 )
+# END_SORT_THIS_LINE_MINUS_2
+
 set_compile_flags( example_optimize "${cppad_debug_which}" "${source_list}" )
 #
 ADD_EXECUTABLE(example_optimize EXCLUDE_FROM_ALL ${source_list})

@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_FORWARD1_HPP
 # define CPPAD_LOCAL_SWEEP_FORWARD1_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -201,19 +201,19 @@ void forward1(
     }
 
     // If this includes a zero calculation, initialize this information
-    pod_vector<bool>   isvar_by_ind;
-    pod_vector<size_t> index_by_ind;
+    pod_vector<bool>   vec_ad2isvar;
+    pod_vector<size_t> vec_ad2index;
     if( p == 0 )
     {   size_t i;
 
         // this includes order zero calculation, initialize vector indices
         size_t num = play->num_vec_ind_rec();
         if( num > 0 )
-        {   isvar_by_ind.extend(num);
-            index_by_ind.extend(num);
+        {   vec_ad2isvar.extend(num);
+            vec_ad2index.extend(num);
             for(i = 0; i < num; i++)
-            {   index_by_ind[i] = play->GetVecInd(i);
-                isvar_by_ind[i] = false;
+            {   vec_ad2index[i] = play->GetVecInd(i);
+                vec_ad2isvar[i] = false;
             }
         }
         // includes zero order, so initialize conditional skip flags
@@ -242,9 +242,8 @@ void forward1(
     const size_t num_par = play->num_par_rec();
 
     // pointer to the beginning of the parameter vector
-    const Base* parameter = CPPAD_NULL;
-    if( num_par > 0 )
-        parameter = play->GetPar();
+    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
+    const Base* parameter = play->GetPar();
 
     // length of the text vector (used by CppAD assert macros)
     const size_t num_text = play->num_text_rec();
@@ -491,8 +490,9 @@ void forward1(
 
 # if CPPAD_USE_CPLUSPLUS_2011
             case ErfOp:
+            case ErfcOp:
             CPPAD_ASSERT_UNKNOWN( CPPAD_USE_CPLUSPLUS_2011 );
-            forward_erf_op(p, q, i_var, arg, parameter, J, taylor);
+            forward_erf_op(op, p, q, i_var, arg, parameter, J, taylor);
             break;
 # endif
             // -------------------------------------------------
@@ -523,8 +523,8 @@ void forward1(
                     parameter,
                     J,
                     taylor,
-                    isvar_by_ind.data(),
-                    index_by_ind.data(),
+                    vec_ad2isvar.data(),
+                    vec_ad2index.data(),
                     var_by_load_op.data()
                 );
                 if( p < q ) forward_load_op(
@@ -565,8 +565,8 @@ void forward1(
                     parameter,
                     J,
                     taylor,
-                    isvar_by_ind.data(),
-                    index_by_ind.data(),
+                    vec_ad2isvar.data(),
+                    vec_ad2index.data(),
                     var_by_load_op.data()
                 );
                 if( p < q ) forward_load_op(
@@ -814,10 +814,11 @@ void forward1(
                     i_var,
                     arg,
                     num_par,
+                    parameter,
                     J,
                     taylor,
-                    isvar_by_ind.data(),
-                    index_by_ind.data()
+                    vec_ad2isvar.data(),
+                    vec_ad2index.data()
                 );
             }
             break;
@@ -829,10 +830,11 @@ void forward1(
                     i_var,
                     arg,
                     num_par,
+                    parameter,
                     J,
                     taylor,
-                    isvar_by_ind.data(),
-                    index_by_ind.data()
+                    vec_ad2isvar.data(),
+                    vec_ad2index.data()
                 );
             }
             break;
@@ -846,8 +848,8 @@ void forward1(
                     num_par,
                     J,
                     taylor,
-                    isvar_by_ind.data(),
-                    index_by_ind.data()
+                    vec_ad2isvar.data(),
+                    vec_ad2index.data()
                 );
             }
             break;
@@ -861,8 +863,8 @@ void forward1(
                     num_par,
                     J,
                     taylor,
-                    isvar_by_ind.data(),
-                    index_by_ind.data()
+                    vec_ad2isvar.data(),
+                    vec_ad2index.data()
                 );
             }
             break;

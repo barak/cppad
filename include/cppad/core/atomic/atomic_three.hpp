@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_ATOMIC_ATOMIC_THREE_HPP
 # define CPPAD_CORE_ATOMIC_ATOMIC_THREE_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -31,13 +31,18 @@ $section Defining Atomic Functions: Third Generation$$
 
 $head Syntax$$
 
-$subhead Atomic Constructor$$
-$icode%atomic_derived% %afun%(%ctor_arg_list%)%$$
+$subhead Define Class$$
+$codei%class %atomic_user% : public CppAD::atomic_three<%Base%> {
+    %...%
+};%$$
+
+$subhead Construct Atomic Function$$
+$icode%atomic_user% %afun%(%ctor_arg_list%)%$$
 
 $subhead Use Atomic Function$$
 $icode%afun%(%ax%, %ay%)%$$
 
-$subhead Callback Functions$$
+$subhead Class Member Callbacks$$
 $icode%ok% = %afun%.for_type(
     %parameter_x%, %type_x%, %type_y%
 )
@@ -103,9 +108,9 @@ In addition,
 $code constant_enum < dynamic_enum < variable_enum$$.
 
 $head Virtual Functions$$
-The $cref/callback functions/atomic_three/Syntax/Callback Functions/$$
+The $cref/callback functions/atomic_three/Syntax/Class Member Callbacks/$$
 are implemented by defining the virtual functions in the
-$icode atomic_derived$$ class.
+$icode atomic_user$$ class.
 These functions compute derivatives,
 sparsity patterns, and dependency relations.
 Each virtual function has a default implementation
@@ -132,15 +137,24 @@ $codei%
 %$$
 Its size is equal to $icode%n% = %ax%.size()%$$
 in corresponding $icode%afun%(%ax%, %ay%)%$$ call.
+
+$subhead Constant$$
 For $icode%j% =0,%...%,%n%-1%$$,
-if $icode%ax%[%j%]%$$ is a parameter,
+if $icode%ax%[%j%]%$$ is a $cref/constant/con_dyn_var/Constant/$$ parameter,
 $codei%
     %parameter_x%[%j%] == %ax%[%j%]
 %$$
+
+$subhead Dynamic$$
+If $icode%ax%[%j%]%$$ is a $cref/dynamic/con_dyn_var/Dynamic/$$ parameter,
+$icode%parameter_x%[%j%]%$$ value of $icode%ax%[%j%]%$$ corresponding to the
+previous call to $cref new_dynamic$$ for the corresponding function object.
+
+$subhead Variable$$
 If $icode%ax%[%j%]%$$ is a variable,
 the value of $icode%parameter_x%[%j%]%$$ is not specified.
 See the
-$cref/atomic_mat_mul.hpp/atomic_mat_mul.hpp/Purpose/parameter_x/$$
+$cref/atomic_three_mat_mul.hpp/atomic_three_mat_mul.hpp/Purpose/parameter_x/$$
 for an example using $icode parameter_x$$.
 
 $head type_x$$
@@ -161,7 +175,7 @@ $codei%
     %type_x%[%j%] == CppAD::variable_enum
 %$$
 See the
-$cref/atomic_mat_mul.hpp/atomic_mat_mul.hpp/Purpose/type_x/$$
+$cref/atomic_three_mat_mul.hpp/atomic_three_mat_mul.hpp/Purpose/type_x/$$
 for an example using $icode type_x$$.
 
 
@@ -350,12 +364,13 @@ public:
     template <class InternalSparsity>
     bool for_hes_sparsity(
         const vector<Base>&              parameter_x      ,
-        const vector<ad_type_enum>&      type_x       ,
+        const vector<ad_type_enum>&      type_x           ,
         const local::pod_vector<size_t>& x_index          ,
         const local::pod_vector<size_t>& y_index          ,
-        const InternalSparsity&          for_jac_sparsity ,
+        size_t                           np1              ,
+        size_t                           numvar           ,
         const InternalSparsity&          rev_jac_sparsity ,
-        InternalSparsity&                hes_sparsity
+        InternalSparsity&                for_sparsity
     );
     template <class InternalSparsity>
     bool rev_hes_sparsity(
@@ -363,7 +378,7 @@ public:
         const vector<ad_type_enum>&      type_x           ,
         const local::pod_vector<size_t>& x_index          ,
         const local::pod_vector<size_t>& y_index          ,
-        const InternalSparsity&          for_jac_sparsity ,
+        const InternalSparsity&          for_jac_pattern  ,
         bool*                            rev_jac_flag     ,
         InternalSparsity&                hes_sparsity
     );
@@ -373,7 +388,7 @@ public:
     // =====================================================================
 
     /// Name corresponding to a atomic_three object
-    const std::string afun_name(void) const
+    const std::string atomic_name(void) const
     {   bool        set_null = false;
         size_t      type  = 0;          // set to avoid warning
         std::string name;

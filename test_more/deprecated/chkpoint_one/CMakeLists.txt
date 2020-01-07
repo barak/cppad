@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -10,13 +10,16 @@
 #       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 #
+# BEGIN_SORT_THIS_LINE_PLUS_2
 SET(source_list
     chkpoint_one.cpp
-    get_started.cpp
     extended_ode.cpp
+    get_started.cpp
     mul_level.cpp
     ode.cpp
 )
+# END_SORT_THIS_LINE_MINUS_2
+
 set_compile_flags(test_more_deprecated_chkpoint_one
     "${cppad_debug_which}" "${source_list}"
 )

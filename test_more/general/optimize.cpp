@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -14,7 +14,6 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <limits>
 # include <cppad/cppad.hpp>
 
-
 namespace {
     // include conditional skip optimization
     bool conditional_skip_;
@@ -24,6 +23,83 @@ namespace {
 
     // note this enum type is not part of the API (but its values are)
     CppAD::atomic_base<double>::option_enum atomic_sparsity_option_;
+
+    // ---------------------------------------------------------------------
+    // optimize_csum
+    bool optimize_csum(void)
+    {   bool ok = true;
+        using CppAD::AD;
+        using CppAD::vector;
+
+        size_t n = 4;
+        vector< AD<double> > ax(n), ap(n);
+        for(size_t j = 0; j < n; ++j)
+        {   ax[j] = 0.0;
+            ap[j] = 0.0;
+        }
+        size_t abort_op_index = 0;
+        bool   record_compare = false;
+        Independent(ax, abort_op_index, record_compare, ap);
+        //
+        AD<double> aplus  = ax[0] + ax[1];
+        AD<double> aminus = ax[0] - ax[1];
+        AD<double> asum   = CondExpLe(ax[0], ax[1], aplus, aminus);
+        size_t n2 = n / 2;
+        for(size_t j = 0; j < n2; ++j)
+            asum += ax[j] + ap[j];
+        for(size_t j = n2; j < n; ++j)
+            asum -= ax[j] + ap[j];
+        //
+        vector< AD<double> > ay(1);
+        ay[0] = asum * asum;
+        CppAD::ADFun<double> f(ax, ay);
+        //
+        f.optimize(); // creates a cumulative sum operator
+        f.optimize(); // optimizes such a function
+        //
+        // zero order forward
+        vector<double> x(n), p(n), y(1);
+        double sum = 0.0;
+        for(size_t j = 0; j < n2; ++j)
+        {   x[j]  = double(j + 1);
+            p[j]  = double(j + 1);
+            sum  += x[j] + p[j];
+        }
+        for(size_t j = n2; j < n; ++j)
+        {   x[j]  = double(j + 1);
+            p[j]  = double(j + 1);
+            sum  -= x[j] + p[j];
+        }
+        if( x[0] <= x[1] )
+            sum += x[0] + x[1];
+        else
+            sum += x[0] - x[1];
+        f.new_dynamic(p);
+        y     = f.Forward(0, x);
+        double check = sum * sum;
+        ok &= y[0] == check;
+
+        //
+        vector<double> w(1), dx(n);
+        w[0] = 1.0;
+        dx   = f.Reverse(1, w);
+        //
+        ok &= 1 < n2;
+        if( x[0] <= x[1] )
+        {   ok &= dx[0] == 4.0 * sum;
+            ok &= dx[1] == 4.0 * sum;
+        }
+        else
+        {   ok &= dx[0] == 4.0 * sum;
+            ok &= dx[1] == 0.0;
+        }
+        for(size_t j = 2; j < n2; ++j)
+            ok &= dx[j] == 2.0 * sum;
+        for(size_t j = n2; j < n; ++j)
+            ok &= dx[j] == - 2.0 * sum;
+        //
+        return ok;
+    }
     // ----------------------------------------------------------------
     class ode_evaluate_fun {
     public:
@@ -678,14 +754,15 @@ namespace {
         using CppAD::vector;
 
         size_t n = 1;
-        size_t m = 1;
+        size_t m = 2;
         vector< AD<double> > X(n), Y(m);
         vector<double>       x(n);
         X[0] = x[0] = double(0.5);
 
         CppAD::Independent(X);
 
-        Y[0] = erf(X[0]) + erf(X[0]);
+        Y[0] = erf(X[0])  + erf(X[0]);
+        Y[1] = erfc(X[0]) + erfc(X[0]);
 
         CppAD::ADFun<double> F(X, Y);
 
@@ -695,9 +772,14 @@ namespace {
             F.optimize();
         else
             F.optimize("no_conditional_skip");
-        ok &= F.size_var() + 5 == size_original;
+        //
+        // each erf (erfc) has 5 result values:
+        //  x*x, -x*x, exp(-x*x), exp(-x*x)*2/sqrt(pi), erf(x)
+        ok &= F.size_var() + 10 == size_original;
+        //
         vector<double> y = F.Forward(0, x);
         ok &=  NearEqual(y[0], y_original[0], eps10, eps10);
+        ok &=  NearEqual(y[1], y_original[1], eps10, eps10);
 # endif
         return ok;
     }
@@ -2075,6 +2157,85 @@ namespace {
         //
         return ok;
     }
+    // ----------------------------------------------------------------
+    // Test case where two non-empty sets need to be intersected to obtain
+    // set of variables that can be skipped
+    bool intersect_cond_exp(void)
+    {   bool ok = true;
+        using CppAD::AD;
+        using CppAD::NearEqual;
+        double eps10 = 10.0 * std::numeric_limits<double>::epsilon();
+        using CppAD::vector;
+
+        // independent variable vector
+        vector< AD<double> > ax(2), ay(1);
+        ax[0] = 1.0;
+        ax[1] = 2.0;
+        Independent(ax);
+
+        // can only be skipped when second conditional expression is true
+        AD<double> askip_second_true = ax[1] + 1.0;
+
+        // at this point reverse mode analysis yields
+        // skip set for askip_second_true = {skip if 2 true}
+
+        // value of first conditional expression when it is true / false
+        AD<double> first_true   = askip_second_true * 2.0;
+        AD<double> first_false  = askip_second_true;
+
+        // at this point reverse mode analysis yields
+        // skip set for askip_second_true = {skip if 1 true, skip if 2 true}
+
+        // first conditional expression
+        AD<double> ac1 = CondExpLe(ax[0], ax[1], first_true, first_false);
+
+        // value of second conditional expression when it is true / false
+        AD<double> second_true   = ax[1] + 2.0;
+        AD<double> second_false  = ac1;
+
+        // at this point reverse mode analysis yields
+        // skip set for ac1 = {skip if 2 true}
+
+        // second conditional expression
+        AD<double> ac2 = CondExpLe(ax[0], ax[1], second_true, second_false);
+
+        // create function object f : ax -> ay
+        ay[0] = ac2;
+        CppAD::ADFun<double> f(ax, ay);
+
+        // now optimize the operation sequence
+        if( conditional_skip_ )
+            f.optimize();
+        else
+            f.optimize("no_conditional_skip");
+
+        // now zero order forward
+        vector<double> x(2), y(1);
+        for(size_t i = 0; i < 3; i++)
+        {   x[0] = 1.0 - double(i);
+            x[1] = - x[0];
+            y    = f.Forward(0, x);
+            //
+            double skip_second_true = x[1] + 1.0;;
+            //
+            // first conditional expression
+            double c1;
+            if( x[0] <= x[1] )
+                c1 = skip_second_true * 2.0;
+            else
+                c1 = skip_second_true;
+            //
+            // second conditional expression
+            double c2;
+            if( x[0] <= x[1] )
+                c2 = x[1] + 2.0;
+            else
+                c2 = c1;
+            //
+            ok &= NearEqual(y[0], c2, eps10, eps10);
+        }
+        return ok;
+    }
 }
 
 bool optimize(void)
@@ -2082,10 +2243,11 @@ bool optimize(void)
     conditional_skip_       = true;
     atomic_sparsity_option_ = CppAD::atomic_base<double>::bool_sparsity_enum;
 
-    ok     &= atomic_arguments();
+    // check optimization with cumulative sum operators
+    ok &= optimize_csum();
 
     // check optimization with print_for operations
-    ok     &= check_print_for();
+    ok &= check_print_for();
 
     // optimize an example ODE
     ok &= optimize_ode();
@@ -2158,11 +2320,13 @@ bool optimize(void)
         ok     &= cond_exp_skip_remove_var();
         // check case where an if case is used after the conditional expression
         ok     &= cond_exp_if_false_used_after();
+        // check case that has non-empty binary intersection operation
+        ok     &= intersect_cond_exp();
     }
 
     // not using conditional_skip or atomic functions
     ok &= only_check_variables_when_hash_codes_match();
-
+    // -----------------------------------------------------------------------
     //
     CppAD::user_atomic<double>::clear();
     return ok;

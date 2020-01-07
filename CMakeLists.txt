@@ -25,7 +25,7 @@ if(POLICY CMP0054)
 endif()
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20190200.5")
+SET(cppad_version "20200000.1")
 SET(cppad_url          "http://www.coin-or.org/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 #
@@ -35,8 +35,8 @@ SET(cppad_description  "Differentiation of C++ Algorithms" )
 PROJECT(cppad)
 #
 # Add the include sub-directory to the list of C++ preprocessor
-# include directories for the entire project.
-# include_directories([AFTER|BEFORE] [SYSTEM] dir1 dir2 ...)
+# include directories for the entire project.  The SYSTEM flag is not included
+# so warnings will be geenreated for this directory.
 INCLUDE_DIRECTORIES( ${cppad_SOURCE_DIR}/include )
 #
 # =============================================================================
@@ -52,8 +52,8 @@ INCLUDE(CheckCXXSourceRuns)
 # ============================================================================
 # Some local cmake language
 # ============================================================================
-# join strings together
-INCLUDE(cmake/join.cmake)
+# assert_value_in_set(value element_1 ... element_n)
+INCLUDE(cmake/assert_value_in_set.cmake)
 #
 # dos_path_to_unix(dos_path unix_path)
 INCLUDE(cmake/dos_path_to_unix.cmake)
@@ -102,7 +102,7 @@ command_line_arg(cmake_install_libdirs lib STRING
 )
 # -----------------------------------------------------------------------------
 # cppad_prefix
-command_line_arg(cppad_prefix /usr PATH
+command_line_arg(cppad_prefix "${CMAKE_INSTALL_PREFIX}" PATH
     "cppad install prefix"
 )
 SET(CMAKE_INSTALL_PREFIX "${cppad_prefix}"
@@ -159,6 +159,7 @@ optional_package(fadbad ${system_include} "fadbad install prefix")
 command_line_arg(cppad_testvector cppad STRING
     "Namespace of vector used for testing, one of: boost, cppad, eigen, std"
 )
+assert_value_in_set(cppad_testvector boost cppad eigen std)
 #
 # cppad_max_num_threads
 command_line_arg(cppad_max_num_threads 48 STRING
@@ -186,19 +187,24 @@ command_line_arg(cppad_tape_addr_type "unsigned int" STRING
 command_line_arg(cppad_debug_which "debug_all" STRING
     "debug_even, debug_odd, debug_all, or debug_none"
 )
+assert_value_in_set(cppad_debug_which debug_even debug_odd debug_all debug_none)
+#
 # cppad_deprecated
 IF( cppad_deprecated )
-    MESSAGE(FATAL_ERROR "cppad_deprecated has been removed" )
+    MESSAGE(FATAL_ERROR "cppad_deprecated has been removed from cmake comamnd" )
 ENDIF( cppad_deprecated )
 # =============================================================================
-# colpack_libs, cppad_lib
+# cppad_lib
+# Perhaps in the future cppad_lib will depend on cmake header only flag ?
+SET( cppad_lib    "cppad_lib" )
+LINK_DIRECTORIES( ${cppad_BINARY_DIR}/cppad_lib )
+# =============================================================================
+# colpack_libs
 #
 IF( cppad_has_colpack )
     SET( colpack_libs "ColPack" )
-    SET( cppad_lib    "cppad_lib" )
 ELSE( cppad_has_colpack )
     SET( colpack_libs "" )
-    SET( cppad_lib    "" )
 ENDIF( cppad_has_colpack )
 # =============================================================================
 # automated system configuration
@@ -238,7 +244,8 @@ ENDFOREACH(dir_types includedirs libdirs datadir docdir)
 FIND_PACKAGE(OpenMP)
 # -----------------------------------------------------------------------------
 # boost_prefix
-FIND_PACKAGE(Boost)
+# Only need components for object libraries, not include libraries.
+FIND_PACKAGE(Boost COMPONENTS thread)
 SET(cppad_has_boost 0)
 IF ( Boost_FOUND )
     SET(cppad_has_boost 1)
@@ -320,9 +327,7 @@ SET(check_depends "")
 # directories with no check depends entries
 ADD_SUBDIRECTORY(include/cppad)
 ADD_SUBDIRECTORY(pkgconfig)
-IF( cppad_has_colpack )
-    ADD_SUBDIRECTORY(cppad_lib)
-ENDIF( cppad_has_colpack )
+ADD_SUBDIRECTORY(cppad_lib)
 #
 IF( NOT ( "${check_depends}" STREQUAL "" ) )
     MESSAGE(FATAL_ERROR "Error in CMakeLists.txt scripts")
@@ -366,22 +371,15 @@ CONFIGURE_FILE(
 INSTALL(
     DIRECTORY "${CMAKE_SOURCE_DIR}/include/cppad/"
     DESTINATION ${cppad_abs_includedir}/cppad
-    FILES_MATCHING PATTERN "*.hpp"
+    FILES_MATCHING PATTERN "*.hpp" PATTERN "omh" EXCLUDE
 )
 #
 # During install copy doc direcrory to cppad_abs_docdir/cppad
 IF ( cmake_install_docdir )
     INSTALL( DIRECTORY "doc/" DESTINATION ${cppad_abs_docdir}/cppad )
 ENDIF ( cmake_install_docdir )
-#
-IF( ${cppad_deprecated} )
-    STRING( TOLOWER "${cppad_deprecated}" temp )
-    IF( "${temp}" STREQUAL "yes" )
-        MESSAGE(FATAL_ERROR
-        "cppad_deprecated = YES has been removed; see whats_new 2017-02-10."
-        )
-    ENDIF( "${temp}" STREQUAL "yes" )
-    MESSAGE(FATAL_ERROR
-        "cppad_deprecated = ${cppad_deprecated} not a valid choice"
-    )
-ENDIF( ${cppad_deprecated} )
+
+# =============================================================================
+# uninstall procedure
+# =============================================================================
+ADD_CUSTOM_TARGET(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cppad_uninstall.cmake)

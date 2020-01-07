@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
   CppAD is distributed under the terms of the
                Eclipse Public License Version 2.0.
@@ -12,6 +12,7 @@ CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
 $begin whats_new_18$$
 $spell
+    chkpoint
     eps
     autotools
     Microsoft
@@ -62,7 +63,7 @@ This has been fixed.
 
 $head 12-23$$
 The documentation for how to run
-$cref/multi_atomic/thread_test.cpp/multi_atomic/$$ was missing.
+$code multi_atomic_two$$ was missing.
 This has been fixed.
 
 $head 12-17$$
@@ -84,10 +85,10 @@ $head 12-12$$
 $list number$$
 Change tabs to spaces in both the source code and the examples.
 $lnext
-The $code inline$$ specifies was removed from template functions
+The $code inline$$ specifiers was removed from template functions
 and class member functions in both the source code and examples; see
 the $code inline$$ entry in the
-$cref/wish_list/wish_list/inline/$$.
+$cref/wish_list/wish_list/cppad_lib/inline/$$.
 $lnext
 In the documentation and examples change the $codei%Vector%Type%$$
 to $icode%Type%Vector%$$ for $icode Type$$ denoting various types; e.g.,
@@ -104,8 +105,10 @@ space that $cref ADFun$$ object refer to.
 $lnext
 Move the $code cppad$$ sub-directory to $code include/cppad$$.
 $lnext
-Add a checkpoint $cref/constructor/wish_list/checkpoint/Constructor/$$
-item to the wish list.
+Add a checkpoint constructor item to the wish list.
+This has been completed; see the
+$cref/fun/chkpoint_two_ctor/fun/$$ argument to the
+second generation checkpoint constructor.
 $lend
 
 $head 11-13$$
@@ -127,13 +130,13 @@ $lnext
 The deprecated $cref/autotools/cmake/CMake Command/autotools/$$
 was fixed to work with the current version of CppAD.
 $lnext
-Fix a warning in $code test_more/cppad_for_tmb/multi_atomic.cpp$$
+Fix a warning in $code test_more/cppad_for_tmb/multi_atomic_two.cpp$$
 when using boost vectors for testing.
 $lend
 
 
 $head 11-11$$
-Fix a warning in $code test_more/cppad_for_tmb/multi_checkpoint.cpp$$
+Fix a warning in $code test_more/cppad_for_tmb/multi_chkpoint_one.cpp$$
 when using boost vectors for testing.
 
 $head 11-06$$
@@ -207,8 +210,9 @@ $cref/checkpoint/chkpoint_one/$$ functions now work with
 $cref/multiple threads/multi_thread/$$,
 the $cref optimize$$ memory usage has been reduced.
 $lnext
-The operations sequence wish list entry was changed to the
-$cref/Constant/wish_list/Constant/$$ entry.
+The operations sequence wish list entry was changed to
+the Constant entry which has since been completed; see
+$cref/Constant/con_dyn_var/Constant/$$.
 The software guidelines entry was changed to just
 Convert Tabs to Spaces.
 $lend
@@ -261,7 +265,7 @@ This has been fixed.
 $head 09-22$$
 There was a bug in the $cref/checkpoint/chkpoint_one/$$ function when they
 were used in $cref/in parallel mode/ta_parallel_setup/$$.
-The $cref multi_checkpoint.cpp$$ example was added
+The $cref multi_chkpoint_one.cpp$$ example was added
 to test this and demonstrate use of checkpoints in parallel mode.
 
 $head 09-19$$

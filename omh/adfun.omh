@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-  CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+  CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
   CppAD is distributed under the terms of the
                Eclipse Public License Version 2.0.
@@ -13,16 +13,35 @@ $begin record_adfun$$
 $spell
 $$
 
-$section Create an ADFun Object (Record an Operation Sequence)$$
+$section Create an ADFun Object by Recording an Operation Sequence$$
 
 $childtable%
-    include/cppad/core/independent.hpp%
+    include/cppad/core/independent/user.omh%
     include/cppad/core/fun_construct.hpp%
     include/cppad/core/dependent.hpp%
     include/cppad/core/abort_recording.hpp%
-    include/cppad/core/base2ad.hpp%
     omh/seq_property.omh
 %$$
+
+$end
+-------------------------------------------------------------------------------
+$begin other_adfun$$
+$spell
+$$
+
+$section Other Ways to Create an ADFun Object$$
+
+
+$childtable%
+    include/cppad/core/base2ad.hpp%
+    include/cppad/core/graph/json_ad_graph.omh%
+    include/cppad/core/graph/cpp_ad_graph.omh
+%$$
+
+$head See Also$$
+$table
+$rref switch_var_dyn.cpp$$
+$tend
 
 $end
 -------------------------------------------------------------------------------
@@ -51,13 +70,13 @@ $section Forward Mode$$
 
 $childtable%
     include/cppad/core/new_dynamic.hpp%
-    omh/forward/forward_zero.omh%
-    omh/forward/forward_one.omh%
-    omh/forward/forward_two.omh%
-    omh/forward/forward_order.omh%
-    omh/forward/forward_dir.omh%
-    omh/forward/size_order.omh%
-    omh/forward/compare_change.omh%
+    include/cppad/core/forward/forward_zero.omh%
+    include/cppad/core/forward/forward_one.omh%
+    include/cppad/core/forward/forward_two.omh%
+    include/cppad/core/forward/forward_order.omh%
+    include/cppad/core/forward/forward_dir.omh%
+    include/cppad/core/forward/size_order.omh%
+    include/cppad/core/forward/compare_change.omh%
     include/cppad/core/capacity_order.hpp%
     include/cppad/core/num_skip.hpp
 %$$

@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_FORWARD2_HPP
 # define CPPAD_LOCAL_SWEEP_FORWARD2_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -159,9 +159,8 @@ void forward2(
     const size_t num_par = play->num_par_rec();
 
     // pointer to the beginning of the parameter vector
-    const Base* parameter = CPPAD_NULL;
-    if( num_par > 0 )
-        parameter = play->GetPar();
+    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
+    const Base* parameter = play->GetPar();
 
     // temporary indices
     size_t i, j, k, ell;
@@ -361,7 +360,8 @@ void forward2(
 
 # if CPPAD_USE_CPLUSPLUS_2011
             case ErfOp:
-            forward_erf_op_dir(q, r, i_var, arg, parameter, J, taylor);
+            case ErfcOp:
+            forward_erf_op_dir(op, q, r, i_var, arg, parameter, J, taylor);
             break;
             // -------------------------------------------------
 # endif
