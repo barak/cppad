@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -302,18 +302,18 @@ size arguments used for the corresponding tests.
 The values $icode rate_1$$, ..., $icode rate_n$$ are the number of times
 per second that the corresponding size problem executed.
 
-$subhead n_sweep$$
+$subhead n_color$$
 The $cref/sparse_jacobian/link_sparse_jacobian/$$
 and $cref/sparse_hessian/link_sparse_hessian/$$ tests has an extra output
 line with the following form
 $codei%
-    %package%_sparse_%test%_n_sweep = [ %n_sweep_1%, %...%, %n_sweep_n% ]
+    %package%_sparse_%test%_n_color = [ %n_color_1%, %...%, %n_color_n% ]
 %$$
 were $icode test$$ is $code jacobian$$ ($code hessian$$).
-The values $icode n_sweep_1$$, ..., $icode n_sweep_n$$ are the number of
-sweeps (colors) used for each sparse Jacobian (Hessian) calculation; see
-$icode n_sweep$$ for
-$cref/sparse_jacobian/sparse_jacobian/n_sweep/$$ and
+The values $icode n_color_1$$, ..., $icode n_color_n$$ are the number of
+colors used for each sparse Jacobian (Hessian) calculation; see
+$icode n_color$$ for
+$cref/sparse_jac/sparse_jac/n_color/$$ and $icode n_sweep$$ for
 $cref/sparse_hessian/sparse_hessian/n_sweep/$$.
 
 
@@ -323,7 +323,7 @@ $children%
     speed/src/link_mat_mul.cpp%
     speed/src/link_ode.cpp%
     speed/src/link_poly.cpp%
-    speed/src/link_sparse_hessian.cpp%
+    speed/src/link_sparse_hessian.hpp%
     speed/src/link_sparse_jacobian.cpp%
     speed/src/microsoft_timer.cpp
 %$$
@@ -362,8 +362,8 @@ CPPAD_DECLARE_SPEED(sparse_hessian);
 CPPAD_DECLARE_SPEED(sparse_jacobian);
 
 // info is different for each test
-extern void info_sparse_jacobian(size_t size, size_t& n_sweep);
-extern void info_sparse_hessian(size_t size, size_t& n_sweep);
+extern void info_sparse_jacobian(size_t size, size_t& n_color);
+extern void info_sparse_hessian(size_t size, size_t& n_color);
 
 // --------------------------------------------------------------------------
 std::map<std::string, bool> global_option;
@@ -742,15 +742,15 @@ int main(int argc, char *argv[])
         run_speed(
             speed_sparse_hessian, size_sparse_hessian,  "sparse_hessian"
         );
-        cout << AD_PACKAGE << "_sparse_hessian_sweep = ";
+        cout << AD_PACKAGE << "_sparse_hessian_n_color = ";
         for(size_t i = 0; i < size_sparse_hessian.size(); i++)
         {   if( i == 0 )
                 cout << "[ ";
             else
                 cout << ", ";
-            size_t n_sweep;
-            info_sparse_hessian(size_sparse_hessian[i], n_sweep);
-            cout << n_sweep;
+            size_t n_color;
+            info_sparse_hessian(size_sparse_hessian[i], n_color);
+            cout << n_color;
         }
         cout << " ]" << endl;
         break;
@@ -769,15 +769,15 @@ int main(int argc, char *argv[])
         run_speed(
             speed_sparse_jacobian, size_sparse_jacobian, "sparse_jacobian"
         );
-        cout << AD_PACKAGE << "_sparse_jacobian_n_sweep = ";
+        cout << AD_PACKAGE << "_sparse_jacobian_n_color = ";
         for(size_t i = 0; i < size_sparse_jacobian.size(); i++)
         {   if( i == 0 )
                 cout << "[ ";
             else
                 cout << ", ";
-            size_t n_sweep;
-            info_sparse_jacobian(size_sparse_jacobian[i], n_sweep);
-            cout << n_sweep;
+            size_t n_color;
+            info_sparse_jacobian(size_sparse_jacobian[i], n_color);
+            cout << n_color;
         }
         cout << " ]" << endl;
         break;
@@ -810,5 +810,10 @@ int main(int argc, char *argv[])
     {   cout << "memory allocated at end of last cppad speed test = ";
         cout << global_cppad_thread_alloc_inuse << std::endl;
     }
-    return static_cast<int>( ! ok );
+    if( ! ok )
+    {   cout << "speed main: Error\n";
+        exit(1);
+    }
+    std::cout << "speed main: OK\n";
+    return 0;
 }

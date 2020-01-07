@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
   CppAD is distributed under the terms of the
                Eclipse Public License Version 2.0.
@@ -275,12 +275,12 @@ $head 06-11$$
 The atomic functions base class $cref atomic_two$$
 makes more of an effort to avoid false sharing cache misses.
 This may the speed of multi-threaded applications with atomic functions;
-e.g., see $cref multi_atomic.cpp$$.
+e.g., see $cref multi_atomic_two.cpp$$.
 
 $head 06-10$$
 $list number$$
 Add the multi-threading atomic function example
-$cref multi_atomic.cpp$$.
+$cref multi_atomic_two.cpp$$.
 $lnext
 The $code example/multi_thread/test_multi$$ directory used
 to have an example using the deprecated
@@ -525,7 +525,7 @@ Fix bug when using $cref ForSparseHes$$ with atomic functions; i.e.,
 $cref atomic_two_for_sparse_hes$$.
 
 $head 02-13$$
-Improve $cref/for_sparse_jac/atomic_eigen_mat_mul.hpp/Private/for_sparse_jac/$$
+Improve $cref/for_sparse_jac/atomic_two_eigen_mat_mul.hpp/Private/for_sparse_jac/$$
 calculation in $code eigen_mat_mul.hpp$$ example.
 It now checks for the parameter zero and does not propagate any sparsity
 in this case (because the result is always zero).
@@ -547,7 +547,7 @@ $lend
 $head 02-10$$
 $list number$$
 The subset of deprecated features corresponding to
-$cref/cppad_deprecated=YES/cmake/cppad_deprecated/$$
+the cmake command option $code cppad_deprecated=YES$$
 have been completely removed.
 $lnext
 Fix problems with $cref autotools$$ build

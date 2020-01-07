@@ -255,7 +255,7 @@ public:
         const addr_t* op_arg;
         size_t        var_index;
         itr.op_info(op, op_arg, var_index);
-        CPPAD_ASSERT_UNKNOWN( op = BeginOp );
+        CPPAD_ASSERT_UNKNOWN( op == BeginOp );
         size_t i_op = 0;
         while( op != EndOp )
         {   // start at second operator
@@ -282,7 +282,7 @@ public:
         const addr_t* op_arg;
         size_t        var_index;
         itr.op_info(op, op_arg, var_index);
-        CPPAD_ASSERT_UNKNOWN( op = BeginOp );
+        CPPAD_ASSERT_UNKNOWN( op == BeginOp );
         //
         addr_t arg_var_bound = 0;
         while( op != EndOp )
@@ -318,6 +318,7 @@ public:
                 case CoshOp:
                 case DivvpOp:
                 case ErfOp:
+                case ErfcOp:
                 case ExpOp:
                 case Expm1Op:
                 case LevpOp:
@@ -462,18 +463,27 @@ public:
             op_code_dyn op = op_code_dyn( dyn_par_op_[i_dyn] );
             //
             // number of arguments for this dynamic parameter
-            size_t n_arg = num_arg_dyn(op);
-            //
-            if( (op == cond_exp_dyn) | (op == dis_dyn ) )
-            {   // for these two cases, first argument not a parameter index
-                for(size_t i = 1; i < n_arg; ++i) CPPAD_ASSERT_UNKNOWN(
-                    dyn_par_arg_[i_arg + i] < i_par
+            size_t n_arg       = num_arg_dyn(op);
+            if( op == atom_dyn )
+            {   size_t n = size_t( dyn_par_arg_[i_arg + 1] );
+                size_t m = size_t( dyn_par_arg_[i_arg + 2] );
+                n_arg    = 5 + n + m;
+                CPPAD_ASSERT_UNKNOWN(
+                    n_arg == size_t( dyn_par_arg_[i_arg + 4 + n + m] )
                 );
+                for(size_t i = 4; i < n - 1; ++i)
+                    CPPAD_ASSERT_UNKNOWN( dyn_par_arg_[i_arg + i] <  i_par );
+# ifndef NDEBUG
+                for(size_t i = 4+n; i < 4+n+m; ++i)
+                {   addr_t j_par = dyn_par_arg_[i_arg + i];
+                    CPPAD_ASSERT_UNKNOWN( (j_par == 0) || (j_par >= i_par) );
+                }
+# endif
             }
             else
-            {   for(size_t i = 0; i < n_arg; ++i) CPPAD_ASSERT_UNKNOWN(
-                    dyn_par_arg_[i_arg + i] < i_par
-                );
+            {   size_t num_non_par = num_non_par_arg_dyn(op);
+                for(size_t i = num_non_par; i < n_arg; ++i)
+                    CPPAD_ASSERT_UNKNOWN( dyn_par_arg_[i_arg + i] < i_par);
             }
             //
             // next dynamic parameter

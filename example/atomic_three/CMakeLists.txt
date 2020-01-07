@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -10,21 +10,24 @@
 #       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 #
+# BEGIN_SORT_THIS_LINE_PLUS_2
 SET(source_list
-    norm_sq.cpp
-    tangent.cpp
-    base2ad.cpp
-    reciprocal.cpp
     atomic_three.cpp
-    mat_mul.cpp
+    base2ad.cpp
     dynamic.cpp
     forward.cpp
     get_started.cpp
     hes_sparsity.cpp
     jac_sparsity.cpp
-    reverse.cpp
+    mat_mul.cpp
+    norm_sq.cpp
+    reciprocal.cpp
     rev_depend.cpp
+    reverse.cpp
+    tangent.cpp
 )
+# END_SORT_THIS_LINE_MINUS_2
+
 set_compile_flags(example_atomic_three "${cppad_debug_which}" "${source_list}" )
 #
 ADD_EXECUTABLE(example_atomic_three EXCLUDE_FROM_ALL ${source_list})

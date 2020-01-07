@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -10,14 +10,23 @@
 # in the Eclipse Public License, Version 2.0 are satisfied:
 #       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
-name=`echo $0 | sed -e 's|.*/||' -e 's|\..*||'`
+name=`echo $0 | sed -e 's|^bug/||' -e 's|\.sh$||'`
 if [ "$0" != "bug/$name.sh" ]
 then
     echo "usage: bug/$name.sh"
     exit 1
 fi
+# -----------------------------------------------------------------------------
+if [ -e build/bug ]
+then
+    rm -r build/bug
+fi
+mkdir -p build/bug
+cd build/bug
+cmake ../..
+# -----------------------------------------------------------------------------
 cat << EOF
-Description
+Description:
 EOF
 cat << EOF > $name.cpp
 # include <cppad/cppad.hpp>
@@ -25,37 +34,22 @@ int main(void)
 {   bool ok = true;
     using std::cout;
     using CppAD::AD;
+    using CppAD::vector;
     //
-    cout << "1. copy bug/template.sh to bug/<name>.sh\n";
-    cout << "2. Edit bug/<name>.sh replacing description and C++ source code\n";
-    cout << "3. Run bug/<name>.sh\n";
-    cout << "where <name> is a name that describes the bug\n";
+    cout << "1. copy bug/template.sh to bug/$name.sh\n";
+    cout << "2. Edit bug/$name.sh replacing description and C++ source code\n";
+    cout << "3. Run bug/$name.sh\n";
+    cout << "Test passes (fails) if bug/$name.sh: OK (Error) echoed at end\n";
     //
     if( ok )
         return 0;
     return 1;
 }
 EOF
-# -----------------------------------------------------------------------------
-if [ ! -e cppad/configure.hpp ]
-then
-    echo
-    echo 'Cannot find the file cppad/configure.hpp.'
-    echo 'Must run bin/run_cmake.sh to create it.'
-    rm $name.cpp
-    exit 1
-fi
-if [ -e build/bug ]
-then
-    rm -r build/bug
-fi
-mkdir -p build/bug
-mv $name.cpp build/bug/$name.cpp
-cd build/bug
 cxx_flags='-Wall -pedantic-errors -std=c++11 -Wshadow -Wconversion -g -O0'
 eigen_dir="$HOME/prefix/eigen/include"
-echo "g++ -I../.. -isystem $eigen_dir $cxx_flags $name.cpp -o $name"
-g++ -I../.. -isystem $eigen_dir $cxx_flags $name.cpp -o $name
+echo "g++ -I../../include -isystem $eigen_dir $cxx_flags $name.cpp -o $name"
+g++ -I../../include -isystem $eigen_dir $cxx_flags $name.cpp -o $name
 #
 echo "build/bug/$name"
 if ! ./$name
@@ -65,5 +59,6 @@ then
     exit 1
 fi
 echo
-echo "./$name.sh: OK"
+# -----------------------------------------------------------------------------
+echo "bug/$name.sh: OK"
 exit 0

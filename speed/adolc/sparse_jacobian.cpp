@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -64,7 +64,7 @@ bool link_sparse_jacobian(
     const CppAD::vector<size_t>&     col      ,
           CppAD::vector<double>&     x_return ,
           CppAD::vector<double>&     jacobian ,
-          size_t&                    n_sweep  )
+          size_t&                    n_color  )
 {
     if( global_option["atomic"] || (! global_option["colpack"]) )
         return false;
@@ -130,10 +130,10 @@ bool link_sparse_jacobian(
         a_y[i] >>= y[i];
     trace_off();
 
-    // Retrieve n_sweep using undocumented feature of sparsedrivers.cpp
+    // Retrieve n_color using undocumented feature of sparsedrivers.cpp
     int same_pattern = 0;
     options[2]       = -1;
-    n_sweep = sparse_jac(tag, int(m), int(n),
+    n_color = sparse_jac(tag, int(m), int(n),
         same_pattern, x, &nnz, &rind, &cind, &values, options
     );
     options[2]       = 0;
@@ -167,14 +167,11 @@ bool link_sparse_jacobian(
         );
         // only needed last time through loop
         if( repeat == 0 )
-        {   size_t K = row.size();
+        {   assert( size_t(nnz) == row.size() );
             for(int ell = 0; ell < nnz; ell++)
-            {   i = size_t(rind[ell]);
-                j = size_t(cind[ell]);
-                for(k = 0; k < K; k++)
-                {   if( row[k]==i && col[k]==j )
-                        jacobian[k] = values[ell];
-                }
+            {   assert( row[ell] == size_t(rind[ell]) );
+                assert( col[ell] == size_t(cind[ell]) );
+                jacobian[ell] = values[ell];
             }
         }
 
@@ -194,15 +191,15 @@ bool link_sparse_jacobian(
             );
             same_pattern = 1;
         }
-        size_t K = row.size();
-        for(int ell = 0; ell < nnz; ell++)
-        {   i = size_t(rind[ell]);
-            j = size_t(cind[ell]);
-            for(k = 0; k < K; k++)
-            {   if( row[k]==i && col[k]==j )
-                    jacobian[k] = values[ell];
-            }
+        // check that acolc has the same sparsity pattern in row major order
+        bool ok = size_t(nnz) == row.size();
+        for(k = 0; k < row.size(); ++k)
+        {   ok &= row[k] == size_t( rind[k] );
+            ok &= col[k] == size_t( cind[k] );
+            jacobian[k] = values[k];
         }
+        // assert here incase adolc stops returning same pattern
+        assert( ok );
 
         // free raw memory allocated by sparse_jac
         free(rind);

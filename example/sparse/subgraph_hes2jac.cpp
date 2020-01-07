@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -30,11 +30,9 @@ $end
 bool subgraph_hes2jac(void)
 {   bool ok = true;
     using CppAD::NearEqual;
-    typedef CppAD::AD<double>                      a1double;
-    typedef CppAD::AD<a1double>                    a2double;
+    typedef CppAD::AD<double>                      a_double;
     typedef CPPAD_TESTVECTOR(double)               d_vector;
-    typedef CPPAD_TESTVECTOR(a1double)             a1vector;
-    typedef CPPAD_TESTVECTOR(a2double)             a2vector;
+    typedef CPPAD_TESTVECTOR(a_double)             a_vector;
     typedef CPPAD_TESTVECTOR(size_t)               s_vector;
     typedef CPPAD_TESTVECTOR(bool)                 b_vector;
     typedef CppAD::sparse_rcv<s_vector, d_vector>  sparse_matrix;
@@ -47,47 +45,45 @@ bool subgraph_hes2jac(void)
     for(size_t j = 0; j < n; j++)
         x[j] = double(j + 2);
     //
-    // a1double version of x
-    a1vector a1x(n);
+    // a_double version of x
+    a_vector ax(n);
     for(size_t j = 0; j < n; j++)
-        a1x[j] = x[j];
-    //
-    // a2double version of x
-    a2vector a2x(n);
-    for(size_t j = 0; j < n; j++)
-        a2x[j] = a1x[j];
+        ax[j] = x[j];
     //
     // declare independent variables and starting recording
-    CppAD::Independent(a2x);
+    CppAD::Independent(ax);
     //
-    // a2double version of y = f(x) = 5 * x0 * x1 + sum_j xj^3
+    // a_double version of y = f(x) = 5 * x0 * x1 + sum_j xj^3
     size_t m = 1;
-    a2vector a2y(m);
-    a2y[0] = 5.0 * a2x[0] * a2x[1];
+    a_vector ay(m);
+    ay[0] = 5.0 * ax[0] * ax[1];
     for(size_t j = 0; j < n; j++)
-        a2y[0] += a2x[j] * a2x[j] * a2x[j];
+        ay[0] += ax[j] * ax[j] * ax[j];
     //
-    // create a1double version of f: x -> y and stop tape recording
+    // create double version of f: x -> y and stop tape recording
     // (without executing zero order forward calculation)
-    CppAD::ADFun<a1double> a1f;
-    a1f.Dependent(a2x, a2y);
+    CppAD::ADFun<double> f;
+    f.Dependent(ax, ay);
     //
     // Optimize this function to reduce future computations.
     // Perhaps only one optimization at the end would be faster.
-    a1f.optimize();
+    f.optimize();
+    //
+    // create a_double version of f
+    CppAD::ADFun<a_double, double> af = f.base2ad();
     //
     // declare independent variables and start recording g(x) = f'(x)
-    Independent(a1x);
+    Independent(ax);
     //
     // Use one reverse mode pass to compute z = f'(x)
-    a1vector a1w(m), a1z(n);
-    a1w[0] = 1.0;
-    a1f.Forward(0, a1x);
-    a1z = a1f.Reverse(1, a1w);
+    a_vector aw(m), az(n);
+    aw[0] = 1.0;
+    af.Forward(0, ax);
+    az = af.Reverse(1, aw);
     //
     // create double version of g : x -> f'(x)
     CppAD::ADFun<double> g;
-    g.Dependent(a1x, a1z);
+    g.Dependent(ax, az);
     ok &= g.size_random() == 0;
     //
     // Optimize this function to reduce future computations.

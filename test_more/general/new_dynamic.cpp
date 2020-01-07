@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -13,8 +13,61 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <limits>
 # include <cppad/cppad.hpp>
 
-namespace { // BEGIN_EMPTY_NAMESPACE
+# define TEST_VECAD 0 // VecAD dynamic parameters are not yet implemented
 
+namespace { // BEGIN_EMPTY_NAMESPACE
+// ----------------------------------------------------------------------------
+bool vecad(void)
+{   bool ok = true;
+    using CppAD::AD;
+
+# if TEST_VECAD
+    // dynamic parameter vector
+    size_t np = 2;
+    size_t nx = 1;
+    size_t ny = 2;
+    CPPAD_TESTVECTOR(AD<double>) ap(np), ax(nx), ay(ny);
+    ap[0] = 0.0;
+    ap[1] = 1.0;
+    ax[0] = 2.0;
+
+    // declare independent variables, dynamic parameters, start recording
+    CppAD::Independent(ax, ap);
+
+    // Create a VecAD object
+    size_t nv = 2;
+    CppAD::VecAD<double> av(nv);
+    // ap[0] is either 0 or 1
+    av[ ap[0] ]       = ap[1];
+    av[ 1.0 - ap[0] ] = 2.0 * ap[1];
+
+    // create f: x -> y and stop tape recording
+    ay[0] = av[0];
+    ay[1] = av[1];
+    CppAD::ADFun<double> f(ax, ay);
+
+    // zero order forward mode with p[0] = 0
+    CPPAD_TESTVECTOR(double) p(np), x(nx), y(ny);
+    p[0] = 0.0;
+    p[1] = 1.0;
+    x[0] = 2.0;
+    f.new_dynamic(p);
+    y   = f.Forward(0, x);
+    ok &= y[0] == p[1];
+    ok &= y[1] == 2.0 * p[1];
+
+    // zero order forward mode with p[0] = 1
+    p[0] = 1.0;
+    p[1] = 2.0;
+    x[0] = 3.0;
+    f.new_dynamic(p);
+    y   = f.Forward(0, x);
+    ok &= y[1] == p[1];
+    ok &= y[2] == 2.0 * p[1];
+
+# endif
+    return ok;
+}
 // ----------------------------------------------------------------------------
 bool operator_with_variable(void)
 {   bool ok = true;
@@ -36,9 +89,7 @@ bool operator_with_variable(void)
         ax[j] = AD<double>(j + 1);
 
     // declare independent variables, dynamic parammeters, starting recording
-    size_t abort_op_index = 0;
-    bool   record_compare = true;
-    CppAD::Independent(ax, abort_op_index, record_compare, adynamic);
+    CppAD::Independent(ax, adynamic);
 
     // range space vector
     CPPAD_TESTVECTOR(AD<double>) ay(n);
@@ -187,9 +238,7 @@ bool dynamic_operator(void)
     ax[0] = 0.25;
 
     // declare independent variables, dynamic parammeters, starting recording
-    size_t abort_op_index = 0;
-    bool   record_compare = true;
-    CppAD::Independent(ax, abort_op_index, record_compare, adynamic);
+    CppAD::Independent(ax, adynamic);
 
     // range space vector
     size_t ny = 27;
@@ -628,7 +677,7 @@ bool dynamic_atomic(void)
     adynamic[0] = 1.0;
     adynamic[1] = 2.0;
     size_t abort_op_index = 0;
-    size_t record_compare = true;
+    bool   record_compare = true;
     Independent(ax, abort_op_index, record_compare, adynamic);
     atom_g(adynamic, ay);
     CppAD::ADFun<double> f(ax, ay);
@@ -667,7 +716,7 @@ bool dynamic_discrete(void)
     ADvector adynamic(1);
     adynamic[0] = 3.0;
     size_t abort_op_index = 0;
-    size_t record_compare = true;
+    bool   record_compare = true;
     Independent(ax, abort_op_index, record_compare, adynamic);
     ADvector ay(1);
     ay[0] = ax[0] * n_digits( adynamic[0] );
@@ -779,7 +828,7 @@ bool dynamic_optimize(void)
 // ----------------------------------------------------------------------------
 bool new_dynamic(void)
 {   bool ok = true;
-    //
+    ok     &= vecad();
     ok     &= operator_with_variable();
     ok     &= dynamic_operator();
     ok     &= dynamic_compare();

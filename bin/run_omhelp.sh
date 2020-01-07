@@ -1,20 +1,6 @@
 #! /bin/bash -e
-# -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
-#
-# CppAD is distributed under the terms of the
-#              Eclipse Public License Version 2.0.
-#
-# This Source Code may also be made available under the following
-# Secondary License when the conditions for such availability set forth
-# in the Eclipse Public License, Version 2.0 are satisfied:
-#       GNU General Public License, Version 2.0 or later.
-# -----------------------------------------------------------------------------
-if [ ! -e "bin/run_omhelp.sh" ]
-then
-    echo "bin/run_omhelp.sh: must be executed from its parent directory"
-    exit 1
-fi
+# Copyright: None
+start_dir=`pwd`
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -22,104 +8,139 @@ echo_eval() {
     eval $*
 }
 # -----------------------------------------------------------------------------
-clean='no'
-htm='no'
-xml='no'
-printable='no'
-while [ "$1" != '' ]
-do
-    case "$1" in
-
-        clean)
-        clean='yes'
-        ;;
-
-        htm)
-        htm='yes'
-        ;;
-
-        xml)
-        xml='yes'
-        ;;
-
-        printable)
-        printable='yes'
-        ;;
-
-        *)
-        echo "$1 is not a valid bin/run_omhelp.sh option"
-        exit 1
-    esac
-    shift
-done
-if [ "$htm" == "$xml" ]
+if ! which omhelp >& /dev/null
 then
-    echo 'usage: bin/run_omhelp.sh [clean] [htm] [xml] [printable]'
-    echo 'order does not matter and htm or xml is present (but not both).'
+    if [ -e build/prefix/bin/omhelp ]
+    then
+        PATH="$PATH:$start_dir/build/prefix/bin"
+    fi
+fi
+if ! which omhelp 
+then
+    echo 'run_omhel.sh: cannot find omhelp'
+    echo 'perhaps you need to execute the following commands:'
+    echo '  bin/get_highlight.sh'
+    echo '  bin/get_omhelp.sh'
     exit 1
 fi
-if [ "$htm" == 'yes' ]
+# -----------------------------------------------------------------------------
+# command line arguments
+cat << EOF > run_omhelp.$$
+usage: run_omhelp.sh [-clean] [-printable] [-xml] root
+where ./root.omh is the top level (root) omhelp file.
+The output is written in the ./root directory.
+EOF
+clean='no'
+printable=''
+xml=''
+root=''
+while [ "$1" != '' ]
+do
+    case $1 in
+    
+        -clean)
+        clean='yes'
+        shift
+        ;;
+    
+        -printable)
+        printable='-printable'
+        shift
+        ;;
+    
+        -xml)
+        xml='-xml'
+        shift
+        ;;
+    
+        *)
+        root="$1"
+        shift
+        if [ ! -f "$root".omh ] || [ "$1" != '' ]
+        then
+            cat run_omhelp.$$
+            rm run_omhelp.$$
+            exit 1
+        fi
+        ;;
+    
+    esac
+done
+#
+if [ "$root" == '' ]
 then
-    ext='htm'
-else
-    ext='xml'
+    cat run_omhelp.$$
+    rm run_omhelp.$$
+    exit 1
+fi
+rm run_omhelp.$$
+# -----------------------------------------------------------------------------
+for file in bin/devel.sh $root.omh
+do
+    if [ ! -e "$file" ]
+    then
+        echo "run_omhelp.sh: cannot find the file: $file"
+        exit 1
+    fi
+done
+# -----------------------------------------------------------------------------
+# get image_link
+if ! grep "^image_link='[^']*'$" bin/devel.sh > /dev/null
+then
+    echo 'run_omhelp.sh cannot find the following pattern in bin/devel.sh' 
+    echo "^image_link='[^']*'$"
+    exit 1
+fi
+#
+image_link=`grep '^image_link=' bin/devel.sh | sed \
+    -e "s|^image_link='||" -e "s|'$||"`
+echo "image_link ='$image_link'"
+if [ "$image_link" != '' ]
+then
+    image_link="-image_link $image_link"
 fi
 # -----------------------------------------------------------------------------
 if [ "$clean" == 'yes' ]
 then
-    echo_eval rm -rf doc
+    if [ -d $root ]
+    then
+        echo_eval rm -r $root
+    fi
 fi
-#
-if [ ! -e doc ]
-then
-    echo_eval mkdir doc
-fi
-echo_eval cd doc
 # -----------------------------------------------------------------------------
-cmd='omhelp ../doc.omh -noframe -debug'
-cmd="$cmd -image_link http://www.coin-or.org/CppAD/"
-#
-if [ "$ext" == "xml" ]
+if [ ! -d "$root" ]
 then
-    cmd="$cmd -xml"
+    echo_eval mkdir $root
 fi
-if [ $printable == 'yes' ]
+echo_eval cd $root
+if omhelp \
+    "../$root.omh" \
+    $printable \
+    $xml \
+    $image_link \
+    -noframe \
+    -debug \
+    > ../omhelp.$root.log
 then
-    cmd="$cmd -printable"
-fi
-echo "$cmd >& omhelp.$ext.log"
-if !  $cmd >& ../omhelp.$ext.log
-then
-    cat ../omhelp.$ext.log
-    echo "OMhelp could not build doc/*.$ext documentation."
-    grep "^OMhelp Error:" ../omhelp.$ext.log
-    exit 1
-fi
-if grep "^OMhelp Warning:" ../omhelp.$ext.log
-then
-    echo "See the complete warning messages in omhelp.$ext.log."
-    exit 1
-fi
-if [ "$printable" == 'yes' ]
-then
-    root_name='_printable'
+    omhelp_error='no'
 else
-    root_name='cppad'
+    omhelp_error='yes'
 fi
-if [ ! -e "$root_name.$ext" ]
+cd ..
+# -----------------------------------------------------------------------------
+if [ "$omhelp_error" == 'yes' ]
 then
-    echo "run_omhelp.sh: Can't make $root_name.$ext the default page."
+    cat omhelp.$root.log
+    echo "OMhelp could not build $root."
+    echo "See the complete error message in omhelp.$root.log."
+    grep "^OMhelp Error:" omhelp.$root.log
     exit 1
 fi
-if [ -e 'index.htm' ]
+if grep "^OMhelp Warning:" omhelp.$root.log
 then
-    echo_eval rm index.htm
+    echo "See the complete warning messages in omhelp.$root.log."
+    exit 1
 fi
-cat << EOF > index.html
-<html><head><script>
-window.location.href="$root_name.$ext";
-</script></head></html>
-EOF
-#
-echo "OK: omhelp $*"
+# -----------------------------------------------------------------------------
+echo 'run_omhelp.sh OK'
 exit 0

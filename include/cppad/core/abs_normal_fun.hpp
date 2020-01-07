@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_ABS_NORMAL_FUN_HPP
 # define CPPAD_CORE_ABS_NORMAL_FUN_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -361,6 +361,11 @@ void ADFun<Base,RecBase>::abs_normal_fun(ADFun& g, ADFun& a) const
         else
         {   // operator for this dynamic parameter
             op_code_dyn op_dyn = op_code_dyn( dyn_par_op[i_dyn] );
+            CPPAD_ASSERT_KNOWN(
+                op_dyn != local::atom_dyn,
+                "abs_normal_fun: not yet implemented for "
+                "atomic dynamic parameter functions"
+            );
             //
             // number of arguments for this dynamic parameter
             size_t n_arg = num_arg_dyn(op_dyn);
@@ -517,6 +522,7 @@ void ADFun<Base,RecBase>::abs_normal_fun(ADFun& g, ADFun& a) const
             break;
 
             case ErfOp:
+            case ErfcOp:
             CPPAD_ASSERT_NARG_NRES(op, 3, 5);
             CPPAD_ASSERT_UNKNOWN( size_t( f2g_var[ arg[0] ] ) < num_var );
             // Error function is a special case
@@ -695,7 +701,7 @@ void ADFun<Base,RecBase>::abs_normal_fun(ADFun& g, ADFun& a) const
             case LdpOp:
             CPPAD_ASSERT_NARG_NRES(op, 3, 1);
             new_arg[0] = arg[0];
-            new_arg[1] = arg[1];
+            new_arg[1] = arg[1]; // parameter
             new_arg[2] = arg[2];
             rec.PutArg(
                 new_arg[0],

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -48,6 +48,7 @@ $srccode%cpp% */
 # include <adolc/adolc.h>
 # include <adolc/adolc_sparse.h>
 # include <cppad/utility/vector.hpp>
+# include <cppad/utility/index_sort.hpp>
 # include <cppad/speed/uniform_01.hpp>
 # include <cppad/utility/thread_alloc.hpp>
 # include <cppad/speed/sparse_hes_fun.hpp>
@@ -63,7 +64,7 @@ bool link_sparse_hessian(
     const CppAD::vector<size_t>&     col      ,
     CppAD::vector<double>&           x_return ,
     CppAD::vector<double>&           hessian  ,
-    size_t&                          n_sweep )
+    size_t&                          n_color )
 {
     if( global_option["atomic"] || (! global_option["colpack"]) )
         return false;
@@ -71,13 +72,12 @@ bool link_sparse_hessian(
         return false;
     // -----------------------------------------------------
     // setup
-    typedef unsigned int*    SizeVector;
+    typedef unsigned int*    IntVector;
     typedef double*          DblVector;
     typedef adouble          ADScalar;
     typedef ADScalar*        ADVector;
 
 
-    size_t i, j, k;         // temporary indices
     size_t order = 0;    // derivative order corresponding to function
     size_t m = 1;        // number of dependent variables
     size_t n = size;     // number of independent variables
@@ -103,10 +103,10 @@ bool link_sparse_hessian(
     options[1] = 0; // indirect recovery
 
     // structure that holds some of the work done by sparse_hess
-    int        nnz;                   // number of non-zero values
-    SizeVector rind   = CPPAD_NULL;   // row indices
-    SizeVector cind   = CPPAD_NULL;   // column indices
-    DblVector  values = CPPAD_NULL;   // Hessian values
+    int       nnz;                   // number of non-zero values
+    IntVector rind   = CPPAD_NULL;   // row indices
+    IntVector cind   = CPPAD_NULL;   // column indices
+    DblVector values = CPPAD_NULL;   // Hessian values
 
     // ----------------------------------------------------------------------
     if( ! global_option["onetape"] ) while(repeat--)
@@ -116,7 +116,7 @@ bool link_sparse_hessian(
         // declare independent variables
         int keep = 0; // keep forward mode results
         trace_on(tag, keep);
-        for(j = 0; j < n; j++)
+        for(size_t j = 0; j < n; j++)
             a_x[j] <<= x[j];
 
         // AD computation of f (x)
@@ -136,23 +136,14 @@ bool link_sparse_hessian(
         sparse_hess(tag, int(n),
             same_pattern, x, &nnz, &rind, &cind, &values, options
         );
-        // only needed last time through loop
-        if( repeat == 0 )
-        {   size_t K = row.size();
-            for(int ell = 0; ell < nnz; ell++)
-            {   i = size_t(rind[ell]);
-                j = size_t(cind[ell]);
-                for(k = 0; k < K; k++)
-                {   if( (row[k]==i && col[k]==j) || (row[k]==j && col[k]==i) )
-                        hessian[k] = values[ell];
-                }
-            }
-        }
 
         // free raw memory allocated by sparse_hess
-        free(rind);
-        free(cind);
-        free(values);
+        // (keep on last repeat for correctness testing)
+        if( repeat != 0 )
+        {   free(rind);
+            free(cind);
+            free(values);
+        }
     }
     else
     {   // choose a value for x
@@ -161,7 +152,7 @@ bool link_sparse_hessian(
         // declare independent variables
         int keep = 0; // keep forward mode results
         trace_on(tag, keep);
-        for(j = 0; j < n; j++)
+        for(size_t j = 0; j < n; j++)
             a_x[j] <<= x[j];
 
         // AD computation of f (x)
@@ -184,27 +175,65 @@ bool link_sparse_hessian(
             );
             same_pattern = 1;
         }
-        size_t K = row.size();
-        for(int ell = 0; ell < nnz; ell++)
-        {   i = size_t(rind[ell]);
-            j = size_t(cind[ell]);
-            for(k = 0; k < K; k++)
-            {   if( (row[k]==i && col[k]==j) || (row[k]==j && col[k]==i) )
-                    hessian[k] = values[ell];
+    }
+    // Adolc returns upper triangle in row major order while row, col are
+    // lower trangle in row major order.
+    CppAD::vector<size_t> keys(nnz), ind(nnz);
+    for(int ell = 0; ell < nnz; ++ell)
+    {   // transpose to get lower triangle
+        size_t i = size_t( cind[ell] );
+        size_t j = size_t( rind[ell] );
+        keys[ell] = i * n + j; // row major order for lower triangle
+    }
+    CppAD::index_sort(keys, ind);
+    size_t k = 0;     // initialize index in row, col
+    size_t r = row[k];
+    size_t c = col[k];
+    for(int ell = 0; ell < nnz; ++ell)
+    {   // Adolc version of lower trangle of Hessian in row major order
+        size_t ind_ell  = ind[ell];
+        size_t i        = size_t( cind[ind_ell] );
+        size_t j        = size_t( rind[ind_ell] );
+        while( (r < i) | ( (r == i) & (c < j) ) )
+        {   // (r, c) not in Adolc sparsity pattern
+            hessian[k++] = 0.0;
+            if( k < row.size() )
+            {   r = row[k];
+                c = col[k];
+            }
+            else
+            {   r = n;
+                c = n;
             }
         }
-        // free raw memory allocated by sparse_hessian
-        free(rind);
-        free(cind);
-        free(values);
+        if( (r == i) & (c == j) )
+        {   // adolc value for (r, c)
+            hessian[k++] = values[ind_ell];
+            if( k < row.size() )
+            {   r = row[k];
+                c = col[k];
+            }
+            else
+            {   r = n;
+                c = n;
+            }
+        }
+        else
+        {   // Hessian at (i, j) must be zero (but Adolc does not know this)
+            assert( values[ind_ell] == 0.0 );
+        }
     }
-    // --------------------------------------------------------------------
+    // free raw memory allocated by sparse_hessian
+    free(rind);
+    free(cind);
+    free(values);
+    //
     // return argument
-    for(j = 0; j < n; j++)
+    for(size_t j = 0; j < n; j++)
         x_return[j] = x[j];
 
     // do not know how to return number of sweeps used
-    n_sweep = 0;
+    n_color = 0;
 
     // tear down
     thread_alloc::delete_array(a_x);

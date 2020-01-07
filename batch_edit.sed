@@ -1,8 +1,11 @@
+# Plan for batch Edit:
+# 1. Remove tab from copyright message.
 # ----------------------------------------------------------------------------
 # None of the lists below can have white space or a dollar sign in an entry.
 #
 # list of directories that are added to the repository by batch_edit.sh
 # new_directories='
+#   include/cppad/core/vec_ad
 # '
 # list of files that are deleted by batch_edit.sh
 # delete_files='
@@ -14,10 +17,12 @@
 # '
 # list of files and or directories that are moved to new names
 # move_paths='
+#   include/cppad/core/vec_ad.hpp 
 # '
 # list of sed commands that map old file and directory names to new names.
 # The characters @s, @d, @n get converted to a space, dollar sign, new line.
 # move_seds='
+#   s|cppad/core/vec_ad.hpp|cppad/core/vec_ad/vec_ad.hpp|
 # '
 # list of files that get edited by the extra_seds command
 # extra_files='
@@ -29,3 +34,4 @@
 # '
 # ----------------------------------------------------------------------------
 # Put other sed commands below here and without # at start of line
+s|cppad/core/vec_ad.hpp|cppad/core/vec_ad/vec_ad.hpp|

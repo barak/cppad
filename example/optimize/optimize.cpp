@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -29,6 +29,7 @@ extern bool forward_active(void);
 extern bool nest_conditional(void);
 extern bool print_for(void);
 extern bool reverse_active(void);
+extern bool optimize_twice(void);
 
 // main program that runs all the tests
 int main(void)
@@ -46,6 +47,7 @@ int main(void)
     Run( nest_conditional,    "nest_conditional"   );
     Run( print_for,           "print_for"          );
     Run( reverse_active,      "reverse_active"     );
+    Run( optimize_twice,         "re_optimize"        );
     //
     // check for memory leak
     bool memory_ok = CppAD::thread_alloc::free_all();

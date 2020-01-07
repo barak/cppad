@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -20,6 +20,50 @@ Old examples now only used for validation testing
 
 
 namespace { // Begin empty namespace
+
+void myhandler(
+    bool known       ,
+    int  line        ,
+    const char *file ,
+    const char *exp  ,
+    const char *msg  )
+{   // error handler must not return, so throw an exception
+    throw msg;
+}
+
+bool test_comp_assign(void)
+{   bool ok = true;
+
+    // replace the default CppAD error handler
+    CppAD::ErrorHandler info(myhandler);
+
+
+    // create a VecAD vector
+    CppAD::VecAD<double> v(1);
+
+    // assign its element a value
+    v[0] = 1.0;
+
+# ifndef NDEBUG
+    // use try / catch because error haandler throws an exception
+    try {
+        // set ok to false unless catch block is executed
+        ok = false;
+
+        // attempt to use a compound assignment operator
+        // with a reference to a VecAD object
+        CppAD::AD<double> x = 0.0;
+        v[x] += 1.0;
+    }
+    catch (const char* msg)
+    {   std::string check =
+            "Can't use VecAD<Base>::reference on left side of +=";
+        ok = msg == check;
+    }
+# endif
+
+    return ok;
+}
 
 bool VecADTestOne(void)
 {   bool ok = true;
@@ -254,6 +298,7 @@ bool SecondOrderReverse(void)
 
 bool VecAD(void)
 {   bool ok = true;
+    ok &= test_comp_assign();
     ok &= VecADTestOne();
     ok &= VecADTestTwo();
     ok &= SecondOrderReverse();

@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_FORWARD0_HPP
 # define CPPAD_LOCAL_SWEEP_FORWARD0_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -155,19 +155,19 @@ void forward0(
     }
 
     // If this includes a zero calculation, initialize this information
-    pod_vector<bool>   isvar_by_ind;
-    pod_vector<size_t> index_by_ind;
+    pod_vector<bool>   vec_ad2isvar;
+    pod_vector<size_t> vec_ad2index;
     if( p == 0 )
     {   size_t i;
 
         // this includes order zero calculation, initialize vector indices
         size_t num = play->num_vec_ind_rec();
         if( num > 0 )
-        {   isvar_by_ind.extend(num);
-            index_by_ind.extend(num);
+        {   vec_ad2isvar.extend(num);
+            vec_ad2index.extend(num);
             for(i = 0; i < num; i++)
-            {   index_by_ind[i] = play->GetVecInd(i);
-                isvar_by_ind[i] = false;
+            {   vec_ad2index[i] = play->GetVecInd(i);
+                vec_ad2isvar[i] = false;
             }
         }
         // includes zero order, so initialize conditional skip flags
@@ -196,9 +196,8 @@ void forward0(
     const size_t num_par = play->num_par_rec();
 
     // pointer to the beginning of the parameter vector
-    const Base* parameter = CPPAD_NULL;
-    if( num_par > 0 )
-        parameter = play->GetPar();
+    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
+    const Base* parameter = play->GetPar();
 
     // length of the text vector (used by CppAD assert macros)
     const size_t num_text = play->num_text_rec();
@@ -444,7 +443,8 @@ void forward0(
 
 # if CPPAD_USE_CPLUSPLUS_2011
             case ErfOp:
-            forward_erf_op_0(i_var, arg, parameter, J, taylor);
+            case ErfcOp:
+            forward_erf_op_0(op, i_var, arg, parameter, J, taylor);
             break;
 # endif
             // -------------------------------------------------
@@ -474,8 +474,8 @@ void forward0(
                 parameter,
                 J,
                 taylor,
-                isvar_by_ind.data(),
-                index_by_ind.data(),
+                vec_ad2isvar.data(),
+                vec_ad2index.data(),
                 var_by_load_op.data()
             );
             break;
@@ -489,8 +489,8 @@ void forward0(
                 parameter,
                 J,
                 taylor,
-                isvar_by_ind.data(),
-                index_by_ind.data(),
+                vec_ad2isvar.data(),
+                vec_ad2index.data(),
                 var_by_load_op.data()
             );
             break;
@@ -711,10 +711,11 @@ void forward0(
                 i_var,
                 arg,
                 num_par,
+                parameter,
                 J,
                 taylor,
-                isvar_by_ind.data(),
-                index_by_ind.data()
+                vec_ad2isvar.data(),
+                vec_ad2index.data()
             );
             break;
             // -------------------------------------------------
@@ -724,10 +725,11 @@ void forward0(
                 i_var,
                 arg,
                 num_par,
+                parameter,
                 J,
                 taylor,
-                isvar_by_ind.data(),
-                index_by_ind.data()
+                vec_ad2isvar.data(),
+                vec_ad2index.data()
             );
             break;
             // -------------------------------------------------
@@ -739,8 +741,8 @@ void forward0(
                 num_par,
                 J,
                 taylor,
-                isvar_by_ind.data(),
-                index_by_ind.data()
+                vec_ad2isvar.data(),
+                vec_ad2index.data()
             );
             break;
             // -------------------------------------------------
@@ -752,8 +754,8 @@ void forward0(
                 num_par,
                 J,
                 taylor,
-                isvar_by_ind.data(),
-                index_by_ind.data()
+                vec_ad2isvar.data(),
+                vec_ad2index.data()
             );
             break;
             // -------------------------------------------------

@@ -17,14 +17,18 @@ SET(name cppad_for_tmb)
 # This change only affects the cppad_for_tmb tests (NO PARENT_SCOPE).
 SET(cppad_cxx_flags "${cppad_cxx_flags} ${OpenMP_CXX_FLAGS} -DCPPAD_FOR_TMB")
 #
+# BEGIN_SORT_THIS_LINE_PLUS_2
 SET(source_list
     ${name}.cpp
     implicit_ctor.cpp
-    perfer_reverse.cpp
-    multi_atomic.cpp
-    multi_checkpoint.cpp
+    multi_atomic_two.cpp
+    multi_atomic_three.cpp
+    multi_chkpoint_one.cpp
     multi_chkpoint_two.cpp
+    perfer_reverse.cpp
 )
+# END_SORT_THIS_LINE_MINUS_2
+
 set_compile_flags(
     test_more_${name} "${cppad_debug_which}" "${source_list}"
 )
