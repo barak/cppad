@@ -1,13 +1,9 @@
 #!/usr/bin/make -f
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
 %:
 	dh $@ --buildsystem=cmake
-
-# override_dh_autoreconf:
-# 	@echo "Hey debhelper, what are you doing?"
-# 	@echo "THE BUILD SYSTEM IS CMAKE!!!"
-# 	@echo "But maybe you do not care, maybe you just like to watch the world burn."
-# 	dh_autoreconf
 
 override_dh_auto_install:
 	dh_auto_install
