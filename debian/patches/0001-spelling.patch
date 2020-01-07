@@ -1,0 +1,35 @@
+From: "Barak A. Pearlmutter" <barak+git@pearlmutter.net>
+Date: Tue, 7 Jan 2020 17:10:36 +0000
+Subject: spelling
+
+---
+ cppad_lib/json_lexer.cpp            | 2 +-
+ example/general/abort_recording.cpp | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cppad_lib/json_lexer.cpp b/cppad_lib/json_lexer.cpp
+index 22645e6..1e01940 100644
+--- a/cppad_lib/json_lexer.cpp
++++ b/cppad_lib/json_lexer.cpp
+@@ -31,7 +31,7 @@ void json_lexer::report_error(
+     }
+     std::string recent_input = json_.substr( pos, index_ - pos + 1);
+ 
+-    std::string msg = "Error occured while parsing Json AD graph";
++    std::string msg = "Error occurred while parsing Json AD graph";
+     if( function_name_ != "" )
+         msg += " for the function " + function_name_;
+     msg += ".\n";
+diff --git a/example/general/abort_recording.cpp b/example/general/abort_recording.cpp
+index fc80d44..edc26f6 100644
+--- a/example/general/abort_recording.cpp
++++ b/example/general/abort_recording.cpp
+@@ -49,7 +49,7 @@ bool abort_recording(void)
+     catch (int e)
+     {   ok &= (e == 1);
+ 
+-        // do this incase throw occured after the call to Independent
++        // do this incase throw occurred after the call to Independent
+         // (for case above this is known, but in general it is unknown)
+         AD<double>::abort_recording();
+     }
