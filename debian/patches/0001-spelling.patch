@@ -3,10 +3,55 @@ Date: Tue, 7 Jan 2020 17:10:36 +0000
 Subject: spelling
 
 ---
- cppad_lib/json_lexer.cpp            | 2 +-
- example/general/abort_recording.cpp | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ bin/check_all.sh                           | 8 ++++----
+ cppad_lib/json_lexer.cpp                   | 2 +-
+ example/general/abort_recording.cpp        | 2 +-
+ example/multi_thread/team_example.cpp      | 2 +-
+ include/cppad/core/cond_exp.hpp            | 2 +-
+ include/cppad/local/sparse/svec_setvec.hpp | 4 ++--
+ speed/adolc/sparse_jacobian.cpp            | 2 +-
+ 7 files changed, 11 insertions(+), 11 deletions(-)
 
+diff --git a/bin/check_all.sh b/bin/check_all.sh
+index d0962a5..32eeccb 100755
+--- a/bin/check_all.sh
++++ b/bin/check_all.sh
+@@ -206,7 +206,7 @@ done
+ # ----------------------------------------------------------------------------
+ # extra speed tests not run with option specified
+ #
+-# make speed_cppad incase make check above is commented out
++# make speed_cppad in case make check above is commented out
+ echo_log_eval make -j $n_job speed_cppad
+ for option in onetape colpack optimize atomic memory boolsparsity
+ do
+@@ -215,7 +215,7 @@ do
+ done
+ if ! echo "$skip" | grep 'adolc' > /dev/null
+ then
+-    # make speed_adolc incase make check above is commented out
++    # make speed_adolc in case make check above is commented out
+     echo_log_eval make -j $n_job speed_adolc
+     #
+     echo_eval speed/adolc/speed_adolc correct         432 onetape
+@@ -236,7 +236,7 @@ do
+         program="$dir/example_multi_thread_${threading}"
+         program_list="$program_list $program"
+         #
+-        # make program incase make check above is commented out
++        # make program in case make check above is commented out
+         echo_log_eval make -j $n_job example_multi_thread_${threading}
+         #
+         # all programs check the fast cases
+@@ -268,7 +268,7 @@ fi
+ #
+ # print_for test
+ program='example/print_for/example_print_for'
+-# make program incase make check above is commented out
++# make program in case make check above is commented out
+ echo_log_eval make -j $n_job example_print_for
+ echo_log_eval $program
+ $program | sed -e '/^Test passes/,$d' > junk.1.$$
 diff --git a/cppad_lib/json_lexer.cpp b/cppad_lib/json_lexer.cpp
 index 22645e6..1e01940 100644
 --- a/cppad_lib/json_lexer.cpp
@@ -21,7 +66,7 @@ index 22645e6..1e01940 100644
          msg += " for the function " + function_name_;
      msg += ".\n";
 diff --git a/example/general/abort_recording.cpp b/example/general/abort_recording.cpp
-index fc80d44..edc26f6 100644
+index fc80d44..349badf 100644
 --- a/example/general/abort_recording.cpp
 +++ b/example/general/abort_recording.cpp
 @@ -49,7 +49,7 @@ bool abort_recording(void)
@@ -29,7 +74,68 @@ index fc80d44..edc26f6 100644
      {   ok &= (e == 1);
  
 -        // do this incase throw occured after the call to Independent
-+        // do this incase throw occurred after the call to Independent
++        // do this in case throw occurred after the call to Independent
          // (for case above this is known, but in general it is unknown)
          AD<double>::abort_recording();
      }
+diff --git a/example/multi_thread/team_example.cpp b/example/multi_thread/team_example.cpp
+index 3661da0..35c1dd4 100644
+--- a/example/multi_thread/team_example.cpp
++++ b/example/multi_thread/team_example.cpp
+@@ -105,7 +105,7 @@ bool team_example(void)
+         size_t min_bytes(sizeof(work_one_t)), cap_bytes;
+         void*  v_ptr = thread_alloc::get_memory(min_bytes, cap_bytes);
+         work_all_[thread_num]     = static_cast<work_one_t*>(v_ptr);
+-        // incase this thread's worker does not get called
++        // in case this thread's worker does not get called
+         work_all_[thread_num]->ok = false;
+         // parameter that defines the work for this thread
+         work_all_[thread_num]->x  = double(thread_num) + 1.;
+diff --git a/include/cppad/core/cond_exp.hpp b/include/cppad/core/cond_exp.hpp
+index 300be1d..dea54be 100644
+--- a/include/cppad/core/cond_exp.hpp
++++ b/include/cppad/core/cond_exp.hpp
+@@ -225,7 +225,7 @@ AD<Base> CondExpOp(
+         return result;
+     }
+ 
+-    // must use CondExp incase Base is an AD type and recording
++    // must use CondExp in case Base is an AD type and recording
+     result.value_ = CondExpOp(cop,
+         left.value_, right.value_, if_true.value_, if_false.value_);
+ 
+diff --git a/include/cppad/local/sparse/svec_setvec.hpp b/include/cppad/local/sparse/svec_setvec.hpp
+index 2f6c30f..60f5826 100644
+--- a/include/cppad/local/sparse/svec_setvec.hpp
++++ b/include/cppad/local/sparse/svec_setvec.hpp
+@@ -1135,7 +1135,7 @@ public:
+         CPPAD_ASSERT_UNKNOWN( other.reference_count(other_right) > 0 );
+ 
+         // must get all the start indices before modify start_this
+-        // (incase start_this is the same as start_left or start_right)
++        // (in case start_this is the same as start_left or start_right)
+         size_t start_left    = start_[this_left];
+         size_t start_right   = other.start_[other_right];
+ 
+@@ -1255,7 +1255,7 @@ public:
+         CPPAD_ASSERT_UNKNOWN( other.reference_count(other_right) > 0 );
+ 
+         // must get all the start indices before modify start_this
+-        // (incase start_this is the same as start_left or start_right)
++        // (in case start_this is the same as start_left or start_right)
+         size_t start_left    = start_[this_left];
+         size_t start_right   = other.start_[other_right];
+ 
+diff --git a/speed/adolc/sparse_jacobian.cpp b/speed/adolc/sparse_jacobian.cpp
+index d456292..4cbb3fc 100644
+--- a/speed/adolc/sparse_jacobian.cpp
++++ b/speed/adolc/sparse_jacobian.cpp
+@@ -198,7 +198,7 @@ bool link_sparse_jacobian(
+             ok &= col[k] == size_t( cind[k] );
+             jacobian[k] = values[k];
+         }
+-        // assert here incase adolc stops returning same pattern
++        // assert here in case adolc stops returning same pattern
+         assert( ok );
+ 
+         // free raw memory allocated by sparse_jac
