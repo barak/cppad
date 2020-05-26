@@ -4,64 +4,66 @@ Priority: optional
 Maintainer: Debian Science Team <debian-science-maintainers@alioth-lists.debian.net>
 Uploaders: Miles Lubin <miles.lubin@gmail.com>,
            Barak A. Pearlmutter <bap@debian.org>
-Build-Depends: debhelper-compat (= 12), cmake, libboost-dev
-Standards-Version: 4.4.1
+Build-Depends: debhelper-compat (= 13), cmake, libboost-all-dev
+Standards-Version: 4.5.0
 Rules-Requires-Root: no
 Homepage: https://projects.coin-or.org/CppAD/
 Vcs-Git: https://salsa.debian.org/science-team/cppad.git
 Vcs-Browser: https://salsa.debian.org/science-team/cppad
 
-Package: cppad
-Architecture: all
-Multi-Arch: foreign
-Depends: libcppad-dev
-Description: Automatic Differentiation (AD) of C++ algorithms
- CppAD is a package for automatic differentiation of algorithms
+Package: libcppad-lib340.3
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: cppad (<< 2020.00.00.0)
+Description: Automatic Differentiation of C++ algorithms, shared library
+ CppAD is a package for automatic differentiation (AD) of algorithms
  written in C++.  Given appropriately written C++ code that computes a
  function, CppAD augments it to also compute derivative values.  The
  system uses templates, supports forward and reverse accumulation
  modes, and allows nested derivatives.
  .
- This transition package 
-
-Package: libcppadXXX
-Architecture: all
-Multi-Arch: foreign
-Depends: ${misc:Depends}
-Conflicts: cppad (< 2020.00.00.0)
-Description: Automatic Differentiation (AD) of C++ algorithms
- CppAD is a package for automatic differentiation of algorithms
- written in C++.  Given appropriately written C++ code that computes a
- function, CppAD augments it to also compute derivative values.  The
- system uses templates, supports forward and reverse accumulation
- modes, and allows nested derivatives.
- .
- This package contains C++ header files and documentation.
+ This package contains runtime support, including shared libraries.
 
 Package: libcppad-dev
-Architecture: all
-Multi-Arch: foreign
-Depends: ${misc:Depends}
-Conflicts: cppad (< 2020.00.00.0)
-Description: Automatic Differentiation (AD) of C++ algorithms
- CppAD is a package for automatic differentiation of algorithms
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, libcppad-lib340.3 (= ${binary:Version})
+Conflicts: cppad (<< 2020.00.00.0)
+Description: Automatic Differentiation of C++ algorithms, dev files
+ CppAD is a package for automatic differentiation (AD) of algorithms
  written in C++.  Given appropriately written C++ code that computes a
  function, CppAD augments it to also compute derivative values.  The
  system uses templates, supports forward and reverse accumulation
  modes, and allows nested derivatives.
  .
- This package contains C++ header files and.
+ This package contains development file: C++ headers and development
+ libraries.
 
 Package: libcppad-doc
+Section: doc
 Architecture: all
-Multi-Arch: foreign
 Depends: ${misc:Depends}
-Conflicts: cppad (< 2020.00.00.0)
-Description: Automatic Differentiation (AD) of C++ algorithms
- CppAD is a package for automatic differentiation of algorithms
+Conflicts: cppad (<< 2020.00.00.0)
+Description: Automatic Differentiation of C++ algorithms, documentation
+ CppAD is a package for automatic differentiation (AD) of algorithms
  written in C++.  Given appropriately written C++ code that computes a
  function, CppAD augments it to also compute derivative values.  The
  system uses templates, supports forward and reverse accumulation
  modes, and allows nested derivatives.
  .
  This package contains documentation.
+
+Package: cppad
+Architecture: all
+Depends: libcppad-dev, ${misc:Depends}
+Description: Automatic Differentiation of C++ algorithms, dummy package
+ CppAD is a package for automatic differentiation (AD) of algorithms
+ written in C++.  Given appropriately written C++ code that computes a
+ function, CppAD augments it to also compute derivative values.  The
+ system uses templates, supports forward and reverse accumulation
+ modes, and allows nested derivatives.
+ .
+ This transition package helps with the move to libcppad-dev.

@@ -3,15 +3,30 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 %:
-	dh $@ --buildsystem=cmake
+	dh $@ --buildsystem=cmake --without autoreconf
+# adding --without autotools-dev breaks dh_auto_install (!)
 
-override_dh_auto_install:
-	dh_auto_install
-	@echo "File cppad.pc should be installed only once, in the right place."
-	@echo "See lintian-info -t pkg-config-unavailable-for-cross-compilation"
-	if [ -e debian/cppad/usr/share/pkgconfig/cppad.pc \
-	     -a -e debian/cppad/usr/lib/pkgconfig/cppad.pc ]; then \
-	  rm --verbose debian/cppad/usr/lib/pkgconfig/cppad.pc; \
-	  rmdir --ignore-fail-on-non-empty --verbose debian/cppad/usr/lib/pkgconfig; \
-	  rmdir --ignore-fail-on-non-empty --verbose debian/cppad/usr/lib; \
-	fi;
+override_dh_autotools-dev_updateconfig:
+	@echo using cmake so no need to fiddle with config.guess or config.sub
+
+override_dh_autotools-dev_restoreconfig:
+	@echo using cmake so no need to fiddle with config.guess or config.sub
+
+# Depending on how the package evolves, it might make sense at some
+# point to make these package into build dependencies:
+#
+#	libadolc-dev
+#	libcolpack-dev
+#	coinor-libipopt-dev
+#	libtrilinos-sacado-dev
+#	libeigen3-dev
+#
+# and to enable them with something like this:
+#
+# override_dh_auto_configure:
+#	dh_auto_configure --		\
+#		-D adolc_prefix=/usr	\
+#		-D colpack_prefix=/usr	\
+#		-D ipopt_prefix=/usr	\
+#		-D sacado_prefix=/usr	\
+#		-D eigen_prefix=/usr
