@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -11,6 +11,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 ---------------------------------------------------------------------------- */
 # include <cppad/utility/vector.hpp>
 # include <cppad/utility/near_equal.hpp>
+# include <cppad/utility/time_test.hpp>
 // BEGIN PROTOTYPE
 extern bool link_mat_mul(
     size_t                     size     ,
@@ -34,7 +35,7 @@ $$
 $section Speed Testing Derivative of Matrix Multiply$$
 
 $head Prototype$$
-$srcfile%speed/src/link_mat_mul.cpp%
+$srcthisfile%
     0%// BEGIN PROTOTYPE%// END PROTOTYPE%0
 %$$
 
@@ -94,13 +95,30 @@ derivative of $icode z$$ with respect to $icode x$$.
 $end
 -----------------------------------------------------------------------------
 */
+// ---------------------------------------------------------------------------
+// The routines below are documented in dev_link.omh
+// ---------------------------------------------------------------------------
+namespace {
+    void time_mat_mul_callback(size_t size, size_t repeat)
+    {   // free statically allocated memory
+        if( size == 0 && repeat == 0 )
+            return;
+        //
+        CppAD::vector<double>  x(size * size), z(1), dz(size * size);
+
+        link_mat_mul(size, repeat, x, z, dz);
+        return;
+    }
+}
+// ---------------------------------------------------------------------------
 bool available_mat_mul(void)
-{   size_t size   = 2;
+{   size_t size   = 3;
     size_t repeat = 1;
     CppAD::vector<double>  x(size * size), z(1), dz(size * size);
 
     return link_mat_mul(size, repeat, x, z, dz);
 }
+// --------------------------------------------------------------------------
 bool correct_mat_mul(bool is_package_double)
 {   size_t size   = 2;
     size_t repeat = 1;
@@ -139,14 +157,7 @@ bool correct_mat_mul(bool is_package_double)
 
     return ok;
 }
-
-void speed_mat_mul(size_t size, size_t repeat)
-{   // free statically allocated memory
-    if( size == 0 && repeat == 0 )
-        return;
-    //
-    CppAD::vector<double>  x(size * size), z(1), dz(size * size);
-
-    link_mat_mul(size, repeat, x, z, dz);
-    return;
+double time_mat_mul(double time_min, size_t size)
+{   return CppAD::time_test(time_mat_mul_callback, time_min, size);
 }
+// --------------------------------------------------------------------------

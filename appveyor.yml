@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -19,6 +19,7 @@ environment:
   matrix:
     - HOST_ARCH_ARG: --host=x86_64-w64-mingw32
       ADD_PATH: /mingw64/bin
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 # scripts that run after cloning repository
 install:
@@ -30,12 +31,13 @@ build_script:
   - C:\msys64\usr\bin\bash -lc "
       cd $APPVEYOR_BUILD_FOLDER;
       export PATH=$PATH:$ADD_PATH;
-      bin/appveyor.sh
+      bin/appveyor.sh make check install uninstall
     "
 #
 notifications:
   - provider: Email
     to:
      - bradbell@seanet.com
-    on_build_success: true
+    on_build_status_changed: true
     on_build_failure: true
+    on_build_success: false

@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_OPTIMIZE_GET_PAR_USAGE_HPP
 # define CPPAD_LOCAL_OPTIMIZE_GET_PAR_USAGE_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -37,7 +37,7 @@ $$
 $section Use Reverse Activity Analysis to Get Usage for Each Parameter$$
 
 $head Prototype$$
-$srcfile%include/cppad/local/optimize/get_par_usage.hpp%
+$srcthisfile%
     0%// BEGIN_GET_PAR_USAGE%// END_PROTOTYPE%1
 %$$
 
@@ -63,7 +63,7 @@ the i-th operator in the operation sequence.
 
 $head vecad_used$$
 This argument has size equal to the number of VecAD vectors
-in the operations sequences; i.e., play->num_vecad_vec_rec().
+in the operations sequences; i.e., play->num_var_vecad_rec().
 The VecAD vectors are indexed in the order that their indices appear
 in the one large play->GetVecInd that holds all the VecAD vectors.
 
@@ -106,7 +106,7 @@ void get_par_usage(
     size_t num_dynamic_ind = play->num_dynamic_ind();
     //
     // number of VecAD vectors
-    size_t num_vecad_vec = play->num_vecad_vec_rec();
+    size_t num_vecad_vec = play->num_var_vecad_rec();
     //
     // dynamic parameter information
     const pod_vector<bool>&        dyn_par_is( play->dyn_par_is() );
@@ -143,7 +143,7 @@ void get_par_usage(
         }
         start_this_vector += length + 1;
     }
-    CPPAD_ASSERT_UNKNOWN( start_this_vector == play->num_vec_ind_rec() );
+    CPPAD_ASSERT_UNKNOWN( start_this_vector == play->num_var_vecad_ind_rec() );
     //
     // -----------------------------------------------------------------------
     // forward pass to mark which parameters are used by necessary operators

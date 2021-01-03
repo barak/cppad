@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -32,7 +32,7 @@ Set the following preprocessor symbol to 1 to demonstrate this bug:
 $srccode%cpp% */
 # define DEMONSTRATE_BUG_IN_CYGWIN 0
 /* %$$
-$srcfile%example/multi_thread/pthread/team_pthread.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -85,7 +85,7 @@ namespace {
     thread_one_t thread_all_[MAX_NUMBER_THREADS];
 
     // pointer to function that does the work for one thread
-    void (* worker_)(void) = CPPAD_NULL;
+    void (* worker_)(void) = nullptr;
 
     // ---------------------------------------------------------------------
     // in_parallel()
@@ -145,10 +145,10 @@ namespace {
         thread_all_[thread_num].ok = ok;
 # if DEMONSTRATE_BUG_IN_CYGWIN
         // Terminate this thread
-        void* no_status = CPPAD_NULL;
+        void* no_status = nullptr;
         pthread_exit(no_status);
 # endif
-        return CPPAD_NULL;
+        return nullptr;
     }
 }
 
@@ -198,7 +198,7 @@ bool team_create(size_t num_threads)
     num_threads_ = num_threads;
 
     // initialize two barriers, one for work done, one for new job ready
-    pthread_barrierattr_t* no_barrierattr = CPPAD_NULL;
+    pthread_barrierattr_t* no_barrierattr = nullptr;
     rc = pthread_barrier_init(
         &wait_for_work_, no_barrierattr, (unsigned int) num_threads
     );
@@ -211,7 +211,7 @@ bool team_create(size_t num_threads)
     // structure used to create the threads
     pthread_t       pthread_id;
     // default for pthread_attr_setdetachstate is PTHREAD_CREATE_JOINABLE
-    pthread_attr_t* no_attr= CPPAD_NULL;
+    pthread_attr_t* no_attr= nullptr;
 
     // initial job for the threads
     thread_job_           = init_enum;
@@ -301,7 +301,7 @@ bool team_destroy(void)
     // now wait for the other threads to exit
     size_t thread_num;
     for(thread_num = 1; thread_num < num_threads_; thread_num++)
-    {   void* no_status = CPPAD_NULL;
+    {   void* no_status = nullptr;
         rc      = pthread_join(
             thread_all_[thread_num].pthread_id, &no_status
         );
@@ -328,7 +328,7 @@ bool team_destroy(void)
 
     // now inform CppAD that there is only one thread
     num_threads_ = 1;
-    thread_alloc::parallel_setup(num_threads_, CPPAD_NULL, CPPAD_NULL);
+    thread_alloc::parallel_setup(num_threads_, nullptr, nullptr);
     thread_alloc::hold_memory(false);
     CppAD::parallel_ad<double>();
 

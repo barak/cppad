@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -12,6 +12,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <cppad/utility/vector.hpp>
 # include <cppad/utility/poly.hpp>
 # include <cppad/utility/near_equal.hpp>
+# include <cppad/utility/time_test.hpp>
 // BEGIN PROTOTYPE
 extern bool link_poly(
     size_t                     size     ,
@@ -35,7 +36,7 @@ $$
 $section Speed Testing Second Derivative of a Polynomial$$
 
 $head Prototype$$
-$srcfile%speed/src/link_poly.cpp%
+$srcthisfile%
     0%// BEGIN PROTOTYPE%// END PROTOTYPE%0
 %$$
 
@@ -90,6 +91,22 @@ is the polynomial value (the second derivative is not computed).
 $end
 -----------------------------------------------------------------------------
 */
+// ---------------------------------------------------------------------------
+// The routines below are documented in dev_link.omh
+// ---------------------------------------------------------------------------
+namespace {
+void time_poly_callback(size_t size, size_t repeat)
+    {   // free statically allocated memory
+        if( size == 0 && repeat == 0 )
+            return;
+        //
+        CppAD::vector<double>  a(size), z(1), ddp(1);
+
+        link_poly(size, repeat, a, z, ddp);
+        return;
+    }
+}
+// ---------------------------------------------------------------------------
 bool available_poly(void)
 {   size_t size   = 10;
     size_t repeat = 1;
@@ -97,6 +114,7 @@ bool available_poly(void)
 
     return link_poly(size, repeat, a, z, ddp);
 }
+// ---------------------------------------------------------------------------
 bool correct_poly(bool is_package_double)
 {   size_t size   = 10;
     size_t repeat = 1;
@@ -116,13 +134,8 @@ bool correct_poly(bool is_package_double)
     bool ok = CppAD::NearEqual(check, ddp[0], eps99, eps99);
     return ok;
 }
-void speed_poly(size_t size, size_t repeat)
-{   // free statically allocated memory
-    if( size == 0 && repeat == 0 )
-        return;
-    //
-    CppAD::vector<double>  a(size), z(1), ddp(1);
-
-    link_poly(size, repeat, a, z, ddp);
-    return;
+// ---------------------------------------------------------------------------
+double time_poly(double time_min, size_t size)
+{   return CppAD::time_test(time_poly_callback, time_min, size);
 }
+// ---------------------------------------------------------------------------

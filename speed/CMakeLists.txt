@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -20,6 +20,7 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(cppad)
 ADD_SUBDIRECTORY(double)
 ADD_SUBDIRECTORY(example)
+ADD_SUBDIRECTORY(xpackage)
 IF ( cppad_profile_flag )
     ADD_SUBDIRECTORY(profile)
 ENDIF ( cppad_profile_flag )
@@ -30,6 +31,9 @@ ENDIF( cppad_has_adolc )
 IF( cppad_has_fadbad )
     ADD_SUBDIRECTORY(fadbad)
 ENDIF( cppad_has_fadbad )
+IF( cppad_has_cppadcg )
+    ADD_SUBDIRECTORY(cppadcg)
+ENDIF( cppad_has_cppadcg )
 IF( cppad_has_sacado )
     ADD_SUBDIRECTORY(sacado)
 ENDIF( cppad_has_sacado )

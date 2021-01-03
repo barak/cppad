@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_ATOMIC_THREE_CTOR_HPP
 # define CPPAD_CORE_ATOMIC_THREE_CTOR_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -40,7 +40,7 @@ $icode%atomic_user afun%(%ctor_arg_list%)
 %$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/atomic/three_ctor.hpp%
+$srcthisfile%
     0%// BEGIN_PROTOTYPE%// END_PROTOTYPE%1
 %$$
 
@@ -158,7 +158,7 @@ atomic_three<Base>::atomic_three(const std::string& name )
     );
     // initialize work pointers as null;
     for(size_t thread = 0; thread < CPPAD_MAX_NUM_THREADS; thread++)
-        work_[thread] = CPPAD_NULL;
+        work_[thread] = nullptr;
 }
 
 } // END_CPPAD_NAMESPACE

@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_RECORD_PUT_VAR_ATOMIC_HPP
 # define CPPAD_LOCAL_RECORD_PUT_VAR_ATOMIC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -31,7 +31,7 @@ $icode%rec%.put_var_atomic(
 )%$$
 
 $head Prototype$$
-$srcfile%include/cppad/local/record/put_var_atomic.hpp%
+$srcthisfile%
     0%// BEGIN_PUT_VAR_ATOMIC%// END_PROTOTYPE%1
 %$$
 
@@ -94,7 +94,7 @@ void recorder<Base>::put_var_atomic(
         "atomic_three: cppad_tape_addr_type maximum not large enough"
     );
     CPPAD_ASSERT_UNKNOWN(
-        (tape_id == 0) == (AD<Base>::tape_ptr() == CPPAD_NULL)
+        (tape_id == 0) == (AD<Base>::tape_ptr() == nullptr)
     );
     // Operator that marks beginning of this atomic operation
     CPPAD_ASSERT_NARG_NRES(local::AFunOp, 4, 0 );

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -62,9 +62,8 @@ It uses the $cref thread_alloc$$ memory allocator which makes it fast
 in a multi-threading environment; see
 $cref/memory and parallel mode/CppAD_vector/Memory and Parallel Mode/$$.
 $lnext
-Its $cref/resize/CppAD_vector/resize/$$ function is designed so that
-a local vector can be held in memory and resized for each use without
-having to allocate memory or copy elements for each use.
+The operations it has are like the corresponding $code std::vector$$
+operation so it is easy to use.
 $lend
 
 $head Include$$
@@ -82,6 +81,12 @@ If you want $cref/vectorBool/CppAD_vector/vectorBool/$$,
 and not the rest of CppAD, you should include
 $code cppad/utility/vector_bool.hpp$$.
 
+$head Integer Size$$
+The size $icode n$$ in the constructor syntax below can be an
+$code int$$ (all simple vectors support $code size_t$$):
+$codei%
+    CppAD::vector<%Scalar%> %vec%(%n%)
+%$$
 
 $head capacity$$
 If $icode cap$$ is a $code size_t$$ object,
@@ -207,12 +212,18 @@ $codei%
     %vec%.resize(%n%)
 %$$
 sets the size of $icode vec$$ equal to $icode n$$.
+
+$subhead data$$
+The elements in $icode vec$$ before the resize operation are preserved.
+
+$subhead memory$$
 If before the resize, $icode%n% <= %vec%.capacity()%$$,
-no memory is freed or allocated,
-the capacity of $icode vec$$ does not change,
-and the data in $icode vec$$ is preserved.
-Otherwise, new memory is allocated and the data in $icode vec$$ is lost
-(not copied to the new memory location).
+no memory is freed or allocated and
+the capacity of $icode vec$$ does not change.
+Otherwise, new memory is allocated and the elements before the resize
+are copied to the new memory.
+If you do not need to the elements previously in the vector,
+you can resize to zero and then to the new size to avoid the copy.
 
 $head clear$$
 $icode%vec%.clear()
@@ -281,7 +292,7 @@ a comparison operator (e.g. $code >$$) is used between
 two iterators that correspond to different vectors.
 
 $head vectorBool$$
-The file $code <cppad/vector_bool.hpp>$$ defines the class
+The file $code <cppad/utility/vector_bool.hpp>$$ defines the class
 $code CppAD::vectorBool$$.
 This has the same specifications as $code CppAD::vector<bool>$$
 with the following exceptions:

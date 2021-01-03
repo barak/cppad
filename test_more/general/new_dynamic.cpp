@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -13,15 +13,12 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <limits>
 # include <cppad/cppad.hpp>
 
-# define TEST_VECAD 0 // VecAD dynamic parameters are not yet implemented
-
 namespace { // BEGIN_EMPTY_NAMESPACE
 // ----------------------------------------------------------------------------
 bool vecad(void)
 {   bool ok = true;
     using CppAD::AD;
 
-# if TEST_VECAD
     // dynamic parameter vector
     size_t np = 2;
     size_t nx = 1;
@@ -42,8 +39,9 @@ bool vecad(void)
     av[ 1.0 - ap[0] ] = 2.0 * ap[1];
 
     // create f: x -> y and stop tape recording
-    ay[0] = av[0];
-    ay[1] = av[1];
+    CppAD::AD<double> zero(0.0), one(1.0);
+    ay[0] = av[zero];
+    ay[1] = av[one];
     CppAD::ADFun<double> f(ax, ay);
 
     // zero order forward mode with p[0] = 0
@@ -62,10 +60,14 @@ bool vecad(void)
     x[0] = 3.0;
     f.new_dynamic(p);
     y   = f.Forward(0, x);
+    ok &= y[0] == 2.0 * p[1];
     ok &= y[1] == p[1];
-    ok &= y[2] == 2.0 * p[1];
+    CPPAD_TESTVECTOR(double) dx(nx), dy(ny);
+    dx[0] = 1.0;
+    dy    = f.Forward(1, dx);
+    ok   &= dy[0] == 0.0;
+    ok   &= dy[1] == 0.0;
 
-# endif
     return ok;
 }
 // ----------------------------------------------------------------------------
@@ -242,9 +244,7 @@ bool dynamic_operator(void)
 
     // range space vector
     size_t ny = 27;
-# if CPPAD_USE_CPLUSPLUS_2011
     ny += 6;
-# endif
     CPPAD_TESTVECTOR(AD<double>) ay(ny);
     size_t k = 0;
     // ----------------------------------------------------------
@@ -277,7 +277,6 @@ bool dynamic_operator(void)
     ++k;
     // ----------------------------------------------------------
     // 2011 standard math
-# if CPPAD_USE_CPLUSPLUS_2011
     ay[k] = asinh(adynamic[0]);
     ++k;
     ay[k] = acosh(adynamic[0] + 1.0);
@@ -290,7 +289,6 @@ bool dynamic_operator(void)
     ++k;
     ay[k] = log1p(adynamic[0]);
     ++k;
-# endif
     // ----------------------------------------------------------
     // binary
     ay[k]  = 2.0 + adynamic[0];
@@ -387,7 +385,6 @@ bool dynamic_operator(void)
     ++k;
     // ----------------------------------------------------------
     // 2011 standard math
-# if CPPAD_USE_CPLUSPLUS_2011
     check = asinh(dynamic[0]);
     ok   &= NearEqual(y[k], check, eps99, eps99);
     ++k;
@@ -406,7 +403,6 @@ bool dynamic_operator(void)
     check = std::log1p(dynamic[0]);
     ok   &= NearEqual(y[k], check, eps99, eps99);
     ++k;
-# endif
     // ----------------------------------------------------------
     // binary
     check = 2.0 + dynamic[0];

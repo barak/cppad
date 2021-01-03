@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -13,6 +13,8 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <cppad/utility/vector.hpp>
 # include <cppad/speed/det_grad_33.hpp>
 # include <cppad/speed/det_33.hpp>
+# include <cppad/utility/time_test.hpp>
+
 // BEGIN PROTOTYPE
 extern bool link_det_lu(
     size_t                     size      ,
@@ -34,7 +36,7 @@ $$
 $section Speed Testing Gradient of Determinant Using Lu Factorization$$
 
 $head Prototype$$
-$srcfile%speed/src/link_det_lu.cpp%
+$srcthisfile%
     0%// BEGIN PROTOTYPE%// END PROTOTYPE%0
 %$$
 
@@ -82,7 +84,23 @@ the determinant value (the gradient value is not computed).
 $end
 -----------------------------------------------------------------------------
 */
+// ---------------------------------------------------------------------------
+// The routines below are documented in dev_link.omh
+// ---------------------------------------------------------------------------
+namespace {
+    void time_det_lu_callback(size_t size, size_t repeat)
+    {   // free statically allocated memory
+        if( size == 0 && repeat == 0 )
+            return;
+        //
+        CppAD::vector<double> matrix(size * size);
+        CppAD::vector<double> gradient(size * size);
 
+        link_det_lu(size, repeat, matrix, gradient);
+        return;
+    }
+}
+// ---------------------------------------------------------------------------
 bool available_det_lu(void)
 {   size_t size   = 3;
     size_t repeat = 1;
@@ -91,6 +109,7 @@ bool available_det_lu(void)
 
     return link_det_lu(size, repeat, matrix, gradient);
 }
+// ---------------------------------------------------------------------------
 bool correct_det_lu(bool is_package_double)
 {   size_t size   = 3;
     size_t repeat = 1;
@@ -105,14 +124,7 @@ bool correct_det_lu(bool is_package_double)
         ok = CppAD::det_grad_33(matrix, gradient);
     return ok;
 }
-void speed_det_lu(size_t size, size_t repeat)
-{   // free statically allocated memory
-    if( size == 0 && repeat == 0 )
-        return;
-    //
-    CppAD::vector<double> matrix(size * size);
-    CppAD::vector<double> gradient(size * size);
-
-    link_det_lu(size, repeat, matrix, gradient);
-    return;
+// ---------------------------------------------------------------------------
+double time_det_lu(double time_min, size_t size)
+{   return CppAD::time_test(time_det_lu_callback, time_min, size);
 }

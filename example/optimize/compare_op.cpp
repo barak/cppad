@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -17,7 +17,7 @@ $section Optimize Comparison Operators: Example and Test$$
 $head See Also$$
 $cref cond_exp.cpp$$
 
-$srcfile%example/optimize/compare_op.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -37,12 +37,12 @@ namespace {
         before.n_var = 1 + x.size(); before.n_op  = 2 + x.size();
         after.n_var  = 1 + x.size(); after.n_op   = 2 + x.size();
 
-        // Create a variable that is is only used in the comparision operation
+        // Create a variable that is is only used in the comparison operation
         // It is not used when the comparison operator is not included
         scalar one = 1. / x[0];
         before.n_var += 1; before.n_op += 1;
         after.n_var  += 0; after.n_op  += 0;
-        // If we keep comparision operators, we must compute their operands
+        // If we keep comparison operators, we must compute their operands
         if( options.find("no_compare_op") == std::string::npos )
         {   after.n_var += 1;  after.n_op += 1;
         }
@@ -124,7 +124,7 @@ bool compare_op(void)
         fun(options, x, check, before, after);
         ok &= NearEqual(y[0], check[0], eps10, eps10);
 
-        // Check case where result of the comparision is differnent
+        // Check case where result of the comparison is differnent
         // (hence one needs to re-tape to get correct result)
         x[0] = 2.0;
         y    = f.Forward(0, x);

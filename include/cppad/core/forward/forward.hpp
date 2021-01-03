@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_FORWARD_FORWARD_HPP
 # define CPPAD_CORE_FORWARD_FORWARD_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -38,7 +38,7 @@ $icode%yq% = %f%.Forward(%q%, %xq%, %s% )
 %$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/forward/forward.hpp%
+$srcthisfile%
     0%// BEGIN_FORWARD_ORDER%// END_FORWARD_ORDER%1
 %$$
 
@@ -101,7 +101,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
 // END_FORWARD_ORDER
 {
     // used to identify the RecBase type in calls to sweeps
-    RecBase not_used_rec_base;
+    RecBase not_used_rec_base(0.0);
 
     // temporary indices
     size_t i, j, k;
@@ -148,7 +148,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
         }
         else
             num_order_taylor_ = q;
-        size_t c = std::max(q + 1, cap_order_taylor_);
+        size_t c = std::max<size_t>(q + 1, cap_order_taylor_);
         size_t r = 1;
         capacity_order(c, r);
     }
@@ -183,12 +183,12 @@ BaseVector ADFun<Base,RecBase>::Forward(
 
     // evaluate the derivatives
     CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
-    CPPAD_ASSERT_UNKNOWN( load_op_.size()  == play_.num_load_op_rec() );
+    CPPAD_ASSERT_UNKNOWN( load_op2var_.size()  == play_.num_var_load_rec() );
     if( q == 0 )
     {
         local::sweep::forward0(&play_, s, true,
             n, num_var_tape_, C,
-            taylor_.data(), cskip_op_.data(), load_op_,
+            taylor_.data(), cskip_op_.data(), load_op2var_,
             compare_change_count_,
             compare_change_number_,
             compare_change_op_index_,
@@ -198,7 +198,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
     else
     {   local::sweep::forward1(&play_, s, true, p, q,
             n, num_var_tape_, C,
-            taylor_.data(), cskip_op_.data(), load_op_,
+            taylor_.data(), cskip_op_.data(), load_op2var_,
             compare_change_count_,
             compare_change_number_,
             compare_change_op_index_,
@@ -307,7 +307,7 @@ $icode%yq% = %f%.Forward(%q%, %r%, %xq%)
 %$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/forward/forward.hpp%
+$srcthisfile%
     0%// BEGIN_FORWARD_DIR%// END_FORWARD_DIR%1
 %$$
 
@@ -380,7 +380,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
 // END_FORWARD_DIR
 {
     // used to identify the RecBase type in calls to sweeps
-    RecBase not_used_rec_base;
+    RecBase not_used_rec_base(0.0);
 
     // temporary indices
     size_t i, j, ell;
@@ -415,7 +415,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
     {   if( num_direction_taylor_ != r )
             num_order_taylor_ = 1;
 
-        size_t c = std::max(q + 1, cap_order_taylor_);
+        size_t c = std::max<size_t>(q + 1, cap_order_taylor_);
         capacity_order(c, r);
     }
     CPPAD_ASSERT_UNKNOWN( cap_order_taylor_ > q );
@@ -439,7 +439,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
 
     // evaluate the derivatives
     CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
-    CPPAD_ASSERT_UNKNOWN( load_op_.size()  == play_.num_load_op_rec() );
+    CPPAD_ASSERT_UNKNOWN( load_op2var_.size()  == play_.num_var_load_rec() );
     local::sweep::forward2(
         &play_,
         q,
@@ -449,7 +449,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
         c,
         taylor_.data(),
         cskip_op_.data(),
-        load_op_,
+        load_op2var_,
         not_used_rec_base
     );
 

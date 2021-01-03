@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_REV_JAC_HPP
 # define CPPAD_LOCAL_SWEEP_REV_JAC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -47,7 +47,7 @@ $codei%local::sweep::rev_jac(
 )%$$
 
 $head Prototype$$
-$srcfile%include/cppad/local/sweep/rev_jac.hpp%
+$srcthisfile%
     0%// BEGIN_PROTOTYPE%// END_PROTOTYPE%1
 %$$
 
@@ -145,8 +145,8 @@ void rev_jac(
     // vecad_sparsity contains a sparsity pattern for each VecAD object.
     // vecad_ind maps a VecAD index (beginning of the VecAD object)
     // to the index of the corresponding set in vecad_sparsity.
-    size_t num_vecad_ind   = play->num_vec_ind_rec();
-    size_t num_vecad_vec   = play->num_vecad_vec_rec();
+    size_t num_vecad_ind   = play->num_var_vecad_ind_rec();
+    size_t num_vecad_vec   = play->num_var_vecad_rec();
     Vector_set  vecad_sparsity;
     pod_vector<size_t> vecad_ind;
     if( num_vecad_vec > 0 )
@@ -164,7 +164,7 @@ void rev_jac(
             // start of next VecAD
             j       += length + 1;
         }
-        CPPAD_ASSERT_UNKNOWN( j == play->num_vec_ind_rec() );
+        CPPAD_ASSERT_UNKNOWN( j == play->num_var_vecad_ind_rec() );
     }
 
     // ----------------------------------------------------------------------
@@ -243,7 +243,6 @@ void rev_jac(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case AcoshOp:
             // sqrt(x * x - 1), acosh(x)
             CPPAD_ASSERT_NARG_NRES(op, 1, 2);
@@ -251,7 +250,6 @@ void rev_jac(
                 i_var, size_t(arg[0]), var_sparsity
             );
             break;
-# endif
             // -------------------------------------------------
 
             case AsinOp:
@@ -263,7 +261,6 @@ void rev_jac(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case AsinhOp:
             // sqrt(1 + x * x), asinh(x)
             CPPAD_ASSERT_NARG_NRES(op, 1, 2);
@@ -271,7 +268,6 @@ void rev_jac(
                 i_var, size_t(arg[0]), var_sparsity
             );
             break;
-# endif
             // -------------------------------------------------
 
             case AtanOp:
@@ -283,7 +279,6 @@ void rev_jac(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case AtanhOp:
             // 1 - x * x, atanh(x)
             CPPAD_ASSERT_NARG_NRES(op, 1, 2);
@@ -291,7 +286,6 @@ void rev_jac(
                 i_var, size_t(arg[0]), var_sparsity
             );
             break;
-# endif
             // -------------------------------------------------
 
             case BeginOp:
@@ -390,14 +384,12 @@ void rev_jac(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case Expm1Op:
             CPPAD_ASSERT_NARG_NRES(op, 1, 1);
             sparse::rev_jac_unary_op(
                 i_var, size_t(arg[0]), var_sparsity
             );
             break;
-# endif
             // -------------------------------------------------
 
             case InvOp:
@@ -459,14 +451,12 @@ void rev_jac(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case Log1pOp:
             CPPAD_ASSERT_NARG_NRES(op, 1, 1);
             sparse::rev_jac_unary_op(
                 i_var, size_t(arg[0]), var_sparsity
             );
             break;
-# endif
             // -------------------------------------------------
 
             case MulpvOp:
@@ -800,7 +790,7 @@ void rev_jac(
         if( NumRes(op) > 0 && op != BeginOp ) printOpResult(
             std::cout,
             0,
-            (CppAD::vectorBool *) CPPAD_NULL,
+            (CppAD::vectorBool *) nullptr,
             1,
             &z_value
         );

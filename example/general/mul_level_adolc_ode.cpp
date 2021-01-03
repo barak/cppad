@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -21,6 +21,8 @@ $spell
     AdolcDir
     adouble
     Vec
+    ipopt
+    cmake
 $$
 
 $section Taylor's Ode Solver: A Multi-Level Adolc Example and Test$$
@@ -107,13 +109,12 @@ $cref/delete_array/ta_delete_array/$$
 are used to manage this memory allocation.
 
 $head Configuration Requirement$$
-This example will be compiled and tested provided that
-the value $cref ipopt_prefix$$ is specified on the
-$cref cmake$$ command line.
+This example will be compiled and tested provided
+$cref/include_ipopt/cmake/include_ipopt/$$ is on the cmake command line.
 
 $head Source$$
 
-$srcfile%example/general/mul_level_adolc_ode.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 --------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_AD_FUN_HPP
 # define CPPAD_CORE_AD_FUN_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -41,7 +41,6 @@ derivative values, and other values related to the corresponding function.
 $childtable%
     omh/adfun.omh%
     include/cppad/core/optimize.hpp%
-    example/abs_normal/abs_normal.omh%
     include/cppad/core/fun_check.hpp%
     include/cppad/core/check_for_nan.hpp
 %$$
@@ -79,9 +78,8 @@ private:
     /// name of this function (so far only json operations use this value)
     std::string function_name_;
 
-    /// Is this function obejct a base2ad return value
-    /// (special becasue some compliers need copy constructor in this case)
-    bool base2ad_return_value_;
+    /// Did the previous optimzation exceed the collision limit
+    bool exceed_collision_limit_;
 
     /// Has this ADFun object been optmized
     bool has_been_optimized_;
@@ -124,19 +122,27 @@ private:
     /// which dependent variables are actually parameters
     local::pod_vector<bool> dep_parameter_;
 
-    /// results of the forward mode calculations
-    local::pod_vector_maybe<Base> taylor_;
-
     /// which operations can be conditionally skipped
     /// Set during forward pass of order zero
     local::pod_vector<bool> cskip_op_;
 
     /// Variable on the tape corresponding to each vecad load operation
     /// (if zero, the operation corresponds to a parameter).
-    local::pod_vector<addr_t> load_op_;
+    local::pod_vector<addr_t> load_op2var_;
+
+    /// results of the forward mode calculations
+    local::pod_vector_maybe<Base> taylor_;
+
+    /// used for subgraph reverse mode calculations.
+    /// Declared here to avoid reallocation for each call to subgraph_reverse.
+    /// Not in subgraph_info_ because it depends on Base.
+    local::pod_vector_maybe<Base> subgraph_partial_;
 
     /// the operation sequence corresponding to this object
     local::player<Base> play_;
+
+    /// subgraph information for this object
+    local::subgraph::subgraph_info subgraph_info_;
 
     /// Packed results of the forward mode Jacobian sparsity calculations.
     /// for_jac_sparse_pack_.n_set() != 0  implies other sparsity results
@@ -147,13 +153,6 @@ private:
     /// for_jac_sparse_set_.n_set() != 0  implies for_sparse_pack_ is empty.
     local::sparse::list_setvec for_jac_sparse_set_;
 
-    /// subgraph information for this object
-    local::subgraph::subgraph_info subgraph_info_;
-
-    /// used for subgraph reverse mode calculations.
-    /// Declared here to avoid reallocation for each call to subgraph_reverse.
-    /// Not in subgraph_info_ because it depends on Base.
-    local::pod_vector_maybe<Base> subgraph_partial_;
 
     // ------------------------------------------------------------
     // Private member functions
@@ -295,15 +294,20 @@ public:
     ADFun(void);
 
     /// copy constructor
-    ADFun(const ADFun& g);
+    ADFun(const ADFun& g) = delete;
 
     // assignment operator
     // (doxygen in cppad/core/fun_construct.hpp)
     void operator=(const ADFun& f);
-# if CPPAD_USE_CPLUSPLUS_2011
-    // assignment operator with move semantics
+
+    // swap
+    void swap(ADFun& f);
+
+    // move semenatics copy
+    ADFun(ADFun&& f);
+
+    // move semantics assignment
     void operator=(ADFun&& f);
-# endif
 
     // create from Json or C++ AD graph
     void from_json(const std::string& json);
@@ -327,8 +331,7 @@ public:
     ADFun(const ADvector &x, const ADvector &y);
 
     /// destructor
-    ~ADFun(void)
-    { }
+    ~ADFun(void);
 
     /// set check_for_nan
     void check_for_nan(bool value);
@@ -562,6 +565,10 @@ public:
     local::sparse::list_setvec&        s
     );
 
+    /// did previous optimization exceed the collision limit
+    bool exceed_collision_limit(void) const
+    {   return exceed_collision_limit_; }
+
     /// amount of memory used for boolean Jacobain sparsity pattern
     size_t size_forward_bool(void) const
     {   return for_jac_sparse_pack_.memory(); }
@@ -639,7 +646,7 @@ public:
 
     /// number of VecAD indices in the operation sequence
     size_t size_VecAD(void) const
-    {   return play_.num_vec_ind_rec(); }
+    {   return play_.num_var_vecad_ind_rec(); }
 
     /// set number of orders currently allocated (user API)
     void capacity_order(size_t c);
@@ -823,7 +830,7 @@ public:
     /// Deprecated: Does this AD operation sequence use
     /// VecAD<Base>::reference operands
     bool use_VecAD(void) const
-    {   return play_.num_vec_ind_rec() > 0; }
+    {   return play_.num_var_vecad_ind_rec() > 0; }
 
     /// Deprecated: # taylor_ coefficient orders calculated
     /// (per variable,direction)

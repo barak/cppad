@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_GRAPH_FROM_GRAPH_HPP
 # define CPPAD_CORE_GRAPH_FROM_GRAPH_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -39,10 +39,10 @@ $codei%
 %$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/graph/from_graph.hpp%
+$srcthisfile%
     0%// BEGIN_ONE_ARGUMENT%// END_ONE_ARGUMENT%1
 %$$
-$srcfile%include/cppad/core/graph/from_graph.hpp%
+$srcthisfile%
     0%// BEGIN_WITH_IS_DYNAMIC%// END_WITH_IS_DYNAMIC%1
 %$$
 
@@ -224,7 +224,7 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
                     {   std::string msg = "from_graph: error in call to ";
                         msg += name + ".\n";
                         msg += "There is more than one atomic_three ";
-                        msg + "function with this name";
+                        msg += "function with this name";
                         //
                         // use this source code as point of detection
                         bool known       = true;
@@ -369,7 +369,6 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
             //
             // type of argument
             type_x[j] = node_type[ node_index ];
-            CPPAD_ASSERT_UNKNOWN( type_x[j] != string_enum );
             //
             // argument to function operator
             arg[j]  = node2fun[ node_index ];
@@ -646,7 +645,7 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
                 msg += graph_obj.atomic_name_vec_get(name_index);
                 msg += ".\n";
                 msg += "No previously defined atomic_three function ";
-                msg + "has this name";
+                msg += "has this name";
                 //
                 // use this source code as point of detection
                 bool known       = true;
@@ -661,7 +660,7 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
             // afun
             bool         set_null = false;
             size_t       type;
-            std::string* name = CPPAD_NULL;
+            std::string* name = nullptr;
             void*        v_ptr;
             CppAD::local::atomic_index<RecBase>(
                 set_null, atomic_index, type, name, v_ptr
@@ -1405,10 +1404,7 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
     dep_parameter_.resize( n_dependent );
     dep_taddr_.resize( n_dependent );
     for(size_t i = 0; i < n_dependent; ++i)
-    {   CPPAD_ASSERT_KNOWN(
-            node_type[ graph_obj.dependent_vec_get(i) ] != string_enum,
-            "AD graph dependent variable node is a string"
-        );
+    {
         CPPAD_ASSERT_UNKNOWN(
             node_type[ graph_obj.dependent_vec_get(i) ] != number_ad_type_enum
         );
@@ -1429,7 +1425,6 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
     // ----------------------------------------------------------------------
     //
     // bool values in this object except check_for_nan_
-    base2ad_return_value_      = false;
     has_been_optimized_        = false;
     //
     // size_t values in this object
@@ -1447,8 +1442,8 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
     // cskip_op_
     cskip_op_.resize( rec.num_op_rec() );
     //
-    // load_op_
-    load_op_.resize( rec.num_load_op_rec() );
+    // load_op2var_
+    load_op2var_.resize( rec.num_var_load_rec() );
     //
     // play_
     // Now that each dependent variable has a place in the recording,

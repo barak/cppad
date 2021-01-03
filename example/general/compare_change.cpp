@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -19,7 +19,7 @@ $$
 $section CompareChange and Re-Tape: Example and Test$$
 
 
-$srcfile%example/general/compare_change.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -30,7 +30,7 @@ $end
 namespace { // put this function in the empty namespace
     template <class Type>
     Type Minimum(const Type &x, const Type &y)
-    {   // Use a comparision to compute the min(x, y)
+    {   // Use a comparison to compute the min(x, y)
         // (note that CondExp would never require retaping).
         if( x < y )
             return x;

@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -11,15 +11,39 @@
 #       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
 set_libdir() {
-    if [ -e $1/lib ]
+    my_prefix="$1"
+    my_lib="$2"
+    libdir=''
+    if [ -e $my_prefix/lib ]
     then
-        libdir='lib'
-    elif [ -e $1/lib64 ]
+        if ls $my_prefix/lib | grep "lib$my_lib" > /dev/null
+        then
+            libdir='lib'
+        fi
+    fi
+    if [ -e $my_prefix/lib64 ]
     then
-        libdir='lib64'
-    else
-        echo "bin/test_one.sh: cannot file $1/lib or $1/lib64"
+        if ls $my_prefix/lib64 | grep "lib$my_lib" > /dev/null
+        then
+            libdir='lib64'
+        fi
+    fi
+    if [ "$libdir" == '' ]
+    then
+        echo "bin/test_one.sh: cannot find lib$my_lib"
+        echo " in $my_prefix/lib or $my_prefix/lib64"
         exit 1
+    fi
+    my_path="$my_prefix/$libdir"
+    library_flags="$library_flags -L$my_path -l$my_lib"
+    if ! echo "$LD_LIBRARY_PATH:" | grep "$my_path:" > /dev/null
+    then
+        if [ "$LD_LIBRARY_PATH" == '' ]
+        then
+            export LD_LIBRARY_PATH="$my_path"
+        else
+            export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$my_path"
+        fi
     fi
 }
 # -----------------------------------------------------------------------------
@@ -35,6 +59,12 @@ extra: extra source files and/or options for the compile command
 EOF
     exit 1
 fi
+if ! echo "$1" | grep '/' > /dev/null
+then
+    echo 'test_one.sh: dir missing in'
+    echo '    bin/test_one.sh dir/file'
+    exit 1
+fi
 dir=`echo $1 | sed -e 's|/[^/]*$||'`
 file=`echo $1 | sed -e 's|.*/||'`
 extra="$2"
@@ -47,7 +77,7 @@ fi
 # Check command line arguments
 if [ "$dir" == '' ]
 then
-    echo "test_one.sh: cannot find dir before front of file"
+    echo "test_one.sh: cannot find dir/file in \$1='$1'"
     exit 1
 fi
 if [ ! -e "$dir/$file" ]
@@ -72,18 +102,37 @@ then
 fi
 original_dir=`pwd`
 # ---------------------------------------------------------------------------
+cwd=$(pwd)
+PKG_CONFIG_PATH="$cwd/build/prefix/lib64/pkgconfig"
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$cwd/build/prefix/share/pkgconfig"
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$cwd/build/prefix/lib/pkgconfig"
+# ---------------------------------------------------------------------------
 # initialize
-include_flags="-I $original_dir/include"
-library_flags="-lpthread"
+export LD_LIBRARY_PATH=''
+include_flags=''
+library_flags=''
 #
 # adolc
 if [ @cppad_has_adolc@ == 1 ]
 then
-    include_flags="$include_flags -I @adolc_prefix@/include"
-    #
-    set_libdir @adolc_prefix@
-    library_flags="$library_flags -L@adolc_prefix@/$libdir -ladolc"
-    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@adolc_prefix@/$libdir"
+    include_flags="$include_flags $(pkg-config adolc --cflags)"
+    library_flags="$library_flags $(pkg-config adolc --libs)"
+    library_path=$(pkg-config adolc --libs | sed -e 's|.*-L\([^ ]*\).*|\1|')
+    LD_LIBRARY_PATH="$library_path:$LD_LIBRARY_PATH"
+fi
+if [ @cppad_has_eigen@ == 1 ]
+then
+    include_flags="$include_flags $(pkg-config eigen3 --cflags)"
+    library_flags="$library_flags $(pkg-config eigen3 --libs)"
+fi
+#
+# ipopt
+if [ @cppad_has_ipopt@ == 1 ]
+then
+    include_flags="$include_flags $(pkg-config ipopt --cflags)"
+    library_flags="$library_flags $(pkg-config ipopt --libs)"
+    library_path=$(pkg-config ipopt --libs | sed -e 's|.*-L\([^ ]*\).*|\1|')
+    LD_LIBRARY_PATH="$library_path:$LD_LIBRARY_PATH"
 fi
 #
 if [ @cppad_has_boost@ == 1 ]
@@ -96,29 +145,16 @@ if [ @cppad_has_colpack@ == 1 ]
 then
     include_flags="$include_flags -I @colpack_prefix@/include"
     #
-    set_libdir @colpack_prefix@
-    library_flags="$library_flags -L@colpack_prefix@/$libdir -lColPack"
-    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:@colpack_prefix@/$libdir"
+    set_libdir @colpack_prefix@ ColPack
 fi
 #
-# ipopt
-if [ @cppad_has_ipopt@ == 1 ]
-then
-    include_flags="$include_flags -I @ipopt_prefix@/include"
-    #
-    ipopt_flags=`pkg-config --libs ipopt`
-    library_flags="$library_flags $ipopt_flags"
-fi
-#
-# eigen
-if [ @cppad_has_eigen@ == 1 ]
-then
-    include_flags="$include_flags -isystem @eigen_prefix@/include"
-fi
-#
-# cppad_lib
+# cppad
+include_flags=$(echo $include_flags | \
+    sed -e 's| -I| -isystem|g' -e 's|^-I|-isystem|'
+)
+include_flags="-I $original_dir/include $include_flags"
 cppad_lib_path="@PROJECT_BINARY_DIR@/cppad_lib/libcppad_lib.so"
-library_flags="$library_flags $cppad_lib_path"
+library_flags="$library_flags $cppad_lib_path -lpthread"
 #
 cd build
 if ! make cppad_lib
@@ -167,17 +203,25 @@ then
 fi
 # --------------------------------------------------------------------------
 # LD_LIBRARY_PATH
-library_path='@PROJECT_BINARY_DIR@/cppad_lib'
-if ! echo $LD_LIBRARY_PATH | grep "$library_path"
+my_path='@PROJECT_BINARY_DIR@/cppad_lib'
+if ! echo $LD_LIBRARY_PATH | grep "$my_path" > /dev/null
 then
-    echo 'LD_LIBRARY_PATH=\'
-    echo "$library_path:\$LD_LIBRARY_PATH"
-    export LD_LIBRARY_PATH="$library_path:$LD_LIBRARY_PATH"
+    if [ "$LD_LIBRARY_PATH" == '' ]
+    then
+        export LD_LIBRARY_PATH="$my_path"
+    else
+        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$my_path"
+    fi
 fi
 # --------------------------------------------------------------------------
 # Execute the test
 echo "./test_one.exe"
-./test_one.exe
+if ! ./test_one.exe
+then
+    cat test_one.err
+    echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+    exit 1
+fi
 # --------------------------------------------------------------------------
 # Check for compiler warnings
 cat << EOF > test_one.sed

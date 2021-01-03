@@ -1,7 +1,7 @@
 # ifndef CPPAD_UTILITY_SPARSE_RCV_HPP
 # define CPPAD_UTILITY_SPARSE_RCV_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -37,7 +37,9 @@ $codei%sparse_rcv<%SizeVector%, %ValueVector%>  %empty%
 %$$
 $codei%sparse_rcv<%SizeVector%, %ValueVector%>  %matrix%(%pattern%)
 %$$
-$icode%target% = %matrix%
+$icode%matrix% = %other%
+%$$
+$icode%matrix%.swap( %other% )
 %$$
 $icode%matrix%.set(%k%, %v%)
 %$$
@@ -90,17 +92,26 @@ Only the $icode val$$ vector can be changed. All other values returned by
 $icode matrix$$ are fixed during the constructor and constant there after.
 The $icode val$$ vector is only changed by the constructor
 and the $code set$$ function.
-There is one exception to the rule, where $icode matrix$$ corresponds
-to $icode target$$ for an assignment statement.
+There are two exceptions to this rule, where $icode other$$ appears in the
+assignment and swap syntax.
 
-$head target$$
-The target of the assignment statement must have prototype
+$head other$$
+The $icode other$$ variable has prototype
 $codei%
-    sparse_rcv<%SizeVector%, %ValueVector%>  %target%
+    sparse_rcv<%SizeVector%, %ValueVector%>  %other%
 %$$
-After this assignment statement, $icode target$$ is an independent copy
+
+$subhead Assignment$$
+After this assignment statement, $icode other$$ is an independent copy
 of $icode matrix$$; i.e. it has all the same values as $icode matrix$$
-and changes to $icode target$$ do not affect $icode matrix$$.
+and changes to $icode other$$ do not affect $icode matrix$$.
+A move semantics version of the assignment operator is defined; e.g.,
+it is used when $icode other$$ in the assignment syntax
+is a function return value;
+
+$subhead swap$$
+After the swap operation $icode other$$ ($icode matrix$$) is equivalent
+to $icode matrix$$ ($icode other$$) before the operation.
 
 $head nr$$
 This return value has prototype
@@ -198,7 +209,7 @@ This routine generates an assert if there are two entries with the same
 row and column values (if $code NDEBUG$$ is not defined).
 
 $head Eigen Matrix$$
-If you have the $cref/eigen package/eigen_prefix/$$ in your include path,
+If you have the $cref/eigen package/eigen/$$ in your include path,
 you can use $cref sparse2eigen$$ to convert a sparse matrix to eigen format.
 
 $children%
@@ -232,7 +243,14 @@ public:
     // ------------------------------------------------------------------------
     /// default constructor
     sparse_rcv(void)
-    : pattern_(0, 0, 0), val_(0)
+    : pattern_(0, 0, 0)
+    { }
+    /// move semantics constructor
+    /// (none of the default constructor values are used by destructor)
+    sparse_rcv(sparse_rcv&& other)
+    {   swap(other); }
+    /// destructor
+    ~sparse_rcv(void)
     { }
     /// constructor
     sparse_rcv(const sparse_rc<SizeVector>& pattern )
@@ -241,12 +259,20 @@ public:
     val_(pattern_.nnz())
     { }
     /// assignment
-    void operator=(const sparse_rcv& matrix)
-    {   pattern_ = matrix.pattern_;
+    void operator=(const sparse_rcv& other)
+    {   pattern_ = other.pattern_;
         // simple vector assignment requires vectors to have same size
-        val_.resize( matrix.nnz() );
-        val_ = matrix.val();
+        val_.resize( other.nnz() );
+        val_ = other.val();
     }
+    /// swap
+    void swap(sparse_rcv& other)
+    {   pattern_.swap( other.pattern_ );
+        val_.swap( other.val_ );
+    }
+    /// move semantics assignment
+    void operator=(sparse_rcv&& other)
+    {   swap(other); }
     // ------------------------------------------------------------------------
     void set(size_t k, const value_type& v)
     {   CPPAD_ASSERT_KNOWN(

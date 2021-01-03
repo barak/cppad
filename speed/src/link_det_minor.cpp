@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -13,8 +13,10 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <cppad/utility/vector.hpp>
 # include <cppad/speed/det_grad_33.hpp>
 # include <cppad/speed/det_33.hpp>
+# include <cppad/utility/time_test.hpp>
 // BEGIN PROTOTYPE
 extern bool link_det_minor(
+    const std::string&         job       ,
     size_t                     size      ,
     size_t                     repeat    ,
     CppAD::vector<double>&     matrix    ,
@@ -26,42 +28,30 @@ extern bool link_det_minor(
 $begin link_det_minor$$
 $spell
     det
-    bool
-    CppAD
 $$
 
 
 $section Speed Testing Gradient of Determinant by Minor Expansion$$
 
 $head Prototype$$
-$srcfile%speed/src/link_det_minor.cpp%
+$srcthisfile%
     0%// BEGIN PROTOTYPE%// END PROTOTYPE%0
 %$$
-
-
-$head Purpose$$
-Each $cref/package/speed_main/package/$$
-must define a version of this routine as specified below.
-This is used by the $cref speed_main$$ program
-to run the corresponding speed and correctness tests.
 
 $head Method$$
 The same template class $cref det_by_minor$$
 is used by the different AD packages.
 
-$head Return Value$$
-If this speed test is not yet
-supported by a particular $icode package$$,
-the corresponding return value for $code link_det_minor$$
-should be $code false$$.
+$head job$$
+See the standard link specifications for $cref/job/link_routines/job/$$.
 
 $head size$$
-The argument $icode size$$
-is the number of rows and columns in the matrix.
+See the standard link specifications for $cref/size/link_routines/size/$$
+In addition, $icode size$$ is the number of rows and columns in
+$icode matrix$$.
 
 $head repeat$$
-The argument $icode repeat$$ is the number of different matrices
-that the gradient (or determinant) is computed for.
+See the standard link specifications for $cref/repeat/link_routines/repeat/$$.
 
 $head matrix$$
 The argument $icode matrix$$ is a vector with
@@ -85,37 +75,76 @@ the determinant value (the gradient value is not computed).
 $end
 -----------------------------------------------------------------------------
 */
-
-bool available_det_minor(void)
-{   size_t size   = 3;
-    size_t repeat = 1;
-    CppAD::vector<double> matrix(size * size);
-    CppAD::vector<double> gradient(size * size);
-
-    return link_det_minor(size, repeat, matrix, gradient);
+// ---------------------------------------------------------------------------
+// The routines below are documented in dev_link.omh
+// ---------------------------------------------------------------------------
+namespace {
+    void time_det_minor_callback(size_t size, size_t repeat)
+    {   std::string           job("run");
+        CppAD::vector<double> matrix(size * size);
+        CppAD::vector<double> gradient(size * size);
+        //
+        link_det_minor(job, size, repeat, matrix, gradient);
+        return;
+    }
 }
-bool correct_det_minor(bool is_package_double)
-{   size_t size   = 3;
-    size_t repeat = 1;
+// ---------------------------------------------------------------------------
+bool available_det_minor(void)
+{
+    size_t size   = 3;
+    size_t repeat = 0;
     CppAD::vector<double> matrix(size * size);
     CppAD::vector<double> gradient(size * size);
-
-    link_det_minor(size, repeat, matrix, gradient);
+    //
+    std::string job = "setup";
+    bool result = link_det_minor(job, size, repeat, matrix, gradient);
+    //
+    job = "teardown";
+    link_det_minor(job, size, repeat, matrix, gradient);
+    //
+    return result;
+}
+// ---------------------------------------------------------------------------
+bool correct_det_minor(bool is_package_double)
+{
+    size_t  size   = 3;
+    size_t  repeat = 1;
+    CppAD::vector<double> matrix(size * size);
+    CppAD::vector<double> gradient(size * size);
+    //
+    std::string job = "setup";
+    link_det_minor(job, size, repeat, matrix, gradient);
+    //
+    job = "run";
+    link_det_minor(job, size, repeat, matrix, gradient);
+    //
     bool ok = CppAD::det_grad_33(matrix, gradient);
     if( is_package_double )
         ok = CppAD::det_33(matrix, gradient);
     else
         ok = CppAD::det_grad_33(matrix, gradient);
+    //
+    job = "teardown";
+    link_det_minor(job, size, repeat, matrix, gradient);
+    //
     return ok;
 }
-void speed_det_minor(size_t size, size_t repeat)
-{   // free statically allocated memory
-    if( size == 0 && repeat == 0 )
-        return;
+double time_det_minor(double time_min, size_t size)
+{   CPPAD_ASSERT_UNKNOWN( size != 0 );
     //
     CppAD::vector<double> matrix(size * size);
     CppAD::vector<double> gradient(size * size);
-
-    link_det_minor(size, repeat, matrix, gradient);
-    return;
+    //
+    std::string job    = "setup";
+    size_t      repeat = 0;
+    link_det_minor(job, size, repeat, matrix, gradient);
+    //
+    // job is run in time_det_minor_callback
+    double time = CppAD::time_test(time_det_minor_callback, time_min, size);
+    //
+    job = "teardown";
+    link_det_minor(job, size, repeat, matrix, gradient);
+    //
+    return time;
 }
+// ---------------------------------------------------------------------------

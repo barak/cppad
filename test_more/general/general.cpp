@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -28,7 +28,7 @@ extern bool acos(void);
 extern bool AddEq(void);
 extern bool Add(void);
 extern bool AddZero(void);
-extern bool adfun_copy(void);
+extern bool adfun(void);
 extern bool alloc_openmp(void);
 extern bool asinh(void);
 extern bool asin(void);
@@ -130,6 +130,7 @@ extern bool VecUnary(void);
 // END_SORT_THIS_LINE_MINUS_1
 
 // tests in local subdirectory
+extern bool is_pod(void);
 extern bool json_lexer(void);
 extern bool json_parser(void);
 extern bool vector_set(void);
@@ -148,7 +149,7 @@ int main(void)
     Run( Add,             "Add"            );
     Run( AddEq,           "AddEq"          );
     Run( AddZero,         "AddZero"        );
-    Run( adfun_copy,      "adfun_copy"     );
+    Run( adfun,           "adfun"          );
     Run( asin,            "asin"           );
     Run( asinh,           "asinh"          );
     Run( assign,          "assign"         );
@@ -258,8 +259,9 @@ int main(void)
     Run( test_vector,     "test_vector"    );
 # endif
     // local sub-directory
-    Run( json_lexer,     "json_lexer"     );
-    Run( json_parser,    "json_parser"    );
+    Run( is_pod,         "is_pod"          );
+    Run( json_lexer,     "json_lexer"      );
+    Run( json_parser,    "json_parser"     );
     Run( vector_set,      "vector_set"     );
     //
     // check for memory leak

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -25,7 +25,7 @@ $head Purpose$$
 This example just demonstrates pthreads and does not use CppAD at all.
 
 $head Source Code$$
-$srcfile%example/multi_thread/pthread/a11c_pthread.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 $end
 ----------------------------------------------------------------------------
 */
@@ -34,15 +34,9 @@ $end
 # include <limits>
 # include <cmath>
 # include <cassert>
+// for size_t
+# include <cstddef>
 
-// define CPPAD_NULPTR
-# include <cppad/configure.hpp>
-# if CPPAD_USE_CPLUSPLUS_2011
-# define CPPAD_NULL nullptr
-# else
-# define CPPAD_NULL 0
-# endif
-//
 # define NUMBER_THREADS 4
 
 # ifdef NDEBUG
@@ -66,7 +60,7 @@ namespace {
     {   start_arg* arg = static_cast<start_arg*>( arg_vptr );
         a1(arg->n, arg->a, arg->b);
 
-        void* no_status = CPPAD_NULL;
+        void* no_status = nullptr;
         pthread_exit(no_status);
 
         return no_status;
@@ -78,8 +72,8 @@ bool a11c(void)
 
     // Test setup
     int i, j, n_total = 10;
-    float *a = new float[n_total];
-    float *b = new float[n_total];
+    float *a = new float[size_t(n_total)];
+    float *b = new float[size_t(n_total)];
     for(i = 0; i < n_total; i++)
         a[i] = float(i);
 
@@ -114,7 +108,7 @@ bool a11c(void)
         ) );
     }
     for(j = 0; j < n_thread; j++)
-    {   void* no_status = CPPAD_NULL;
+    {   void* no_status = nullptr;
         CHECK_ZERO( pthread_join(thread[j], &no_status) );
     }
 

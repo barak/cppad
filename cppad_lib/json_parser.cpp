@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -20,7 +20,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 // documentation for this routine is in the file below
 # include <cppad/local/graph/json_parser.hpp>
 
-CPPAD_LIB_EXPORT void CppAD::local::graph::json_parser(
+void CppAD::local::graph::json_parser(
     const std::string& json      ,
     cpp_graph&         graph_obj )
 {   using std::string;
@@ -80,27 +80,6 @@ CPPAD_LIB_EXPORT void CppAD::local::graph::json_parser(
         json_lexer.check_next_string(match_any_string);
         string name = json_lexer.token();
         graph_op_enum op_enum = op_name2enum[name];
-# if ! CPPAD_USE_CPLUSPLUS_2011
-        switch( op_enum )
-        {
-            case acosh_graph_op:
-            case asinh_graph_op:
-            case atanh_graph_op:
-            case erf_graph_op:
-            case erfc_graph_op:
-            case expm1_graph_op:
-            case log1p_graph_op:
-            {   string expected = "a C++98 function";
-                string found    = name + " which is a C++11 function.";
-                json_lexer.report_error(expected, found);
-            }
-            break;
-
-            default:
-            break;
-        }
-
-# endif
         //
         // op_code2enum for this op_code
         op_code2enum.push_back(op_enum);

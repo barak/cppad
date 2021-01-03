@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -25,7 +25,7 @@ This example demonstrates how CppAD can be used in a
 boost multi-threading environment.
 
 $head Source Code$$
-$srcfile%example/multi_thread/bthread/simple_ad_bthread.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 ------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ namespace {
 
         // This master thread is already running, we need to create
         // num_threads - 1 more threads
-        thread_all_[0].bthread = CPPAD_NULL;
+        thread_all_[0].bthread = nullptr;
         for(thread_num = 1; thread_num < num_threads; thread_num++)
         {   // Create the thread with thread number equal to thread_num
             thread_all_[thread_num].bthread =
@@ -157,14 +157,14 @@ namespace {
         for(thread_num = 1; thread_num < num_threads; thread_num++)
         {   thread_all_[thread_num].bthread->join();
             delete thread_all_[thread_num].bthread;
-            thread_all_[thread_num].bthread = CPPAD_NULL;
+            thread_all_[thread_num].bthread = nullptr;
         }
 
         // Inform CppAD that we now are definately back to sequential mode
         sequential_execution_ = true;
 
         // now inform CppAD that there is only one thread
-        thread_alloc::parallel_setup(1, CPPAD_NULL, CPPAD_NULL);
+        thread_alloc::parallel_setup(1, nullptr, nullptr);
         thread_alloc::hold_memory(false);
         CppAD::parallel_ad<double>();
 

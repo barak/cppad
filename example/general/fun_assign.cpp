@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -16,7 +16,7 @@ $begin fun_assign.cpp$$
 $section ADFun Assignment: Example and Test$$
 
 
-$srcfile%example/general/fun_assign.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -52,8 +52,7 @@ bool fun_assign(void)
     y[1] = x[1] * x[2] + x[2];
 
     // Store operation sequence, and order zero forward results, in f.
-    // If CPPAD_USE_CPLUSPLUS_2011 in cppad/configure.hpp is 1,
-    // this assignment will use move semantics
+    // This assignment will use move semantics
     CppAD::ADFun<double> f;
     f = CppAD::ADFun<double>(x, y);
 

@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -15,15 +15,22 @@ then
     echo "bin/check_all.sh: must be executed from its parent directory"
     exit 1
 fi
-debug_all='no'
-if [ "$1" != '' ]
+if [ "$1" != 'mixed' ] && [ "$1" != 'debug' ] && [ "$1" != 'release' ]
 then
-    debug_all='yes'
-    if [ "$1" != 'debug_all' ]
-    then
-        echo 'usage: bin/check_all.sh [debug_all]'
-        exit 1
-    fi
+    echo 'bin/check_all.sh: (mixed|debug|release) [get_optional]'
+    exit 1
+fi
+if [ "$2" != '' ] && [ "$2" != 'get_optional' ]
+then
+    echo 'bin/check_all.sh: (mixed|debug|release) [get_optional]'
+    exit 1
+fi
+build_type="$1"
+if [ "$2" == 'get_optional' ]
+then
+    get_optional='yes'
+else
+    get_optional='no'
 fi
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
@@ -58,7 +65,7 @@ EOF
 echo_log_eval() {
     echo $*
     echo $* >> $top_srcdir/check_all.log
-    if ! eval $* >> $top_srcdir/check_all.log 2> $top_srcdir/check_all.err
+    if ! $* >> $top_srcdir/check_all.log 2> $top_srcdir/check_all.err
     then
         tail $top_srcdir/check_all.err
         echo 'Error: see check_all.err, check_all.log'
@@ -87,7 +94,7 @@ random_01() {
 # -----------------------------------------------------------------------------
 # start new check_all.log
 echo "date > check_all.log"
-date > check_all.log
+date | sed -e 's|^|date: |' > check_all.log
 top_srcdir=`pwd`
 echo "top_srcdir = $top_srcdir"
 # ---------------------------------------------------------------------------
@@ -112,19 +119,36 @@ then
 else
     compiler='--clang'
 fi
+#
+# Prefer c-17 standard
 random_01 standard
 if [ "$random_01_standard" == '0' ]
 then
-    standard='--c++98 --no_adolc --no_sacado'
+    random_01 standard
+    if [ "$random_01_standard" == '0' ]
+    then
+        standard='--c++11'
+    else
+        standard='--c++17'
+    fi
 else
-    standard='--c++11'
+    standard='--c++17'
 fi
 #
-if [ "$debug_all" == 'yes' ]
+if [ "$build_type" == 'debug' ]
 then
     package_vector='--cppad_vector'
     debug_which='--debug_all'
+elif [ "$build_type" == 'release' ]
+then
+    package_vector='--cppad_vector'
+    debug_which='--debug_none'
 else
+    if [ "$build_type" != 'mixed' ]
+    then
+        echo 'bin/run_cmake.sh: build_type program error'
+        exit 1
+    fi
     random_01 debug_which
     if [ "$random_01_debug_which" == '0' ]
     then
@@ -159,9 +183,22 @@ if [ "$compiler" == 'default' ]
 then
     compiler=''
 fi
-if [ "$standard" == '--c++11' ]
+if [ "$standard" == '--c++17' ]
 then
     standard='' # default for run_cmake.sh
+fi
+# ---------------------------------------------------------------------------
+# re-install optional packages that can be used with CppAD
+if [ "$get_optional" == 'yes' ]
+then
+    bin/get_optional.sh
+fi
+# ---------------------------------------------------------------------------
+# absoute prefix where optional packages are installed
+eval `grep '^prefix=' bin/get_optional.sh`
+if [[ "$prefix" =~ ^[^/] ]]
+then
+    prefix="$(pwd)/$prefix"
 fi
 # ---------------------------------------------------------------------------
 # Run automated checks for the form bin/check_*.sh with a few exceptions.
@@ -184,21 +221,24 @@ echo_log_eval rm -rf cppad-$version
 echo_log_eval tar -xzf $tarball
 echo_log_eval cd cppad-$version
 # -----------------------------------------------------------------------------
-echo_log_eval bin/run_cmake.sh $compiler $standard $debug_which $package_vector
+# run_cmake.sh with proper prefix
+echo_log "sed -i bin/get_optional.sh -e 's|^prefix=.*|prefix=$prefix|'"
+sed -i bin/get_optional.sh -e "s|^prefix=.*|prefix=$prefix|"
+echo_log_eval bin/run_cmake.sh \
+    --profile_speed \
+    $compiler \
+    $standard \
+    $debug_which \
+    $package_vector
 echo_log_eval cd build
 # -----------------------------------------------------------------------------
 # can comment out this make check to if only running tests below it
 n_job=`nproc`
 echo_log_eval make -j $n_job check
 # -----------------------------------------------------------------------------
-skip=''
-for package in adolc eigen ipopt fadbad sacado
+for package in adolc cppadcg eigen ipopt fadbad sacado
 do
-    dir=$HOME/prefix/$package
-    if [ ! -d "$dir" ]
-    then
-        skip="$skip $package"
-    elif echo $standard | grep "no_$package" > /dev/null
+    if echo $standard | grep "no_$package" > /dev/null
     then
         skip="$skip $package"
     fi
@@ -206,7 +246,7 @@ done
 # ----------------------------------------------------------------------------
 # extra speed tests not run with option specified
 #
-# make speed_cppad incase make check above is commented out
+# make speed_cppad in case make check above is commented out
 echo_log_eval make -j $n_job speed_cppad
 for option in onetape colpack optimize atomic memory boolsparsity
 do
@@ -215,7 +255,7 @@ do
 done
 if ! echo "$skip" | grep 'adolc' > /dev/null
 then
-    # make speed_adolc incase make check above is commented out
+    # make speed_adolc in case make check above is commented out
     echo_log_eval make -j $n_job speed_adolc
     #
     echo_eval speed/adolc/speed_adolc correct         432 onetape
@@ -236,7 +276,7 @@ do
         program="$dir/example_multi_thread_${threading}"
         program_list="$program_list $program"
         #
-        # make program incase make check above is commented out
+        # make program in case make check above is commented out
         echo_log_eval make -j $n_job example_multi_thread_${threading}
         #
         # all programs check the fast cases
@@ -268,7 +308,7 @@ fi
 #
 # print_for test
 program='example/print_for/example_print_for'
-# make program incase make check above is commented out
+# make program in case make check above is commented out
 echo_log_eval make -j $n_job example_print_for
 echo_log_eval $program
 $program | sed -e '/^Test passes/,$d' > junk.1.$$
@@ -285,7 +325,7 @@ fi
 echo_log_eval make install
 #
 echo "date >> check_all.log"
-date >> $top_srcdir/check_all.log
+date  | sed -e 's|^|date: |' >> $top_srcdir/check_all.log
 if [ "$skip" != '' ]
 then
     echo_log_eval echo "check_all.sh: skip = $skip"

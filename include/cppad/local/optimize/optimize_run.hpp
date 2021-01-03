@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_OPTIMIZE_OPTIMIZE_RUN_HPP
 # define CPPAD_LOCAL_OPTIMIZE_OPTIMIZE_RUN_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -38,17 +38,18 @@ $spell
     const
     iterator
     PriOp
+    optimizer
 $$
 
 $section Convert a player object to an optimized recorder object $$
 
 $head Syntax$$
-$codei%local::optimize::optimize_run(
+$codei%exceed_collision_limit% = local::optimize::optimize_run(
     %options%, %n%, %dep_taddr%, %play%, %rec%
 )%$$
 
 $head Prototype$$
-$srcfile%include/cppad/local/optimize/optimize_run.hpp%
+$srcthisfile%
     0%// BEGIN_PROTOTYPE%// END_PROTOTYPE%1
 %$$
 
@@ -76,12 +77,27 @@ meaningful in the resulting recording.
 On the other hand, they are not necessary and take extra time
 when this feature is not needed.
 
-$subhead no_print_for$$
+$subhead no_print_for_op$$
 If this sub-string appears,
 then $cref printfor$$ operators $code PriOp$$
 will be removed from the optimized tape.
 These operators are useful for reporting problems evaluating derivatives
 at independent variable values different from those used to record a function.
+
+$subhead no_cumulative_sum_op$$
+If this sub-string appears,
+no cumulative sum operations will be generated during the optimization; see
+$cref optimize_cumulative_sum.cpp$$.
+
+$subhead collision_limit=value$$
+If this substring appears,
+where $icode value$$ is a sequence of decimal digits,
+the optimizer's hash code collision limit will be set to $icode value$$.
+When the collision limit is exceeded, the expressions with that hash code
+are removed and a new lists of expressions with that has code is started.
+The larger $icode value$$, the more identical expressions the optimizer
+can recognize, but the slower the optimizer may run.
+The default for $icode value$$ is $code 10$$.
 
 $head n$$
 is the number of independent variables on the tape.
@@ -103,10 +119,18 @@ it corresponds to directly after the default constructor.
 Upon return, it contains an optimized version of the
 operation sequence corresponding to $icode play$$.
 
+$head exceed_collision_limit$$
+If the $icode collision_limit$$ is exceeded (is not exceeded),
+the return value is true (false).
+
 $childtable%
+    include/cppad/local/optimize/cexp_info.hpp%
+    include/cppad/local/optimize/get_cexp_info.hpp%
     include/cppad/local/optimize/get_op_usage.hpp%
     include/cppad/local/optimize/get_par_usage.hpp%
-    include/cppad/local/optimize/record_csum.hpp
+    include/cppad/local/optimize/record_csum.hpp%
+    include/cppad/local/optimize/match_op.hpp%
+    include/cppad/local/optimize/get_op_previous.hpp
 %$$
 
 $end
@@ -114,14 +138,16 @@ $end
 
 // BEGIN_PROTOTYPE
 template <class Addr, class Base>
-void optimize_run(
+bool optimize_run(
     const std::string&                         options    ,
     size_t                                     n          ,
     pod_vector<size_t>&                        dep_taddr  ,
     player<Base>*                              play       ,
     recorder<Base>*                            rec        )
 // END_PROTOTYPE
-{   // check that recorder is empty
+{   bool exceed_collision_limit = false;
+    //
+    // check that recorder is empty
     CPPAD_ASSERT_UNKNOWN( rec->num_op_rec() == 0 );
     //
     // get a random iterator for this player
@@ -129,9 +155,11 @@ void optimize_run(
     local::play::const_random_iterator<Addr> random_itr =
         play->template get_random<Addr>();
 
-    bool conditional_skip = true;
-    bool compare_op       = true;
-    bool print_for_op     = true;
+    bool conditional_skip    = true;
+    bool compare_op          = true;
+    bool print_for_op        = true;
+    bool cumulative_sum_op   = true;
+    size_t collision_limit   = 10;
     size_t index = 0;
     while( index < options.size() )
     {   while( index < options.size() && options[index] == ' ' )
@@ -146,6 +174,25 @@ void optimize_run(
                 compare_op = false;
             else if( option == "no_print_for_op" )
                 print_for_op = false;
+            else if( option == "no_cumulative_sum_op" )
+                cumulative_sum_op = false;
+            else if( option.substr(0, 16)  == "collision_limit=" )
+            {   std::string value = option.substr(16, option.size());
+                bool value_ok = value.size() > 0;
+                for(size_t i = 0; i < value.size(); ++i)
+                {   value_ok &= '0' <= value[i];
+                    value_ok &= value[i] <= '9';
+                }
+                if( ! value_ok )
+                {   option += " value is not a sequence of decimal digits";
+                    CPPAD_ASSERT_KNOWN( false , option.c_str() );
+                }
+                collision_limit = size_t( std::atoi( value.c_str() ) );
+                if( collision_limit < 1 )
+                {   option += " value must be greater than zero";
+                    CPPAD_ASSERT_KNOWN( false , option.c_str() );
+                }
+            }
             else
             {   option += " is not a valid optimize option";
                 CPPAD_ASSERT_KNOWN( false , option.c_str() );
@@ -155,7 +202,7 @@ void optimize_run(
     // number of operators in the player
     const size_t num_op = play->num_op_rec();
     CPPAD_ASSERT_UNKNOWN(
-        num_op < size_t( std::numeric_limits<addr_t>::max() )
+        num_op < size_t( (std::numeric_limits<addr_t>::max)() )
     );
 
     // number of variables in the player
@@ -165,10 +212,10 @@ void optimize_run(
     const size_t num_par = play->num_par_rec();
 
     // number of  VecAD indices
-    size_t num_vecad_ind   = play->num_vec_ind_rec();
+    size_t num_vecad_ind   = play->num_var_vecad_ind_rec();
 
     // number of VecAD vectors
-    size_t num_vecad_vec   = play->num_vecad_vec_rec();
+    size_t num_vecad_vec   = play->num_var_vecad_rec();
 
     // number of independent dynamic parameters
     size_t num_dynamic_ind = play->num_dynamic_ind();
@@ -192,6 +239,7 @@ void optimize_run(
         conditional_skip,
         compare_op,
         print_for_op,
+        cumulative_sum_op,
         play,
         random_itr,
         dep_taddr,
@@ -201,7 +249,8 @@ void optimize_run(
         op_usage
     );
     pod_vector<addr_t>        op_previous;
-    get_op_previous(
+    exceed_collision_limit |= get_op_previous(
+        collision_limit,
         play,
         random_itr,
         cexp_set,
@@ -293,7 +342,7 @@ void optimize_run(
     // start mapping from old parameter indices to new parameter indices
     // for all parameters that get used.
     pod_vector<addr_t> new_par( num_par );
-    addr_t addr_t_max = std::numeric_limits<addr_t>::max();
+    addr_t addr_t_max = (std::numeric_limits<addr_t>::max)();
     for(size_t i_par = 0; i_par < num_par; ++i_par)
         new_par[i_par] = addr_t_max; // initialize as not used
     //
@@ -483,7 +532,7 @@ void optimize_run(
     // ------------------------------------------------------------------------
     // initialize mapping from old VecAD index to new VecAD index
     CPPAD_ASSERT_UNKNOWN(
-        size_t( std::numeric_limits<addr_t>::max() ) >= num_vecad_ind
+        size_t( (std::numeric_limits<addr_t>::max)() ) >= num_vecad_ind
     );
     pod_vector<addr_t> new_vecad_ind(num_vecad_ind);
     for(size_t i = 0; i < num_vecad_ind; i++)
@@ -496,9 +545,9 @@ void optimize_run(
             if( vecad_used[i] )
             {   // Put this VecAD vector in new recording
                 CPPAD_ASSERT_UNKNOWN(length < num_vecad_ind);
-                new_vecad_ind[j] = rec->PutVecInd( addr_t(length) );
+                new_vecad_ind[j] = rec->put_var_vecad_ind( addr_t(length) );
                 for(size_t k = 1; k <= length; k++) new_vecad_ind[j+k] =
-                    rec->PutVecInd(
+                    rec->put_var_vecad_ind(
                         new_par[ play->GetVecInd(j+k) ]
                 );
             }
@@ -602,7 +651,7 @@ void optimize_run(
         }
         //
         CPPAD_ASSERT_UNKNOWN(
-            size_t( std::numeric_limits<addr_t>::max() ) >= rec->num_op_rec()
+            size_t( (std::numeric_limits<addr_t>::max)() ) >= rec->num_op_rec()
         );
         //
         // For each call, first and second AFunOp will have same op_usage
@@ -1002,9 +1051,9 @@ void optimize_run(
             new_arg[0] = new_vecad_ind[ arg[0] ];
             new_arg[1] = new_par[ arg[1] ];
             CPPAD_ASSERT_UNKNOWN(
-                size_t( std::numeric_limits<addr_t>::max() ) >= rec->num_load_op_rec()
+                size_t( (std::numeric_limits<addr_t>::max)() ) >= rec->num_var_load_rec()
             );
-            new_arg[2] = addr_t( rec->num_load_op_rec() );
+            new_arg[2] = addr_t( rec->num_var_load_rec() );
             CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < num_vecad_ind );
             rec->PutArg(
                 new_arg[0],
@@ -1022,9 +1071,9 @@ void optimize_run(
             new_arg[0] = new_vecad_ind[ arg[0] ];
             new_arg[1] = new_var[ random_itr.var2op(size_t(arg[1])) ];
             CPPAD_ASSERT_UNKNOWN(
-                size_t( std::numeric_limits<addr_t>::max() ) >= rec->num_load_op_rec()
+                size_t( (std::numeric_limits<addr_t>::max)() ) >= rec->num_var_load_rec()
             );
-            new_arg[2] = addr_t( rec->num_load_op_rec() );
+            new_arg[2] = addr_t( rec->num_var_load_rec() );
             CPPAD_ASSERT_UNKNOWN( size_t(new_arg[0]) < num_vecad_ind );
             CPPAD_ASSERT_UNKNOWN( size_t(new_arg[1]) < num_var );
             rec->PutArg(
@@ -1295,6 +1344,7 @@ void optimize_run(
 # endif
         }
     }
+    return exceed_collision_limit;
 }
 
 } } } // END_CPPAD_LOCAL_OPTIMIZE_NAMESPACE

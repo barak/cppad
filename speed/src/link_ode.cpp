@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -12,6 +12,8 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 # include <cppad/utility/vector.hpp>
 # include <cppad/speed/ode_evaluate.hpp>
 # include <cppad/utility/near_equal.hpp>
+# include <cppad/utility/near_equal.hpp>
+# include <cppad/utility/time_test.hpp>
 // BEGIN PROTOTYPE
 extern bool link_ode(
     size_t                     size       ,
@@ -34,7 +36,7 @@ $$
 $section Speed Testing the Jacobian of Ode Solution$$
 
 $head Prototype$$
-$srcfile%speed/src/link_ode.cpp%
+$srcthisfile%
     0%// BEGIN PROTOTYPE%// END PROTOTYPE%0
 %$$
 
@@ -102,6 +104,22 @@ $latex f(x)$$ corresponding to the output value of $icode x$$.
 $end
 -----------------------------------------------------------------------------
 */
+// ---------------------------------------------------------------------------
+// The routines below are documented in dev_link.omh
+// ---------------------------------------------------------------------------
+namespace {
+    void time_ode_callback(size_t n, size_t repeat)
+    {   // free statically allocated memory
+        if( n == 0 && repeat == 0 )
+            return;
+        //
+        CppAD::vector<double> x(n);
+        CppAD::vector<double> jacobian(n * n);
+        link_ode(n, repeat, x, jacobian);
+        return;
+    }
+}
+// ---------------------------------------------------------------------------
 bool available_ode(void)
 {   size_t n      = 1;
     size_t repeat = 1;
@@ -110,6 +128,7 @@ bool available_ode(void)
 
     return link_ode(n, repeat, x, jacobian);
 }
+// ----------------------------------------------------------------------------
 bool correct_ode(bool is_package_double)
 {   bool ok       = true;
 
@@ -134,13 +153,7 @@ bool correct_ode(bool is_package_double)
 
     return ok;
 }
-void speed_ode(size_t n, size_t repeat)
-{   // free statically allocated memory
-    if( n == 0 && repeat == 0 )
-        return;
-    //
-    CppAD::vector<double> x(n);
-    CppAD::vector<double> jacobian(n * n);
-    link_ode(n, repeat, x, jacobian);
-    return;
+double time_ode(double time_min, size_t size)
+{   return CppAD::time_test(time_ode_callback, time_min, size);
 }
+// ----------------------------------------------------------------------------

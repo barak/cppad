@@ -25,8 +25,8 @@ if(POLICY CMP0054)
 endif()
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20200000.3")
-SET(cppad_url          "http://www.coin-or.org/CppAD" )
+SET(cppad_version "20210000.0")
+SET(cppad_url          "https://coin-or.github.io/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 #
 # Set name of this project and create the variables
@@ -67,8 +67,8 @@ INCLUDE(cmake/command_line_arg.cmake)
 # optional_package(package description)
 INCLUDE(cmake/optional_package.cmake)
 #
-# check_source_runs(source variable)
-INCLUDE(cmake/check_source_runs.cmake)
+# run_source_test(source variable)
+INCLUDE(cmake/run_source_test.cmake)
 #
 # assert(variable)
 INCLUDE(cmake/assert.cmake)
@@ -78,83 +78,102 @@ INCLUDE(cmake/print_variable.cmake)
 #
 # set_compile_flags( program_name debug_which source_list)
 INCLUDE(cmake/set_compile_flags.cmake)
+#
+# pkgconfig_info(name, system)
+INCLUDE(cmake/pkgconfig_info.cmake)
+# ============================================================================
+# Check for c++11
+SET(source "
+int main(void)
+{   if( __cplusplus < 201103 )
+        return 1;
+    return 0;
+}"
+)
+run_source_test("${source}" cppad_cplusplus_201100_ok )
+IF( NOT cppad_cplusplus_201100_ok  )
+    MESSAGE(FATAL_ERROR
+    "The c++ complier flag __cplusplus is less than 201103. "
+    "Starting with cppad-20201202, c++11 or higher is required."
+    )
+ENDIF( NOT cppad_cplusplus_201100_ok  )
 # =============================================================================
 # command line arguments
 # =============================================================================
-# cmake_install_datadir
-command_line_arg(cmake_install_datadir share STRING
-    "directory, below prefix, where cmake installs cppad data files"
-)
-# -----------------------------------------------------------------------------
-# cmake_install_docdir
-command_line_arg(cmake_install_docdir NOTFOUND STRING
-    "directory, below prefix, where cmake installs cppad documentation files"
-)
-# -----------------------------------------------------------------------------
-# cmake_install_includedirs
-command_line_arg(cmake_install_includedirs include STRING
-    "directories, below prefix, where cmake installs include files"
-)
-# -----------------------------------------------------------------------------
-# cmake_install_libdirs
-command_line_arg(cmake_install_libdirs lib STRING
-    "directories, below prefix, where cmake installs library files"
-)
-# -----------------------------------------------------------------------------
-# cppad_prefix
-command_line_arg(cppad_prefix "${CMAKE_INSTALL_PREFIX}" PATH
-    "cppad install prefix"
-)
-SET(CMAKE_INSTALL_PREFIX "${cppad_prefix}"
-    CACHE PATH "value copied from cppad_prefix" FORCE
-)
+# Argumentd that are no longer used
+#
+IF( cppad_sparse_list )
+    MESSAGE(FATAL_ERROR
+        "cppad_sparse_list has been removed from cmake command"
+    )
+ENDIF( cppad_sparse_list )
+#
+IF( cppad_deprecated )
+    MESSAGE(FATAL_ERROR "cppad_deprecated has been removed from cmake comamnd" )
+ENDIF( cppad_deprecated )
+#
 IF( cmake_install_prefix )
     MESSAGE(FATAL_ERROR
         "cmake_install_prefix has been changed to cppad_prefix"
     )
 ENDIF( cmake_install_prefix )
-# -----------------------------------------------------------------------------
-# cppad_postfix
-command_line_arg(cppad_postfix NOTFOUND STRING
-    "cppad install postfix"
-)
+#
 IF( cmake_install_postfix )
     MESSAGE(FATAL_ERROR
         "cmake_install_postfix has been changed to cppad_postfix"
     )
 ENDIF( cmake_install_postfix )
+#
+FOREACH(pkg adolc eigen ipopt cppadcg)
+    IF( ${pkg}_prefix )
+        MESSAGE(FATAL_ERROR
+            "-D ${pkg}_prefix=value has been changed to -D include_${pkg}=true"
+        )
+    ENDIF( ${pkg}_prefix )
+ENDFOREACH(pkg adolc eigen ipopt)
 # -----------------------------------------------------------------------------
+# Current Arguments
+#
+# cmake_install_datadir
+command_line_arg(cmake_install_datadir share STRING
+    "directory, below prefix, where cmake installs cppad data files"
+)
+#
+# cmake_install_docdir
+command_line_arg(cmake_install_docdir NOTFOUND STRING
+    "directory, below prefix, where cmake installs cppad documentation files"
+)
+#
+# cmake_install_includedirs
+command_line_arg(cmake_install_includedirs include STRING
+    "directories, below prefix, where cmake installs include files"
+)
+#
+# cmake_install_libdirs
+command_line_arg(cmake_install_libdirs lib STRING
+    "directories, below prefix, where cmake installs library files"
+)
+#
+# cppad_prefix
+command_line_arg(cppad_prefix "${CMAKE_INSTALL_PREFIX}" PATH
+    "cppad install prefix"
+)
+#
+# cppad_postfix
+command_line_arg(cppad_postfix NOTFOUND STRING
+    "cppad install postfix"
+)
+#
 # cppad_cxx_flags
 command_line_arg(cppad_cxx_flags "" STRING
     "compile flags used with cppad (besides debug, release, and profile flags)"
 )
-# -----------------------------------------------------------------------------
+#
 # cppad_profile_flag
 command_line_arg(cppad_profile_flag NOTFOUND STRING
     "compile flag used to compile and link a profile version of a program"
 )
-# -----------------------------------------------------------------------------
-# All the External package prefixes without warnings
-SET(system_include TRUE)
 #
-# adolc_prefix
-optional_package(adolc ${system_include} "adolc install prefix")
-#
-# colpack_prefix
-optional_package(colpack ${system_include} "colpack install prefix")
-#
-# ipopt_prefix
-optional_package(ipopt ${system_include} "ipopt install prefix")
-#
-# sacado_prefix
-optional_package(sacado ${system_include} "sacado install prefix")
-#
-# eigen_prefix
-optional_package(eigen ${system_include} "eigen install prefix")
-#
-# fadbad_prefix
-optional_package(fadbad ${system_include} "fadbad install prefix")
-# -----------------------------------------------------------------------------
 # cppad_testvector
 command_line_arg(cppad_testvector cppad STRING
     "Namespace of vector used for testing, one of: boost, cppad, eigen, std"
@@ -165,13 +184,6 @@ assert_value_in_set(cppad_testvector boost cppad eigen std)
 command_line_arg(cppad_max_num_threads 48 STRING
     "maximum number of threads that CppAD can use use"
 )
-# cppad_sparse_list
-IF( cppad_sparse_list )
-    MESSAGE(FATAL_ERROR
-        "cppad_sparse_list = ${cppad_sparse_list}"
-        ": this command line argument has been removed"
-    )
-ENDIF( cppad_sparse_list )
 #
 # cppad_tape_id_type
 command_line_arg(cppad_tape_id_type "unsigned int" STRING
@@ -189,10 +201,68 @@ command_line_arg(cppad_debug_which "debug_all" STRING
 )
 assert_value_in_set(cppad_debug_which debug_even debug_odd debug_all debug_none)
 #
-# cppad_deprecated
-IF( cppad_deprecated )
-    MESSAGE(FATAL_ERROR "cppad_deprecated has been removed from cmake comamnd" )
-ENDIF( cppad_deprecated )
+# include_eigen
+# include_adolc
+# include_ipopt
+# include_cppadcg
+FOREACH(package eigen adolc ipopt cppadcg)
+    command_line_arg(include_${package} "false" BOOL
+            "include the ${package} examples and tests"
+    )
+ENDFOREACH(package eigen adolc ipopt cppadcg)
+# -----------------------------------------------------------------------------
+# CMAKE_INSTALL_PREFIX
+SET(CMAKE_INSTALL_PREFIX "${cppad_prefix}"
+    CACHE PATH "value copied from cppad_prefix" FORCE
+)
+# -----------------------------------------------------------------------------
+# External package information
+SET(system_include TRUE)
+#
+# eigen
+IF( include_eigen )
+    pkgconfig_info(eigen3 ${system_include})
+    SET(eigen_LIBRARIES "${eigen3_LIBRARIES}")
+    SET(cppad_has_eigen 1)
+ELSE( include_eigen )
+    SET(cppad_has_eigen 0)
+ENDIF( include_eigen )
+#
+# adolc
+IF( include_adolc )
+    pkgconfig_info(adolc ${system_include})
+    SET(cppad_has_adolc 1)
+ELSE( include_adolc )
+    SET(cppad_has_adolc 0)
+ENDIF( include_adolc )
+#
+# ipopt
+IF( include_ipopt )
+    pkgconfig_info(ipopt ${system_include})
+    SET(cppad_has_ipopt 1)
+ELSE( include_ipopt )
+    SET(cppad_has_ipopt 0)
+ENDIF( include_ipopt )
+#
+# cppadcg
+IF( include_cppadcg )
+    SET(cppad_has_cppadcg 1)
+ELSE( include_cppadcg )
+    SET(cppad_has_cppadcg 0)
+ENDIF( include_cppadcg )
+#
+# colpack_prefix
+optional_package(colpack ${system_include} "colpack install prefix")
+#
+# sacado_prefix
+optional_package(sacado ${system_include} "sacado install prefix")
+#
+# fadbad_prefix
+optional_package(fadbad ${system_include} "fadbad install prefix")
+#
+# xpackage_prefix is an example package prefix that is not really used
+SET(xpackage_prefix "/usr")
+# -----------------------------------------------------------------------------
 # =============================================================================
 # cppad_lib
 # Perhaps in the future cppad_lib will depend on cmake header only flag ?
@@ -210,11 +280,14 @@ ENDIF( cppad_has_colpack )
 # automated system configuration
 # =============================================================================
 # CMAKE_CXX_FLAGS
-# remove Visual Studio C++ warning level if specified in cppad_cxx_flags
-IF ( cppad_cxx_flags MATCHES "/W[0-9]" )
-    STRING( REGEX REPLACE "/W[0-9]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} )
-ENDIF ( cppad_cxx_flags MATCHES "/W[0-9]" )
-print_variable(CMAKE_CXX_FLAGS)
+IF( "${debug_which}" STREQUAL "debug_all" )
+    print_variable(CMAKE_CXX_FLAGS_DEBUG)
+ELSEIF( "${debug_which}" STREQUAL "debug_none" )
+    print_variable(CMAKE_CXX_FLAGS_RELEASE)
+ELSE( "${debug_which}" )
+    print_variable(CMAKE_CXX_FLAGS_DEBUG)
+    print_variable(CMAKE_CXX_FLAGS_RELEASE)
+ENDIF( "${debug_which}" STREQUAL "debug_all" )
 # -----------------------------------------------------------------------------
 # cppad_abs_includedir, cppad_abs_libdir, cppad_abs_datadir, cppad_abs_docdir
 #
@@ -287,10 +360,6 @@ ENDIF ( Boost_FOUND )
 # -----------------------------------------------------------------------------
 # ipopt_LIBRARIES and ipopt_LIBRARY_DIRS
 IF( cppad_has_ipopt )
-    FIND_PACKAGE(PkgConfig)
-    IF( NOT PKG_CONFIG_FOUND )
-        MESSAGE(FATAL_ERROR "Using ipopt_prefix but cannot find pkg-config")
-    ENDIF( NOT PKG_CONFIG_FOUND )
     #
     # Set the system environment variable PKG_CONFIG_PATH
     FOREACH(dir ${cmake_install_libdirs})

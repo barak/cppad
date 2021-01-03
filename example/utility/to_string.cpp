@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -15,7 +15,7 @@ $begin to_string.cpp$$
 
 $section to_string: Example and Test$$
 
-$srcfile%example/utility/to_string.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -31,7 +31,7 @@ namespace {
         if( s[0] == '-' )
             ++index;
         while( index < s.size() )
-            result = Integer(10 * result + s[index++] - '0');
+            result = Integer( 10 * result + (s[index++] - '0') );
         if( s[0] == '-' )
             return - result;
         return result;
@@ -112,10 +112,8 @@ bool to_string(void)
     //
     ok &= unsigned_integer<unsigned long>();
     ok &= signed_integer<signed long>();
-# if CPPAD_USE_CPLUSPLUS_2011
     ok &= unsigned_integer<unsigned long long>();
     ok &= signed_integer<signed long long>();
-# endif
     //
     ok &= floating<float>();
     ok &= floating<double>();

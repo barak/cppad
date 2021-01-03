@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -18,7 +18,7 @@ $$
 $section Abort Current Recording: Example and Test$$
 
 
-$srcfile%example/general/abort_recording.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -49,7 +49,7 @@ bool abort_recording(void)
     catch (int e)
     {   ok &= (e == 1);
 
-        // do this incase throw occured after the call to Independent
+        // do this in case throw occurred after the call to Independent
         // (for case above this is known, but in general it is unknown)
         AD<double>::abort_recording();
     }

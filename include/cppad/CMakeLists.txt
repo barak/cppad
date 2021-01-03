@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -35,7 +35,7 @@ IF( clang_or_gnu )
     SET(cppad_cxx_flags "${backup} -Wfloat-conversion -Wconversion -Werror")
     #
     SET(source "int main(void) { return 0; }")
-    check_source_runs("${source}" compiler_has_conversion_warn )
+    run_source_test("${source}" compiler_has_conversion_warn )
     #
     SET(cppad_cxx_flags "${backup}")
 ELSE( clang_or_gnu )
@@ -71,121 +71,12 @@ IF( cppad_boostvector )
 ENDIF( cppad_boostvector )
 #
 IF( cppad_eigenvector )
-    IF( NOT eigen_prefix )
+    IF( NOT include_eigen )
         MESSAGE(FATAL_ERROR
 "cppad_testvector == eigen but eigen_prefix is not specified"
         )
-    ENDIF( NOT eigen_prefix )
+    ENDIF( NOT include_eigen )
 ENDIF( cppad_eigenvector )
-# =============================================================================
-# Begin C++11 features
-#
-SET(cppad_cplusplus_201100_ok 1)
-# -----------------------------------------------------------------------------
-# cppad_has_signed_long_long
-#
-SET(source "
-int main(void)
-{   signed long long value = 0;
-    return int(value);
-}"
-)
-check_source_runs("${source}" cppad_has_signed_long_long )
-IF( NOT cppad_has_signed_long_long )
-    SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_signed_long_long )
-# -----------------------------------------------------------------------------
-# cppad_has_rvalue
-#
-SET(source "
-int main(void)
-{   int&& value = 1 + 2;
-    if( value != 3 )
-        return 1;
-    return 0;
-}"
-)
-check_source_runs("${source}" cppad_has_rvalue)
-IF( NOT cppad_has_rvalue )
-    SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_rvalue )
-# -----------------------------------------------------------------------------
-# cppad_has_nullptr
-#
-SET(source "
-int main(void)
-{   char *c = nullptr;
-    return 0;
-}"
-)
-check_source_runs("${source}" cppad_has_nullptr)
-IF( NOT cppad_has_nullptr )
-    SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_nullptr )
-# -----------------------------------------------------------------------------
-# cppad_has_long_long
-#
-SET(source "
-template <class T> bool is_pod(void)  { return false; }
-template <> inline bool is_pod<signed long long>(void) { return true;  }
-template <> inline bool is_pod<unsigned long long>(void) { return true;  }
-int main(void)
-{   return 0; }
-"
-)
-check_source_runs("${source}" cppad_has_long_long)
-IF( NOT cppad_has_long_long )
-    SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_long_long )
-# -----------------------------------------------------------------------------
-# cppad_compiler_has_erf
-# cppad_compiler_has_asinh
-# cppad_compiler_has_acosh
-# cppad_compiler_has_atanh
-# cppad_compiler_has_expm1
-#
-SET(source_template "
-# include <cmath>
-int main(void)
-{   std::c11_function(0.0);
-    return 0;
-}
-"
-)
-FOREACH(c11_function erf asinh acosh atanh expm1 log1p)
-    STRING(REPLACE "c11_function" ${c11_function} source "${source_template}" )
-    # really only checking if program compiles
-    check_source_runs("${source}" cppad_compiler_has_${c11_function} )
-    IF( NOT cppad_compiler_has_${c11_function} )
-        SET(cppad_cplusplus_201100_ok 0)
-    ENDIF( NOT cppad_compiler_has_${c11_function} )
-ENDFOREACH(c11_function)
-# -----------------------------------------------------------------------------
-# cppad_has_steady_clock
-#
-SET(source "
-# include <chrono>
-# include <thread>
-# include <iostream>
-int main(void)
-{   std::chrono::time_point<std::chrono::steady_clock> start, end;
-    start = std::chrono::steady_clock::now();
-    std::this_thread::sleep_for( std::chrono::milliseconds(1) );
-    end   = std::chrono::steady_clock::now();
-    std::chrono::duration<double> difference = end - start;
-    double elapsed_seconds = difference.count();
-    if( elapsed_seconds >= 0.9e-3 ) // 1e-3 = one millisecond
-        return 0;
-    return 1;
-}
-"
-)
-check_source_runs("${source}" cppad_has_steady_clock)
-IF( NOT cppad_has_steady_clock )
-    SET(cppad_cplusplus_201100_ok 0)
-ENDIF( NOT cppad_has_steady_clock )
-# =============================================================================
-# End C++11 features
 #
 print_variable(cppad_cplusplus_201100_ok)
 # -----------------------------------------------------------------------------
@@ -199,7 +90,7 @@ int main(void)
     return 0;
 }"
 )
-check_source_runs("${source}" cppad_has_gettimeofday)
+run_source_test("${source}" cppad_has_gettimeofday)
 # -----------------------------------------------------------------------------
 # cppad_tape_addr_type, cppad_tape_id_type
 #
@@ -212,7 +103,7 @@ int main(void)
 }
 "
     )
-    check_source_runs("${source}" ${cmake_var}_is_unsigned)
+    run_source_test("${source}" ${cmake_var}_is_unsigned)
     IF( ${cmake_var}_is_unsigned STREQUAL 0  )
         MESSAGE(STATUS
 "Warning: using a signed ${cmake_var} is for CppAD developers only !"
@@ -245,7 +136,7 @@ int main(void)
     return 0;
 }
 " )
-# Using CHECK_CXX_SOURCE_RUNS directly (instead of check_source_runs).
+# Using CHECK_CXX_SOURCE_RUNS directly (instead of run_source_test).
 IF( DEFINED cppad_max_num_threads_is_integer_ge_4 )
     MESSAGE( ERROR
         "cppad_max_num_threads_is_integer_ge_4 is defined before expected"
@@ -270,7 +161,7 @@ int main(void)
     return 0;
 }
 " )
-check_source_runs("${source}" cppad_has_mkstemp )
+run_source_test("${source}" cppad_has_mkstemp )
 # -----------------------------------------------------------------------------
 # cppad_has_tmpname_s
 #
@@ -283,7 +174,7 @@ int main(void)
     return 0;
 }
 " )
-check_source_runs("${source}" cppad_has_tmpnam_s )
+run_source_test("${source}" cppad_has_tmpnam_s )
 # -----------------------------------------------------------------------------
 # configure.hpp
 CONFIGURE_FILE(
@@ -291,5 +182,3 @@ CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/configure.hpp
 )
 # -----------------------------------------------------------------------------
-# configure files in local subdirectory
-ADD_SUBDIRECTORY(local)
