@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -19,7 +19,7 @@ $$
 
 $section Gradient of Determinant Using LU Factorization: Example and Test$$
 
-$srcfile%example/general/hes_lu_det.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -57,7 +57,7 @@ bool HesLuDet(void)
     // value of the independent variable
     size_t i;
     for(i = 0; i < n * n; i++)
-        X[i] = Complex(int(i), -int(i) );
+        X[i] = Complex( double(i), -double(i) );
 
     // set the independent variables
     Independent(X);
@@ -70,7 +70,7 @@ bool HesLuDet(void)
     // argument value
     CPPAD_TESTVECTOR(Complex)     x( n * n );
     for(i = 0; i < n * n; i++)
-        x[i] = Complex(2 * i, i);
+        x[i] = Complex( double(2 * i) , double(i) );
 
     // first derivative of the determinant
     CPPAD_TESTVECTOR(Complex) H( n * n * n * n );

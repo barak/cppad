@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -23,7 +23,7 @@ $head Purpose$$
 This example just demonstrates OpenMP and does not use CppAD at all.
 
 $head Source Code$$
-$srcfile%example/multi_thread/openmp/a11c_openmp.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 $end
 ----------------------------------------------------------------------------
 */
@@ -32,6 +32,9 @@ $end
 # include <limits>
 # include <cmath>
 # include <cassert>
+// for size_t
+# include <cstddef>
+//
 # define NUMBER_THREADS 4
 
 namespace {
@@ -52,7 +55,7 @@ bool a11c(void)
 {   bool ok = true;
 
     // Test setup
-    int i, n = 1000;
+    size_t i, n = 1000;
     float *a = new float[n];
     float *b = new float[n];
     for(i = 0; i < n; i++)
@@ -62,7 +65,7 @@ bool a11c(void)
     omp_set_dynamic(0);              // off dynamic thread adjust
     omp_set_num_threads(n_thread);   // set the number of threads
 
-    a1(n, a, b);
+    a1(int(n), a, b);
 
     // check the result
     float eps = float(100) * std::numeric_limits<float>::epsilon();

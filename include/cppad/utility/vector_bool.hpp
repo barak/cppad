@@ -1,7 +1,7 @@
 # ifndef CPPAD_UTILITY_VECTOR_BOOL_HPP
 # define CPPAD_UTILITY_VECTOR_BOOL_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -149,18 +149,23 @@ is returned to thread_alloc.
 $head Source$$
 $srccode%hpp%:
 */
-    vectorBool(void) : n_unit_(0), length_(0), data_(CPPAD_NULL)
+    vectorBool(void) : n_unit_(0), length_(0), data_(nullptr)
     { }
-    vectorBool(size_t n) : n_unit_(0), length_(n), data_(CPPAD_NULL)
+    vectorBool(size_t n) : n_unit_(0), length_(n), data_(nullptr)
     {   resize(n); }
     vectorBool(const vectorBool& other)
-    : n_unit_(0), length_(0), data_(CPPAD_NULL)
+    : n_unit_(0), length_(0), data_(nullptr)
     {   resize(other.length_);
         size_t n_used = unit_min();
         CPPAD_ASSERT_UNKNOWN( n_used <= n_unit_ );
         for(size_t i = 0; i < n_used; ++i)
             data_[i] = other.data_[i];
     }
+    // n_unit_ is the only value necessary to make destructor work
+    // for other after this move semantics constructor
+    vectorBool(vectorBool&& other)
+    : n_unit_(0), length_(0), data_(nullptr)
+    {   swap(other); }
     ~vectorBool(void)
     {   clear(); }
 /* %$$
@@ -181,10 +186,10 @@ $icode%vec%.resize(%n%)
 $icode%vec%.clear()%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_RESIZE%// END_RESIZE%1
 %$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_CLEAR%// END_CLEAR%1
 %$$
 
@@ -256,13 +261,13 @@ $icode%vec%.swap(%other%)
 $icode%vec% = %other%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_SWAP%// END_SWAP%1
 %$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_ASSIGN%// END_ASSIGN%1
 %$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_MOVE_SEMANTICS%// END_MOVE_SEMANTICS%1
 %$$
 
@@ -280,8 +285,7 @@ The elements of $icode vec$$ are then individually assigned
 to have the value of the corresponding elements of $icode other$$.
 
 $head Move Semantics$$
-If $code CPPAD_USE_CPLUSPLUS_2011$$ is $code 1$$
-the move semantics version of the assignment operator, implemented using
+A move semantics version of the assignment operator, implemented using
 $code swap$$, is defined.
 
 $end
@@ -315,7 +319,6 @@ $end
             data_[i] = other.data_[i];
         return *this;
     }
-# if CPPAD_USE_CPLUSPLUS_2011
 // BEGIN_MOVE_SEMANTICS
     vectorBool& operator=(vectorBool&& other)
 // END_MOVE_SEMANTICS
@@ -326,7 +329,6 @@ $end
         swap(other);
         return *this;
     }
-# endif
 /*
 -------------------------------------------------------------------------------
 $begin vector_bool_subscript$$
@@ -389,7 +391,7 @@ $head Syntax$$
 $icode%vec%.push_back(%element%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_PUSH_BACK%// END_PUSH_BACK%1
 %$$
 
@@ -444,7 +446,7 @@ $head Syntax$$
 $icode%vec%.push_vector(%other%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector_bool.hpp%
+$srcthisfile%
     0%// BEGIN_PUSH_VECTOR%// END_PUSH_VECTOR%1
 %$$
 

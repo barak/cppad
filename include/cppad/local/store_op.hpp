@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_STORE_OP_HPP
 # define CPPAD_LOCAL_STORE_OP_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -50,7 +50,7 @@ where the index type $icode I$$ and the value being stored type $icode V$$
 are $code p$$ (for parameter) or $code v$$ (for variable).
 
 $head Prototype$$
-$srcfile%include/cppad/local/store_op.hpp%
+$srcthisfile%
     0%// BEGIN_FORWARD_STORE_PP_OP_0%// END_FORWARD_STORE_PP_OP_0%1
 %$$
 The prototype for
@@ -100,7 +100,7 @@ corresponding to $cref/i_vec/load_op_var/Notation/i_vec/$$.
 
 $subhead arg[2]$$
 Is the index of this VecAD load instruction in the
-$icode var_by_load_op$$ array.
+$icode load_op2var$$ array.
 
 $head num_par$$
 is the number of parameters in this recording.

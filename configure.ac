@@ -11,7 +11,7 @@
 # -----------------------------------------------------------------------------
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20200000.3], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20210000.0], [cppad@list.coin-or.org])
 AM_SILENT_RULES([no])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -35,10 +35,8 @@ dnl Have configure check source directory for the following file:
 dnl include/cppad/cppad.hpp
 AC_CONFIG_SRCDIR(include/cppad/cppad.hpp)
 
-# check if we have ar program
-have_ar='yes'
-AM_PROG_AR([have_ar='no'])
-AC_MSG_NOTICE([have_ar = $have_ar])
+# check if we have ar program and abort if it is not found
+AM_PROG_AR
 
 dnl -----------------------------------------------------------------------
 dnl The case where enable_msvc != no is defined and supported by Ted Ralphs
@@ -131,9 +129,6 @@ AC_ARG_VAR(ADOLC_DIR,
 AM_CONDITIONAL(CppAD_ADOLC, test "$ADOLC_DIR" != "")
 if test "$ADOLC_DIR" != "" ; then
     AC_MSG_RESULT([$ADOLC_DIR])
-    if test "$have_ar" = "no"; then
-        AC_MSG_ERROR([ar is missing and ADOLC_DIR is present])
-    fi
     AC_SUBST(cppad_has_adolc, 1)
 else
     AC_MSG_RESULT([no])
@@ -164,9 +159,6 @@ AC_ARG_VAR(FADBAD_DIR,
 AM_CONDITIONAL(CppAD_FADBAD, test "$FADBAD_DIR" != "")
 if test "$FADBAD_DIR" != "" ; then
     AC_MSG_RESULT([$FADBAD_DIR])
-    if test "$have_ar" = "no"; then
-        AC_MSG_ERROR([ar is missing and FADBAD_DIR is present])
-    fi
     AC_SUBST(cppad_has_fadbad, 1)
 else
     AC_MSG_RESULT([no])
@@ -194,9 +186,6 @@ AC_ARG_VAR(IPOPT_DIR,
 AM_CONDITIONAL(CppAD_IPOPT, test "$IPOPT_DIR" != "")
 if test "$IPOPT_DIR" != "" ; then
     AC_MSG_RESULT([$IPOPT_DIR])
-    if test "$have_ar" = "no"; then
-        AC_MSG_ERROR([ar is missing and IPOPT_DIR is present])
-    fi
     AC_SUBST(cppad_has_ipopt, 1)
 else
     AC_MSG_RESULT([no])
@@ -360,15 +349,12 @@ dnl not compiling any fortran so no need to touch flags
 dnl Check for pkgconfig
 AC_CHECK_PROG(have_pkg_config, [pkg-config], [yes], [no])
 AM_CONDITIONAL(CppAD_PKG_CONFIG, test "$have_pkg_config" = "yes")
-
-dnl check if we can build libraries
-AM_CONDITIONAL(CppAD_HAVE_AR, test "$have_ar" = 'yes' )
-if test "$have_ar" = 'no'; then
-    AC_MSG_WARN(
-    [cannot build any libraries because ar is missing; e.g,, speed/* not built]
-    )
+dnl --------------------------------------------------------------------------
+dnl If the compiler does not support -c -o, wrap it with the compile script.
+AC_PROG_CXX_C_O
+if test $ac_cv_prog_cxx_c_o = no ; then
+   CXX="$am_aux_dir/compile $CXX"
 fi
-
 dnl -------------------------------------------------------------------------
 dnl Setting that cmake finds but autotools not kept up to date on
 AC_SUBST(cppad_cxx_flags, "")
@@ -377,43 +363,6 @@ AC_SUBST(cppad_has_mkstemp, 0)
 AC_SUBST(cppad_has_tmpnam_s, 0)
 AC_SUBST(cppad_cplusplus_201100_ok, 0)
 AC_SUBST(compiler_has_conversion_warn, 0)
-
-dnl autotools version sets is_pod without testing system, cmake is better
-dnl for the  Fundamental types
-AC_SUBST(is_pod_specialize_98,"
-    template <> inline bool is_pod<bool>(void) { return true; }
-    template <> inline bool is_pod<char>(void) { return true; }
-    template <> inline bool is_pod<wchar_t>(void) { return true; }
-    template <> inline bool is_pod<float>(void) { return true; }
-    template <> inline bool is_pod<double>(void) { return true; }
-    template <> inline bool is_pod<long double>(void) { return true; }
-    template <> inline bool is_pod<signed char>(void) { return true; }
-    template <> inline bool is_pod<unsigned char>(void) { return true; }
-    template <> inline bool is_pod<signed short>(void) { return true; }
-    template <> inline bool is_pod<unsigned short>(void) { return true; }
-    template <> inline bool is_pod<signed int>(void) { return true; }
-    template <> inline bool is_pod<unsigned int>(void) { return true; }
-    template <> inline bool is_pod<signed long>(void) { return true; }
-    template <> inline bool is_pod<unsigned long>(void) { return true; }
-" )
-AC_SUBST(is_pod_specialize_11, "
-    template <> inline bool is_pod<bool>(void) { return true; }
-    template <> inline bool is_pod<char>(void) { return true; }
-    template <> inline bool is_pod<wchar_t>(void) { return true; }
-    template <> inline bool is_pod<float>(void) { return true; }
-    template <> inline bool is_pod<double>(void) { return true; }
-    template <> inline bool is_pod<long double>(void) { return true; }
-    template <> inline bool is_pod<signed char>(void) { return true; }
-    template <> inline bool is_pod<unsigned char>(void) { return true; }
-    template <> inline bool is_pod<signed short>(void) { return true; }
-    template <> inline bool is_pod<unsigned short>(void) { return true; }
-    template <> inline bool is_pod<signed int>(void) { return true; }
-    template <> inline bool is_pod<unsigned int>(void) { return true; }
-    template <> inline bool is_pod<signed long>(void) { return true; }
-    template <> inline bool is_pod<unsigned long>(void) { return true; }
-" )
-AM_SUBST_NOTMAKE(is_pod_specialize_98)
-AM_SUBST_NOTMAKE(is_pod_specialize_11)
 
 dnl -------------------------------------------------------------------------
 dnl Determine which definition we are using for CPPAD_TESTVECTOR
@@ -586,8 +535,8 @@ AC_LANG_POP([C++])
 dnl --------------------------------------------------------------------------
 dnl Library directories
 if test -e $IPOPT_DIR/lib/coin ; then
-    IPOPT_LIBS="-L $IPOPT_DIR/lib/coin -L $IPOPT_DIR/lib/coin/ThirdParty"
-    IPOPT_LD_PATH="$IPOPT_DIR/lib/coin:$IPOPT_DIR/lib/coin/ThirdParty"
+    IPOPT_LIBS="-L $IPOPT_DIR/lib/coin -L $IPOPT_DIR/lib/coin-or/ThirdParty"
+    IPOPT_LD_PATH="$IPOPT_DIR/lib/coin:$IPOPT_DIR/lib/coin-or/ThirdParty"
 else
     IPOPT_LIBS="-L $IPOPT_DIR/lib"
     IPOPT_LD_PATH="$IPOPT_DIR/lib"
@@ -715,7 +664,6 @@ dnl AC_CONFIG_FILES(file-list) for each file in the list, configure will
 dnl read file.in, do its substitutions, and create file
 AC_CONFIG_FILES([
     include/cppad/configure.hpp
-    include/cppad/local/is_pod.hpp
     cppad_ipopt/example/test.sh
     cppad_ipopt/speed/test.sh
     cppad_ipopt/test/test.sh
@@ -748,8 +696,6 @@ AC_CONFIG_FILES([
     speed/double/makefile
     speed/example/makefile
     speed/fadbad/makefile
-    speed/profile/makefile
-    speed/profile/gprof.sed
     speed/sacado/makefile
     speed/src/makefile
     test_more/compare_c/makefile
@@ -766,12 +712,6 @@ AC_CONFIG_COMMANDS(
     [cp include/cppad/configure.hpp  \
         $abs_top_srcdir/include/cppad/configure.hpp],
 [abs_top_srcdir=$abs_top_srcdir]
-)
-AC_CONFIG_COMMANDS(
-    [is_pod.hpp],
-    [cp include/cppad/local/is_pod.hpp  \
-        $abs_top_srcdir/include/cppad/local/is_pod.hpp],
-    [abs_top_srcdir=$abs_top_srcdir]
 )
 dnl scripts that set library path before running test
 AC_CONFIG_COMMANDS(

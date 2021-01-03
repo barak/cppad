@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -19,7 +19,7 @@ $$
 $section OpenMP Implementation of a Team of AD Threads$$
 See $cref team_thread.hpp$$ for this routines specifications.
 
-$srcfile%example/multi_thread/openmp/team_openmp.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -93,7 +93,7 @@ bool team_destroy(void)
     omp_set_num_threads( int(num_threads_) );
 
     // inform CppAD no longer in multi-threading mode
-    thread_alloc::parallel_setup(num_threads_, CPPAD_NULL, CPPAD_NULL);
+    thread_alloc::parallel_setup(num_threads_, nullptr, nullptr);
     thread_alloc::hold_memory(false);
     CppAD::parallel_ad<double>();
 

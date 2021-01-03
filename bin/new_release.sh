@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -10,7 +10,7 @@
 # in the Eclipse Public License, Version 2.0 are satisfied:
 #       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
-stable_version='20200000' # date at which this stable branch started
+stable_version='20210000' # date at which this stable branch started
 release='0'               # first release for each stable version is 0
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
@@ -46,21 +46,17 @@ sed -i omh/cppad.omh \
     -e "/\/archive\//N" \
     -e "/\/archive\//s|[0-9]\{8\}\.[0-9]*|$stable_version.$release|g"
 #
-# check version number
-version.sh set $stable_version
-version.sh copy
-#
 list=`git status -s`
 if [ "$list" != '' ]
 then
     git add --all
     echo "new_release.sh: 'git status -s' is not empty for master branch"
     echo "commit changes to master branch with the following command ?"
-    echo "git commit -m 'master: change stable version to $stable_version'"
+    echo "git commit -m 'master: bin/new_release.sh $stable_version.$release'"
     exit 1
 fi
 # -----------------------------------------------------------------------------
-# Check if these reference tags alread exist
+# Check if these reference tags already exist
 #
 tag=$stable_version.$release
 if git tag --list | grep "$tag"
@@ -147,7 +143,6 @@ then
 fi
 if [ "$ok" != 'yes' ]
 then
-    old_release=`expr $release - 1`
 cat << EOF
 bin/new_release.sh: version number is not correct in $stable_branch.
 Use the following commands in $stable_branch to fix it ?
@@ -155,8 +150,7 @@ Use the following commands in $stable_branch to fix it ?
     version.sh set $stable_version.$release
     version.sh copy
     version.sh check
-    sed -i configure \\
-        -e 's|$stable_version\\.$old_release|$stable_version.$release|'
+    bin/autotools.sh automake
     Then check the chages to the $stable_branch branch and commit
 EOF
     exit 1
@@ -202,8 +196,7 @@ then
     echo "new_release.sh: local and remote differ for $stable_branch"
     echo "local  $stable_local_hash"
     echo "remote $stable_remote_hash"
-    echo "try: git checkout $stable_branch"
-    echo '     git push'
+    echo 'try: git push'
     exit 1
 fi
 # =============================================================================

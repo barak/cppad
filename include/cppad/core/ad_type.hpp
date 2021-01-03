@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_AD_TYPE_HPP
 # define CPPAD_CORE_AD_TYPE_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -38,13 +38,12 @@ $srccode%hpp% */
         constant_enum,            // constant parameter
         dynamic_enum,             // dynamic parameter
         variable_enum,            // variable
-        string_enum,              // string
         number_ad_type_enum       // number of valid values for type_ad_enum
     } ad_type_enum;
 /* %$$
 
 $head is_pod$$
-Inform $code local::is_pod$$ that this is plain old data.
+The following informs $cref is_pod$$ that this is plain old data.
 $srccode%hpp% */
     namespace local {
         template <> inline bool

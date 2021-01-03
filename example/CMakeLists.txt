@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -24,6 +24,11 @@ ADD_SUBDIRECTORY(atomic_three)
 
 # checkpoint exmaples
 ADD_SUBDIRECTORY(chkpoint_two)
+
+# code_gen_fun examples
+IF( cpapd_has_cpapdcg )
+    ADD_SUBDIRECTORY(code_gen_fun)
+ENDIF( cpapd_has_cpapdcg )
 
 # graph examples
 ADD_SUBDIRECTORY(graph)

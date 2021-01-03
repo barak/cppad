@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_INDEPENDENT_INDEPENDENT_HPP
 # define CPPAD_CORE_INDEPENDENT_INDEPENDENT_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -30,7 +30,7 @@ $head Syntax$$
 $codei%Independent(%x%, %abort_op_index%, %record_compare%, %dynamic%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/independent/independent.hpp%
+$srcthisfile%
     0%// BEGIN_ALL_ARGUMENT%// END_ALL_ARGUMENT%1
 %$$
 
@@ -70,7 +70,7 @@ void Independent(
     typedef typename ADVector::value_type ADBase;
     typedef typename ADBase::value_type   Base;
     CPPAD_ASSERT_KNOWN(
-        ADBase::tape_ptr() == CPPAD_NULL,
+        ADBase::tape_ptr() == nullptr,
         "Independent: cannot create a new tape because\n"
         "a previous tape is still active (for this thread).\n"
         "AD<Base>::abort_recording() would abort this previous recording."
@@ -95,7 +95,7 @@ $head Syntax$$
 $codei%Independent(%x%, %abort_op_index%, %record_compare%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/independent/independent.hpp%
+$srcthisfile%
     0%// BEGIN_THREE_ARGUMENT%// END_THREE_ARGUMENT%1
 %$$
 
@@ -141,7 +141,7 @@ $head Syntax$$
 $codei%Independent(%x%, %abort_op_index%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/independent/independent.hpp%
+$srcthisfile%
     0%// BEGIN_X_ABORT_OP_INDEX%// END_X_ABORT_OP_INDEX%1
 %$$
 
@@ -185,7 +185,7 @@ $head Syntax$$
 $codei%Independent(%x%, %dynamic%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/independent/independent.hpp%
+$srcthisfile%
     0%// BEGIN_X_DYNAMIC%// END_X_DYNAMIC%1
 %$$
 
@@ -228,7 +228,7 @@ $head Syntax$$
 $codei%Independent(%x%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/independent/independent.hpp%
+$srcthisfile%
     0%// BEGIN_ONE_ARGUMENT%// END_ONE_ARGUMENT%1
 %$$
 

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -25,7 +25,7 @@ This example demonstrates how CppAD can be used in a
 OpenMP multi-threading environment.
 
 $head Source Code$$
-$srcfile%example/multi_thread/openmp/simple_ad_openmp.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 ------------------------------------------------------------------------------
@@ -91,15 +91,15 @@ namespace {
 
         // execute worker in parallel
 # pragma omp parallel for
-    for(thread_num = 0; thread_num < int_num_threads; thread_num++)
-        thread_all_[thread_num].ok = worker(info_all[thread_num]);
+        for(thread_num = 0; thread_num < int_num_threads; thread_num++)
+            thread_all_[thread_num].ok = worker(info_all[thread_num]);
 // end omp parallel for
 
         // set the number of OpenMP threads to one
         omp_set_num_threads(1);
 
         // now inform CppAD that there is only one thread
-        thread_alloc::parallel_setup(1, CPPAD_NULL, CPPAD_NULL);
+        thread_alloc::parallel_setup(1, nullptr, nullptr);
         thread_alloc::hold_memory(false);
         CppAD::parallel_ad<double>();
 

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -23,7 +23,7 @@ This is an example and test of the features of the
 $cref CppAD_vector$$ class that are not included in the
 $cref SimpleVector$$ concept.
 
-$srcfile%example/utility/cppad_vector.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -44,7 +44,7 @@ namespace {
         const char *exp  ,
         const char *msg  )
     {   // error handler must not return, so throw an exception
-        throw line;
+        throw std::string( file );
     }
 }
 
@@ -56,8 +56,12 @@ bool CppAD_vector(void)
     // check Simple Vector specifications
     CppAD::CheckSimpleVector< Scalar, vector<Scalar> >();
 
+    // check constructor with size_t and with an int
+    size_t two_s = 2;
+    int    two_i = 2;
+    vector<Scalar> vec(2), other(two_s), another(two_i);
+
     // assignment returns reference for use in other assignments
-    vector<Scalar> vec(2), other(2), another(2);
     another[0] = Scalar(1);
     another[1] = Scalar(2);
     vec = other = another;
@@ -153,8 +157,12 @@ bool CppAD_vector(void)
     bool detected_error = false;
     try
     {   another = other; }
-    catch(int line)
-    {   detected_error = true; }
+    catch(const std::string& file)
+    {   // This location for the error is not part of user API and may change
+        size_t pos    = file.find("/vector.hpp");
+        ok           &=  pos != std::string::npos;
+        detected_error = true;
+    }
     ok &= detected_error;
     // -----------------------------------------------------------------------
     // check that iterator access out of range generates an error
@@ -167,8 +175,12 @@ bool CppAD_vector(void)
         // this access is no longer valid
         *itr;
     }
-    catch(int line)
-    {   detected_error = true; }
+    catch(const std::string& file)
+    {   // This location for the error is not part of user API and may change
+        size_t pos     = file.find("/cppad_vector_itr.hpp");
+        ok            &=  pos != std::string::npos;
+        detected_error = true;
+    }
     ok &= detected_error;
     // -----------------------------------------------------------------------
 # endif

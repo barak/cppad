@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -18,7 +18,7 @@ $$
 $section Using a User Defined AD Base Type: Example and Test$$
 
 
-$srcfile%example/general/base_require.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $head Purpose$$
 The type $code base_alloc$$, defined in $cref base_alloc.hpp$$,
@@ -64,6 +64,9 @@ bool base_require(void)
     CPPAD_TESTVECTOR(base_alloc) dy(m * n);
     dy   = f.Jacobian(x);
     ok  &= CppAD::NearEqual(dy[0], base_alloc(2.) * x[0], eps, eps);
+
+    // check the abs function
+    ok  &= abs( - a_x[0] ) == abs( a_x[0] );
 
     return ok;
 }

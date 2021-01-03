@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -13,6 +13,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 
 # include <limits>
 # include <cppad/cppad.hpp>
+# include <cppad/speed/det_by_minor.hpp>
 
 namespace {
     // include conditional skip optimization
@@ -24,6 +25,229 @@ namespace {
     // note this enum type is not part of the API (but its values are)
     CppAD::atomic_base<double>::option_enum atomic_sparsity_option_;
 
+    // =======================================================================
+    // Test conditional expressions where left and right are dynamic parameters
+    bool cond_exp_ppvv(void)
+    {   bool ok = true;
+        using CppAD::AD;
+
+        // independent variable vector
+        CPPAD_TESTVECTOR(AD<double>) ax(2), ap(2);
+        ap[0]     = 0.;
+        ap[1]     = 1.;
+        ax[0]     = 2.;
+        ax[1]     = 3.;
+        size_t abort_op_index = 0;
+        bool   record_compare = false;
+        CppAD::Independent(ax, abort_op_index, record_compare, ap);
+
+        // dependent variable vector
+        CPPAD_TESTVECTOR(AD<double>) ay(5);
+
+        // CondExp(parameter, variable, variable, variable)
+        ay[0] = CondExpLt(ap[0], ap[1], ax[0], ax[1]);
+        ay[1] = CondExpLt(ap[0], ap[1], ax[0], ax[1]);
+        ay[2] = CondExpEq(ap[0], ap[1], ax[0], ax[1]);
+        ay[3] = CondExpGe(ap[0], ap[1], ax[0], ax[1]);
+        ay[4] = CondExpGt(ap[0], ap[1], ax[0], ax[1]);
+
+        // create f: X -> Y
+        CppAD::ADFun<double> f(ax, ay);
+        if( conditional_skip_ )
+            f.optimize();
+        else
+            f.optimize("no_conditional_skip");
+
+
+        // vectors for function values
+        CPPAD_TESTVECTOR(double) x( f.Domain() );
+        CPPAD_TESTVECTOR(double) y( f.Range() );
+
+        // vectors for derivative values
+        CPPAD_TESTVECTOR(double) dx( f.Domain() );
+        CPPAD_TESTVECTOR(double) dy( f.Range() );
+
+        // check original function values
+        // ap[0] < ap[1]
+        ok &= ay[0] == ax[0];
+        ok &= ay[1] == ax[0];
+        ok &= ay[2] == ax[1];
+        ok &= ay[3] == ax[1];
+        ok &= ay[4] == ax[1];
+
+        // function values
+        x[0] = 2.;
+        x[1] = 3.;
+        y    = f.Forward(0, x);
+        ok &= ( y[0] == x[0] );
+        ok &= ( y[1] == x[0] );
+        ok &= ( y[2] == x[1] );
+        ok &= ( y[3] == x[1] );
+        ok &= ( y[4] == x[1] );
+
+        // forward mode derivative values
+        dx[0] = 1.;
+        dx[1] = 2.;
+        dy    = f.Forward(1, dx);
+        ok   &= (dy[0] == dx[0] );
+        ok   &= (dy[1] == dx[0] );
+        ok   &= (dy[2] == dx[1] );
+        ok   &= (dy[3] == dx[1] );
+        ok   &= (dy[4] == dx[1] );
+
+        // reverse mode derivative values
+        dy[0] = 1.;
+        dy[1] = 2.;
+        dy[2] = 3.;
+        dy[3] = 4.;
+        dy[4] = 5.;
+        dx    = f.Reverse(1, dy);
+        ok   &= dx[0] == dy[0] + dy[1];
+        ok   &= dx[1] == dy[2] + dy[3] + dy[4];
+
+        // now change the dynamic parameter so the results are reversed
+        CPPAD_TESTVECTOR(double) p( f.size_dyn_ind() );
+        p[0] = 1.0;
+        p[1] = 0.0;
+        f.new_dynamic(p);
+
+        // function values
+        y    = f.Forward(0, x);
+        ok &= ( y[0] == x[1] );
+        ok &= ( y[1] == x[1] );
+        ok &= ( y[2] == x[1] );
+        ok &= ( y[3] == x[0] );
+        ok &= ( y[4] == x[0] );
+
+        // forward mode derivative values
+        dx[0] = 1.;
+        dx[1] = 2.;
+        dy    = f.Forward(1, dx);
+        ok   &= (dy[0] == dx[1] );
+        ok   &= (dy[1] == dx[1] );
+        ok   &= (dy[2] == dx[1] );
+        ok   &= (dy[3] == dx[0] );
+        ok   &= (dy[4] == dx[0] );
+
+        // reverse mode derivative values
+        dy[0] = 1.;
+        dy[1] = 2.;
+        dy[2] = 3.;
+        dy[3] = 4.;
+        dy[4] = 5.;
+        dx    = f.Reverse(1, dy);
+        ok   &= dx[0] == dy[3] + dy[4];
+        ok   &= dx[1] == dy[0] + dy[1] + dy[2];
+
+        return ok;
+    }
+    // ====================================================================
+    // test collision_limit
+    bool exceed_collision_limit(void)
+    {   bool ok = true;
+        using CppAD::vector;
+        using CppAD::AD;
+
+        // number of rows in the matrix
+        size_t nr = 5;
+
+        // number of eleemnt in the matrix
+        size_t n  = nr * nr;
+
+        // independent variable
+        vector< AD<double> > ax(n);
+        for(size_t j = 0; j < n; ++j)
+            ax[j] = double(j);
+        CppAD::Independent(ax);
+
+        // determinant by minors function
+        CppAD::det_by_minor< AD<double> > adet(nr);
+
+        // dependent variable
+        vector< AD<double> > ay(1);
+        ay[0] = adet(ax);
+
+        // ADFun
+        CppAD::ADFun<double> f(ax, ay);
+
+        // optimize the function
+        std::string options = "collision_limit=1";
+        f.optimize(options);
+
+        // check that the limit was exceeded
+        ok &= f.exceed_collision_limit();
+
+        return ok;
+    }
+    // ====================================================================
+    // check no_cumulative_sum_op option
+    bool no_cumulative_sum(void)
+    {   bool ok = true;
+        using CppAD::AD;
+        using CppAD::NearEqual;
+        double eps10 = 10.0 * std::numeric_limits<double>::epsilon();
+
+        // domain space vector
+        size_t n  = 2;
+        CppAD::vector< AD<double> > ax(n);
+        for(size_t j = 0; j < n; j++)
+            ax[j] = double(j + 2);
+
+        size_t n_original = 1 + n;
+        size_t n_optimize = 1 + n;
+
+        // range space vector
+        size_t m = 1;
+        CppAD::vector< AD<double> > ay(m);
+
+        // declare independent variables and start tape recording
+        CppAD::Independent(ax);
+
+        // A cumulative summation and a multiply
+        AD<double> sum = 1.0;
+        for(size_t j = 0; j < n; ++j)
+            sum += ax[j];
+        ay[0]       =  ax[0] * sum;
+        n_original += n + 1;
+        n_optimize += n + 1; // not gathered as a cumulative sum
+
+        // same cumulative summation different multiply
+        // all of the terms in the sum have been calculated before
+        sum = 1.0;
+        for(size_t j = 0; j < n; ++j)
+            sum += ax[j];
+        ay[0]      +=  ax[1] * sum;
+        n_original += n + 2; // n sums, one multiply, and final sum
+        n_optimize += 2;     // one multiply, and final sum
+
+        CppAD::ADFun<double> f;
+        f.Dependent(ax, ay);
+
+        // check number of variables in original function
+        ok &= f.size_var() ==  n_original;
+
+        CppAD::vector<double> x(n), y(m);
+        for(size_t j = 0; j < n; j++)
+            x[j] = double(j + 2);
+
+        y   = f.Forward(0, x);
+        for(size_t i = 0; i < m; i++)
+            ok &= NearEqual(y[i], Value(ay[i]), eps10, eps10);
+
+        if( conditional_skip_ )
+            f.optimize("no_cumulative_sum_op");
+        else
+            f.optimize("no_conditional_skip no_cumulative_sum_op");
+
+        // check number of variables  in optimized version
+        ok &= (f.size_var() == n_optimize );
+
+        y   = f.Forward(0, x);
+        for(size_t i = 0; i < m; i++)
+            ok &= NearEqual(y[i], Value(ay[i]), eps10, eps10);
+
+        return ok;
+    }
     // ---------------------------------------------------------------------
     // optimize_csum
     bool optimize_csum(void)
@@ -747,7 +971,6 @@ namespace {
     bool depend_four(void)
     {   // erf function is a special case for optimize
         bool ok = true;
-# if CPPAD_USE_CPLUSPLUS_2011
         using CppAD::AD;
         using CppAD::NearEqual;
         double eps10 = 10.0 * std::numeric_limits<double>::epsilon();
@@ -780,7 +1003,6 @@ namespace {
         vector<double> y = F.Forward(0, x);
         ok &=  NearEqual(y[0], y_original[0], eps10, eps10);
         ok &=  NearEqual(y[1], y_original[1], eps10, eps10);
-# endif
         return ok;
     }
     // ===================================================================
@@ -2243,6 +2465,14 @@ bool optimize(void)
     conditional_skip_       = true;
     atomic_sparsity_option_ = CppAD::atomic_base<double>::bool_sparsity_enum;
 
+    ok     &= atomic_cond_exp_sparsity();
+
+    // check exceed_collision_limit
+    ok &= exceed_collision_limit();
+
+    // check no_cumulative_sum_op
+    ok &= no_cumulative_sum();
+
     // check optimization with cumulative sum operators
     ok &= optimize_csum();
 
@@ -2276,6 +2506,8 @@ bool optimize(void)
     // conditional skip loop
     for(size_t i = 0; i < 2; i++)
     {   conditional_skip_ = i == 0;
+        // dynamic parameter conditional expression
+        ok     &= cond_exp_ppvv();
         //
         // check nested conditional expressions
         ok     &= nested_cond_exp();

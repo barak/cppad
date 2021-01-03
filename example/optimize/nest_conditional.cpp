@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -17,7 +17,7 @@ $section Optimize Nested Conditional Expressions: Example and Test$$
 $head See Also$$
 $cref cond_exp.cpp$$
 
-$srcfile%example/optimize/nest_conditional.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -37,7 +37,7 @@ namespace {
         before.n_var = 1 + x.size(); before.n_op  = 2 + x.size();
         after.n_var  = 1 + x.size(); after.n_op   = 2 + x.size();
 
-        // Create a variable that is is only used in the second comparision
+        // Create a variable that is is only used in the second comparison
         scalar two = 1. + x[0];
         before.n_var += 1; before.n_op += 1;
         after.n_var  += 1; after.n_op  += 1;
@@ -46,7 +46,7 @@ namespace {
         if( options.find("no_conditional_skip") == std::string::npos )
             after.n_op += 1; // for conditional skip operation
 
-        // Create a variable that is is only used in the first comparision
+        // Create a variable that is is only used in the first comparison
         // (can be skipped when second comparison result is false)
         scalar one = 1. / x[0];
         before.n_var += 1; before.n_op += 1;

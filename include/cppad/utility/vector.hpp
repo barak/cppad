@@ -1,7 +1,7 @@
 # ifndef CPPAD_UTILITY_VECTOR_HPP
 # define CPPAD_UTILITY_VECTOR_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -68,13 +68,13 @@ private:
     size_t length_;
     Type*  data_;
 public:
-    size_t capacity(void) const CPPAD_NOEXCEPT
+    size_t capacity(void) const noexcept
     {   return capacity_; }
-    size_t size(void) const CPPAD_NOEXCEPT
+    size_t size(void) const noexcept
     {   return length_; }
-    const Type* data(void) const CPPAD_NOEXCEPT
+    const Type* data(void) const noexcept
     {   return data_; }
-    Type* data(void) CPPAD_NOEXCEPT
+    Type* data(void) noexcept
     {   return data_; }
 /* %$$
 $end
@@ -119,7 +119,7 @@ creates an empty vector no elements and capacity zero.
 $head Sizing$$
 $codei%vector<%Type%> %vec%(%n%)
 %$$
-where $icode n$$ is a $code size_t$$,
+where $icode n$$ is a $code size_t$$ or $code int$$,
 creates the vector $icode vec$$ with $icode n$$ elements and capacity
 greater than or equal $icode n$$.
 
@@ -130,6 +130,10 @@ where $icode other$$ is a $codei%vector<%Type%>%$$,
 creates the vector $icode vec$$
 with $icode%n% = %other%.size()%$$ elements and capacity
 greater than or equal $icode n$$.
+
+$head Move Semantics$$
+A move semantics version of the copy operator
+is implemented using $code swap$$.
 
 $head Destructor$$
 If $code capacity_$$ is non-zero, call the destructor
@@ -142,16 +146,27 @@ Call destructor and free all the allocated elements
 $head Source$$
 $srccode%hpp% */
 public:
-    vector(void) CPPAD_NOEXCEPT
-    : capacity_(0), length_(0), data_(CPPAD_NULL)
+    vector(void) noexcept
+    : capacity_(0), length_(0), data_(nullptr)
     { }
-    vector(size_t n) : capacity_(0), length_(0), data_(CPPAD_NULL)
+    vector(size_t n) : capacity_(0), length_(0), data_(nullptr)
     {   resize(n); }
-    vector(const vector& other) : capacity_(0), length_(0), data_(CPPAD_NULL)
+    vector(int n) : capacity_(0), length_(0), data_(nullptr)
+    {   CPPAD_ASSERT_KNOWN(
+            n >= 0,
+            "CppAD::vector: attempt to create a vector with a negative size."
+        );
+        resize( size_t(n) );
+    }
+    vector(const vector& other) : capacity_(0), length_(0), data_(nullptr)
     {   resize(other.length_);
         for(size_t i = 0; i < length_; i++)
             data_[i] = other.data_[i];
     }
+    // capacity_ is only value required to make destructor work for other
+    // after this move semantics constuctor
+    vector(vector&& other) : capacity_(0), length_(0), data_(nullptr)
+    {   swap(other); }
     ~vector(void)
     {   if( capacity_ > 0 ) delete_data(data_); }
 private:
@@ -174,10 +189,10 @@ $icode%vec%.resize(%n%)
 $icode%vec%.clear()%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector.hpp%
+$srcthisfile%
     0%// BEGIN_RESIZE%// END_RESIZE%1
 %$$
-$srcfile%include/cppad/utility/vector.hpp%
+$srcthisfile%
     0%// BEGIN_CLEAR%// END_CLEAR%1
 %$$
 
@@ -188,8 +203,10 @@ $head resize$$
 If $icode n$$ is less than or equal the input value of
 $icode%vec%.capacity_%$$,
 the only change is that $icode%vec%.length_%$$ is set to $icode n$$.
-Otherwise the old elements are deleted and a new vector is created
-with $icode%vec%.length_%$$ equal to $icode n$$.
+Otherwise, new memory is allocated for the vector and
+$icode%vec%.length_%$$ elements are copied from the old vector
+to the new one. I you do not need the old elements, you can first resize
+to zero and then the $icode n$$ to avoid copying the elements.
 
 $head clear$$
 The destructor is called for all the elements of $icode vec$$
@@ -202,17 +219,27 @@ $end
 public:
     void resize(size_t n)
 // END_RESIZE
-    {   length_ = n;
-        if( capacity_ < length_ )
-        {   // we must allocate new memory
+    {   if( capacity_ < n )
+        {   if( capacity_ == 0 )
+            {   // get new memory and set capacity
+                data_ = thread_alloc::create_array<Type>(n, capacity_);
+            }
+            else
+            {   // save old information
+                Type*  old_data     = data_;
 
-            // free old memory
-            if( capacity_ > 0 )
-                delete_data(data_);
+                // get new memory and set capacity
+                data_ = thread_alloc::create_array<Type>(n, capacity_);
 
-            // get new memory and set capacity
-            data_ = thread_alloc::create_array<Type>(length_, capacity_);
+                // copy old data
+                for(size_t i = 0; i < length_; ++i)
+                    data_[i] = old_data[i];
+
+                // free old memory
+                thread_alloc::delete_array(old_data);
+            }
         }
+        length_ = n;
     }
 // BEGIN_CLEAR
     void clear(void)
@@ -240,14 +267,14 @@ $icode%vec%.swap(%other%)
 $icode%vec% = %other%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector.hpp%
+$srcthisfile%
     0%// BEGIN_SWAP%// END_SWAP%1
 %$$
-$srcfile%include/cppad/utility/vector.hpp%
-    0%// BEGIN_ASSIGN%// END_ASSIGN%1
+$srcthisfile%
+    0%// BEGIN_MOVE_ASSIGN%// END_MOVE_ASSIGN%1
 %$$
-$srcfile%include/cppad/utility/vector.hpp%
-    0%// BEGIN_MOVE_SEMANTICS%// END_MOVE_SEMANTICS%1
+$srcthisfile%
+    0%// BEGIN_ASSIGN%// END_ASSIGN%1
 %$$
 
 $head swap$$
@@ -258,16 +285,15 @@ $head Assignment$$
 see $cref/user API assignment/CppAD_vector/Assignment/$$
 
 $head Move Semantics$$
-If $code CPPAD_USE_CPLUSPLUS_2011$$ is $code 1$$
-the move semantics version of the assignment operator, implemented using
-$code swap$$, is defined.
+A move semantics version of the assignment operator
+is implemented using $code swap$$.
 
 $end
 -------------------------------------------------------------------------------
 */
 // BEGIN_SWAP
 public:
-    void swap(vector& other) CPPAD_NOEXCEPT
+    void swap(vector& other) noexcept
 // END_SWAP
     {  // special case where vec and other are the same vector
        if( this == &other )
@@ -278,6 +304,20 @@ public:
         std::swap(data_,     other.data_     );
         return;
     }
+
+// BEGIN_MOVE_ASSIGN
+    // Move semantics should not do any allocation.
+    // If NDEBUG is defined, this should not throw an exception.
+    vector& operator=(vector&& other) CPPAD_NDEBUG_NOEXCEPT
+// END_MOVE_ASSIGN
+    {   CPPAD_ASSERT_KNOWN(
+            length_ == other.length_ || (length_ == 0),
+            "vector: size miss match in assignment operation"
+        );
+        swap(other);
+        return *this;
+    }
+
 // BEGIN_ASSIGN
     vector& operator=(const vector& other)
 // END_ASSIGN
@@ -291,20 +331,6 @@ public:
             data_[i] = other.data_[i];
         return *this;
     }
-# if CPPAD_USE_CPLUSPLUS_2011
-// BEGIN_MOVE_SEMANTICS
-    // move semantics should not do any allocation
-    // hence when NDEBUG is define this should not throw an exception
-    vector& operator=(vector&& other) CPPAD_NDEBUG_NOEXCEPT
-// END_MOVE_SEMANTICS
-    {   CPPAD_ASSERT_KNOWN(
-            length_ == other.length_ || (length_ == 0),
-            "vector: size miss match in assignment operation"
-        );
-        swap(other);
-        return *this;
-    }
-# endif
 /*
 -------------------------------------------------------------------------------
 $begin cppad_vector_subscript$$
@@ -352,7 +378,7 @@ $head Syntax$$
 $icode%vec%.push_back(%element%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector.hpp%
+$srcthisfile%
     0%// BEGIN_PUSH_BACK%// END_PUSH_BACK%1
 %$$
 
@@ -399,7 +425,7 @@ $head Syntax$$
 $icode%vec%.push_vector(%other%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/utility/vector.hpp%
+$srcthisfile%
     0%// BEGIN_PUSH_VECTOR%// END_PUSH_VECTOR%1
 %$$
 
@@ -458,17 +484,17 @@ $icode%os%vec%.end()
 
 $head Source$$
 $srccode%hpp% */
-    const_iterator begin(void) const CPPAD_NOEXCEPT
+    const_iterator begin(void) const noexcept
     {    return const_iterator(&data_, &length_, 0); }
-    const_iterator end(void) const CPPAD_NOEXCEPT
+    const_iterator end(void) const noexcept
     {   typedef typename const_iterator::difference_type difference_type;
         difference_type index = static_cast<difference_type>(length_);
         return const_iterator(&data_, &length_, index);
     }
     //
-    iterator begin(void) CPPAD_NOEXCEPT
+    iterator begin(void) noexcept
     {    return iterator(&data_, &length_, 0); }
-    iterator end(void) CPPAD_NOEXCEPT
+    iterator end(void) noexcept
     {   typedef typename iterator::difference_type difference_type;
         difference_type index = static_cast<difference_type>(length_);
         return iterator(&data_, &length_, index);

@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-15 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -17,35 +17,39 @@
 # $$
 #
 # $section Download and Install Fadbad in Build Directory$$
-# $index fadbad, download and install$$
-# $index download, install fadbad$$
-# $index install, fadbad$$
 #
 # $head Syntax$$
 # $code bin/get_fadbad.sh$$
 #
 # $head Purpose$$
 # If you are using Unix, this command will download and install
-# $href%http://www.fadbad.com%Fadbad%$$ in the
-# CppAD $code build$$ directory.
+# $cref/Fadbad/fadbad_prefix/Fadbad Home Page/$$
+# in the CppAD $code build$$ directory.
 #
 # $head Distribution Directory$$
 # This command must be executed in the
 # $cref/distribution directory/download/Distribution Directory/$$.
 #
-# $head External Directory$$
+# $head Source Directory$$
 # The Fadbad source code is downloaded into the sub-directory
-# $code build/external$$ below the distribution directory.
+# $code external/FADBAD++$$ below the distribution directory.
 #
-# $head Prefix Directory$$
-# The Fadbad include files are installed in the sub-directory
-# $code build/prefix/include/FADBAD++$$ below the distribution directory.
+# $head Prefix$$
+# The $cref/prefix/get_optional.sh/prefix/$$
+# in the file $code bin/get_optional.sh$$ is used for this install.
+#
+# $head Version$$
+# This will install the following version of Fadbad
+# $srccode%sh%
+version='2.1'
+# %$$
 #
 # $end
 # -----------------------------------------------------------------------------
-if [ $0 != "bin/get_fadbad.sh" ]
+package='fadbad'
+if [ $0 != "bin/get_$package.sh" ]
 then
-    echo "bin/get_fadbad.sh: must be executed from its parent directory"
+    echo "bin/get_$package.sh: must be executed from its parent directory"
     exit 1
 fi
 # -----------------------------------------------------------------------------
@@ -55,23 +59,22 @@ echo_eval() {
     eval $*
 }
 # -----------------------------------------------------------------------------
-echo 'Download fadbad to build/external and install it to build/prefix'
-version='2.1'
 web_page='http://www.fadbad.com/download'
 cppad_dir=`pwd`
-prefix="$cppad_dir/build/prefix"
-installed_flag="build/external/fadbad-${version}.installed"
-if [ -e "$installed_flag" ]
-then
-    echo "$installed_flag exists: Skipping get_fadbad.sh"
-    exit 0
-fi
 # -----------------------------------------------------------------------------
-if [ ! -d build/external ]
+# prefix
+eval `grep '^prefix=' bin/get_optional.sh`
+if [[ "$prefix" =~ ^[^/] ]]
 then
-    echo_eval mkdir -p build/external
+    prefix="$cppad_dir/$prefix"
 fi
-echo_eval cd build/external
+echo "prefix=$prefix"
+# -----------------------------------------------------------------------------
+if [ ! -d external ]
+then
+    echo_eval mkdir external
+fi
+echo_eval cd external
 # -----------------------------------------------------------------------------
 if [ ! -e "FADBAD++-$version.tar.gz" ]
 then
@@ -92,5 +95,4 @@ then
 fi
 echo_eval cp -r FADBAD++ "$prefix/include/FADBAD++"
 # -----------------------------------------------------------------------------
-echo_eval touch $cppad_dir/$installed_flag
-echo "get_fadbad.sh: OK"
+echo "get_$package.sh: OK"

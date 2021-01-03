@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-18 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -55,7 +55,8 @@ then
 fi
 log_dir=`pwd`
 log_file="$option.log"
-version=`version.sh get`
+version=$( grep '^AC_INIT(' configure.ac | \
+    sed -e 's|AC_INIT([^,]*, *\[ *\([0-9.]* *\)\].*|\1|')
 #
 # Files are created by the configure command and copied to the source tree
 configure_file_list="
@@ -158,7 +159,7 @@ then
     then
         dir_list="$dir_list FADBAD_DIR=$FADBAD_DIR"
     fi
-    if [ -e $IPOPT_DIR/include/coin/IpIpoptApplication.hpp ]
+    if [ -e $IPOPT_DIR/include/coin-or/IpIpoptApplication.hpp ]
     then
         dir_list="$dir_list IPOPT_DIR=$IPOPT_DIR"
     fi

@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -15,23 +15,40 @@ then
     echo "bin/run_cmake.sh: must be executed from its parent directory"
     exit 1
 fi
+# prefix
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
     echo $*
     eval $*
 }
+#
+# prefix
+eval `grep '^prefix=' bin/get_optional.sh`
+if [[ "$prefix" =~ ^[^/] ]]
+then
+    prefix="$(pwd)/$prefix"
+fi
+echo "prefix=$prefix"
+#
+# PKG_CONFIG_PATH
+PKG_CONFIG_PATH="$prefix/lib64/pkgconfig:$prefix/lib/pkgconfig"
+PKG_CONFIG_PATH="$prefix/share/pkgconfig:$PKG_CONFIG_PATH"
+export PKG_CONFIG_PATH
 # -----------------------------------------------------------------------------
 addr_t_size_t='no'
 verbose='no'
-standard='c++11'
+standard='c++17'
 profile_speed='no'
 clang='no'
-no_adolc='no'
-no_colpack='no'
-no_eigen='no'
-no_ipopt='no'
-no_documentation='no'
+yes_adolc='yes'
+yes_colpack='yes'
+yes_eigen='yes'
+yes_ipopt='yes'
+yes_fadbad='yes'
+yes_cppadcg='yes'
+yes_sacado='yes'
+yes_documentation='yes'
 testvector='boost'
 debug_which='debug_all'
 while [ "$1" != "" ]
@@ -43,7 +60,7 @@ usage: bin/run_cmake.sh: \\
     [--help] \\
     [--addr_t_size_t] \\
     [--verbose] \\
-    [--c++98] \\
+    [--c++11] \\
     [--profile_speed] \\
     [--callgrind] \\
     [--clang ] \\
@@ -51,6 +68,8 @@ usage: bin/run_cmake.sh: \\
     [--no_colpack] \\
     [--no_eigen] \\
     [--no_ipopt] \\
+    [--no_fadbad] \\
+    [--no_cppadcg] \\
     [--no_sacado] \\
     [--no_documentation] \\
     [--<package>_vector] \\
@@ -72,8 +91,8 @@ EOF
         verbose='yes'
         ;;
 
-        --c++98)
-        standard='c++98'
+        --c++11)
+        standard='c++11'
         ;;
 
         --profile_speed)
@@ -89,27 +108,35 @@ EOF
         ;;
 
         --no_adolc)
-        no_adolc='yes'
+        yes_adolc='no'
         ;;
 
         --no_colpack)
-        no_colpack='yes'
+        yes_colpack='no'
         ;;
 
         --no_eigen)
-        no_eigen='yes'
+        yes_eigen='no'
         ;;
 
         --no_ipopt)
-        no_ipopt='yes'
+        yes_ipopt='no'
+        ;;
+
+        --no_cppadcg)
+        yes_cppadcg='no'
+        ;;
+
+        --no_fadbad)
+        yes_fadbad='no'
         ;;
 
         --no_sacado)
-        no_sacado='yes'
+        yes_sacado='no'
         ;;
 
         --no_documentation)
-        no_documentation='yes'
+        yes_documentation='no'
         ;;
 
         --cppad_vector)
@@ -151,20 +178,6 @@ EOF
     shift
 done
 # ---------------------------------------------------------------------------
-if [ "$standard" == 'c++98' ]
-then
-    if [ "$no_adolc" == 'no' ]
-    then
-        echo 'run_cmake.sh: --no_adolc required when --c++98 present'
-        exit 1
-    fi
-    if [ "$no_sacado" == 'no' ]
-    then
-        echo 'run_cmake.sh: --no_sacado required when --c++98 present'
-        exit 1
-    fi
-fi
-# ---------------------------------------------------------------------------
 if [ ! -e build ]
 then
     echo_eval mkdir build
@@ -189,7 +202,7 @@ then
 fi
 # -----------------------------------------------------------------------------
 # cppad_prefix
-cmake_args="$cmake_args  -D cppad_prefix=$HOME/prefix/cppad"
+cmake_args="$cmake_args  -D cppad_prefix=$(pwd)/build/prefix"
 #
 # cmake_install_includedirs
 if [ -d '/usr/include' ]
@@ -204,7 +217,7 @@ then
 fi
 #
 # cmake_install_docdir
-if [ -d '/usr/share' ] && [ "$no_documentation" == 'no' ]
+if [ -d '/usr/share' ] && [ "$yes_documentation" == 'yes' ]
 then
     cmake_args="$cmake_args -D cmake_install_docdir=share/doc"
 fi
@@ -219,34 +232,78 @@ then
 fi
 #
 # {package}_prefix
-package_list='fadbad'
-if [ "$no_adolc" == 'no' ]
+prefix_list=''
+include_list=''
+if [ "$yes_cppadcg" == 'yes' ]
 then
-    package_list="$package_list adolc"
-fi
-if [ "$no_colpack" == 'no' ]
-then
-    package_list="$package_list colpack"
-fi
-if [ "$no_eigen" == 'no' ]
-then
-    package_list="$package_list eigen"
-fi
-if [ "$no_ipopt" == 'no' ]
-then
-    package_list="$package_list ipopt"
-fi
-if [ "$no_sacado" == 'no' ]
-then
-    package_list="$package_list sacado"
-fi
-for package in $package_list
-do
-    dir=$HOME/prefix/$package
-    if [ -d "$dir" ]
+    if [ ! -e "$prefix/include/cppad/cg/cg.hpp" ]
     then
-        cmake_args="$cmake_args  -D ${package}_prefix=$dir"
+        echo "Cannot find $prefix/include/cppad/cg/cg.hpp"
+        exit 1
     fi
+    include_list="$include_list cppadcg"
+fi
+if [ "$yes_fadbad" == 'yes' ]
+then
+    if [ ! -e "$prefix/include/FADBAD++/badiff.h" ]
+    then
+        echo "Cannot find $prefix/include/FADBAD++/badiff.h"
+        exit 1
+    fi
+    prefix_list="$prefix_list fadbad"
+fi
+if [ "$yes_adolc" == 'yes' ]
+then
+    if [ ! -d "$prefix/include/adolc" ]
+    then
+        echo "Cannot file $prefix/include/adolc"
+        exit 1
+    fi
+    include_list="$include_list adolc"
+fi
+if [ "$yes_colpack" == 'yes' ]
+then
+    if [ ! -e "$prefix/include/ColPack" ]
+    then
+        echo "Cannot find $prefix/include/ColPack"
+        exit 1
+    fi
+    prefix_list="$prefix_list colpack"
+fi
+if [ "$yes_eigen" == 'yes' ]
+then
+    if [ ! -e "$prefix/include/Eigen" ]
+    then
+        echo "Cannot find $prefix/include/Eigen"
+        exit 1
+    fi
+    include_list="$include_list eigen"
+fi
+if [ "$yes_ipopt" == 'yes' ]
+then
+    if [ ! -e "$prefix/include/coin-or/IpNLP.hpp" ]
+    then
+        echo "Cannot find $prefix/include/coin-or/IpoptConfig.hpp"
+        exit 1
+    fi
+    include_list="$include_list ipopt"
+fi
+if [ "$yes_sacado" == 'yes' ]
+then
+    if [ ! -e "$prefix/include/Sacado_config.h" ]
+    then
+        echo "Cannot find $prefix/include/Sacado_config.h"
+        exit
+    fi
+    prefix_list="$prefix_list sacado"
+fi
+for package in $include_list
+do
+    cmake_args="$cmake_args -D include_${package}=true"
+done
+for package in $prefix_list
+do
+    cmake_args="$cmake_args  -D ${package}_prefix=$prefix"
 done
 #
 # cppad_cxx_flags

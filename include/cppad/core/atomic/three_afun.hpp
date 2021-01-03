@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_ATOMIC_THREE_AFUN_HPP
 # define CPPAD_CORE_ATOMIC_THREE_AFUN_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -29,7 +29,7 @@ $head Syntax$$
 $icode%afun%(%ax%, %ay%)%$$
 
 $head Prototype$$
-$srcfile%include/cppad/core/atomic/three_afun.hpp%
+$srcthisfile%
     0%// BEGIN_PROTOTYPE%// END_PROTOTYPE%1
 %$$
 
@@ -135,7 +135,7 @@ void atomic_three<Base>::operator()(
     //
     // Determine tape corresponding to variables in ax
     tape_id_t            tape_id  = 0;
-    local::ADTape<Base>* tape     = CPPAD_NULL;
+    local::ADTape<Base>* tape     = nullptr;
     for(size_t j = 0; j < n; j++)
     {   taylor_x[j]  = ax[j].value_;
         if( Constant( ax[j] ) )
@@ -145,7 +145,7 @@ void atomic_three<Base>::operator()(
             if( tape_id == 0 )
             {   tape    = ax[j].tape_this();
                 tape_id = ax[j].tape_id_;
-                CPPAD_ASSERT_UNKNOWN( tape != CPPAD_NULL );
+                CPPAD_ASSERT_UNKNOWN( tape != nullptr );
             }
 # ifndef NDEBUG
             if( Dynamic( ax[j] ) )
@@ -206,7 +206,7 @@ void atomic_three<Base>::operator()(
         record_variable |= type_y[i] == variable_enum;
     }
 # ifndef NDEBUG
-    if( (record_dynamic || record_variable) && tape == CPPAD_NULL )
+    if( (record_dynamic || record_variable) && tape == nullptr )
     {   msg +=
         "all elements of x are constants but y contains a non-constant";
         CPPAD_ASSERT_KNOWN(false, msg.c_str() );

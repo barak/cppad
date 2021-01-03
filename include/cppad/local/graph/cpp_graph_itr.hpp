@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_GRAPH_CPP_GRAPH_ITR_HPP
 # define CPPAD_LOCAL_GRAPH_CPP_GRAPH_ITR_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -277,7 +277,7 @@ $codei%cpp_graph_itr %itr%(%operator_vec%, %operator_arg%, %op_index%
 %$$
 
 $head Prototype$$
-$srcfile%include/cppad/local/graph/cpp_graph_itr.hpp%
+$srcthisfile%
     0%// BEGIN_CTOR%// END_CTOR%1
 %$$
 
@@ -301,7 +301,7 @@ or equal to the size of $icode operator_vec$$
 $end
 */
     cpp_graph_itr(void)
-    : operator_vec_(CPPAD_NULL), operator_arg_(CPPAD_NULL)
+    : operator_vec_(nullptr), operator_arg_(nullptr)
     { }
     // BEGIN_CTOR
     cpp_graph_itr(
@@ -347,7 +347,7 @@ $srccode%hpp% */
     }
     // *itr
     value_type operator*(void)
-    {   CPPAD_ASSERT_KNOWN( operator_vec_ != CPPAD_NULL,
+    {   CPPAD_ASSERT_KNOWN( operator_vec_ != nullptr,
             "cpp_graph_itr: attempt to dereference default iterator"
         );
         CPPAD_ASSERT_KNOWN( op_index_ < operator_vec_->size(),

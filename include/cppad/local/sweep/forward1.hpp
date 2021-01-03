@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_SWEEP_FORWARD1_HPP
 # define CPPAD_LOCAL_SWEEP_FORWARD1_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -87,8 +87,8 @@ does not affect any of the dependent variable
 In this case cskip_op is not modified and has the same meaning
 as its return value above.
 
-\param var_by_load_op
-is a vector with size play->num_load_op_rec().
+\param load_op2var
+is a vector with size play->num_var_load_rec().
 \n
 \n
 <tt>p == 0</tt>
@@ -104,7 +104,7 @@ Note that the is no variable with index zero on the tape.
 \n
 <tt>p > 0</tt>
 \n
-In this case var_by_load_op is not modified and has the meaning
+In this case load_op2var is not modified and has the meaning
 as its return value above.
 
 \param p
@@ -149,7 +149,7 @@ zero order foward mode.
 \param compare_change_number
 If p is non-zero, this value is not changed, otherwise:
 If compare_change_count is zero, this value is set to zero, otherwise:
-this value is set to the number of comparision operations
+this value is set to the number of comparison operations
 that have a different result from when the information in
 play was recorded.
 
@@ -157,7 +157,7 @@ play was recorded.
 if p is non-zero, this value is not changed, otherwise:
 If compare_change_count is zero, this value is set to zero.
 Otherwise it is the operator index (see forward_next) for the count-th
-comparision operation that has a different result from when the information in
+comparison operation that has a different result from when the information in
 play was recorded.
 
 \param not_used_rec_base
@@ -176,7 +176,7 @@ void forward1(
     const size_t               J,
     Base*                      taylor,
     bool*                      cskip_op,
-    pod_vector<Addr>&          var_by_load_op,
+    pod_vector<Addr>&          load_op2var,
     size_t                     compare_change_count,
     size_t&                    compare_change_number,
     size_t&                    compare_change_op_index,
@@ -194,7 +194,7 @@ void forward1(
     <!-- replace forward0sweep_code_define -->
     */
 
-    // initialize the comparision operator counter
+    // initialize the comparison operator counter
     if( p == 0 )
     {   compare_change_number   = 0;
         compare_change_op_index = 0;
@@ -207,7 +207,7 @@ void forward1(
     {   size_t i;
 
         // this includes order zero calculation, initialize vector indices
-        size_t num = play->num_vec_ind_rec();
+        size_t num = play->num_var_vecad_ind_rec();
         if( num > 0 )
         {   vec_ad2isvar.extend(num);
             vec_ad2index.extend(num);
@@ -249,7 +249,7 @@ void forward1(
     const size_t num_text = play->num_text_rec();
 
     // pointer to the beginning of the text vector
-    const char* text = CPPAD_NULL;
+    const char* text = nullptr;
     if( num_text > 0 )
         text = play->GetTxt(0);
     /*
@@ -346,13 +346,11 @@ void forward1(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case AcoshOp:
             // sqrt(x * x - 1), acosh(x)
             CPPAD_ASSERT_UNKNOWN( i_var < numvar  );
             forward_acosh_op(p, q, i_var, size_t(arg[0]), J, taylor);
             break;
-# endif
             // -------------------------------------------------
 
             case AsinOp:
@@ -362,13 +360,11 @@ void forward1(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case AsinhOp:
             // sqrt(1 + x * x), asinh(x)
             CPPAD_ASSERT_UNKNOWN( i_var < numvar  );
             forward_asinh_op(p, q, i_var, size_t(arg[0]), J, taylor);
             break;
-# endif
             // -------------------------------------------------
 
             case AtanOp:
@@ -378,13 +374,11 @@ void forward1(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case AtanhOp:
             // 1 - x * x, atanh(x)
             CPPAD_ASSERT_UNKNOWN( i_var < numvar  );
             forward_atanh_op(p, q, i_var, size_t(arg[0]), J, taylor);
             break;
-# endif
             // -------------------------------------------------
 
             case CExpOp:
@@ -488,13 +482,10 @@ void forward1(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case ErfOp:
             case ErfcOp:
-            CPPAD_ASSERT_UNKNOWN( CPPAD_USE_CPLUSPLUS_2011 );
             forward_erf_op(op, p, q, i_var, arg, parameter, J, taylor);
             break;
-# endif
             // -------------------------------------------------
 
             case ExpOp:
@@ -502,11 +493,9 @@ void forward1(
             break;
             // ---------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case Expm1Op:
             forward_expm1_op(p, q, i_var, size_t(arg[0]), J, taylor);
             break;
-# endif
             // ---------------------------------------------------
 
             case InvOp:
@@ -525,7 +514,7 @@ void forward1(
                     taylor,
                     vec_ad2isvar.data(),
                     vec_ad2index.data(),
-                    var_by_load_op.data()
+                    load_op2var.data()
                 );
                 if( p < q ) forward_load_op(
                     play,
@@ -536,7 +525,7 @@ void forward1(
                     J,
                     i_var,
                     arg,
-                    var_by_load_op.data(),
+                    load_op2var.data(),
                     taylor
                 );
             }
@@ -550,7 +539,7 @@ void forward1(
                 J,
                 i_var,
                 arg,
-                var_by_load_op.data(),
+                load_op2var.data(),
                 taylor
             );
             break;
@@ -567,7 +556,7 @@ void forward1(
                     taylor,
                     vec_ad2isvar.data(),
                     vec_ad2index.data(),
-                    var_by_load_op.data()
+                    load_op2var.data()
                 );
                 if( p < q ) forward_load_op(
                     play,
@@ -578,7 +567,7 @@ void forward1(
                     J,
                     i_var,
                     arg,
-                    var_by_load_op.data(),
+                    load_op2var.data(),
                     taylor
                 );
             }
@@ -592,7 +581,7 @@ void forward1(
                 J,
                 i_var,
                 arg,
-                var_by_load_op.data(),
+                load_op2var.data(),
                 taylor
             );
             break;
@@ -647,11 +636,9 @@ void forward1(
             break;
             // -------------------------------------------------
 
-# if CPPAD_USE_CPLUSPLUS_2011
             case Log1pOp:
             forward_log1p_op(p, q, i_var, size_t(arg[0]), J, taylor);
             break;
-# endif
             // -------------------------------------------------
 
             case LtppOp:
@@ -1047,7 +1034,7 @@ void forward1(
                     i_tmp,
                     atom_iy[i],
                     FunrvOp,
-                    CPPAD_NULL
+                    nullptr
                 );
                 Base* Z_tmp = taylor + atom_iy[i] * J;
                 printOpResult(
@@ -1055,7 +1042,7 @@ void forward1(
                     q + 1,
                     Z_tmp,
                     0,
-                    (Base *) CPPAD_NULL
+                    (Base *) nullptr
                 );
                 std::cout << std::endl;
             }
@@ -1076,7 +1063,7 @@ void forward1(
                 q + 1,
                 Z_tmp,
                 0,
-                (Base *) CPPAD_NULL
+                (Base *) nullptr
             );
             std::cout << std::endl;
         }

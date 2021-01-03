@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -32,7 +32,7 @@ $rref team_pthread.cpp$$
 $tend
 
 $head Source Code$$
-$srcfile%example/multi_thread/team_example.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 ------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ bool team_example(void)
         size_t min_bytes(sizeof(work_one_t)), cap_bytes;
         void*  v_ptr = thread_alloc::get_memory(min_bytes, cap_bytes);
         work_all_[thread_num]     = static_cast<work_one_t*>(v_ptr);
-        // incase this thread's worker does not get called
+        // in case this thread's worker does not get called
         work_all_[thread_num]->ok = false;
         // parameter that defines the work for this thread
         work_all_[thread_num]->x  = double(thread_num) + 1.;

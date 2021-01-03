@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_OPTIMIZE_HPP
 # define CPPAD_CORE_OPTIMIZE_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -27,6 +27,7 @@ $spell
     const
     onetape
     op
+    optimizer
 $$
 
 $section Optimize an ADFun Object Tape$$
@@ -36,6 +37,8 @@ $head Syntax$$
 $icode%f%.optimize()
 %$$
 $icode%f%.optimize(%options%)
+%$$
+$icode%flag% = %f%.exceed_collision_limit()
 %$$
 
 $head Purpose$$
@@ -87,6 +90,21 @@ If the sub-string $code no_compare_op$$ appears in $icode options$$,
 $cref PrintFor$$ operations will be removed form the optimized function.
 These operators are useful for reporting problems evaluating derivatives
 at independent variable values different from those used to record a function.
+
+$subhead no_cumulative_sum_op$$
+If this sub-string appears,
+no cumulative sum operations will be generated during the optimization; see
+$cref optimize_cumulative_sum.cpp$$.
+
+$subhead collision_limit=value$$
+If this substring appears,
+where $icode value$$ is a sequence of decimal digits,
+the optimizer's hash code collision limit will be set to $icode value$$.
+When the collision limit is reached, the expressions with that hash code
+are removed and a new lists of expressions with that has code is started.
+The larger $icode value$$, the more identical expressions the optimizer
+can recognize, but the slower the optimizer may run.
+The default for $icode value$$ is $code 10$$.
 
 $head Re-Optimize$$
 Before 2019-06-28, optimizing twice was not supported and would fail
@@ -157,6 +175,11 @@ the same as before.
 If they are not the same, the
 $cref ErrorHandler$$ is called with a known error message
 related to $icode%f%.optimize()%$$.
+
+$head exceed_collision_limit$$
+If the return value $icode flag$$ is true (false),
+the previous call to $icode%f%.optimize%$$ exceed the
+$cref/collision_limit/optimize/options/collision_limit=value/$$.
 
 $head Examples$$
 $comment childtable without Example instead of Contents for header$$
@@ -256,22 +279,23 @@ void ADFun<Base,RecBase>::optimize(const std::string& options)
 # endif
 
     // create the optimized recording
+    size_t exceed = false;
     switch( play_.address_type() )
     {
         case local::play::unsigned_short_enum:
-        local::optimize::optimize_run<unsigned short>(
+        exceed = local::optimize::optimize_run<unsigned short>(
             options, n, dep_taddr_, &play_, &rec
         );
         break;
 
         case local::play::unsigned_int_enum:
-        local::optimize::optimize_run<unsigned int>(
+        exceed = local::optimize::optimize_run<unsigned int>(
             options, n, dep_taddr_, &play_, &rec
         );
         break;
 
         case local::play::size_t_enum:
-        local::optimize::optimize_run<size_t>(
+        exceed = local::optimize::optimize_run<size_t>(
             options, n, dep_taddr_, &play_, &rec
         );
         break;
@@ -279,6 +303,7 @@ void ADFun<Base,RecBase>::optimize(const std::string& options)
         default:
         CPPAD_ASSERT_UNKNOWN(false);
     }
+    exceed_collision_limit_ = exceed;
 
     // number of variables in the recording
     num_var_tape_  = rec.num_var_rec();

@@ -1,7 +1,7 @@
 # ifndef CPPAD_LOCAL_ATOMIC_INDEX_HPP
 # define CPPAD_LOCAL_ATOMIC_INDEX_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -25,7 +25,7 @@ $icode%index_out% = local::atomic_index<%Base%>(
 )%$$
 
 $head Prototype$$
-$srcfile%include/cppad/local/atomic_index.hpp%
+$srcthisfile%
     0%// BEGIN_ATOMIC_INDEX%// END_PROTOTYPE%1
 %$$
 
@@ -136,12 +136,12 @@ size_t atomic_index(
         //
         // case where we are setting the pointer to null
         if( set_null )
-            vec[index_in-1].ptr = CPPAD_NULL;
+            vec[index_in-1].ptr = nullptr;
         //
         atomic_index_info& entry = vec[index_in - 1];
         type = entry.type;
         ptr  = entry.ptr;
-        if( name != CPPAD_NULL )
+        if( name != nullptr )
             *name  = entry.name;
         return 0;
     }

@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -20,7 +20,7 @@ $section AD Binary Comparison Operators: Example and Test$$
 
 
 
-$srcfile%example/general/compare.cpp%0%// BEGIN C++%// END C++%1%$$
+$srcthisfile%0%// BEGIN C++%// END C++%1%$$
 
 $end
 */
@@ -42,7 +42,7 @@ bool Compare(void)
     x[1]      = x1;
     CppAD::Independent(x);
 
-    // some binary comparision operations
+    // some binary comparison operations
     AD<double> p;
     if( x[0] < x[1] )
         p = x[0];   // values in x choose this case

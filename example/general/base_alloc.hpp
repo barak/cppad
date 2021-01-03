@@ -1,7 +1,7 @@
 # ifndef CPPAD_EXAMPLE_GENERAL_BASE_ALLOC_HPP
 # define CPPAD_EXAMPLE_GENERAL_BASE_ALLOC_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -14,6 +14,7 @@ in the Eclipse Public License, Version 2.0 are satisfied:
 /*
 $begin base_alloc.hpp$$
 $spell
+    isnan
     azmul
     expm1
     atanh
@@ -290,13 +291,20 @@ $cref/unary standard math/base_std_math/Unary Standard Math/$$ functions
 $srccode%cpp% */
 namespace CppAD {
     BASE_ALLOC_STD_MATH(acos)
+    BASE_ALLOC_STD_MATH(acosh)
     BASE_ALLOC_STD_MATH(asin)
+    BASE_ALLOC_STD_MATH(asinh)
     BASE_ALLOC_STD_MATH(atan)
+    BASE_ALLOC_STD_MATH(atanh)
     BASE_ALLOC_STD_MATH(cos)
     BASE_ALLOC_STD_MATH(cosh)
+    BASE_ALLOC_STD_MATH(erf)
+    BASE_ALLOC_STD_MATH(erfc)
     BASE_ALLOC_STD_MATH(exp)
+    BASE_ALLOC_STD_MATH(expm1)
     BASE_ALLOC_STD_MATH(fabs)
     BASE_ALLOC_STD_MATH(log)
+    BASE_ALLOC_STD_MATH(log1p)
     BASE_ALLOC_STD_MATH(log10)
     BASE_ALLOC_STD_MATH(sin)
     BASE_ALLOC_STD_MATH(sinh)
@@ -310,28 +318,15 @@ $code fabs$$
 $srccode%cpp% */
 namespace CppAD {
     inline base_alloc abs(const base_alloc& x)
-    {   return fabs(x); }
+    {   return fabs(*x.ptrdbl_); }
 }
 /* %$$
-
-$head erf, asinh, acosh, atanh, expm1, log1p$$
-The following defines the
-$cref/asinh, acosh, atanh, erf, erfc, expm1, log1p
-    /base_std_math
-    /asinh, acosh, atanh, erf, erfc, expm1, log1p
-/$$
-functions
-required by $code AD<base_alloc>$$:
+The isnan function is special because it returns a bool
 $srccode%cpp% */
-# if CPPAD_USE_CPLUSPLUS_2011
-    BASE_ALLOC_STD_MATH(asinh)
-    BASE_ALLOC_STD_MATH(acosh)
-    BASE_ALLOC_STD_MATH(atanh)
-    BASE_ALLOC_STD_MATH(erf)
-    BASE_ALLOC_STD_MATH(erfc)
-    BASE_ALLOC_STD_MATH(expm1)
-    BASE_ALLOC_STD_MATH(log1p)
-# endif
+namespace CppAD {
+    inline bool isnan(const base_alloc& x)
+    {   return *x.ptrdbl_ != *x.ptrdbl_; }
+}
 /* %$$
 
 $head sign$$

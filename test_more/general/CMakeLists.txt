@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-19 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -11,13 +11,11 @@
 # -----------------------------------------------------------------------------
 # Build the test_more/general tests
 #
-# adolc_sources, adolc_libs
+# adolc_sources
 IF( cppad_has_adolc )
     SET(adolc_sources base_adolc.cpp)
-    SET(adolc_libs adolc)
 ELSE( cppad_has_adolc )
     SET(adolc_sources "")
-    SET(adolc_libs "")
 ENDIF( cppad_has_adolc )
 #
 # eigen_sources
@@ -27,13 +25,11 @@ ELSE( cppad_has_eigen )
     SET(eigen_sources "")
 ENDIF( cppad_has_eigen )
 #
-# ipopt_prefix
+# ipopt_sourced
 IF( cppad_has_ipopt )
     SET(ipopt_sources ipopt_solve.cpp)
-    SET(ipopt_libs "${ipopt_LIBRARIES}")
 ELSE( cppad_has_ipopt )
     SET(ipopt_sources "")
-    SET(ipopt_libs "")
 ENDIF( cppad_has_ipopt )
 #
 # BEGIN_SORT_THIS_LINE_PLUS_6
@@ -47,7 +43,7 @@ SET(source_list
     add.cpp
     add_eq.cpp
     add_zero.cpp
-    adfun_copy.cpp
+    adfun.cpp
     asin.cpp
     asinh.cpp
     assign.cpp
@@ -91,6 +87,7 @@ SET(source_list
     hes_sparsity.cpp
     jacobian.cpp
     json_graph.cpp
+    local/is_pod.cpp
     local/json_lexer.cpp
     local/json_parser.cpp
     local/vector_set.cpp
@@ -160,8 +157,8 @@ ENDIF( NOT  empty_cppad_lib )
 # List of libraries to be linked into the specified target
 TARGET_LINK_LIBRARIES(test_more_general
     ${cppad_lib}
-    ${adolc_libs}
-    ${ipopt_libs}
+    ${adolc_LIBRARIES}
+    ${ipopt_LIBRARIES}
     ${colpack_libs}
 )
 #

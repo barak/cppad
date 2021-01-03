@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-16 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -15,12 +15,11 @@
 #   tgz
 #   Ipopt
 #   CppAD
+#   Blas
+#   Lapack
 # $$
 #
 # $section Download and Install Ipopt in Build Directory$$
-# $index ipopt, download and install$$
-# $index download, install ipopt$$
-# $index install, ipopt$$
 #
 # $head Syntax$$
 # $code bin/get_ipopt.sh$$
@@ -30,29 +29,42 @@
 # $href%http://www.coin-or.org/projects/Ipopt.xml%Ipopt%$$ in the
 # CppAD $code build$$ directory.
 #
+# $head Requirements$$
+# This It is assumed that a copy of the Blas and Lapack is installed on
+# the system.
+#
 # $head Distribution Directory$$
 # This command must be executed in the
 # $cref/distribution directory/download/Distribution Directory/$$.
 #
-# $head External Directory$$
+# $head Source Directory$$
 # The Ipopt source code is downloaded and compiled in the sub-directory
-# $code build/external$$ below the distribution directory.
+# $codei%external/Ipopt-%version%$$ below the distribution directory.
 #
-# $head Prefix Directory$$
-# The Ipopt libraries and include files are installed in the sub-directory
-# $code build/prefix$$ below the distribution directory.
+# $head Prefix$$
+# The $cref/prefix/get_optional.sh/prefix/$$
+# in the file $code bin/get_optional.sh$$ is used for this install.
 #
-# $head Reuse$$
-# The file $codei%build/external/Ipopt-%version%.tgz%$$
-# and the directory $codei%build/external/Ipopt-%version%$$
-# will be reused if they exist. Delete this file and directory
-# to get a complete rebuild.
+# $head Version$$
+# This will install the following version of Ipopt
+# $srccode%sh%
+version='3.13.2'
+# %$$
+#
+# $head Configuration$$
+# If the file
+# $codei%
+#   external/ipopt-%version%.configured
+# %$$
+# exists, the configuration will be skipped.
+# Delete this file if you want to re-run the configuration.
 #
 # $end
 # -----------------------------------------------------------------------------
-if [ $0 != "bin/get_ipopt.sh" ]
+package='ipopt'
+if [ $0 != "bin/get_$package.sh" ]
 then
-    echo "bin/get_ipopt.sh: must be executed from its parent directory"
+    echo "bin/get_$package.sh: must be executed from its parent directory"
     exit 1
 fi
 # -----------------------------------------------------------------------------
@@ -62,68 +74,62 @@ echo_eval() {
     eval $*
 }
 # -----------------------------------------------------------------------------
-echo 'Download ipopt to build/external and install it to build/prefix'
-version='3.11.9'
-web_page='http://www.coin-or.org/download/source/Ipopt'
+coinbrew='https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew'
 cppad_dir=`pwd`
-prefix="$cppad_dir/build/prefix"
-installed_flag="build/external/ipopt-${version}.installed"
-if [ -e "$installed_flag" ]
+# -----------------------------------------------------------------------------
+# prefix
+eval `grep '^prefix=' bin/get_optional.sh`
+if [[ "$prefix" =~ ^[^/] ]]
 then
-    echo "$installed_flag exists: Skipping get_ipopt.sh"
+    prefix="$cppad_dir/$prefix"
+fi
+echo "prefix=$prefix"
+# -----------------------------------------------------------------------------
+configured_flag="external/$package-${version}.configured"
+echo "Executing get_$package.sh"
+if [ -e "$configured_flag" ]
+then
+    echo "Skipping configuration because $configured_flag exits"
+    echo_eval cd external
+    ./coinbrew install Ipopt --no-prompt
+    echo "get_$package.sh: OK"
     exit 0
 fi
 # -----------------------------------------------------------------------------
-if [ ! -d build/external ]
+if [ ! -d external ]
 then
-    echo_eval mkdir -p build/external
+    echo_eval mkdir external
 fi
-echo_eval cd build/external
+echo_eval cd external
 # -----------------------------------------------------------------------------
-if [ ! -e "Ipopt-$version.tgz" ]
+if [ ! -e coinbrew ]
 then
-    echo_eval wget --no-check-certificate "$web_page/Ipopt-$version.tgz"
+    echo_eval wget $coinbrew
+    echo_eval chmod +x coinbrew
 fi
-if [ ! -e "Ipopt-$version" ]
+if [ ! -e Ipoot ]
 then
-    echo_eval tar -xzf Ipopt-$version.tgz
+    ./coinbrew fetch Ipopt@$version --no-prompt
 fi
-echo_eval cd "Ipopt-$version"
 # -----------------------------------------------------------------------------
-for file in ThirdParty/Blas/get.Blas ThirdParty/Lapack/get.Lapack
-do
-    sed -e 's|ftp:\(\/\/www.netlib.org\/\)|http:\1|' \
-        -i $file
-done
-# -----------------------------------------------------------------------------
-if [ -e ThirdParty/HSL ]
+# klugde necessary until coin or mumps fixes this problem
+cat << EOF > junk.f
+      program junk
+      print*, "Hello World"
+      end
+EOF
+if gfortran -c -fallow-argument-mismatch junk.f >& /dev/null
 then
-    echo_eval rm -rf ThirdParty/HSL
-fi
-for package in Blas Lapack Metis Mumps
-do
-    if [ ! -e "ThirdParty/$package/get.$package.done" ]
-    then
-        echo_eval cd ThirdParty/$package
-        echo_eval "./get.$package"
-        echo_eval touch "get.$package.done"
-        echo_eval cd ../..
-    fi
-done
-# -----------------------------------------------------------------------------
-if [ -e /usr/lib64 ]
-then
-    libdir='lib64'
+    echo 'Adding -fallow-argument-mismatch to Mumps fortran compiler flags'
+    ADD_FCFLAGS='ADD_FCFLAGS=-fallow-argument-mismatch'
 else
-    libdir='lib'
+    ADD_FCFLAGS=''
 fi
-export PKG_CONFIG_PATH="$prefix/$libdir/pkgconfig"
-echo_eval ./configure \
-    --enable-debug \
-    --prefix="$prefix" \
-    --libdir="$prefix/$libdir" \
-    coin_skip_warn_cxxflags='yes'
-echo_eval make install
 # -----------------------------------------------------------------------------
-echo_eval touch $cppad_dir/$installed_flag
-echo "get_ipopt.sh: OK"
+echo_eval ./coinbrew build Ipopt@$version \
+    --prefix=$prefix --test --no-prompt --verbosity=3 $ADD_FCFLAGS
+echo_eval ./coinbrew install Ipopt@$version \
+    --no-prompt
+# -----------------------------------------------------------------------------
+echo_eval touch $cppad_dir/$configured_flag
+echo "get_$package.sh: OK"
