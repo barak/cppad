@@ -25,7 +25,7 @@ if(POLICY CMP0054)
 endif()
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20210000.1")
+SET(cppad_version "20210000.2")
 SET(cppad_url          "https://coin-or.github.io/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 #
@@ -92,10 +92,8 @@ int main(void)
 )
 run_source_test("${source}" cppad_cplusplus_201100_ok )
 IF( NOT cppad_cplusplus_201100_ok  )
-    MESSAGE(FATAL_ERROR
-    "The c++ complier flag __cplusplus is less than 201103. "
-    "Starting with cppad-20201202, c++11 or higher is required."
-    )
+    SET(CMAKE_CXX_STANDARD 11)
+    SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 ENDIF( NOT cppad_cplusplus_201100_ok  )
 # =============================================================================
 # command line arguments
