@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -122,13 +122,14 @@
 # and is set by cmake to the top soruce directory.
 #
 # cppad_includedir
-LIST(GET cmake_install_libdirs 0 cppad_includedir)
+LIST(GET cmake_install_includedirs 0 cppad_includedir)
 #
 # cppad_libdir
 LIST(GET cmake_install_libdirs 0 cppad_libdir)
 # -----------------------------------------------------------------------------
 # initialize
-SET(cppad_lib_list "-l${cppad_lib}")
+SET(cppad_lib_list "-L${cppad_prefix}/${cppad_libdir} -l${cppad_lib}")
+SET(cppad_requires "")
 SET(cppad_libs_private "")
 SET(cppad_requires_private "")
 #
@@ -144,14 +145,14 @@ IF( cppad_has_colpack )
     IF( NOT colpack_libdir )
         MESSAGE(FATAL_ERROR "Cannit find libColPack.* below ${colpack_prefix}")
     ENDIF( NOT colpack_libdir )
-    SET(cppad_libs_private
-        "${cppad_libs_private} -L${colpack_libdir} -lColPack"
+    SET(cppad_lib_list
+        "${cppad_lib_list} -L${colpack_libdir} -lColPack"
     )
 ENDIF( cppad_has_colpack )
 #
 # Ipopt has a pkgconfig file.
 IF( cppad_has_ipopt )
-    SET(cppad_requires_private  "${cppad_requires} ipopt")
+    SET(cppad_requires          "${cppad_requires} ipopt")
     SET(cppad_lib_list          "${cppad_lib_list} -lcppad_ipopt")
 ENDIF( cppad_has_ipopt )
 # -----------------------------------------------------------------------------
@@ -159,11 +160,13 @@ ENDIF( cppad_has_ipopt )
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/cppad.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/cppad.pc
+    @ONLY
 )
 # cppad-uninstalled.pc
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/cppad-uninstalled.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/cppad-uninstalled.pc
+    @ONLY
 )
 # During install copy cppad.pc to datadir
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/cppad.pc
