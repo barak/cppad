@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -87,6 +87,14 @@ echo_eval() {
 web_page='https://github.com/joaoleal/CppADCodeGen.git'
 cppad_repo=$(pwd)
 # -----------------------------------------------------------------------------
+# n_job
+if which nproc > /dev/null
+then
+    n_job=$(nproc)
+else
+    n_job=$(sysctl -n hw.ncpu)
+fi
+# ----------------------------------------------------------------------------
 # prefix
 eval `grep '^prefix=' bin/get_optional.sh`
 if [[ "$prefix" =~ ^[^/] ]]
@@ -101,7 +109,7 @@ if [ -e "$configured_flag" ]
 then
     echo "Skipping configuration because $configured_flag exits"
     echo_eval cd external/$package.git/build
-    echo_eval make install
+    echo_eval make -j $n_job install
     echo "get_$package.sh: OK"
     exit 0
 fi
@@ -134,8 +142,7 @@ then
 fi
 echo_eval cd $package.git
 # -----------------------------------------------------------------------------
-# 2DO: get following code into CppADCodeGen
-# Must modify FindCppAD.cmake so can used git repository
+# Modify FindCppAD.cmake so can use git repository
 # version of CppAD (not yet installed).
 cat << EOF > get_cppadcg.sed
 s|IF *( *DEFINED *CPPAD_HOME *)|IF (DEFINED CPPAD_GIT_REPO)\\
@@ -195,7 +202,7 @@ echo_eval cmake \
     -D GOOGLETEST_GIT=ON \
     -D CREATE_DOXYGEN_DOC=OFF \
     ..
-echo_eval make install
+echo_eval make -j $n_job install
 # -----------------------------------------------------------------------------
 echo_eval touch $cppad_repo/$configured_flag
 echo "get_$package.sh: OK"

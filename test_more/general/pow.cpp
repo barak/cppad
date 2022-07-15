@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -411,43 +411,6 @@ bool PowTestSix(void)
     return ok;
 }
 
-/*
-// This test does not pass because azmul is used be reverse mode to deteremine which
-// partials are slected and the result is zero instead of nan or infinity.
-// There is a wish list item to fix this problem.
-bool PowTestSeven(void)
-{   bool ok = true;
-
-    using std::cout;
-    using CppAD::AD;
-    using CppAD::vector;
-    //
-    vector< double> x(1), y(1), dx(1), dy(1), w(1), dw(2);
-    vector< AD<double> > ax(1), ay(1);
-    //
-    ax[0] = 0.0;
-    //
-    CppAD::Independent(ax);
-    ay[0] = pow(ax[0], 0.5);
-    CppAD::ADFun<double> f(ax, ay);
-    f.check_for_nan(false);
-    //
-    x[0]  = 0.0;
-    y     = f.Forward(0, x);
-    //
-    dx[0] = 1.0;
-    dy    = f.Forward(1, dx);
-    //
-    w[0]  = 1.0;
-    dw    = f.Reverse(2, w);
-    //
-    ok &= y[0] == 0.0;
-    ok &= ! std::isfinite( dw[0] );
-    ok &= ! std::isfinite( dw[1] );
-    //
-    return ok;
-}
-*/
 // Test x^e where x is negative and e is AD<double> equal to an integer
 bool PowTestEight(void)
 {   bool ok = true;
@@ -458,7 +421,7 @@ bool PowTestEight(void)
     using CppAD::NearEqual;
     double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
     //
-    vector< double>      x(1), y(2), dx(1), dy(2), w(2), dw(2);
+    vector<double>      x(1), y(2), dx(1), dy(2), w(2), dw(2);
     vector< AD<double> > ax(1), ay(2);
     //
     x[0]  = -2.0;
@@ -502,6 +465,148 @@ bool PowTestEight(void)
     //
     return ok;
 }
+// k-th derivative of x^y .w.r.t. x
+double dpow_dx(double x, double y, size_t k)
+{   double result = std::pow(x, y - double(k));
+    for(size_t ell = 0; ell < k; ++ell)
+        result *= (y - double(ell));
+    return result;
+}
+// Testing PowvpOp
+bool PowTestNine(void)
+{   bool ok = true;
+    //
+    using std::cout;
+    using CppAD::AD;
+    using CppAD::vector;
+    using CppAD::NearEqual;
+    double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
+    //
+    vector<double> x(1), dx(1);
+    vector<double> z(1), dz(1);
+    vector<double> w(1), dw(5);
+    vector< AD<double> > ax(1), az(1);
+    //
+    ax[0]    = 1.0;
+    double y = 2.5;
+    //
+    CppAD::Independent(ax);
+    az[0] = pow(ax[0], y);
+    CppAD::ADFun<double> f(ax, az);
+    //
+    double check;
+    //
+    // zero order forward
+    for(size_t ix = 0; ix < 3; ++ix)
+    {   x[0]  = double(ix);
+        z     = f.Forward(0, x);
+        check = dpow_dx(x[0], y, 0);
+        ok   &= NearEqual(z[0], check, eps99, eps99);
+        //
+        // first order forward
+        dx[0] = 1.0;
+        dz    = f.Forward(1, dx);
+        check = dpow_dx(x[0], y, 1);
+        ok   &= NearEqual(dz[0], check, eps99, eps99);
+        //
+        // ell-th order forward
+        double factorial = 1.0;
+        for(size_t k = 2; k < 5; ++k)
+        {   factorial *= double(k);
+            dx[0]      = 0.0; // x^(k)
+            dz         = f.Forward(k, dx);
+            check      = dpow_dx(x[0], y, k) / factorial;
+            ok        &= NearEqual(dz[0], check, eps99, eps99);
+        }
+        // second order reverse
+        w[0]  = 1.0;
+        dw    = f.Reverse(5, w);
+        factorial = 1.0;
+        for(size_t k = 0; k < 5; ++k)
+        {   check = dpow_dx(x[0], y, k+1) / factorial;
+            ok   &= NearEqual(dw[k], check, eps99, eps99);
+            factorial *= double(k+1);
+        }
+    }
+    //
+    return ok;
+}
+// Testing PowvpOp multiple direction forward
+bool PowTestTen(void)
+{   bool ok = true;
+    //
+    using std::cout;
+    using CppAD::AD;
+    using CppAD::vector;
+    using CppAD::NearEqual;
+    double eps99 = 99.0 * std::numeric_limits<double>::epsilon();
+    //
+    size_t n = 3;
+    vector<double> x(n), xq(n * n);
+    vector<double> z(n), zq(n * n);
+    vector<double> y(n);
+    vector< AD<double> > ax(n), az(n);
+    //
+    for(size_t j = 0; j < n; ++j)
+    {   ax[j] = double(j);
+        y[j]  = double(j) + 1.5;
+    }
+    //
+    CppAD::Independent(ax);
+    for(size_t j = 0; j < n; ++j)
+        az[j] = pow(ax[j], y[j]);
+    CppAD::ADFun<double> f(ax, az);
+    //
+    // zero order forward
+    for(size_t j = 0; j < n; ++j)
+        x[j]  = double(j) + 1.5;
+    z     = f.Forward(0, x);
+    double check;
+    for(size_t j = 0; j < n; ++j)
+    {   check = dpow_dx(x[j], y[j], 0);
+        ok   &= NearEqual(z[j], check, eps99, eps99);
+    }
+    //
+    // first order forward multiple directions
+    size_t r = n;
+    for(size_t j = 0; j < n; ++j)
+    {   for(size_t ell = 0; ell < r; ell++)
+        {   if( j == ell )
+                xq[ r * j + ell] = 1.0;
+            else
+                xq[ r * j + ell] = 0.0;
+        }
+    }
+    size_t q = 1;
+    zq = f.Forward(q, r, xq);
+    for(size_t j = 0; j < n; ++j)
+    {   for(size_t ell = 0; ell < r; ell++)
+        {   if( j == ell )
+                check = dpow_dx(x[j], y[j], 1);
+            else
+                check = 0.0;
+            ok   &= NearEqual(zq[r * j + ell], check, eps99, eps99);
+        }
+    }
+    //
+    // second order forward multiple directions
+    for(size_t j = 0; j < n; ++j)
+    {   for(size_t ell = 0; ell < r; ell++)
+                xq[ r * j + ell] = 0.0;
+    }
+    q = 2;
+    zq = f.Forward(q, r, xq);
+    for(size_t j = 0; j < n; ++j)
+    {   for(size_t ell = 0; ell < r; ell++)
+        {   if( j == ell )
+                check = dpow_dx(x[j], y[j], 2) / 2.0;
+            else
+                check = 0.0;
+            ok   &= NearEqual(zq[r * j + ell], check, eps99, eps99);
+        }
+    }
+    return ok;
+}
 
 } // END empty namespace
 
@@ -513,8 +618,10 @@ bool Pow(void)
     ok     &= PowTestFour();
     ok     &= PowTestFive();
     ok     &= PowTestSix();
-    // ok     &= PowTestSeven();
+    // PowTestSeven was removed
     ok     &= PowTestEight();
+    ok     &= PowTestNine();
+    ok     &= PowTestTen();
     //
     return ok;
 }

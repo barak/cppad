@@ -298,7 +298,6 @@ bool optimize_run(
         dyn_previous
     );
     // -----------------------------------------------------------------------
-
     // conditional expression information
     //
     // Size of the conditional expression information structure.
@@ -700,6 +699,7 @@ bool optimize_run(
             case Expm1Op:
             case LogOp:
             case Log1pOp:
+            case NegOp:
             case SignOp:
             case SinOp:
             case SinhOp:
@@ -1186,7 +1186,10 @@ bool optimize_run(
             CPPAD_ASSERT_NARG_NRES(op, 1, 0);
             new_arg[0] = new_par[ arg[0] ];
             if( new_arg[0] == addr_t_max )
+            {   // This parameter is not used, so we put zero here. If we
+                // put nan here, atomic reverse mode would have to use azmul.
                 new_arg[0] = zero_par_index;
+            }
             rec->PutArg(new_arg[0]);
             new_op[i_op] = addr_t( rec->num_op_rec() );
             rec->PutOp(FunapOp);
@@ -1207,8 +1210,7 @@ bool optimize_run(
                 rec->PutOp(FunavOp);
             }
             else
-            {   // This argument does not affect the result and
-                // has been optimized out so use nan in its place.
+            {   // This argument does not affect the result.
                 new_arg[0] = zero_par_index;
                 rec->PutArg(new_arg[0]);
                 new_op[i_op] = addr_t( rec->num_op_rec() );
@@ -1246,7 +1248,7 @@ bool optimize_run(
             if( op_usage[i_op] == usage_t(yes_usage) )
                 new_var[i_op] = rec->PutOp(FunrvOp);
             else
-            {   // change FunrvOp -> FunrpOp to avoid creating new variable
+            {   // This result is not used.
                 CPPAD_ASSERT_UNKNOWN( op_usage[i_op] == usage_t(no_usage) );
                 CPPAD_ASSERT_NARG_NRES(FunrpOp, 1, 0);
                 rec->PutArg( zero_par_index );

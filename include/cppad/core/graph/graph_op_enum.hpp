@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_GRAPH_GRAPH_OP_ENUM_HPP
 # define CPPAD_CORE_GRAPH_GRAPH_OP_ENUM_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 
   CppAD is distributed under the terms of the
                Eclipse Public License Version 2.0.
@@ -39,15 +39,14 @@ $$
 
 $section C++ AD Graph Operator Enum Type$$
 
+$comment
+    The following headings are referenced by comments in cpp_graph_op.cpp:
+    Atomic Fucntion, Comparison, Discrete Function, Print, Summation
+$$
+
 $head Unary$$
 The unary operators have one argument and one result node.
 The argument is a node index and the result is the next node.
-
-$subhead Require C++11$$
-The following unary operators require a compiler that supports c++11:
-$code asinh$$, $code acosh$$, $code atanh$$,
-$code erf$$, $code erfc$$,
-$code expm1$$, $code log1p$$.
 
 $head Binary$$
 The binary operators have two arguments and one result node.
@@ -218,6 +217,7 @@ namespace CppAD { namespace graph {
         expm1_graph_op,    // unary: exponential minus one
         log1p_graph_op,    // unary: logarithm of one plus argument
         log_graph_op,      // unary: logarithm
+        neg_graph_op,      // unary: minus
         mul_graph_op,      // binary: multiplication
         pow_graph_op,      // binary: first argument raised to second argument
         print_graph_op,    // print during zero order forward

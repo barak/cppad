@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-22 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -11,7 +11,7 @@
 # -----------------------------------------------------------------------------
 dnl Process this file with autoconf to produce a configure script.
 dnl   package   version              bug-report
-AC_INIT([cppad], [20210000.8], [cppad@list.coin-or.org])
+AC_INIT([cppad], [20220000.4], [cppad@list.coin-or.org])
 AM_SILENT_RULES([no])
 
 dnl By defalut disable maintainer mode when running configure;
@@ -361,7 +361,6 @@ AC_SUBST(cppad_cxx_flags, "")
 AC_SUBST(cppad_has_colpack, 0)
 AC_SUBST(cppad_has_mkstemp, 0)
 AC_SUBST(cppad_has_tmpnam_s, 0)
-AC_SUBST(cppad_cplusplus_201100_ok, 0)
 AC_SUBST(compiler_has_conversion_warn, 0)
 
 dnl -------------------------------------------------------------------------
@@ -698,6 +697,7 @@ AC_CONFIG_FILES([
     speed/fadbad/makefile
     speed/sacado/makefile
     speed/src/makefile
+    speed/xpackage/makefile
     test_more/compare_c/makefile
     test_more/general/makefile
     test_more/deprecated/makefile

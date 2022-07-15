@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -126,6 +126,8 @@ extern bool fabs(void);
 extern bool forward_dir(void);
 extern bool forward_order(void);
 extern bool fun_assign(void);
+extern bool fun_property(void);
+extern bool function_name(void);
 extern bool interp_onetape(void);
 extern bool interp_retape(void);
 extern bool log(void);
@@ -141,12 +143,12 @@ extern bool num_limits(void);
 extern bool number_skip(void);
 extern bool opt_val_hes(void);
 extern bool pow(void);
+extern bool pow_nan(void);
 extern bool print_for(void);
 extern bool rev_checkpoint(void);
 extern bool reverse_one(void);
 extern bool reverse_three(void);
 extern bool reverse_two(void);
-extern bool seq_property(void);
 extern bool sign(void);
 extern bool taylor_ode(void);
 extern bool vec_ad(void);
@@ -238,6 +240,8 @@ int main(void)
     Run( forward_dir,       "forward_dir"      );
     Run( forward_order,     "forward_order"    );
     Run( fun_assign,        "fun_assign"       );
+    Run( fun_property,      "fun_property"     );
+    Run( function_name,     "function_name"    );
     Run( interp_onetape,    "interp_onetape"   );
     Run( interp_retape,     "interp_retape"    );
     Run( log,               "log"              );
@@ -251,11 +255,11 @@ int main(void)
     Run( number_skip,       "number_skip"      );
     Run( opt_val_hes,       "opt_val_hes"      );
     Run( pow,               "pow"              );
+    Run( pow_nan,           "pow_nan"          );
     Run( rev_checkpoint,    "rev_checkpoint"   );
     Run( reverse_one,       "reverse_one"      );
     Run( reverse_three,     "reverse_three"    );
     Run( reverse_two,       "reverse_two"      );
-    Run( seq_property,      "seq_property"     );
     Run( sign,              "sign"             );
     Run( taylor_ode,        "ode_taylor"       );
     Run( vec_ad,            "vec_ad"           );

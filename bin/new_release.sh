@@ -1,6 +1,6 @@
 #! /bin/bash -e
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -10,8 +10,8 @@
 # in the Eclipse Public License, Version 2.0 are satisfied:
 #       GNU General Public License, Version 2.0 or later.
 # -----------------------------------------------------------------------------
-stable_version='20210000' # date at which this stable branch started
-release='1'               # first release for each stable version is 0
+stable_version='20220000' # date at which this stable branch started
+release='0'               # first release for each stable version is 0
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -145,12 +145,11 @@ if [ "$ok" != 'yes' ]
 then
 cat << EOF
 bin/new_release.sh: version number is not correct in $stable_branch.
-Use the following commands in $stable_branch to fix it ?
+Currently in $stable_branch branch, use following to fix it ?
     git fetch
     version.sh set $stable_version.$release
     version.sh copy
     version.sh check
-    bin/autotools.sh automake
     Then check the chages to the $stable_branch branch and commit
 EOF
     exit 1

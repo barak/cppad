@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-17 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 
   CppAD is distributed under the terms of the
                Eclipse Public License Version 2.0.
@@ -157,20 +157,27 @@ $latex \[
     e^{(j)} = d^{(j)} + \sum_{k=0}^j a^{(j-k)} * z^{(k)}
 \] $$
 We need to complete the induction by finding formulas for $latex z^{(j+1)}$$.
-It follows for the formula for the
-$cref/multiplication/ForwardTheory/Binary Operators/Multiplication/$$
-operator that
+It follows from the definition of $latex E(t)$$ that
 $latex  \[
-\begin{array}{rcl}
-\left( \sum_{k=0}^j b^{(k)} t^k \right)
+\left( \sum_{k=0}^j b^{(k)} * t^k \right)
 *
 \left( \sum_{k=1}^{j+1} k z^{(k)} * t^{k-1} \right)
-& = &
+=
 \left( \sum_{k=0}^j e^{(k)} * t^k \right)
 *
 \left( \sum_{k=1}^{j+1} k x^{(k)} * t^{k-1} \right)
 +
 o( t^p )
+\] $$
+Setting the left and right side coefficients of $latex t^j$$ equal,
+and using the formula for
+$cref/multiplication/ForwardTheory/Binary Operators/Multiplication/$$,
+we obtain
+$latex  \[
+\begin{array}{rcl}
+\sum_{k=0}^j b^{(k)} (j+1-k) z^{(j+1-k)}
+& = &
+\sum_{k=0}^j e^{(k)} (j+1-k) x^{(j+1-k)}
 \\
 z^{(j+1)} & = & \frac{1}{j+1} \frac{1}{ b^{(0)} }
 \left(
@@ -189,8 +196,6 @@ This completes the induction that computes $latex e^{(j)}$$
 and $latex z^{(j+1)}$$.
 
 
-
-
 $children%
     omh/theory/exp_forward.omh%
     omh/theory/log_forward.omh%
@@ -200,7 +205,8 @@ $children%
     omh/theory/asin_forward.omh%
     omh/theory/acos_forward.omh%
     omh/theory/tan_forward.omh%
-    omh/theory/erf_forward.omh
+    omh/theory/erf_forward.omh%
+    omh/theory/pow_forward.omh
 %$$
 
 $subhead Cases that Apply Recursion Above$$
@@ -212,6 +218,7 @@ $rref sin_cos_forward$$
 $rref atan_forward$$
 $rref asin_forward$$
 $rref acos_forward$$
+$rref pow_forward$$
 $tend
 
 $subhead Special Cases$$

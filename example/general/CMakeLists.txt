@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -76,6 +76,8 @@ SET(source_list
     forward_order.cpp
     fun_assign.cpp
     fun_check.cpp
+    fun_property.cpp
+    function_name.cpp
     general.cpp
     hes_lagrangian.cpp
     hes_lu_det.cpp
@@ -109,14 +111,14 @@ SET(source_list
     ode_stiff.cpp
     opt_val_hes.cpp
     pow.cpp
+    pow_nan.cpp
     print_for.cpp
+    rev_checkpoint.cpp
     rev_one.cpp
     rev_two.cpp
-    rev_checkpoint.cpp
     reverse_one.cpp
     reverse_three.cpp
     reverse_two.cpp
-    seq_property.cpp
     sign.cpp
     sin.cpp
     sinh.cpp
