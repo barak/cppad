@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
+# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-22 Bradley M. Bell
 #
 # CppAD is distributed under the terms of the
 #              Eclipse Public License Version 2.0.
@@ -12,20 +12,18 @@
 # =============================================================================
 # Some constants
 # =============================================================================
-# Suppress warnging that WIN32 not defined on cygwin
-SET(CMAKE_LEGACY_CYGWIN_WIN32 0) # remove when version below >= 2.8.4
 #
 # Set the minimum required version of cmake for this project.
 # see http://www.cmake.org/pipermail/cmake/2013-January/053213.html
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.4)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 #
-# https://gitlab.kitware.com/cmake/cmake/issues/17292
-if(POLICY CMP0054)
-  cmake_policy(SET CMP0054 NEW)
-endif()
+# Only interpret if() arguments as variables or keywords when unquoted.
+IF( POLICY CMP0054 )
+  CMAKE_POLICY(SET CMP0054 NEW)
+ENDIF( POLICY CMP0054 )
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20210000.8")
+SET(cppad_version "20220000.4")
 SET(cppad_url          "https://coin-or.github.io/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 #
@@ -47,8 +45,7 @@ INCLUDE_DIRECTORIES( ${cppad_SOURCE_DIR}/include )
 # return zero status. You can set
 # CMAKE_REQUIRED_LIBRARIES, CMAKE_REQUIRED_FLAGS and CMAKE_REQUIRED_INCLUDES
 # accordingly if additional libraries or compiler flags are required.
-INCLUDE(CheckCXXSourceRuns)
-
+INCLUDE(CheckCXXSourceCompiles)
 # ============================================================================
 # Some local cmake language
 # ============================================================================
@@ -67,8 +64,8 @@ INCLUDE(cmake/command_line_arg.cmake)
 # optional_package(package description)
 INCLUDE(cmake/optional_package.cmake)
 #
-# run_source_test(source variable)
-INCLUDE(cmake/run_source_test.cmake)
+# compile_source_test(source variable)
+INCLUDE(cmake/compile_source_test.cmake)
 #
 # assert(variable)
 INCLUDE(cmake/assert.cmake)
@@ -82,19 +79,22 @@ INCLUDE(cmake/set_compile_flags.cmake)
 # pkgconfig_info(name, system)
 INCLUDE(cmake/pkgconfig_info.cmake)
 # ============================================================================
-# Check for c++11
+# Ensure c++11 support
+SET(CMAKE_REQUIRED_DEFINITIONS "")
+SET(CMAKE_REQUIRED_FLAGS       "")
+SET(CMAKE_REQUIRED_INCLUDES    "")
+SET(CMAKE_REQUIRED_LIBRARIES   "")
 SET(source "
 int main(void)
-{   if( __cplusplus < 201103 )
-        return 1;
+{   static_assert( __cplusplus >= 201103 , \"c++11 or higher required\" );
     return 0;
 }"
 )
-run_source_test("${source}" cppad_cplusplus_201100_ok )
-IF( NOT cppad_cplusplus_201100_ok  )
+compile_source_test("${source}" cplusplus_201100_ok )
+IF( NOT cplusplus_201100_ok  )
     SET(CMAKE_CXX_STANDARD 11)
     SET(CMAKE_CXX_STANDARD_REQUIRED ON)
-ENDIF( NOT cppad_cplusplus_201100_ok  )
+ENDIF( NOT cplusplus_201100_ok  )
 # =============================================================================
 # command line arguments
 # =============================================================================
@@ -182,6 +182,11 @@ assert_value_in_set(cppad_testvector boost cppad eigen std)
 command_line_arg(cppad_max_num_threads 48 STRING
     "maximum number of threads that CppAD can use use"
 )
+IF( "${cppad_max_num_threads}" LESS "4" )
+    MESSAGE(FATAL_ERROR
+        "cppad_max_num_threads is not an integer greater than or equal 4"
+    )
+ENDIF( "${cppad_max_num_threads}" LESS "4" )
 #
 # cppad_tape_id_type
 command_line_arg(cppad_tape_id_type "unsigned int" STRING
@@ -194,10 +199,38 @@ command_line_arg(cppad_tape_addr_type "unsigned int" STRING
 )
 #
 # cppad_debug_which
-command_line_arg(cppad_debug_which "debug_all" STRING
-    "debug_even, debug_odd, debug_all, or debug_none"
-)
-assert_value_in_set(cppad_debug_which debug_even debug_odd debug_all debug_none)
+# CMAKE_BUILD_TYPE
+IF( NOT debug_which )
+    SET(debug_which "" CACHE STRING
+        "debug_even, debug_odd, debug_all, debug_none, or empty string"
+    )
+ENDIF( NOT debug_which )
+IF( NOT ${cppad_debug_which} STREQUAL "" )
+    assert_value_in_set(
+        cppad_debug_which debug_even debug_odd debug_all debug_none
+    )
+ENDIF( NOT ${cppad_debug_which} STREQUAL "" )
+IF( CMAKE_BUILD_TYPE )
+    IF( NOT ${cppad_debug_which} STREQUAL "" )
+        print_variable(CMAKE_BUILD_TYPE)
+        print_variable(cppad_debug_which)
+        MESSAGE(FATAL_ERROR
+            "Both CMAKE_BUILD_TYPE and cppad_debug_which specified"
+        )
+    ENDIF( NOT ${cppad_debug_which} STREQUAL "" )
+ELSE( CMAKE_BUILD_TYPE )
+    IF( "${cppad_debug_which}" STREQUAL debug_all)
+        SET(CMAKE_BUILD_TYPE Debug)
+    ELSEIF( "${cppad_debug_which}" STREQUAL debug_none)
+        SET(CMAKE_BUILD_TYPE Release)
+    ELSEIF( "${cppad_debug_which}" STREQUAL debug_odd)
+        SET(CMAKE_BUILD_TYPE Debug)
+    ELSEIF( "${cppad_debug_which}" STREQUAL debug_even)
+        SET(CMAKE_BUILD_TYPE Release)
+    ENDIF( "${cppad_debug_which}" STREQUAL debug_all)
+ENDIF( CMAKE_BUILD_TYPE )
+print_variable(cppad_debug_which)
+print_variable(CMAKE_BUILD_TYPE)
 #
 # include_eigen
 # include_adolc
@@ -216,10 +249,11 @@ SET(CMAKE_INSTALL_PREFIX "${cppad_prefix}"
 # -----------------------------------------------------------------------------
 # External package information
 SET(system_include TRUE)
+SET(remove_coin_or FALSE)
 #
 # eigen
 IF( include_eigen )
-    pkgconfig_info(eigen3 ${system_include})
+    pkgconfig_info(eigen3 ${system_include} ${remove_coin_or})
     SET(eigen_LIBRARIES "${eigen3_LIBRARIES}")
     SET(cppad_has_eigen 1)
 ELSE( include_eigen )
@@ -228,7 +262,7 @@ ENDIF( include_eigen )
 #
 # adolc
 IF( include_adolc )
-    pkgconfig_info(adolc ${system_include})
+    pkgconfig_info(adolc ${system_include} ${remove_coin_or})
     SET(cppad_has_adolc 1)
 ELSE( include_adolc )
     SET(cppad_has_adolc 0)
@@ -236,14 +270,20 @@ ENDIF( include_adolc )
 #
 # ipopt
 IF( include_ipopt )
-    pkgconfig_info(ipopt ${system_include})
+    SET(remove_coin_or TRUE)
+    pkgconfig_info(ipopt ${system_include} ${remove_coin_or})
     SET(cppad_has_ipopt 1)
+    SET(remove_coin_or FALSE)
 ELSE( include_ipopt )
     SET(cppad_has_ipopt 0)
 ENDIF( include_ipopt )
 #
 # cppadcg
 IF( include_cppadcg )
+    # Assume bin/get_cppadcg.sh puts include files in this directory
+    SET(cppadcg_include_dir "${CMAKE_BINARY_DIR}/prefix/include" )
+    print_variable(cppadcg_include_dir)
+    INCLUDE_DIRECTORIES( SYSTEM ${cppadcg_include_dir})
     SET(cppad_has_cppadcg 1)
 ELSE( include_cppadcg )
     SET(cppad_has_cppadcg 0)
@@ -258,9 +298,6 @@ optional_package(sacado ${system_include} "sacado install prefix")
 # fadbad_prefix
 optional_package(fadbad ${system_include} "fadbad install prefix")
 #
-# xpackage_prefix is an example package prefix that is not really used
-SET(xpackage_prefix "/usr")
-# -----------------------------------------------------------------------------
 # =============================================================================
 # cppad_lib
 # Perhaps in the future cppad_lib will depend on cmake header only flag ?
@@ -278,14 +315,14 @@ ENDIF( cppad_has_colpack )
 # automated system configuration
 # =============================================================================
 # CMAKE_CXX_FLAGS
-IF( "${debug_which}" STREQUAL "debug_all" )
+IF( "${cppad_debug_which}" STREQUAL "debug_all" )
     print_variable(CMAKE_CXX_FLAGS_DEBUG)
-ELSEIF( "${debug_which}" STREQUAL "debug_none" )
+ELSEIF( "${cppad_debug_which}" STREQUAL "debug_none" )
     print_variable(CMAKE_CXX_FLAGS_RELEASE)
-ELSE( "${debug_which}" )
+ELSE( "${cppad_debug_which}" )
     print_variable(CMAKE_CXX_FLAGS_DEBUG)
     print_variable(CMAKE_CXX_FLAGS_RELEASE)
-ENDIF( "${debug_which}" STREQUAL "debug_all" )
+ENDIF( "${cppad_debug_which}" STREQUAL "debug_all" )
 # -----------------------------------------------------------------------------
 # cppad_abs_includedir, cppad_abs_libdir, cppad_abs_datadir, cppad_abs_docdir
 #
@@ -436,7 +473,7 @@ CONFIGURE_FILE(
 # During install copy all the cppad include files to
 # ${cppad_abs_includedir}/cppad
 INSTALL(
-    DIRECTORY "${CMAKE_SOURCE_DIR}/include/cppad/"
+    DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/cppad/"
     DESTINATION ${cppad_abs_includedir}/cppad
     FILES_MATCHING PATTERN "*.hpp" PATTERN "omh" EXCLUDE
 )

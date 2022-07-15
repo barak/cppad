@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_GRAPH_FROM_GRAPH_HPP
 # define CPPAD_CORE_GRAPH_FROM_GRAPH_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -33,6 +33,7 @@ $section ADFun Object Corresponding to a CppAD Graph$$
 
 $head Syntax$$
 $codei%
+    cpp_graph %graph_obj%
     ADFun<%Base%> %fun%
     %fun%.from_graph(%graph_obj%)
     %fun%.from_graph(%graph_obj%, %dyn2var%, %var2dyn%)
@@ -155,10 +156,12 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
     }
     //
     // Start of node indices
+# ifndef NDEBUG
     size_t start_dynamic_ind = 1;
     size_t start_independent = start_dynamic_ind + n_dynamic_ind;
     size_t start_constant    = start_independent + n_variable_ind;
     size_t start_operator    = start_constant    + n_constant;
+# endif
     //
     // initialize mappings from node index as empty
     // (there is no node zero)
@@ -337,7 +340,9 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
     cpp_graph::const_iterator       graph_itr;
     //
     // loop over operators in the recording
+# ifndef NDEBUG
     size_t start_result = start_operator;
+# endif
     for(size_t op_index = 0; op_index < n_usage; ++op_index)
     {   // op_enum, str_index, n_result, arg_node
         if( op_index == 0 )
@@ -874,6 +879,12 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
                 CPPAD_ASSERT_UNKNOWN( NumArg(local::LogOp) == 1 );
                 break;
 
+                case neg_graph_op:
+                i_result = rec.PutOp(local::NegOp);
+                rec.PutArg( arg[0] );
+                CPPAD_ASSERT_UNKNOWN( NumArg(local::NegOp) == 1 );
+                break;
+
                 case sign_graph_op:
                 i_result = rec.PutOp(local::SignOp);
                 rec.PutArg( arg[0] );
@@ -988,6 +999,11 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
 
                 case log_graph_op:
                 i_result = rec.put_dyn_par(nan, local::log_dyn, arg[0] );
+                CPPAD_ASSERT_UNKNOWN( isnan( parameter[i_result] ) );
+                break;
+
+                case neg_graph_op:
+                i_result = rec.put_dyn_par(nan, local::neg_dyn, arg[0] );
                 CPPAD_ASSERT_UNKNOWN( isnan( parameter[i_result] ) );
                 break;
 
@@ -1113,6 +1129,12 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
 
                 case log_graph_op:
                 result    = CppAD::log( parameter[ arg[0] ] );
+                i_result  = rec.put_con_par(result);
+                CPPAD_ASSERT_UNKNOWN( parameter[i_result] == result );
+                break;
+
+                case neg_graph_op:
+                result    = - parameter[ arg[0] ];
                 i_result  = rec.put_con_par(result);
                 CPPAD_ASSERT_UNKNOWN( parameter[i_result] == result );
                 break;
@@ -1394,7 +1416,9 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
             node2fun.push_back(i_result);
         }
         //
+# ifndef NDEBUG
         start_result          += n_result;
+# endif
         CPPAD_ASSERT_UNKNOWN( node2fun.size() == start_result );
         CPPAD_ASSERT_UNKNOWN( node_type.size() == start_result );
     }

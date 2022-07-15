@@ -1,7 +1,7 @@
 # ifndef CPPAD_CORE_AD_FUN_HPP
 # define CPPAD_CORE_AD_FUN_HPP
 /* --------------------------------------------------------------------------
-CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
+CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
 
 CppAD is distributed under the terms of the
              Eclipse Public License Version 2.0.
@@ -39,7 +39,7 @@ The $code ADFun$$ object can then be used to calculate function values,
 derivative values, and other values related to the corresponding function.
 
 $childtable%
-    omh/adfun.omh%
+    include/cppad/core/ad_fun.omh%
     include/cppad/core/optimize.hpp%
     include/cppad/core/fun_check.hpp%
     include/cppad/core/check_for_nan.hpp
@@ -664,6 +664,12 @@ public:
     /// number of dependent variables
     size_t Range(void) const
     {   return dep_taddr_.size(); }
+
+    /// set and get function name
+    void function_name_set(const std::string& function_name)
+    {   function_name_ = function_name; }
+    std::string function_name_get(void)
+    {   return function_name_; }
 
     /// is variable a parameter
     bool Parameter(size_t i)

@@ -15,14 +15,13 @@ then
     echo "bin/run_cmake.sh: must be executed from its parent directory"
     exit 1
 fi
-# prefix
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
     echo $*
     eval $*
 }
-#
+# -----------------------------------------------------------------------------
 # prefix
 eval `grep '^prefix=' bin/get_optional.sh`
 if [[ "$prefix" =~ ^[^/] ]]
@@ -30,7 +29,7 @@ then
     prefix="$(pwd)/$prefix"
 fi
 echo "prefix=$prefix"
-#
+# -----------------------------------------------------------------------------
 # PKG_CONFIG_PATH
 PKG_CONFIG_PATH="$prefix/lib64/pkgconfig:$prefix/lib/pkgconfig"
 PKG_CONFIG_PATH="$prefix/share/pkgconfig:$PKG_CONFIG_PATH"
@@ -71,6 +70,7 @@ usage: bin/run_cmake.sh: \\
     [--no_fadbad] \\
     [--no_cppadcg] \\
     [--no_sacado] \\
+    [--no_optional] \\
     [--no_documentation] \\
     [--<package>_vector] \\
     [--debug_<which>]
@@ -133,6 +133,17 @@ EOF
 
         --no_sacado)
         yes_sacado='no'
+        ;;
+
+        --no_optional)
+        yes_adolc='no'
+        yes_colpack='no'
+        yes_eigen='no'
+        yes_ipopt='no'
+        yes_cppadcg='no'
+        yes_fadbad='no'
+        yes_sacado='no'
+        testvector='cppad'
         ;;
 
         --no_documentation)

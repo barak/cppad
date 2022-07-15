@@ -34,6 +34,7 @@ $section Create a C++ AD Graph Corresponding to an ADFun Object$$
 
 $head Syntax$$
 $codei%
+    cpp_graph %graph_obj%
     ADFun<%Base%> %fun%
     %fun%.to_graph(%graph_obj%)
 %$$
@@ -73,13 +74,6 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
 {   using local::pod_vector;
     using local::opcode_t;
     using namespace CppAD::graph;
-    // --------------------------------------------------------------------
-    if( local::graph::op_name2enum.size() == 0 )
-    {   CPPAD_ASSERT_KNOWN( ! thread_alloc::in_parallel() ,
-            "call to set_operator_info in parallel mode"
-        );
-        local::graph::set_operator_info();
-    }
     //
 # ifndef NDEBUG
 # endif
@@ -262,6 +256,10 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
 
             case local::log_dyn:
             graph_op = log_graph_op;
+            break;
+
+            case local::neg_dyn:
+            graph_op = neg_graph_op;
             break;
 
             case local::sign_dyn:
@@ -493,7 +491,8 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
         // operator is not ignored.
         // -------------------------------------------------------------------
         switch( var_op )
-        {
+        {   // 2DO: some of these cases can be joined
+
             // -------------------------------------------------------------
             // unary operators
             case local::AbsOp:
@@ -567,6 +566,11 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
             break;
 
             case local::LogOp:
+            fixed_n_arg = 1;
+            is_var[0] = true;
+            break;
+
+            case local::NegOp:
             fixed_n_arg = 1;
             is_var[0] = true;
             break;
@@ -708,6 +712,10 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
 
                 case local::LogOp:
                 graph_op = log_graph_op;
+                break;
+
+                case local::NegOp:
+                graph_op = neg_graph_op;
                 break;
 
                 case local::SignOp:
