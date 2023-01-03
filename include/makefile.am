@@ -1,14 +1,7 @@
-# -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-21 Bradley M. Bell
-#
-# CppAD is distributed under the terms of the
-#              Eclipse Public License Version 2.0.
-#
-# This Source Code may also be made available under the following
-# Secondary License when the conditions for such availability set forth
-# in the Eclipse Public License, Version 2.0 are satisfied:
-#       GNU General Public License, Version 2.0 or later.
-# -----------------------------------------------------------------------------
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
+# SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
+# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# ----------------------------------------------------------------------------
 #
 if CppAD_POSTFIX
 postfix_dir  = $(POSTFIX_DIR)
@@ -38,28 +31,39 @@ nobase_myinclude_HEADERS =  \
 	cppad/core/add_eq.hpp \
 	cppad/core/arithmetic.hpp \
 	cppad/core/atan2.hpp \
-	cppad/core/atomic/atomic_one.hpp \
-	cppad/core/atomic/atomic_three.hpp \
-	cppad/core/atomic/atomic_two.hpp \
-	cppad/core/atomic/three_afun.hpp \
-	cppad/core/atomic/three_ctor.hpp \
-	cppad/core/atomic/three_for_type.hpp \
-	cppad/core/atomic/three_forward.hpp \
-	cppad/core/atomic/three_hes_sparsity.hpp \
-	cppad/core/atomic/three_jac_sparsity.hpp \
-	cppad/core/atomic/three_rev_depend.hpp \
-	cppad/core/atomic/three_reverse.hpp \
-	cppad/core/atomic/two_afun.hpp \
-	cppad/core/atomic/two_clear.hpp \
-	cppad/core/atomic/two_ctor.hpp \
-	cppad/core/atomic/two_for_sparse_hes.hpp \
-	cppad/core/atomic/two_for_sparse_jac.hpp \
-	cppad/core/atomic/two_forward.hpp \
-	cppad/core/atomic/two_option.hpp \
-	cppad/core/atomic/two_rev_depend.hpp \
-	cppad/core/atomic/two_rev_sparse_hes.hpp \
-	cppad/core/atomic/two_rev_sparse_jac.hpp \
-	cppad/core/atomic/two_reverse.hpp \
+	cppad/core/atomic/four/atomic.hpp \
+	cppad/core/atomic/four/call.hpp \
+	cppad/core/atomic/four/ctor.hpp \
+	cppad/core/atomic/four/devel/hes_sparsity.hpp \
+	cppad/core/atomic/four/devel/jac_sparsity.hpp\
+	cppad/core/atomic/four/for_type.hpp \
+	cppad/core/atomic/four/forward.hpp \
+	cppad/core/atomic/four/hes_sparsity.hpp \
+	cppad/core/atomic/four/jac_sparsity.hpp \
+	cppad/core/atomic/four/rev_depend.hpp \
+	cppad/core/atomic/four/reverse.hpp \
+	cppad/core/atomic/one/atomic.hpp \
+	cppad/core/atomic/three/afun.hpp \
+	cppad/core/atomic/three/atomic.hpp \
+	cppad/core/atomic/three/ctor.hpp \
+	cppad/core/atomic/three/for_type.hpp \
+	cppad/core/atomic/three/forward.hpp \
+	cppad/core/atomic/three/hes_sparsity.hpp \
+	cppad/core/atomic/three/jac_sparsity.hpp \
+	cppad/core/atomic/three/rev_depend.hpp \
+	cppad/core/atomic/three/reverse.hpp \
+	cppad/core/atomic/two/afun.hpp \
+	cppad/core/atomic/two/atomic.hpp \
+	cppad/core/atomic/two/clear.hpp \
+	cppad/core/atomic/two/ctor.hpp \
+	cppad/core/atomic/two/for_sparse_hes.hpp \
+	cppad/core/atomic/two/for_sparse_jac.hpp \
+	cppad/core/atomic/two/forward.hpp \
+	cppad/core/atomic/two/option.hpp \
+	cppad/core/atomic/two/rev_depend.hpp \
+	cppad/core/atomic/two/rev_sparse_hes.hpp \
+	cppad/core/atomic/two/rev_sparse_jac.hpp \
+	cppad/core/atomic/two/reverse.hpp \
 	cppad/core/azmul.hpp \
 	cppad/core/base2ad.hpp \
 	cppad/core/base_complex.hpp \
@@ -165,8 +169,8 @@ nobase_myinclude_HEADERS =  \
 	cppad/core/subgraph_reverse.hpp \
 	cppad/core/subgraph_sparsity.hpp \
 	cppad/core/tape_link.hpp \
-	cppad/core/test_vector.hpp \
 	cppad/core/testvector.hpp \
+	cppad/core/to_csrc.hpp
 	cppad/core/unary_minus.hpp \
 	cppad/core/unary_plus.hpp \
 	cppad/core/undef.hpp \
@@ -176,6 +180,38 @@ nobase_myinclude_HEADERS =  \
 	cppad/core/vec_ad/vec_ad.hpp \
 	cppad/core/zdouble.hpp \
 	cppad/cppad.hpp \
+	cppad/example/atomic_four/lin_ode/base_solver.hpp \
+	cppad/example/atomic_four/lin_ode/for_type.hpp \
+	cppad/example/atomic_four/lin_ode/forward.hpp \
+	cppad/example/atomic_four/lin_ode/get.hpp \
+	cppad/example/atomic_four/lin_ode/hes_sparsity.hpp \
+	cppad/example/atomic_four/lin_ode/jac_sparsity.hpp \
+	cppad/example/atomic_four/lin_ode/lin_ode.hpp \
+	cppad/example/atomic_four/lin_ode/rev_depend.hpp \
+	cppad/example/atomic_four/lin_ode/reverse.hpp \
+	cppad/example/atomic_four/lin_ode/set.hpp \
+	cppad/example/atomic_four/mat_mul/base_mat_mul.hpp \
+	cppad/example/atomic_four/mat_mul/for_type.hpp \
+	cppad/example/atomic_four/mat_mul/forward.hpp \
+	cppad/example/atomic_four/mat_mul/get.hpp \
+	cppad/example/atomic_four/mat_mul/hes_sparsity.hpp \
+	cppad/example/atomic_four/mat_mul/jac_sparsity.hpp \
+	cppad/example/atomic_four/mat_mul/mat_mul.hpp \
+	cppad/example/atomic_four/mat_mul/rev_depend.hpp \
+	cppad/example/atomic_four/mat_mul/reverse.hpp \
+	cppad/example/atomic_four/mat_mul/set.hpp \
+	cppad/example/atomic_four/vector/add_op.hpp \
+	cppad/example/atomic_four/vector/div_op.hpp \
+	cppad/example/atomic_four/vector/for_type.hpp \
+	cppad/example/atomic_four/vector/forward_op.hpp \
+	cppad/example/atomic_four/vector/hes_sparsity.hpp \
+	cppad/example/atomic_four/vector/jac_sparsity.hpp \
+	cppad/example/atomic_four/vector/mul_op.hpp \
+	cppad/example/atomic_four/vector/neg_op.hpp \
+	cppad/example/atomic_four/vector/rev_depend.hpp \
+	cppad/example/atomic_four/vector/reverse_op.hpp \
+	cppad/example/atomic_four/vector/sub_op.hpp \
+	cppad/example/atomic_four/vector/vector.hpp \
 	cppad/example/atomic_three/mat_mul.hpp \
 	cppad/example/atomic_two/eigen_cholesky.hpp \
 	cppad/example/atomic_two/eigen_mat_inv.hpp \
@@ -197,6 +233,7 @@ nobase_myinclude_HEADERS =  \
 	cppad/local/define.hpp \
 	cppad/local/graph/cpp_graph_itr.hpp \
 	cppad/local/graph/cpp_graph_op.hpp \
+	cppad/local/graph/csrc_writer.hpp \
 	cppad/local/graph/json_lexer.hpp \
 	cppad/local/graph/json_parser.hpp \
 	cppad/local/graph/json_writer.hpp \
@@ -298,6 +335,7 @@ nobase_myinclude_HEADERS =  \
 	cppad/local/sweep/rev_hes.hpp \
 	cppad/local/sweep/rev_jac.hpp \
 	cppad/local/sweep/reverse.hpp \
+	cppad/local/temp_file.hpp \
 	cppad/local/utility/cppad_vector_itr.hpp \
 	cppad/local/utility/vector_bool.hpp \
 	cppad/speed/det_33.hpp \
@@ -313,9 +351,11 @@ nobase_myinclude_HEADERS =  \
 	cppad/utility.hpp \
 	cppad/utility/check_numeric_type.hpp \
 	cppad/utility/check_simple_vector.hpp \
+	cppad/utility/create_dll_lib.hpp \
 	cppad/utility/elapsed_seconds.hpp \
 	cppad/utility/error_handler.hpp \
 	cppad/utility/index_sort.hpp \
+	cppad/utility/link_dll_lib.hpp \
 	cppad/utility/lu_factor.hpp \
 	cppad/utility/lu_invert.hpp \
 	cppad/utility/lu_solve.hpp \
