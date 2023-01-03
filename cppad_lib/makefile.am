@@ -1,14 +1,7 @@
-# -----------------------------------------------------------------------------
-# CppAD: C++ Algorithmic Differentiation: Copyright (C) 2003-20 Bradley M. Bell
-#
-# CppAD is distributed under the terms of the
-#              Eclipse Public License Version 2.0.
-#
-# This Source Code may also be made available under the following
-# Secondary License when the conditions for such availability set forth
-# in the Eclipse Public License, Version 2.0 are satisfied:
-#       GNU General Public License, Version 2.0 or later.
-# -----------------------------------------------------------------------------
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
+# SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
+# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# ----------------------------------------------------------------------------
 # automake input file
 #
 # CppAD pusts all it's preprocessor definitions in the cppad/configure.hpp
@@ -18,13 +11,18 @@ AM_CXXFLAGS =  \
 	$(CXX_FLAGS) \
 	-I$(top_srcdir)/include
 #
+# BEGIN_SORT_THIS_LINE_PLUS_3
 lib_LIBRARIES = libcppad_lib.a
 libcppad_lib_a_SOURCES = \
-	cppad_colpack.cpp \
-	json_lexer.cpp \
 	cpp_graph_op.cpp \
+	cppad_colpack.cpp \
+	csrc_writer.cpp \
+	json_lexer.cpp \
 	json_parser.cpp \
-	json_writer.cpp
+	json_writer.cpp \
+	link_dll_lib.cpp \
+	temp_file.cpp
+# END_SORT_THIS_LINE_MINUS_1
 
 # autotools version of install does not support CppADCodeGen but need source
 # here so that bin/check_makefile.sh knows not using it is OK.
