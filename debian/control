@@ -11,12 +11,12 @@ Homepage: https://projects.coin-or.org/CppAD/
 Vcs-Git: https://salsa.debian.org/science-team/cppad.git
 Vcs-Browser: https://salsa.debian.org/science-team/cppad
 
-Package: libcppad-lib340.3
+Package: libcppad-lib1456.0
 Section: libs
 Architecture: any
 Multi-Arch: same
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Conflicts: cppad (<< 2020.00.00.0)
+Conflicts: cppad
 Description: Automatic Differentiation of C++ algorithms, shared library
  CppAD is a package for automatic differentiation (AD) of algorithms
  written in C++.  Given appropriately written C++ code that computes a
@@ -30,8 +30,11 @@ Package: libcppad-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, libcppad-lib340.3 (= ${binary:Version})
-Conflicts: cppad (<< 2020.00.00.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libcppad-lib1456.0 (= ${binary:Version})
+Suggests: libcppad-doc
+Conflicts: cppad
+Provides: cppad
+Replaces: cppad
 Description: Automatic Differentiation of C++ algorithms, dev files
  CppAD is a package for automatic differentiation (AD) of algorithms
  written in C++.  Given appropriately written C++ code that computes a
@@ -47,7 +50,7 @@ Section: doc
 Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends}
-Conflicts: cppad (<< 2020.00.00.0)
+Conflicts: cppad
 Description: Automatic Differentiation of C++ algorithms, documentation
  CppAD is a package for automatic differentiation (AD) of algorithms
  written in C++.  Given appropriately written C++ code that computes a
@@ -56,15 +59,7 @@ Description: Automatic Differentiation of C++ algorithms, documentation
  modes, and allows nested derivatives.
  .
  This package contains documentation.
-
-Package: cppad
-Architecture: all
-Depends: libcppad-dev, ${misc:Depends}
-Description: Automatic Differentiation of C++ algorithms, dummy package
- CppAD is a package for automatic differentiation (AD) of algorithms
- written in C++.  Given appropriately written C++ code that computes a
- function, CppAD augments it to also compute derivative values.  The
- system uses templates, supports forward and reverse accumulation
- modes, and allows nested derivatives.
  .
- This transition package helps with the move to libcppad-dev.
+ (Or did, and would if the documentation source format hadn't changed
+ to xrst which Debian cannot yet process, and will again at some point
+ in the future. For now, see https://coin-or.github.io/CppAD/doc.)
