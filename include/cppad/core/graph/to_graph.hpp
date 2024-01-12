@@ -3,7 +3,7 @@
 
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/core/ad_fun.hpp>
@@ -21,7 +21,7 @@ Syntax
 ******
 
 | |tab| ``cpp_graph`` *graph_obj*
-| |tab| ``ADFun<`` *Base* > *fun*
+| |tab| ``ADFun`` < *Base* > *fun*
 | |tab| *fun* . ``to_graph`` ( *graph_obj* )
 
 Prototype
@@ -943,18 +943,24 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
             // argument nodes
             size_t arg_node  = par2node[ arg[0] ];
             graph_obj.operator_arg_push_back( arg_node );
+# ifndef NDEBUG
             size_t j_arg = 1;
+# endif
             for(addr_t i = 5; i < arg[1]; ++i)
             {  arg_node    = var2node[ arg[i] ];
                CPPAD_ASSERT_UNKNOWN( arg_node > 0 );
                graph_obj.operator_arg_push_back( arg_node );
+# ifndef NDEBUG
                ++j_arg;
+# endif
             }
             for(addr_t i = arg[2]; i < arg[3]; ++i)
             {  arg_node  = par2node[ arg[i] ];
                CPPAD_ASSERT_UNKNOWN( arg_node > 0 );
                graph_obj.operator_arg_push_back( arg_node );
+# ifndef NDEBUG
                ++j_arg;
+# endif
             }
             CPPAD_ASSERT_UNKNOWN( j_arg == n_arg );
             if( has_subtract )
@@ -971,18 +977,24 @@ void CppAD::ADFun<Base,RecBase>::to_graph(
                graph_obj.operator_vec_push_back( graph_op );
                //
                // argument nodes
+# ifndef NDEBUG
                j_arg = 0;
+# endif
                for(addr_t i = arg[1]; i < arg[2]; ++i)
                {  arg_node    = var2node[ arg[i] ];
                   CPPAD_ASSERT_UNKNOWN( arg_node > 0 );
                   graph_obj.operator_arg_push_back( arg_node );
+# ifndef NDEBUG
                   ++j_arg;
+# endif
                }
                for(addr_t i = arg[3]; i < arg[4]; ++i)
                {  arg_node  = par2node[ arg[i] ];
                   CPPAD_ASSERT_UNKNOWN( arg_node > 0 );
                   graph_obj.operator_arg_push_back( arg_node );
+# ifndef NDEBUG
                   ++j_arg;
+# endif
                }
                CPPAD_ASSERT_UNKNOWN( j_arg == n_arg );
                //

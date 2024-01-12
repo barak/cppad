@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 
 {xrst_begin whats_new_13 app}
@@ -34,7 +34,7 @@ mm-dd
 #. There was a problem with this automation
    when ``eigen`` was used for the cppad :ref:`testvector-name` .
    This has been fixed.
-#. There was a problem with deprecated :ref:`autotools-name`
+#. There was a problem with deprecated :ref:`configure-name`
    (created when optional implicit constructor from any type was added).
    This has been fixed by adding the
    ``--with-implicit_ctor`` option
@@ -42,7 +42,7 @@ mm-dd
 
 12-27
 =====
-The constructor from an arbitrary type to ``AD<`` *Base* > was
+The constructor from an arbitrary type to ``AD`` < *Base* > was
 implicit, but there was no specification to this effect.
 The caused problems when using CppAD with
 :ref:`eigen 3.2<eigen-name>` (scheduled to be fixed in 3.3).
@@ -54,11 +54,11 @@ are now listed in the documentation.
 
 If you get a compiler error on an constructor / assignment of the form
 
-   ``AD<`` *Base* > ``x`` = *y*
+   ``AD`` < *Base* > ``x`` = *y*
 
 (that used to work) try changing the constructor call to
 
-   ``AD<`` *Base* >( *y*  )
+   ``AD`` < *Base* >( *y*  )
 
 A deprecated alternative is to make this constructor implicit using the
 cmake ``cppad_deprecated``
@@ -129,7 +129,7 @@ For more details, see :ref:`optimize_nest_conditional.cpp-name` .
    This required adding the
    :ref:`RevSparseJac@dependency` argument to the
    reverse Jacobian sparsity pattern calculation.
-#. Fix the deprecated autotools install (see :ref:`autotools-name` )
+#. Fix the deprecated autotools install (see :ref:`configure-name` )
    which was broken by the changes on 10-22.
    To be specific, the
    example for :ref:`number_skip-name` was not being included.

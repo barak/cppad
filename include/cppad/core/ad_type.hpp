@@ -2,7 +2,7 @@
 # define CPPAD_CORE_AD_TYPE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/is_pod.hpp>
@@ -10,20 +10,20 @@
 # ifdef NDEBUG
 # define CPPAD_ASSERT_AD_TYPE(ad_obj)
 # else
-# define CPPAD_ASSERT_AD_TYPE(ad_obj)                 \
-   switch(ad_obj.ad_type_)                           \
+# define CPPAD_ASSERT_AD_TYPE(ad_obj)               \
+   switch(ad_obj.ad_type_)                          \
    {  case constant_enum:                           \
       CPPAD_ASSERT_UNKNOWN( ad_obj.tape_id_ == 0 ); \
       break;                                        \
-                                                      \
+                                                    \
       case dynamic_enum:                            \
       case variable_enum:                           \
       break;                                        \
-                                                      \
+                                                    \
       default:                                      \
       CPPAD_ASSERT_UNKNOWN(false);                  \
-   }                                                 \
-   CPPAD_ASSERT_UNKNOWN(                             \
+   }                                                \
+   CPPAD_ASSERT_UNKNOWN(                            \
       ad_obj.tape_id_ == 0 ||                       \
       ad_obj.ad_type_ == dynamic_enum ||            \
       ad_obj.ad_type_ == variable_enum              \
@@ -84,7 +84,7 @@ Only some of the values are valid for the user atomic function API; see
 
 ASSERT_AD_TYPE
 **************
-If *ad_obj* is an ``AD<`` *Base* > object, the syntax
+If *ad_obj* is an ``AD`` < *Base* > object, the syntax
 
    ``CPPAD_ASSERT_AD_TYPE`` ( *ad_obj* )
 

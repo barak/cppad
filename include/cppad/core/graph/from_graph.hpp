@@ -2,7 +2,7 @@
 # define CPPAD_CORE_GRAPH_FROM_GRAPH_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/core/ad_fun.hpp>
@@ -20,7 +20,7 @@ Syntax
 ******
 
 | |tab| ``cpp_graph`` *graph_obj*
-| |tab| ``ADFun<`` *Base* > *fun*
+| |tab| ``ADFun`` < *Base* > *fun*
 | |tab| *fun* . ``from_graph`` ( *graph_obj* )
 | |tab| *fun* . ``from_graph`` ( *graph_obj* , *dyn2var* , *var2dyn* )
 
@@ -176,7 +176,7 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
    for(size_t i = 0; i < n_graph_discrete; ++i)
       discrete_index[i] = n_list_discrete; // invalid discrete index
    for(size_t index = 0; index < n_list_discrete; ++index)
-   {  const char* name( discrete<Base>::name(index) );
+   {  const std::string& name( discrete<Base>::name(index) );
       size_t graph_index = graph_obj.discrete_name_vec_find(name);
       if( graph_index != n_graph_discrete )
       {  if( discrete_index[graph_index] != n_list_discrete )
@@ -771,8 +771,8 @@ void CppAD::ADFun<Base,RecBase>::from_graph(
             // ay
             ay.resize(n_result);
             for(size_t i = 0; i < n_result; ++i)
-            {  ay[i].value_ = taylor_y[i];
-               ay[i].taddr_ = 0;
+            {  ay[i].value_ = nan; // not_used
+               ay[i].taddr_ = 0;   // not used
             }
          }
          if( record_dynamic ) rec.put_dyn_atomic(

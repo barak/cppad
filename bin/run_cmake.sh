@@ -1,8 +1,9 @@
-#! /bin/bash -e
+#! /usr/bin/env bash
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
+set -e -u
 if [ ! -e "bin/run_cmake.sh" ]
 then
    echo "bin/run_cmake.sh: must be executed from its parent directory"
@@ -28,11 +29,13 @@ PKG_CONFIG_PATH="$prefix/lib64/pkgconfig:$prefix/lib/pkgconfig"
 PKG_CONFIG_PATH="$prefix/share/pkgconfig:$PKG_CONFIG_PATH"
 export PKG_CONFIG_PATH
 # -----------------------------------------------------------------------------
-addr_t_size_t='no'
+addr_t_type='int'
 verbose='no'
 standard='c++17'
 profile_speed='no'
+callgrind='no'
 clang='no'
+static='no'
 yes_adolc='yes'
 yes_colpack='yes'
 yes_eigen='yes'
@@ -44,19 +47,20 @@ yes_sacado='yes'
 yes_documentation='yes'
 testvector='boost'
 debug_which='debug_all'
-while [ "$1" != "" ]
+while [ "$#" != 0 ]
 do
    if [ "$1" == '--help' ]
    then
       cat << EOF
 usage: bin/run_cmake.sh: \\
    [--help] \\
-   [--addr_t_size_t] \\
+   [--addr_t_<type>] \\
    [--verbose] \\
    [--c++11] \\
    [--profile_speed] \\
    [--callgrind] \\
    [--clang ] \\
+   [--static] \\
    [--no_adolc] \\
    [--no_colpack] \\
    [--no_eigen] \\
@@ -72,6 +76,7 @@ usage: bin/run_cmake.sh: \\
 The --help option just prints this message and exits.
 The value <package> above must be one of: cppad, boost, or eigen.
 The value <which> must be one of: odd, even, all, none.
+The value <type> must be one of: size_t, int, unsigned_int
 
 EOF
       exit 0
@@ -79,7 +84,15 @@ EOF
    case "$1" in
 
       --addr_t_size_t)
-      addr_t_size_t='yes'
+      addr_t_type='size_t'
+      ;;
+
+      --addr_t_int)
+      addr_t_type='int'
+      ;;
+
+      --addr_t_unsigned_int)
+      addr_t_type='unsigned int'
       ;;
 
       --verbose)
@@ -100,6 +113,10 @@ EOF
 
       --clang)
       clang='yes'
+      ;;
+
+      --static)
+      static='yes'
       ;;
 
       --no_adolc)
@@ -187,6 +204,11 @@ EOF
    esac
    shift
 done
+if [ "$standard" == 'c++11' ]
+then
+   # Scacdo will not build with c++11
+   yes_sacado='no'
+fi
 # ---------------------------------------------------------------------------
 if [ ! -e build ]
 then
@@ -203,7 +225,7 @@ then
 fi
 # ---------------------------------------------------------------------------
 # clean all variables in cmake cache
-cmake_args='-U .+ -D cmake_defined_ok=FALSE'
+cmake_args='-U .+ -D cmake_defined_ok=FALSE -G Ninja'
 #
 if [ "$verbose" == 'yes' ]
 then
@@ -319,10 +341,6 @@ done
 # cppad_cxx_flags
 cppad_cxx_flags="-Wall -pedantic-errors -std=$standard -Wshadow"
 cppad_cxx_flags="$cppad_cxx_flags -Wfloat-conversion -Wconversion"
-if [ "$debug_which" == 'debug_odd' ] || [ "$debug_which" == 'debug_even' ]
-then
-   cppad_cxx_flags="$cppad_cxx_flags -D CPPAD_DEBUG_AND_RELEASE"
-fi
 if [ "$callgrind" == 'yes' ]
 then
    if [ "$debug_which" != 'debug_none' ]
@@ -351,24 +369,30 @@ then
    cmake_args="$cmake_args -D CMAKE_CXX_COMPILER=clang++"
 fi
 #
+# static
+if [ "$static" == 'yes' ]
+then
+   cmake_args="$cmake_args -D cppad_static_lib=true"
+fi
+#
 # profile
 if [ "$profile_speed" == 'yes' ]
 then
    cmake_args="$cmake_args -D cppad_profile_flag=-pg"
 fi
 #
+# debug_and_release
+if [ "$debug_which" == 'debug_none' ] || [ "$debug_which" == 'debug_all' ]
+then
+   cmake_args="$cmake_args -D cppad_debug_and_release=false"
+fi
+#
 # simple options
 cmake_args="$cmake_args -D cppad_testvector=$testvector"
 cmake_args="$cmake_args -D cppad_debug_which=$debug_which"
 cmake_args="$cmake_args -D cppad_max_num_threads=48"
-if [ "$addr_t_size_t" == 'yes' ]
-then
-   cmake_args="$cmake_args -D cppad_tape_id_type='size_t'"
-   cmake_args="$cmake_args -D cppad_tape_addr_type=size_t"
-else
-   cmake_args="$cmake_args -D cppad_tape_id_type='int32_t'"
-   cmake_args="$cmake_args -D cppad_tape_addr_type=int32_t"
-fi
+cmake_args="$cmake_args -D cppad_tape_id_type='$addr_t_type'"
+cmake_args="$cmake_args -D cppad_tape_addr_type='$addr_t_type'"
 #
 echo_eval cmake $cmake_args ..
 #

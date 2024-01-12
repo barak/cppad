@@ -2,10 +2,11 @@
 # define CPPAD_CORE_DISCRETE_DISCRETE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 # include <vector>
 # include <cppad/core/cppad_assert.hpp>
+# include <cppad/local/op_code_dyn.hpp>
 
 // needed before one can use CPPAD_ASSERT_FIRST_CALL_NOT_PARALLEL
 # include <cppad/utility/thread_alloc.hpp>
@@ -33,11 +34,11 @@ is the name of the user defined function that corresponding to this operation.
 
 ax
 **
-Is a ``AD<`` *Base* > corresponding to the argument for the function.
+Is a ``AD`` < *Base* > corresponding to the argument for the function.
 
 ay
 **
-Is a ``AD<`` *Base* > corresponding to the result for the function.
+Is a ``AD`` < *Base* > corresponding to the result for the function.
 
 fun
 ***
@@ -51,7 +52,10 @@ Source Code
 inline CppAD::AD<Base> name (const CppAD::AD<Base>& ax) \
 {    static CppAD::discrete<Base> fun(#name, name);     \
      return fun.ad(ax);                                 \
-}
+}                                                       \
+CppAD::AD<Base> this_variable_name_used_to_initialize_discrete_ ##name =  \
+name( CppAD::AD<Base>(0.0) );
+//
 # define CppADCreateDiscrete CPPAD_DISCRETE_FUNCTION
 /* {xrst_code}
 {xrst_spell_on}
@@ -107,7 +111,7 @@ List of all objects in the discrete class
 
 Syntax
 ******
-*list* = ``discrete<`` *Base* >:: ``List`` ()
+*list* = ``discrete`` < *Base* >:: ``List`` ()
 
 Base
 ****
@@ -147,7 +151,7 @@ Size of the Discrete Function List
 
 Syntax
 ******
-*size* = ``discrete<`` *Base* >:: ``list_size`` ()
+*size* = ``discrete`` < *Base* >:: ``list_size`` ()
 
 Base
 ****
@@ -176,7 +180,7 @@ Constructor Called by each Use of CPPAD_DISCRETE_FUNCTION
 
 Syntax
 ******
-``discrete<`` *Base* > *fun* ( *name* , *f* )
+``discrete`` < *Base* > *fun* ( *name* , *f* )
 
 name
 ****
@@ -211,7 +215,7 @@ the static object returned by :ref:`discrete_list-name` .
 {xrst_end discrete_ctor}
 */
 public:
-   discrete(const char* name, Fun f) :
+   discrete(const std::string& name, Fun f) :
    name_(name), f_(f) , index_( List().size() )
    {  std::string msg = "discrete: first call to the discrete function ";
       msg  += name;
@@ -309,6 +313,31 @@ Prototype
       return ay;
    }
 /*
+ ------------------------------------------------------------------------------
+{xrst_begin discrete_index dev}
+{xrst_spell
+   msg
+   str
+}
+
+Index That Identifies a Discrete Function
+#########################################
+{xrst_code hpp} */
+static size_t index(const std::string& name)
+{  size_t i = List().size();
+   while(i--)
+   {  if( List()[i]->name_ == name )
+         return i;
+   }
+   std::string msg = "There is no discrete function named " + name;
+   CPPAD_ASSERT_KNOWN(false, msg.c_str());
+   return List().size();
+}
+/* {xrst_code}
+
+{xrst_end discrete_index}
+*/
+/*
 ------------------------------------------------------------------------------
 {xrst_begin discrete_name dev}
 
@@ -317,7 +346,7 @@ Name Corresponding to a discrete Function
 
 Syntax
 ******
-``discrete<`` *Base* >:: ``name`` ( *index* )
+``discrete`` < *Base* >:: ``name`` ( *index* )
 
 Base
 ****
@@ -332,8 +361,8 @@ Source Code
 ***********
 {xrst_spell_off}
 {xrst_code hpp} */
-   static const char* name(size_t index)
-   {  return List()[index]->name_.c_str(); }
+   static const std::string& name(size_t index)
+   {  return List()[index]->name_; }
 /* {xrst_code}
 {xrst_spell_on}
 
@@ -345,7 +374,7 @@ Link From Forward Mode Sweep to Users Routine
 
 Syntax
 ******
-*y* = ``discrete<`` *Base* >:: ``eval`` ( *index* , *x* )
+*y* = ``discrete`` < *Base* >:: ``eval`` ( *index* , *x* )
 
 Base
 ****
@@ -383,7 +412,7 @@ Link From Forward Mode Sweep to AD Version of Discrete Function
 
 Syntax
 ******
-*ay* = ``discrete<`` *Base* >:: ``eval`` ( *index* , *ax* )
+*ay* = ``discrete`` < *Base* >:: ``eval`` ( *index* , *ax* )
 
 Base
 ****
@@ -396,11 +425,11 @@ index for this function in :ref:`discrete_list-name` .
 
 ax
 **
-argument at which to evaluate ``AD<`` *Base* > version of this function.
+argument at which to evaluate ``AD`` < *Base* > version of this function.
 
 ay
 **
-result for the ``AD<`` *Base* > version of this function.
+result for the ``AD`` < *Base* > version of this function.
 
 Source Code
 ***********

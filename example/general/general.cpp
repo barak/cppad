@@ -106,7 +106,6 @@ extern bool base_require(void);
 extern bool capacity_order(void);
 extern bool change_param(void);
 extern bool check_for_nan(void);
-extern bool compare_change(void);
 extern bool complex_poly(void);
 extern bool con_dyn_var(void);
 extern bool eigen_array(void);
@@ -223,7 +222,6 @@ int main(void)
    Run( base_require,      "base_require"     );
    Run( capacity_order,    "capacity_order"   );
    Run( change_param,      "change_param"     );
-   Run( compare_change,    "compare_change"   );
    Run( complex_poly,      "complex_poly"     );
    Run( con_dyn_var,       "con_dyn_var"      );
    Run( erf,               "erf"              );
@@ -261,7 +259,7 @@ int main(void)
    Run( unary_plus,        "unary_plus"       );
    Run( vec_ad,            "vec_ad"           );
    // END_SORT_THIS_LINE_MINUS_1
-# ifndef CPPAD_DEBUG_AND_RELEASE
+# if ! CPPAD_DEBUG_AND_RELEASE
    Run( check_for_nan,     "check_for_nan"    );
 # endif
 # if CPPAD_HAS_ADOLC

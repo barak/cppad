@@ -77,8 +77,15 @@ then
    echo_log_eval rm -r $HOME/prefix/cppad
 fi
 # ---------------------------------------------------------------------------
-version=`version.sh get`
+#
+# version
+version=$(
+   sed -n -e '/^SET( *cppad_version *"[0-9.]*")/p' CMakeLists.txt | \
+      sed -e 's|.*"\([^"]*\)".*|\1|'
+)
 # ---------------------------------------------------------------------------
+#
+# compiler
 random_01 compiler
 if [ "$random_01_compiler" == '0' ]
 then
@@ -87,7 +94,7 @@ else
    compiler='--clang'
 fi
 #
-# Prefer c-17 standard
+# standard
 random_01 standard
 if [ "$random_01_standard" == '0' ]
 then
@@ -102,6 +109,22 @@ else
    standard='--c++17'
 fi
 #
+# use_configure
+random_01 use_configure
+if [ "$random_01_use_configure" == '0' ]
+then
+   random_01 use_configure
+   if [ "$random_01_use_configure" == '0' ]
+   then
+      use_configure='yes'
+   else
+      use_configure='no'
+   fi
+else
+   use_configure='no'
+fi
+#
+# package_vector, debug_which
 if [ "$build_type" == 'debug' ]
 then
    package_vector='--cppad_vector'
@@ -138,6 +161,7 @@ compiler        = $compiler
 standard        = $standard
 debug_which     = $debug_which
 package_vector  = $package_vector
+use_configure   = $use_configure
 EOF
 cat << EOF >> $top_srcdir/check_all.log
 tarball         = $cppad-$version.tgz
@@ -145,14 +169,19 @@ compiler        = $compiler
 standard        = $standard
 debug_which     = $debug_which
 package_vector  = $package_vector
+use_configure   = $use_configure
 EOF
+#
+# compiler
 if [ "$compiler" == 'default' ]
 then
    compiler=''
 fi
+#
+# standard
 if [ "$standard" == '--c++17' ]
 then
-   standard='' # default for run_cmake.sh
+   standard='' # default for run_cmake.sh and configure
 fi
 # ---------------------------------------------------------------------------
 # absoute prefix where optional packages are installed
@@ -169,18 +198,27 @@ then
 fi
 export LD_LIBRARY_PATH="$prefix/lib:$prefix/lib64"
 # ---------------------------------------------------------------------------
+#
+# check_version.sh
+# run this separate because it my be interactive
+echo_eval bin/check_version.sh
+#
 # Run automated checks for the form bin/check_*.sh with a few exceptions.
 list=$(
    ls bin/check_* | sed \
    -e '/check_all.sh/d' \
+   -e '/check_version.sh/d' \
    -e '/check_doxygen.sh/d' \
    -e '/check_install.sh/d'
 )
-# ~/devel/check_copyright.sh not included in batch_edit branch
+#
 for check in $list
 do
    echo_log_eval $check
 done
+#
+# run_xrst.sh
+bin/run_xrst.sh +dev
 # ---------------------------------------------------------------------------
 # build/cppad-$version.tgz
 echo_log_eval bin/package.sh
@@ -197,20 +235,37 @@ then
 fi
 echo_log_eval cp -r ../prefix build/prefix
 #
-# run_cmake.sh
-# prefix is extracted from bin/get_optional
-echo_log_eval bin/run_cmake.sh \
-   $verbose \
-   --profile_speed \
-   $compiler \
-   $standard \
-   $debug_which \
-   $package_vector
+# configure or cmake
+if [ "$use_configure" == 'yes' ]
+then
+   builder='make'
+   if [ "$compiler" == 'clang' ]
+   then
+      echo_log_eval bin/run_configure.sh $standard --with_clang
+   else
+      echo_log_eval bin/run_configure.sh $standard
+   fi
+else
+   builder='ninja'
+   echo_log_eval bin/run_cmake.sh \
+      $verbose \
+      --profile_speed \
+      $compiler \
+      $standard \
+      $debug_which \
+      $package_vector
+fi
 echo_log_eval cd build
+#
+# n_job
+n_job=$(nproc)
+if [ "$n_job" -ge '5' ]
+then
+   let n_job="$n_job - 1"
+fi
 # -----------------------------------------------------------------------------
 # can comment out this make check to if only running tests below it
-n_job=`nproc`
-cmd="make -j $n_job check"
+cmd="$builder -j $n_job check"
 echo "$cmd >& check_all.tmp"
 echo "$cmd" > $top_srcdir/check_all.tmp
 if ! $cmd >& $top_srcdir/check_all.tmp
@@ -219,37 +274,22 @@ then
 fi
 echo 'Re-running Command'
 echo_log_eval $cmd
-# -----------------------------------------------------------------------------
-for package in adolc cppadcg eigen ipopt fadbad sacado
-do
-   if echo $standard | grep "no_$package" > /dev/null
-   then
-      skip="$skip $package"
-   fi
-done
 # ----------------------------------------------------------------------------
-# extra speed tests not run with option specified
+# extra speed tests not run with different options
 #
-# make speed_cppad in case make check above is commented out
-echo_log_eval make -j $n_job speed_cppad
 for option in onetape colpack optimize atomic memory boolsparsity
 do
-   #
    echo_eval speed/cppad/speed_cppad correct 432 $option
 done
-if ! echo "$skip" | grep 'adolc' > /dev/null
-then
-   # make speed_adolc in case make check above is commented out
-   echo_log_eval make -j $n_job speed_adolc
-   #
-   echo_eval speed/adolc/speed_adolc correct         432 onetape
-   echo_eval speed/adolc/speed_adolc sparse_jacobian 432 onetape colpack
-   echo_eval speed/adolc/speed_adolc sparse_hessian  432 onetape colpack
-fi
+#
+echo_eval speed/adolc/speed_adolc correct         432 onetape
+echo_eval speed/adolc/speed_adolc sparse_jacobian 432 onetape colpack
+echo_eval speed/adolc/speed_adolc sparse_hessian  432 onetape colpack
 #
 # ----------------------------------------------------------------------------
 # extra multi_thread tests
 program_list=''
+skip=''
 for threading in bthread openmp pthread
 do
    dir="example/multi_thread/$threading"
@@ -260,8 +300,8 @@ do
       program="$dir/example_multi_thread_${threading}"
       program_list="$program_list $program"
       #
-      # make program in case make check above is commented out
-      echo_log_eval make -j $n_job example_multi_thread_${threading}
+      # redo this build in case it is commented out above
+      echo_log_eval $builder -j $n_job example_multi_thread_${threading}
       #
       # all programs check the fast cases
       echo_log_eval $program a11c
@@ -292,8 +332,10 @@ fi
 #
 # print_for test
 program='example/print_for/example_print_for'
-# make program in case make check above is commented out
-echo_log_eval make -j $n_job example_print_for
+#
+# redo this build in case it is commented out above
+echo_log_eval $builder -j $n_job example_print_for
+#
 echo_log_eval $program
 $program | sed -e '/^Test passes/,$d' > junk.1.$$
 $program | sed -e '1,/^Test passes/d' > junk.2.$$
@@ -308,7 +350,7 @@ fi
 #
 # ---------------------------------------------------------------------------
 # check install
-echo_log_eval make install
+echo_log_eval $builder install
 echo_log_eval cd ..
 echo_log_eval bin/check_install.sh
 # ---------------------------------------------------------------------------

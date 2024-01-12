@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Configure the CppAD include file directory
 # -----------------------------------------------------------------------------
@@ -101,6 +101,9 @@ IF( cppad_eigenvector )
    ENDIF( NOT include_eigen )
 ENDIF( cppad_eigenvector )
 # -----------------------------------------------------------------------------
+# cppad_tape_addr_type_is_size_t
+check_match(cppad_tape_addr_type size_t cppad_tape_addr_type_is_size_t)
+# -----------------------------------------------------------------------------
 # cppad_has_gettimeofday
 #
 SET(source "
@@ -169,6 +172,23 @@ int main(void)
 }
 " )
 compile_source_test(${cmake_defined_ok} "${source}" cppad_has_tmpnam_s )
+# -----------------------------------------------------------------------------
+# cppad_is_same_unsigned_int_size_t
+#
+SET(source "
+# include <cstddef>
+# include <type_traits>
+int main(void)
+{  static_assert(
+      std::is_same<unsigned int, size_t>::value ,
+      \"message not needed with C++17 or later\"  
+   );
+   return 0;
+}
+" )
+compile_source_test(
+   ${cmake_defined_ok} "${source}" cppad_is_same_unsigned_int_size_t 
+)
 # -----------------------------------------------------------------------------
 # configure.hpp
 CONFIGURE_FILE(

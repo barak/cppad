@@ -2,7 +2,7 @@
 # define CPPAD_CORE_ATOMIC_FOUR_ATOMIC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin atomic_four_define}
@@ -46,7 +46,7 @@ Callbacks
 | |tab| *dependency* , *ident_zero_x* , *select_x* *select_y* , *pattern_out*
 | )
 | *ok* = *afun* . ``hes_sparsity`` ( *call_id* ,
-| |tab| *ident_zero_x* , *select_x* *select_y* , *pattern_out*
+| |tab| *ident_zero_x* , *select_x* , *select_y* , *pattern_out*
 | )
 | *ok* = *afun* . ``rev_depend`` ( *call_id* ,
 | |tab| *ident_zero_x* , *depend_x* , *depend_y*
@@ -67,7 +67,7 @@ In some cases, it is possible to compute derivatives of a function
 
    y = g(x) \; {\rm where} \; g : \B{R}^n \rightarrow \B{R}^m
 
-more efficiently than by coding it using ``AD<`` *Base* >
+more efficiently than by coding it using ``AD`` < *Base* >
 :ref:`glossary@Operation@Atomic` operations
 and letting CppAD do the rest.
 The class ``atomic_four`` < ``Base`` > is used to
@@ -80,7 +80,7 @@ Reduce Memory
 If the function :math:`g(x)` is used many times during the recording
 of an :ref:`ADFun-name` object,
 an atomic version of :math:`g(x)` removes the need for repeated
-copies of the corresponding ``AD<`` *Base* > operations and variables
+copies of the corresponding ``AD`` < *Base* > operations and variables
 in the recording.
 
 Virtual Functions
@@ -122,8 +122,13 @@ Contents
 */
 
 # include <set>
+# include <map>
 # include <cppad/core/cppad_assert.hpp>
 # include <cppad/local/atomic_index.hpp>
+# include <cppad/core/ad_type.hpp>
+# include <cppad/utility/sparse_rc.hpp>
+# include <cppad/local/pod_vector.hpp>
+# include <cppad/local/op_code_var.hpp>
 
 // needed before one can use in_parallel
 # include <cppad/utility/thread_alloc.hpp>
@@ -141,7 +146,7 @@ private:
    // ------------------------------------------------------
    // constants
    //
-   /// index of this object in lcal::atomic_index
+   /// index of this object in local::atomic_index
    /// (set by constructor and not changed; i.e., effectively const)
    size_t index_;
    //
@@ -167,6 +172,12 @@ private:
    work_struct* work_[CPPAD_MAX_NUM_THREADS];
    // -----------------------------------------------------
 public:
+   //
+   // atomic_index
+   // Needed by val_graph and not documented. Perhaps should be in
+   // include/cppad/core/atomic/four/devel/devel.xrst
+   size_t atomic_index(void) const
+   { return index_; }
    // =====================================================================
    // In User API
    // =====================================================================
@@ -308,7 +319,7 @@ public:
    // rev_depend
    virtual bool rev_depend(
       size_t                       call_id      ,
-      vector<bool>&                ident_zero_x ,
+      const vector<bool>&          ident_zero_x ,
       vector<bool>&                depend_x     ,
       const vector<bool>&          depend_y
    );

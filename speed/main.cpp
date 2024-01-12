@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cstring>
@@ -205,6 +205,12 @@ If it is false, this optimization will not be done.
 Note that this option is usually slower unless it is combined with the
 ``onetape`` option.
 
+val_graph
+=========
+If this option and optimize are present,
+CppAD will add the :code:`optimize@options@val_graph` option to
+the optimization of the operation sequence.
+
 atomic
 ======
 If this option is present,
@@ -399,7 +405,8 @@ namespace {
       "revsparsity",
       "subsparsity",
       "colpack",
-      "symmetric"
+      "symmetric",
+      "val_graph"
    };
    size_t num_option = sizeof(option_list) / sizeof( option_list[0] );
    // ----------------------------------------------------------------
@@ -608,13 +615,13 @@ int main(int argc, char *argv[])
    CppAD::vector<size_t> size_sparse_hessian(n_size);
    CppAD::vector<size_t> size_sparse_jacobian(n_size);
    for(size_t i = 0; i < n_size; i++)
-   {  size_det_minor[i]   = i + 2;
-      size_det_lu[i]      = 10 * i + 1;
-      size_mat_mul[i]     = 10 * i + 1;
-      size_ode[i]         = 10 * i + 1;
-      size_poly[i]        = 10 * i + 1;
-      size_sparse_hessian[i]  = 150 * (i + 1) * (i + 1);
-      size_sparse_jacobian[i] = 150 * (i + 1) * (i + 1);
+   {  size_det_minor[i]   =  i + 3;
+      size_det_lu[i]      = 20 * i + 1;
+      size_mat_mul[i]     = 20 * i + 1;
+      size_ode[i]         = 20 * i + 1;
+      size_poly[i]        = 20 * i + 1;
+      size_sparse_hessian[i]  = 250 * (i + 1) * (i + 1);
+      size_sparse_jacobian[i] = 250 * (i + 1) * (i + 1);
    }
    switch(match)
    {
