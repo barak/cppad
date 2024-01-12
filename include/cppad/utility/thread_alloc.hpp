@@ -2,12 +2,13 @@
 # define CPPAD_UTILITY_THREAD_ALLOC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <sstream>
 # include <limits>
 # include <memory>
+# include <cstdint>
 
 
 # ifdef _MSC_VER
@@ -133,9 +134,9 @@ private:
       block_t root_available_[CPPAD_MAX_NUM_CAPACITY];
       /*!
       root of inuse list for this thread and each capacity
-      If NDEBUG or CPPAD_DEBUG_AND_RELEASE is defined, this memory is not
-      used, but it still helps to separate this structure from the structure
-      for the next thread.
+      If NDEBUG is defined or CPPAD_DEBUG_AND_RELEASE is true,
+      this memory is not used, but it still helps to separate
+      this structure from the structure for the next thread.
       */
       block_t root_inuse_[CPPAD_MAX_NUM_CAPACITY];
    };
@@ -787,7 +788,7 @@ Example
             first_trace = false;
       }
 
-# ifndef CPPAD_DEBUG_AND_RELEASE
+# if ! CPPAD_DEBUG_AND_RELEASE
       // Root nodes for both lists. Note these are different for different
       // threads because tc_index is different for different threads.
       block_t* inuse_root     = info->root_inuse_ + c_index;
@@ -807,7 +808,7 @@ Example
          // return value for get_memory
          void* v_ptr = reinterpret_cast<void*>(node + 1);
 # ifndef NDEBUG
-# ifndef CPPAD_DEBUG_AND_RELEASE
+# if ! CPPAD_DEBUG_AND_RELEASE
          // add node to inuse list
          node->next_           = inuse_root->next_;
          inuse_root->next_     = v_node;
@@ -823,7 +824,13 @@ Example
          inc_inuse(cap_bytes, thread);
          dec_available(cap_bytes, thread);
 
-         // return pointer to memory, do not inclue thread_alloc information
+# ifndef NDEBUG
+         // check that pointers and doubles are aligned
+         std::uintptr_t i_ptr = reinterpret_cast<std::uintptr_t>(v_ptr);
+         CPPAD_ASSERT_UNKNOWN( i_ptr % sizeof(v_ptr) == 0 );
+         CPPAD_ASSERT_UNKNOWN( i_ptr % sizeof(double) == 0 );
+# endif
+         // return pointer to memory, do not inclue block_t at begining
          return v_ptr;
       }
 
@@ -837,7 +844,7 @@ Example
       void* v_ptr     = reinterpret_cast<void*>(node + 1);
 
 # ifndef NDEBUG
-# ifndef CPPAD_DEBUG_AND_RELEASE
+# if ! CPPAD_DEBUG_AND_RELEASE
       // add node to inuse list
       node->next_       = inuse_root->next_;
       inuse_root->next_ = v_node;
@@ -936,7 +943,7 @@ Example
 
       thread_alloc_info* info = thread_info(thread);
 # ifndef NDEBUG
-# ifndef CPPAD_DEBUG_AND_RELEASE
+# if ! CPPAD_DEBUG_AND_RELEASE
       // remove node from inuse list
       void* v_node         = reinterpret_cast<void*>(node);
       block_t* inuse_root  = info->root_inuse_ + c_index;
@@ -1125,9 +1132,6 @@ to the system using :ref:`free_available<ta_free_available-name>` .
 
 /* -----------------------------------------------------------------------
 {xrst_begin ta_inuse}
-{xrst_spell
-   inuse
-}
 
 Amount of Memory a Thread is Currently Using
 ############################################

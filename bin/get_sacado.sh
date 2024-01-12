@@ -1,9 +1,9 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# {xrst_begin get_sacado.sh} 
+# {xrst_begin get_sacado.sh}
 # {xrst_spell
 #     trilinos
 # }
@@ -43,7 +43,7 @@
 # version of Trilinos:
 # {xrst_spell_off}
 # {xrst_code sh}
-version='13-0-1'
+version='14-0-0'
 # {xrst_code}
 # {xrst_spell_on}
 #
@@ -71,7 +71,8 @@ echo_eval() {
    eval $*
 }
 # -----------------------------------------------------------------------------
-web_page='https://github.com/trilinos/Trilinos.git'
+web_page='https://github.com/trilinos/Trilinos/archive/refs/tags'
+release_name="trilinos-release-$version"
 cppad_dir=`pwd`
 # -----------------------------------------------------------------------------
 # n_job
@@ -95,7 +96,7 @@ echo "Executing get_$package.sh"
 if [ -e "$configured_flag" ]
 then
    echo "Skipping configuration because $configured_flag exits"
-   echo_eval cd external/trilinos.git/build
+   echo_eval cd external/$release_name/build
    echo_eval make -j $n_job install
    echo "get_$package.sh: OK"
    exit 0
@@ -117,14 +118,20 @@ fi
 echo_eval cd external
 # -----------------------------------------------------------------------------
 # create the trilions source directory and change into it
-if [ ! -e trilinos.git ]
+if [ ! -e $release_name ]
 then
-   echo_eval git clone $web_page trilinos.git
+   wget "$web_page/$release_name.tar.gz"
+   tar -xzf "$release_name.tar.gz"
+   mv Trilinos-$release_name $release_name
+   #
+   # see https://github.com/trilinos/Trilinos/issues/11923
+   file="$release_name/packages/teuchos/core/src/Teuchos_BigUIntDecl.hpp"
+   if ! grep '^#include <cstdint>' $file > /dev/null
+   then
+      sed -i $file -e 's|#include <iosfwd>|&\n#include <cstdint>|'
+   fi
 fi
-echo_eval cd trilinos.git
-echo_eval git checkout master
-echo_eval git pull
-echo_eval git checkout trilinos-release-$version
+echo_eval cd $release_name
 # -----------------------------------------------------------------------------
 # change into build sub-directory
 if [ ! -e build ]
@@ -133,13 +140,15 @@ then
 fi
 echo_eval cd build
 # -----------------------------------------------------------------------------
-echo_eval cmake \
-   -D CMAKE_BUILD_TYPE:STRING=RELEASE \
-   -D Trilinos_ENABLE_Sacado:BOOL=ON \
-   -D Sacado_ENABLE_TESTS:BOOL=OFF \
-   -D CMAKE_INSTALL_PREFIX:PATH=$prefix \
+cmd="cmake \
+   -D CMAKE_BUILD_TYPE=RELEASE \
+   -D Trilinos_ENABLE_Sacado=ON \
+   -D Sacado_ENABLE_TESTS=OFF \
+   -D CMAKE_INSTALL_PREFIX=$prefix \
    -D Trilinos_INSTALL_LIB_DIR=$prefix/$libdir \
-   ..
+   .."
+echo $cmd
+$cmd
 echo_eval make -j $n_job install
 # -----------------------------------------------------------------------------
 echo_eval touch $cppad_dir/$configured_flag

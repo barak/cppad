@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-23 Bradley M. Bell
 # ----------------------------------------------------------------------------
 
 {xrst_begin cmake}
@@ -13,10 +13,10 @@
    cstdint
    cxx
    datadir
+   dlls
    docdir
    dylib
    exe
-   github
    gnu
    gprof
    grep
@@ -101,40 +101,41 @@ Options
 =======
 The full version of the command, with all its optional arguments is:
 
-| ``cmake``                                                                      \\
-| |tab| ``-D CMAKE_VERBOSE_MAKEFILE`` = *cmake_verbose_makefile*                        \\
-| |tab| ``-D CMAKE_BUILD_TYPE`` = *cmake_build_type*                                    \\
-| |tab| ``-G`` *generator*                                                            \\
+| ``cmake``                                                                 \\
+| |tab| ``-D CMAKE_VERBOSE_MAKEFILE`` = *cmake_verbose_makefile*            \\
+| |tab| ``-D CMAKE_BUILD_TYPE`` = *cmake_build_type*                        \\
+| |tab| ``-G`` *generator*                                                  \\
 | |tab| \\
-| |tab| ``-D cppad_prefix`` = *cppad_prefix*                                            \\
-| |tab| ``-D cppad_postfix`` = *cppad_postfix*                                          \\
+| |tab| ``-D cppad_prefix`` = *cppad_prefix*                                \\
+| |tab| ``-D cppad_postfix`` = *cppad_postfix*                              \\
 | |tab| \\
-| |tab| ``-D cmake_install_includedirs`` = *cmake_install_includedirs*                  \\
-| |tab| ``-D cmake_install_libdirs`` = *cmake_install_libdirs*                          \\
+| |tab| ``-D cmake_install_includedirs`` = *cmake_install_includedirs*      \\
+| |tab| ``-D cmake_install_libdirs`` = *cmake_install_libdirs*              \\
 | |tab| \\
-| |tab| ``-D cmake_install_datadir`` = *cmake_install_datadir*                          \\
-| |tab| ``-D cmake_install_docdir`` = *cmake_install_docdir*                            \\
+| |tab| ``-D cmake_install_datadir`` = *cmake_install_datadir*              \\
+| |tab| ``-D cmake_install_docdir`` = *cmake_install_docdir*                \\
 | |tab| \\
-| |tab| ``-D cmake_defined_ok`` = *cmake_defined_ok*                                    \\
-| |tab| ``-D cmake_needs_dot_slash`` = *cmake_needs_dot_slash*                          \\
+| |tab| ``-D cmake_defined_ok`` = *cmake_defined_ok*                        \\
 | |tab| \\
-| |tab| ``-D include_adolc`` = *true_or_false*                                          \\
-| |tab| ``-D include_eigen`` = *true_or_false*                                          \\
-| |tab| ``-D include_ipopt`` = *true_or_false*                                          \\
-| |tab| ``-D include_cppadcg`` = *true_or_false*                                        \\
+| |tab| ``-D include_adolc`` = *true_or_false*                              \\
+| |tab| ``-D include_eigen`` = *true_or_false*                              \\
+| |tab| ``-D include_ipopt`` = *true_or_false*                              \\
+| |tab| ``-D include_cppadcg`` = *true_or_false*                            \\
 | |tab| \\
-| |tab| ``-D eigen_prefix`` = *eigen_prefix*
-| |tab| ``-D colpack_prefix`` = *colpack_prefix*                                        \\
-| |tab| ``-D fadbad_prefix`` = *fadbad_prefix*                                          \\
-| |tab| ``-D sacado_prefix`` = *sacado_prefix*                                          \\
+| |tab| ``-D eigen_prefix`` = *eigen_prefix*                                \\
+| |tab| ``-D colpack_prefix`` = *colpack_prefix*                            \\
+| |tab| ``-D fadbad_prefix`` = *fadbad_prefix*                              \\
+| |tab| ``-D sacado_prefix`` = *sacado_prefix*                              \\
 | |tab| \\
-| |tab| ``-D cppad_cxx_flags`` = *cppad_cxx_flags*                                      \\
-| |tab| ``-D cppad_profile_flag`` = *cppad_profile_flag*                                \\
-| |tab| ``-D cppad_testvector`` = *cppad_testvector*                                    \\
-| |tab| ``-D cppad_max_num_threads`` = *cppad_max_num_threads*                          \\
-| |tab| ``-D cppad_tape_id_type`` = *cppad_tape_id_type*                                \\
-| |tab| ``-D cppad_tape_addr_type`` = *cppad_tape_addr_type*                            \\
-| |tab| ``-D cppad_debug_which`` = *cppad_debug_which*                                  \\
+| |tab| ``-D cppad_cxx_flags`` = *cppad_cxx_flags*                          \\
+| |tab| ``-D cppad_profile_flag`` = *cppad_profile_flag*                    \\
+| |tab| ``-D cppad_testvector`` = *cppad_testvector*                        \\
+| |tab| ``-D cppad_max_num_threads`` = *cppad_max_num_threads*              \\
+| |tab| ``-D cppad_tape_id_type`` = *cppad_tape_id_type*                    \\
+| |tab| ``-D cppad_tape_addr_type`` = *cppad_tape_addr_type*                \\
+| |tab| ``-D cppad_debug_which`` = *cppad_debug_which*                      \\
+| |tab| ``-D cppad_static_lib`` = *cppad_static_lib*                        \\
+| |tab| ``-D cppad_debug_and_release`` = *cppad_debug_and_release*          \\
 | |tab| \\
 | |tab| ..
 
@@ -208,7 +209,7 @@ all the test options with the command:
 cmake_verbose_makefile
 **********************
 This value should be either ``true`` or ``false`` .
-The default value, when it is not present, is ``NO`` .
+The default value, when it is not present, is ``false`` .
 If it is ``true`` , then the output of the ``make`` commands
 will include all of the files and flags used to run the compiler
 and linker. This can be useful for seeing how to compile and link
@@ -221,20 +222,11 @@ This value should be one of the valid CMake build types; e.g.,
 ``Release`` ,
 ``RelWithDebInfo`` ,
 ``MinSizeRel`` .
-If this value is specified,
+The value of this option is not case sensitive; e.g.,
+``Debug`` and ``debug`` yield the same result.
+If *cmake_build_type* is specified,
 :ref:`cmake@cppad_debug_which`
-must not be the empty string.
-
-cmake_needs_dot_slash
-*********************
-This value should be either ``true`` or ``false`` .
-The default value, when it is not present, is ``false`` .
-If you get an error saying that an executable program could not be found,
-try setting this to true.
-CMake gets confused on some systems and needs ``./`` in front
-of the name of the executable corresponding to a cmake
-``ADD_CUSTOM_COMMAND`` . For example, in the github actions version of
-`using msys2 in ci <https://www.msys2.org/docs/ci/>`_.
+must be the empty string.
 
 generator
 *********
@@ -247,6 +239,10 @@ Below is a table with a few of the possible files
    *generator*,Description
    ``"Unix Makefiles"``,make files for unix operating system
    ``"NMake Makefiles"``,make files for Visual Studio
+   ``"MSYS Makefiles"``,make files for msys2
+   ``Ninja``, `Ninja`_ build system
+
+.. _Ninja: https://en.wikipedia.org/wiki/Ninja_(build_system)
 
 Other generator choices are available; see the cmake
 `generators <http://www.cmake.org/cmake/help/cmake2.6docs.html#section_Generators>`_ documentation.
@@ -448,14 +444,6 @@ C++17
 In order for the compiler to take advantage of features that are in C++17
 ,but not in C++11, the *cppad_cxx_flags* must enable these features.
 
-debug and release
-=================
-The CppAD examples and tests decide which files to compile for debugging
-and which to compile for release. Hence debug and release flags should
-not be included in *cppad_cxx_flags* .
-See also the
-:ref:`preprocessor@Documented Here@CPPAD_DEBUG_AND_RELEASE`
-compiler flag (which should not be included in *cppad_cxx_flags* ).
 
 clang
 =====
@@ -571,6 +559,29 @@ The value *cppad_debug_which* be one of the following:
 
 If ``CMAKE_BUILD_TYPE`` is specified on the command line,
 then *cppad_debug_which* must be the empty string (its default value).
+
+cppad_static_lib
+****************
+This value should be either ``true`` or ``false`` and
+its default value is ``false`` .
+If it is true (false), the cppad library will be a static (shared) library.
+If the target system uses windows dlls, this setting should be true.
+If it is false, a warning will be issued and it will be ignored.
+
+cppad_debug_and_release
+***********************
+This value should be either ``true`` or ``false`` and its
+default value is ``true`` .
+If it is true,
+and the debug and release versions of CppAD can be mixed in the same program.
+This must be true if
+:ref:`cmake@cppad_debug_which` is ``debug_even`` or ``debug_odd`` .
+If ``NDEBUG`` is defined and *cppad_debug_and_release* is false,
+:ref:`thread_alloc-name` does more error checking.
+For programs that do a lot of memory allocation,
+this can take a significant amount of time.
+This is meant for testing CppAD and as a last resort when debugging.
+
 {xrst_toc_hidden
    bin/get_optional.sh
    xrst/install/adolc.xrst

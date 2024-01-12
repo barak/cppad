@@ -8,7 +8,7 @@
 #
 # Set the minimum required version of cmake for this project.
 # see http://www.cmake.org/pipermail/cmake/2013-January/053213.html
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 #
 # Only interpret if() arguments as variables or keywords when unquoted.
 IF( POLICY CMP0054 )
@@ -16,9 +16,12 @@ IF( POLICY CMP0054 )
 ENDIF( POLICY CMP0054 )
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20230000.0")
+SET(cppad_version "20240000.1")
 SET(cppad_url          "https://coin-or.github.io/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
+IF( NOT DEFINED CMAKE_BUILD_TYPE)
+    SET(CMAKE_BUILD_TYPE "NOTFOUND")
+ENDIF( NOT DEFINED CMAKE_BUILD_TYPE)
 #
 # Set name of this project and create the variables
 # cppad_BINARY_DIR and cppad_SOURCE_DIR.
@@ -92,7 +95,7 @@ IF( cppad_sparse_list )
 ENDIF( cppad_sparse_list )
 #
 IF( cppad_deprecated )
-   MESSAGE(FATAL_ERROR "cppad_deprecated has been removed from cmake comamnd" )
+   MESSAGE(FATAL_ERROR "cppad_deprecated has been removed from cmake command" )
 ENDIF( cppad_deprecated )
 #
 IF( cmake_install_prefix )
@@ -114,13 +117,14 @@ FOREACH(pkg adolc ipopt cppadcg)
       )
    ENDIF( ${pkg}_prefix )
 ENDFOREACH(pkg adolc eigen ipopt)
+#
+IF( cmake_needs_dot_slash )
+   MESSAGE(FATAL_ERROR
+      "cmake_needs_dot_slash was removed; see release notes for 2023-06-01"
+   )
+ENDIF( cmake_needs_dot_slash )
 # -----------------------------------------------------------------------------
 # Current Arguments
-#
-# cmake_needs_dot_slash
-command_line_arg(cmake_needs_dot_slash "false" BOOL
-"does cmake need a ./ in the front of an executable name in a custom command"
-)
 #
 # cmake_install_datadir
 command_line_arg(cmake_install_datadir share STRING
@@ -193,6 +197,16 @@ command_line_arg(cppad_tape_id_type "unsigned int" STRING
 command_line_arg(cppad_tape_addr_type "unsigned int" STRING
 "type used to identify variables on one tape, size must be <= sizeof(size_t)"
 )
+#
+# cppad_static_lib
+command_line_arg(cppad_static_lib FALSE BOOL
+   "If true (false) the cppad library will be static (shared)"
+)
+#
+# cppad_debug_and_release
+command_line_arg(cppad_debug_and_release TRUE BOOL
+   "If true the cppad library and tests will be able to mix debug and release"
+)
 # ----------------------------------------------------------------------------
 #
 # Ensure c++11 support
@@ -223,6 +237,13 @@ int main(void)
 compile_source_test(${cmake_defined_ok} "${source}" use_cplusplus_2017_ok )
 # ----------------------------------------------------------------------------
 #
+# cppad_debug_and_release_01
+IF (cppad_debug_and_release )
+   SET(cppad_debug_and_release_01 1 )
+ELSE (cppad_debug_and_release )
+   SET(cppad_debug_and_release_01 0 )
+ENDIF ( )
+#
 # cppad_debug_which
 # CMAKE_BUILD_TYPE
 SET(debug_even_or_odd FALSE)
@@ -238,17 +259,22 @@ IF( CMAKE_BUILD_TYPE )
       MESSAGE(FATAL_ERROR
          "Both CMAKE_BUILD_TYPE and cppad_debug_which specified"
       )
-   ENDIF( NOT ${cppad_debug_which} STREQUAL "" )
-   IF(CMAKE_BUILD_TYPE MATCHES Debug)
+   ENDIF( )
+   STRING( TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_lower )
+   IF(cmake_build_type_lower MATCHES debug)
       SET(cppad_debug_which "debug_all")
-   ELSEIF(CMAKE_BUILD_TYPE MATCHES Release)
+   ELSEIF(cmake_build_type_lower MATCHES release)
       SET(cppad_debug_which "debug_none")
-   ELSEIF(CMAKE_BUILD_TYPE MATCHES RelWithDebInfo)
+   ELSEIF(cmake_build_type_lower MATCHES relwithdebInfo)
       SET(cppad_debug_which "debug_none")
-   ELSEIF(CMAKE_BUILD_TYPE MATCHES MinSizeRel)
+   ELSEIF(cmake_build_type_lower MATCHES minsizerel)
       SET(cppad_debug_which "debug_none")
-   ENDIF()
-ELSE( CMAKE_BUILD_TYPE )
+   ELSE( )
+      MESSAGE(FATAL_ERROR
+         "Unknonw CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}"
+      )
+   ENDIF( )
+ELSE( ) # CMAKE_BUILD_TYPE
    IF( "${cppad_debug_which}" STREQUAL debug_all)
       SET(CMAKE_BUILD_TYPE Debug)
    ELSEIF( "${cppad_debug_which}" STREQUAL debug_none)
@@ -260,14 +286,19 @@ ELSE( CMAKE_BUILD_TYPE )
       SET(CMAKE_BUILD_TYPE Release)
       SET(debug_even_or_odd TRUE)
    ENDIF( "${cppad_debug_which}" STREQUAL debug_all)
-ENDIF( CMAKE_BUILD_TYPE )
-IF( ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
-   IF( debug_even_or_odd )
+ENDIF( ) # CMAKE_BUILD_TYPE
+IF( debug_even_or_odd )
+   IF ( NOT cppad_debug_and_release )
+      MESSAGE(FATAL_ERROR
+"cppad_debug_and_release is false and cppad_debug_wich = ${cppad_debug_which}"
+      )
+   ENDIF ( NOT cppad_debug_and_release )
+   IF( ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
       MESSAGE(FATAL_ERROR
       "Cannot have cppad_debug_which equal ${cppad_debug_which} on Windows."
       )
-   ENDIF( debug_even_or_odd )
-ENDIF( ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
+   ENDIF( ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
+ENDIF( debug_even_or_odd )
 print_variable(CMAKE_SYSTEM_NAME)
 print_variable(cppad_debug_which)
 print_variable(CMAKE_BUILD_TYPE)
@@ -458,16 +489,26 @@ ENDIF( cppad_has_ipopt )
 # add_subdirectory(source_dir [binary_dir] [EXCLUDE_FROM_ALL])
 #
 #
-# cppad_lib_is_dynamic
-STRING( REGEX MATCH "^MSYS" is_msys        "${CMAKE_SYSTEM_NAME}" )
-STRING( REGEX MATCH "^CYGWIN" is_cygwin    "${CMAKE_SYSTEM_NAME}" )
+# is_cppad_lib_dynamic
+STRING( REGEX MATCH "^MSYS"    is_msys     "${CMAKE_SYSTEM_NAME}" )
+STRING( REGEX MATCH "^CYGWIN"  is_cygwin   "${CMAKE_SYSTEM_NAME}" )
 STRING( REGEX MATCH "^Windows" is_windows  "${CMAKE_SYSTEM_NAME}" )
 IF( is_msys OR is_cygwin OR is_windows )
-   MESSAGE( STATUS "Windows system so building static cppad_lib")
+   IF( NOT cppad_static_lib )
+      MESSAGE(WARNING
+"This systems uses windows dynamic libraries.
+The cppad library must be static for this case.
+Ignoring fact that cppad_static_lib is FALSE.
+"
+      )
+   ENDIF( )
    SET(is_cppad_lib_dynamic 0)
 ELSE( )
-   MESSAGE( STATUS "Not Windows system so building shared cppad_lib")
-   SET(is_cppad_lib_dynamic 1)
+   IF( cppad_static_lib )
+      SET(is_cppad_lib_dynamic 0)
+   ELSE( )
+      SET(is_cppad_lib_dynamic 1)
+   ENDIF( )
 ENDIF( )
 print_variable(is_cppad_lib_dynamic)
 
@@ -485,6 +526,7 @@ IF( NOT ( "${check_depends}" STREQUAL "" ) )
 ENDIF( NOT ( "${check_depends}" STREQUAL "" ) )
 #
 # directories with check depends entries
+ADD_SUBDIRECTORY(val_graph)
 ADD_SUBDIRECTORY(example)
 ADD_SUBDIRECTORY(introduction)
 ADD_SUBDIRECTORY(test_more)
@@ -493,7 +535,9 @@ IF( cppad_has_ipopt )
    ADD_SUBDIRECTORY(cppad_ipopt)
 ENDIF( cppad_has_ipopt )
 #
+# check, test
 ADD_CUSTOM_TARGET(check DEPENDS ${check_depends})
+ADD_CUSTOM_TARGET(test DEPENDS ${check_depends})
 # ============================================================================
 # Copy a file to another location and modify its contents.
 # configure_file(InputFile OutputFile [COPYONLY] [ESCAPE_QUOTES] [@ONLY])

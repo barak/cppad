@@ -2,7 +2,7 @@
 # define CPPAD_SPEED_DET_BY_MINOR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin det_by_minor}
@@ -13,22 +13,20 @@ Determinant Using Expansion by Minors
 Syntax
 ******
 
-| # ``include <cppad/speed/det_by_minor.hpp>``
-| ``det_by_minor<`` *Scalar* > *det* ( *n* )
+| ``# include <cppad/speed/det_by_minor.hpp>``
+| ``det_by_minor`` < *Scalar* > *det* ( *n* )
 | *d* = *det* ( *a* )
 
 Inclusion
 *********
 The template class ``det_by_minor`` is defined in the ``CppAD``
-namespace by including
-the file ``cppad/speed/det_by_minor.hpp``
-(relative to the CppAD distribution directory).
+namespace by including the file ``cppad/speed/det_by_minor.hpp`` .
 
 Constructor
 ***********
 The syntax
 
-   ``det_by_minor<`` *Scalar* > *det* ( *n* )
+   ``det_by_minor`` < *Scalar* > *det* ( *n* )
 
 constructs the object *det* which can be used for
 evaluating the determinant of *n* by *n* matrices
@@ -117,34 +115,57 @@ namespace CppAD {
 template <class Scalar>
 class det_by_minor {
 private:
-   size_t              m_;
-
-   // made mutable because modified and then restored
-   mutable std::vector<size_t> r_;
-   mutable std::vector<size_t> c_;
-
-   // make mutable because its value does not matter
-   mutable std::vector<Scalar> a_;
+   //
+   // m_
+   // size for the matrix
+   const size_t        m_;
+   //
+   // r_, c_
+   // row and column indices so that minor is entire matrix.
+   std::vector<size_t> r_;
+   std::vector<size_t> c_;
+   //
+   // a_
+   // temporary vector declared here to avoid reallocation for each use
+   std::vector<Scalar> a_;
 public:
    det_by_minor(size_t m) : m_(m) , r_(m + 1) , c_(m + 1), a_(m * m)
-   {
-      size_t i;
-
-      // values for r and c that correspond to entire matrix
-      for(i = 0; i < m; i++)
+   {  //
+      // r_, c_
+      // values that correspond to entire matrix
+      for(size_t i = 0; i < m; i++)
       {  r_[i] = i+1;
          c_[i] = i+1;
       }
       r_[m] = 0;
       c_[m] = 0;
    }
-
+   //
+   // operator()
    template <class Vector>
-   Scalar operator()(const Vector &x) const
-   {  size_t i = m_ * m_;
-      while(i--)
+   Scalar operator()(const Vector &x)
+   {  //
+      // a_
+      // copy from type Vector to std::vector<Scalar>
+      for(size_t i = 0; i < m_ * m_; ++i)
          a_[i] = x[i];
-      return det_of_minor(a_, m_, m_, r_, c_);
+      //
+      // det
+      // compute determinant of entire matrix
+      Scalar det = det_of_minor(a_, m_, m_, r_, c_);
+      //
+# ifndef NDEBUG
+      // r_, c_
+      // values that correspond to entire matrix
+      // (not const because det_of_minor uses r_, c_ for work space)
+      for(size_t i = 0; i < m_; ++i)
+      {  assert( r_[i] == i + 1 );
+         assert( c_[i] == i + 1 );
+      }
+      assert( r_[m_] == 0 );
+      assert( c_[m_] == 0 );
+# endif
+      return det;
    }
 
 };

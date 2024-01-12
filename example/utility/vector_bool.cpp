@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
@@ -34,18 +34,26 @@ bool vectorBool(void)
    vectorBool x;          // default constructor
    ok &= (x.size() == 0);
 
-   x.resize(2);             // resize and set element assignment to bool
+   // resize using size_t or int
+   size_t two_s = 2;
+   int    two_i = 2;
+   x.resize( two_s );
+   x.resize( two_i );
    ok &= (x.size() == 2);
-   x[0] = false;
-   x[1] = true;
+
+   // set element values using size_t and int
+   size_t zero_s = 0;
+   int    one_i  = 1;
+   x[zero_s]     = false;
+   x[one_i]      = true;
 
    vectorBool y(2);       // sizing constructor
    ok &= (y.size() == 2);
 
-   // swap
+   // swap, get element values using size_t and int
    y.swap(x);
-   ok &= y[0] == false;
-   ok &= y[1] == true;
+   ok &= y[zero_s] == false;
+   ok &= y[one_i]  == true;
 
    const vectorBool z(y); // copy constructor and const element access
    ok &= (z.size() == 2);
@@ -97,6 +105,14 @@ bool vectorBool(void)
    ok &= (x.size() == 100);
    for(i = 0; i < 100; i++)
       ok &= ( x[i] == ((i % 3) != 0) );
+
+   // initializer list constructor
+   vectorBool w = { true, false, false, true };
+   ok &= w.size() == 4;
+   ok &= w[0] == true;
+   ok &= w[1] == false;
+   ok &= w[2] == false;
+   ok &= w[3] == true;
 
    return ok;
 }

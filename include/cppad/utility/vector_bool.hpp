@@ -2,7 +2,7 @@
 # define CPPAD_UTILITY_VECTOR_BOOL_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 
@@ -117,6 +117,9 @@ public:
 {xrst_end vector_bool_typedef}
 ----------------------------------------------------------------------------
 {xrst_begin vector_bool_ctor dev}
+{xrst_spell
+   initializer
+}
 vectorBool: Constructors and Destructor
 #######################################
 
@@ -136,12 +139,18 @@ where *n* is a ``size_t`` ,
 creates the vector *vec* with *n* elements and ``n_unit_``
 greater than or equal ``unit_min()`` .
 
+Initializer
+***********
+
+   ``vectorBool`` *vec* ( { *b_1* , ... , *b_n* } )
+
+
 Copy
 ****
 
-   ``vector<`` *Type* > *vec* ( *other* )
+   ``vector`` < *Type* > *vec* ( *other* )
 
-where *other* is a ``vector<`` *Type* > ,
+where *other* is a ``vector`` < *Type* > ,
 creates the vector *vec*
 with *n* = *other* . ``size`` () elements and ``n_unit_``
 greater than or equal ``unit_min()`` .
@@ -156,10 +165,21 @@ Source
 {xrst_spell_off}
 {xrst_code hpp}:
 */
+   // default
    vectorBool(void) : n_unit_(0), length_(0), data_(nullptr)
    { }
-   vectorBool(size_t n) : n_unit_(0), length_(n), data_(nullptr)
+   //
+   // sizing
+   vectorBool(size_t n) : n_unit_(0), length_(0), data_(nullptr)
    {  resize(n); }
+   vectorBool(int n) : n_unit_(0), length_(0), data_(nullptr)
+   {  resize( size_t(n) ); }
+# if ! CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+   vectorBool(unsigned int n) : n_unit_(0), length_(0), data_(nullptr)
+   {  resize( size_t(n) ); }
+# endif
+   //
+   // copy
    vectorBool(const vectorBool& other)
    : n_unit_(0), length_(0), data_(nullptr)
    {  resize(other.length_);
@@ -167,6 +187,11 @@ Source
       CPPAD_ASSERT_UNKNOWN( n_used <= n_unit_ );
       for(size_t i = 0; i < n_used; ++i)
          data_[i] = other.data_[i];
+   }
+   vectorBool(std::initializer_list<bool> list)
+   : n_unit_(0), length_(0), data_(nullptr)
+   {  for(auto itr = list.begin(); itr != list.end(); ++itr)
+         this->push_back(*itr);
    }
    // n_unit_ is the only value necessary to make destructor work
    // for other after this move semantics constructor
@@ -188,24 +213,13 @@ vectorBool: Change Size
 Syntax
 ******
 
-   *vec* . ``resize`` ( *n* )
-
-*vec* . ``clear`` ()
-
-Prototype
-*********
-{xrst_literal
-   // BEGIN_RESIZE
-   // END_RESIZE
-}
-{xrst_literal
-   // BEGIN_CLEAR
-   // END_CLEAR
-}
+| |tab| *vec* . ``resize`` ( *n* )
+| |tab| *vec* . ``clear`` ()
 
 n
 *
-is the number of elements in the new version of the vector.
+is a ``size_t`` or ``int`` specifying
+the number of elements in the new version of the vector.
 
 resize
 ******
@@ -225,6 +239,18 @@ the memory allocated for this vector is freed and
 */
 // BEGIN_RESIZE
 public:
+# if ! CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+   void resize(unsigned int n)
+   {  resize( size_t(n) );
+   }
+# endif
+   void resize(int n)
+   {  CPPAD_ASSERT_KNOWN(
+         n >= 0,
+         "CppAD::vector: attempt to create a vector with a negative size."
+      );
+      resize( size_t(n) );
+   }
    void resize(size_t n)
 // END_RESIZE
    {  length_ = n;
@@ -267,9 +293,8 @@ vectorBool: Assignment Operators
 Syntax
 ******
 
-   *vec* . ``swap`` ( *other* )
-
-*vec* = *other*
+| |tab| *vec* . ``swap`` ( *other* )
+| |tab| *vec* = *other*
 
 Prototype
 *********
@@ -394,6 +419,11 @@ Source Code
       unit_t mask         = unit_t(1) << bit_index;
       return local::utility::vectorBoolElement(data_ + unit_index , mask);
    }
+   template <class Index> bool operator[]( Index i) const
+   {  return (*this)[size_t(i)]; }
+   template <class Index>
+   local::utility::vectorBoolElement operator[](Index i)
+   {  return (*this)[size_t(i)]; }
 /* {xrst_code}
 {xrst_spell_on}
 

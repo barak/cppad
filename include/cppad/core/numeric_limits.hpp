@@ -2,7 +2,7 @@
 # define CPPAD_CORE_NUMERIC_LIMITS_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
@@ -19,24 +19,25 @@ Numeric Limits For an AD and Base Types
 Syntax
 ******
 
-| *eps* = ``numeric_limits<`` *Float* >:: ``epsilon`` ()
-| *min* = ``numeric_limits<`` *Float* >:: ``min`` ()
-| *max* = ``numeric_limits<`` *Float* >:: ``max`` ()
-| *nan* = ``numeric_limits<`` *Float* >:: ``quiet_NaN`` ()
-| *inf* = ``numeric_limits<`` *Float* >:: ``infinity`` ()
-
-``numeric_limits<`` *Float* >:: ``digits10``
+| *eps* = ``numeric_limits`` < *Float* >:: ``epsilon`` ()
+| *min* = ``numeric_limits`` < *Float* >:: ``min`` ()
+| *max* = ``numeric_limits`` < *Float* >:: ``max`` ()
+| *nan* = ``numeric_limits`` < *Float* >:: ``quiet_NaN`` ()
+| *inf* = ``numeric_limits`` < *Float* >:: ``infinity`` ()
+| ``numeric_limits`` < *Float* >:: ``digits10``
+| ``numeric_limits`` < *Float* >:: ``max_digits10``
 
 CppAD::numeric_limits
 *********************
-These functions and have the prototype
+The functions above and have the prototype
 
    ``static`` *Float* ``CppAD::numeric_limits<`` *Float* >:: *fun* ( *void* )
 
 where *fun* is
-``epsilon`` , ``min`` , ``max`` , ``quiet_NaN`` ,
-and ``infinity`` .
-(Note that ``digits10`` is member variable and not a function.)
+``epsilon`` , ``min`` , ``max`` , ``quiet_NaN`` , and ``infinity`` .
+
+The values ``digits10`` and ``max_digits10`` are
+member variable and not a functions.
 
 std::numeric_limits
 *******************
@@ -44,7 +45,8 @@ CppAD does not use a specialization of ``std::numeric_limits``
 because this would be to restrictive.
 The C++ standard specifies that Non-fundamental standard
 types, such as
-:ref:`std::complex\<double><base_complex.hpp-name>` shall not have specializations
+:ref:`std::complex\<double><base_complex.hpp-name>`
+shall not have specializations
 of ``std::numeric_limits`` ; see Section 18.2 of
 ISO/IEC 14882:1998(E).
 In addition, since C++11, a only literal types can have a specialization
@@ -52,7 +54,7 @@ of ``std::numeric_limits`` .
 
 Float
 *****
-These functions are defined for all ``AD<`` *Base* > ,
+These functions are defined for all ``AD`` < *Base* > ,
 and for all corresponding *Base* types;
 see *Base* type :ref:`base_limits-name` .
 
@@ -131,12 +133,23 @@ digits10
 ********
 The member variable ``digits10`` has prototype
 
-   ``static const int numeric_limits<`` *Float* >:: ``digits10``
+   ``static const int numeric_limits`` < *Float* >:: ``digits10``
 
 It is the number of decimal digits that can be represented by a
 *Float* value.  A number with this many decimal digits can be
 converted to *Float* and back to a string,
 without change due to rounding or overflow.
+
+max_digits10
+************
+The member variable ``max_digits10`` has prototype
+
+   ``static const int numeric_limits`` < *Float* >:: ``max_digits10``
+
+is the number of decimal digits that are necessary to uniquely represent
+all distinct values of the type *Float* .
+For example, the number of digits necessary to convert to text and back
+and get the exact same result.
 
 Example
 *******
@@ -231,7 +244,8 @@ public:
    static AD<Base> infinity(void)
    {  return AD<Base>( numeric_limits<Base>::infinity() ); }
    /// number of decimal digits
-   static const int digits10 = numeric_limits<Base>::digits10;
+   static const int digits10     = numeric_limits<Base>::digits10;
+   static const int max_digits10 = numeric_limits<Base>::max_digits10;
 };
 
 } // END_CPPAD_NAMESPACE

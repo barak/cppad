@@ -2,7 +2,7 @@
 # define CPPAD_UTILITY_VECTOR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 
@@ -107,6 +107,9 @@ public:
 {xrst_end cppad_vector_typedef}
 -----------------------------------------------------------------------------
 {xrst_begin cppad_vector_ctor dev}
+{xrst_spell
+   initializer
+}
 
 Vector Class: Constructors and Destructor
 #########################################
@@ -114,25 +117,36 @@ Vector Class: Constructors and Destructor
 Default
 *******
 
-   ``vector<`` *Type* > *vec*
+   ``vector`` < *Type* > *vec*
 
 creates an empty vector no elements and capacity zero.
 
 Sizing
 ******
 
-   ``vector<`` *Type* > *vec* ( *n* )
+|  ``vector`` < *Type* > *vec* ( *n* )
+|  ``vector`` < *Type* > *vec* ( *n* , *value* )
 
-where *n* is a ``size_t`` or ``int`` ,
-creates the vector *vec* with *n* elements and capacity
+where *n* is a ``size_t`` , ``unsigned int`` , or ``int`` .
+This creates the vector *vec* with *n* elements and capacity
 greater than or equal *n* .
+
+Value
+=====
+If *value* is present, it is a *Type* object and all of the
+elements of the vector are given this value.
+
+Initializer List
+****************
+
+   ``vector`` < *Type > *vec* ( { *e_1* , ... , *e_n* } )
 
 Copy
 ****
 
-   ``vector<`` *Type* > *vec* ( *other* )
+   ``vector`` < *Type* > *vec* ( *other* )
 
-where *other* is a ``vector<`` *Type* > ,
+where *other* is a ``vector`` < *Type* > ,
 creates the vector *vec*
 with *n* = *other* . ``size`` () elements and capacity
 greater than or equal *n* .
@@ -157,18 +171,51 @@ Source
 {xrst_spell_off}
 {xrst_code hpp} */
 public:
+   // default
    vector(void) noexcept
    : capacity_(0), length_(0), data_(nullptr)
    { }
+   //
+   // sizing
    vector(size_t n) : capacity_(0), length_(0), data_(nullptr)
    {  resize(n); }
+# if ! CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+   vector(unsigned int n) : capacity_(0), length_(0), data_(nullptr)
+   {  resize(n); }
+# endif
    vector(int n) : capacity_(0), length_(0), data_(nullptr)
-   {  CPPAD_ASSERT_KNOWN(
-         n >= 0,
-         "CppAD::vector: attempt to create a vector with a negative size."
-      );
-      resize( size_t(n) );
+   {  resize(n); }
+   //
+   // sizing with value
+   vector(size_t n, const Type& value)
+   : capacity_(0), length_(0), data_(nullptr)
+   {  resize(n);
+      for(size_t i = 0; i < length_; ++i)
+         data_[i] = value;
    }
+# if ! CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+   vector(unsigned int n, const Type& value)
+   : capacity_(0), length_(0), data_(nullptr)
+   {  resize(n);
+      for(size_t i = 0; i < length_; ++i)
+         data_[i] = value;
+   }
+# endif
+   vector(int n, const Type& value)
+   : capacity_(0), length_(0), data_(nullptr)
+   {  resize(n);
+      for(size_t i = 0; i < length_; ++i)
+         data_[i] = value;
+   }
+   //
+   // initializer list
+   vector(std::initializer_list<Type> list) :
+   capacity_(0), length_(0), data_(nullptr)
+   {  for(auto itr = list.begin(); itr != list.end(); ++itr)
+         this->push_back(*itr);
+   }
+   //
+   // copy
    vector(const vector& other) : capacity_(0), length_(0), data_(nullptr)
    {  resize(other.length_);
       for(size_t i = 0; i < length_; i++)
@@ -196,24 +243,13 @@ Vector Class: Change Size
 Syntax
 ******
 
-   *vec* . ``resize`` ( *n* )
-
-*vec* . ``clear`` ()
-
-Prototype
-*********
-{xrst_literal
-   // BEGIN_RESIZE
-   // END_RESIZE
-}
-{xrst_literal
-   // BEGIN_CLEAR
-   // END_CLEAR
-}
+| |tab|  *vec* . ``resize`` ( *n* )
+| |tab| *vec* . ``clear`` ()
 
 n
 *
-is the number of elements in the new version of the vector.
+is a ``size_t`` , ``unsigned int`` , or ``int`` specifying
+the number of elements in the new version of the vector.
 
 resize
 ******
@@ -233,10 +269,19 @@ and then *vec.length_* and *vec* . ``capacity_`` are set to zero.
 {xrst_end cppad_vector_size}
 ------------------------------------------------------------------------------
 */
-// BEGIN_RESIZE
 public:
+# if ! CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+   void resize(unsigned int n)
+   {  resize( size_t(n) ); }
+# endif
+   void resize(int n)
+   {  CPPAD_ASSERT_KNOWN(
+         n >= 0,
+         "CppAD::vector: attempt to create a vector with a negative size."
+      );
+      resize( size_t(n) );
+   }
    void resize(size_t n)
-// END_RESIZE
    {  if( capacity_ < n )
       {  if( capacity_ == 0 )
          {  // get new memory and set capacity
@@ -259,9 +304,7 @@ public:
       }
       length_ = n;
    }
-// BEGIN_CLEAR
    void clear(void)
-// END_CLEAR
    {  length_ = 0;
       // check if there is old memory to be freed
       if( capacity_ > 0 )
@@ -348,6 +391,124 @@ public:
       for(size_t i = 0; i < length_; i++)
          data_[i] = other.data_[i];
       return *this;
+   }
+/*
+-------------------------------------------------------------------------------
+{xrst_begin cppad_vector_compare dev}
+
+Vector Class: Comparison Operators
+##################################
+
+Syntax
+******
+
+|  *result* = *vec* *op* *other*
+
+where *op* is one of the following: == , != , < , <= , > , >= .
+
+Prototype
+*********
+{xrst_literal ,
+   // BEGIN_EQUAL, // END_EQUAL
+   // BEGIN_NOT_EQUAL, // END_NOT_EQUAL
+   // BEGIN_LESS_THAN, // END_LESS_THAN
+   // BEGIN_LESS_OR_EQUAL, // END_LESS_OR_EQUAL
+   // BEGIN_GREATER_THAN, // END_GREATER_THAN
+   // BEGIN_GREATER_OR_EQUAL, // END_GREATER_OR_EQUAL
+}
+
+vec
+***
+is the left side for the comparison operation.
+
+other
+*****
+is the right side for the comparison operation.
+This vector must have the same size as *vec* .
+
+result
+******
+The *result* is true if the comparison
+
+|  *vec* [ *i* ] *op* *other [ *i* ]
+
+ture for all valid indices *i* .  Otherwise, the *result* is false
+
+{xrst_end cppad_vector_compare}
+-------------------------------------------------------------------------------
+*/
+// BEGIN_EQUAL
+public:
+   bool operator==(const vector& other) const
+// END_EQUAL
+   {  bool result = true;
+      CPPAD_ASSERT_KNOWN(
+         length_ == other.length_ ,
+         "CppAD::vector: vec == other: size of vectors is different"
+      );
+      for(size_t i = 0; i < length_; ++i)
+         result &= data_[i] == other.data_[i];
+      return result;
+   }
+// BEGIN_NOT_EQUAL
+   bool operator!=(const vector& other) const
+// END_NOT_EQUAL
+   {  bool result = true;
+      CPPAD_ASSERT_KNOWN(
+         length_ == other.length_ ,
+         "CppAD::vector: vec == other: size of vectors is different"
+      );
+      for(size_t i = 0; i < length_; ++i)
+         result &= data_[i] != other.data_[i];
+      return result;
+   }
+// BEGIN_LESS_THAN
+   bool operator<(const vector& other) const
+// END_LESS_THAN
+   {  bool result = true;
+      CPPAD_ASSERT_KNOWN(
+         length_ == other.length_ ,
+         "CppAD::vector: vec == other: size of vectors is different"
+      );
+      for(size_t i = 0; i < length_; ++i)
+         result &= data_[i] < other.data_[i];
+      return result;
+   }
+// BEGIN_LESS_OR_EQUAL
+   bool operator<=(const vector& other) const
+// END_LESS_OR_EQUAL
+   {  bool result = true;
+      CPPAD_ASSERT_KNOWN(
+         length_ == other.length_ ,
+         "CppAD::vector: vec == other: size of vectors is different"
+      );
+      for(size_t i = 0; i < length_; ++i)
+         result &= data_[i] <= other.data_[i];
+      return result;
+   }
+// BEGIN_GREATER_THAN
+   bool operator>(const vector& other) const
+// END_GREATER_THAN
+   {  bool result = true;
+      CPPAD_ASSERT_KNOWN(
+         length_ == other.length_ ,
+         "CppAD::vector: vec == other: size of vectors is different"
+      );
+      for(size_t i = 0; i < length_; ++i)
+         result &= data_[i] > other.data_[i];
+      return result;
+   }
+// BEGIN_GREATER_OR_EQUAL
+   bool operator>=(const vector& other) const
+// END_GREATER_OR_EQUAL
+   {  bool result = true;
+      CPPAD_ASSERT_KNOWN(
+         length_ == other.length_ ,
+         "CppAD::vector: vec == other: size of vectors is different"
+      );
+      for(size_t i = 0; i < length_; ++i)
+         result &= data_[i] >= other.data_[i];
+      return result;
    }
 /*
 -------------------------------------------------------------------------------

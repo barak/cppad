@@ -2,7 +2,7 @@
 # define CPPAD_CONFIGURE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*!
@@ -61,6 +61,17 @@ The second operand in a divide operation evaluated to zero at compile time.
 # undef CPPAD_DISABLE_SOME_MICROSOFT_COMPILER_WARNINGS
 /* {xrst_code}
 {xrst_spell_on}
+
+CPPAD_DEBUG_AND_RELEASE
+***********************
+Starting with 2023-12-24,
+this flag is set by the cmake command; see
+:ref:`cmake@cppad_debug_and_release` .
+Before then, one would add -D CPPAD_DEBUG_AND_RELEASE
+when compiling CppAD code.
+{xrst_code hpp} */
+# define CPPAD_DEBUG_AND_RELEASE @cppad_debug_and_release_01@
+/* {xrst_code}
 
 CPPAD_USE_CPLUSPLUS_2011
 ************************
@@ -197,9 +208,12 @@ Otherwise, this symbol should be zero.
 
 CPPAD_TAPE_ADDR_TYPE
 ********************
-Is the type used to store address on the tape. If not size_t, then
-<code>sizeof(CPPAD_TAPE_ADDR_TYPE) <= sizeof( size_t )</code>
-to conserve memory.
+Is the type used to store address on the tape.
+If it is not size_t, then
+{xrst_code cpp}
+   sizeof(CPPAD_TAPE_ADDR_TYPE) < sizeof( size_t )
+{xrst_code}
+can be used to conserve memory.
 This type must support std::numeric_limits,
 the <= operator,
 and conversion to size_t.
@@ -212,11 +226,24 @@ This type is later defined as addr_t in the CppAD namespace.
 /* {xrst_code}
 {xrst_spell_on}
 
+CPPAD_TAPE_ADDR_TYPE_IS_SIZE_T
+******************************
+Is size_t the type the same as CPPAD_TAPE_ADDR_TYPE:
+{xrst_spell_off}
+{xrst_code hpp} */
+# define CPPAD_TAPE_ADDR_TYPE_IS_SIZE_T @cppad_tape_addr_type_is_size_t@
+/* {xrst_code}
+{xrst_spell_off}
+
+
 CPPAD_TAPE_ID_TYPE
 ******************
-Is the type used to store tape identifiers. If not size_t, then
-<code>sizeof(CPPAD_TAPE_ID_TYPE) <= sizeof( size_t )</code>
-to conserve memory.
+Is the type used to store tape identifiers.
+If it is not size_t, then
+{xrst_code cpp}
+   sizeof(CPPAD_TAPE_ID_TYPE) < sizeof( size_t )
+{xrst_code}
+can be used to conserve memory.
 This type must support std::numeric_limits,
 the <= operator,
 and conversion to size_t.
@@ -306,6 +333,13 @@ If true, the C complier is ``cl``
 # define CPPAD_C_COMPILER_CLANG @cppad_c_compiler_clang@
 /* {xrst_code}
 {xrst_spell_on}
+
+CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+*********************************
+If true, ``unsigned int`` and ``size_t`` are the same type
+{xrst_code hpp} */
+# define CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T @cppad_is_same_unsigned_int_size_t@
+/* {xrst_code}
 
 {xrst_end configure.hpp}
 */

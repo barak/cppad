@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_SWEEP_CALL_ATOMIC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-23 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/atomic_index.hpp>
@@ -13,8 +13,15 @@
 // BEGIN_CPAPD_LOCAL_SWEEP_NAMESPACE
 namespace CppAD { namespace local { namespace sweep {
 
-// ----------------------------------------------------------------------------
 /*
+// ----------------------------------------------------------------------------
+{xrst_begin_parent call_atomic dev}
+
+Atomic Function Callbacks
+#########################
+
+{xrst_end call_atomic}
+// ----------------------------------------------------------------------------
 {xrst_begin atomic_forward_callback dev}
 
 Forward Mode Callback to Atomic Functions
@@ -50,10 +57,13 @@ what is the type, in the call, for each component of x.
 need_y
 ******
 specifies which components of taylor_y are necessary.
+Only the components of y with the type equal to need_y need
+to be computed. If need_y is greater than variable_enum,
+then all the components of y must be computed.
 
 select_y
 ********
-specifies which components of taylor_x are necessary.
+specifies which components of taylor_y are necessary.
 
 order_low
 *********
@@ -422,7 +432,7 @@ void call_atomic_for_jac_sparsity(
    {  size_t n = x_index.size();
       ident_zero_x.resize(n);
       for(size_t j = 0; j < n; ++j)
-      {  if( type_x[j] >= constant_enum )
+      {  if( type_x[j] > constant_enum )
             ident_zero_x[j] = false;
          else
             ident_zero_x[j] = IdenticalZero( parameter_x[j] );
@@ -584,7 +594,7 @@ void call_atomic_rev_jac_sparsity(
    {  size_t n = x_index.size();
       ident_zero_x.resize(n);
       for(size_t j = 0; j < n; ++j)
-      {  if( type_x[j] >= constant_enum )
+      {  if( type_x[j] > constant_enum )
             ident_zero_x[j] = false;
          else
             ident_zero_x[j] = IdenticalZero( parameter_x[j] );
@@ -795,7 +805,7 @@ void call_atomic_for_hes_sparsity(
    {  size_t n = x_index.size();
       ident_zero_x.resize(n);
       for(size_t j = 0; j < n; ++j)
-      {  if( type_x[j] >= constant_enum )
+      {  if( type_x[j] > constant_enum )
             ident_zero_x[j] = false;
          else
             ident_zero_x[j] = IdenticalZero( parameter_x[j] );
@@ -1006,7 +1016,7 @@ void call_atomic_rev_hes_sparsity(
    {  size_t n = x_index.size();
       ident_zero_x.resize(n);
       for(size_t j = 0; j < n; ++j)
-      {  if( type_x[j] >= constant_enum )
+      {  if( type_x[j] > constant_enum )
             ident_zero_x[j] = false;
          else
             ident_zero_x[j] = IdenticalZero( parameter_x[j] );
@@ -1177,7 +1187,7 @@ void call_atomic_rev_depend(
    {  size_t n = parameter_x.size();
       ident_zero_x.resize(n);
       for(size_t j = 0; j < n; ++j)
-      {  if( type_x[j] >= constant_enum )
+      {  if( type_x[j] > constant_enum )
             ident_zero_x[j] = false;
          else
             ident_zero_x[j] = IdenticalZero( parameter_x[j] );
