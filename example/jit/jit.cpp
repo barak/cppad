@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-22 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 // CPPAD_HAS_* defines
@@ -30,7 +30,11 @@ extern bool get_started(void);
 int main(void)
 {  bool ok = true;
    //
-# if CPPAD_C_COMPILER_GNU || CPPAD_C_COMPILER_MSVC
+# if ! (CPPAD_C_COMPILER_MSVC_FLAGS || CPPAD_C_COMPILER_GNU_FLAGS)
+   std::cout << "Do not know how to use this C compiler to create a DLL\n";
+   std::cout << CPPAD_C_COMPILER_CMD << "\n";
+   std::cout << "Skipping example/jit\n";
+# else
    std::string group = "example/jit";
    size_t      width = 20;
    CppAD::test_boolofvoid Run(group, width);
