@@ -8,6 +8,7 @@
 /*!
 {xrst_begin configure.hpp dev}
 {xrst_spell
+   cmd
    cl
    complier
    gettimeofday
@@ -226,12 +227,13 @@ This type is later defined as addr_t in the CppAD namespace.
 /* {xrst_code}
 {xrst_spell_on}
 
-CPPAD_TAPE_ADDR_TYPE_IS_SIZE_T
-******************************
-Is size_t the type the same as CPPAD_TAPE_ADDR_TYPE:
+CPPAD_IS_SAME_TAPE_ADDR_TYPE_SIZE_T
+***********************************
+Is size_t the type the same as CPPAD_TAPE_ADDR_TYPE.
 {xrst_spell_off}
 {xrst_code hpp} */
-# define CPPAD_TAPE_ADDR_TYPE_IS_SIZE_T @cppad_tape_addr_type_is_size_t@
+# define CPPAD_IS_SAME_TAPE_ADDR_TYPE_SIZE_T \
+   @cppad_is_same_tape_addr_type_size_t@
 /* {xrst_code}
 {xrst_spell_off}
 
@@ -304,33 +306,33 @@ replace it by ``noexcept`` .
 CPPAD_NDEBUG_NOEXCEPT
 =====================
 This preprocessor symbol is
-``noexcept`` when C++11 is available and ``NDEBUG`` is defined.
+``noexcept`` when ``NDEBUG`` is defined.
 Otherwise it is empty.
 
-CPPAD_C_COMPILER_GNU
+CPPAD_C_COMPILER_CMD
 ********************
-If true, the C complier is ``gcc``
+This is the command that runs the C compiler as a C string; 
+i.e., surrounded by double quotes. 
+It can be used to run the C compiler; e.g. see for :ref:`create_dll_lib-name` .
+{xrst_code hpp} */
+# define CPPAD_C_COMPILER_CMD "@cppad_c_compiler_cmd@"
+/* {xrst_code}
+
+CPPAD_C_COMPILER_GNU_FLAGS
+**************************
+If true, the C complier uses the same flags as ``gcc``
 {xrst_spell_off}
 {xrst_code hpp} */
-# define CPPAD_C_COMPILER_GNU @cppad_c_compiler_gnu@
+# define CPPAD_C_COMPILER_GNU_FLAGS @cppad_c_compiler_gnu_flags@
 /* {xrst_code}
 {xrst_spell_on}
 
-CPPAD_C_COMPILER_MSVC
-*********************
-If true, the C complier is ``cl``
+CPPAD_C_COMPILER_MSVC_FLAGS
+***************************
+If true, the C complier uses the same flags as ``cl``
 {xrst_spell_off}
 {xrst_code hpp} */
-# define CPPAD_C_COMPILER_MSVC @cppad_c_compiler_msvc@
-/* {xrst_code}
-{xrst_spell_on}
-
-CPPAD_C_COMPILER_CLANG
-**********************
-If true, the C complier is ``cl``
-{xrst_spell_off}
-{xrst_code hpp} */
-# define CPPAD_C_COMPILER_CLANG @cppad_c_compiler_clang@
+# define CPPAD_C_COMPILER_MSVC_FLAGS @cppad_c_compiler_msvc_flags@
 /* {xrst_code}
 {xrst_spell_on}
 
@@ -339,6 +341,14 @@ CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
 If true, ``unsigned int`` and ``size_t`` are the same type
 {xrst_code hpp} */
 # define CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T @cppad_is_same_unsigned_int_size_t@
+/* {xrst_code}
+
+CPPAD_PADDING_BLOCK_T
+*********************
+Is a string used to define an object that pads the block_t structure
+so that its size is a multiple of the size of a double.
+{xrst_code hpp} */
+# define CPPAD_PADDING_BLOCK_T @cppad_padding_block_t@
 /* {xrst_code}
 
 {xrst_end configure.hpp}
