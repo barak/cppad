@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin adolc_sparse_hessian.cpp}
@@ -61,7 +61,7 @@ bool link_sparse_hessian(
    size_t capacity;           // capacity of an allocation
 
    // tape identifier
-   int tag  = 0;
+   short tag  = 0;
    // AD domain space vector
    ADVector a_x = thread_alloc::create_array<ADScalar>(n, capacity);
    // AD range space vector
@@ -85,7 +85,7 @@ bool link_sparse_hessian(
    // ----------------------------------------------------------------------
    if( ! global_option["onetape"] ) while(repeat--)
    {  // choose a value for x
-      CppAD::uniform_01(n, x);
+      CppAD::uniform_01( size_t(n), x);
 
       // declare independent variables
       int keep = 0; // keep forward mode results
@@ -121,7 +121,7 @@ bool link_sparse_hessian(
    }
    else
    {  // choose a value for x
-      CppAD::uniform_01(n, x);
+      CppAD::uniform_01( size_t(n), x);
 
       // declare independent variables
       int keep = 0; // keep forward mode results
@@ -141,7 +141,7 @@ bool link_sparse_hessian(
 
       while(repeat--)
       {  // choose a value for x
-         CppAD::uniform_01(n, x);
+         CppAD::uniform_01( size_t(n), x);
 
          // calculate the hessian at this x
          sparse_hess(tag, int(n),
@@ -168,7 +168,7 @@ bool link_sparse_hessian(
       size_t ind_ell  = ind[ell];
       size_t i        = size_t( cind[ind_ell] );
       size_t j        = size_t( rind[ind_ell] );
-      while( (r < i) | ( (r == i) & (c < j) ) )
+      while( (r < i) || ( (r == i) && (c < j) ) )
       {  // (r, c) not in Adolc sparsity pattern
          hessian[k++] = 0.0;
          if( k < row.size() )
@@ -180,7 +180,7 @@ bool link_sparse_hessian(
             c = n;
          }
       }
-      if( (r == i) & (c == j) )
+      if( (r == i) && (c == j) )
       {  // adolc value for (r, c)
          hessian[k++] = values[ind_ell];
          if( k < row.size() )

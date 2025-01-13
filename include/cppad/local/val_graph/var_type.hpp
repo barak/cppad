@@ -2,14 +2,11 @@
 # define  CPPAD_LOCAL_VAL_GRAPH_VAR_TYPE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2023-23 Bradley M. Bell
+// SPDX-FileContributor: 2023-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 -------------------------------------------------------------------------------
 {xrst_begin type_var_op dev}
-{xrst_spell
-   operands
-}
 
 Types of Variable Operators
 ###########################
@@ -49,7 +46,7 @@ namespace CppAD { namespace local { namespace val_graph {
 
 // BEGIN_TYPE_VAR_OP
 inline void type_var_op(
-   OpCode var_op     ,
+   op_code_var var_op     ,
    bool& is_unary    ,
    bool& is_binary   ,
    bool& is_compare  )

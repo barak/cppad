@@ -2,14 +2,10 @@
 # define CPPAD_UTILITY_MEMORY_LEAK_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin memory_leak app}
-{xrst_spell
-   inuse
-   statics
-}
 
 Memory Leak Detection
 #####################
@@ -21,11 +17,9 @@ You should instead use the routine :ref:`ta_free_all-name` .
 
 Syntax
 ******
-
 | # ``include <cppad/utility/memory_leak.hpp>``
 | ``flag`` = ``memory_leak`` ()
-
-*flag* = *memory_leak* ( *add_static* )
+| *flag* = *memory_leak* ( *add_static* )
 
 Purpose
 *******

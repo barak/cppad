@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin thread_test.cpp}
 {xrst_spell
-   bthread
-   preforms
-   pthreads
+  posix
 }
 
 Run Multi-Threading Examples and Speed Tests
@@ -26,9 +24,9 @@ command.
 threading
 *********
 If the :ref:`cmake-name` command output indicates that
-``bthread`` , ``pthread`` , or ``openmp`` is available,
+``openmp``, ``bthread`` , ``pthread`` , or ``sthread`` is available,
 you can run the program below with *threading* equal to
-``bthread`` , ``pthread`` , or ``openmp`` respectively.
+``openmp``, ``bthread`` , ``pthread`` , or ``sthread`` respectively.
 
 program
 *******
@@ -52,7 +50,7 @@ you can execute the following commands:
 
 | .
 | ./ *program* ``a11c``
-| ./ *program* ``simple_ad``
+| ./ *program* ``get_started``
 | ./ *program* ``team_example``
 | ./ *program* ``harmonic`` *test_time* *max_threads* *mega_sum*
 | ./ *program* ``atomic_two`` *test_time* *max_threads* *num_solve*
@@ -68,9 +66,11 @@ as the *test_case* below.
    example/multi_thread/openmp/a11c_openmp.cpp
    example/multi_thread/bthread/a11c_bthread.cpp
    example/multi_thread/pthread/a11c_pthread.cpp
-   example/multi_thread/openmp/simple_ad_openmp.cpp
-   example/multi_thread/bthread/simple_ad_bthread.cpp
-   example/multi_thread/pthread/simple_ad_pthread.cpp
+   example/multi_thread/sthread/a11c_sthread.cpp
+   example/multi_thread/openmp/get_started.cpp
+   example/multi_thread/bthread/get_started.cpp
+   example/multi_thread/pthread/get_started.cpp
+   example/multi_thread/sthread/get_started.cpp
    example/multi_thread/team_example.cpp
    example/multi_thread/harmonic.xrst
    example/multi_thread/multi_atomic_three.xrst
@@ -83,22 +83,23 @@ a11c
 ****
 The *test_case* ``a11c`` runs the examples
 :ref:`a11c_openmp.cpp-name` ,
-:ref:`a11c_bthread.cpp-name` , and
-:ref:`a11c_pthread.cpp-name` .
+:ref:`a11c_bthread.cpp-name` ,
+:ref:`a11c_pthread.cpp-name` , and
+:ref:`a11c_sthread.cpp-name` .
 These cases demonstrate simple multi-threading,
 without algorithmic differentiation, using
-OpenMP, boost threads and pthreads respectively.
+OpenMP, Boost Posix and Standard threads respectively.
 
-simple_ad
-*********
-The *test_case* ``simple_ad`` runs the examples
-:ref:`simple_ad_openmp.cpp-name` ,
-:ref:`simple_ad_bthread.cpp-name` ,
-and
-:ref:`simple_ad_pthread.cpp-name` .
+get_started
+***********
+The *test_case* ``get_started`` runs the examples
+:ref:`openmp_get_started.cpp-name` ,
+:ref:`bthread_get_started.cpp-name` ,
+:ref:`pthread_get_started.cpp-name` , and
+:ref:`sthread_get_started.cpp-name` .
 These cases demonstrate simple multi-threading,
 with algorithmic differentiation, using
-OpenMP, boost threads and pthreads respectively.
+OpenMP, Boost Posix and Standard threads respectively.
 
 team_example
 ************
@@ -216,6 +217,7 @@ systems through the common interface :ref:`team_thread.hpp-name` :
    team_openmp.cpp,:ref:`team_openmp.cpp-title`
    team_bthread.cpp,:ref:`team_bthread.cpp-title`
    team_pthread.cpp,:ref:`team_pthread.cpp-title`
+   team_sthread.cpp,:ref:`team_sthread.cpp-title`
 
 Source
 ******
@@ -242,7 +244,7 @@ Source
 # include "multi_newton.hpp"
 
 extern bool a11c(void);
-extern bool simple_ad(void);
+extern bool get_started(void);
 
 namespace {
    size_t arg2size_t(
@@ -278,7 +280,7 @@ int main(int argc, char *argv[])
    // commnd line usage message
    const char* usage =
    "./<program> a11c\n"
-   "./<program> simple_ad\n"
+   "./<program> get_started\n"
    "./<program> team_example\n"
    "./<program> harmonic     test_time max_threads mega_sum\n"
    "./<program> atomic_two   test_time max_threads num_solve\n"
@@ -288,7 +290,7 @@ int main(int argc, char *argv[])
    "./<program> multi_newton test_time max_threads \\\n"
    "   num_zero num_sub num_sum use_ad\\\n"
    "where <program> is example_multi_thread_<threading>\n"
-   "and <threading> is bthread, openmp, or pthread";
+   "and <threading> is openmp, bthread, pthread, or sthread";
 
    // command line argument values (assign values to avoid compiler warnings)
    size_t num_zero=0, num_sub=0, num_sum=0;
@@ -308,7 +310,7 @@ int main(int argc, char *argv[])
    cout << "cppad_version = '" << CPPAD_PACKAGE_STRING << "';" << endl;
 
    // put the team name in the output file
-   cout << "team_name     = '" << team_name() << "';" << endl;
+   cout << "thread_system = '" << team_name() << "';" << endl;
 
    // print command line as valid matlab/octave
    cout << "command       = '" << argv[0];
@@ -321,7 +323,7 @@ int main(int argc, char *argv[])
    if( argc > 1 )
       test_name = *++argv;
    bool run_a11c         = std::strcmp(test_name, "a11c")             == 0;
-   bool run_simple_ad    = std::strcmp(test_name, "simple_ad")        == 0;
+   bool run_get_started  = std::strcmp(test_name, "get_started")      == 0;
    bool run_team_example = std::strcmp(test_name, "team_example")     == 0;
    bool run_harmonic     = std::strcmp(test_name, "harmonic")         == 0;
    bool run_atomic_two   = std::strcmp(test_name, "atomic_two")       == 0;
@@ -329,7 +331,7 @@ int main(int argc, char *argv[])
    bool run_chkpoint_one = std::strcmp(test_name, "chkpoint_one")     == 0;
    bool run_chkpoint_two = std::strcmp(test_name, "chkpoint_two")     == 0;
    bool run_multi_newton = std::strcmp(test_name, "multi_newton")     == 0;
-   if( run_a11c || run_simple_ad || run_team_example )
+   if( run_a11c || run_get_started || run_team_example )
       ok = (argc == 2);
    else if( run_harmonic
    || run_atomic_two
@@ -345,11 +347,11 @@ int main(int argc, char *argv[])
       std::cerr << usage << endl;
       exit(1);
    }
-   if( run_a11c || run_simple_ad || run_team_example )
+   if( run_a11c || run_get_started || run_team_example )
    {  if( run_a11c )
          ok        = a11c();
-      else if( run_simple_ad )
-         ok        = simple_ad();
+      else if( run_get_started )
+         ok        = get_started();
       else
          ok        = team_example();
       if( thread_alloc::free_all() )

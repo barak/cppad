@@ -1,50 +1,48 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-23 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 
 {xrst_begin cmake}
 {xrst_spell
-   ansi
-   autotools
-   bitwise
-   cl
-   colons
-   cstdint
-   cxx
-   datadir
-   dlls
-   docdir
-   dylib
-   exe
-   gnu
-   gprof
-   grep
-   hsc
-   includedirs
-   libcppad
-   libdirs
-   linker
-   makefile
-   makefiles
-   mingw
-   mkdir
-   msys
-   operands
-   optionally
-   pacman
-   pkgconfig
-   postfix
-   testvector
-   txt
-   uint
-   usr
-   vcvarsall
-   wno
-   wshadow
-   xml
-   yyyy
-   yyyymmdd
+  ansi
+  autotools
+  bitwise
+  colpack
+  cstdint
+  cxx
+  datadir
+  dev
+  dlls
+  docdir
+  dylib
+  exe
+  ext
+  fadbad
+  gprof
+  grep
+  hsc
+  includedirs
+  libcppad
+  libdirs
+  makefile
+  makefiles
+  mingw
+  mkdir
+  msys
+  pacman
+  profiler
+  sacado
+  sed
+  testvector
+  txt
+  uint
+  usr
+  vcvarsall
+  wno
+  wshadow
+  yyyy
+  yyyymmdd
 }
 
 Using CMake to Configure CppAD
@@ -56,13 +54,22 @@ The cmake program enables one to create a single set of scripts,
 called ``CMakeLists.txt`` ,
 that can be used to test and install a program on Unix, Microsoft, or
 Apple operating systems; see
-`install cmake <http://www.cmake.org/cmake/help/install.html>`_ .
+`cmake resources <https://cmake.org/resources/>`_ .
 
 Build Directory
 ***************
 Create ``build`` , a subdirectory of the
 :ref:`download@Distribution Directory` ,
 change into the ``build`` .
+
+Eigen
+*****
+The cmake command will automatically search for the eigen package.
+If it is found,
+the  corresponding examples will be tested and the
+:ref:`sparse2eigen-name` utility will be installed; see :ref:`eigen-name` .
+The results of cppad's search for Eigen are reported in the output of
+the cmake command.
 
 CMake Command
 *************
@@ -97,6 +104,12 @@ examples and tests that use boost.
 Newer version of cmake; e.g., 3.13.4, do not generate this warning
 (when boost is not present on your system).
 
+true_or_false
+=============
+The syntax ``-D`` *name* = *true_or_false* , mean that
+the variable *name* can be assigned the value ``true`` or ``false`` .
+
+
 Options
 =======
 The full version of the command, with all its optional arguments is:
@@ -115,14 +128,15 @@ The full version of the command, with all its optional arguments is:
 | |tab| ``-D cmake_install_datadir`` = *cmake_install_datadir*              \\
 | |tab| ``-D cmake_install_docdir`` = *cmake_install_docdir*                \\
 | |tab| \\
-| |tab| ``-D cmake_defined_ok`` = *cmake_defined_ok*                        \\
+| |tab| ``-D cmake_defined_ok`` = *true_or_false*                           \\
+| |tab| ``-D include_doc`` = *true_or_false*                                \\
+| |tab| ``-D cppad_static_lib`` = *true_or_false*                           \\
+| |tab| ``-D cppad_debug_and_release`` = *true_or_false*                    \\
 | |tab| \\
 | |tab| ``-D include_adolc`` = *true_or_false*                              \\
-| |tab| ``-D include_eigen`` = *true_or_false*                              \\
 | |tab| ``-D include_ipopt`` = *true_or_false*                              \\
 | |tab| ``-D include_cppadcg`` = *true_or_false*                            \\
 | |tab| \\
-| |tab| ``-D eigen_prefix`` = *eigen_prefix*                                \\
 | |tab| ``-D colpack_prefix`` = *colpack_prefix*                            \\
 | |tab| ``-D fadbad_prefix`` = *fadbad_prefix*                              \\
 | |tab| ``-D sacado_prefix`` = *sacado_prefix*                              \\
@@ -134,8 +148,6 @@ The full version of the command, with all its optional arguments is:
 | |tab| ``-D cppad_tape_id_type`` = *cppad_tape_id_type*                    \\
 | |tab| ``-D cppad_tape_addr_type`` = *cppad_tape_addr_type*                \\
 | |tab| ``-D cppad_debug_which`` = *cppad_debug_which*                      \\
-| |tab| ``-D cppad_static_lib`` = *cppad_static_lib*                        \\
-| |tab| ``-D cppad_debug_and_release`` = *cppad_debug_and_release*          \\
 | |tab| \\
 | |tab| ..
 
@@ -150,9 +162,13 @@ Use ``pacman`` to install
 Visual Studio
 =============
 
+#. Make sure you have a version of
+   `git for windows <https://git-scm.com/download/win>`_ .
+
 #. Launch the Visual Studio
-   `developer command prompt <https://docs.microsoft.com/en-us/dotnet/framework/tools/developer-command-prompt-for-vs>`_
-#. Use the command
+   `developer command window <https://learn.microsoft.com/en-us/visualstudio/ide/reference/command-prompt-powershell?view=vs-2022>`_
+
+#. At the command prompt enter
    ::
 
       where cmake.exe
@@ -161,8 +177,15 @@ Visual Studio
    If not, download and install the win64-x64 version of the
    `cmake program <https://cmake.org/download/>`_.
    Make sure you select the box that adds ``cmake`` to your execution path.
-#. In the command window, change into the directory where the cppad git
-   repository is located and run the following commands.
+
+#. Download the CppAD repository, and make it the current directory,
+   using the following commands
+   {xrst_code bat}
+   clone https://github.com/coin-or/CppAD.git cppad.git
+   cd cppad.git
+   {xrst_code}
+
+#. Execute the following commands:
    {xrst_literal
       bin/build.bat
    }
@@ -245,7 +268,7 @@ Below is a table with a few of the possible files
 .. _Ninja: https://en.wikipedia.org/wiki/Ninja_(build_system)
 
 Other generator choices are available; see the cmake
-`generators <http://www.cmake.org/cmake/help/cmake2.6docs.html#section_Generators>`_ documentation.
+`generators <https://cmake.org//cmake/help/cmake2.6docs.html#section_Generators>`_ documentation.
 
 cppad_prefix
 ************
@@ -265,7 +288,7 @@ the file ``cppad.hpp`` is installed in the location
 The default value for *cppad_prefix* is the value of
 *CMAKE_INSTALL_PREFIX* ; see the cmake documentation.
 (Before 2019-10-02 the default value was ``/usr`` ; see
-the heading 10-02 on :ref:`whats_new_19<whats_new_19@mm-dd@10-02>` .)
+the heading 10-02 on :ref:`2019<2019@mm-dd@10-02>` .)
 
 cppad_postfix
 *************
@@ -351,64 +374,89 @@ The default value for *cmake_install_datadir* is ``share`` .
 cmake_install_docdir
 ********************
 This is the middle level relative path below which
-the CppAD documentation files are installed.
+the CppAD user documentation files are installed.
 For example,
 if *cppad_prefix* is ``/usr`` ,
 *cmake_install_docdir* is ``share/doc`` , and
 *cppad_postfix* is not specified,
-the file ``cppad.xml`` is installed in the location
+the file ``user_guide.html`` is installed in the location
 
-   / ``usr/share/doc/cppad/cppad.xml``
+   / ``usr/share/doc/cppad/user_guide.html``
 
-There is no default value for *cmake_install_docdir* .
-If it is not specified, the documentation files are not installed.
+If *cmake_install_docdir* is not specified,
+or :ref:`cmake@include_doc` is false,
+the documentation files are not installed.
 
 cmake_defined_ok
 ****************
-This must be true when running cmake with a non-empty
+The default value for this option is true.
+It must be true when running cmake with a non-empty
 ``CMakeCache.txt`` file.
 If it is false, some checks will be made to make sure
 certain variables are not defined twice.
-The default value for *cmake_defined_ok* is true.
+
+include_doc
+***********
+The default value for this option is false.
+If it is true, is in the command line, the
+`xrst <https://xrst.readthedocs.io/latest/>`_
+program must be installed.
+In this case, the user and developer documentation targets
+``doc_user`` and ``doc_dev`` will be available.
+For example, if the :ref:`cmake@generator` is ``Ninja``
+the commands ``ninja doc_user`` and ``ninja doc_dev``
+will build the  corresponding documentation in the
+``build/html`` sub-directory of the
+:ref:`download@Distribution Directory` .
+
+cppad_static_lib
+****************
+The default value for this option is false.
+If it is true (false)
+the cppad library will be a static (shared) library.
+If the target system uses windows dlls, this setting should be true and
+if it is false, a warning will be issued and it will be ignored.
+
+cppad_debug_and_release
+***********************
+The default value for this option is true.
+If it is true,
+the debug and release versions of CppAD can be mixed in the same program.
+This must be true if
+:ref:`cmake@cppad_debug_which` is ``debug_even`` or ``debug_odd`` .
+If ``NDEBUG`` is defined and *cppad_debug_and_release* is false,
+:ref:`thread_alloc-name` does more error checking.
+For programs that do a lot of memory allocation,
+this can take a significant amount of time.
+This is meant for testing CppAD and as a last resort when debugging.
 
 include_adolc
 *************
-The :ref:`adolc-name` examples
-will be compiled and tested if ``include_adolc=true``
-is in the command line.
-
-include_eigen
-*************
-The :ref:`eigen-name` examples
-will be compiled and tested if ``include_eigen=true``
-is on the command line.
-In addition, the :ref:`sparse2eigen-name` utility will be installed.
+The default value for this option is false.
+If it is true,
+the :ref:`adolc-name` examples will be compiled and tested.
+In this case, ``adolc.pc`` must be in the ``PKG_CONFIG_PATH`` .
 
 include_ipopt
 *************
-The :ref:`ipopt-name` examples
-will be compiled and tested if ``include_ipopt=true``
-is on the command line.
+The default value for this option is false.
+If it is true,
+the :ref:`ipopt-name` examples will be compiled and tested.
+In this case, ``ipopt.pc`` must be in the ``PKG_CONFIG_PATH`` .
 In addition, :ref:`ipopt_solve-name` and :ref:`cppad_ipopt_nlp-name`
 will be installed.
 
 include_cppadcg
 ***************
-The :ref:`cppadcg-name` examples
-will be compiled and tested if ``include_cppadcg=true``
-is on the command line.
+The default value for this option is false.
+If it is true,
+the :ref:`cppadcg-name` examples will be compiled and tested.
 **Warning** :
 Do not use this option when installing cppad because
 the cppadcg package depends on cppad and using this option
 makes cppad depend on cppadcg.
 This option, and the script :ref:`get_cppadcg.sh-name` are only intended
 for testing purposes.
-
-eigen_prefix
-************
-This specifies the :ref:`eigen@eigen_prefix` .
-It must not be set when *include_eigen* is true
-(because ``pkg-config`` will be used to determine this information).
 
 package_prefix
 **************
@@ -559,28 +607,6 @@ The value *cppad_debug_which* be one of the following:
 
 If ``CMAKE_BUILD_TYPE`` is specified on the command line,
 then *cppad_debug_which* must be the empty string (its default value).
-
-cppad_static_lib
-****************
-This value should be either ``true`` or ``false`` and
-its default value is ``false`` .
-If it is true (false), the cppad library will be a static (shared) library.
-If the target system uses windows dlls, this setting should be true.
-If it is false, a warning will be issued and it will be ignored.
-
-cppad_debug_and_release
-***********************
-This value should be either ``true`` or ``false`` and its
-default value is ``true`` .
-If it is true,
-and the debug and release versions of CppAD can be mixed in the same program.
-This must be true if
-:ref:`cmake@cppad_debug_which` is ``debug_even`` or ``debug_odd`` .
-If ``NDEBUG`` is defined and *cppad_debug_and_release* is false,
-:ref:`thread_alloc-name` does more error checking.
-For programs that do a lot of memory allocation,
-this can take a significant amount of time.
-This is meant for testing CppAD and as a last resort when debugging.
 
 {xrst_toc_hidden
    bin/get_optional.sh

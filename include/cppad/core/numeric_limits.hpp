@@ -2,15 +2,15 @@
 # define CPPAD_CORE_NUMERIC_LIMITS_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 ------------------------------------------------------------------------------
 {xrst_begin numeric_limits}
 {xrst_spell
-   isnan
-   specializations
+  eps
+  isnan
 }
 
 Numeric Limits For an AD and Base Types
@@ -18,7 +18,6 @@ Numeric Limits For an AD and Base Types
 
 Syntax
 ******
-
 | *eps* = ``numeric_limits`` < *Float* >:: ``epsilon`` ()
 | *min* = ``numeric_limits`` < *Float* >:: ``min`` ()
 | *max* = ``numeric_limits`` < *Float* >:: ``max`` ()
@@ -176,7 +175,7 @@ namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 File that defines CppAD numeric_limits for AD types
 */
 
-/// All tthese defaults correspond to errors
+/// All these defaults correspond to errors
 template <class Float>
 class numeric_limits {
 public:

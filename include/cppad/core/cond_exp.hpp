@@ -2,22 +2,19 @@
 # define CPPAD_CORE_COND_EXP_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 -------------------------------------------------------------------------------
 {xrst_begin CondExp}
-{xrst_spell
-   deprecate
-}
 
 AD Conditional Expressions
 ##########################
 
 Syntax
 ******
-*result* = ``CondExp`` *Rel* ( *left* , *right* , *if_true* , *if_false* )
+| *result* = ``CondExp`` *Rel* ( *left* , *right* , *if_true* , *if_false* )
 
 Purpose
 *******
@@ -34,8 +31,10 @@ the conditional result
 The relational *Rel* and comparison operator *Cop*
 above have the following correspondence:
 
-| |tab| *Rel* ``Lt   Le   Eq   Ge   Gt``
-| |tab| *Cop*     <   <=   ==   >=   >
+.. csv-table::
+
+   *Rel* , ``Lt`` , ``Le`` , ``Eq`` , ``Ge`` , ``Gt``
+   *Cop* ,  <     , <=     , ==     , >=     , >
 
 If *f* is the :ref:`ADFun-name` object corresponding to the
 AD operation sequence,
@@ -58,9 +57,9 @@ when comparing *left* and *right* .
 Type
 ****
 These functions are defined in the CppAD namespace for arguments of
-*Type* is ``float`` , ``double`` , or any type of the form
-``AD`` < *Base* > .
-(Note that all four arguments must have the same type.)
+*Type* is *Base* or ``AD`` < *Base* > .
+Note that all four arguments,
+*left* , *right*, *if_true* , *if_false* ,  must have the same type.
 
 left
 ****
@@ -173,48 +172,10 @@ AD<Base> CondExpOp(
    CPPAD_ASSERT_UNKNOWN( Parameter(result) );
 
    // check first case where do not need to tape
-   if( IdenticalCon(left) & IdenticalCon(right) )
-   {  switch( cop )
-      {
-         case CompareLt:
-         if( left.value_ < right.value_ )
-            result = if_true;
-         else
-            result = if_false;
-         break;
-
-         case CompareLe:
-         if( left.value_ <= right.value_ )
-            result = if_true;
-         else
-            result = if_false;
-         break;
-
-         case CompareEq:
-         if( left.value_ == right.value_ )
-            result = if_true;
-         else
-            result = if_false;
-         break;
-
-         case CompareGe:
-         if( left.value_ >= right.value_ )
-            result = if_true;
-         else
-            result = if_false;
-         break;
-
-         case CompareGt:
-         if( left.value_ > right.value_ )
-            result = if_true;
-         else
-            result = if_false;
-         break;
-
-         default:
-         CPPAD_ASSERT_UNKNOWN(0);
-         result = if_true;
-      }
+   if( IdenticalCon(left) && IdenticalCon(right) )
+   {  result = CondExpOp(
+         cop, left.value_, right.value_, if_true.value_, if_false.value_
+      );
       return result;
    }
 

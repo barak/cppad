@@ -7,8 +7,9 @@
 /*
 {xrst_begin parallel_ad}
 {xrst_spell
-   rosen
-   teardown
+  rosen
+  runge
+  teardown
 }
 
 Enable AD Calculations During Parallel Mode
@@ -16,7 +17,7 @@ Enable AD Calculations During Parallel Mode
 
 Syntax
 ******
-``parallel_ad`` < *Base* >()
+| ``parallel_ad`` < *Base* >()
 
 Purpose
 *******
@@ -64,9 +65,9 @@ the :ref:`cppad_testvector-name` .
 Example
 *******
 The files
-:ref:`team_openmp.cpp-name` ,
-:ref:`team_bthread.cpp-name` , and
-:ref:`team_pthread.cpp-name` ,
+:ref:`openmp_get_started.cpp-name` ,
+:ref:`bthread_get_started.cpp-name` , and
+:ref:`pthread_get_started.cpp-name` ,
 contain examples and tests that implement this function.
 
 Restriction

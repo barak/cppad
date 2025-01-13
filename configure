@@ -1,28 +1,31 @@
-# #! /bin/bash -e
-# # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
-# # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# # SPDX-FileContributor: 2003-23 Bradley M. Bell
+#! /usr/bin/env bash
+# SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
+# SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
+set -e -u
+echo $0 $*
 # # ----------------------------------------------------------------------------
 # {xrst_begin configure app}
 # {xrst_spell
+#     adolc
 #     adouble
 #     ansi
 #     badiff
 #     boostvector
-#     cl
+#     colpack
 #     cxx
 #     cygdrive
 #     dist
 #     eigenvector
+#     fadbad
 #     fortran
-#     italic
-#     linux
+#     ip
+#     ipopt
 #     msvc
 #     nmake
-#     optionally
-#     postfix
+#     sacado
 #     stdvector
-#     testvector
+#     sys
 #     ublas
 #     usr
 # }
@@ -59,15 +62,14 @@
 # | ../ ``configure`` \\
 # | |tab| ``--help``                                       \\
 # | |tab| ``--prefix`` = *prefix_dir*                      \\
-# | |tab| ``--with-`` *test* ``vector``                    \\
+# | |tab| ``--with-`` *package* ``vector``                 \\
 # | |tab| ``--enable-msvc``                                \\
 # | |tab| ``--with-clang``                                 \\
+# | |tab| ``--with-verbose-make``                          \\
 # | |tab| ``MAX_NUM_THREADS`` = *max_num_threads*          \\
 # | |tab| ``CXX_FLAGS`` = *cxx_flags*                      \\
 # | |tab| ``POSTFIX_DIR`` = *postfix_dir*                  \\
 # | |tab| ``ADOLC_DIR`` = *adolc_dir*                      \\
-# | |tab| ``BOOST_DIR`` = *boost_dir*                      \\
-# | |tab| ``EIGEN_DIR`` = *eigen_dir*                      \\
 # | |tab| ``FADBAD_DIR`` = *fadbad_dir*                    \\
 # | |tab| ``SADADO_DIR`` = *sacado_dir*                    \\
 # | |tab| ``IPOPT_DIR`` = *ipopt_dir*                      \\
@@ -112,11 +114,14 @@
 #
 #    / ``usr/local/include/cppad``
 #
-# --with-testvector
-# *****************
+# --with-<package>vector
+# **********************
 # The :ref:`CPPAD_TESTVECTOR<testvector-name>`
 # template class is used for many of the CppAD examples and tests.
-# The default for this template class is ``CppAD::vector<`` *Scalar* > .
+# The default for this template class is
+#
+#  |tab| ``CppAD::vector<`` *Scalar* > .
+#
 # If one, and only one, of the following command line arguments is specified:
 # ::
 #
@@ -130,11 +135,6 @@
 # | |tab| ``boost::numeric::ublas::vector<`` *Scalar* >
 # | |tab| ``Eigen::matrix<`` *Scalar* , ``Eigen::Dynamic`` , 1>
 #
-# See also,
-# :ref:`configure@boost_dir`
-# and
-# :ref:`configure@eigen_dir` .
-#
 # --enable-msvc
 # *************
 # If this flag is present, the Microsoft ``cl`` compiler will be
@@ -142,17 +142,21 @@
 # In addition, nmake_ make files will be generated; i.e.,
 # you will use ``nmake`` instead of ``make`` to build, test, and install.
 # The resulting C++, C, and Fortran compiler orders work Coin-OR specific;
-# see 
+# see
 # `Building with Visual Studio in MSys2
 # <https://coin-or.github.io/user_introduction.html#building-with-visual-studio-in-msys2>`_ .
 #
-# .. _nmake: https://learn.microsoft.com/en-us/cpp/build/reference/nmake-reference
+# .. _nmake: https://learn.microsoft.com/en-us/cpp/build/reference/nmake-reference?view=msvc-170
 #
 # --with-clang
 # ************
 # If this flag is present, ``clang++`` ( ``clang`` )
 # will be used for the C++ (C) compiler.
 # This option cannot appear when the --enable-msvc option appears.
+#
+# --with-verbose-make
+# *******************
+# This will create verbose output during the make commands.
 #
 # max_num_threads
 # ***************
@@ -198,7 +202,7 @@
 # The default value for this directory is empty; i.e., there
 # is no adolc directory.
 # If you have
-# `ADOL-C <https://projects.coin-or.org/ADOL-C>`_
+# `ADOL-C <https://github.com/coin-or/ADOL-C>`_
 # installed on your system, you can
 # specify a value for *adolc_dir* in the
 # :ref:`configure@Configure` command line.
@@ -247,46 +251,12 @@
 # if ``d:/adolc_base`` is the proper directory,
 # ``/cygdrive/d/adolc_base`` should be used for *adolc_dir* .
 #
-# boost_dir
-# *********
-# The default value for this directory is empty; i.e., there
-# is no boost directory.
-# If the command line argument
-#
-#    ``BOOST_DIR`` = *boost_dir*
-#
-# is present, it must be such that files
-#
-# | |tab| *boost_dir* / ``include/boost/numeric/ublas/vector.hpp``
-# | |tab| *boost_dir* / ``include/boost/thread.hpp``
-#
-# are present.
-# In this case, these files will be used by CppAD.
-# See also, :ref:`--with-boostvector<configure@--with-testvector>`
-#
-# eigen_dir
-# *********
-# The default value for this directory is empty; i.e., there
-# is no eigen directory.
-# If you have
-# `Eigen <http://eigen.tuxfamily.org>`_
-# installed on your system, you can
-# specify a value for *eigen_dir* .
-# It must be such that
-#
-#    *eigen_dir* / ``include/Eigen/Core``
-#
-# is a valid include file.
-# In this case CppAD will compile and test the Eigen examples; e.g.,
-# :ref:`eigen_array.cpp-name` .
-# See also, :ref:`--with-eigenvector<configure@--with-testvector>`
-#
 # fadbad_dir
 # **********
 # The default value for this directory is empty; i.e., there
 # is no fadbad directory.
 # If you have
-# `Fadbad 2.1 <http://www.fadbad.com/>`_
+# `Fadbad 2.1 <http://uning.dk//>`_
 # installed on your system, you can
 # specify a value for *fadbad_dir* .
 # It must be such that
@@ -305,7 +275,7 @@
 # The default value for this directory is empty; i.e., there
 # is no ipopt directory.
 # If you have
-# `Ipopt <http://www.coin-or.org/projects/Ipopt.xml>`_
+# `Ipopt <https://coin-or.github.io/Ipopt>`_
 # installed on your system, you can
 # specify a value for *ipopt_dir* .
 # It must be such that
@@ -328,7 +298,7 @@
 # The default value for this directory is empty; i.e., there
 # is no sacado directory.
 # If you have
-# `Sacado <http://trilinos.sandia.gov/packages/sacado/>`_
+# `Sacado <https://trilinos.github.io/sacado.html>`_
 # installed on your system, you can
 # specify a value for *sacado_dir* .
 # It must be such that
@@ -400,6 +370,10 @@
 #
 # {xrst_end configure}
 # ----------------------------------------------------------------------------
+function print_variable {
+   echo "$1 = ${!1}"
+}
+# ----------------------------------------------------------------------------
 #
 # --help
 if echo " $* " | grep ' --help ' > /dev/null
@@ -408,25 +382,23 @@ then
 usage: <path_to_configure>/configure \\
    [--help] \\
    [--prefix=<prefix_dir>] \\
-   [--with-bostvector] \\
-   [--with-eigenvector] \\
-   [--with-stdvector] \\
+   [--with-<package>vector] \\
    [--enable-msvc] \\
+   [--with-clang]  \\
+   [--with-verbose-make] \\
    [MAX_NUM_THREADS=max_num_threads] \\
    [CXX_FLAGS=cxx_flags] \\
    [POSTFIX_DIR=postfix_dir] \\
    [ADOLC_DIR=adolc_dir] \\
-   [BOOST_DIR=boost_dir] \\
-   [EIGEN_DIR=eigne_dir] \\
    [FADBAD_DIR=fadbad_dir] \\
    [SACADO_DIR=sacado_dir] \\
    [IPOPT_DIR=ipopt_dir] \\
    [TAPE_ADDR_TYPE=tape_addr_type] \\
    [TAPE_ID_TYPE=tape_id_type]
-
 The --help option just prints this message and exits.
+<package> is one of he following: boost, eigen, std
+
 EOF
-   echo 'configure: OK'
    exit 0
 fi
 # ----------------------------------------------------------------------------
@@ -442,24 +414,22 @@ first_executable() {
    done
 }
 # ----------------------------------------------------------------------------
-echo $0 $*
 #
 prefix="$HOME"
-testvector=''
-enable_msvc=''
-with_clang=''
+testvector='cppad'
+enable_msvc='no'
+with_clang='n0'
+with_verbose_make='no'
 max_num_threads='64'
 cxx_flags=''
 postfix_dir='NOTFOUND'
 adolc_dir='NOTFOUND'
-boost_dir='NOTFOUND'
-eigen_dir='NOTFOUND'
 fadbad_dir='NOTFOUND'
 sacado_dir='NOTFOUND'
 ipopt_dir='NOTFOUND'
 tape_addr_type='size_t'
 tape_id_type='size_t'
-while [ "$1" != '' ]
+while [ "$#" != 0 ]
 do
    case "$1" in
 
@@ -467,29 +437,36 @@ do
       prefix=$( echo $1 | sed -e 's|^--prefix=||' )
       ;;
 
-      --with-boostvector | --with-eigenvector | --with-stdvector)
-      if [ "$testvector" != '' ]
-      then
-         echo 'configure: Cannot specify more than one test vector'
-         exit 1
-      fi
-      testvector=$( echo $1 | sed -e 's|^--with-||' -e 's|vector$||')
+      --with-boostvector)
+      testvector='boost'
       ;;
 
-      --enable-msvc)
-      enable_msvc='yes'
+      --with-eigenvector)
+      testvector='eigen'
+      ;;
+
+      --with-stdvector)
+      testvector='std'
       ;;
 
       --with-clang)
       with_clang='yes'
       ;;
 
-      CXX_FLAGS=*)
-      cxx_flags=$( echo $1 | sed -e 's|CXX_FLAGS=||' )
+      --enable-msvc)
+      enable_msvc='yes'
+      ;;
+
+      --with-verbose-make)
+      with_verbose_make='yes'
       ;;
 
       MAX_NUM_THREADS=*)
       max_num_threads=$( echo $1 | sed -e 's|MAX_NUM_THREADS=||' )
+      ;;
+
+      CXX_FLAGS=*)
+      cxx_flags=$( echo $1 | sed -e 's|CXX_FLAGS=||' )
       ;;
 
       POSTFIX_DIR=*)
@@ -498,14 +475,6 @@ do
 
       ADOLC_DIR=*)
       adolc_dir=$( echo $1 | sed -e 's|ADOLC_DIR=||' )
-      ;;
-
-      BOOST_DIR=*)
-      boost_dir=$( echo $1 | sed -e 's|BOOST_DIR=||' )
-      ;;
-
-      EIGEN_DIR=*)
-      eigen_dir=$( echo $1 | sed -e 's|EIGEN_DIR=||' )
       ;;
 
       FADBAD_DIR=*)
@@ -535,10 +504,6 @@ do
    esac
    shift
 done
-if [ "$testvector" == '' ]
-then
-   testvector='cppad'
-fi
 if [ "$with_clang" == 'yes' ] && [ "$enable_msvc" == 'yes' ]
 then
    echo 'configure: cannot specify both --enable-mcvc and --with-clang'
@@ -555,6 +520,21 @@ else
       type_makefile='MSYS Makefiles'
    else
       type_makefile='Unix Makefiles'
+   fi
+fi
+#
+# cxx_standard_year
+if echo $cxx_flags | grep 'std=c++' > /dev/null
+then
+   cxx_standard_year=$(echo $cxx_flags | sed -e 's|.*std=c++\([0-9]*\).*|\1|')
+   print_variable cxx_standard_year
+   if [ "$cxx_standard_year"  -lt 17 ]
+   then
+      if [ "$sacado_dir" != 'NOTFOUND' ]
+      then
+         echo 'Sacado requires c++17 or greater'
+         exit 1
+      fi
    fi
 fi
 #
@@ -611,20 +591,42 @@ then
    pwd
    exit 1
 fi
+PKG_CONFIG_PATH=''
 #
-# include_adolc
-include_adolc='false'
-if [ "$adolc_dir" != 'NOTFOUND' ]
-then
-   include_adolc='true'
-fi
-#
-# include_ipopt
-include_ipopt='false'
-if [ "$ipopt_dir" != 'NOTFOUND' ]
-then
-   include_ipopt='true'
-fi
+# include_$package, PKG_CONFIG_PATH
+for package in adolc ipopt
+do
+   package_dir="${package}_dir"
+   if [ "${!package_dir}" == NOTFOUND ]
+   then
+      declare include_${package}='false'
+   else
+      declare include_${package}='true'
+      pc_file="$package.pc"
+      if [ "$package" == eigen ]
+      then
+         pc_file='eigen3.pc'
+      fi
+      pc_path=$(find ${!package_dir} -name "$pc_file" | head -1)
+      if [ "$pc_path" == '' ]
+      then
+         echo "$package_dir = ${!package_dir}"
+         echo "But cannot find $pc_file below that directory"
+         exit 1
+      fi
+      pc_dir=$(echo $pc_path | sed -e "s|/$pc_file||")
+      if [ -z ${PKG_CONFIG_PATH+x} ]
+      then
+         export PKG_CONFIG_PATH="$pc_dir"
+      elif [ "$PKG_CONFIG_PATH" == '' ]
+      then
+         export PKG_CONFIG_PATH="$pc_dir"
+      else
+         PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$pc_dir"
+      fi
+   fi
+   print_variable PKG_CONFIG_PATH
+done
 #
 # cppad_cxx_flags
 cppad_cxx_flags=$( echo " $cxx_flags " | sed -e 's| -g ||' )
@@ -635,22 +637,26 @@ if [ -d '/usr/lib64' ]
 then
    cmake_install_libdirs='lib64;lib'
 fi
-#
-# CMakeCache.txt
-if [ -e CMakeCache.txt ]
-then
-   rm CMakeCache.txt
-fi
-echo
+list='
+   build.ninja
+   CMakeCache.txt
+   CMakeFiles
+'
+for name in $list
+do
+   if [ -e "$name" ]
+   then
+      echo_eval rm -r $name
+   fi
+done
 echo cmake \
    -U .+ \
    -S "$source_dir" \
    -B . \
    \
-   -D CMAKE_VERBOSE_MAKEFILE=0 \
+   -D CMAKE_VERBOSE_MAKEFILE=$with_verbose_make \
    -G "'$type_makefile'" \
    \
-   $cmake_cxx_compiler \
    $cmake_c_compiler \
    $cmake_fortran_compiler \
    \
@@ -664,10 +670,9 @@ echo cmake \
    -D cmake_install_docdir=share/doc \
    \
    -D include_adolc=$include_adolc \
-   -D include_ipopt=$include_adolc \
+   -D include_ipopt=$include_ipopt \
    -D include_cppadcg=false \
    \
-   -D eigen_prefix="$eigen_dir" \
    -D colpack_prefix='NOTFOUND' \
    -D fadbad_prefix="$fadbad_dir" \
    -D sacado_prefix="$sacado_dir" \
@@ -686,8 +691,11 @@ cmake \
    -S "$source_dir" \
    -B . \
    \
-   -D CMAKE_VERBOSE_MAKEFILE=0 \
+   -D CMAKE_VERBOSE_MAKEFILE=$with_verbose_make \
    -G "$type_makefile" \
+   \
+   $cmake_cxx_compiler \
+   $cmake_fortran_compiler \
    \
    -D cppad_prefix="$prefix" \
    -D cppad_postfix="$postfix_dir" \
@@ -702,10 +710,9 @@ cmake \
    -D include_ipopt=$include_adolc \
    -D include_cppadcg=false \
    \
-   -D eigen_prefix="$eigen_prefix" \
    -D colpack_prefix='NOTFOUND' \
-   -D fadbad_prefix="$fadbad_prefix" \
-   -D sacado_prefix="$sacado_prefix" \
+   -D fadbad_prefix="$fadbad_dir" \
+   -D sacado_prefix="$sacado_dir" \
    \
    -D cppad_cxx_flags="$cxx_flags" \
    -D cppad_profile_flag='' \

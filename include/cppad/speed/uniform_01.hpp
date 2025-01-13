@@ -2,24 +2,19 @@
 # define CPPAD_SPEED_UNIFORM_01_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin uniform_01}
-{xrst_spell
-   variate
-}
 
 Simulate a [0,1] Uniform Random Variate
 #######################################
 
 Syntax
 ******
-
 | # ``include <cppad/speed/uniform_01.hpp>``
 | ``uniform_01`` ( *seed* )
-
-``uniform_01`` ( *n* , *x* )
+| ``uniform_01`` ( *n* , *x* )
 
 Purpose
 *******

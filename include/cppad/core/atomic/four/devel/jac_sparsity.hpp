@@ -2,7 +2,7 @@
 # define CPPAD_CORE_ATOMIC_FOUR_DEVEL_JAC_SPARSITY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
@@ -74,8 +74,8 @@ bool atomic_four<Base>::for_jac_sparsity(
    size_t                           call_id      ,
    bool                             dependency   ,
    const vector<bool>&              ident_zero_x ,
-   const local::pod_vector<size_t>& x_index      ,
-   const local::pod_vector<size_t>& y_index      ,
+   const vector<size_t>&            x_index      ,
+   const vector<size_t>&            y_index      ,
    InternalSparsity&                var_sparsity )
 // END_FOR_JAC_SPARSITY
 {  typedef typename InternalSparsity::const_iterator iterator;
@@ -119,7 +119,7 @@ bool atomic_four<Base>::for_jac_sparsity(
    {  size_t i = row[k];
       size_t j = col[k];
       CPPAD_ASSERT_KNOWN(
-         select_y[i] & select_x[j],
+         select_y[i] && select_x[j],
          "atomic: jac_sparsity: pattern_out not in "
          "select_x or select_y range"
       );
@@ -218,8 +218,8 @@ bool atomic_four<Base>::rev_jac_sparsity(
    size_t                           call_id      ,
    bool                             dependency   ,
    const vector<bool>&              ident_zero_x ,
-   const local::pod_vector<size_t>& x_index      ,
-   const local::pod_vector<size_t>& y_index      ,
+   const vector<size_t>&            x_index      ,
+   const vector<size_t>&            y_index      ,
    InternalSparsity&                var_sparsity )
 // END_REV_JAC_SPARSITY
 {  typedef typename InternalSparsity::const_iterator iterator;
@@ -264,7 +264,7 @@ bool atomic_four<Base>::rev_jac_sparsity(
    {  size_t i = row[k];
       size_t j = col[k];
       CPPAD_ASSERT_KNOWN(
-         select_y[i] & select_x[j],
+         select_y[i] && select_x[j],
          "atomic: jac_sparsity: pattern_out not in "
          "select_x or select_y range"
       );

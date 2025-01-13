@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin adolc_mat_mul.cpp}
@@ -45,11 +45,11 @@ bool link_mat_mul(
    typedef adouble    ADScalar;
    typedef ADScalar*  ADVector;
 
-   int tag  = 0;         // tape identifier
-   int m    = 1;         // number of dependent variables
-   int n    = size*size; // number of independent variables
-   double f;             // function value
-   int j;                // temporary index
+   short tag  = 0;                // tape identifier
+   int   m    = 1;                // number of dependent variables
+   int   n    = int(size * size); // number of independent variables
+   double f;                      // function value
+   int j;                         // temporary index
 
    // set up for thread_alloc memory allocator (fast and checks for leaks)
    using CppAD::thread_alloc; // the allocator
@@ -77,7 +77,7 @@ bool link_mat_mul(
    // ----------------------------------------------------------------------
    if( ! global_option["onetape"] ) while(repeat--)
    {  // choose a matrix
-      CppAD::uniform_01(n, mat);
+      CppAD::uniform_01( size_t(n), mat);
 
       // declare independent variables
       int keep = 1; // keep forward mode results
@@ -97,7 +97,7 @@ bool link_mat_mul(
    }
    else
    {  // choose a matrix
-      CppAD::uniform_01(n, mat);
+      CppAD::uniform_01( size_t(n), mat);
 
       // declare independent variables
       int keep = 0; // do not keep forward mode results
@@ -114,7 +114,7 @@ bool link_mat_mul(
 
       while(repeat--)
       {  // choose a matrix
-         CppAD::uniform_01(n, mat);
+         CppAD::uniform_01( size_t(n), mat);
 
          // evaluate the determinant at the new matrix value
          keep = 1; // keep this forward mode result

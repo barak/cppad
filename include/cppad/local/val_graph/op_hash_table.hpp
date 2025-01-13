@@ -2,7 +2,7 @@
 # define  CPPAD_LOCAL_VAL_GRAPH_OP_HASH_TABLE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2023-23 Bradley M. Bell
+// SPDX-FileContributor: 2023-24 Bradley M. Bell
 // ---------------------------------------------------------------------------
 # include <cppad/local/sparse/size_setvec.hpp>
 # include <cppad/local/val_graph/tape.hpp>
@@ -153,7 +153,7 @@ private:
          // code
          code = 0;
          //
-         // These are auxillary indices
+         // These are auxiliary indices
          for(addr_t i = 0; i < n_before; ++i)
             code += size_t( arg_vec[arg_index + i] );
          //
@@ -162,7 +162,7 @@ private:
          for(addr_t i = n_before; i < n_arg - n_after; ++i)
             code += size_t( new_val_index[ arg_vec[arg_index + i] ] );
          //
-         // These are auxillary indices
+         // These are auxiliary indices
          for(addr_t i = n_arg - n_after; i < n_arg ; ++i)
             code += size_t( arg_vec[arg_index + i] );
       }
@@ -247,7 +247,7 @@ public:
          addr_t     n_arg_j    = op_ptr_j->n_arg(arg_index_j, arg_vec);
          //
          // match
-         bool match = (op_enum == op_enum_j) & (n_arg == n_arg_j);
+         bool match = (op_enum == op_enum_j) && (n_arg == n_arg_j);
          if( match && op_enum == con_op_enum )
          {  //
             const Value& c = con_vec[ arg_vec[arg_index] ];

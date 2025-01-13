@@ -2,14 +2,13 @@
 # define CPPAD_CORE_SPARSE_HESSIAN_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin sparse_hessian}
 {xrst_spell
-   recomputed
-   valarray
+  valarray
 }
 
 Sparse Hessian
@@ -17,7 +16,6 @@ Sparse Hessian
 
 Syntax
 ******
-
 | *hes* = *f* . ``SparseHessian`` ( *x* , *w* )
 | *hes* = *f* . ``SparseHessian`` ( *x* , *w* , *p* )
 | *n_sweep* = *f* . ``SparseHessian`` ( *x* , *w* , *p* , *row* , *col* , *hes* , *work* )

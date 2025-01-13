@@ -2,12 +2,12 @@
 # define CPPAD_CORE_ATOMIC_TWO_FOR_SPARSE_HES_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin atomic_two_for_sparse_hes app}
 {xrst_spell
-   vx
+  vx
 }
 
 Atomic Forward Hessian Sparsity Patterns
@@ -15,7 +15,7 @@ Atomic Forward Hessian Sparsity Patterns
 
 Syntax
 ******
-*ok* = *afun* . ``for_sparse_hes`` ( *vx* , *r* , *s* , *h* , *x* )
+| *ok* = *afun* . ``for_sparse_hes`` ( *vx* , *r* , *s* , *h* , *x* )
 
 Deprecated 2016-06-27
 *********************
@@ -97,7 +97,7 @@ The argument has prototype
    ``const CppAD::vector<`` *Base* >& *x*
 
 and size is equal to the *n* .
-This is the :ref:`Value-name` value corresponding to the parameters in the
+This is the :ref:`Value-name`  corresponding to the parameters in the
 vector :ref:`atomic_two_afun@ax` (when the atomic function was called).
 To be specific, if
 
@@ -221,8 +221,8 @@ template <class Base>
 template <class InternalSparsity>
 bool atomic_base<Base>::for_sparse_hes(
    const vector<Base>&              x                ,
-   const local::pod_vector<size_t>& x_index          ,
-   const local::pod_vector<size_t>& y_index          ,
+   const vector<size_t>&            x_index          ,
+   const vector<size_t>&            y_index          ,
    size_t                           np1              ,
    size_t                           numvar           ,
    const InternalSparsity&          rev_jac_sparsity ,
@@ -303,7 +303,7 @@ bool atomic_base<Base>::for_sparse_hes(
    // modify hessian in calling routine
    for(size_t i = 0; i < n; i++)
    {  for(size_t j = 0; j < n; j++)
-      {  if( (x_index[i] > 0) & (x_index[j] > 0) )
+      {  if( (x_index[i] > 0) && (x_index[j] > 0) )
          {  bool flag = false;
             switch( sparsity_ )
             {  case pack_sparsity_enum:

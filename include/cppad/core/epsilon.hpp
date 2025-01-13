@@ -2,12 +2,15 @@
 # define CPPAD_CORE_EPSILON_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 ------------------------------------------------------------------------------
 {xrst_begin epsilon app}
+{xrst_spell
+  eps
+}
 
 Machine Epsilon For AD Types
 ############################
@@ -19,7 +22,7 @@ You should use the :ref:`numeric_limits-name` ``epsilon`` instead.
 
 Syntax
 ******
-*eps* = ``epsilon`` < *Float* >()
+| *eps* = ``epsilon`` < *Float* >()
 
 Purpose
 *******

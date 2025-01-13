@@ -2,18 +2,16 @@
 # define CPPAD_UTILITY_LU_SOLVE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin LuSolve}
 {xrst_spell
-   determinants
-   geq
-   leq
-   logdet
-   signdet
-   specializations
+  geq
+  leq
+  logdet
+  signdet
 }
 
 Compute Determinant and Solve Linear Equations
@@ -21,10 +19,8 @@ Compute Determinant and Solve Linear Equations
 
 Syntax
 ******
-
-   # ``include <cppad/utility/lu_solve.hpp>``
-
-*signdet* = ``LuSolve`` ( *n* , *m* , *A* , *B* , *X* , *logdet* )
+| # ``include <cppad/utility/lu_solve.hpp>``
+| *signdet* = ``LuSolve`` ( *n* , *m* , *A* , *B* , *X* , *logdet* )
 
 Description
 ***********
@@ -159,7 +155,7 @@ in the case where *Float* corresponds to a real number.
 Float
 *****
 The type *Float* must satisfy the conditions
-for a :ref:`NumericType-name` type.
+for a :ref:`NumericType-name` .
 The routine :ref:`CheckNumericType-name` will generate an error message
 if this is not the case.
 In addition, the following operations must be defined for any pair

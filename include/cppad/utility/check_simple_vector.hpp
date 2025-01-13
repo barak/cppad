@@ -2,25 +2,19 @@
 # define CPPAD_UTILITY_CHECK_SIMPLE_VECTOR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin CheckSimpleVector}
-{xrst_spell
-   preforms
-}
 
 Check Simple Vector Concept
 ###########################
 
 Syntax
 ******
-
-   # ``include <cppad/utility/check_simple_vector.hpp>``
-
-``CheckSimpleVector`` < *Scalar* , *Vector* >()
-
-``CheckSimpleVector`` < *Scalar* , *Vector* >( *x* , *y* )
+| # ``include <cppad/utility/check_simple_vector.hpp>``
+| ``CheckSimpleVector`` < *Scalar* , *Vector* >()
+| ``CheckSimpleVector`` < *Scalar* , *Vector* >( *x* , *y* )
 
 Purpose
 *******
@@ -81,9 +75,12 @@ if the CppAD include files.
 
 Parallel Mode
 *************
-The routine :ref:`thread_alloc::parallel_setup<ta_parallel_setup-name>`
-must be called before it
-can be used in :ref:`parallel<ta_in_parallel-name>` mode.
+This routine must be called before entering parallel mode
+because it has static variables that must be initialized.
+If it's first call is not in  parallel mode, and NDEBUG is not defined,
+you will get an assertion. Running in the debugger and going to the
+stack frame where CheckSimpleVector is called may help you determine
+what the value of *Scalar* and *Vector* need to be initialized.
 
 Example
 *******
@@ -105,9 +102,18 @@ so *S* is not the same as *T* .
 # include <cppad/local/define.hpp>
 # include <cppad/utility/thread_alloc.hpp>
 
+// CPPAD_CHECK_SIMPLE_VECTOR
+# ifndef NDEBUG
+# define CPPAD_CHECK_SIMPLE_VECTOR 1
+# elif CPPAD_DEBUG_AND_RELEASE
+# define CPPAD_CHECK_SIMPLE_VECTOR 1
+# else
+# define CPPAD_CHECK_SIMPLE_VECTOR 0
+# endif
+
 namespace CppAD {
 
-# ifdef NDEBUG
+# if ! CPPAD_CHECK_SIMPLE_VECTOR
    template <class Scalar, class Vector>
    inline void CheckSimpleVector(const Scalar& x, const Scalar& y)
    { }
@@ -122,11 +128,18 @@ namespace CppAD {
    struct ok_if_S_same_as_T<T,T> { T value; };
 
    template <class Scalar, class Vector>
-   void CheckSimpleVector(const Scalar& x, const Scalar& y)
-   {  CPPAD_ASSERT_FIRST_CALL_NOT_PARALLEL
-      static size_t count;
+   inline void CheckSimpleVector(const Scalar& x, const Scalar& y)
+   {  //
+      // count
+      static size_t count = 0;
       if( count > 0  )
          return;
+      CPPAD_ASSERT_KNOWN(
+         ! CppAD::thread_alloc::in_parallel() ,
+         "In parallel mode and CheckSimpleVector was not previously called\n"
+         "with this Scalar and Vector type; see the heading\n"
+         "Parallel Mode in the CheckSimpleVector documentation."
+      );
       count++;
 
       // value_type must be type of elements of Vector
@@ -190,8 +203,8 @@ namespace CppAD {
       Scalar y;
 
       // use assignment and not constructor
-      x = 0;
-      y = 1;
+      x = Scalar(0);
+      y = Scalar(1);
 
       CheckSimpleVector<Scalar, Vector>(x, y);
    }
@@ -200,4 +213,5 @@ namespace CppAD {
 
 } // end namespace CppAD
 
+# undef CPPAD_CHECK_SIMPLE_VECTOR
 # endif

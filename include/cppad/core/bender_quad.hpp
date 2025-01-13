@@ -2,14 +2,14 @@
 # define CPPAD_CORE_BENDER_QUAD_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin BenderQuad app}
 {xrst_spell
-   avector
-   gx
-   gxx
+  avector
+  gx
+  gxx
 }
 
 Computing Jacobian and Hessian of Bender's Reduced Objective
@@ -17,7 +17,6 @@ Computing Jacobian and Hessian of Bender's Reduced Objective
 
 Syntax
 ******
-
 | # ``include <cppad/cppad.hpp>``
 | *BenderQuad* ( ``x`` , ``y`` , ``fun`` , ``g`` , ``gx`` , ``gxx`` )
 

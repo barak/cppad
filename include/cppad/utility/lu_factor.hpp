@@ -2,16 +2,15 @@
 # define CPPAD_UTILITY_LU_FACTOR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin LuFactor}
 {xrst_spell
-   geq
-   jp
-   permuted
-   specializations
+  geq
+  ip
+  jp
 }
 
 LU Factorization of A Square Matrix
@@ -19,10 +18,8 @@ LU Factorization of A Square Matrix
 
 Syntax
 ******
-
-   # ``include <cppad/utility/lu_factor.hpp>``
-
-*sign* = ``LuFactor`` ( *ip* , *jp* , *LU* )
+| # ``include <cppad/utility/lu_factor.hpp>``
+| *sign* = ``LuFactor`` ( *ip* , *jp* , *LU* )
 
 Description
 ***********
@@ -166,7 +163,7 @@ Float
 This notation is used to denote the type corresponding
 to the elements of a *FloatVector* .
 The type *Float* must satisfy the conditions
-for a :ref:`NumericType-name` type.
+for a :ref:`NumericType-name` .
 The routine :ref:`CheckNumericType-name` will generate an error message
 if this is not the case.
 In addition, the following operations must be defined for any pair
@@ -323,7 +320,7 @@ int LuFactor(SizeVector &ip, SizeVector &jp, FloatVector &LU)           //
       for(i = p; i < n; i++)
       {  for(j = p; j < n; j++)
          {  CPPAD_ASSERT_UNKNOWN(
-               (ip[i] < n) & (jp[j] < n)
+               (ip[i] < n) && (jp[j] < n)
             );
             etmp = LU[ ip[i] * n + jp[j] ];
 
@@ -336,7 +333,7 @@ int LuFactor(SizeVector &ip, SizeVector &jp, FloatVector &LU)           //
          }
       }
       CPPAD_ASSERT_KNOWN(
-      (imax < n) & (jmax < n) ,
+      (imax < n) && (jmax < n) ,
       "LuFactor can't determine an element with "
       "maximum absolute value.\n"
       "Perhaps original matrix contains not a number or infinity.\n"

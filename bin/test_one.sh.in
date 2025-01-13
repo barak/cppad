@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-23 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 set_libdir() {
    my_prefix="$1"
@@ -33,9 +33,9 @@ set_libdir() {
    then
       if [ "$LD_LIBRARY_PATH" == '' ]
       then
-         export LD_LIBRARY_PATH="$my_path"
+         LD_LIBRARY_PATH="$my_path"
       else
-         export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$my_path"
+         LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$my_path"
       fi
    fi
 }
@@ -97,12 +97,12 @@ if [ -e test_one.cpp ]
 then
    rm test_one.cpp
 fi
-original_dir=`pwd`
+top_srcdir=$(pwd)
 # ---------------------------------------------------------------------------
-cwd=$(pwd)
-PKG_CONFIG_PATH="$cwd/build/prefix/lib64/pkgconfig"
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$cwd/build/prefix/share/pkgconfig"
-PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$cwd/build/prefix/lib/pkgconfig"
+PKG_CONFIG_PATH="@cppad_prefix@/share/pkgconfig"
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:@cppad_prefix@/lib/pkgconfig"
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:@cppad_prefix@/lib64/pkgconfig"
+export PKG_CONFIG_PATH
 # ---------------------------------------------------------------------------
 # initialize
 export LD_LIBRARY_PATH=''
@@ -149,7 +149,7 @@ fi
 include_flags=$(echo $include_flags | \
    sed -e 's|  *-I *| -isystem |g' -e 's|^-I *|-isystem |'
 )
-include_flags="-I $original_dir/include $include_flags"
+include_flags="-I $top_srcdir/include $include_flags"
 if [ @is_cppad_lib_dynamic@ ==  '1' ]
 then
    cppad_lib_path='@PROJECT_BINARY_DIR@/cppad_lib/libcppad_lib.so'
@@ -159,9 +159,23 @@ fi
 library_flags="$library_flags $cppad_lib_path -lpthread"
 #
 cd build
-if ! ninja cppad_lib
+if [ -e 'build.ninja' ] && [ -e 'Makefile' ]
 then
-   echo 'test_one.sh: ninja cppad_lib failed: see erros above'
+   echo "bin/test_one.sh: Both build.ninja and Makefile are in $(pwd)"
+   exit 1
+elif [ -e 'build.ninja' ]
+then
+   builder=ninja
+elif [ -e 'Makefile' ]
+then
+   builder=make
+else
+   echo "bin/test_one.sh: Neither build.ninja or Makefile is in $(pwd)"
+   exit 1
+fi
+if ! $builder cppad_lib
+then
+   echo "test_one.sh: $builder cppad_lib failed: see erros above"
    exit 1
 fi
 cd ..
@@ -210,9 +224,9 @@ if ! echo $LD_LIBRARY_PATH | grep "$my_path" > /dev/null
 then
    if [ "$LD_LIBRARY_PATH" == '' ]
    then
-      export LD_LIBRARY_PATH="$my_path"
+      LD_LIBRARY_PATH="$my_path"
    else
-      export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$my_path"
+      LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$my_path"
    fi
 fi
 # --------------------------------------------------------------------------

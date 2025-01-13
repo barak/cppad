@@ -2,7 +2,7 @@
 # define CPPAD_UTILITY_THREAD_ALLOC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <sstream>
@@ -410,8 +410,7 @@ Setup thread_alloc For Use in Multi-Threading Environment
 
 Syntax
 ******
-
-   ``thread_alloc::parallel_setup`` ( *num_threads* , *in_parallel* , *thread_num* )
+| ``thread_alloc::parallel_setup`` ( *num_threads* , *in_parallel* , *thread_num* )
 
 Purpose
 *******
@@ -483,9 +482,9 @@ In addition, this function cannot be called while in parallel mode.
 Example
 *******
 The files
-:ref:`simple_ad_openmp.cpp-name` ,
-:ref:`simple_ad_bthread.cpp-name` , and
-:ref:`simple_ad_pthread.cpp-name` ,
+:ref:`openmp_get_started.cpp-name` ,
+:ref:`bthread_get_started.cpp-name` , and
+:ref:`pthread_get_started.cpp-name` ,
 contain examples and tests that use this function.
 
 {xrst_end ta_parallel_setup}
@@ -514,7 +513,7 @@ contain examples and tests that use this function.
       {  bool set = true;
          set_get_num_threads(num_threads);
          // emphasize that this routine is outside thread_alloc class
-         CppAD::local::set_get_in_parallel(nullptr, set);
+         CppAD::local::set_get_in_parallel(set, nullptr);
          set_get_thread_num(nullptr, set);
          return;
       }
@@ -554,7 +553,7 @@ contain examples and tests that use this function.
       {  bool set = true;
          set_get_num_threads(num_threads);
          // emphasize that this routine is outside thread_alloc class
-         CppAD::local::set_get_in_parallel(in_parallel, set);
+         CppAD::local::set_get_in_parallel(set, in_parallel);
          set_get_thread_num(thread_num, set);
       }
    }
@@ -629,7 +628,7 @@ Example
    /// other threads are currently executing.
    static bool in_parallel(void)
    {  // emphasize that this routine is outside thread_alloc class
-      return CppAD::local::set_get_in_parallel(0);
+      return CppAD::local::set_get_in_parallel();
    }
 /* -----------------------------------------------------------------------
 {xrst_begin ta_thread_num}
@@ -951,7 +950,7 @@ Example
       void* v_node         = reinterpret_cast<void*>(node);
       block_t* inuse_root  = info->root_inuse_ + c_index;
       block_t* previous    = inuse_root;
-      while( (previous->next_ != nullptr) & (previous->next_ != v_node) )
+      while( (previous->next_ != nullptr) && (previous->next_ != v_node) )
          previous = reinterpret_cast<block_t*>(previous->next_);
 
       // check that v_ptr is valid
@@ -1001,7 +1000,7 @@ Example
 /* -----------------------------------------------------------------------
 {xrst_begin ta_free_available}
 {xrst_spell
-   inuse
+  inuse
 }
 
 Free Memory Currently Available for Quick Use by a Thread
@@ -1252,9 +1251,6 @@ Example
    }
 /* -----------------------------------------------------------------------
 {xrst_begin ta_create_array}
-{xrst_spell
-   inuse
-}
 
 Allocate An Array and Call Default Constructor for its Elements
 ###############################################################
@@ -1377,8 +1373,7 @@ Example
 /* -----------------------------------------------------------------------
 {xrst_begin ta_delete_array}
 {xrst_spell
-   deallocate
-   inuse
+  deallocate
 }
 
 Deallocate An Array and Call Destructor for its Elements
@@ -1460,9 +1455,6 @@ Example
    }
 /* -----------------------------------------------------------------------
 {xrst_begin ta_free_all}
-{xrst_spell
-   inuse
-}
 
 Free All Memory That Was Allocated for Use by thread_alloc
 ##########################################################

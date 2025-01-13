@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin a11c_pthread.cpp}
 {xrst_spell
-   pthreads
+  pthreads
 }
 
 A Simple Parallel Pthread Example and Test
@@ -45,8 +45,6 @@ namespace {
    // Beginning of Example A.1.1.1c of OpenMP 2.5 standard document ---------
    void a1(int n, float *a, float *b)
    {  int i;
-      // for some reason this function is missing on some systems
-      // assert( pthread_is_multithreaded_np() > 0 );
       for(i = 1; i < n; i++)
          b[i] = (a[i] + a[i-1]) / 2.0f;
       return;

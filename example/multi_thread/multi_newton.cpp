@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin multi_newton_common}
@@ -78,8 +78,8 @@ namespace {
 -------------------------------------------------------------------------------
 {xrst_begin multi_newton_setup}
 {xrst_spell
-   xlow
-   xup
+  xlow
+  xup
 }
 
 Set Up Multi-Threaded Newton Method
@@ -87,7 +87,6 @@ Set Up Multi-Threaded Newton Method
 
 Syntax
 ******
-
 | *ok* = ``multi_newton_setup`` (
 | |tab| *num_sub* , *xlow* , *xup* , *epsilon* , *max_itr* , *num_threads*
 | )
@@ -218,8 +217,8 @@ bool multi_newton_setup(
 ------------------------------------------------------------------------------
 {xrst_begin multi_newton_worker}
 {xrst_spell
-   xlow
-   xup
+  xlow
+  xup
 }
 
 Do One Thread's Work for Multi-Threaded Newton Method
@@ -311,9 +310,9 @@ void multi_newton_worker(void)
          // check end of iterations
          if( fabs(fcur) <= epsilon_ )
             more_itr = false;
-         if( (xcur == xlow_i ) & (fcur * dfcur > 0.) )
+         if( (xcur == xlow_i ) && (fcur * dfcur > 0.) )
             more_itr = false;
-         if( (xcur == xup_i)   & (fcur * dfcur < 0.) )
+         if( (xcur == xup_i) && (fcur * dfcur < 0.) )
             more_itr = false;
 
          // next Newton iterate
@@ -349,7 +348,7 @@ void multi_newton_worker(void)
 -------------------------------------------------------------------------------
 {xrst_begin multi_newton_takedown}
 {xrst_spell
-   xout
+  xout
 }
 
 Take Down Multi-threaded Newton Method
@@ -455,10 +454,10 @@ bool multi_newton_takedown(vector<double>& xout)
 ------------------------------------------------------------------------------
 {xrst_begin multi_newton_run}
 {xrst_spell
-   df
-   xlow
-   xout
-   xup
+  df
+  xlow
+  xout
+  xup
 }
 
 A Multi-Threaded Newton's Method

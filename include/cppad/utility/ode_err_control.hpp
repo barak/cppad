@@ -2,24 +2,24 @@
 # define CPPAD_UTILITY_ODE_ERR_CONTROL_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin OdeErrControl}
 {xrst_spell
-   eabs
-   erel
-   maxabs
-   nstep
-   scur
-   smax
-   smin
-   tb
-   tf
-   xa
-   xb
-   xf
+  eabs
+  eb
+  ef
+  erel
+  nstep
+  scur
+  smax
+  smin
+  tf
+  xa
+  xb
+  xf
 }
 
 An Error Controller for ODE Solvers
@@ -27,7 +27,6 @@ An Error Controller for ODE Solvers
 
 Syntax
 ******
-
 | # ``include <cppad/utility/ode_err_control.hpp>``
 | *xf* = ``OdeErrControl`` ( *method* , *ti* , *tf* , *xi* ,
 | |tab| ``smin`` , ``smax`` , ``scur`` , ``eabs`` , ``erel`` , ``ef`` , ``maxabs`` , ``nstep``  )
@@ -349,7 +348,7 @@ with a smaller value of *smin* .
 Scalar
 ******
 The type *Scalar* must satisfy the conditions
-for a :ref:`NumericType-name` type.
+for a :ref:`NumericType-name` .
 The routine :ref:`CheckNumericType-name` will generate an error message
 if this is not the case.
 In addition, the following operations must be defined for

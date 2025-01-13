@@ -2,20 +2,17 @@
 # define CPPAD_EXAMPLE_ATOMIC_FOUR_LIN_ODE_GET_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin atomic_four_lin_ode_get.hpp}
-{xrst_spell
-   auxillary
-}
 
 atomic_lin_ode Get Routine: Example Implementation
 ##################################################
 
 Syntax
 ******
-*lin_ode* . ``get`` ( *call_id* , *r* , *step* , *pattern* , *transpose* )
+| *lin_ode* . ``get`` ( *call_id* , *r* , *step* , *pattern* , *transpose* )
 
 Prototype
 *********
@@ -31,12 +28,12 @@ Prototype
 
 Purpose
 *******
-Retrieves the auxillary information for a an atomic operation that computes
+Retrieves the auxiliary information for a an atomic operation that computes
 the solution of a linear ODE.
 
 call_id
 *******
-This input argument identifies the auxillary information for this ODE.
+This input argument identifies the auxiliary information for this ODE.
 
 r
 *

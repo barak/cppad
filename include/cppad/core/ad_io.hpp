@@ -2,13 +2,13 @@
 # define CPPAD_CORE_AD_IO_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin ad_input}
 {xrst_spell
-   istream
+  istream
 }
 
 AD Input Stream Operator
@@ -16,7 +16,7 @@ AD Input Stream Operator
 
 Syntax
 ******
-*is* >> *x*
+| *is* >> *x*
 
 Purpose
 *******
@@ -76,7 +76,7 @@ contains an example and test of this operation.
 ------------------------------------------------------------------------------
 {xrst_begin ad_output}
 {xrst_spell
-   ostream
+  ostream
 }
 
 AD Output Stream Operator

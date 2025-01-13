@@ -2,13 +2,12 @@
 # define CPPAD_CORE_ATOMIC_TWO_REV_SPARSE_JAC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin atomic_two_rev_sparse_jac app}
 {xrst_spell
-   rt
-   st
+  rt
 }
 
 Atomic Reverse Jacobian Sparsity Patterns
@@ -16,8 +15,7 @@ Atomic Reverse Jacobian Sparsity Patterns
 
 Syntax
 ******
-
-   *ok* = *afun* . ``rev_sparse_jac`` ( *q* , *rt* , *st* , *x* )
+| *ok* = *afun* . ``rev_sparse_jac`` ( *q* , *rt* , *st* , *x* )
 
 Deprecated 2016-06-27
 *********************
@@ -204,16 +202,24 @@ template <class Base>
 template <class InternalSparsity>
 bool atomic_base<Base>::rev_sparse_jac(
    const vector<Base>&              x            ,
-   const local::pod_vector<size_t>& x_index      ,
-   const local::pod_vector<size_t>& y_index      ,
+   const vector<size_t>&            x_index      ,
+   const vector<size_t>&            y_index      ,
    InternalSparsity&                var_sparsity )
-{
+{  //
+   // pod_x_index, pod_y_index
+   local::pod_vector<size_t> pod_x_index( x_index.size() );
+   local::pod_vector<size_t> pod_y_index( y_index.size() );
+   for(size_t j = 0; j < x_index.size(); ++j)
+      pod_x_index[j] = x_index[j];
+   for(size_t i = 0; i < y_index.size(); ++i)
+      pod_y_index[i] = y_index[i];
+   //
    // initial results may be non-empty during reverse mode
    size_t q           = var_sparsity.end();
    bool   input_empty = false;
    bool   zero_empty  = true;
    bool   transpose   = false;
-   size_t n           = x_index.size();
+   size_t n           = pod_x_index.size();
    bool   ok          = false;
    size_t thread      = thread_alloc::thread_num();
    allocate_work(thread);
@@ -223,7 +229,7 @@ bool atomic_base<Base>::rev_sparse_jac(
    {  vectorBool& pack_rt ( work_[thread]->pack_r );
       vectorBool& pack_st ( work_[thread]->pack_s );
       local::sparse::get_internal_pattern(
-         transpose, y_index, var_sparsity, pack_rt
+         transpose, pod_y_index, var_sparsity, pack_rt
       );
       //
       pack_st.resize(n * q );
@@ -235,14 +241,14 @@ bool atomic_base<Base>::rev_sparse_jac(
          CPPAD_ASSERT_KNOWN(false, msg.c_str());
       }
       local::sparse::set_internal_pattern(zero_empty, input_empty,
-         transpose, x_index, var_sparsity, pack_st
+         transpose, pod_x_index, var_sparsity, pack_st
       );
    }
    else if( sparsity_ == bool_sparsity_enum )
    {  vector<bool>& bool_rt ( work_[thread]->bool_r );
       vector<bool>& bool_st ( work_[thread]->bool_s );
       local::sparse::get_internal_pattern(
-         transpose, y_index, var_sparsity, bool_rt
+         transpose, pod_y_index, var_sparsity, bool_rt
       );
       bool_st.resize(n * q );
       ok = rev_sparse_jac(q, bool_rt, bool_st, x);
@@ -253,7 +259,7 @@ bool atomic_base<Base>::rev_sparse_jac(
          CPPAD_ASSERT_KNOWN(false, msg.c_str());
       }
       local::sparse::set_internal_pattern(zero_empty, input_empty,
-         transpose, x_index, var_sparsity, bool_st
+         transpose, pod_x_index, var_sparsity, bool_st
       );
    }
    else
@@ -261,7 +267,7 @@ bool atomic_base<Base>::rev_sparse_jac(
       vector< std::set<size_t> >& set_rt ( work_[thread]->set_r );
       vector< std::set<size_t> >& set_st ( work_[thread]->set_s );
       local::sparse::get_internal_pattern(
-         transpose, y_index, var_sparsity, set_rt
+         transpose, pod_y_index, var_sparsity, set_rt
       );
       set_st.resize(n);
       ok = rev_sparse_jac(q, set_rt, set_st, x);
@@ -272,7 +278,7 @@ bool atomic_base<Base>::rev_sparse_jac(
          CPPAD_ASSERT_KNOWN(false, msg.c_str());
       }
       local::sparse::set_internal_pattern(zero_empty, input_empty,
-         transpose, x_index, var_sparsity, set_st
+         transpose, pod_x_index, var_sparsity, set_st
       );
    }
    return ok;

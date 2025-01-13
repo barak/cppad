@@ -2,7 +2,7 @@
 # define CPPAD_CORE_ATOMIC_TWO_FOR_SPARSE_JAC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin atomic_two_for_sparse_jac app}
@@ -12,8 +12,7 @@ Atomic Forward Jacobian Sparsity Patterns
 
 Syntax
 ******
-
-   *ok* = *afun* . ``for_sparse_jac`` ( *q* , *r* , *s* , *x* )
+| *ok* = *afun* . ``for_sparse_jac`` ( *q* , *r* , *s* , *x* )
 
 Deprecated 2016-06-27
 *********************
@@ -82,7 +81,7 @@ The argument has prototype
    ``const CppAD::vector<`` *Base* >& *x*
 
 and size is equal to the *n* .
-This is the :ref:`Value-name` value corresponding to the parameters in the
+This is the :ref:`Value-name`  corresponding to the parameters in the
 vector :ref:`atomic_two_afun@ax` (when the atomic function was called).
 To be specific, if
 
@@ -196,16 +195,24 @@ template <class Base>
 template <class InternalSparsity>
 bool atomic_base<Base>::for_sparse_jac(
    const vector<Base>&              x            ,
-   const local::pod_vector<size_t>& x_index      ,
-   const local::pod_vector<size_t>& y_index      ,
+   const vector<size_t>&            x_index      ,
+   const vector<size_t>&            y_index      ,
    InternalSparsity&                var_sparsity )
-{
+{  //
+   // pod_x_index, pod_y_index
+   local::pod_vector<size_t> pod_x_index( x_index.size() );
+   local::pod_vector<size_t> pod_y_index( y_index.size() );
+   for(size_t j = 0; j < x_index.size(); ++j)
+      pod_x_index[j] = x_index[j];
+   for(size_t i = 0; i < y_index.size(); ++i)
+      pod_y_index[i] = y_index[i];
+   //
    // intial results are empty during forward mode
    size_t q           = var_sparsity.end();
    bool   input_empty = true;
    bool   zero_empty  = true;
    bool   transpose   = false;
-   size_t m           = y_index.size();
+   size_t m           = pod_y_index.size();
    bool   ok          = false;
    size_t thread      = thread_alloc::thread_num();
    allocate_work(thread);
@@ -215,7 +222,7 @@ bool atomic_base<Base>::for_sparse_jac(
    {  vectorBool& pack_r ( work_[thread]->pack_r );
       vectorBool& pack_s ( work_[thread]->pack_s );
       local::sparse::get_internal_pattern(
-         transpose, x_index, var_sparsity, pack_r
+         transpose, pod_x_index, var_sparsity, pack_r
       );
       //
       pack_s.resize(m * q );
@@ -227,14 +234,14 @@ bool atomic_base<Base>::for_sparse_jac(
          CPPAD_ASSERT_KNOWN(false, msg.c_str());
       }
       local::sparse::set_internal_pattern(zero_empty, input_empty,
-         transpose, y_index, var_sparsity, pack_s
+         transpose, pod_y_index, var_sparsity, pack_s
       );
    }
    else if( sparsity_ == bool_sparsity_enum )
    {  vector<bool>& bool_r ( work_[thread]->bool_r );
       vector<bool>& bool_s ( work_[thread]->bool_s );
       local::sparse::get_internal_pattern(
-         transpose, x_index, var_sparsity, bool_r
+         transpose, pod_x_index, var_sparsity, bool_r
       );
       bool_s.resize(m * q );
       ok = for_sparse_jac(q, bool_r, bool_s, x);
@@ -245,7 +252,7 @@ bool atomic_base<Base>::for_sparse_jac(
          CPPAD_ASSERT_KNOWN(false, msg.c_str());
       }
       local::sparse::set_internal_pattern(zero_empty, input_empty,
-         transpose, y_index, var_sparsity, bool_s
+         transpose, pod_y_index, var_sparsity, bool_s
       );
    }
    else
@@ -253,7 +260,7 @@ bool atomic_base<Base>::for_sparse_jac(
       vector< std::set<size_t> >& set_r ( work_[thread]->set_r );
       vector< std::set<size_t> >& set_s ( work_[thread]->set_s );
       local::sparse::get_internal_pattern(
-         transpose, x_index, var_sparsity, set_r
+         transpose, pod_x_index, var_sparsity, set_r
       );
       //
       set_s.resize(m);
@@ -265,7 +272,7 @@ bool atomic_base<Base>::for_sparse_jac(
          CPPAD_ASSERT_KNOWN(false, msg.c_str());
       }
       local::sparse::set_internal_pattern(zero_empty, input_empty,
-         transpose, y_index, var_sparsity, set_s
+         transpose, pod_y_index, var_sparsity, set_s
       );
    }
    return ok;

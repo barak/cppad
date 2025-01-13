@@ -2,13 +2,15 @@
 # define CPPAD_CORE_SPARSE_HES_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin sparse_hes}
 {xrst_spell
-   nr
+  nr
+  rc
+  rcv
 }
 
 Computing Sparse Hessians
@@ -16,7 +18,6 @@ Computing Sparse Hessians
 
 Syntax
 ******
-
 | *n_sweep* = *f* . ``sparse_hes`` (
 | |tab| *x* , *w* , *subset* , *pattern* , *coloring* , *work*
 | )

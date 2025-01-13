@@ -3,7 +3,7 @@ set -e -u
 # ---------------------------------------------------------------------------
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-23 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
 # ---------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -26,6 +26,12 @@ then
    echo 'bin/git_commit.sh: cannot find ./.git'
    exit 1
 fi
+#
+# grep, sed
+source bin/grep_and_sed.sh
+#
+# check_commit
+source bin/dev_settings.sh
 # -----------------------------------------------------------------------------
 # EDITOR
 set +u
@@ -36,50 +42,96 @@ then
 fi
 set -u
 # -----------------------------------------------------------------------------
-# new files
-list=$(git status --porcelain | sed -n -e '/^?? /p' | sed -e 's|^?? ||')
+# check_commit
+echo 's|^...||' > temp.sed
+for name in $check_commit
+do
+   if [ -f $name ]
+   then
+      echo "^$name\$" | $sed -e 's|/|[/]|g' -e 's|.*|/&/p|' >> temp.sed
+   elif [ -d $name ]
+   then
+      echo "^$name/" | $sed -e 's|/|[/]|g' -e 's|.*|/&/p|' >> temp.sed
+   else
+      echo "$name in check_commit is not a file or directory"
+      exit 1
+   fi
+done
+list=$(
+   git status --porcelain | $sed -n -f temp.sed
+)
 for file in $list
 do
    res=''
+   while [ "$res" != 'revert' ] && [ "$res" != 'commit' ]
+   do
+      read -p "$file: Revert or commit changes [revert/commit] ?" res
+   done
+   if [ "$res" == 'revert' ]
+   then
+      git reset    $file
+      git checkout $file
+   fi
+done
+# -----------------------------------------------------------------------------
+# new files
+# convert spaces in file names to @@
+list=$(
+   git status --porcelain | $sed -n -e '/^?? /p' |  \
+      $sed -e 's|^?? ||' -e 's|"||g' -e 's| |@@|g'
+)
+for file in $list
+do
+   # convert @@ in file names back to spaces
+   file=$(echo $file | $sed -e 's|@@| |g')
+   res=''
    while [ "$res" != 'delete' ] && [ "$res" != 'add' ] && [ "$res" != 'abort' ]
    do
-      read -p "$file is uknown to git, [delete/add/abort] ?" res
+      read -p "'$file' is unknown to git, [delete/add/abort] ?" res
    done
    if [ "$res" == 'delete' ]
    then
-      echo_eval rm $file
+      # may be spaces in file name so do not use echo_eval
+      echo "rm '$file'"
+      rm "$file"
    elif [ "$res" == 'abort' ]
    then
       echo 'bin/git_commit.sh: aborting'
       exit 1
+   else
+      git add "$file"
    fi
 done
 # -----------------------------------------------------------------------------
-# git_commit.log
+# temp.log
 branch=$(git branch --show-current)
-cat << EOF > git_commit.log
+cat << EOF > temp.log
 $branch:
-# Enter the commit message for your changes above. 
-# This commit will abort if the first line does not begin with "$branch:"
-# because $branch is the branch for this commit. 
-# Lines starting with '#' are not included in the message.
-# Below is a list of the files for this commit:
+# 1. Enter message for this commit above this line.
+# 2. The message for the previous commit is in git_commit.log (if it exists).
+# 3. This commit will abort if the first line does not begin with "$branch:"
+#    because $branch is the branch for this commit.
+# 4. Lines starting with '#' are not included in the message.
+# 5. Below is a list of the files for this commit:
 EOF
-git status --porcelain | sed -e 's|^|# |' >> git_commit.log
-$EDITOR git_commit.log
-sed -i git_commit.log -e '/^#/d'
-if ! head -1 git_commit.log | grep "^$branch:" > /dev/null  
+git status --porcelain | $sed -e 's|^|# |' >> temp.log
+$EDITOR temp.log
+$sed -i -e '/^#/d' temp.log
+if ! head -1 temp.log | $grep "^$branch:" > /dev/null
 then
    echo "Aborting because first line does not begin with $branch:"
-   echo 'See ./git_commit.log'
+   echo 'See ./temp.log'
    exit 1
 fi
-if ! head -1 git_commit.log | grep "^$branch:.*[^ \t]" > /dev/null  
+if ! head -1 temp.log | $grep "^$branch:.*[^ \t]" > /dev/null
 then
    echo "Aborting because only white space follow $branch: in first line"
-   echo 'See ./git_commit.log'
+   echo 'See ./temp.log'
    exit 1
 fi
+#
+# git_commit.log
+mv temp.log git_commit.log
 # -----------------------------------------------------------------------------
 # git add
 echo_eval git add --all

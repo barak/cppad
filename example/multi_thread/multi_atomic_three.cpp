@@ -1,23 +1,18 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin multi_atomic_three_user}
-{xrst_spell
-   iterate
-}
 
 Defines a atomic_three Operation that Computes Square Root
 ##########################################################
 
 Syntax
 ******
-
-   ``atomic_user`` *a_square_root*
-
-*a_square_root* ( *au* , *ay* )
+| ``atomic_user`` *a_square_root*
+| *a_square_root* ( *au* , *ay* )
 
 Purpose
 *******

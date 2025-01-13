@@ -2,14 +2,13 @@
 # define CPPAD_CORE_PRINT_FOR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin PrintFor}
 {xrst_spell
-   cout
-   notpos
+  notpos
 }
 
 Printing AD Values During Forward Mode
@@ -17,7 +16,6 @@ Printing AD Values During Forward Mode
 
 Syntax
 ******
-
 | *f* . ``Forward`` (0, *x* )
 | *f* . ``Forward`` (0, *x* , *s* )
 | ``PrintFor`` ( *before* , *value* )

@@ -2,21 +2,19 @@
 # define CPPAD_CPPAD_IPOPT_SRC_CPPAD_IPOPT_NLP_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin cppad_ipopt_nlp app}
 {xrst_spell
-   fg
-   infeasibility
-   iterates
-   lagrange
-   libs
-   lipopt
-   maxiter
-   naninf
-   rll
-   unrecoverable
+  doesn
+  fg
+  libs
+  lipopt
+  maxiter
+  naninf
+  retape
+  rll
 }
 Nonlinear Programming Using the CppAD Interface to Ipopt
 ########################################################
@@ -27,7 +25,6 @@ This interface to Ipopt is deprecated, use :ref:`ipopt_solve-name` instead.
 
 Syntax
 ******
-
 | # ``include`` ``"cppad_ipopt_nlp.hpp"``
 | ``cppad_ipopt_solution`` *solution* ;
 | ``cppad_ipopt_nlp`` *cppad_nlp* (
@@ -51,9 +48,9 @@ problems of the form
    \end{array}
 
 This is done using
-`Ipopt <http://www.coin-or.org/projects/Ipopt.xml>`_
+`Ipopt <https://coin-or.github.io/Ipopt>`_
 optimizer and
-`CppAD <http://www.coin-or.org/CppAD/>`_
+`CppAD <https://www.coin-or.org/CppAD/>`_
 Algorithmic Differentiation package.
 
 cppad_ipopt namespace

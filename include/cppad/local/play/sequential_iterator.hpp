@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_PLAY_SEQUENTIAL_ITERATOR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 // BEGIN_CPPAD_LOCAL_PLAY_NAMESPACE
@@ -50,7 +50,7 @@ private:
    size_t                    var_index_;
 
    /// value of current operator; i.e. op_ = *op_cur_
-   OpCode                    op_;
+   op_code_var               op_;
 public:
    /// default constructor
    const_sequential_iterator(void) :
@@ -95,8 +95,8 @@ public:
    It must be zero or op_vec_->size() - 1.
 
    \par Assumptions
-   - OpCode(op_vec_[0]) == BeginOp
-   - OpCode(op_vec_[op_vec_->size() - 1]) == EndOp
+   - op_code_var(op_vec_[0]) == BeginOp
+   - op_code_var(op_vec_[op_vec_->size() - 1]) == EndOp
    */
    const_sequential_iterator(
       size_t                                num_var    ,
@@ -119,7 +119,7 @@ public:
          //
          // BeginOp
          op_cur_    = op_begin_;
-         op_        = OpCode( *op_cur_ );
+         op_        = op_code_var( *op_cur_ );
          CPPAD_ASSERT_UNKNOWN( op_ == BeginOp );
          CPPAD_ASSERT_NARG_NRES(op_, 1, 1);
       }
@@ -134,7 +134,7 @@ public:
          //
          // EndOp
          op_cur_    = op_end_ - 1;
-         op_        = OpCode( *op_cur_ );
+         op_        = op_code_var( *op_cur_ );
          CPPAD_ASSERT_UNKNOWN( op_ == EndOp );
          CPPAD_ASSERT_NARG_NRES(op_, 0, 0);
       }
@@ -149,7 +149,7 @@ public:
       //
       // next operator
       ++op_cur_;
-      op_ = OpCode( *op_cur_ );
+      op_ = op_code_var( *op_cur_ );
       //
       // last result for next operator
       var_index_ += NumRes(op_);
@@ -158,30 +158,36 @@ public:
    }
    /*!
    Correction applied before ++ operation when current operator
-   is CSumOp or CSkipOp.
+   is CSumOp, CSkipOp, or AFunOP.
    */
    void correct_before_increment(void)
-   {  // number of arguments for this operator depends on argument data
+   {  //
+      // arg_
+      // actual number of arguments for this operator depends on argument data
       CPPAD_ASSERT_UNKNOWN( NumArg(op_) == 0 );
       const addr_t* arg = arg_;
       //
-      // CSumOp
-      if( op_ == CSumOp )
-      {  // add actual number of arguments to arg_
+      switch( op_ )
+      {  //
+         default:
+         CPPAD_ASSERT_UNKNOWN( false );
+         break;
+         //
+         // CSumOp
+         case CSumOp:
+         CPPAD_ASSERT_UNKNOWN( arg + 4 < arg_end_ );
          arg_ += arg[4] + 1;
-      }
-      //
-      // CSkip
-      else
-      {  CPPAD_ASSERT_UNKNOWN( op_ == CSkipOp );
+         CPPAD_ASSERT_UNKNOWN( *(arg_ - 1) == arg[4] + 1 );
+         break;
          //
+         // CSkipOp
+         case CSkipOp:
          CPPAD_ASSERT_UNKNOWN( arg + 5 < arg_end_ );
-         addr_t n_skip     = arg[4] + arg[5];
-         CPPAD_ASSERT_UNKNOWN( n_skip == arg[6 + n_skip] );
-         //
-         // add actual number of arguments to arg_
-         arg_ += 7 + n_skip;
+         arg_ += 7 + arg[4] + arg[5];
+         CPPAD_ASSERT_UNKNOWN( *(arg_ - 1) == 7 + arg[4] + arg[5] );
+         break;
       }
+      CPPAD_ASSERT_UNKNOWN( arg_ <= arg_end_ );
       return;
    }
    /*!
@@ -194,7 +200,7 @@ public:
       //
       // next operator
       --op_cur_;
-      op_ = OpCode( *op_cur_ );
+      op_ = op_code_var( *op_cur_ );
       //
       // first argument for next operator
       arg_ -= NumArg(op_);
@@ -209,37 +215,40 @@ public:
    corrected point to arguments for this operation.
    */
    void correct_after_decrement(const addr_t*& arg)
-   {  // number of arguments for this operator depends on argument data
+   {  //
+      // arg
+      // actual number of arguments for this operator depends on argument data
       CPPAD_ASSERT_UNKNOWN( NumArg(op_) == 0 );
-      //
-      // infromation for number of arguments is stored in arg_ - 1
       CPPAD_ASSERT_UNKNOWN( arg_begin_ < arg_ );
       //
-      // CSumOp
-      if( op_ == CSumOp )
-      {  // index of arg[4]
-         addr_t arg_4 = *(arg_ - 1);
+      switch( op_ )
+      {  //
+         default:
+         CPPAD_ASSERT_UNKNOWN( false );
+         break;
          //
-         // corrected index of first argument to this operator
-         arg = arg_ -= arg_4 + 1;
+         // CSumOp
+         case CSumOp:
+         {  // index of arg[4]
+            addr_t n_arg = *(arg_ - 1);
+            arg          = arg_ - n_arg;
+            CPPAD_ASSERT_UNKNOWN( arg[4] + 1 == n_arg );
+         }
+         break;
          //
-         CPPAD_ASSERT_UNKNOWN( arg[arg[4] ] == arg[4] );
+         // CSkipOp
+         case CSkipOp:
+         {  addr_t n_arg = *(arg_ - 1);
+            arg          = arg_ - n_arg;
+            CPPAD_ASSERT_UNKNOWN( 7 + arg[4] + arg[5] == n_arg );
+         }
+         break;
       }
       //
-      // CSkip
-      else
-      {  CPPAD_ASSERT_UNKNOWN( op_ == CSkipOp );
-         //
-         // number to possibly skip is stored in last argument
-         addr_t n_skip = *(arg_ - 1);
-         //
-         // corrected index of frist argument to this operator
-         arg = arg_ -= 7 + n_skip;
-         //
-         CPPAD_ASSERT_UNKNOWN( arg[4] + arg[5] == n_skip );
-      }
+      // arg_
       CPPAD_ASSERT_UNKNOWN( arg_begin_ <= arg );
       CPPAD_ASSERT_UNKNOWN( arg + NumArg(op_) <= arg_end_ );
+      arg_ = arg;
    }
    /*!
    \brief
@@ -257,7 +266,7 @@ public:
    is not sepcified and could have any value.
    */
    void op_info(
-      OpCode&        op         ,
+      op_code_var&   op         ,
       const addr_t*& arg        ,
       size_t&        var_index  ) const
    {  // op

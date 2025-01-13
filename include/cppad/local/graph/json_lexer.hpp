@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_GRAPH_JSON_LEXER_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <string>
@@ -18,9 +18,6 @@ class json_lexer {
 /*
 -------------------------------------------------------------------------------
 {xrst_begin json_lexer_member_data dev}
-{xrst_spell
-   parsed
-}
 
 json lexer: Private Data
 ########################
@@ -103,8 +100,7 @@ json lexer: Report an Error
 
 Syntax
 ******
-
-   *json_lexer* . ``report_error`` ( *expected* , *found* )
+| *json_lexer* . ``report_error`` ( *expected* , *found* )
 
 json_lexer
 **********
@@ -242,9 +238,6 @@ public:
 {xrst_end json_lexer_constructor}
 -------------------------------------------------------------------------------
 {xrst_begin json_lexer_check_next_char dev}
-{xrst_spell
-   ch
-}
 
 Get and Check Next Single Character Token
 #########################################

@@ -1,7 +1,7 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # {xrst_begin get_cppadcg.sh}
 # {xrst_spell
@@ -24,7 +24,8 @@
 #
 # Requirements
 # ************
-# You must first use :ref:`get_eigen.sh-name` to download and install Eigen.
+# You must first use your package manager to install
+# :ref:`cmake@Eigen` .
 #
 # Distribution Directory
 # **********************
@@ -46,10 +47,10 @@
 # This will install the commit of Cppadcg with the following git hash
 # {xrst_spell_off}
 # {xrst_code sh}
-git_hash='b5307ad'
+git_hash='e15c57207ea42a9572e9ed44df1894e09f7ce67e'
 # {xrst_code}
 # {xrst_spell_on}
-# The date corresponding to this commit was 20201009.
+# The date corresponding to this commit was 2024-06-16.
 #
 # Configuration
 # *************
@@ -79,13 +80,16 @@ then
    exit 1
 fi
 # -----------------------------------------------------------------------------
-# bash function that echos and executes a command
+# echo_eval
 echo_eval() {
    echo $*
    eval $*
 }
+#
+# grep, sed
+source bin/grep_and_sed.sh
 # -----------------------------------------------------------------------------
-web_page='https://github.com/joaoleal/CppADCodeGen.git'
+web_page='https://github.com/joaoleal/CppADCodeGen'
 cppad_repo=$(pwd)
 # -----------------------------------------------------------------------------
 # n_job
@@ -97,7 +101,7 @@ else
 fi
 # ----------------------------------------------------------------------------
 # prefix
-eval `grep '^prefix=' bin/get_optional.sh`
+eval `$grep '^prefix=' bin/get_optional.sh`
 if [[ "$prefix" =~ ^[^/] ]]
 then
    prefix="$cppad_repo/$prefix"
@@ -189,39 +193,7 @@ s|IF *( *DEFINED *CPPAD_HOME *)|IF (DEFINED CPPAD_GIT_REPO)\\
 ELSEIF (DEFINED CPPAD_HOME)|
 EOF
 echo_eval git checkout  cmake/FindCppAD.cmake
-echo_eval sed -i cmake/FindCppAD.cmake -f temp.sed
-#
-# include/cppad/cg/base_float.hpp
-cat << EOF > temp.sed
-/template *<> *\$/! b skip
-: loop1
-N
-/\\n};\$/! b loop1
-#
-: loop2
-N
-/\\n}\$/! b loop2
-s|.*|CPPAD_NUMERIC_LIMITS(float, cg::CG<float>)|
-#
-: skip
-EOF
-echo_eval sed -i include/cppad/cg/base_float.hpp -f temp.sed
-#
-# include/cppad/cg/base_double.hpp
-cat << EOF > temp.sed
-/template *<> *\$/! b skip
-: loop1
-N
-/\\n};* *\$/! b loop1
-#
-: loop2
-N
-/\\n};* *\$/! b loop2
-s|.*|CPPAD_NUMERIC_LIMITS(double, cg::CG<double>)|
-#
-: skip
-EOF
-echo_eval sed -i include/cppad/cg/base_double.hpp -f temp.sed
+echo_eval $sed -i -f temp.sed cmake/FindCppAD.cmake
 # -----------------------------------------------------------------------------
 #  make install
 if [ ! -e build ]
@@ -229,10 +201,13 @@ then
    echo_eval mkdir build
 fi
 echo_eval cd build
+if [ -e CMakeCache.txt ]
+then
+   rm CMakeCache.txt
+fi
 echo_eval cmake \
    -D CPPAD_GIT_REPO="$cppad_repo" \
    -D CMAKE_INSTALL_PREFIX=$prefix \
-   -D EIGNE_INCLUDE_DIR=$prefix/include \
    -D GOOGLETEST_GIT=ON \
    -D CREATE_DOXYGEN_DOC=OFF \
    ..

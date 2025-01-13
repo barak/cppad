@@ -2,7 +2,7 @@
 # define CPPAD_CORE_REV_SPARSE_HES_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
@@ -13,10 +13,8 @@ Hessian Sparsity Pattern: Reverse Mode
 
 Syntax
 ******
-
-   *h* = *f* . ``RevSparseHes`` ( *q* , *s* )
-
-*h* = *f* . ``RevSparseHes`` ( *q* , *s* , *transpose* )
+| *h* = *f* . ``RevSparseHes`` ( *q* , *s* )
+| *h* = *f* . ``RevSparseHes`` ( *q* , *s* , *transpose* )
 
 Purpose
 *******
@@ -276,9 +274,8 @@ void ADFun<Base,RecBase>::RevSparseHesCase(
    rev_hes_pattern.resize(num_var_tape_, q);
 
    // compute the Hessian sparsity patterns
-   local::sweep::rev_hes<addr_t>(
+   local::sweep::rev_hes(
       &play_,
-      n,
       num_var_tape_,
       for_jac_sparse_pack_,
       RevJac.data(),
@@ -414,9 +411,8 @@ void ADFun<Base,RecBase>::RevSparseHesCase(
    rev_hes_pattern.resize(num_var_tape_, q);
 
    // compute the Hessian sparsity patterns
-   local::sweep::rev_hes<addr_t>(
+   local::sweep::rev_hes(
       &play_,
-      n,
       num_var_tape_,
       for_jac_sparse_set_,
       RevJac.data(),
@@ -596,9 +592,8 @@ void ADFun<Base,RecBase>::RevSparseHesCheckpoint(
    rev_hes_pattern.resize(num_var_tape_, q);
 
    // compute Hessian sparsity pattern for all variables
-   local::sweep::rev_hes<addr_t>(
+   local::sweep::rev_hes(
       &play_,
-      n,
       num_var_tape_,
       for_jac_sparse_set_,
       RevJac.data(),

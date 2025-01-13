@@ -2,13 +2,15 @@
 # define CPPAD_CORE_SPARSE_JAC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin sparse_jac}
 {xrst_spell
-   nr
+  nr
+  rc
+  rcv
 }
 
 Computing Sparse Jacobians
@@ -16,7 +18,6 @@ Computing Sparse Jacobians
 
 Syntax
 ******
-
 | *n_color* = *f* . ``sparse_jac_for`` (
 | |tab| *group_max* , *x* , *subset* , *pattern* , *coloring* , *work*
 | )

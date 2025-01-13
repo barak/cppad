@@ -2,16 +2,15 @@
 # define CPPAD_CORE_LU_RATIO_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin LuRatio app}
 {xrst_spell
-   jp
-   permuted
-   revaluate
-   xk
+  ip
+  jp
+  xk
 }
 
 LU Factorization of A Square Matrix and Stability Calculation
@@ -19,9 +18,8 @@ LU Factorization of A Square Matrix and Stability Calculation
 
 Syntax
 ******
-``# include <cppad/cppad.hpp>``
-
-*sign* = ``LuRatio`` ( *ip* , *jp* , *LU* , *ratio* )
+| ``# include <cppad/cppad.hpp>``
+| *sign* = ``LuRatio`` ( *ip* , *jp* , *LU* , *ratio* )
 
 Description
 ***********
@@ -265,7 +263,7 @@ int LuRatio(SizeVector &ip, SizeVector &jp, ADvector &LU, AD<Base> &ratio) //
       for(i = p; i < n; i++)
       {  for(j = p; j < n; j++)
          {  CPPAD_ASSERT_UNKNOWN(
-               (ip[i] < n) & (jp[j] < n)
+               (ip[i] < n) && (jp[j] < n)
             );
             etmp = LU[ ip[i] * n + jp[j] ];
 
@@ -285,7 +283,7 @@ int LuRatio(SizeVector &ip, SizeVector &jp, ADvector &LU, AD<Base> &ratio) //
          }                                                    //
       }                                                            //
       CPPAD_ASSERT_KNOWN(
-         (imax < n) & (jmax < n) ,
+         (imax < n) && (jmax < n) ,
          "AbsGeq must return true when second argument is zero"
       );
       if( imax != p )

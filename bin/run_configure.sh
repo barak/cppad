@@ -1,7 +1,10 @@
-#! /bin/bash -e
+#! /usr/bin/env bash
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-23 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
+# ----------------------------------------------------------------------------
+set -e -u
+echo $0 $*
 # ----------------------------------------------------------------------------
 if [ ! -e "bin/run_configure.sh" ]
 then
@@ -10,27 +13,54 @@ then
 fi
 # -----------------------------------------------------------------------------
 with_clang=''
+with_verbose_make=''
 cpp_standard='c++17'
-while [ "$1" != '' ]
+with_vector=''
+while [ "$#" != '0' ]
 do
    if [ "$1" == '--help' ]
    then
       cat << EOF
 usage: bin/run_configure.sh \\
    [--help] \\
-   [--with_clang] \\
-   [--c++yy]
+   [--clang] \\
+   [--verbose_make] \\
+   [--c++<yy> ] \\
+   [--<package>_vector]
+The value yy is two decimal digits specifying the C++ standard year.
+The value <package> must be one of: cppad, boost, eigen, std.
+
 EOF
       exit 0
    fi
    case "$1" in
 
-      --with_clang)
-      with_clang='--with_clang'
+      --clang)
+      with_clang='--with-clang'
+      ;;
+
+      --verbose_make)
+      with_verbose_make='--with-verbose-make'
       ;;
 
       --c++*)
       cpp_standard=$(echo "$1" | sed -e 's|^--||')
+      ;;
+
+      --cppad_vector)
+      with_vector=''
+      ;;
+
+      --boost_vector)
+      with_vector='--with-boostvector'
+      ;;
+
+      --eigen_vector)
+      with_vector='--with-eigenvector'
+      ;;
+
+      --std_vector)
+      with_vector='--with-stdvector'
       ;;
 
       *)
@@ -61,12 +91,26 @@ PKG_CONFIG_PATH="$prefix/lib64/pkgconfig:$prefix/lib/pkgconfig"
 PKG_CONFIG_PATH="$prefix/share/pkgconfig:$PKG_CONFIG_PATH"
 export PKG_CONFIG_PATH
 #
-# testvector
-testvector='cppad'
-#
 # cppad_cxx_flags
 cppad_cxx_flags="-std=$cpp_standard -Wall -pedantic-errors -Wshadow"
-cppad_cxx_flags="$cppad_cxx_flags -Wfloat-conversion -Wconversion"
+cppad_cxx_flags+=" -Wfloat-conversion -Wconversion"
+if [ "$(uname)" == 'Darwin' ]
+then
+   if which brew > /dev/null
+   then
+      cppad_cxx_flags+=" -I $(brew --prefix)/include"
+   fi
+fi
+# 2DO: clang++ 14.05 is generating a lot of warnings (we should fix these)
+#
+# scaado_prefix
+cxx_standard_year=$(echo $cpp_standard | sed -e 's|c++||')
+if [ "$cxx_standard_year" -lt 17 ]
+then
+   scaado_prefix=''
+else
+   scaado_prefix="SACADO_DIR=$prefix"
+fi
 #
 # ---------------------------------------------------------------------------
 if [ ! -e build ]
@@ -74,27 +118,18 @@ then
    echo_eval mkdir build
 fi
 echo_eval cd build
-if [ -e CMakeCache.txt ]
-then
-   echo_eval rm CMakeCache.txt
-fi
-if [ -e CMakeFiles ]
-then
-   echo_eval rm -r CMakeFiles
-fi
 # -----------------------------------------------------------------------------
 ../configure \
    --prefix=$prefix \
    $with_clang \
-   --with-stdvector \
+   $with_verbose_make \
+   $with_vector \
    MAX_NUM_THREADS=32 \
    CXX_FLAGS="'$cppad_cxx_flags'" \
    ADOLC_DIR=$prefix \
-   BOOST_DIR=$prefix \
-   EIGEN_DIR=$prefix \
    FADBAD_DIR=$prefix \
-   SACADO_DIR=$prefix \
    IPOPT_DIR=$prefix \
+   $scaado_prefix \
    TAPE_ADDR_TYPE=size_t \
    TAPE_ID_TYPE=size_t
 # ----------------------------------------------------------------------------

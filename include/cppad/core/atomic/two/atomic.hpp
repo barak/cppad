@@ -2,15 +2,17 @@
 # define CPPAD_CORE_ATOMIC_TWO_ATOMIC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin atomic_two app}
 {xrst_spell
-   px
-   py
-   tx
-   vx
+  ctor
+  px
+  py
+  tx
+  vx
+  vy
 }
 
 Defining Atomic Functions: Second Generation
@@ -23,7 +25,6 @@ Use :ref:`atomic_three-name` instead.
 
 Syntax
 ******
-
 | *atomic_user* *afun* ( *ctor_arg_list* )
 | *afun* ( *ax* , *ay* )
 | *ok* = *afun* . ``forward`` ( *p* , *q* , *vx* , *vy* , *tx* , *ty* )
@@ -104,9 +105,6 @@ Contents
 {xrst_end atomic_two}
 -------------------------------------------------------------------------------
 {xrst_begin atomic_two_example app}
-{xrst_spell
-   scalars
-}
 
 Example Defining Atomic Functions: Second Generation
 ####################################################
@@ -317,8 +315,8 @@ public:
    template <class InternalSparsity>
    bool for_sparse_jac(
       const vector<Base>&              x            ,
-      const local::pod_vector<size_t>& x_index      ,
-      const local::pod_vector<size_t>& y_index      ,
+      const vector<size_t>&            x_index      ,
+      const vector<size_t>&            y_index      ,
       InternalSparsity&                var_sparsity
    );
    // deprecated versions
@@ -360,8 +358,8 @@ public:
    template <class InternalSparsity>
    bool rev_sparse_jac(
       const vector<Base>&        x            ,
-      const local::pod_vector<size_t>& x_index ,
-      const local::pod_vector<size_t>& y_index ,
+      const vector<size_t>&            x_index ,
+      const vector<size_t>&            y_index ,
       InternalSparsity&          var_sparsity
    );
    // deprecated versions
@@ -406,8 +404,8 @@ public:
    template <class InternalSparsity>
    bool for_sparse_hes(
       const vector<Base>&              x                ,
-      const local::pod_vector<size_t>& x_index          ,
-      const local::pod_vector<size_t>& y_index          ,
+      const vector<size_t>&            x_index          ,
+      const vector<size_t>&            y_index          ,
       size_t                           np1              ,
       size_t                           numvar           ,
       const InternalSparsity&          rev_jac_sparsity ,
@@ -467,8 +465,8 @@ public:
    template <class InternalSparsity>
    bool rev_sparse_hes(
       const vector<Base>&              x                ,
-      const local::pod_vector<size_t>& x_index          ,
-      const local::pod_vector<size_t>& y_index          ,
+      const vector<size_t>&            x_index          ,
+      const vector<size_t>&            y_index          ,
       const InternalSparsity&          for_jac_sparsity ,
       bool*                            rev_jac_flag     ,
       InternalSparsity&                rev_hes_sparsity
