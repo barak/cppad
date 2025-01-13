@@ -2,24 +2,24 @@
 # define CPPAD_UTILITY_ODE_GEAR_CONTROL_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin OdeGearControl}
 {xrst_spell
-   dep
-   eabs
-   erel
-   maxabs
-   nstep
-   sini
-   smax
-   smin
-   tb
-   test test
-   tf
-   xf
+  dep
+  eabs
+  ef
+  erel
+  maxabs
+  nstep
+  sini
+  smax
+  smin
+  test test
+  tf
+  xf
 }
 
 An Error Controller for Gear's Ode Solvers
@@ -27,7 +27,6 @@ An Error Controller for Gear's Ode Solvers
 
 Syntax
 ******
-
 | # ``include <cppad/utility/ode_gear_control.hpp>``
 | *xf* = ``OdeGearControl`` ( *F* , *M* , *ti* , *tf* , *xi* ,
 | |tab| ``smin`` , ``smax`` , ``sini`` , ``eabs`` , ``erel`` , ``ef`` , ``maxabs`` , ``nstep``  )
@@ -314,7 +313,7 @@ with a smaller value of *smin* .
 Scalar
 ******
 The type *Scalar* must satisfy the conditions
-for a :ref:`NumericType-name` type.
+for a :ref:`NumericType-name` .
 The routine :ref:`CheckNumericType-name` will generate an error message
 if this is not the case.
 In addition, the following operations must be defined for

@@ -2,7 +2,7 @@
 # define CPPAD_CORE_CHKPOINT_ONE_CHKPOINT_ONE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 # include <cppad/local/sparse/list_setvec.hpp>
 # include <cppad/local/sparse/pack_setvec.hpp>
@@ -16,11 +16,8 @@ First generation checkpoint functions.
 /*
 {xrst_begin chkpoint_one app}
 {xrst_spell
-   caching
-   destructed
-   inuse
-   recomputed
-   sv
+  algo
+  sv
 }
 
 Checkpoint Functions: First Generation
@@ -33,7 +30,6 @@ Use :ref:`chkpoint_two-name` instead.
 
 Syntax
 ******
-
 | ``checkpoint`` < *Base* > *atom_fun* (
 | |tab| *name* , *algo* , *ax* , *ay* , *sparsity* , *optimize*
 | )

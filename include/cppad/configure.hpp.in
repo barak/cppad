@@ -2,37 +2,30 @@
 # define CPPAD_CONFIGURE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*!
 {xrst_begin configure.hpp dev}
 {xrst_spell
-   cmd
-   cl
-   complier
-   gettimeofday
-   mkstemp
-   noexcept
-   nullptr
-   pragmas
-   tmpnam
-   unreferenced
-   yyyy
-   yyyymmdd
+  adolc
+  cmd
+  colpack
+  complier
+  gettimeofday
+  ipopt
+  mkstemp
+  noexcept
+  nullptr
+  pragmas
+  tmpnam
+  unreferenced
+  yyyy
+  yyyymmdd
 }
 
 Preprocessor Symbols Set By CMake Command
 #########################################
-
-CPPAD_SYSTEM_IS_DARWIN
-**********************
-is this a Darwin system; i.e., macOC or OS X, etc.
-This seems to only needed for verison 20240000.6. 
-Use git grep CPPAD_SYSTEM_IS_DARWIN to see what it used for.
-{xrst_code hpp} */
-# define CPPAD_SYSTEM_IS_DARWIN @cppad_system_is_darwin@
-/* {xrst_code}
 
 CPPAD_COMPILER_HAS_CONVERSION_WARN
 **********************************
@@ -132,7 +125,7 @@ Was a colpack_prefix specified on the cmake command line.
 
 CPPAD_HAS_EIGEN
 ***************
-Was include_eigen=true on the cmake command line.
+Was Eigen found and c++14 is supported.
 {xrst_spell_off}
 {xrst_code hpp} */
 # define CPPAD_HAS_EIGEN @cppad_has_eigen@
@@ -320,8 +313,8 @@ Otherwise it is empty.
 
 CPPAD_C_COMPILER_CMD
 ********************
-This is the command that runs the C compiler as a C string; 
-i.e., surrounded by double quotes. 
+This is the command that runs the C compiler as a C string;
+i.e., surrounded by double quotes.
 It can be used to run the C compiler; e.g. see for :ref:`create_dll_lib-name` .
 {xrst_code hpp} */
 # define CPPAD_C_COMPILER_CMD "@cppad_c_compiler_cmd@"

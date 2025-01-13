@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Construct cppad.pc from cppad.pc.in; see
 # http://people.freedesktop.org/~dbn/pkg-config-guide.html
@@ -10,11 +10,9 @@
 #     builddir
 #     cflags
 #     datadir
-#     gnu
 #     includedir
 #     libdir
 #     libs
-#     uninstalled
 # }
 # {xrst_comment_ch #}
 #
@@ -161,7 +159,10 @@ IF( cppad_has_colpack )
    add_to_set(cppad_lib_list    "-lColPack")
 ENDIF( cppad_has_colpack )
 #
-# Ipopt has a pkgconfig file.
+# Ipopt and eigen have pkgconfig files.
+IF( cppad_has_eigen )
+   SET(cppad_requires         "${cppad_requires} eigen3")
+ENDIF( cppad_has_eigen )
 IF( cppad_has_ipopt )
    SET(cppad_requires         "${cppad_requires} ipopt")
    add_to_set(cppad_lib_list  "-lcppad_ipopt" )

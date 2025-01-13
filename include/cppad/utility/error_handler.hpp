@@ -2,15 +2,14 @@
 # define CPPAD_UTILITY_ERROR_HANDLER_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin ErrorHandler}
 {xrst_spell
-   destructed
-   msg
-   test test
+  msg
+  test test
 }
 
 Replacing the CppAD Error Handler
@@ -18,7 +17,6 @@ Replacing the CppAD Error Handler
 
 Syntax
 ******
-
 | # ``include <cppad/utility/error_handler.hpp>``
 | ``ErrorHandler`` *info* ( *handler* )
 | ``ErrorHandler::Call`` ( *known* , *line* , *file* , *exp* , *msg* )
@@ -140,11 +138,11 @@ public:
 
    // construct a new handler
    ErrorHandler(Handler handler) : previous( Current() )
-   {  if( local::set_get_in_parallel(0) )
+   {  if( local::set_get_in_parallel() )
       {  bool known       = true;
          int  line        = __LINE__;
          const char* file = __FILE__;
-         const char* exp  = "! local::set_get_in_parallel(0)";
+         const char* exp  = "! local::set_get_in_parallel()";
          const char* msg  =
             "Using ErrorHandler constructor in parallel mode.";
          Call(known, line, file, exp, msg);
@@ -154,11 +152,11 @@ public:
 
    // destructor for an error handler
    ~ErrorHandler(void)
-   {  if( local::set_get_in_parallel(0) )
+   {  if( local::set_get_in_parallel() )
       {  bool known       = true;
          int  line        = __LINE__;
          const char* file = __FILE__;
-         const char* exp  = "! local::set_get_in_parallel(0)";
+         const char* exp  = "! local::set_get_in_parallel()";
          const char* msg  =
             "Using ErrorHandler destructor in parallel mode.";
          Call(known, line, file, exp, msg);
@@ -216,7 +214,7 @@ private:
       // CPPAD_ASSERT_FIRST_CALL_NOT_PARALLEL
       // code below is like macro above but works when NDEBUG defined
       if( first_call )
-      {  if( local::set_get_in_parallel(0) )
+      {  if( local::set_get_in_parallel() )
          {  bool known       = false;
             int  line        = __LINE__;
             const char* file = __FILE__;

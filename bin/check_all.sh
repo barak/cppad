@@ -1,37 +1,94 @@
-#! /bin/bash -e
+#! /usr/bin/env bash
+set -e -u
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-23 Bradley M. Bell
+# SPDX-FileContributor: 2003-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
+#
 if [ "$0" != 'bin/check_all.sh' ]
 then
    echo "bin/check_all.sh: must be executed from its parent directory"
    exit 1
 fi
-if [ "$1" != 'mixed' ] && [ "$1" != 'debug' ] && [ "$1" != 'release' ]
+if [ $# == 1 ]
 then
-   echo 'bin/check_all.sh: (mixed|debug|release) [verbose]'
-   exit 1
+   if [ "$1" == --help ]
+   then
+cat << EOF
+bin/check_all.sh flags
+possible flags
+--mixed                    mix debug and release compiles
+--debug                    only compile for debugging
+--release                  only compile for release
+--verbose_make             generate verbose makefiles
+--skip_external_links      do not check documentation external links
+--suppress_spell_warnings  do not check for documentaiton spelling errors
+EOF
+      exit 0
+   fi
 fi
-if [ "$2" != '' ] && [ "$2" != 'verbose' ]
-then
-   echo 'bin/check_all.sh: (mixed|debug|release) [verbose]'
-   exit 1
-fi
-build_type="$1"
-if [ "$2" == 'verbose' ]
-then
-   verbose='--verbose'
-else
-   verbose=''
-fi
-# -----------------------------------------------------------------------------
-# bash function that echos and executes a command
+#
+# build_type, verbose_make, skip_external_links, suppress_spell_warnings
+build_type='mixed'
+verbose_make='no'
+skip_external_links='no'
+suppress_spell_warnings='no'
+while [ $# != 0 ]
+do
+   case "$1" in
+
+      --mixed)
+      build_type=mixed
+      ;;
+
+      --debug)
+      build_type=debug
+      ;;
+
+      --release)
+      build_type=release
+      ;;
+
+      --verbose_make)
+      verbose_make='yes'
+      ;;
+
+      --skip_external_links)
+      skip_external_links='yes'
+      ;;
+
+      --suppress_spell_warnings)
+      suppress_spell_warnings='yes'
+      ;;
+
+      *)
+      echo "bin/check_all.sh: command line argument "$1" is not valid"
+      exit 1
+      ;;
+
+   esac
+   #
+   shift
+done
+#
+# grep and sed
+source bin/grep_and_sed.sh
+#
+# LD_LIBRARY_PATH
+# all linking of dynamic libraries should use rpath
+export LD_LIBRARY_PATH=''
+#
+# top_srcdir
+top_srcdir=`pwd`
+echo "top_srcdir = $top_srcdir"
+#
+# echo_eval
 echo_eval() {
    echo $*
    eval $*
 }
-# -----------------------------------------------------------------------------
+#
+# echo_log_eval
 echo_log_eval() {
    echo "$* >& check_all.tmp"
    echo "$*" > $top_srcdir/check_all.tmp
@@ -41,49 +98,72 @@ echo_log_eval() {
       echo 'Error: see check_all.tmp'
       exit 1
    fi
-   if grep ': *warning *:"' $top_srcdir/check_all.tmp
+   # 1.  If we don't have c++17 and mkstemp, then temp_file is not thread safe.
+   #
+   # 2.  If using g++ -O3 -DNDEBUG -Wall,
+   #     an improper compile time warning is generated at:
+   #     forward.hpp:187, reverse.hpp:151, independent.hpp:100-109,
+   #     base_alloc.hpp:143, abs_min_quad.hpp:424 .
+   #
+   # warning
+   warning='no'
+   if [ "$compiler" == '--clang' ]
    then
-      echo 'Warning: see check_all.tmp'
+      if $sed $top_srcdir/check_all.tmp \
+         -e '/temp_file.cpp:.*warning.*tmpnam/d' \
+         | grep ': *warning *:'
+      then
+         warning='yes'
+      fi
+   else
+      if $sed $top_srcdir/check_all.tmp \
+         -e '/temp_file.cpp:.*warning.*tmpnam/d' \
+         -e '/forward.hpp:187:.*warning.*outside array bounds/d' \
+         -e '/reverse.hpp:151:.*warning.*outside array bounds/d' \
+         -e '/independent.hpp:10[0-9]:.*warning.*outside array bounds/d' \
+         -e '/base_alloc.hpp:143:.*warning.*may be used uninitialized/d' \
+         -e '/abs_min_quad.hpp:424:.*bound.*exceeds maximum/d' \
+         | grep ': *warning *:'
+      then
+         warning='yes'
+      fi
+   fi
+   if [ "$warning" == 'yes' ]
+   then
+      echo "The warnings above happened during the command: $*"
+      echo "see the file $top_srcdir/check_all.tmp"
       exit 1
    fi
+   #
+   # check_all.log
    echo '        cat check_all.tmp >> check_all.log'
    cat $top_srcdir/check_all.tmp >> $top_srcdir/check_all.log
 }
-echo_log() {
-   echo $*
-   echo $* >> $top_srcdir/check_all.log
-}
+#
+# random_01
 random_01() {
    set +e
    eval random_01_$1="`expr $RANDOM % 2`"
    eval echo "random_01_$1=\$random_01_$1"
    set -e
 }
-# -----------------------------------------------------------------------------
+#
+#  check_all.log
 # start new check_all.log
 echo "date > check_all.log"
-date | sed -e 's|^|date: |' > check_all.log
-top_srcdir=`pwd`
-echo "top_srcdir = $top_srcdir"
-# ---------------------------------------------------------------------------
-# circular shift program list and set program to first entry in list
-next_program() {
-   program_list=`echo "$program_list" | sed -e 's| *\([^ ]*\) *\(.*\)|\2 \1|'`
-   program=`echo "$program_list" | sed -e 's| *\([^ ]*\).*|\1|'`
-}
-# ---------------------------------------------------------------------------
+date | $sed -e 's|^|date: |' > check_all.log
+#
+# $HOME/prefix/cppad
 if [ -e "$HOME/prefix/cppad" ]
 then
    echo_log_eval rm -r $HOME/prefix/cppad
 fi
-# ---------------------------------------------------------------------------
 #
 # version
 version=$(
-   sed -n -e '/^SET( *cppad_version *"[0-9.]*")/p' CMakeLists.txt | \
-      sed -e 's|.*"\([^"]*\)".*|\1|'
+   $sed -n -e '/^SET( *cppad_version *"[0-9.]*")/p' CMakeLists.txt | \
+      $sed -e 's|.*"\([^"]*\)".*|\1|'
 )
-# ---------------------------------------------------------------------------
 #
 # compiler
 random_01 compiler
@@ -136,7 +216,8 @@ then
 else
    if [ "$build_type" != 'mixed' ]
    then
-      echo 'bin/run_cmake.sh: build_type program error'
+      msg="build_type = $build_type not debug release or mixed"
+      echo "bin/check_all.sh $msg"
       exit 1
    fi
    random_01 debug_which
@@ -152,24 +233,37 @@ else
    then
       package_vector='--boost_vector'
    else
-      package_vector='--eigen_vector'
+      if [ "$standard" == '--c++17' ]
+      then
+         package_vector='--eigen_vector'
+      else
+         package_vector='--std_vector'
+      fi
    fi
 fi
+#
+# debug_which
+if [ "$use_configure" == 'yes' ]
+then
+   debug_which='--debug_none'
+fi
 cat << EOF
-tarball         = $cppad-$version.tgz
+tarball         = cppad-$version.tgz
 compiler        = $compiler
 standard        = $standard
 debug_which     = $debug_which
 package_vector  = $package_vector
 use_configure   = $use_configure
+verbose_make    = $verbose_make
 EOF
 cat << EOF >> $top_srcdir/check_all.log
-tarball         = $cppad-$version.tgz
+tarball         = cppad-$version.tgz
 compiler        = $compiler
 standard        = $standard
 debug_which     = $debug_which
 package_vector  = $package_vector
 use_configure   = $use_configure
+verbose_make    = $verbose_make
 EOF
 #
 # compiler
@@ -178,14 +272,22 @@ then
    compiler=''
 fi
 #
-# standard
+# standard, exclude_package
 if [ "$standard" == '--c++17' ]
 then
    standard='' # default for run_cmake.sh and configure
+   exclude_package=''
+else
+   exclude_package='--no_sacado'
 fi
-# ---------------------------------------------------------------------------
+if [ "$(uname)" == 'Darwin' ]
+then
+   exclude_package+=' --no_colpack'
+fi
+#
+# prefix
 # absoute prefix where optional packages are installed
-eval `grep '^prefix=' bin/get_optional.sh`
+eval `$grep '^prefix=' bin/get_optional.sh`
 if [[ "$prefix" =~ ^[^/] ]]
 then
    prefix="$(pwd)/$prefix"
@@ -196,38 +298,44 @@ then
    echo 'Probably need to run bin/get_optional.sh'
    exit 1
 fi
-export LD_LIBRARY_PATH="$prefix/lib:$prefix/lib64"
-# ---------------------------------------------------------------------------
+#
 # check_version
-version=$(
-   sed -n -e '/^SET( *cppad_version *"[0-9.]*")/p' CMakeLists.txt | \
-      sed -e 's|.*"\([^"]*\)".*|\1|'
-)
-if echo $version | grep '[0-9]\{4\}0000[.]' > /dev/null
+if echo $version | $grep '[0-9]\{4\}0000[.]' > /dev/null
 then
    # special interactive case for stable versions.
    echo_eval bin/check_version.sh
 else
-   echo_eval_log bin/check_version.sh
+   echo_log_eval bin/check_version.sh
 fi
-# ---------------------------------------------------------------------------
+#
+# bin/check_*.sh
 # Run automated checks for the form bin/check_*.sh with a few exceptions.
 list=$(
    ls bin/check_* | sed \
    -e '/check_all.sh/d' \
    -e '/check_doxygen.sh/d' \
-   -e '/version.sh/d' \
-   -e '/check_install.sh/d'
+   -e '/check_install.sh/d' \
+   -e '/check_invisible/d'
 )
 #
+echo_eval bin/check_invisible.sh
 for check in $list
 do
    echo_log_eval $check
 done
 #
 # run_xrst.sh
-bin/run_xrst.sh +dev
-# ---------------------------------------------------------------------------
+flags='--include_dev'
+if [ "$skip_external_links" == 'no' ]
+then
+   flags+=' --external_links'
+fi
+if [ "$suppress_spell_warnings" == 'yes' ]
+then
+   flags+=' --suppress_spell_warnings'
+fi
+bin/run_xrst.sh $flags
+#
 # build/cppad-$version.tgz
 echo_log_eval bin/package.sh
 #
@@ -236,140 +344,102 @@ echo_log_eval cd build
 echo_log_eval tar -xzf cppad-$version.tgz
 echo_log_eval cd cppad-$version
 #
-# build/cppad-$version/build/prefix
-if [ ! -e build ]
+# build/cppad-$version/bin/get_optional.sh
+sed -i bin/get_optional.sh -e "s|^prefix=.*|prefix=$prefix|"
+#
+# builder
+if [ "$use_configure" == 'yes' ]
 then
-   mkdir build
+   builder='make'
+elif [ "$verbose_make" == 'yes' ]
+then
+   builder='make'
+else
+   builder='ninja'
 fi
-echo_log_eval cp -r ../prefix build/prefix
+#
+# verbose_flag
+if [ "$verbose_make" == 'yes' ]
+then
+   verbose_flag='--verbose_make'
+else
+   verbose_flag=''
+fi
 #
 # configure or cmake
 if [ "$use_configure" == 'yes' ]
 then
-   builder='make'
-   if [ "$compiler" == 'clang' ]
-   then
-      echo_log_eval bin/run_configure.sh $standard --with_clang
-   else
-      echo_log_eval bin/run_configure.sh $standard
-   fi
+   echo_log_eval bin/run_configure.sh \
+      $verbose_flag \
+      $compiler \
+      $standard \
+      $package_vector
 else
-   builder='ninja'
    echo_log_eval bin/run_cmake.sh \
-      $verbose \
-      --profile_speed \
+      $verbose_flag \
       $compiler \
       $standard \
       $debug_which \
+      $exclude_package \
       $package_vector
 fi
 echo_log_eval cd build
 #
 # n_job
-n_job=$(nproc)
-if [ "$n_job" -ge '5' ]
+if which nproc >& /dev/null
 then
-   let n_job="$n_job - 1"
+   n_job=$(nproc)
+else
+   n_job=$(sysctl -n hw.ncpu)
 fi
-# -----------------------------------------------------------------------------
-# can comment out this make check to if only running tests below it
-cmd="$builder -j $n_job check"
-echo "$cmd >& check_all.tmp"
-echo "$cmd" > $top_srcdir/check_all.tmp
-if ! $cmd >& $top_srcdir/check_all.tmp
-then
-   echo 'Command Failed:'
-fi
-echo 'Re-running Command'
-echo_log_eval $cmd
-# ----------------------------------------------------------------------------
-# extra speed tests not run with different options
 #
+# build: check
+echo_log_eval $builder -j $n_job check
+#
+# speed/cppad/speed_cppad
 for option in onetape colpack optimize atomic memory boolsparsity
 do
    echo_eval speed/cppad/speed_cppad correct 432 $option
 done
 #
+# speed/adolc/speed_adolc
 echo_eval speed/adolc/speed_adolc correct         432 onetape
 echo_eval speed/adolc/speed_adolc sparse_jacobian 432 onetape colpack
 echo_eval speed/adolc/speed_adolc sparse_hessian  432 onetape colpack
 #
-# ----------------------------------------------------------------------------
-# extra multi_thread tests
-program_list=''
-skip=''
-for threading in bthread openmp pthread
-do
-   dir="example/multi_thread/$threading"
-   if [ ! -e "$dir" ]
-   then
-      skip="$skip example_multi_thread_${threading}"
-   else
-      program="$dir/example_multi_thread_${threading}"
-      program_list="$program_list $program"
-      #
-      # redo this build in case it is commented out above
-      echo_log_eval $builder -j $n_job example_multi_thread_${threading}
-      #
-      # all programs check the fast cases
-      echo_log_eval $program a11c
-      echo_log_eval $program simple_ad
-      echo_log_eval $program team_example
-   fi
-done
-if [ "$program_list" != '' ]
-then
-   # test_time=1,max_thread=4,mega_sum=1
-   next_program
-   echo_log_eval $program harmonic 1 4 1
-   #
-   # test_time=1,max_thread=4,num_solve=100
-   next_program
-   echo_log_eval $program atomic_two 1 4 100
-   next_program
-   echo_log_eval $program atomic_three 1 4 100
-   next_program
-   echo_log_eval $program chkpoint_one 1 4 100
-   next_program
-   echo_log_eval $program chkpoint_two 1 4 100
-   #
-   # test_time=2,max_thread=4,num_zero=20,num_sub=30,num_sum=50,use_ad=true
-   next_program
-   echo_log_eval $program multi_newton 2 4 20 30 50 true
-fi
+# bin/test_multi_thread.sh
+cd ..
+bin/test_multi_thread.sh $builder
+cd build
 #
 # print_for test
-program='example/print_for/example_print_for'
-#
 # redo this build in case it is commented out above
+program='example/print_for/example_print_for'
 echo_log_eval $builder -j $n_job example_print_for
-#
 echo_log_eval $program
-$program | sed -e '/^Test passes/,$d' > junk.1.$$
-$program | sed -e '1,/^Test passes/d' > junk.2.$$
-if diff junk.1.$$ junk.2.$$
+$program | sed -e '/^Test passes/,$d' > temp.1.$$
+$program | sed -e '1,/^Test passes/d' > temp.2.$$
+if diff temp.1.$$ temp.2.$$
 then
-   rm junk.1.$$ junk.2.$$
+   rm temp.1.$$ temp.2.$$
    echo_log_eval echo "print_for: OK"
 else
    echo_log_eval echo "print_for: Error"
    exit 1
 fi
 #
-# ---------------------------------------------------------------------------
-# check install
-echo_log_eval $builder install
+# bin/test_install.sh
 echo_log_eval cd ..
-echo_log_eval bin/check_install.sh
-# ---------------------------------------------------------------------------
+if [ "$standard" == '' ]
+then
+   echo_log_eval bin/test_install.sh $builder --c++17
+else
+   echo_log_eval bin/test_install.sh $builder $standard
+fi
+#
 #
 echo "date >> check_all.log"
 date  | sed -e 's|^|date: |' >> $top_srcdir/check_all.log
-if [ "$skip" != '' ]
-then
-   echo_log_eval echo "check_all.sh: skip = $skip"
-   exit 1
-fi
 # ----------------------------------------------------------------------------
 echo "$0: OK" >> $top_srcdir/check_all.log
 echo "$0: OK"

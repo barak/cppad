@@ -2,18 +2,17 @@
 # define CPPAD_UTILITY_ROSEN_34_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin Rosen34}
 {xrst_spell
-   dep
-   rd
-   rosenbrock
-   test test
-   tf
-   xf
+  dep
+  rosenbrock
+  test test
+  tf
+  xf
 }
 
 A 3rd and 4th Order Rosenbrock ODE Solver
@@ -21,7 +20,6 @@ A 3rd and 4th Order Rosenbrock ODE Solver
 
 Syntax
 ******
-
 | # ``include <cppad/utility/rosen_34.hpp>``
 | *xf* = ``Rosen34`` ( *F* , *M* , *ti* , *tf* , *xi* )
 | *xf* = ``Rosen34`` ( *F* , *M* , *ti* , *tf* , *xi* , *e* )
@@ -240,7 +238,7 @@ where :math:`h = (tf - ti) / M` is the step size.
 Scalar
 ******
 The type *Scalar* must satisfy the conditions
-for a :ref:`NumericType-name` type.
+for a :ref:`NumericType-name` .
 The routine :ref:`CheckNumericType-name` will generate an error message
 if this is not the case.
 In addition, the following operations must be defined for

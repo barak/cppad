@@ -2,17 +2,20 @@
 # define CPPAD_CORE_FOR_HES_SPARSITY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin for_hes_sparsity}
+{xrst_spell
+  rc
+  walther
+}
 
 Forward Mode Hessian Sparsity Patterns
 ######################################
 
 Syntax
 ******
-
 | *f* . ``for_hes_sparsity`` (
 | |tab| *select_domain* , *select_range* , *internal_bool* , *pattern_out*
 | )
@@ -92,7 +95,7 @@ Upon return *pattern_out* is a sparsity pattern for :math:`H(x)`.
 
 Sparsity for Entire Hessian
 ***************************
-Suppose that :math:`R` is the :math:`n \times n` identity matrix.
+Suppose that :math:`D` is the :math:`n \times n` identity matrix.
 In this case, *pattern_out* is a sparsity pattern for
 :math:`(s^\R{T} F) F^{(2)} ( x )`.
 
@@ -196,7 +199,7 @@ void ADFun<Base,RecBase>::for_hes_sparsity(
          internal_rev_jac.add_element( dep_taddr_[i] , 0 );
       }
       // reverse Jacobian sparsity for all variables on tape
-      local::sweep::rev_jac<addr_t>(
+      local::sweep::rev_jac(
          &play_,
          dependency,
          n,
@@ -209,7 +212,7 @@ void ADFun<Base,RecBase>::for_hes_sparsity(
       internal_for_hes.resize(n + 1 + num_var_tape_, n + 1);
       //
       // compute forward Hessian sparsity pattern
-      local::sweep::for_hes<addr_t>(
+      local::sweep::for_hes(
          &play_,
          n,
          num_var_tape_,
@@ -236,7 +239,7 @@ void ADFun<Base,RecBase>::for_hes_sparsity(
          internal_rev_jac.add_element( dep_taddr_[i] , 0 );
       }
       // reverse Jacobian sparsity for all variables on tape
-      local::sweep::rev_jac<addr_t>(
+      local::sweep::rev_jac(
          &play_,
          dependency,
          n,
@@ -250,7 +253,7 @@ void ADFun<Base,RecBase>::for_hes_sparsity(
       internal_for_hes.resize(n + 1 + num_var_tape_, n + 1);
       //
       // compute forward Hessian sparsity pattern
-      local::sweep::for_hes<addr_t>(
+      local::sweep::for_hes(
          &play_,
          n,
          num_var_tape_,

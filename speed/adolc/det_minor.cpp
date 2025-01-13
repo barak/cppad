@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin adolc_det_minor.cpp}
@@ -29,9 +29,9 @@ Implementation
 extern std::map<std::string, bool> global_option;
 
 namespace {
-   void setup(int tag, size_t size, const CppAD::vector<double>& matrix)
+   void setup(short tag, size_t size, const CppAD::vector<double>& matrix)
    {  // number of independent variables
-      int n = size * size;
+      int n = int(size * size);
 
       // object for computing determinant
       CppAD::det_by_minor<adouble> a_det(size);
@@ -82,10 +82,10 @@ bool link_det_minor(
    static size_t static_size = 0;
    //
    // number of independent variables
-   int n = size * size;
+   int n = int(size * size);
    //
    // tape identifier
-   int tag  = 0;
+   short tag = 0;
    //
    bool onetape = global_option["onetape"];
    // ----------------------------------------------------------------------
@@ -111,7 +111,7 @@ bool link_det_minor(
    CPPAD_ASSERT_UNKNOWN( job == "run" );
    //
    // number of dependent variables
-   int m    = 1;
+   int   m    = 1;
    //
    // vectors of reverse mode weights
    CppAD::vector<double> u(m);
@@ -123,7 +123,7 @@ bool link_det_minor(
       }
 
       // choose a matrix
-      CppAD::uniform_01(n, matrix);
+      CppAD::uniform_01( size_t(n), matrix);
 
       // evaluate the determinant at the new matrix value
       int keep = 1; // keep this forward mode result
@@ -136,7 +136,7 @@ bool link_det_minor(
    else while(repeat--)
    {
       // choose a matrix
-      CppAD::uniform_01(n, matrix);
+      CppAD::uniform_01( size_t(n), matrix);
 
       // record the tape
       setup(tag, size, matrix);

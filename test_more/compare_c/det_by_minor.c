@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <assert.h>
@@ -22,16 +22,13 @@
 /*
 -------------------------------------------------------------------------------
 {xrst_begin det_of_minor_c app}
-{xrst_spell
-   factorial
-}
 
 Determinant of a Minor
 ######################
 
 Syntax
 ******
-*d* = ``det_of_minor`` ( *a* , *m* , *n* , *r* , *c* )
+| *d* = ``det_of_minor`` ( *a* , *m* , *n* , *r* , *c* )
 
 Purpose
 *******
@@ -303,9 +300,6 @@ double det_by_minor(double* a, size_t m)
 {xrst_end det_by_minor_c}
 --------------------------------------------------------------------------
 {xrst_begin uniform_01_c app}
-{xrst_spell
-   variate
-}
 
 Simulate a [0,1] Uniform Random Variate
 #######################################

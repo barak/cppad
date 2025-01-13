@@ -2,7 +2,7 @@
 # define CPPAD_CORE_FOR_JAC_SPARSITY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin for_jac_sparsity}
@@ -12,7 +12,6 @@ Forward Mode Jacobian Sparsity Patterns
 
 Syntax
 ******
-
 | *f* . ``for_jac_sparsity`` (
 | |tab| *pattern_in* , *transpose* , *dependency* , *internal_bool* , *pattern_out*
 | )
@@ -254,7 +253,7 @@ void ADFun<Base,RecBase>::for_jac_sparsity(
       );
 
       // compute sparsity for other variables
-      local::sweep::for_jac<addr_t>(
+      local::sweep::for_jac(
          &play_,
          dependency,
          n,
@@ -286,7 +285,7 @@ void ADFun<Base,RecBase>::for_jac_sparsity(
       );
 
       // compute sparsity for other variables
-      local::sweep::for_jac<addr_t>(
+      local::sweep::for_jac(
          &play_,
          dependency,
          n,

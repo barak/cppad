@@ -2,13 +2,13 @@
 # define CPPAD_INTRODUCTION_EXP_2_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin exp_2}
 {xrst_spell
-   apx
-   yyyymmdd
+  apx
+  yyyymmdd
 }
 
 Second Order Exponential Approximation
@@ -16,9 +16,8 @@ Second Order Exponential Approximation
 
 Syntax
 ******
-# ``include`` ``"exp_2.hpp"``
-
-*y* = ``exp_2`` ( *x* )
+| # ``include`` ``"exp_2.hpp"``
+| *y* = ``exp_2`` ( *x* )
 
 Purpose
 *******

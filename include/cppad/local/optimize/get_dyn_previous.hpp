@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_OPTIMIZE_GET_DYN_PREVIOUS_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*!
 \file get_cexp_info.hpp
@@ -115,9 +115,6 @@ using AD< Base > and computations by this routine are done using type
 \param play
 This is the old operation sequence.
 
-\param random_itr
-This is a random iterator for the old operation sequence.
-
 \param par_usage
 The size of this vector is the number of parameters in the
 operation sequence.i.e., play->nun_var_rec().
@@ -133,10 +130,9 @@ used in place of the j-th dynamic parameter, k < j, dyn_previous[k] != num_dyn,
 par_usage[dyn_ind2par_ind[k]] == true.
 */
 
-template <class Addr, class Base>
+template <class Base>
 void get_dyn_previous(
    const player<Base>*                         play                ,
-   const play::const_random_iterator<Addr>&    random_itr          ,
    pod_vector<bool>&                           par_usage           ,
    pod_vector<addr_t>&                         dyn_previous        )
 {
@@ -365,7 +361,7 @@ void get_dyn_previous(
                dyn_previous[i_dyn] = addr_t( k_dyn );
             }
          }
-         if( (! match) & ( (op == add_dyn) | (op == mul_dyn) ) )
+         if( (! match) && ( (op == add_dyn) || (op == mul_dyn) ) )
          {  size_t num_arg = 2;
             std::swap( arg_match[0], arg_match[1] );
             opcode_t op_t    = opcode_t(op);

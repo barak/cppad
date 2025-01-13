@@ -2,14 +2,14 @@
 # define CPPAD_CORE_SUBGRAPH_JAC_REV_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin subgraph_jac_rev}
 {xrst_spell
-   nnz
-   nr
-   subgraphs
+  nnz
+  nr
+  subgraphs
 }
 
 Compute Sparse Jacobians Using Subgraphs
@@ -17,7 +17,6 @@ Compute Sparse Jacobians Using Subgraphs
 
 Syntax
 ******
-
 | *f* . ``subgraph_jac_rev`` ( *x* , *subset* )
 | *f* . ``subgraph_jac_rev`` (
 | |tab| *select_domain* , *select_range* , *x* , *matrix_out*

@@ -2,7 +2,7 @@
 # define CPPAD_CORE_OPTIMIZE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # define CPPAD_CORE_OPTIMIZE_PRINT_RESULT 0
@@ -10,8 +10,8 @@
 /*
 {xrst_begin optimize}
 {xrst_spell
-   onetape
-   substring
+  onetape
+  substring
 }
 
 Optimize an ADFun Object Tape
@@ -19,7 +19,6 @@ Optimize an ADFun Object Tape
 
 Syntax
 ******
-
 | *f* . ``optimize`` ()
 | *f* . ``optimize`` ( *options* )
 | *flag* = *f* . ``exceed_collision_limit`` ()

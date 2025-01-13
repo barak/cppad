@@ -2,12 +2,12 @@
 # define CPPAD_UTILITY_ROMBERG_MUL_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin RombergMul}
 {xrst_spell
-   test test
+  test test
 }
 
 Multi-dimensional Romberg Integration
@@ -15,12 +15,9 @@ Multi-dimensional Romberg Integration
 
 Syntax
 ******
-
-   # ``include <cppad/utility/romberg_mul.hpp>``
-
-``RombergMul`` < *Fun* , *SizeVector* , *FloatVector* , *m* > *R*
-
-*r* = *R* ( *F* , *a* , *b* , *n* , *p* , *e* )
+| # ``include <cppad/utility/romberg_mul.hpp>``
+| ``RombergMul`` < *Fun* , *SizeVector* , *FloatVector* , *m* > *R*
+| *r* = *R* ( *F* , *a* , *b* , *n* , *p* , *e* )
 
 Description
 ***********
@@ -131,7 +128,7 @@ Float
 The type *Float* is defined as the type of the elements of
 :ref:`RombergMul@FloatVector` .
 The type *Float* must satisfy the conditions
-for a :ref:`NumericType-name` type.
+for a :ref:`NumericType-name` .
 The routine :ref:`CheckNumericType-name` will generate an error message
 if this is not the case.
 In addition, if *x* and *y* are *Float* objects,

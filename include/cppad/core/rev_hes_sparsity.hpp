@@ -2,17 +2,19 @@
 # define CPPAD_CORE_REV_HES_SPARSITY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin rev_hes_sparsity}
+{xrst_spell
+  rc
+}
 
 Reverse Mode Hessian Sparsity Patterns
 ######################################
 
 Syntax
 ******
-
 | *f* . ``rev_hes_sparsity`` (
 | |tab| *select_range* , *transpose* , *internal_bool* , *pattern_out*
 | )
@@ -106,7 +108,7 @@ Sparsity for Entire Hessian
 ***************************
 Suppose that :math:`R` is the :math:`n \times n` identity matrix.
 In this case, *pattern_out* is a sparsity pattern for
-:math:`(s^\R{T} F) F^{(2)} ( x )`.
+:math:`(s^\R{T} F)^{(2)} ( x )`.
 
 Example
 *******
@@ -169,7 +171,6 @@ void ADFun<Base,RecBase>::rev_hes_sparsity(
    // used to identify the RecBase type in calls to sweeps
    RecBase not_used_rec_base(0.0);
    //
-   size_t n  = Domain();
    size_t m  = Range();
    //
    CPPAD_ASSERT_KNOWN(
@@ -203,9 +204,8 @@ void ADFun<Base,RecBase>::rev_hes_sparsity(
       internal_hes.resize(num_var_tape_, ell);
       //
       // compute the Hessian sparsity pattern
-      local::sweep::rev_hes<addr_t>(
+      local::sweep::rev_hes(
          &play_,
-         n,
          num_var_tape_,
          for_jac_sparse_pack_,
          rev_jac_pattern.data(),
@@ -232,9 +232,8 @@ void ADFun<Base,RecBase>::rev_hes_sparsity(
       internal_hes.resize(num_var_tape_, ell);
       //
       // compute the Hessian sparsity pattern
-      local::sweep::rev_hes<addr_t>(
+      local::sweep::rev_hes(
          &play_,
-         n,
          num_var_tape_,
          for_jac_sparse_set_,
          rev_jac_pattern.data(),

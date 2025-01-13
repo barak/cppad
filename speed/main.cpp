@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cstring>
@@ -49,14 +49,14 @@
 /*
 {xrst_begin speed_main}
 {xrst_spell
-   boolsparsity
-   onetape
-   optionlist
-   retaped
-   revsparsity
-   subgraphs
-   subsparsity
-   underbar
+  boolsparsity
+  onetape
+  optionlist
+  retaped
+  revsparsity
+  subgraphs
+  subsparsity
+  underbar
 }
 
 Running the Speed Test Program
@@ -64,7 +64,7 @@ Running the Speed Test Program
 
 Syntax
 ******
-``speed/`` *package* / ``speed_`` *package* *test* *seed* *option_list*
+| ``speed/`` *package* / ``speed_`` *package* *test* *seed* *option_list*
 
 Purpose
 *******

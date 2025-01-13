@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin atomic_four_norm_sq.cpp}
-{xrst_spell
-   euclidean
-}
 
 Atomic Euclidean Norm Squared: Example and Test
 ###############################################
@@ -121,10 +118,6 @@ namespace {
          assert( order_up == 1 );
          ty[1] = 2.0 * sum;
          return ok;
-
-         // Assume we are not using forward mode with order > 1
-         assert( ! ok );
-         return ok;
       }
       // END FORWARD
       // BEGIN REVERSE
@@ -157,7 +150,7 @@ namespace {
          {  // x_0^0
             double xj0 = tx[ j * q + 0];
             //
-            // H = G( F( { x_j^k } ) )
+            // H( {x_j^k} ) = G[ F( {x_j^k} ), {x_j^k} ]
             double dF = 2.0 * xj0; // partial F w.r.t x_j^0
             double dG = py[0];     // partial of G w.r.t. y[0]
             double dH = dG * dF;   // partial of H w.r.t. x_j^0

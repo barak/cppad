@@ -2,21 +2,17 @@
 # define CPPAD_CORE_ABS_NORMAL_FUN_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin abs_normal_fun}
-{xrst_spell
-   affine
-   approximations
-}
 
 Create An Abs-normal Representation of a Function
 #################################################
 
 Syntax
 ******
-*f* . ``abs_normal_fun`` ( *g* , *a* )
+| *f* . ``abs_normal_fun`` ( *g* , *a* )
 
 f
 *
@@ -352,7 +348,7 @@ void ADFun<Base,RecBase>::abs_normal_fun(ADFun& g, ADFun& a) const
    CppAD::vector<addr_t> f_abs_arg;
    CppAD::vector<size_t> f_abs_res;
    //
-   OpCode        op;                 // this operator
+   op_code_var   op;                 // this operator
    const addr_t* arg = nullptr;   // arguments for this operator
    size_t        i_var;              // variable index for this operator
    local::play::const_sequential_iterator itr = play_.begin();
@@ -560,7 +556,7 @@ void ADFun<Base,RecBase>::abs_normal_fun(ADFun& g, ADFun& a) const
          case SqrtOp:
          case TanOp:
          case TanhOp:
-         // some of these operators have an auxillary result; e.g.,
+         // some of these operators have an auxiliary result; e.g.,
          // sine and cosine are computed togeather.
          CPPAD_ASSERT_UNKNOWN( NumArg(op) ==  1 );
          CPPAD_ASSERT_UNKNOWN( NumRes(op) == 1 || NumRes(op) == 2 );

@@ -2,7 +2,7 @@
 # define CPPAD_CORE_CPPAD_ASSERT_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*!
@@ -14,8 +14,7 @@ Define the CppAD error checking macros (all of which begin with CPPAD_ASSERT_)
 -------------------------------------------------------------------------------
 {xrst_begin cppad_assert}
 {xrst_spell
-   macros
-   msg
+  msg
 }
 
 CppAD Assertions During Execution
@@ -23,10 +22,8 @@ CppAD Assertions During Execution
 
 Syntax
 ******
-
-   ``CPPAD_ASSERT_KNOWN`` ( *exp* , *msg* )
-
-``CPPAD_ASSERT_UNKNOWN`` ( *exp* )
+| ``CPPAD_ASSERT_KNOWN`` ( *exp* , *msg* )
+| ``CPPAD_ASSERT_UNKNOWN`` ( *exp* )
 
 Purpose
 *******

@@ -2,7 +2,7 @@
 # define CPPAD_CORE_REV_SPARSE_JAC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
@@ -13,10 +13,8 @@ Jacobian Sparsity Pattern: Reverse Mode
 
 Syntax
 ******
-
-   *s* = *f* . ``RevSparseJac`` ( *q* , *r* )
-
-*s* = *f* . ``RevSparseJac`` ( *q* , *r* , *transpose* , *dependency* )
+| *s* = *f* . ``RevSparseJac`` ( *q* , *r* )
+| *s* = *f* . ``RevSparseJac`` ( *q* , *r* , *transpose* , *dependency* )
 
 Purpose
 *******
@@ -257,7 +255,7 @@ void ADFun<Base,RecBase>::RevSparseJacCase(
       var_sparsity.process_post( dep_taddr_[i] );
 
    // evaluate the sparsity patterns
-   local::sweep::rev_jac<addr_t>(
+   local::sweep::rev_jac(
       &play_,
       dependency,
       n,
@@ -408,7 +406,7 @@ void ADFun<Base,RecBase>::RevSparseJacCase(
       var_sparsity.process_post( dep_taddr_[i] );
 
    // evaluate the sparsity patterns
-   local::sweep::rev_jac<addr_t>(
+   local::sweep::rev_jac(
       &play_,
       dependency,
       n,
@@ -607,7 +605,7 @@ void ADFun<Base,RecBase>::RevSparseJacCheckpoint(
       var_sparsity.process_post( dep_taddr_[i] );
 
    // evaluate the sparsity pattern for all variables
-   local::sweep::rev_jac<addr_t>(
+   local::sweep::rev_jac(
       &play_,
       dependency,
       n,

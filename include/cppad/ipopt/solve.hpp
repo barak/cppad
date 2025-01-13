@@ -2,25 +2,24 @@
 # define CPPAD_IPOPT_SOLVE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin ipopt_solve}
 {xrst_spell
-   bvector
-   fg
-   gl
-   infeasibility
-   iterates
-   lagrange
-   maxiter
-   naninf
-   ng
-   nx
-   rll
-   unrecoverable
-   xl
-   zl
+  bvector
+  doesn
+  fg
+  gl
+  gu
+  maxiter
+  naninf
+  ng
+  nx
+  rll
+  xl
+  zl
+  zu
 }
 
 Use Ipopt to Solve a Nonlinear Programming Problem
@@ -28,7 +27,6 @@ Use Ipopt to Solve a Nonlinear Programming Problem
 
 Syntax
 ******
-
 | # ``include <cppad/ipopt/solve.hpp>``
 | ``ipopt::solve`` (
 | |tab| *options* , *xi* , *xl* , *xu* , *gl* , *gu* , *fg_eval* , *solution*
@@ -50,7 +48,7 @@ problems of the form
    \end{array}
 
 This is done using
-`Ipopt <http://www.coin-or.org/projects/Ipopt.xml>`_
+`Ipopt <https://coin-or.github.io/Ipopt>`_
 optimizer and CppAD for the derivative and sparsity calculations.
 
 Include File
@@ -515,7 +513,7 @@ void solve(
          "ipopt::solve: missing '\\n' at end of an option line"
       );
       CPPAD_ASSERT_KNOWN(
-         (end_1 > begin_1) & (end_2 > begin_2) ,
+         (end_1 > begin_1) && (end_2 > begin_2) ,
          "ipopt::solve: an option line does not have two tokens"
       );
 
@@ -542,18 +540,18 @@ void solve(
       // switch on option type
       if( tok_1 == "Retape" )
       {  CPPAD_ASSERT_KNOWN(
-            (tok_2 == "true") | (tok_2 == "false") ,
+            (tok_2 == "true") || (tok_2 == "false") ,
             "ipopt::solve: Retape value is not true or false"
          );
          retape = (tok_2 == "true");
       }
       else if( tok_1 == "Sparse" )
       {  CPPAD_ASSERT_KNOWN(
-            (tok_2 == "true") | (tok_2 == "false") ,
+            (tok_2 == "true") || (tok_2 == "false") ,
             "ipopt::solve: Sparse value is not true or false"
          );
          CPPAD_ASSERT_KNOWN(
-            (tok_3 == "forward") | (tok_3 == "reverse") ,
+            (tok_3 == "forward") || (tok_3 == "reverse") ,
             "ipopt::solve: Sparse direction is not forward or reverse"
          );
          if( tok_2 == "false" )

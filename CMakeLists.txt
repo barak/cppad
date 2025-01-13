@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-23 Bradley M. Bell
+# SPDX-FileContributor: 2003-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # =============================================================================
 # Some constants
 # =============================================================================
 #
 # Set the minimum required version of cmake for this project.
-# see http://www.cmake.org/pipermail/cmake/2013-January/053213.html
+# see https://cmake.org//pipermail/cmake/2013-January/053213.html
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 #
 # Only interpret if() arguments as variables or keywords when unquoted.
@@ -16,7 +16,7 @@ IF( POLICY CMP0054 )
 ENDIF( POLICY CMP0054 )
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20240000.7")
+SET(cppad_version "20250000.0")
 SET(cppad_url          "https://coin-or.github.io/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 IF( NOT DEFINED CMAKE_BUILD_TYPE)
@@ -75,6 +75,9 @@ INCLUDE(cmake/set_compile_flags.cmake)
 # pkgconfig_info(name, system)
 INCLUDE(cmake/pkgconfig_info.cmake)
 #
+# eigen_info()
+INCLUDE(cmake/eigen_info.cmake)
+#
 # add_check_executable(parent_target short_name)
 INCLUDE(cmake/add_check_executable.cmake)
 # =============================================================================
@@ -110,19 +113,25 @@ IF( cmake_install_postfix )
    )
 ENDIF( cmake_install_postfix )
 #
-FOREACH(pkg adolc ipopt cppadcg)
+FOREACH(pkg adolc eigen ipopt cppadcg)
    IF( ${pkg}_prefix )
       MESSAGE(FATAL_ERROR
          "-D ${pkg}_prefix=value has been changed to -D include_${pkg}=true"
       )
    ENDIF( ${pkg}_prefix )
-ENDFOREACH(pkg adolc eigen ipopt)
+ENDFOREACH(pkg adolc eigen ipopt cppadcg)
 #
 IF( cmake_needs_dot_slash )
    MESSAGE(FATAL_ERROR
       "cmake_needs_dot_slash was removed; see release notes for 2023-06-01"
    )
 ENDIF( cmake_needs_dot_slash )
+#
+IF( include_eigen )
+   MESSAGE(FATAL_ERROR
+      "include_eigen was removed; see release notes for 2024-10-02"
+   )
+ENDIF( )
 # -----------------------------------------------------------------------------
 # Current Arguments
 #
@@ -227,10 +236,19 @@ IF( NOT minimal_cplusplus  )
    SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 ENDIF( NOT minimal_cplusplus  )
 #
+# use_cplusplus_2014_ok
+SET(source "
+int main(void)
+{  static_assert( __cplusplus >= 201302L , \"c++17 is supported\" );
+   return 0;
+}"
+)
+compile_source_test(${cmake_defined_ok} "${source}" use_cplusplus_2014_ok )
+#
 # use_cplusplus_2017_ok
 SET(source "
 int main(void)
-{  static_assert( __cplusplus >= 201703 , \"c++17 is supported\" );
+{  static_assert( __cplusplus >= 201703L , \"c++17 is supported\" );
    return 0;
 }"
 )
@@ -310,34 +328,37 @@ SET(CMAKE_INSTALL_PREFIX "${cppad_prefix}"
 )
 # -----------------------------------------------------------------------------
 # Optional package information
+# cppad_has_{package}, {package}_LINK_LIBRARIES, package INCLUDE_DIRECTORIES
+#
+# system_include
 SET(system_include TRUE)
 #
-# eigen
-IF( ${include_eigen} )
-   pkgconfig_info(eigen ${system_include})
-   IF( DEFINED eigen_prefix )
-      MESSAGE(FATAL_ERROR "include_eigen is true and eigen_prefix is defined")
-   ENDIF( )
-ELSE( )
-   prefix_info(eigen ${system_include} )
-ENDIF( )
+# package = eigen
+eigen_info()
 #
-# adolc
+# package = adolc
 pkgconfig_info(adolc ${system_include})
 #
-# ipopt
+# package = ipopt
 pkgconfig_info(ipopt ${system_include})
 #
-# colpack_prefix
+# package = colpack
 prefix_info(colpack ${system_include} )
 #
-# sacado_prefix
+# package = sacado
 prefix_info(sacado ${system_include} )
 #
-# fadbad_prefix
+# package = fadbad
 prefix_info(fadbad ${system_include} )
 #
-# include_cpapdcg
+# check sacado
+IF( ${cppad_has_sacado} )
+   IF( NOT ${use_cplusplus_2017_ok} )
+      MESSAGE(FATAL_ERROR "sacado_prefix is defined but c++17 not supported")
+   ENDIF( )
+ENDIF( )
+#
+# package = cppadcg
 SET( include_cppadcg FALSE CACHE BOOL "include cppadcg" )
 IF( include_cppadcg )
    #
@@ -352,6 +373,56 @@ ELSE( )
    # cppad_has_cppadcg
    SET(cppad_has_cppadcg 0)
 ENDIF( include_cppadcg )
+#
+# package = xrst
+SET( include_doc FALSE CACHE BOOL "include documentation")
+IF( include_doc )
+   #
+   # xrst_path
+   FIND_PROGRAM( xrst_path xrst )
+   IF( "${xrst_path}" STREQUAL "xrst_path-NOTFOUND" )
+      MESSAGE(FATAL_ERROR
+         "include_doc is true and cannot find xrst in system path"
+      )
+   ENDIF( )
+   #
+   # processor_count
+   INCLUDE(ProcessorCount)
+   ProcessorCount(processor_count)
+   IF( processor_count EQUAL 0 )
+      SET(processor_count 1)
+   ENDIF( )
+   #
+   # see
+   # https://discourse.cmake.org/t/how-to-install-a-generated-directory/1267
+   #
+   # doc_dir
+   SET(doc_dir "${CMAKE_SOURCE_DIR}/build/html")
+   #
+   # doc_user
+   ADD_CUSTOM_TARGET(doc_user ALL
+      COMMAND xrst
+         --group_list default app
+         --local_toc
+         --html_theme sphinx_rtd_theme
+         --number_jobs ${processor_count}
+         --index_page_name user_guide
+         --suppress_spell_warnings
+         --config_file "${CMAKE_SOURCE_DIR}/xrst.toml"
+   )
+   #
+   # doc_dev
+   ADD_CUSTOM_TARGET(doc_dev
+      COMMAND xrst
+         --group_list default app dev
+         --local_toc
+         --html_theme sphinx_rtd_theme
+         --number_jobs ${processor_count}
+         --index_page_name user_guide
+         --suppress_spell_warnings
+         --config_file "${CMAKE_SOURCE_DIR}/xrst.toml"
+   )
+ENDIF( include_doc )
 # =============================================================================
 # cppad_lib
 # Perhaps in the future cppad_lib will depend on cmake header only flag ?
@@ -569,17 +640,12 @@ INSTALL(
 )
 #
 # During install copy doc direcrory to cppad_abs_docdir/cppad
-IF ( cmake_install_docdir )
-   # ADD_CUSTOM_TARGET(docdir COMMAND
-   #    xrst
-   #    --group_list default app
-   #    --config_file "${CMAKE_CURRENT_SOURCE_DIR}/xrst.toml"
-   # )
+IF ( cmake_install_docdir AND include_doc )
    INSTALL(
-      DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/html/"
+      DIRECTORY "${CMAKE_SOURCE_DIR}/build/html/"
       DESTINATION ${cppad_abs_docdir}/cppad
    )
-ENDIF ( cmake_install_docdir )
+ENDIF ( cmake_install_docdir AND include_doc )
 
 # =============================================================================
 # uninstall procedure

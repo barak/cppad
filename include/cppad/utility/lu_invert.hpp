@@ -2,14 +2,14 @@
 # define CPPAD_UTILITY_LU_INVERT_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin LuInvert}
 {xrst_spell
-   jp
-   permuted
+  ip
+  jp
 }
 
 Invert an LU Factored Equation
@@ -17,10 +17,8 @@ Invert an LU Factored Equation
 
 Syntax
 ******
-
-   # ``include <cppad/utility/lu_invert.hpp>``
-
-``LuInvert`` ( *ip* , *jp* , *LU* , *X* )
+| # ``include <cppad/utility/lu_invert.hpp>``
+| ``LuInvert`` ( *ip* , *jp* , *LU* , *X* )
 
 Description
 ***********

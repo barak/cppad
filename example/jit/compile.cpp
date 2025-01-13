@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
@@ -50,11 +50,13 @@ bool compile(void)
    // compile
    std::string compile = "";
 # if CPPAD_C_COMPILER_MSVC_FLAGS
-   if( std::system( CPPAD_C_COMPILER_CMD "/HELP 1> nul 2> nul") == 0 )
+   const char* cmd = CPPAD_C_COMPILER_CMD "/HELP 1> temp.1 2> temp.2";
+   if( std::system(cmd) == 0 )
       compile = CPPAD_C_COMPILER_CMD " /EHs /EHc /c /TC /O2";
 # endif
 # if CPPAD_C_COMPILER_GNU_FLAGS
-   if( std::system( CPPAD_C_COMPILER_CMD " --version > temp") == 0 )
+   const char* cmd = CPPAD_C_COMPILER_CMD " --version > temp";
+   if( std::system(cmd) == 0 )
       compile = CPPAD_C_COMPILER_CMD " -c -fPIC -O2";
 # endif
    //
@@ -105,7 +107,7 @@ bool compile(void)
       return false;
    }
    //
-   // f_ptr
+   // void_ptr
    std::string function_name = "cppad_jit_f";
    void* void_ptr = dll_linker(function_name, err_msg);
    if( err_msg != "" )

@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_SUBGRAPH_INIT_REV_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/subgraph/info.hpp>
@@ -90,7 +90,7 @@ void subgraph_info::init_rev(
 # endif
    bool begin_atomic_call = false;
    for(size_t i_op = 0; i_op < n_op_; ++i_op)
-   {  OpCode op = random_itr.get_op(i_op);
+   {  op_code_var op = random_itr.get_op(i_op);
       //
       // default value for this operator
       in_subgraph_[i_op] = depend_no;
@@ -203,9 +203,10 @@ void subgraph_info::init_rev(
    const BoolVector&   select_domain )
 {
    // get random access iterator for this player
-   play->template setup_random<Addr>();
+   Addr not_used;
+   play->setup_random( not_used );
    local::play::const_random_iterator<Addr> random_itr =
-      play->template get_random<Addr>();
+      play->get_random( not_used );
    //
    init_rev(random_itr, select_domain);
    //

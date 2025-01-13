@@ -1,12 +1,16 @@
 #! /bin/bash -e
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-24 Bradley M. Bell
 # ----------------------------------------------------------------------------
-# 
-# {xrst_begin get_optional.sh} 
+#
+# {xrst_begin get_optional.sh}
 # {xrst_spell
-#     ls
+#     ggrep
+#     grep
+#     gsed
+#     homebrew
+#     sed
 # }
 # {xrst_comment_ch #}
 #
@@ -63,6 +67,11 @@ prefix="build/prefix"
 #
 #     ``ls external/`` * . ``configured``
 #
+# MacOS with Homebrew
+# *******************
+# If you are using MacOS with homebrew, get_optional requires
+# the gnu versions of grep and sed; i.e., ``ggrep`` and ``gsed`` .
+#
 # get_optional.log
 # ****************
 # This file contains the standard out output for each of the optional scripts
@@ -79,7 +88,6 @@ prefix="build/prefix"
 #    bin/get_adolc.sh
 #    bin/get_cppadcg.sh
 #    bin/get_colpack.sh
-#    bin/get_eigen.sh
 #    bin/get_fadbad.sh
 #    bin/get_ipopt.sh
 #    bin/get_sacado.sh
@@ -107,7 +115,7 @@ then
    echo_eval rm get_optional.err
 fi
 # -----------------------------------------------------------------------------
-list='colpack adolc eigen fadbad ipopt sacado cppadcg'
+list='colpack adolc fadbad ipopt sacado cppadcg'
 for package in $list
 do
    echo "bin/get_${package}.sh 1>> get_optional.log 2>> get_optional.err"

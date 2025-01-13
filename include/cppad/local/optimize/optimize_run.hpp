@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_OPTIMIZE_OPTIMIZE_RUN_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <stack>
@@ -27,9 +27,10 @@ namespace CppAD { namespace local { namespace optimize  {
 /*!
 {xrst_begin optimize_run dev}
 {xrst_spell
-   dep
-   substring
-   taddr
+  dep
+  pri
+  substring
+  taddr
 }
 
 Convert a player object to an optimized recorder object
@@ -37,7 +38,6 @@ Convert a player object to an optimized recorder object
 
 Syntax
 ******
-
 | *exceed_collision_limit* = ``local::optimize::optimize_run`` (
 | |tab| ``options`` , ``n`` , ``dep_taddr`` , ``play`` , ``rec``
 | )
@@ -163,9 +163,10 @@ bool optimize_run(
    CPPAD_ASSERT_UNKNOWN( rec->num_op_rec() == 0 );
    //
    // get a random iterator for this player
-   play->template setup_random<Addr>();
+   Addr not_used;
+   play->setup_random( not_used );
    local::play::const_random_iterator<Addr> random_itr =
-      play->template get_random<Addr>();
+      play->get_random( not_used );
    //
    // compare_op, conditional_skip, cumulative_sum_op, print_for_op,
    // collision_limit
@@ -271,7 +272,6 @@ bool optimize_run(
    pod_vector<addr_t> dyn_previous;
    get_dyn_previous(
       play                ,
-      random_itr          ,
       par_usage           ,
       dyn_previous
    );
@@ -328,7 +328,7 @@ bool optimize_run(
    rec->set_record_compare( compare_op );
 
    // copy parameters with index 0
-   CPPAD_ASSERT_UNKNOWN( ! dyn_par_is[0] && isnan( play->GetPar(0) ) );
+   CPPAD_ASSERT_UNKNOWN( ! dyn_par_is[0] && CppAD::isnan( play->GetPar(0) ) );
    rec->put_con_par( play->GetPar(0) );
    new_par[0] = 0;
 
@@ -442,7 +442,7 @@ bool optimize_run(
             rec->put_dyn_arg_vec( arg_vec );
          }
       }
-      else if( par_usage[i_par] & (op != result_dyn) )
+      else if( par_usage[i_par] && (op != result_dyn) )
       {  size_t j_dyn = size_t( dyn_previous[i_dyn] );
          if( j_dyn != num_dynamic_par )
          {  size_t j_par = size_t( dyn_ind2par_ind[j_dyn] );
@@ -559,7 +559,7 @@ bool optimize_run(
    // -------------------------------------------------------------
    // information for current operator
    size_t          i_op;   // index
-   OpCode          op;     // operator
+   op_code_var     op;     // operator
    const addr_t*   arg;    // arguments
    size_t          i_var;  // variable index of primary (last) result
    //
@@ -708,7 +708,7 @@ bool optimize_run(
                ) );
             }
             else
-            {  // some of these operators have an auxillary result;
+            {  // some of these operators have an auxiliary result;
                // e.g. sine and cosine are computed together.
                CPPAD_ASSERT_UNKNOWN( NumArg(op) == 1 );
                CPPAD_ASSERT_UNKNOWN( NumRes(op) ==1 || NumRes(op) == 2 );
@@ -1334,7 +1334,7 @@ bool optimize_run(
             //
             ++itr_false;
          }
-         rec->ReplaceArg(i_arg++, n_true + n_false);
+         rec->ReplaceArg(i_arg++, 7 + n_true + n_false);
 # ifndef NDEBUG
          size_t n_arg   = 7 + size_t(n_true) + size_t(n_false);
          CPPAD_ASSERT_UNKNOWN( cskip_new[i].i_arg + n_arg == i_arg );

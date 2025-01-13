@@ -2,24 +2,19 @@
 # define CPPAD_EXAMPLE_ABS_NORMAL_MIN_NSO_QUAD_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 /*
 {xrst_begin min_nso_quad}
 {xrst_spell
-   affine
-   approximations
-   dbl
-   maxitr
-   minimizer
-   qp
+  dbl
+  maxitr
 }
 Non-Smooth Optimization Using Abs-normal Quadratic Approximations
 #################################################################
 
 Syntax
 ******
-
 | *ok* = ``min_nso_quad`` (
 | |tab| *level* , *f* , *g* , *a* , *epsilon* , *maxitr* , *b_in* , *x_in* , *x_out*
 | )

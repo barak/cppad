@@ -2,24 +2,17 @@
 # define CPPAD_EXAMPLE_CPPAD_EIGEN_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin cppad_eigen.hpp}
-{xrst_spell
-   plugin
-   scalars
-   specializations
-}
 Enable Use of Eigen Linear Algebra Package with CppAD
 #####################################################
 
 Syntax
 ******
-
-   # ``include <cppad/example/cppad_eigen.hpp>``
-
+| # ``include <cppad/example/cppad_eigen.hpp>``
 {xrst_toc_hidden
    include/cppad/example/eigen_plugin.hpp
    example/general/eigen_array.cpp
@@ -249,7 +242,7 @@ namespace std {
    {  return isfinite(CppAD::Value( CppAD::Var2Par(x) ) ); }
 
    template <class Base> bool isnan(const CppAD::AD<Base> &x)
-   {  return isnan(CppAD::Value( CppAD::Var2Par(x) ) ); }
+   {  return CppAD::isnan(CppAD::Value( CppAD::Var2Par(x) ) ); }
 }
 /* {xrst_code}
 {xrst_spell_on}

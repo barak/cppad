@@ -1,20 +1,17 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin multi_chkpoint_two_algo}
-{xrst_spell
-   iterate
-}
 
 chkpoint_two Algorithm that Computes Square Root
 ################################################
 
 Syntax
 ******
-*checkpoint_algo* ( *au* , *ay* )
+| *checkpoint_algo* ( *au* , *ay* )
 
 Purpose
 *******

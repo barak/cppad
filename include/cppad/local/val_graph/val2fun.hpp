@@ -2,17 +2,19 @@
 # define  CPPAD_LOCAL_VAL_GRAPH_VAL2FUN_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-23 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // --------------------------------------------------------------------------
 /*
 {xrst_begin val2fun_graph dev}
+{xrst_spell
+  dyn
+}
 
 Create an ADFun Object Corresponding to a Value Graph
 #####################################################
 
 Syntax
 ******
-
 | |tab| ``ADFun`` < *Base* > *fun*
 | |tab| *fun* . ``val2fun`` ( *val_tape* , *dyn_ind* , *var_ind* )
 | |tab| *fun* . ``val2fun`` ( *val_tape* , *dyn_ind* , *var_ind* , *use_val* )
@@ -228,7 +230,7 @@ void ADFun<Base, RecBase>::val2fun(
    // initialize with the value nan at index nan
    par_addr = rec.put_con_par(nan);
    CPPAD_ASSERT_UNKNOWN( par_addr == 0 );
-   CPPAD_ASSERT_UNKNOWN( isnan( parameter[par_addr] ) );
+   CPPAD_ASSERT_UNKNOWN( CppAD::isnan( parameter[par_addr] ) );
    //
    // rec
    // Place the variable with index 0 in the tape
@@ -270,7 +272,7 @@ void ADFun<Base, RecBase>::val2fun(
       fun_ad_type[ dyn_ind[i] ]  = dynamic_enum;
       par_addr                    = rec.put_dyn_par(nan, local::ind_dyn);
       val2fun_index[ dyn_ind[i] ] = par_addr;
-      CPPAD_ASSERT_UNKNOWN( isnan( parameter[par_addr] ) );
+      CPPAD_ASSERT_UNKNOWN( CppAD::isnan( parameter[par_addr] ) );
    }
    // put the independent variables in the function recording
    for(size_t i = 0; i < var_n_ind; ++i)
@@ -484,7 +486,7 @@ void ADFun<Base, RecBase>::val2fun(
                CPPAD_VAL2FUN_DYN_BINARY(div);
                CPPAD_VAL2FUN_DYN_BINARY(pow);
             }
-            CPPAD_ASSERT_UNKNOWN( isnan( parameter[tmp_addr] ) );
+            CPPAD_ASSERT_UNKNOWN( CppAD::isnan( parameter[tmp_addr] ) );
          }
          else if(
             ad_type_x[0] == variable_enum &&
@@ -802,7 +804,7 @@ void ADFun<Base, RecBase>::val2fun(
                      csum_arg[i_variable++] = fun_arg[n_add + i];
                }
                CPPAD_ASSERT_UNKNOWN( i_dynamic == n_tot - 1 );
-               csum_arg[i_dynamic] = i_dynamic;
+               csum_arg[n_tot - 1] = n_tot;
                //
                // rec, tmp_addr
                tmp_addr = rec.PutOp(local::CSumOp);

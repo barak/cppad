@@ -2,7 +2,7 @@
 # define CPPAD_CORE_ATOMIC_FOUR_DEVEL_HES_SPARSITY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-24 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
@@ -10,8 +10,7 @@ namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 -----------------------------------------------------------------------------
 {xrst_begin atomic_four_for_hes_sparsity dev}
 {xrst_spell
-   np
-   numvar
+  numvar
 }
 
 Link from Forward Hessian Sparsity Sweep to atomic_four Callback
@@ -105,8 +104,8 @@ template <class InternalSparsity>
 bool atomic_four<Base>::for_hes_sparsity(
    size_t                           call_id          ,
    const vector<bool>&              ident_zero_x     ,
-   const local::pod_vector<size_t>& x_index          ,
-   const local::pod_vector<size_t>& y_index          ,
+   const vector<size_t>&            x_index          ,
+   const vector<size_t>&            y_index          ,
    size_t                           np1              ,
    size_t                           numvar           ,
    const InternalSparsity&          rev_jac_pattern  ,
@@ -157,7 +156,7 @@ bool atomic_four<Base>::for_hes_sparsity(
    {  size_t i = row[k];
       size_t j = col[k];
       CPPAD_ASSERT_KNOWN(
-         select_y[i] & select_x[j],
+         select_y[i] && select_x[j],
          "atomic: jac_sparsity: pattern_out not in "
          "select_x or select_y range"
       );
@@ -187,7 +186,7 @@ bool atomic_four<Base>::for_hes_sparsity(
    {  size_t r = row[k];
       size_t c = col[k];
       CPPAD_ASSERT_KNOWN(
-         select_x[r] & select_x[c],
+         select_x[r] && select_x[c],
          "atomic: hes_sparsity: pattern_out not in select_x range"
       );
       const_iterator itr_1(for_sparsity, np1 + x_index[r]);
@@ -282,8 +281,8 @@ template <class InternalSparsity>
 bool atomic_four<Base>::rev_hes_sparsity(
    size_t                           call_id          ,
    const vector<bool>&              ident_zero_x     ,
-   const local::pod_vector<size_t>& x_index          ,
-   const local::pod_vector<size_t>& y_index          ,
+   const vector<size_t>&            x_index          ,
+   const vector<size_t>&            y_index          ,
    const InternalSparsity&          for_jac_pattern  ,
    bool*                            rev_jac_flag     ,
    InternalSparsity&                hes_sparsity_rev )
@@ -340,7 +339,7 @@ bool atomic_four<Base>::rev_hes_sparsity(
    {  size_t i = row_jac[k];
       size_t j = col_jac[k];
       CPPAD_ASSERT_KNOWN(
-         select_y[i] & select_x[j] ,
+         select_y[i] && select_x[j] ,
          "atomic: jac_sparsity: pattern_out not in "
          "select_x or select_y range"
       );
@@ -362,7 +361,7 @@ bool atomic_four<Base>::rev_hes_sparsity(
    {  size_t r = row_hes[k];
       size_t c = col_hes[k];
       CPPAD_ASSERT_KNOWN(
-         select_x[r] & select_x[c] ,
+         select_x[r] && select_x[c] ,
          "atomic: hes_sparsity: pattern_out not in select_x range"
       );
       hes_sparsity_rev.binary_union(
