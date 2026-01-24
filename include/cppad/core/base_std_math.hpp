@@ -8,11 +8,11 @@
 /*
 {xrst_begin base_std_math}
 {xrst_spell
-  acosh
-  asinh
-  erfc
-  expm
-  isnan
+   acosh
+   asinh
+   erfc
+   expm
+   isnan
 }
 
 Base Type Requirements for Standard Math Functions
@@ -136,7 +136,7 @@ namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 
 /*!
 \file base_std_math.hpp
-Defintions that aid meeting Base type requirements for standard math functions.
+Definitions that aid meeting Base type requirements for standard math functions.
 */
 
 /*!

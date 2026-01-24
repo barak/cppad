@@ -120,7 +120,7 @@ public:
 -------------------------------------------------------------------------------
 {xrst_begin pack_setvec_iterators dev}
 {xrst_spell
-  typedef
+   typedef
 }
 
 class pack_setvec: Iterators
@@ -400,7 +400,7 @@ public:
       // initialize count of non-zero bits in this set
       size_t count = 0;
       //
-      // mask corresonding to first bit in Pack
+      // mask corresponding to first bit in Pack
       Pack mask = one_;
       //
       // number of bits in last Packing unit
@@ -898,7 +898,7 @@ inline void pack_setvec::print(void) const
 /*
 {xrst_begin sparsity_user2internal_pack_setvec dev}
 {xrst_spell
-  msg
+   msg
 }
 
 Copy A Boolean Sparsity Pattern To A pack_setvec Object

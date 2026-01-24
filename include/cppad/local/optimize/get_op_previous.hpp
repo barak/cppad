@@ -12,7 +12,7 @@ namespace CppAD { namespace local { namespace optimize {
 /*
 {xrst_begin optimize_get_op_previous dev}
 {xrst_spell
-  cexp
+   cexp
 }
 
 Get Mapping From Op to Previous Op That is Equivalent
@@ -146,7 +146,7 @@ bool get_op_previous(
       switch( random_itr.get_op(i_op) )
       {
          // ----------------------------------------------------------------
-         // these operators never match pevious operators
+         // these operators never match previous operators
          case BeginOp:
          case CExpOp:
          case CSkipOp:

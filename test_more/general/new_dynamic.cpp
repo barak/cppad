@@ -1,12 +1,111 @@
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-22 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <limits>
 # include <cppad/cppad.hpp>
 
 namespace { // BEGIN_EMPTY_NAMESPACE
+// ----------------------------------------------------------------------------
+//
+// pul_323
+// Test that the with_no_op has the same number of dynamic parameters
+// (and variables) as without_no_op.
+bool pull_232_fun(
+   bool with_no_op         ,
+   CppAD::ADFun<double>& f )
+{  //
+   // ok
+   bool ok = true;
+   //
+   // azero, aone
+   CppAD::AD<double> azero(0.0);
+   CppAD::AD<double> aone(1.0);
+   //
+   // ap, ax, ay
+   CPPAD_TESTVECTOR( CppAD::AD<double> ) ap(1), ax(1), ay(1);
+   ap[0] = 2.0;
+   ax[0] = 3.0;
+   //
+   // ax. ap
+   CppAD::Independent(ax, ap);
+   //
+   // ay
+   ay[0] = 0.0;
+   if( with_no_op ) {
+      ay[0] += ax[0] * ( ap[0] + azero );
+      ay[0] += ax[0] * ( ap[0] - azero );
+      ay[0] += ax[0] * ( ap[0] * aone );
+      ay[0] += ax[0] * ( ap[0] / aone );
+      ay[0] += azero;
+      ay[0] -= azero;
+      ay[0] *= aone;
+      ay[0] /= aone;
+      ay[0] += ax[0] * pow(ap[0] , azero);
+      ay[0] += ax[0] + pow(azero, ap[0]);
+      ay[0] += ax[0] + azmul(azero, ap[0]);
+      ay[0] += ax[0] + azmul(ap[0], azero);
+   } else {
+      ay[0] += ax[0] * ap[0];
+      ay[0] += ax[0] * ap[0];
+      ay[0] += ax[0] * ap[0];
+      ay[0] += ax[0] * ap[0];
+      ay[0] += ax[0];
+      ay[0] += ax[0];
+      ay[0] += ax[0];
+      ay[0] += ax[0];
+   }
+   //
+   // f
+   f.Dependent(ay);
+   //
+   // y, check
+   CPPAD_TESTVECTOR(double) p(1), x(1), y(1);
+   p[0] = 4.0;
+   x[0] = 5.0;
+   f.new_dynamic(p);
+   y = f.Forward(0, x);
+   double check = 0;
+   check += x[0] * p[0];
+   check += x[0] * p[0];
+   check += x[0] * p[0];
+   check += x[0] * p[0];
+   check += x[0];
+   check += x[0];
+   check += x[0];
+   check += x[0];
+   //
+   // ok
+   ok &= y[0] == check;
+   //
+   return ok;
+}
+bool pull_232(void)
+{  //
+   // ok, no_op
+   bool ok = true;
+   //
+   // with_no_op
+   bool with_no_op;
+   //
+   // ok, f_without
+   CppAD::ADFun<double> f_without;
+   with_no_op = false;
+   ok     &= pull_232_fun(with_no_op, f_without);
+   //
+   // ok, f_with
+   CppAD::ADFun<double> f_with;
+   with_no_op = true;
+   ok     &= pull_232_fun(with_no_op, f_with);
+   //
+   // ok
+   ok &= f_without.size_dyn_par() == f_with.size_dyn_par();
+   ok &= f_without.size_var() == f_with.size_var();
+   //
+   return ok;
+}
 // ----------------------------------------------------------------------------
 bool vecad(void)
 {  bool ok = true;
@@ -83,7 +182,7 @@ bool operator_with_variable(void)
    for(size_t j = 0; j < n; ++j)
       ax[j] = AD<double>(j + 1);
 
-   // declare independent variables, dynamic parammeters, starting recording
+   // declare independent variables, dynamic parameters, starting recording
    CppAD::Independent(ax, adynamic);
 
    // range space vector
@@ -232,7 +331,7 @@ bool dynamic_operator(void)
    CPPAD_TESTVECTOR(AD<double>) ax(nx);
    ax[0] = 0.25;
 
-   // declare independent variables, dynamic parammeters, starting recording
+   // declare independent variables, dynamic parameters, starting recording
    CppAD::Independent(ax, adynamic);
 
    // range space vector
@@ -819,6 +918,7 @@ bool dynamic_optimize(void)
 // ----------------------------------------------------------------------------
 bool new_dynamic(void)
 {  bool ok = true;
+   ok     &= pull_232();
    ok     &= vecad();
    ok     &= operator_with_variable();
    ok     &= dynamic_operator();

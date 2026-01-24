@@ -7,7 +7,7 @@
 /*
 {xrst_begin atomic_four_define}
 {xrst_spell
-  ctor
+   ctor
 }
 
 Defining Atomic Functions: Fourth Generation
@@ -380,7 +380,7 @@ public:
    {  if( work_[thread] != nullptr )
       {  // call destructor
          work_[thread]->~work_struct();
-         // return memory to avialable pool for this thread
+         // return memory to available pool for this thread
          thread_alloc::return_memory(
             reinterpret_cast<void*>(work_[thread])
          );

@@ -10,7 +10,7 @@ namespace CppAD { namespace local { namespace optimize  {
 /*
 {xrst_begin optimize_match_op dev}
 {xrst_spell
-  erfc
+   erfc
 }
 
 Search for a Previous Operator that Matches Current Operator
@@ -204,7 +204,7 @@ bool match_op(
    // hash coding and matching.
    addr_t arg_match[] = {
       // Invalid value that will not be used. This initialization avoid
-      // a wraning on some compilers
+      // a warning on some compilers
       std::numeric_limits<addr_t>::max(),
       std::numeric_limits<addr_t>::max(),
       std::numeric_limits<addr_t>::max()

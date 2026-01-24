@@ -7,12 +7,12 @@
 /*
 {xrst_begin atomic_two app}
 {xrst_spell
-  ctor
-  px
-  py
-  tx
-  vx
-  vy
+   ctor
+   px
+   py
+   tx
+   vx
+   vy
 }
 
 Defining Atomic Functions: Second Generation
@@ -563,7 +563,7 @@ public:
    {  if( work_[thread] != nullptr )
       {  // call destructor
          work_[thread]->~work_struct();
-         // return memory to avialable pool for this thread
+         // return memory to available pool for this thread
          thread_alloc::return_memory(
             reinterpret_cast<void*>(work_[thread])
          );
@@ -605,7 +605,7 @@ public:
 };
 } // END_CPPAD_NAMESPACE
 
-// functitons implemented in cppad/core/atomic_base files
+// functions implemented in cppad/core/atomic_base files
 # include <cppad/core/atomic/two/ctor.hpp>
 # include <cppad/core/atomic/two/option.hpp>
 # include <cppad/core/atomic/two/afun.hpp>

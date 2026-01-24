@@ -7,9 +7,9 @@
 /*
 {xrst_begin simplex_method}
 {xrst_spell
-  maxitr
-  rl
-  xout
+   maxitr
+   rl
+   xout
 }
 
 abs_normal: Solve a Linear Program Using Simplex Method
@@ -152,7 +152,7 @@ bool simplex_method(
    // number of rows in Tableau, the equations plust two objectives
    size_t nr = ne + 2;
 
-   // Initilize Tableau as zero
+   // Initialize Tableau as zero
    Vector T(nr * nc);
    for(size_t i = 0; i < nr * nc; i++)
       T[i] = 0.0;
@@ -230,7 +230,7 @@ bool simplex_method(
    if( na > 0 )
       iobj = ne + 1; // auxiliary objective w
    //
-   // simplex interations
+   // simplex iterations
    for(size_t itr = 0; itr < maxitr; itr++)
    {  // current value for xout
       for(size_t j = 0; j < nx; j++)
@@ -276,7 +276,7 @@ bool simplex_method(
             nv = nx + ne + na; // (x, s, a)
       }
       //
-      // determine variable with maximuim coefficient in objective row
+      // determine variable with maximum coefficient in objective row
       double cmax = 0.0;
       size_t jmax = nv;
       for(size_t j = 0; j < nv; j++)
@@ -321,7 +321,7 @@ bool simplex_method(
       double pivot = T[imin * nc + jmax];
       //
       // Which variable is changing from basic to non-basic.
-      // Initilaize as not yet determined.
+      // Initialize as not yet determined.
       size_t basic2not = nc;
       //
       // Divide row imin by pivot element

@@ -8,9 +8,9 @@
 /*
 {xrst_begin atomic_three_mat_mul.hpp}
 {xrst_spell
-  nr
-  px
-  tx
+   nr
+   px
+   tx
 }
 
 Matrix Multiply as an Atomic Operation
@@ -293,7 +293,7 @@ Routine called by CppAD during :ref:`afun(ax, ay)<atomic_three_afun-name>` .
       if( ! ok )
          return false;
       //
-      // commpute type_y
+      // compute type_y
       size_t nk = 1; // number of orders
       size_t k  = 0; // order
       for(size_t i = 0; i < nr_left; ++i)
@@ -305,7 +305,7 @@ Routine called by CppAD during :ref:`afun(ax, ay)<atomic_three_afun-name>` .
                size_t i_left = left(
                   i, ell, k, nk, nr_left, n_middle, nc_right
                );
-               // indx for right(ell, j)
+               // index for right(ell, j)
                size_t i_right = right(
                   ell, j, k, nk, nr_left, n_middle, nc_right
                );
@@ -420,7 +420,7 @@ Routine called by CppAD during :ref:`Reverse-name` mode.
             );
       }
 
-      // all orders are implented, so always return true
+      // all orders are implemented, so always return true
       return true;
    }
 /* {xrst_code}
@@ -644,7 +644,7 @@ Routine called when a function using ``mat_mul`` is optimized.
       for(size_t ell = 3; ell < depend_x.size(); ++ell)
          depend_x[ell] = false; // initialize as false
       //
-      // commpute depend_x
+      // compute depend_x
       size_t nk = 1; // number of orders
       size_t k  = 0; // order
       for(size_t i = 0; i < nr_left; ++i)
@@ -659,7 +659,7 @@ Routine called when a function using ``mat_mul`` is optimized.
                   size_t i_left = left(
                      i, ell, k, nk, nr_left, n_middle, nc_right
                   );
-                  // indx for right(ell, j)
+                  // index for right(ell, j)
                   size_t i_right = right(
                      ell, j, k, nk, nr_left, n_middle, nc_right
                   );

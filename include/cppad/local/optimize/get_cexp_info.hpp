@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_OPTIMIZE_GET_CEXP_INFO_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/optimize/match_op.hpp>
@@ -15,11 +15,11 @@ namespace CppAD { namespace local { namespace optimize {
 /*!
 {xrst_begin optimize_get_cexp_info.hpp dev}
 {xrst_spell
-  deallocate
-  funap
-  funav
-  funrp
-  funrv
+   deallocate
+   funap
+   funav
+   funrp
+   funrv
 }
 
 Information for Each Conditional Expression
@@ -143,7 +143,7 @@ void get_cexp_info(
    CPPAD_ASSERT_UNKNOWN( cexp_info.size() == 0 );
 
    // number of operators in the tape
-   const size_t num_op = play->num_op_rec();
+   const size_t num_op = play->num_var_op();
    CPPAD_ASSERT_UNKNOWN( op_usage.size() == num_op );
    CPPAD_ASSERT_UNKNOWN( op_previous.size() == num_op );
    //

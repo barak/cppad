@@ -8,9 +8,9 @@
 /*
 {xrst_begin LuRatio app}
 {xrst_spell
-  ip
-  jp
-  xk
+   ip
+   jp
+   xk
 }
 
 LU Factorization of A Square Matrix and Stability Calculation
@@ -224,7 +224,7 @@ int LuRatio(SizeVector &ip, SizeVector &jp, ADvector &LU, AD<Base> &ratio) //
    size_t  i, j;          // some temporary indices
    const Float zero( 0 ); // the value zero as a Float object
    size_t  imax;          // row index of maximum element
-   size_t  jmax;          // column indx of maximum element
+   size_t  jmax;          // column index of maximum element
    Float    emax;         // maximum absolute value
    size_t  p;             // count pivots
    int     sign;          // sign of the permutation

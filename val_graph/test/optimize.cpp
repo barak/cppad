@@ -70,7 +70,7 @@ bool communative(void)
    tape.eval(trace, val_vec);
    //
    // ok
-   // before optmizing
+   // before optimizing
    ok &= tape.arg_vec().size() == 1 + 4 * 2;
    ok &= tape.con_vec().size() == 1;
    ok &= tape.n_op() == 1 + 4;
@@ -174,7 +174,7 @@ bool propagate_match(void)
    tape.eval(trace, val_vec);
    //
    // ok
-   // before optmizing
+   // before optimizing
    ok &= tape.con_vec().size() == 2;
    ok &= tape.n_op()           == 2 + 4;
    ok &= tape.arg_vec().size() == 2 + 4 * 2;
@@ -321,7 +321,7 @@ bool summation(void)
    Vector<addr_t> op_arg(2);
    //
    // op_arg, add = x[0] + x[0]
-   // This operator will become part of a cumulative sumation
+   // This operator will become part of a cumulative summation
    op_arg[0] = 0;   // x[0]
    op_arg[1] = 0;   // x[0]
    addr_t add = tape.record_op(add_op_enum, op_arg);

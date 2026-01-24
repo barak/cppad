@@ -2,7 +2,7 @@
 # define CPPAD_CORE_ATOMIC_FOUR_DEVEL_HES_SPARSITY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 namespace CppAD { // BEGIN_CPPAD_NAMESPACE
@@ -10,7 +10,7 @@ namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 -----------------------------------------------------------------------------
 {xrst_begin atomic_four_for_hes_sparsity dev}
 {xrst_spell
-  numvar
+   numvar
 }
 
 Link from Forward Hessian Sparsity Sweep to atomic_four Callback
@@ -58,7 +58,7 @@ is the number of components of x plus one; i.e. *n*  + 1 .
 numvar
 ******
 is the total number of variables in the tape; i.e.,
-*play* ``->num_var_rec`` () .
+*play* ``->num_var`` () .
 
 for_sparsity
 ************

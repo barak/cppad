@@ -6,8 +6,8 @@
 /*
 {xrst_begin mul_level.cpp}
 {xrst_spell
-  adouble
-  dx
+   adouble
+   dx
 }
 
 Multiple Level of AD: Example and Test
@@ -110,7 +110,7 @@ bool mul_level(void)
 
    // Values for the independent variables while taping f'(x) * v
    // Declare the independent variable for taping f'(x) * v
-   // (Note we did not have to tape the creationg of a1f.)
+   // (Note we did not have to tape the creation of a1f.)
    CppAD::Independent(a1x);
 
    // set the argument value x for computing f'(x) * v

@@ -6,8 +6,8 @@
 /*
 {xrst_begin mul_level_adolc_ode.cpp}
 {xrst_spell
-  adouble
-  cccc
+   adouble
+   cccc
 }
 
 Taylor's Ode Solver: A Multi-Level Adolc Example and Test
@@ -311,7 +311,7 @@ bool mul_level_adolc_ode(void)
       }
    }
 
-   // make memroy avaiable for other use by this thread
+   // make memory available for other use by this thread
    thread_alloc::delete_array(x);
    thread_alloc::delete_array(y_final);
    thread_alloc::delete_array(jac_);

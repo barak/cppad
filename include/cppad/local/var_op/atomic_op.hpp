@@ -121,10 +121,10 @@ struct atomic_op_work {
 ------------------------------------------------------------------------------
 {xrst_begin_parent var_atomic_op dev}
 {xrst_spell
-  funap
-  funav
-  funrp
-  funrv
+   funap
+   funav
+   funrp
+   funrv
 }
 
 Atomic Function Call Operators
@@ -229,8 +229,8 @@ void atomic_forward_any(
    // vector
    using CppAD::vector;
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // n_order
    size_t n_order = order_up + 1;
@@ -287,8 +287,8 @@ void atomic_forward_any(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
-         if( dyn_par_is[ arg[0] ] )
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -301,7 +301,7 @@ void atomic_forward_any(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          type_x[j]       = variable_enum;
          parameter_x[j]  = CppAD::numeric_limits<Base>::quiet_NaN();
          for(size_t k = 0; k < n_order; ++k)
@@ -327,7 +327,7 @@ void atomic_forward_any(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_y[i]    = std::numeric_limits<size_t>::max();
          variable_y[i] = false;
          if( 0 < order_low )
@@ -453,8 +453,8 @@ void atomic_forward_dir(
       return index;
    };
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // n_order
    size_t n_order = order_up + 1;
@@ -513,9 +513,9 @@ void atomic_forward_dir(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_x[j] = std::numeric_limits<size_t>::max();
-         if( dyn_par_is[ arg[0] ] )
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -525,7 +525,7 @@ void atomic_forward_dir(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          index_x[j]      = size_t( arg[0] );
          type_x[j]       = variable_enum;
          parameter_x[j]  = CppAD::numeric_limits<Base>::quiet_NaN();
@@ -549,7 +549,7 @@ void atomic_forward_dir(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_y[i]    = size_t( arg[0] );
          variable_y[i] = false;
          if( trace )
@@ -653,7 +653,7 @@ void atomic_forward_dir(
 -------------------------------------------------------------------------------
 {xrst_begin var_atomic_reverse dev}
 {xrst_spell
-  subgraph
+   subgraph
 }
 
 Reverse Atomic Function Call
@@ -731,8 +731,8 @@ void atomic_reverse(
    // vector
    using CppAD::vector;
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // n_order
    size_t order_up = n_order - 1;
@@ -793,7 +793,7 @@ void atomic_reverse(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          taylor_y[i * n_order + 0]  = parameter[ arg[0] ];
          partial_y[i * n_order + 0] = Base(0.0);
          for(size_t k = 1; k < n_order; ++k)
@@ -850,10 +850,10 @@ void atomic_reverse(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          variable_x[j] = false;
          index_x[j]    = size_t( arg[0] );
-         if( dyn_par_is[ arg[0] ] )
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -866,7 +866,7 @@ void atomic_reverse(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          variable_x[j]   = true;
          index_x[j]      = size_t( arg[0] );
          type_x[j]       = variable_enum;
@@ -969,8 +969,8 @@ inline void atomic_for_jac(
    // vector
    using CppAD::vector;
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // op_code, i_var, arg
    op_code_var   op_code;
@@ -1021,8 +1021,8 @@ inline void atomic_for_jac(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
-         if( dyn_par_is[ arg[0] ] )
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -1033,7 +1033,7 @@ inline void atomic_for_jac(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          type_x[j]       = variable_enum;
          parameter_x[j]  = CppAD::numeric_limits<Base>::quiet_NaN();
          index_x[j]      = size_t(arg[0]);
@@ -1057,7 +1057,7 @@ inline void atomic_for_jac(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_y[i]       = 0;  // special variable index used for parameters
          break;
          //
@@ -1174,8 +1174,8 @@ inline void atomic_rev_jac(
    // vector
    using CppAD::vector;
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // op_code, i_var, arg
    op_code_var   op_code;
@@ -1221,7 +1221,7 @@ inline void atomic_rev_jac(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_y[i]       = 0;  // special variable index used for parameters
          break;
          //
@@ -1293,8 +1293,8 @@ inline void atomic_rev_jac(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
-         if( dyn_par_is[ arg[0] ] )
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -1305,7 +1305,7 @@ inline void atomic_rev_jac(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          type_x[j]       = variable_enum;
          parameter_x[j]  = CppAD::numeric_limits<Base>::quiet_NaN();
          index_x[j]      = size_t(arg[0]);
@@ -1356,7 +1356,7 @@ num_var
 *******
 We use the notation *num_var* for the number of variables on the tape
 (including the phantom variable at index zero); i.e.::
-``play->num_var_rec()`` .
+``play->num_var()`` .
 
 for_jac_sparsity
 ****************
@@ -1415,15 +1415,15 @@ inline void atomic_rev_hes(
 // END_ATOMIC_REV_HES
 {  //
    //
-   CPPAD_ASSERT_UNKNOWN( for_jac_sparsity.n_set() == play->num_var_rec() );
-   CPPAD_ASSERT_UNKNOWN( rev_hes_sparsity.n_set() == play->num_var_rec() );
+   CPPAD_ASSERT_UNKNOWN( for_jac_sparsity.n_set() == play->num_var() );
+   CPPAD_ASSERT_UNKNOWN( rev_hes_sparsity.n_set() == play->num_var() );
    CPPAD_ASSERT_UNKNOWN( for_jac_sparsity.end()   == rev_hes_sparsity.end() );
    //
    // vector
    using CppAD::vector;
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // op_code, i_var, arg
    op_code_var   op_code;
@@ -1469,7 +1469,7 @@ inline void atomic_rev_hes(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_y[i]       = 0;  // special variable index used for parameters
          break;
          //
@@ -1505,8 +1505,8 @@ inline void atomic_rev_hes(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
-         if( dyn_par_is[ arg[0] ] )
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -1517,7 +1517,7 @@ inline void atomic_rev_hes(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          type_x[j]       = variable_enum;
          parameter_x[j]  = CppAD::numeric_limits<Base>::quiet_NaN();
          index_x[j]      = size_t(arg[0]);
@@ -1670,8 +1670,8 @@ inline void atomic_for_hes(
    // vector
    using CppAD::vector;
    //
-   // dyn_par_is
-   const pod_vector<bool>& dyn_par_is( play->dyn_par_is() );
+   // par_is_dyn
+   const pod_vector<bool>& par_is_dyn( play->par_is_dyn() );
    //
    // op_code, i_var, arg
    op_code_var   op_code;
@@ -1722,8 +1722,8 @@ inline void atomic_for_hes(
          // FunapOp
          case FunapOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
-         if( dyn_par_is[ arg[0] ] )
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
+         if( par_is_dyn[ arg[0] ] )
             type_x[j]    = dynamic_enum;
          else
             type_x[j]    = constant_enum;
@@ -1734,7 +1734,7 @@ inline void atomic_for_hes(
          // FunavOp
          case FunavOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_var() );
          type_x[j]       = variable_enum;
          parameter_x[j]  = CppAD::numeric_limits<Base>::quiet_NaN();
          index_x[j]      = size_t(arg[0]);
@@ -1758,7 +1758,7 @@ inline void atomic_for_hes(
          // FunrpOp
          case FunrpOp:
          CPPAD_ASSERT_NARG_NRES(op_code, 1, 0);
-         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_rec() );
+         CPPAD_ASSERT_UNKNOWN( size_t(arg[0]) < play->num_par_all() );
          index_y[i]       = 0;  // special variable index used for parameters
          break;
          //
@@ -1776,7 +1776,7 @@ inline void atomic_for_hes(
    CPPAD_ASSERT_UNKNOWN( op_code == AFunOp );
    //
    // varsparsity
-   size_t num_var = play->num_var_rec();
+   size_t num_var = play->num_var();
    sweep::call_atomic_for_hes_sparsity<Base,RecBase>(
       atom_index,
       call_id,

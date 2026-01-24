@@ -7,12 +7,12 @@
 /*
 {xrst_begin qp_interior}
 {xrst_spell
-  maxitr
-  rl
-  sout
-  xin
-  xout
-  yout
+   maxitr
+   rl
+   sout
+   xin
+   xout
+   yout
 }
 
 Solve a Quadratic Program Using Interior Point Method
@@ -478,7 +478,7 @@ bool qp_interior(
       yout[i] = std::sqrt(mu);
    }
    // ----------------------------------------------------------------------
-   // initialie F_0(xout, yout, sout)
+   // initial F_0(xout, yout, sout)
    Vector F_0       = qp_interior_F_0(c, C, g, G, xout, yout, sout);
    double F_max_abs = qp_interior_max_abs( F_0 );
    for(size_t itr = 0; itr <= maxitr; itr++)
@@ -618,7 +618,7 @@ bool qp_interior(
       }
    }
    if( level > 0 )
-      std::cout << "end qp_interior: progam error\n";
+      std::cout << "end qp_interior: program error\n";
    return false;
 }
 } // END_CPPAD_NAMESPACE

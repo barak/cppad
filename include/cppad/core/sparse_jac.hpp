@@ -8,9 +8,9 @@
 /*
 {xrst_begin sparse_jac}
 {xrst_spell
-  nr
-  rc
-  rcv
+   nr
+   rc
+   rcv
 }
 
 Computing Sparse Jacobians
@@ -266,7 +266,7 @@ a vector of length n, the number of independent variables in f
 (this ADFun object).
 
 \param subset
-specifices the subset of the sparsity pattern where the Jacobian is evaluated.
+spedifies the subset of the sparsity pattern where the Jacobian is evaluated.
 subset.nr() == m,
 subset.nc() == n.
 
@@ -322,7 +322,7 @@ size_t ADFun<Base,RecBase>::sparse_jac_for(
       "sparse_jac_for: work is non-empty and conditions have changed"
    );
    //
-   // point at which we are evaluationg the Jacobian
+   // point at which we are evaluating the Jacobian
    Forward(0, x);
    //
    // number of elements in the subset
@@ -460,7 +460,7 @@ a vector of length n, the number of independent variables in f
 (this ADFun object).
 
 \param subset
-specifices the subset of the sparsity pattern where the Jacobian is evaluated.
+spedifies the subset of the sparsity pattern where the Jacobian is evaluated.
 subset.nr() == m,
 subset.nc() == n.
 
@@ -515,7 +515,7 @@ size_t ADFun<Base,RecBase>::sparse_jac_rev(
       "sparse_jac_rev: work is non-empty and conditions have changed"
    );
    //
-   // point at which we are evaluationg the Jacobian
+   // point at which we are evaluating the Jacobian
    Forward(0, x);
    //
    // number of elements in the subset

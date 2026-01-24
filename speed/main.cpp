@@ -49,14 +49,14 @@
 /*
 {xrst_begin speed_main}
 {xrst_spell
-  boolsparsity
-  onetape
-  optionlist
-  retaped
-  revsparsity
-  subgraphs
-  subsparsity
-  underbar
+   boolsparsity
+   onetape
+   optionlist
+   retaped
+   revsparsity
+   subgraphs
+   subsparsity
+   underbar
 }
 
 Running the Speed Test Program
@@ -413,7 +413,7 @@ namespace {
    // not available test message
    void not_available_message(const char* test_name)
    {  cout << AD_PACKAGE << ": " << test_name;
-      cout << " is not availabe with " << endl;
+      cout << " is not available with " << endl;
       int max_len = 0;
       for(size_t i = 0; i < num_option; i++)
       {  int len = int( std::strlen( option_list[i] ) );
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
    CppAD::vector<size_t> size_sparse_hessian(n_size);
    CppAD::vector<size_t> size_sparse_jacobian(n_size);
    for(size_t i = 0; i < n_size; i++)
-   {  size_det_minor[i]   =  i + 3;
+   {  size_det_minor[i]   =  i + 4;
       size_det_lu[i]      = 20 * i + 1;
       size_mat_mul[i]     = 20 * i + 1;
       size_ode[i]         = 20 * i + 1;

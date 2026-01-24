@@ -6,7 +6,7 @@
 /*
 {xrst_begin rosen_34.cpp}
 {xrst_spell
-  rclr
+   rclr
 }
 
 rosen_34: Example and Test
@@ -156,7 +156,7 @@ namespace {
          //
          bool retape = true;
          if( ode_dep_defined )
-         {  // check if any comparison operators have a differrent result
+         {  // check if any comparison operators have a different result
             ode_dep_.new_dynamic(t_vec);
             ode_dep_.Forward(0, x);
             retape = ode_dep_.compare_change_number() > 0;

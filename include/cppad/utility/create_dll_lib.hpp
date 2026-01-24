@@ -7,11 +7,11 @@
 /*
 {xrst_begin create_dll_lib}
 {xrst_spell
-  cmd
-  csrc
-  hc
-  hs
-  msg
+   cmd
+   csrc
+   hc
+   hs
+   msg
 }
 
 Create a Dynamic Link Library
@@ -153,7 +153,7 @@ std::string create_dll_lib(
    // check the std::system function exists
    int flag = std::system(nullptr);
    if( flag == 0 )
-   {  err_msg = "C++ std::system function not availablee\n";
+   {  err_msg = "C++ std::system function not available\n";
       return err_msg;
    }
    //

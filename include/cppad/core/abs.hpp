@@ -9,8 +9,8 @@
 -------------------------------------------------------------------------------
 {xrst_begin abs}
 {xrst_spell
-  faq
-  rl
+   faq
+   rl
 }
 
 AD Absolute Value Functions: abs, fabs
@@ -88,7 +88,7 @@ AD<Base> AD<Base>::abs_me (void) const
       return result;
 
    if(ad_type_ == dynamic_enum)
-   {  // dynamic paramter argument
+   {  // dynamic parameter argument
       result.taddr_   = tape->Rec_.put_dyn_par(
          result.value_, local::abs_dyn, taddr_
       );

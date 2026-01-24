@@ -164,7 +164,7 @@ namespace {
       //
 # else  // PASS_SPARSE_JACOBIAN_TO_CODE_GEN
       //
-      // sparsity patttern  for subset of Jacobian pattern that is evaluated
+      // sparsity pattern  for subset of Jacobian pattern that is evaluated
       size_t nnz = row.size();
       sparsity subset_pattern(nr, nc, nnz);
       for(size_t k = 0; k < nnz; ++k)
@@ -212,7 +212,7 @@ namespace {
          c_g.optimize(optimize_options);
       code_gen_fun g_tmp("sparse_jacobian", c_g);
       //
-      // set reture value
+      // set return value
       fun.swap(g_tmp);
 # endif // PASS_SPARSE_JACOBIAN_TO_CODE_GEN
       return;
@@ -303,7 +303,7 @@ bool link_sparse_jacobian(
    // -----------------------------------------------------
    CPPAD_ASSERT_UNKNOWN( job == "run" )
    if( onetape ) while(repeat--)
-   {  // use if before assert to vaoid warning that static_size is not used
+   {  // use if before assert to avoid warning that static_size is not used
       if( size != static_size )
       {  CPPAD_ASSERT_UNKNOWN( size == static_size );
       }

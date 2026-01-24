@@ -8,7 +8,7 @@
 /*
 {xrst_begin ForTwo}
 {xrst_spell
-  ddy
+   ddy
 }
 
 Forward Mode Second Partial Derivative Driver
@@ -166,7 +166,7 @@ BaseVector ADFun<Base,RecBase>::ForTwo(
    );
    CPPAD_ASSERT_KNOWN(
       j.size() == k.size(),
-      "ForTwo: Lenght of the j and k vectors are not equal."
+      "ForTwo: Length of the j and k vectors are not equal."
    );
    // point at which we are evaluating the second partials
    Forward(0, x);

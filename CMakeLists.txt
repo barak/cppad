@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-25 Bradley M. Bell
+# SPDX-FileContributor: 2003-26 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # =============================================================================
 # Some constants
@@ -8,7 +8,12 @@
 #
 # Set the minimum required version of cmake for this project.
 # see https://cmake.org//pipermail/cmake/2013-January/053213.html
-CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+#
+# Use the version of BoostConfig.cmake provided by boost.
+IF( POLICY CMP0167 )
+   CMAKE_POLICY(SET CMP0167 NEW)
+ENDIF( POLICY CMP0167 )
 #
 # Only interpret if() arguments as variables or keywords when unquoted.
 IF( POLICY CMP0054 )
@@ -16,7 +21,7 @@ IF( POLICY CMP0054 )
 ENDIF( POLICY CMP0054 )
 #
 # cppad_version is used by version.sh to get the version number.
-SET(cppad_version "20250000.2")
+SET(cppad_version "20260000.0")
 SET(cppad_url          "https://coin-or.github.io/CppAD" )
 SET(cppad_description  "Differentiation of C++ Algorithms" )
 IF( NOT DEFINED CMAKE_BUILD_TYPE)
@@ -151,7 +156,7 @@ command_line_arg(cmake_install_includedirs include STRING
 )
 #
 # cmake_install_libdirs
-command_line_arg(cmake_install_libdirs lib STRING
+command_line_arg(cmake_install_libdirs "lib;lib64" STRING
    "directories, below prefix, where cmake installs library files"
 )
 #
@@ -174,6 +179,11 @@ command_line_arg(cppad_postfix NOTFOUND STRING
 # cppad_cxx_flags
 command_line_arg(cppad_cxx_flags "" STRING
    "compile flags used with cppad (besides debug, release, and profile flags)"
+)
+#
+# cppad_link_flags
+command_line_arg(cppad_link_flags "" STRING
+   "additional linker flags)"
 )
 #
 # cppad_profile_flag
@@ -207,14 +217,24 @@ command_line_arg(cppad_tape_addr_type "unsigned int" STRING
 "type used to identify variables on one tape, size must be <= sizeof(size_t)"
 )
 #
-# cppad_static_lib
-command_line_arg(cppad_static_lib FALSE BOOL
-   "If true (false) the cppad library will be static (shared)"
-)
-#
 # cppad_debug_and_release
 command_line_arg(cppad_debug_and_release TRUE BOOL
    "If true the cppad library and tests will be able to mix debug and release"
+)
+#
+# cppad_static_lib
+STRING( REGEX MATCH "^MSYS"    is_msys     "${CMAKE_SYSTEM_NAME}" )
+STRING( REGEX MATCH "^CYGWIN"  is_cygwin   "${CMAKE_SYSTEM_NAME}" )
+STRING( REGEX MATCH "^Windows" is_windows  "${CMAKE_SYSTEM_NAME}" )
+IF( is_msys OR is_cygwin OR is_windows )
+   SET(default_cppad_static_lib TRUE)
+ELSE( )
+   SET(default_cppad_static_lib FALSE)
+ENDIF( )
+#
+# cppad_static_lib
+command_line_arg(cppad_static_lib ${default_cppad_static_lib} BOOL
+   "If true (false) the cppad library will be static (shared)"
 )
 # ----------------------------------------------------------------------------
 #
@@ -289,7 +309,7 @@ IF( CMAKE_BUILD_TYPE )
       SET(cppad_debug_which "debug_none")
    ELSE( )
       MESSAGE(FATAL_ERROR
-         "Unknonw CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}"
+         "Unknown CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}"
       )
    ENDIF( )
 ELSE( ) # CMAKE_BUILD_TYPE
@@ -308,7 +328,7 @@ ENDIF( ) # CMAKE_BUILD_TYPE
 IF( debug_even_or_odd )
    IF ( NOT cppad_debug_and_release )
       MESSAGE(FATAL_ERROR
-"cppad_debug_and_release is false and cppad_debug_wich = ${cppad_debug_which}"
+"cppad_debug_and_release is false and cppad_debug_which = ${cppad_debug_which}"
       )
    ENDIF ( NOT cppad_debug_and_release )
    IF( ${CMAKE_SYSTEM_NAME} STREQUAL "Windows" )
@@ -320,7 +340,7 @@ ENDIF( debug_even_or_odd )
 print_variable(CMAKE_SYSTEM_NAME)
 print_variable(cppad_debug_which)
 print_variable(CMAKE_BUILD_TYPE)
-MESSAGE(STATUS "make check: avialable")
+MESSAGE(STATUS "make check: available")
 # -----------------------------------------------------------------------------
 # CMAKE_INSTALL_PREFIX
 SET(CMAKE_INSTALL_PREFIX "${cppad_prefix}"
@@ -472,23 +492,75 @@ FOREACH(dir_types includedirs libdirs datadir docdir)
       SET(cppad_abs_${dir_type} ${cppad_abs_${dir_type}}/${cppad_postfix} )
    ENDIF( cppad_postfix )
 ENDFOREACH(dir_types includedirs libdirs datadir docdir)
+# ----------------------------------------------------------------------------
+# https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling
+#
+# CMAKE_SKIP_BUILD_RPATH
+# use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH FALSE)
+#
+# CMAKE_BUILD_WITH_INSTALL_RPATH
+# when building shared libraries, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+#
+# CMAKE_INSTAL_RPATH_USE_LINK_PATH
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+#
+# isSystemDir
+# is this RPATH choice a system directory
+LIST(FIND
+   CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES
+   "${cppad_abs_libdir}"
+   isSystemDir
+)
+#
+# CMAKE_INSTALL_RPATH
+# the RPATH to be used when installing, but only if it's not a system directory
+SET(CMAKE_INSTALL_RPATH "")
+if("${isSystemDir}" STREQUAL "-1")
+   SET(CMAKE_INSTALL_RPATH "${cppad_abs_libdir}")
+endif("${isSystemDir}" STREQUAL "-1")
+print_variable( CMAKE_INSTALL_RPATH )
+# -----------------------------------------------------------------------------
+# cppad_link_flags_has_m32
+STRING( FIND "${cppad_link_flags}" "-m32" index)
+IF( "${index}" STREQUAL "-1" )
+   SET(cppad_link_flags_has_m32 0)
+ELSE ( )
+   SET(cppad_link_flags_has_m32 1)
+ENDIF( )
 # -----------------------------------------------------------------------------
 # OpenMP_CXX_FOUND, OpenMP_CXX_FLAGS
-IF( ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" )
+IF( cppad_link_flags_has_m32 )
+   SET(OpenMP_CXX_FOUND FALSE)
+   MESSAGE(STATUS
+      "Skipping OpenMP because -m32 is in cppad_link_flags"
+   )
+ELSEIF( ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" )
    SET(OpenMP_CXX_FOUND FALSE)
    MESSAGE(STATUS
       "Skipping OpenMP on Darwin (Mac) systems. 2DO: fix this"
    )
-ELSE( ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" )
+ELSE( )
    FIND_PACKAGE(OpenMP)
-ENDIF( ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin" )
+ENDIF( )
 # -----------------------------------------------------------------------------
-# boost_prefix
+# Boost_Found, cppad_has_boost
 # Only need components for object libraries, not include libraries.
-SET(CMAKE_REQUIRED_FLAGS "")  # 2DO: why is this necessary with clang ?
-FIND_PACKAGE(Boost COMPONENTS thread)
-SET(CMAKE_REQUIRED_FLAGS "${cppad_cxx_flags}")
-SET(cppad_has_boost 0)
+IF( cppad_link_flags_has_m32 )
+   MESSAGE(STATUS
+      "Skipping Boost because -m32 is in cppad_link_flags"
+   )
+   SET( Boost_FOUND 0)
+   SET(cppad_has_boost 0)
+ELSE ( )
+   SET(CMAKE_REQUIRED_FLAGS "")  # 2DO: why is this necessary with clang ?
+   FIND_PACKAGE(Boost COMPONENTS thread)
+   SET(CMAKE_REQUIRED_FLAGS "${cppad_cxx_flags}")
+ENDIF( )
 IF ( Boost_FOUND )
    SET(cppad_has_boost 1)
    #
@@ -561,28 +633,15 @@ ENDIF( cppad_has_ipopt )
 #
 #
 # is_cppad_lib_dynamic
-STRING( REGEX MATCH "^MSYS"    is_msys     "${CMAKE_SYSTEM_NAME}" )
-STRING( REGEX MATCH "^CYGWIN"  is_cygwin   "${CMAKE_SYSTEM_NAME}" )
-STRING( REGEX MATCH "^Windows" is_windows  "${CMAKE_SYSTEM_NAME}" )
-IF( is_msys OR is_cygwin OR is_windows )
-   IF( NOT cppad_static_lib )
-      MESSAGE(WARNING
-"This systems uses windows dynamic libraries.
-The cppad library must be static for this case.
-Ignoring fact that cppad_static_lib is FALSE.
-"
-      )
-   ENDIF( )
+IF( cppad_static_lib )
    SET(is_cppad_lib_dynamic 0)
 ELSE( )
-   IF( cppad_static_lib )
-      SET(is_cppad_lib_dynamic 0)
-   ELSE( )
-      SET(is_cppad_lib_dynamic 1)
-   ENDIF( )
+   SET(is_cppad_lib_dynamic 1)
 ENDIF( )
 print_variable(is_cppad_lib_dynamic)
-
+#
+# CMAKE_EXE_LINKER_FLAGS
+SET(CMAKE_EXE_LINKER_FLAGS "${cppad_link_flags}" )
 #
 # Initialize list of tests as empty
 SET(check_depends "")

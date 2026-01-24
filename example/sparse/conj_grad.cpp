@@ -6,7 +6,7 @@
 /*
 {xrst_begin conj_grad.cpp}
 {xrst_spell
-  goto
+   goto
 }
 
 Differentiate Conjugate Gradient Algorithm: Example and Test
@@ -111,7 +111,7 @@ namespace { // Begin empty namespace
       return;
    }
 
-   // Solve A * x == b to tolerance epsilon or terminate at m interations.
+   // Solve A * x == b to tolerance epsilon or terminate at m iterations.
    template <class Vector> // a simple vector class
    size_t conjugate_gradient(
       size_t         m       , // input
