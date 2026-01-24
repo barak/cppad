@@ -2,11 +2,15 @@
 # define CPPAD_EXAMPLE_CPPAD_EIGEN_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 /*
 {xrst_begin cppad_eigen.hpp}
+{xrst_spell
+   gitlab
+   libeigen
+}
 Enable Use of Eigen Linear Algebra Package with CppAD
 #####################################################
 
@@ -23,7 +27,10 @@ Purpose
 *******
 Enables the use of the :ref:`eigen-name`
 linear algebra package with the type *AD* < ``Base`` > ; see
-`custom scalar types <https://eigen.tuxfamily.org/dox/TopicCustomizing_CustomScalar.html>`_.
+`Using custom scalar types`_ .
+
+.. _Using custom scalar types: https://
+   libeigen.gitlab.io/eigen/docs-nightly/TopicCustomizing_CustomScalar.html
 
 Example
 *******

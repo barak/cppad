@@ -7,8 +7,8 @@
 /*
 {xrst_begin for_hes_sparsity}
 {xrst_spell
-  rc
-  walther
+   rc
+   walther
 }
 
 Forward Mode Hessian Sparsity Patterns
@@ -179,7 +179,7 @@ void ADFun<Base,RecBase>::for_hes_sparsity(
       "for_hes_sparsity: size of select_range is not equal to "
       "number of dependent variables"
    );
-   // do not need transpose or depenency
+   // do not need transpose or dependency
    bool transpose  = false;
    bool dependency = false;
    //

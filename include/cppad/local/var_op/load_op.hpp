@@ -11,8 +11,8 @@ namespace CppAD { namespace local { namespace var_op {
  ------------------------------------------------------------------------------
 {xrst_begin_parent var_load_op dev}
 {xrst_spell
-  ldp
-  ldv
+   ldp
+   ldv
 }
 
 Access an Element in a Variable VecAD Vector
@@ -101,7 +101,7 @@ Is the number of this VecAD load instruction that came before this one.
 -------------------------------------------------------------------------------
 {xrst_begin var_load_forward_0 dev}
 {xrst_spell
-  isvar
+   isvar
 }
 
 Zero Order Forward Load an Element of a VecAD Vector
@@ -236,7 +236,7 @@ inline void load_forward_0(
    //
    CPPAD_ASSERT_KNOWN(
       size_t(i_vec) < vec_ad2index[ arg[0] - 1 ] ,
-      "VecAD: dynamic parmaeter index out or range during zero order forward"
+      "VecAD: dynamic parameter index out or range during zero order forward"
    );
    CPPAD_ASSERT_UNKNOWN( size_t(arg[0] + i_vec) < num_vec_ind );
    //

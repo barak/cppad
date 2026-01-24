@@ -1,9 +1,16 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2023-24 Bradley M. Bell
-# ----------------------------------------------------------------------------
+# SPDX-FileContributor: 2023-25 Bradley M. Bell
+# -----------------------------------------------------------------------------
+# bin/sort.sh file_name
+# Checks all the sections between
+#  BEGIN_SORT_THIS_LINE_PLUS_#
+#  END_SORT_THIS_LINE_MINUS_#
+# in file_name are sorted. If not, it is corrected and an error is returned.
+# -----------------------------------------------------------------------------
 # fix sort order; see
 # unix.stackexchange.com/questions/87745/what-does-lc-all-c-do/87763#87763
 export LC_ALL='C'
@@ -119,7 +126,7 @@ do
    let count="$count + 1"
    echo "sort.sh: sorting lines $start_line to $stop_line in $file_name"
    #
-   if [ $start_line -ge $stop_line ]
+   if [ $start_line -gt $stop_line ]
    then
       echo "start_line = $start_line >= stop_line = $stop_line "
       rm sorted.$$

@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_OP_CODE_VAR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 # include <string>
 # include <sstream>
@@ -20,14 +20,14 @@ namespace CppAD { namespace local { // BEGIN_CPPAD_LOCAL_NAMESPACE
 /*!
 {xrst_begin op_code_var dev}
 {xrst_spell
-  funap
-  funav
-  funrp
-  funrv
-  ldp
-  ldv
-  opcode
-  pri
+   funap
+   funav
+   funrp
+   funrv
+   ldp
+   ldv
+   opcode
+   pri
 }
 
 Variable Op Codes
@@ -224,7 +224,7 @@ enum op_code_var {
    FunavOp,  // ...
    FunrpOp,  // ...
    FunrvOp,  // ...
-   InvOp,    // independent variable, no argumements, one result variable
+   InvOp,    // independent variable, no arguments, one result variable
    LdpOp,    // see its heading above
    LdvOp,    // ...
    LeppOp,   // compare <=
@@ -282,11 +282,11 @@ Number of arguments for a specified operator.
 Number of arguments corresponding to the specified operator.
 
 \param op
-Operator for which we are fetching the number of arugments.
+Operator for which we are fetching the number of arguments.
 
 \par NumArgTable
-this table specifes the number of arguments stored for each
-occurance of the operator that is the i-th value in the op_code_var enum type.
+this table specifies the number of arguments stored for each
+occurrence of the operator that is the i-th value in the op_code_var enum type.
 For example, for the first three op_code_var enum values we have
 \verbatim
 op_code_var j   NumArgTable[j]  Meaning
@@ -407,8 +407,8 @@ Number of variables resulting from the specified operation.
 Operator for which we are fecching the number of results.
 
 \par NumResTable
-table specifes the number of varibles that result for each
-occurance of the operator that is the i-th value in the op_code_var enum type.
+table specifies the number of variables that result for each
+occurrence of the operator that is the i-th value in the op_code_var enum type.
 For example, for the first three op_code_var enum values we have
 \verbatim
 op_code_var j   NumResTable[j]  Meaning
@@ -662,7 +662,7 @@ void printOpField(
       return;
    }
 
-   // count number of spaces at begining
+   // count number of spaces at beginning
    size_t nspace = 0;
    while(str[nspace] == ' ' && nspace < len)
       nspace++;
@@ -741,24 +741,24 @@ void printOp(
       arg[0]     = the Rel operator: Lt, Le, Eq, Ge, Gt, or Ne
       arg[1] & 1 = is left a variable
       arg[1] & 2 = is right a variable
-      arg[2]     = index correspoding to left
-      arg[3]     = index correspoding to right
+      arg[2]     = index corresponding to left
+      arg[3]     = index corresponding to right
       arg[4] = number of operations to skip if CExpOp comparison is true
       arg[5] = number of operations to skip if CExpOp comparison is false
       arg[6] -> arg[5+arg[4]]               = skip operations if true
       arg[6+arg[4]] -> arg[5+arg[4]+arg[5]] = skip operations if false
-      arg[6+arg[4]+arg[5]] = arg[4] + arg[5]
+      arg[6+arg[4]+arg[5]] = 6+arg[4]+arg[5]+1
       */
-      CPPAD_ASSERT_UNKNOWN( arg[6+arg[4]+arg[5]] == arg[4]+arg[5] );
+      CPPAD_ASSERT_UNKNOWN( arg[6+arg[4]+arg[5]] == 6+arg[4]+arg[5]+1 );
       CPPAD_ASSERT_UNKNOWN(arg[1] != 0);
       if( arg[1] & 1 )
          printOpField(os, " vl=", arg[2], ncol);
       else
-         printOpField(os, " pl=", play->GetPar( size_t(arg[2]) ), ncol);
+         printOpField(os, " pl=", play->par_one( size_t(arg[2]) ), ncol);
       if( arg[1] & 2 )
          printOpField(os, " vr=", arg[3], ncol);
       else
-         printOpField(os, " pr=", play->GetPar( size_t(arg[3]) ), ncol);
+         printOpField(os, " pr=", play->par_one( size_t(arg[3]) ), ncol);
       if( size_t(arg[4]) < 3 )
       {  for(addr_t i = 0; i < arg[4]; i++)
             printOpField(os, " ot=", arg[6+i], ncol);
@@ -789,26 +789,26 @@ void printOp(
       arg[4] = end in arg of subtraction dynamic parameters in summation
       arg[5],      ... , arg[arg[1]-1]: indices for addition variables
       arg[arg[1]], ... , arg[arg[2]-1]: indices for subtraction variables
-      arg[arg[2]], ... , arg[arg[3]-1]: indices for additon dynamics
+      arg[arg[2]], ... , arg[arg[3]-1]: indices for addition dynamics
       arg[arg[3]], ... , arg[arg[4]-1]: indices for subtraction dynamics
-      arg[arg[4]] = arg[4]
+      arg[arg[4]] = arg[4] + 1
       */
-      CPPAD_ASSERT_UNKNOWN( arg[arg[4]] == arg[4] );
-      printOpField(os, " pr=", play->GetPar( size_t(arg[0]) ), ncol);
+      CPPAD_ASSERT_UNKNOWN( arg[arg[4]] == arg[4] + 1 );
+      printOpField(os, " pr=", play->par_one( size_t(arg[0]) ), ncol);
       for(addr_t i = 5; i < arg[1]; i++)
              printOpField(os, " +v=", arg[i], ncol);
       for(addr_t i = arg[1]; i < arg[2]; i++)
              printOpField(os, " -v=", arg[i], ncol);
       for(addr_t i = arg[2]; i < arg[3]; i++)
-             printOpField(os, " +d=", play->GetPar( size_t(arg[i]) ), ncol);
+             printOpField(os, " +d=", play->par_one( size_t(arg[i]) ), ncol);
       for(addr_t i = arg[3]; i < arg[4]; i++)
-             printOpField(os, " -d=", play->GetPar( size_t(arg[i]) ), ncol);
+             printOpField(os, " -d=", play->par_one( size_t(arg[i]) ), ncol);
       break;
 
       case LdpOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 3 );
       printOpField(os, "off=", arg[0], ncol);
-      printOpField(os, "  p=", play->GetPar( size_t(arg[1]) ), ncol);
+      printOpField(os, "  p=", play->par_one( size_t(arg[1]) ), ncol);
       break;
 
       case LdvOp:
@@ -820,14 +820,14 @@ void printOp(
       case StppOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 3 );
       printOpField(os, "off=", arg[0], ncol);
-      printOpField(os, " pl=", play->GetPar( size_t(arg[1]) ), ncol);
-      printOpField(os, " pr=", play->GetPar( size_t(arg[2]) ), ncol);
+      printOpField(os, " pl=", play->par_one( size_t(arg[1]) ), ncol);
+      printOpField(os, " pr=", play->par_one( size_t(arg[2]) ), ncol);
       break;
 
       case StpvOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 3 );
       printOpField(os, "off=", arg[0], ncol);
-      printOpField(os, "  p=", play->GetPar( size_t(arg[1]) ), ncol);
+      printOpField(os, "  p=", play->par_one( size_t(arg[1]) ), ncol);
       printOpField(os, "  v=", arg[2], ncol);
       break;
 
@@ -835,7 +835,7 @@ void printOp(
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 3 );
       printOpField(os, "off=", arg[0], ncol);
       printOpField(os, "  v=", arg[1], ncol);
-      printOpField(os, "  p=", play->GetPar( size_t(arg[2]) ), ncol);
+      printOpField(os, "  p=", play->par_one( size_t(arg[2]) ), ncol);
       break;
 
       case StvvOp:
@@ -871,7 +871,7 @@ void printOp(
       case PowpvOp:
       case ZmulpvOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 2 );
-      printOpField(os, " pl=", play->GetPar( size_t(arg[0]) ), ncol);
+      printOpField(os, " pl=", play->par_one( size_t(arg[0]) ), ncol);
       printOpField(os, " vr=", arg[1], ncol);
       break;
 
@@ -883,7 +883,7 @@ void printOp(
       case ZmulvpOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 2 );
       printOpField(os, " vl=", arg[0], ncol);
-      printOpField(os, " pr=", play->GetPar( size_t(arg[1]) ), ncol);
+      printOpField(os, " pr=", play->par_one( size_t(arg[1]) ), ncol);
       break;
 
       case AbsOp:
@@ -923,7 +923,7 @@ void printOp(
       case FunapOp:
       case FunrpOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 1 );
-      printOpField(os, "  p=", play->GetPar( size_t(arg[0]) ), ncol);
+      printOpField(os, "  p=", play->par_one( size_t(arg[0]) ), ncol);
       break;
 
       case AFunOp:
@@ -948,12 +948,12 @@ void printOp(
       if( arg[0] & 1 )
          printOpField(os, " v=", arg[1], ncol);
       else
-         printOpField(os, " p=", play->GetPar( size_t(arg[1]) ), ncol);
+         printOpField(os, " p=", play->par_one( size_t(arg[1]) ), ncol);
       os << "before=\"" << play->GetTxt( size_t(arg[2]) ) << "\"";
       if( arg[0] & 2 )
          printOpField(os, " v=", arg[3], ncol);
       else
-         printOpField(os, " p=", play->GetPar( size_t(arg[3]) ), ncol);
+         printOpField(os, " p=", play->par_one( size_t(arg[3]) ), ncol);
       os << "after=\"" << play->GetTxt( size_t(arg[4]) ) << "\"";
       break;
 
@@ -983,19 +983,19 @@ void printOp(
       if( arg[1] & 1 )
          printOpField(os, " vl=", arg[2], ncol);
       else
-         printOpField(os, " pl=", play->GetPar( size_t(arg[2]) ), ncol);
+         printOpField(os, " pl=", play->par_one( size_t(arg[2]) ), ncol);
       if( arg[1] & 2 )
          printOpField(os, " vr=", arg[3], ncol);
       else
-         printOpField(os, " pr=", play->GetPar( size_t(arg[3]) ), ncol);
+         printOpField(os, " pr=", play->par_one( size_t(arg[3]) ), ncol);
       if( arg[1] & 4 )
          printOpField(os, " vt=", arg[4], ncol);
       else
-         printOpField(os, " pt=", play->GetPar( size_t(arg[4]) ), ncol);
+         printOpField(os, " pt=", play->par_one( size_t(arg[4]) ), ncol);
       if( arg[1] & 8 )
          printOpField(os, " vf=", arg[5], ncol);
       else
-         printOpField(os, " pf=", play->GetPar( size_t(arg[5]) ), ncol);
+         printOpField(os, " pf=", play->par_one( size_t(arg[5]) ), ncol);
       break;
 
       case EqppOp:
@@ -1003,8 +1003,8 @@ void printOp(
       case LtppOp:
       case NeppOp:
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 2 );
-      printOpField(os, " pl=", play->GetPar( size_t(arg[0]) ), ncol);
-      printOpField(os, " pr=", play->GetPar( size_t(arg[1]) ), ncol);
+      printOpField(os, " pl=", play->par_one( size_t(arg[0]) ), ncol);
+      printOpField(os, " pr=", play->par_one( size_t(arg[1]) ), ncol);
       break;
 
       default:
@@ -1013,7 +1013,7 @@ void printOp(
 }
 
 /*!
-Prints the result values correspnding to an operator.
+Prints the result values corresponding to an operator.
 
 \tparam Base
 Is the base type for these AD< Base > operations.
@@ -1111,7 +1111,7 @@ void arg_is_variable(
    switch(op)
    {
       // -------------------------------------------------------------------
-      // cases where true number of arugments = NumArg(op) == 0
+      // cases where true number of arguments = NumArg(op) == 0
 
       case EndOp:
       case InvOp:
@@ -1266,10 +1266,10 @@ void arg_is_variable(
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 6 );
       is_variable[0] = false;
       is_variable[1] = false;
-      is_variable[2] = (arg[0] & 1) != 0;
-      is_variable[3] = (arg[0] & 2) != 0;
-      is_variable[4] = (arg[0] & 4) != 0;
-      is_variable[5] = (arg[0] & 8) != 0;
+      is_variable[2] = (arg[1] & 1) != 0;
+      is_variable[3] = (arg[1] & 2) != 0;
+      is_variable[4] = (arg[1] & 4) != 0;
+      is_variable[5] = (arg[1] & 8) != 0;
       break;
 
       // -------------------------------------------------------------------
@@ -1294,7 +1294,7 @@ void arg_is_variable(
       CPPAD_ASSERT_UNKNOWN( NumArg(op) == 0 )
       //
       // true number of arguments
-      num_arg = size_t(arg[4]);
+      num_arg = size_t(arg[4] + 1);
       //
       is_variable.resize( num_arg );
       for(size_t i = 0; i < num_arg; ++i)

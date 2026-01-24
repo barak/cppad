@@ -7,7 +7,7 @@
 /*
 {xrst_begin atomic_two_rev_sparse_jac app}
 {xrst_spell
-  rt
+   rt
 }
 
 Atomic Reverse Jacobian Sparsity Patterns
@@ -122,7 +122,7 @@ Atomic reverse mode Jacobian sparsity patterns.
 Link, after case split, from rev_jac_sweep to atomic_base
 
 \param q [in]
-is the row dimension for the Jacobian sparsity partterns
+is the row dimension for the Jacobian sparsity patterns
 
 \param rt [out]
 is the tansposed Jacobian sparsity pattern w.r.t to range variables y
@@ -178,7 +178,7 @@ bool atomic_base<Base>::rev_sparse_jac(
 Link, before case split, from rev_jac_sweep to atomic_base.
 
 \tparam InternalSparsity
-Is the used internaly for sparsity calculations; i.e.,
+Is the used internally for sparsity calculations; i.e.,
 sparse_pack or sparse_list.
 
 \param x

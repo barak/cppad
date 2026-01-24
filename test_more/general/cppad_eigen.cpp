@@ -51,7 +51,7 @@ bool cppad_eigen(void)
    x = traits::infinity();
    ok  &= std::isinf(x);
 
-   // Outputing a matrix used to fail before partial specialization of
+   // Outputting a matrix used to fail before partial specialization of
    // struct significant_decimals_default_impl in cppad_eigen.hpp.
    Matrix< AD<double>, 1, 1> X;
    X(0, 0) = AD<double>(1);
@@ -79,7 +79,7 @@ bool cppad_eigen(void)
    ok       &= a_matrix(0, 0) == AScalar(0);
 
    // Test multiply matrix elements of mixed types
-   // (This worked before corresponding ScalarBianryOpTraits was added.)
+   // (This worked before corresponding ScalarBinaryOpTraits was added.)
    AScalar a_scalar = a_matrix(0,0) * d_matrix(0,0);
    ok              &= a_scalar == AScalar(0);
    a_scalar         = d_matrix(0, 0) * a_matrix(0, 0);

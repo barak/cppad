@@ -7,19 +7,19 @@
 /*
 {xrst_begin ipopt_solve}
 {xrst_spell
-  bvector
-  doesn
-  fg
-  gl
-  gu
-  maxiter
-  naninf
-  ng
-  nx
-  rll
-  xl
-  zl
-  zu
+   bvector
+   doesn
+   fg
+   gl
+   gu
+   maxiter
+   naninf
+   ng
+   nx
+   rll
+   xl
+   zl
+   zu
 }
 
 Use Ipopt to Solve a Nonlinear Programming Problem
@@ -416,7 +416,7 @@ It must also support
 \code
    FG_eval::ADvector
 \endcode
-to dentify the type used for the arguments to fg_eval.
+to identify the type used for the arguments to fg_eval.
 
 \param options
 list of options, one for each line.

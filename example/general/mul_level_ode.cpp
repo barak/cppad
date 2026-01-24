@@ -6,7 +6,7 @@
 /*
 {xrst_begin mul_level_ode.cpp}
 {xrst_spell
-  cccc
+   cccc
 }
 
 Taylor's Ode Solver: A Multi-Level AD Example and Test
@@ -204,7 +204,7 @@ a1vector taylor_ode(
 }
 } // END empty namespace
 // ==========================================================================
-// Routine that tests alogirhtmic differentiation of solutions computed
+// Routine that tests algorithmic differentiation of solutions computed
 // by the routine taylor_ode.
 bool mul_level_ode(void)
 {  bool ok = true;

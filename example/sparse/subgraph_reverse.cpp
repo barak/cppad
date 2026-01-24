@@ -6,7 +6,7 @@
 /*
 {xrst_begin subgraph_reverse.cpp}
 {xrst_spell
-  subgraphs
+   subgraphs
 }
 
 Computing Reverse Mode on Subgraphs: Example and Test
@@ -78,7 +78,7 @@ bool subgraph_reverse(void)
    for(size_t j = 1; j < n; j++)
       select_domain[j] = true;
    //
-   // initilaize for reverse mode derivatives computation on subgraphs
+   // initialize for reverse mode derivatives computation on subgraphs
    f.subgraph_reverse(select_domain);
    //
    // compute the derivative for each range component

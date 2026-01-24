@@ -1,30 +1,24 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
 # SPDX-FileContributor: 2020-25 Bradley M. Bell
 # -----------------------------------------------------------------------------
-year='2025' # Year for this stable version
-release='0' # first release for each year starts with 0
-# -----------------------------------------------------------------------------
-if [ $# != 0 ] && [ $# != 1 ]
-then
-   echo 'bin/new_release.sh does not expect any arguments'
-   exit 1
-fi
+# bin/new_release.sh  [--skip_stable_check_all]
+# Creates and check a release for the year and release number specified below.
 #
-# skip_main_check_all
-skip_main_check_all='no'
-if [ $# == 1 ]
-then
-   if [ "$1" == --skip_main_check_all ]
-   then
-      skip_main_check_all='yes'
-   else
-      echo "new_release.sh $1: not a valid argument"
-      exit 1
-   fi
-fi
+# bin/check_all.sh [--skip_external_links]
+# is used by new_release.sh to check the stable branch
+# corresponding to this release (unless skipped by new_release.sh flags).
+#
+# bin/check_all.sh [--skip_external_links]
+# is used by new_release to skip checking external links.
+# new_release.sh skips this when testing before the new release (tag)  exists.
+# -----------------------------------------------------------------------------
+year='2025' # Year for this stable version
+release='3' # first release for each year starts with 0
+# -----------------------------------------------------------------------------
 if [ "$0" != 'bin/new_release.sh' ]
 then
    echo 'bin/new_release.sh: must be executed from its parent directory'
@@ -49,6 +43,21 @@ else
    echo "new_release.sh: release = $release is not valid"
    exit 1
 fi
+#
+# skip_stable_check_all
+skip_stable_check_all='no'
+while [ $# != 0 ]
+do
+   if [ "$1" == '--skip_stable_check_all' ]
+   then
+      skip_stable_check_all='yes'
+   else
+      echo 'bin/new_release.sh [--skip_stable_check_all]'
+      echo "$1 is not a valid argument"
+      exit 1
+   fi
+   shift
+done
 # -----------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -59,7 +68,7 @@ echo_eval() {
 #
 # main_branch
 main_branch=$(git branch --show-current)
-if [ "$main_branch" != 'master' ] || [ "$main_branch" == 'main' ]
+if [ "$main_branch" != 'master' ] && [ "$main_branch" != 'main' ]
 then
    echo 'bin/new_release.sh: execute using master or main branch'
    exit 1
@@ -109,84 +118,68 @@ else
    tag=$year.0.$release
 fi
 #
-# tag_commited
-tag_commited='no'
+# tag_committed
+tag_committed='no'
 if git tag --list | grep "$tag" > /dev/null
 then
-   tag_commited='yes'
+   tag_committed='yes'
 fi
 #
 # stable_branch
 stable_branch=stable/$year
 #
 # stable_local_hash
-pattern=$(echo " *refs/heads/$stable_branch" | $sed -e 's|/|[/]|g')
-stable_local_hash=$(
-   git show-ref $stable_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+stable_local_hash=$(git show-ref --hash "heads/$stable_branch" )
 #
 # stable_remote_hash
-pattern=$(echo " *refs/remotes/origin/$stable_branch" | $sed -e 's|/|[/]|g')
-stable_remote_hash=$(
-   git show-ref $stable_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+stable_remote_hash=$(git show-ref --hash "origin/$stable_branch" )
 #
 # main_local_hash
-pattern=$(echo " *refs/heads/master" | $sed -e 's|/|[/]|g')
-main_local_hash=$(
-   git show-ref $main_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+main_local_hash=$(git show-ref --hash "heads/$main_branch" )
 #
 # main_remote_hash
-pattern=$(echo " *refs/remotes/origin/master" | $sed -e 's|/|[/]|g')
-main_remote_hash=$(
-   git show-ref $main_branch | \
-      $sed -n -e "/$pattern/p" | \
-         $sed -e "s|$pattern||"
-)
+main_remote_hash=$(git show-ref --hash "origin/$main_branch" )
 #
 # ----------------------------------------------------------------------------
-# Changes to master branch
+# Changes to main_branch
 # ----------------------------------------------------------------------------
 #
 # version_file_list
+cat << EOF > temp.sed
+s|stable-[0-9]{4}|stable-$year|g
+s|release-[0-9]{4}|release-$year|g
+#
+s|archive/[0-9]{4}[.][0-9]*[.][0-9]*[.]tar[.]gz|archive/$tag.tar.gz|
+s|archive/[0-9]{8}[.]tar[.]gz|archive/$tag.tar.gz|
+s|archive/[0-9]{8}[.][0-9]*[.]tar[.]gz|archive/$tag.tar.gz|
+#
+s|tags/[0-9]{4}[.][0-9]*[.][0-9]*>|tags/$tag>|
+s|tags/[0-9]{8}>|tags/$tag>|
+s|tags/[0-9]{8}[.][0-9]*>|tags/$tag>|
+#
+s|tags/[0-9]{4}[.][0-9]*[.][0-9]* *\$|tags/$tag|
+s|tags/[0-9]{8} *\$|tags/$tag|
+s|tags/[0-9]{8}[.][0-9]* *\$|tags/$tag|
+#
+EOF
 for file in $version_file_list
 do
-   $sed -i $file \
-      -e "s|stable-[0-9]\{4\}|stable-$year|g" \
-      -e "s|release-[0-9]\{4\}|release-$year|g" \
-      -e "s|archive/[0-9]\{4\}[.]0[.][0-9]*.tar.gz|archive/$tag.tar.gz|"
+   $sed -r -i $file -f temp.sed
 done
 #
-# check_version
-# changes to version ?
-if ! bin/check_version.sh
+# run_xrst.sh
+if [ "$tag_committed" == 'yes' ]
 then
-   echo 'Continuing even thought bin/check_version made changes.'
-fi
-#
-# check_all.sh
-if [ "$skip_main_check_all" == 'no' ]
-then
-   if [ "$tag_commited" == 'yes' ]
-   then
-      echo_eval bin/check_all.sh
-   else
-      echo_eval bin/check_all.sh --skip_external_links
-   fi
+   echo_eval bin/run_xrst.sh --external_links
+else
+   echo_eval bin/run_xrst.sh
 fi
 #
 # git_status
 git_status=$(git status --porcelain)
 if [ "$git_status" != '' ]
 then
-   echo "bin/new_release: git staus is not empty for $main_branch branch"
+   echo "bin/new_release: git status is not empty for $main_branch branch"
    echo 'use bin/git_commit.sh to commit its changes ?'
    exit 1
 fi
@@ -195,7 +188,7 @@ fi
 # ----------------------------------------------------------------------------
 if ! git show-ref $stable_branch > /dev/null
 then
-   echo "bin/new_release: neither local or remvoe $stable_branch exists."
+   echo "bin/new_release: neither local or remove $stable_branch exists."
    echo 'Use the following to create it ?'
    echo "   git branch $stable_branch"
    exit 1
@@ -207,17 +200,32 @@ then
 fi
 #
 # version_file_list
+cat << EOF > temp.sed
+s|stable-[0-9]{4}|stable-$year|g
+s|release-[0-9]{4}|release-$year|g
+#
+s|archive/[0-9]{4}[.][0-9]*[.][0-9]*[.]tar[.]gz|archive/$tag.tar.gz|
+s|archive/[0-9]{8}[.]tar[.]gz|archive/$tag.tar.gz|
+s|archive/[0-9]{8}[.][0-9]*[.]tar[.]gz|archive/$tag.tar.gz|
+#
+s|tags/[0-9]{4}[.][0-9]*[.][0-9]*>|tags/$tag>|
+s|tags/[0-9]{8}>|tags/$tag>|
+s|tags/[0-9]{8}[.][0-9]*>|tags/$tag>|
+#
+s|tags/[0-9]{4}[.][0-9]*[.][0-9]* *\$|tags/$tag|
+s|tags/[0-9]{8} *\$|tags/$tag|
+s|tags/[0-9]{8}[.][0-9]* *\$|tags/$tag|
+#
+EOF
 for file in $version_file_list
 do
-   $sed -i $file \
-      -e "s|stable-[0-9]\{4\}|stable-$year|g" \
-      -e "s|release-[0-9]\{4\}|release-$year|g" \
-      -e "s|archive/[0-9]\{4\}[.]0[.][0-9]*.tar.gz|archive/$tag.tar.gz|"
+   $sed -r -i $file -f temp.sed
 done
 #
 # first_version_file
 cat << EOF > temp.sed
 s|(["'])[0-9]{8}(["'])|\\1$tag\\2|
+s|(["'])[0-9]{8}[.][0-9]{1,2}(["'])|\\1$tag\\2|
 s|(["'])[0-9]{4}[.][0-9]{1,2}[.][0-9]{1,2}(["'])|\\1$tag\\2|
 EOF
 $sed -r -f temp.sed -i $first_version_file
@@ -236,18 +244,22 @@ then
 fi
 #
 # check_all.sh
-if [ "$tag_commited" == 'yes' ]
+if [ "$skip_stable_check_all" == 'no' ]
 then
-   echo_eval bin/check_all.sh --suppress_spell_warnings
-else
-   echo_eval bin/check_all.sh --suppress_spell_warnings --skip_external_links
+   if [ "$tag_committed" == 'yes' ]
+   then
+      echo_eval bin/check_all.sh --suppress_spell_warnings
+   else
+      echo_eval bin/check_all.sh \
+         --suppress_spell_warnings --skip_external_links
+   fi
 fi
 #
 # git_status
 git_status=$(git status --porcelain)
 if [ "$git_status" != '' ]
 then
-   echo "bin/new_release: git staus --porcelean not empty for $stable_branch"
+   echo "bin/new_release: git status --porcelean not empty for $stable_branch"
    echo 'use bin/git_commit.sh to commit its changes ?'
    exit 1
 fi
@@ -273,7 +285,7 @@ then
 fi
 #
 # push tag
-if [ "$tag_commited" == 'no' ]
+if [ "$tag_committed" == 'no' ]
 then
    read -p 'commit release or abort [c/a] ?' response
    if [ "$response" == 'a' ]

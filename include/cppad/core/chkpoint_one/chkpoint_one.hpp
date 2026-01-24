@@ -2,7 +2,7 @@
 # define CPPAD_CORE_CHKPOINT_ONE_CHKPOINT_ONE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 # include <cppad/local/sparse/list_setvec.hpp>
 # include <cppad/local/sparse/pack_setvec.hpp>
@@ -16,8 +16,8 @@ First generation checkpoint functions.
 /*
 {xrst_begin chkpoint_one app}
 {xrst_spell
-  algo
-  sv
+   algo
+   sv
 }
 
 Checkpoint Functions: First Generation
@@ -322,7 +322,7 @@ private:
    \copydetails atomic_base::for_sparse_jac
    */
    template <class sparsity_type>
-   bool for_sparse_jac(
+   bool for_sparse_jac_sparsity_type(
       size_t                                  q  ,
       const sparsity_type&                    r  ,
               sparsity_type&                    s  ,
@@ -335,7 +335,7 @@ private:
    \copydetails atomic_base::rev_sparse_jac
    */
    template <class sparsity_type>
-   bool rev_sparse_jac(
+   bool rev_sparse_jac_sparsity_type(
       size_t                                  q  ,
       const sparsity_type&                    rt ,
               sparsity_type&                    st ,
@@ -347,7 +347,7 @@ private:
    \copydetails atomic_base::rev_sparse_hes
    */
    template <class sparsity_type>
-   bool rev_sparse_hes(
+   bool rev_sparse_hes_sparsity_type(
       const vector<bool>&                     vx ,
       const vector<bool>&                     s  ,
               vector<bool>&                     t  ,

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-22 Bradley M. Bell
+# SPDX-FileContributor: 2003-25 Bradley M. Bell
 # ----------------------------------------------------------------------------
 # Build and install the cppad_lib shared library
 #
@@ -41,22 +41,26 @@ IF( cppad_has_cppadcg )
    SET(source_list ${source_list} code_gen_fun.cpp)
 ENDIF( cppad_has_cppadcg )
 #
+# set_compile_flags
 set_compile_flags(cppad_lib "${cppad_debug_which}" "${source_list}" )
 #
-# is_windows
+# add_library
 IF( "${is_cppad_lib_dynamic}" STREQUAL "0" )
-   MESSAGE( STATUS "Windows system so building static cppad_lib")
+   MESSAGE( STATUS "Building static cppad_lib")
    ADD_LIBRARY( cppad_lib STATIC ${source_list} )
 ELSEIF( "${is_cppad_lib_dynamic}" STREQUAL "1" )
-   MESSAGE( STATUS "Not Windows system so building shared cppad_lib")
+   MESSAGE( STATUS "Building shared cppad_lib")
    ADD_LIBRARY( cppad_lib SHARED ${source_list} )
-   SET_TARGET_PROPERTIES( cppad_lib PROPERTIES SOVERSION ${soversion} )
+   SET_TARGET_PROPERTIES( cppad_lib PROPERTIES
+      SOVERSION ${soversion}
+      LINK_OPTIONS "${cppad_link_flags}"
+   )
    #
    FIND_LIBRARY(dl_LIBRARY dl)
    IF( dl_LIBRARY )
       TARGET_LINK_LIBRARIES(cppad_lib ${dl_LIBRARY})
    ENDIF( dl_LIBRARY )
-ELSE( "${is_cppad_lib_dynamic}" == "0" )
+ELSE( )
    MESSAGE(FATAL_ERROR "CMkakeLists.txt Error: invalid is_cppad_lib_dynamic")
 ENDIF( )
 #

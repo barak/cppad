@@ -13,7 +13,7 @@ then
 cat << EOF
 usage: bin/speed_diff.sh speed_one.out speed_two.out
 where speed_one.out and speed_two.out are outputs from the speed_cppad program
-runing its 'speed' test.
+running its 'speed' test.
 EOF
    exit 1
 fi
@@ -35,8 +35,9 @@ sed -n -e'/_size *=/p' $speed_one | sort -u > speed_diff.1.$$
 sed -n -e'/_size *=/p' $speed_two | sort -u > speed_diff.2.$$
 if ! diff speed_diff.1.$$ speed_diff.2.$$
 then
-   echo "Size in $speed_one"
-   echo "Note equal size in $speed_two"
+   echo 'The sizes above do not agree'
+   echo "< for $speed_one"
+   echo "> for $speed_two"
    rm speed_diff.1.$$ speed_diff.2.$$
    exit 1
 fi

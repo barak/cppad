@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_SWEEP_REV_JAC_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/play/atom_op_info.hpp>
@@ -15,7 +15,7 @@
 /*
 {xrst_begin local_sweep_rev_jac dev}
 {xrst_spell
-  setvec
+   setvec
 }
 
 Reverse Mode Jacobian Sparsity Patterns
@@ -27,7 +27,7 @@ Syntax
 | |tab| *play*               ,
 | |tab| *dependency*         ,
 | |tab| *n*                  ,
-| |tab| *num_var*            ,
+| |tab| *num_var*        ,
 | |tab| *var_sparsity*       ,
 | |tab| ``not_used_rec_base``
 | )
@@ -81,7 +81,7 @@ is the number of independent variables in the tape.
 num_var
 *******
 is the total number of variables in the tape; i.e.,
-*play* ``->num_var_rec`` () .
+*play* ``->num_var`` () .
 This is also the number of rows in all the sparsity patterns.
 
 var_sparsity
@@ -127,11 +127,11 @@ void rev_jac(
    size_t            i, j, k;
 
    // length of the parameter vector (used by CppAD assert macros)
-   const size_t num_par = play->num_par_rec();
+   const size_t num_par = play->num_par_all();
 
    // check num_var argument
    CPPAD_ASSERT_UNKNOWN( num_var > 0 );
-   CPPAD_ASSERT_UNKNOWN( play->num_var_rec()   == num_var );
+   CPPAD_ASSERT_UNKNOWN( play->num_var()       == num_var );
    CPPAD_ASSERT_UNKNOWN( var_sparsity.n_set() == num_var );
 
    // upper limit (exclusive) for elements in the set
@@ -140,8 +140,8 @@ void rev_jac(
    // vecad_sparsity contains a sparsity pattern for each VecAD object.
    // vecad_ind maps a VecAD index (beginning of the VecAD object)
    // to the index of the corresponding set in vecad_sparsity.
-   size_t num_vecad_ind   = play->num_var_vecad_ind_rec();
-   size_t num_vecad_vec   = play->num_var_vecad_rec();
+   size_t num_vecad_ind   = play->num_var_vec_ind();
+   size_t num_vecad_vec   = play->num_var_vecad();
    Vector_set  vecad_sparsity;
    pod_vector<size_t> vecad_ind;
    if( num_vecad_vec > 0 )
@@ -159,17 +159,17 @@ void rev_jac(
          // start of next VecAD
          j       += length + 1;
       }
-      CPPAD_ASSERT_UNKNOWN( j == play->num_var_vecad_ind_rec() );
+      CPPAD_ASSERT_UNKNOWN( j == play->num_var_vec_ind() );
    }
    // ----------------------------------------------------------------------
    //
-   // work space used by atomic funcions
+   // work space used by atomic functions
    var_op::atomic_op_work<Base> atom_work;
    //
    // pointer to the beginning of the parameter vector
    // (used by atomic functions
    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
-   const Base* parameter = play->GetPar();
+   const Base* parameter = play->par_ptr();
    //
    // skip the EndOp at the end of the recording
    play::const_sequential_iterator itr = play->end();

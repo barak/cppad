@@ -157,7 +157,7 @@ namespace {
       // number of rows in the matrix
       size_t nr = 5;
 
-      // number of eleemnt in the matrix
+      // number of element in the matrix
       size_t n  = nr * nr;
 
       // independent variable
@@ -854,7 +854,7 @@ namespace {
       V[ X[0] ] = X[1];
 
       // Make dependency for vecad vectors different that for
-      // variables because original code used worng dependency info.
+      // variables because original code used wrong dependency info.
       // Y does not depend on the first variable in the tape; i.e.
       // the one corresponding to the BeginOp. So make it depend
       // on the first vecad vector in the tape.
@@ -928,7 +928,7 @@ namespace {
       y = F.Forward(0, x);
 
       // Use identically equal because the result of the operations
-      // have been stored as double and gaurd bits have been dropped.
+      // have been stored as double and guard bits have been dropped.
       // (This may not be true for some compiler in the future).
       for(j = 0; j < n; j++)
          ok &= NearEqual(y[j], Value(Y[j]), eps10, eps10);
@@ -1143,7 +1143,7 @@ namespace {
       // create a new variable using first version of duplicate
       AD<double> B1 = A1 / 2.;
 
-      // create a duplicate that can only be dectected using new
+      // create a duplicate that can only be detected using new
       // argument indices
       AD<double> B2 = A2 / 2.;
 
@@ -1210,7 +1210,7 @@ namespace {
       // create a new variable using first version of duplicate
       AD<double> B1 = A1 * 2.;
 
-      // create a duplicate that can only be dectected using new
+      // create a duplicate that can only be detected using new
       // argument indices
       AD<double> B2 = 2. * A2;
 
@@ -1728,8 +1728,8 @@ namespace {
 
       return ok;
    }
-   // check that CondExp properly handels expressions that get
-   // removed during opitmization
+   // check that CondExp properly handles expressions that get
+   // removed during optimization
    bool cond_exp_removed(void)
    {  bool ok = true;
       using CppAD::AD;
@@ -1880,13 +1880,13 @@ namespace {
       my_atomic_one(id++, ax, az);
       // create function
       CppAD::ADFun<double> g(ax, ay);
-      // should have 1 + n + m + m varaibles
+      // should have 1 + n + m + m variables
       ok &= g.size_var() == (1 + n + m + m);
 
       // optimize
       optimize_with_options(g);
 
-      // should have 1 + n + m varaibles
+      // should have 1 + n + m variables
       ok &= g.size_var() == (1 + n + m);
 
       // now test that the optimized function gives same results
@@ -2246,7 +2246,7 @@ namespace {
    }
 
    // -----------------------------------------------------------------------
-   // Test case where only varaible arguments were being checked for
+   // Test case where only variable arguments were being checked for
    // a complete match once hash_codes were equal.
    // (*bug fixed 2017-11-23)
    bool only_check_variables_when_hash_codes_match(void)
@@ -2544,7 +2544,7 @@ bool optimize(void)
       ok     &= cond_exp_atomic_dependence();
       // check reverse mode conditional skipping
       ok     &= cond_exp_reverse();
-      // check case where an expresion needed by both true and false case
+      // check case where an expression needed by both true and false case
       ok     &= cond_exp_both_true_and_false();
       // check case were a variable in left or right expressions
       // is removed during the optimization

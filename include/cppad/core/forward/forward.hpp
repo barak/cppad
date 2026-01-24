@@ -2,10 +2,10 @@
 # define CPPAD_CORE_FORWARD_FORWARD_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
-// documened after Forward but included here so easy to see
+// documented after Forward but included here so easy to see
 # include <cppad/core/capacity_order.hpp>
 # include <cppad/core/num_skip.hpp>
 # include <cppad/core/check_for_nan.hpp>
@@ -16,9 +16,9 @@ namespace CppAD { // BEGIN_CPPAD_NAMESPACE
 --------------------------------------- ---------------------------------------
 {xrst_begin devel_forward_order dev}
 {xrst_spell
-  pri
-  xq
-  yq
+   pri
+   xq
+   yq
 }
 
 Multiple orders, one direction, forward mode Taylor coefficients
@@ -159,7 +159,7 @@ BaseVector ADFun<Base,RecBase>::Forward(
    size_t C = cap_order_taylor_;
 
    // The optimizer may skip a step that does not affect dependent variables.
-   // Initilaizing zero order coefficients avoids following valgrind warning:
+   // Initializing zero order coefficients avoids following valgrind warning:
    // "Conditional jump or move depends on uninitialised value(s)".
    for(j = 0; j < num_var_tape_; j++)
    {  for(k = p; k <= q; k++)
@@ -189,8 +189,8 @@ BaseVector ADFun<Base,RecBase>::Forward(
    }
    //
    // evaluate the derivatives
-   CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
-   CPPAD_ASSERT_UNKNOWN( load_op2var_.size()  == play_.num_var_load_rec() );
+   CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_var_op() );
+   CPPAD_ASSERT_UNKNOWN( load_op2var_.size()  == play_.num_var_load() );
    if( q == 0 )
    {  bool print = true;
       local::sweep::forward_0(
@@ -316,8 +316,8 @@ BaseVector ADFun<Base,RecBase>::Forward(
 --------------------------------------- ---------------------------------------
 {xrst_begin devel_forward_dir dev}
 {xrst_spell
-  xq
-  yq
+   xq
+   yq
 }
 
 One order, multiple directions, forward mode Taylor coefficients
@@ -469,8 +469,8 @@ BaseVector ADFun<Base,RecBase>::Forward(
    }
 
    // evaluate the derivatives
-   CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_op_rec() );
-   CPPAD_ASSERT_UNKNOWN( load_op2var_.size()  == play_.num_var_load_rec() );
+   CPPAD_ASSERT_UNKNOWN( cskip_op_.size() == play_.num_var_op() );
+   CPPAD_ASSERT_UNKNOWN( load_op2var_.size()  == play_.num_var_load() );
    local::sweep::forward_dir(
       not_used_rec_base,
       &play_,

@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_SWEEP_FORWARD_ANY_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/play/atom_op_info.hpp>
@@ -18,7 +18,7 @@ namespace CppAD { namespace local { namespace sweep {
  ------------------------------------------------------------------------------
 {xrst_begin sweep_forward_any dev}
 {xrst_spell
-  cskip
+   cskip
 }
 
 {xrst_template ;
@@ -67,7 +67,7 @@ void forward_any(
 
    CPPAD_ASSERT_UNKNOWN(order_low <= order_up );
    CPPAD_ASSERT_UNKNOWN( cap_order >= order_up + 1 );
-   CPPAD_ASSERT_UNKNOWN( play->num_var_rec() == num_var );
+   CPPAD_ASSERT_UNKNOWN( play->num_var() == num_var );
 
    /*
    <!-- replace forward0sweep_code_define -->
@@ -86,7 +86,7 @@ void forward_any(
    {  size_t i;
 
       // this includes order zero calculation, initialize vector indices
-      size_t num = play->num_var_vecad_ind_rec();
+      size_t num = play->num_var_vec_ind();
       if( num > 0 )
       {  vec_ad2isvar.extend(num);
          vec_ad2index.extend(num);
@@ -96,28 +96,28 @@ void forward_any(
          }
       }
       // includes zero order, so initialize conditional skip flags
-      num = play->num_op_rec();
+      num = play->num_var_op();
       for(i = 0; i < num; i++)
          cskip_op[i] = false;
    }
 
    // information used by atomic function operators
 
-   // work space used by atomic funcions
+   // work space used by atomic functions
    var_op::atomic_op_work<Base> atom_work;
 
    // information defined by atomic function operators
    size_t atom_index, atom_id, atom_m, atom_n;
 
    // length of the parameter vector (used by CppAD assert macros)
-   const size_t num_par = play->num_par_rec();
+   const size_t num_par = play->num_par_all();
 
    // pointer to the beginning of the parameter vector
    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
-   const Base* parameter = play->GetPar();
+   const Base* parameter = play->par_ptr();
 
    // length of the text vector (used by CppAD assert macros)
-   const size_t num_text = play->num_text_rec();
+   const size_t num_text = play->num_var_text();
 
    // pointer to the beginning of the text vector
    const char* text = nullptr;
@@ -150,7 +150,7 @@ void forward_any(
    {
       // next op
       (++itr).op_info(op, arg, i_var);
-      CPPAD_ASSERT_UNKNOWN( itr.op_index() < play->num_op_rec() );
+      CPPAD_ASSERT_UNKNOWN( itr.op_index() < play->num_var_op() );
 
       // check if we are skipping this operation
       while( cskip_op[itr.op_index()] )
@@ -395,7 +395,7 @@ void forward_any(
          {  var_op::load_forward_0(
                op,
                i_var,
-               play->num_var_vecad_ind_rec(),
+               play->num_var_vec_ind(),
                arg,
                num_var,
                num_par,

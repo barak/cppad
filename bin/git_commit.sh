@@ -1,9 +1,24 @@
 #! /usr/bin/env bash
 set -e -u
+# !! EDITS TO THIS FILE ARE LOST DURING UPDATES BY xrst.git/bin/dev_tools.sh !!
 # ---------------------------------------------------------------------------
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 # SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-# SPDX-FileContributor: 2003-24 Bradley M. Bell
+# SPDX-FileContributor: 2003-25 Bradley M. Bell
+# ---------------------------------------------------------------------------
+# bin/git_commit.sh
+# Opens your editor with comments about this git commit.
+# 1.  The git commit log message will not include comment lines.
+# 2.  The file git_commit.log contains the message for the previous commit
+#     so that you can read it in and modify it for this commit.
+# 3.  If typos is installed on your system, it will be used to check for
+#     errors in git_commit.log. If so, you can read it and modity it
+#     when you re-run git_commit.sh.
+# 4.  The branch of the commit is automatically placed a the beginning
+#     of the first line for the message.
+# 5.  All the modified files are automatically included in the commit.
+# 6.  The variable check_git_commit in bin/dev_settings.sh can be used
+#     to selectively revert certain files before the commit.
 # ---------------------------------------------------------------------------
 # bash function that echos and executes a command
 echo_eval() {
@@ -13,7 +28,7 @@ echo_eval() {
 # -----------------------------------------------------------------------------
 if [ $# != 0 ]
 then
-   echo 'usage: bin/git_commit.sh: does not expect arugments'
+   echo 'usage: bin/git_commit.sh: does not expect arguments'
    exit 1
 fi
 if [ "$0" != 'bin/git_commit.sh' ]
@@ -30,7 +45,7 @@ fi
 # grep, sed
 source bin/grep_and_sed.sh
 #
-# check_commit
+# check_git_commit
 source bin/dev_settings.sh
 # -----------------------------------------------------------------------------
 # EDITOR
@@ -42,9 +57,9 @@ then
 fi
 set -u
 # -----------------------------------------------------------------------------
-# check_commit
+# check_git_commit
 echo 's|^...||' > temp.sed
-for name in $check_commit
+for name in $check_git_commit
 do
    if [ -f $name ]
    then
@@ -53,7 +68,7 @@ do
    then
       echo "^$name/" | $sed -e 's|/|[/]|g' -e 's|.*|/&/p|' >> temp.sed
    else
-      echo "$name in check_commit is not a file or directory"
+      echo "$name in check_git_commit is not a file or directory"
       exit 1
    fi
 done
@@ -132,6 +147,10 @@ fi
 #
 # git_commit.log
 mv temp.log git_commit.log
+if which typos >& /dev/null
+then
+   typos git_commit.log
+fi
 # -----------------------------------------------------------------------------
 # git add
 echo_eval git add --all

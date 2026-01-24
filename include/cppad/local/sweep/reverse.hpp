@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_SWEEP_REVERSE_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 
@@ -36,7 +36,7 @@ is the number of independent variables on the tape.
 \param num_var
 is the total number of variables on the tape.
 This is also equal to the number of rows in the matrix Taylor; i.e.,
-play->num_var_rec().
+play->num_var().
 
 \param play
 The information stored in play
@@ -119,7 +119,7 @@ is the partial derivative of \f$ W( u ) \f$ with
 respect to \f$ u_j^{(k)} \f$.
 
 \param cskip_op
-Is a vector with size play->num_op_rec().
+Is a vector with size play->num_var_op().
 If cskip_op[i] is true, the operator index i in the recording
 does not affect any of the dependent variable (given the value
 of the independent variables).
@@ -127,7 +127,7 @@ Note that all the operators in an atomic function call are skipped as a block,
 so only the last AFunOp fore each call needs to have cskip_op[i] true.
 
 \param load_op2var
-is a vector with size play->num_var_load_rec().
+is a vector with size play->num_var_load().
 It contains the variable index corresponding to each load instruction.
 In the case where the index is zero,
 the instruction corresponds to a parameter (not variable).
@@ -145,7 +145,7 @@ If i_var is a variable index, and the corresponding operator
 is not in the subgraph,
 then the partials with respect to i_var are not modified and need to be
 initialized as zero. Note that this means the partial for the independent
-varaibles, that are not in the subgraph are not calculated.
+variables, that are not in the subgraph are not calculated.
 If part of an atomic function call is in the subgraph,
 the entire atomic function call must be in the subgraph.
 
@@ -172,17 +172,17 @@ void reverse(
 )
 {
    // check num_var argument
-   CPPAD_ASSERT_UNKNOWN( play->num_var_rec() == num_var );
+   CPPAD_ASSERT_UNKNOWN( play->num_var() == num_var );
    CPPAD_ASSERT_UNKNOWN( num_var > 0 );
 
    // length of the parameter vector (used by CppAD assert macros)
-   const size_t num_par = play->num_par_rec();
+   const size_t num_par = play->num_par_all();
 
    // pointer to the beginning of the parameter vector
    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
-   const Base* parameter = play->GetPar();
+   const Base* parameter = play->par_ptr();
 
-   // work space used by atomic funcions
+   // work space used by atomic functions
    var_op::atomic_op_work<Base> atom_work;
 
    //
@@ -424,7 +424,7 @@ void reverse(
          // --------------------------------------------------
          case EndOp:
          CPPAD_ASSERT_UNKNOWN(
-            i_op == play->num_op_rec() - 1
+            i_op == play->num_var_op() - 1
          );
          break;
 

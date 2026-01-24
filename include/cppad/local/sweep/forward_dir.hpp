@@ -2,7 +2,7 @@
 # define CPPAD_LOCAL_SWEEP_FORWARD_DIR_HPP
 // SPDX-License-Identifier: EPL-2.0 OR GPL-2.0-or-later
 // SPDX-FileCopyrightText: Bradley M. Bell <bradbell@seanet.com>
-// SPDX-FileContributor: 2003-24 Bradley M. Bell
+// SPDX-FileContributor: 2003-25 Bradley M. Bell
 // ----------------------------------------------------------------------------
 
 # include <cppad/local/play/atom_op_info.hpp>
@@ -17,7 +17,7 @@ namespace CppAD { namespace local { namespace sweep {
  ------------------------------------------------------------------------------
 {xrst_begin sweep_forward_dir dev}
 {xrst_spell
-  cskip
+   cskip
 }
 
 {xrst_template ;
@@ -57,25 +57,25 @@ void forward_dir(
 {
    CPPAD_ASSERT_UNKNOWN( order_up > 0 );
    CPPAD_ASSERT_UNKNOWN( cap_order >= order_up + 1 );
-   CPPAD_ASSERT_UNKNOWN( play->num_var_rec() == num_var );
+   CPPAD_ASSERT_UNKNOWN( play->num_var() == num_var );
 
    // only compute one order at a time when using multi-direction forward
    size_t order_low = order_up;
 
    // information used by atomic function operators
 
-   // work space used by atomic funcions
+   // work space used by atomic functions
    var_op::atomic_op_work<Base> atom_work;
 
    // information defined by atomic function operators
    size_t atom_index=0, atom_id=0, atom_m=0, atom_n=0;
    //
    // length of the parameter vector (used by CppAD assert macros)
-   const size_t num_par = play->num_par_rec();
+   const size_t num_par = play->num_par_all();
 
    // pointer to the beginning of the parameter vector
    CPPAD_ASSERT_UNKNOWN( num_par > 0 )
-   const Base* parameter = play->GetPar();
+   const Base* parameter = play->par_ptr();
 
    // temporary indices
    size_t i;
@@ -100,7 +100,7 @@ void forward_dir(
    {
       // next op
       (++itr).op_info(op, arg, i_var);
-      CPPAD_ASSERT_UNKNOWN( itr.op_index() < play->num_op_rec() );
+      CPPAD_ASSERT_UNKNOWN( itr.op_index() < play->num_var_op() );
 
       // check if we are skipping this operation
       while( cskip_op[itr.op_index()] )
@@ -238,7 +238,7 @@ void forward_dir(
          // -------------------------------------------------
 
          case CSkipOp:
-         // CSkipOp only does somthing on order zero.
+         // CSkipOp only does something on order zero.
          CPPAD_ASSERT_UNKNOWN( order_low > 0 );
          itr.correct_before_increment();
          break;

@@ -6,7 +6,7 @@
 /*
 {xrst_begin thread_test.cpp}
 {xrst_spell
-  posix
+   posix
 }
 
 Run Multi-Threading Examples and Speed Tests
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
    using std::cout;
    using std::endl;
 
-   // commnd line usage message
+   // command line usage message
    const char* usage =
    "./<program> a11c\n"
    "./<program> get_started\n"

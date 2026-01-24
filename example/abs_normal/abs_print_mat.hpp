@@ -7,8 +7,8 @@
 /*
 {xrst_begin abs_print_mat}
 {xrst_spell
-  cout
-  nr
+   cout
+   nr
 }
 abs_normal: Print a Vector or Matrix
 ####################################
@@ -78,7 +78,7 @@ void abs_print_mat(
    // output name
    std::cout << name << " =";
    //
-   // handel empty case
+   // handle empty case
    if( nr == 0 || nc == 0 )
    {  std::cout << " " << nr << " by " << nc << " empty matrix\n";
       return;

@@ -26,7 +26,7 @@ do
    fi
 done
 #
-echo "Checking soruce code for names reserved for addon packages"
+echo "Checking source code for names reserved for addon packages"
 echo "-------------------------------------------------------"
 ok="yes"
 file_list=`git ls-files`
@@ -34,7 +34,7 @@ for file in $file_list
 do
    if grep -E $grep_cmd $file > /dev/null
    then
-      echo "$file containts $grep_cmd"
+      echo "$file contains $grep_cmd"
       ok="no"
    fi
 done

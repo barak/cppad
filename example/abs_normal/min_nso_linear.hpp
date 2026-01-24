@@ -7,8 +7,8 @@
 /*
 {xrst_begin min_nso_linear}
 {xrst_spell
-  dbl
-  maxitr
+   dbl
+   maxitr
 }
 Non-Smooth Optimization Using Abs-normal Linear Approximations
 ##############################################################
@@ -256,7 +256,7 @@ bool min_nso_linear(
    // current bound
    double b_cur = b_in;
    //
-   // initilaize the current x
+   // initialize the current x
    x_out = x_in;
    //
    // value of a(x) at current x

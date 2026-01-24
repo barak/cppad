@@ -29,9 +29,10 @@ then
    echo "$program: must be executed from its parent directory"
    exit 1
 fi
-if ! git branch | grep '^\* master' > /dev/null
+branch_start=$(git branch --show-current)
+if [ "$branch_start" != 'master' ] && [ "$branch_start" != 'main' ]
 then
-   echo 'bin/speed_branch.sh: must start execution from master branch'
+   echo 'bin/speed_branch.sh: must start from master or main branch'
    exit 1
 fi
 if [ "$3" == '' ]
@@ -105,8 +106,12 @@ do
    then
       echo "Using existing $target_dir/$out_file"
    else
-      # use --quiet to supress detached HEAD message
+      # use --quiet to suppress detached HEAD message
       echo_eval git checkout --quiet $branch
+      #
+      # speed/main.cpp
+      echo "git show $branch_start:speed/main.cpp > speed/main.cpp"
+      git show $branch_start:speed/main.cpp > speed/main.cpp
       #
       day=`git log -1 --date=iso | grep '^Date:' | \
          sed -e 's|Date: *||' -e 's|-||g' -e 's| .*||'`
@@ -121,22 +126,20 @@ do
          fi
       fi
       #
-      # versions of CppAD before 20170625 did not have --debug_none option
-      echo "bin/run_cmake.sh --debug_none >& $target_dir/$log_file"
-      if ! bin/run_cmake.sh --debug_none >& $target_dir/$log_file
-      then
-         echo "bin/run_cmake.sh >& $target_dir/$log_file"
-         bin/run_cmake.sh >& $target_dir/$log_file
-      fi
+      echo "bin/run_cmake.sh --debug_none --no_optional >& $target_dir/$log_file"
+      bin/run_cmake.sh --debug_none --no_optional >& $target_dir/$log_file
       #
       echo "ninja check_speed_cppad >>& $target_dir/$log_file"
       ninja -C build check_speed_cppad >& speed_branch.log.$$
+      #
       cat speed_branch.log.$$ >> $target_dir/$log_file
       rm speed_branch.log.$$
       #
       echo "$target_dir/speed_cppad $test_name 123 $* > $target_dir/$out_file"
       $target_dir/speed_cppad $test_name 123 $* > $target_dir/$out_file
       #
+      # speed/main.cpp
+      echo_eval git checkout speed/main.cpp
    fi
 done
 # return to master (branch where we started)
