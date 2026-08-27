@@ -1,0 +1,76 @@
+From: "Barak A. Pearlmutter" <bap@debian.org>
+Date: Thu, 27 Aug 2026 10:23:22 +0100
+Subject: make installed cppad/configure.hpp architecture independent
+
+Bug-Debian: https://bugs.debian.org/1133789
+Forwarded: https://github.com/coin-or/CppAD/issues/258
+
+libcppad-dev is Multi-Arch: same, so every file it ships below /usr/include
+must be identical on all architectures.  Three of the values that the cmake
+command substitutes into cppad/configure.hpp depend on the size of size_t
+and of a pointer, so the installed header differed between 32-bit and 64-bit
+architectures and the package was not co-installable.
+
+Determine those three symbols with the preprocessor instead, using the
+compiler-supplied __SIZEOF_* macros; this reproduces exactly the values that
+the cmake tests produced on each architecture.  A compiler that does not
+define those macros would silently evaluate them as zero and so get the
+wrong answer, hence the #error guards.
+
+The tape address type test assumes CPPAD_TAPE_ADDR_TYPE is unsigned int,
+which is the cmake default and what Debian builds with.
+---
+ include/cppad/configure.hpp.in | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/include/cppad/configure.hpp.in b/include/cppad/configure.hpp.in
+index 9eb936d..7667aab 100644
+--- a/include/cppad/configure.hpp.in
++++ b/include/cppad/configure.hpp.in
+@@ -240,8 +240,13 @@ CPPAD_IS_SAME_TAPE_ADDR_TYPE_SIZE_T
+ Is size_t the type the same as CPPAD_TAPE_ADDR_TYPE.
+ {xrst_spell_off}
+ {xrst_code hpp} */
+-# define CPPAD_IS_SAME_TAPE_ADDR_TYPE_SIZE_T \
+-   @cppad_is_same_tape_addr_type_size_t@
++# if !defined(__SIZEOF_SIZE_T__) || !defined(__SIZEOF_INT__)
++# error "cppad: compiler does not define __SIZEOF_SIZE_T__ and __SIZEOF_INT__"
++# elif __SIZEOF_SIZE_T__ == __SIZEOF_INT__
++# define CPPAD_IS_SAME_TAPE_ADDR_TYPE_SIZE_T 1
++# else
++# define CPPAD_IS_SAME_TAPE_ADDR_TYPE_SIZE_T 0
++# endif
+ /* {xrst_code}
+ {xrst_spell_off}
+ 
+@@ -348,7 +353,13 @@ CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T
+ *********************************
+ If true, ``unsigned int`` and ``size_t`` are the same type
+ {xrst_code hpp} */
+-# define CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T @cppad_is_same_unsigned_int_size_t@
++# if !defined(__SIZEOF_SIZE_T__) || !defined(__SIZEOF_INT__)
++# error "cppad: compiler does not define __SIZEOF_SIZE_T__ and __SIZEOF_INT__"
++# elif __SIZEOF_SIZE_T__ == __SIZEOF_INT__
++# define CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T 1
++# else
++# define CPPAD_IS_SAME_UNSIGNED_INT_SIZE_T 0
++# endif
+ /* {xrst_code}
+ 
+ CPPAD_PADDING_BLOCK_T
+@@ -356,7 +367,14 @@ CPPAD_PADDING_BLOCK_T
+ Is a string used to define an object that pads the block_t structure
+ so that its size is a multiple of the size of a double.
+ {xrst_code hpp} */
+-# define CPPAD_PADDING_BLOCK_T @cppad_padding_block_t@
++# if !defined(__SIZEOF_SIZE_T__) || !defined(__SIZEOF_POINTER__) \
++   || !defined(__SIZEOF_DOUBLE__)
++# error "cppad: compiler does not define the __SIZEOF_* macros"
++# elif (2 * __SIZEOF_SIZE_T__ + __SIZEOF_POINTER__) % __SIZEOF_DOUBLE__
++# define CPPAD_PADDING_BLOCK_T void* note_used_;
++# else
++# define CPPAD_PADDING_BLOCK_T
++# endif
+ /* {xrst_code}
+ 
+ {xrst_end configure.hpp}
